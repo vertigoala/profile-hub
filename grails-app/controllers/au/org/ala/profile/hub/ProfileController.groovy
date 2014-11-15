@@ -13,7 +13,7 @@ class ProfileController {
 
         def js = new JsonSlurper()
 
-        def profile = js.parseText(new URL("http://localhost:8081/profile-service/profile/Acacia+acuminata").text).profile
+        def profile = js.parseText(new URL("http://localhost:8081/profile-service/profile/" + URLEncoder.encode(params.uuid, "UTF-8")).text)
 
         def opus = js.parseText(new URL("http://localhost:8081/profile-service/opus/${profile.opusId}").text)
 
@@ -39,10 +39,12 @@ class ProfileController {
 //        profile.opus.
 
 
-        def listsURL = "http://lists.ala.org.au/ws/species/urn:lsid:biodiversity.org.au:apni.taxon:302011"
+        def listsURL = "http://lists.ala.org.au/ws/species/${profile.guid}"
 
         [
-            profile: js.parseText(new URL("http://localhost:8081/profile-service/profile/Acacia+acuminata").text),
+            occurrenceQuery: query,
+            opus: opus,
+            profile: profile,
             lists: []
         ]
     }
