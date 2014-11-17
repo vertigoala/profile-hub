@@ -13,7 +13,8 @@ class UrlMappings {
             }
         }
 
-        "/"(view:"/index")
+        "/"(controller: 'opus', action: 'index')
+
         "500"(view:'/error')
 	}
 }

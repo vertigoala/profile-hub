@@ -8,7 +8,7 @@
 
 <body>
 
-<h1>Profiles - ${opus.title}</h1>
+<h1>Profile collections - ${opus.title}</h1>
 <g:if test="${!edit}">
     <g:link class="btn btn-mini pull-right" mapping="editOpus"  params="[uuid:opus.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
 </g:if>

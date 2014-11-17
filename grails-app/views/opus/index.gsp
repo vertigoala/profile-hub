@@ -8,10 +8,10 @@
 
 <body>
 
-<h1>Profiles</h1>
+<h1>Profile collections</h1>
 
 <p class="lead">
-   A list of all the profile collections in the system.
+   A list of all the profile collections in this system.
 </p>
 
 <div class="row-fluid">

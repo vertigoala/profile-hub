@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="main"/>
-    <title>Welcome to Grails</title>
+    <title>${profile.scientificName} | ${profile.opusName}</title>
     <style type="text/css">
     /* Base class */
     .bs-docs-example {
@@ -91,13 +91,15 @@
 
 <body>
 
-<a class="btn btn-mini pull-right" href="http://localhost:8081/profile-service/profile/${profile.uuid}">JSON</a>
+<div class="pull-right" style="margin-top:20px;">
+<a class="btn btn-mini" href="http://localhost:8081/profile-service/profile/${profile.uuid}">JSON</a>
 <g:if test="${!edit}">
-    <g:link class="btn btn-mini pull-right" mapping="editProfile"  params="[uuid:profile.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
+    <g:link class="btn btn-mini" mapping="editProfile"  params="[uuid:profile.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
 </g:if>
 <g:else>
-    <g:link class="btn btn-mini pull-right" mapping="viewProfile"  params="[uuid:profile.uuid]">Public view</g:link>
+    <g:link class="btn btn-mini" mapping="viewProfile"  params="[uuid:profile.uuid]">Public view</g:link>
 </g:else>
+</div>
 <h1><g:link mapping="viewOpus" params="${[uuid: profile.opusId]}">${profile.opusName}</g:link> - ${profile.scientificName?:'empty'}</h1>
 
 <div class="row-fluid">
@@ -142,6 +144,16 @@
 </div>
 </g:if>
 
+
+<g:if test="${classification}">
+    <div class="bs-docs-example" id="browse_links" data-content="Taxonomy">
+        <ul>
+            <g:each in="${classification}" var="taxon">
+                <li><g:link mapping="viewProfile" params="${[uuid: taxon.guid]}">${taxon.rank}: ${taxon.scientificName}</g:link></li>
+            </g:each>
+        </ul>
+    </div>
+</g:if>
 
 <g:if test="${records}">
 

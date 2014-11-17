@@ -50,6 +50,18 @@ class ProfileController {
             imagesQuery = query + " AND (data_resource_uid:" + opus.imageSources.join(" OR data_resource_uid:") + ")"
         }
 
+        def classification = []
+        def availableProfiles = []
+        if(profile.guid){
+            classification = js.parseText(new URL("http://bie.ala.org.au/ws/classification/" + profile.guid).text)
+
+
+
+        }
+
+
+
+
         //WMS URL
         def listsURL = "http://lists.ala.org.au/ws/species/${profile.guid}"
         [
@@ -57,6 +69,7 @@ class ProfileController {
                 imagesQuery: imagesQuery,
                 opus: opus,
                 profile: profile,
+                classification: classification,
                 lists: []
         ]
     }
