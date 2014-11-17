@@ -2,7 +2,8 @@ class UrlMappings {
 
 	static mappings = {
 
-        "/profile/$uuid"(controller: 'profile', action: 'show')
+        name editProfile: "/profile/edit/$uuid"(controller: 'profile', action: 'edit')
+        name viewProfile: "/profile/$uuid"(controller: 'profile', action: 'show')
 
         "/$controller/$action?/$id?(.$format)?"{
             constraints {

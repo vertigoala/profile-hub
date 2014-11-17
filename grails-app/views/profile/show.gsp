@@ -39,6 +39,50 @@
     .bs-docs-example + .prettyprint {
         padding-top: 15px;
     }
+
+    /* Gallery styling */
+    .imgCon {
+        display: inline-block;
+        /* margin-right: 8px; */
+        text-align: center;
+        line-height: 1.3em;
+        background-color: #DDD;
+        color: #DDD;
+        font-size: 12px;
+        /*text-shadow: 2px 2px 6px rgba(255, 255, 255, 1);*/
+        /* padding: 5px; */
+        /* margin-bottom: 8px; */
+        margin: 2px 4px 2px 0;
+        position: relative;
+    }
+    .imgCon img {
+        height: 200px;
+        min-width: 180px;
+    }
+    .imgCon .meta {
+        opacity: 0.6;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+        text-align: left;
+        padding: 4px 5px 2px 5px;
+        background-color: #DDD;
+        color: #000;
+        width:100%;
+        font-weight:bold;
+    }
+    .imgCon .brief {
+        color: black;
+        background-color: white;
+    }
+    .imgCon .detail {
+        color: white;
+        background-color: black;
+        opacity: 0.7;
+    }
+
     </style>
     <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css" />
     <script src="http://leafletjs.com/dist/leaflet.js"></script>
@@ -48,15 +92,35 @@
 <body>
 
 <a class="btn btn-mini pull-right" href="http://localhost:8081/profile-service/profile/${profile.uuid}">JSON</a>
-
+<g:if test="${!edit}">
+    <g:link class="btn btn-mini pull-right" mapping="editProfile"  params="[uuid:profile.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
+</g:if>
+<g:else>
+    <g:link class="btn btn-mini pull-right" mapping="viewProfile"  params="[uuid:profile.uuid]">Public view</g:link>
+</g:else>
 <h1>${profile.opusName} - ${profile.scientificName?:'empty'}</h1>
 
 <div class="row-fluid">
 
     <div class="span8">
     <g:each in="${profile.attributes}" var="attribute">
-        <div class="bs-docs-example" id="browse_species_images" data-content="${attribute.title}">
-            <p>${attribute.text} </p>
+        <div class="bs-docs-example" id="browse_attributes" data-content="${attribute.title}">
+            <g:if test="${edit}">
+                <g:textArea  class="field span12" rows="10" name="${attribute.title}" value="${attribute.text}" />
+            </g:if>
+            <g:else>
+                <blockquote style="border-left:none;">
+                    <p>${attribute.text}</p>
+                    <small>
+                        Contributed by
+                        <cite title="Contributors to this text">
+                            <g:each in="${attribute.contributor}" var="c">
+                                ${c}
+                            </g:each>
+                        </cite>
+                    </small>
+                </blockquote>
+            </g:else>
         </div>
     </g:each>
     </div>
@@ -69,7 +133,7 @@
 
 <div>
 <g:if test="${profile.links}">
-<div class="bs-docs-example" id="browse_species_images" data-content="Links">
+<div class="bs-docs-example" id="browse_links" data-content="Links">
     <ul>
        <g:each in="${profile.links}" var="link">
         <li><a href="${link.url}">${link.title}</a>${link.description ? ' - ' + link.description : ''}</li>
@@ -79,18 +143,51 @@
 </g:if>
 
 
-<g:if test="${images}">
-
-</g:if>
-
 <g:if test="${records}">
 
 </g:if>
 
 
+<div class="bs-docs-example hide" id="browse_images" data-content="Images" >
+
+</div>
+
+
+
 <script>
 
     $(function() {
+        addTaxonMap();
+        addImages();
+    });
+
+    function addImages(){
+
+        $.ajax({
+            url: "http://biocache.ala.org.au/ws/occurrences/search.json",
+            jsonp: "callback",
+            dataType: "jsonp",
+            data: {
+                q: "${occurrenceQuery}",
+                fq: "multimedia:Image",
+                format: 'json'
+            },
+            success: function( response ) {
+                if(response.totalRecords > 0) {
+                    console.log("number of records with images: " + response.totalRecords);
+                    $.each(response.occurrences, function( key, record ) {
+                        $('#browse_images').append('<div class="imgCon"><a href="http://biocache.ala.org.au/occurrences/'+record.uuid+'"><img src="'+record.largeImageUrl+'"/></a> <div class="meta">Metadata to be added</div></div>');
+                    });
+                    $('#browse_images').show();
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                console.log("Error completing images - JSON - " + errorThrown);
+            }
+        });
+    }
+
+    function addTaxonMap(){
 
         //add an occurrence layer for macropus
         var acacia = L.tileLayer.wms("http://biocache.ala.org.au/ws/mapping/wms/reflect?q=${occurrenceQuery}", {
@@ -131,7 +228,7 @@
         L.control.layers(baseLayers, overlays).addTo(map);
 
         map.on('click', onMapClick);
-    });
+    }
 
     function onMapClick(e) {
         $.ajax({

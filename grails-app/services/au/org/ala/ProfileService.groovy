@@ -1,32 +1,14 @@
-package au.org.ala.profile.hub
+package au.org.ala
 
+import grails.transaction.Transactional
 import groovy.json.JsonSlurper
 
-class ProfileController {
+@Transactional
+class ProfileService {
 
-    def index() {}
+    def serviceMethod() {}
 
-    def edit(){
-        def model = buildProfile(params.uuid)
-        //need CAS check here
-        model.put("edit", true)
-        render(view: "show", model: model)
-    }
-
-    def save(){
-
-
-
-
-
-
-    }
-
-    def show(){
-        buildProfile(params.uuid)
-    }
-
-    private def buildProfile(String uuid){
+    def getProfile(String uuid){
 
         println("getProfile " + uuid )
 
@@ -44,7 +26,6 @@ class ProfileController {
             query = profile.scientificName
         }
 
-
         if(opus.recordSources){
             query = query + " AND (data_resource_uid:" + opus.recordSources.join(" OR ") + ")"
         }
@@ -54,11 +35,11 @@ class ProfileController {
         //WMS URL
         def listsURL = "http://lists.ala.org.au/ws/species/${profile.guid}"
         [
-                occurrenceQuery: query,
-                imagesQuery: imagesQuery,
-                opus: opus,
-                profile: profile,
-                lists: []
+            occurrenceQuery: query,
+            imagesQuery: imagesQuery,
+            opus: opus,
+            profile: profile,
+            lists: []
         ]
     }
 }
