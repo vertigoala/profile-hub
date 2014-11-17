@@ -15,11 +15,6 @@ class ProfileController {
 
     def save(){
 
-
-
-
-
-
     }
 
     def show(){
@@ -44,17 +39,21 @@ class ProfileController {
             query = profile.scientificName
         }
 
+        def occurrenceQuery = query
 
         if(opus.recordSources){
-            query = query + " AND (data_resource_uid:" + opus.recordSources.join(" OR ") + ")"
+            occurrenceQuery = query + " AND (data_resource_uid:" + opus.recordSources.join(" OR data_resource_uid:") + ")"
         }
 
-        def imagesQuery = query + "&fq=multimedia:Image"
+        def imagesQuery = query
+        if(opus.imageSources){
+            imagesQuery = query + " AND (data_resource_uid:" + opus.imageSources.join(" OR data_resource_uid:") + ")"
+        }
 
         //WMS URL
         def listsURL = "http://lists.ala.org.au/ws/species/${profile.guid}"
         [
-                occurrenceQuery: query,
+                occurrenceQuery: occurrenceQuery,
                 imagesQuery: imagesQuery,
                 opus: opus,
                 profile: profile,

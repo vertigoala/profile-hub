@@ -98,7 +98,7 @@
 <g:else>
     <g:link class="btn btn-mini pull-right" mapping="viewProfile"  params="[uuid:profile.uuid]">Public view</g:link>
 </g:else>
-<h1>${profile.opusName} - ${profile.scientificName?:'empty'}</h1>
+<h1><g:link mapping="viewOpus" params="${[uuid: profile.opusId]}">${profile.opusName}</g:link> - ${profile.scientificName?:'empty'}</h1>
 
 <div class="row-fluid">
 
@@ -168,7 +168,7 @@
             jsonp: "callback",
             dataType: "jsonp",
             data: {
-                q: "${occurrenceQuery}",
+                q: "${imagesQuery}",
                 fq: "multimedia:Image",
                 format: 'json'
             },
@@ -176,7 +176,7 @@
                 if(response.totalRecords > 0) {
                     console.log("number of records with images: " + response.totalRecords);
                     $.each(response.occurrences, function( key, record ) {
-                        $('#browse_images').append('<div class="imgCon"><a href="http://biocache.ala.org.au/occurrences/'+record.uuid+'"><img src="'+record.largeImageUrl+'"/></a> <div class="meta">Metadata to be added</div></div>');
+                        $('#browse_images').append('<div class="imgCon"><a href="http://biocache.ala.org.au/occurrences/'+record.uuid+'"><img src="'+record.largeImageUrl+'"/></a> <div class="meta">' + record.dataResourceName + '</div></div>');
                     });
                     $('#browse_images').show();
                 }
