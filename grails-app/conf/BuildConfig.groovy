@@ -6,6 +6,7 @@ grails.project.work.dir = "target/work"
 grails.project.target.level = 1.7
 grails.project.source.level = 1.7
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
+grails.plugin.location.'custom-layout' = "../ala-web-theme"
 
 //grails.project.fork = [
 //    // configure settings for compilation JVM, note that if you alter the Groovy version forked compilation is required
@@ -67,7 +68,8 @@ grails.project.dependency.resolution = {
 //        runtime ":database-migration:1.4.0"
         //runtime ":jquery:1.11.1"
 
-        runtime ":ala-web-theme:1.0.1"
+//        runtime ":ala-web-theme:1.0.1"
+//        runtime ":custom-layout:0.1"
 
         // Uncomment these to enable additional asset-pipeline capabilities
         //compile ":sass-asset-pipeline:1.9.0"

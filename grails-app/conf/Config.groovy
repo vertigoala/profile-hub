@@ -92,6 +92,9 @@ grails.hibernate.pass.readonly = false
 // configure passing read-only to OSIV session by default, requires "singleSession = false" OSIV mode
 grails.hibernate.osiv.readonly = false
 
+layout = 'custom'
+skin.fluidLayout = true
+
 environments {
     development {
         grails.logging.jul.usebridge = true

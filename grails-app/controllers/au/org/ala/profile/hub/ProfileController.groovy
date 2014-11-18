@@ -54,13 +54,7 @@ class ProfileController {
         def availableProfiles = []
         if(profile.guid){
             classification = js.parseText(new URL("http://bie.ala.org.au/ws/classification/" + profile.guid).text)
-
-
-
         }
-
-
-
 
         //WMS URL
         def listsURL = "http://lists.ala.org.au/ws/species/${profile.guid}"
@@ -70,7 +64,10 @@ class ProfileController {
                 opus: opus,
                 profile: profile,
                 classification: classification,
-                lists: []
+                lists: [],
+                logoUrl: opus.logoUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
+                bannerUrl: opus.bannerUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/bg.jpg',
+                pageTitle: opus.title?:'Profile collections'
         ]
     }
 }

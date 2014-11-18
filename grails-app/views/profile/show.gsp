@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main"/>
+    <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>${profile.scientificName} | ${profile.opusName}</title>
     <style type="text/css">
     /* Base class */
@@ -100,7 +100,7 @@
     <g:link class="btn btn-mini" mapping="viewProfile"  params="[uuid:profile.uuid]">Public view</g:link>
 </g:else>
 </div>
-<h1><g:link mapping="viewOpus" params="${[uuid: profile.opusId]}">${profile.opusName}</g:link> - ${profile.scientificName?:'empty'}</h1>
+<h1>${profile.scientificName?:'empty'}</h1>
 
 <div class="row-fluid">
 
@@ -125,44 +125,39 @@
             </g:else>
         </div>
     </g:each>
+        <g:if test="${profile.links}">
+            <div class="bs-docs-example" id="browse_links" data-content="Links">
+                <ul>
+                    <g:each in="${profile.links}" var="link">
+                        <li><a href="${link.url}">${link.title}</a>${link.description ? ' - ' + link.description : ''}</li>
+                    </g:each>
+                </ul>
+            </div>
+        </g:if>
+        <g:if test="${classification}">
+            <div class="bs-docs-example" id="browse_taxonomy" data-content="Taxonomy">
+                <ul>
+                    <g:each in="${classification}" var="taxon">
+                        <li><g:link mapping="viewProfile" params="${[uuid: taxon.guid]}">${taxon.rank}: ${taxon.scientificName}</g:link></li>
+                    </g:each>
+                </ul>
+            </div>
+        </g:if>
+
+        <div class="bs-docs-example hide" id="browse_images" data-content="Images" >
+
+        </div>
+
     </div>
 
     <div class="span4">
-        <div id="map" style="height: 400px; "> </div>
+        <div id="map" style="height: 400px; margin-top:10px;"> </div>
         <a class="btn" href="http://avh.ala.org.au/occurrences/search?q=${occurrenceQuery}">View in AVH</a>
+        <div id="firstImage" class="hide" style="margin-top:15px;"></div>
     </div>
 </div>
 
 <div>
-<g:if test="${profile.links}">
-<div class="bs-docs-example" id="browse_links" data-content="Links">
-    <ul>
-       <g:each in="${profile.links}" var="link">
-        <li><a href="${link.url}">${link.title}</a>${link.description ? ' - ' + link.description : ''}</li>
-       </g:each>
-    </ul>
-</div>
-</g:if>
-
-
-<g:if test="${classification}">
-    <div class="bs-docs-example" id="browse_links" data-content="Taxonomy">
-        <ul>
-            <g:each in="${classification}" var="taxon">
-                <li><g:link mapping="viewProfile" params="${[uuid: taxon.guid]}">${taxon.rank}: ${taxon.scientificName}</g:link></li>
-            </g:each>
-        </ul>
-    </div>
-</g:if>
-
-<g:if test="${records}">
-
-</g:if>
-
-
-<div class="bs-docs-example hide" id="browse_images" data-content="Images" >
-
-</div>
 
 
 
@@ -187,6 +182,13 @@
             success: function( response ) {
                 if(response.totalRecords > 0) {
                     console.log("number of records with images: " + response.totalRecords);
+
+                    var firstImage = response.occurrences[0];
+
+                    $('#firstImage').append('<div class="imgConXXX"><a href="http://biocache.ala.org.au/occurrences/'+firstImage.uuid+'"><img src="'+firstImage.largeImageUrl+'"/></a> <div class="meta">' + firstImage.dataResourceName + '</div></div>');
+                    $('#firstImage').show();
+
+
                     $.each(response.occurrences, function( key, record ) {
                         $('#browse_images').append('<div class="imgCon"><a href="http://biocache.ala.org.au/occurrences/'+record.uuid+'"><img src="'+record.largeImageUrl+'"/></a> <div class="meta">' + record.dataResourceName + '</div></div>');
                     });

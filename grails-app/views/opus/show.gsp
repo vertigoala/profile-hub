@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main"/>
+    <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Welcome to Grails</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 
 <body>
 
-<h1>Profile collections - ${opus.title}</h1>
+<h1>${opus.title}</h1>
 <g:if test="${!edit}">
     <g:link class="btn btn-mini pull-right" mapping="editOpus"  params="[uuid:opus.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
 </g:if>
@@ -16,17 +15,8 @@
     <g:link class="btn btn-mini pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
 </g:else>
 
-<p>
-    ${dataResource.pubDescription}
-</p>
-<p>
-    ${dataResource.rights}
-</p>
-<p>
-    ${dataResource.citation}
-</p>
 
-<div class="row-fluid">
+<div class="well pull-right">
     <h3>Approved Image sources</h3>
     <ul>
         <g:each in="${opus.imageSources}" var="imageSource">
@@ -40,6 +30,23 @@
         </g:each>
     </ul>
 </div>
+
+<div>
+<p>
+    ${dataResource.pubDescription}
+</p>
+<p>
+    ${dataResource.rights}
+</p>
+<p>
+    ${dataResource.citation}
+</p>
+</div>
+
+
+
+
+
 
 </body>
 

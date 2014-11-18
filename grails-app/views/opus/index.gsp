@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main"/>
-    <title>Welcome to Grails</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <meta name="layout" content="${grailsApplication.config.layout}"/>
+    <meta name="logoUrl" content="${logoUrl}"/>
+    <title>Profile collections | Atlas of Living Australia</title>
 </head>
 
 <body>
