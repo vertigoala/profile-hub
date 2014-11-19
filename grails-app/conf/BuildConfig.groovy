@@ -46,35 +46,14 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
-        // runtime 'mysql:mysql-connector-java:5.1.29'
-        // runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
         test "org.grails:grails-datastore-test-support:1.0-grails-2.4"
         compile 'net.sf.ehcache:ehcache:2.8.4'
     }
 
     plugins {
         build ":release:3.0.1"
-        // plugins for the build system only
         build ":tomcat:7.0.55"
-
-        // plugins for the compile step
         compile ":scaffolding:2.1.2"
         compile ':cache:1.1.6'
-        //compile ":asset-pipeline:1.9.6"
-
-//        // plugins needed at runtime but not for compilation
-//        runtime ":hibernate4:4.3.5.5" // or ":hibernate:3.6.10.17"
-//        runtime ":database-migration:1.4.0"
-        //runtime ":jquery:1.11.1"
-
-//        runtime ":ala-web-theme:1.0.1"
-//        runtime ":custom-layout:0.1"
-
-        // Uncomment these to enable additional asset-pipeline capabilities
-        //compile ":sass-asset-pipeline:1.9.0"
-        //compile ":less-asset-pipeline:1.10.0"
-        //compile ":coffee-asset-pipeline:1.8.0"
-        //compile ":handlebars-asset-pipeline:1.3.0.3"
     }
 }
