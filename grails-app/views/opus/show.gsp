@@ -56,7 +56,7 @@
             <button class="btn" type="button">Search</button>
         </div>
 
-        <table class="table table-striped">
+        <table class="table table-striped" ng-show="profiles.length > 0">
             <tr>
                 <th>Taxon</th>
             </tr>
@@ -64,6 +64,10 @@
                 <td><a href="${createLink(mapping: 'viewProfile')}/{{profile.guid}}">{{profile.scientificName}}</a></td>
             </tr>
         </table>
+
+        <div  ng-show="profiles.length == 0">
+            <p>No matching results</p>
+        </div>
     </div>
 
 </div>
@@ -79,7 +83,7 @@
                     jsonp: "callback",
                     dataType: "jsonp",
                     data: {
-                        opusUuid: "013e5a47-e613-48e3-8718-2d8711097e6b",
+                        opusUuid: "${opus.uuid}",
                         scientificName: $scope.searchTerm,
                         format: 'json'
                     },
