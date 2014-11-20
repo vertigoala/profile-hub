@@ -1,4 +1,4 @@
-package au.org.ala
+package au.org.ala.profile.hub
 
 import grails.transaction.Transactional
 import groovy.json.JsonSlurper

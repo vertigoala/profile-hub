@@ -1,8 +1,11 @@
 package au.org.ala.profile.hub
 
+import grails.converters.JSON
 import groovy.json.JsonSlurper
 
 class ProfileController {
+
+    WebService webService
 
     def index() {}
 
@@ -14,12 +17,31 @@ class ProfileController {
     }
 
     def save(){
-
     }
 
     def show(){
         buildProfile(params.uuid)
     }
+
+    def updateAttribute() {
+        println "Updating attributing....."
+        //TODO check user in ROLE.....
+        def resp = webService.doPost("http://localhost:8081/profile-service/attribute/" + params.uuid?:'', [
+                userId: "to-be-added",
+                title : params.title,
+                text : params.text,
+                profileUuid : params.profileUuid,
+                uuid : params.uuid?:'',
+        ])
+        response.setContentType("application/json")
+        response.setStatus(201)
+        render resp as JSON
+    }
+
+    def deleteAttribute(){
+        //TODO check user in ROLE.....
+    }
+
 
     private def buildProfile(String uuid){
 
@@ -59,15 +81,16 @@ class ProfileController {
         //WMS URL
         def listsURL = "http://lists.ala.org.au/ws/species/${profile.guid}"
         [
-                occurrenceQuery: occurrenceQuery,
-                imagesQuery: imagesQuery,
-                opus: opus,
-                profile: profile,
-                classification: classification,
-                lists: [],
-                logoUrl: opus.logoUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
-                bannerUrl: opus.bannerUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/bg.jpg',
-                pageTitle: opus.title?:'Profile collections'
+            occurrenceQuery: occurrenceQuery,
+            imagesQuery: imagesQuery,
+            opus: opus,
+            profile: profile,
+            classification: classification,
+            lists: [],
+            logoUrl: opus.logoUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
+            bannerUrl: opus.bannerUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/bg.jpg',
+            pageTitle: opus.title?:'Profile collections',
+            pageTitleLink: createLink(mapping: 'viewOpus', params: ['uuid': opus.uuid])
         ]
     }
 }

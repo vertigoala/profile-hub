@@ -35,6 +35,9 @@
         border-radius: 4px 0 4px 0;
     }
 
+    .attribute-header-input { font-size: 36px; font-weight: bold; padding: 6px 12px 8px 12px;}
+    .attribute-edit { background-color: #f5f5f5; margin-top: 10px;}
+
     /* Remove spacing between an example and it's code */
     .bs-docs-example + .prettyprint {
         padding-top: 15px;
@@ -87,44 +90,52 @@
     <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css" />
     <script src="http://leafletjs.com/dist/leaflet.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js" type="text/javascript" ></script>
 </head>
 
 <body>
 
+<div id="container"  ng-app="attributes">
 <div class="pull-right" style="margin-top:20px;">
-<a class="btn btn-mini" href="http://localhost:8081/profile-service/profile/${profile.uuid}">JSON</a>
+
 <g:if test="${!edit}">
-    <g:link class="btn btn-mini" mapping="editProfile"  params="[uuid:profile.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
+    <g:link class="btn btn" mapping="editProfile"  params="[uuid:profile.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
 </g:if>
 <g:else>
-    <g:link class="btn btn-mini" mapping="viewProfile"  params="[uuid:profile.uuid]">Public view</g:link>
+    <g:link class="btn" mapping="viewProfile"  params="[uuid:profile.uuid]">Public view</g:link>
 </g:else>
+<a class="btn btn" href="http://localhost:8081/profile-service/profile/${profile.uuid}">JSON</a>
 </div>
+
 <h1>${profile.scientificName?:'empty'}</h1>
 
 <div class="row-fluid">
 
     <div class="span8">
-    <g:each in="${profile.attributes}" var="attribute">
-        <div class="bs-docs-example" id="browse_attributes" data-content="${attribute.title}">
-            <g:if test="${edit}">
-                <g:textArea  class="field span12" rows="10" name="${attribute.title}" value="${attribute.text}" />
-            </g:if>
-            <g:else>
-                <blockquote style="border-left:none;">
-                    <p>${attribute.text}</p>
-                    <small>
+        <div ng-controller="AttributeEditor">
+            <div class="ng-show" ng-show="!readonly">
+                <button ng-click="addAttribute()" class="btn"><i class="icon icon-plus"></i>Add attribute</button>
+            </div>
+            <div ng-repeat="attribute in attributes">
+                <div class="well attribute-edit" id="browse_attributes_edit" class=" ng-show" ng-show="!readonly">
+                    <g:textField class="attribute-header-input" ng-model="attribute.title" name="title"/>
+                    <g:textArea class="field span12" rows="10" ng-model="attribute.text" name="text" />
+                    <button class="btn" ng-click="saveAttribute($index)"> Save </button>
+                </div>
+                <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}" class="ng-show" ng-show="readonly">
+                    <blockquote style="border-left:none;" >
+                        <p>{{ attribute.text }}</p>
+                        <small>
                         Contributed by
                         <cite title="Contributors to this text">
-                            <g:each in="${attribute.contributor}" var="c">
-                                ${c}
-                            </g:each>
+                            {{ attribute.contributor.join(', ') }}
                         </cite>
-                    </small>
-                </blockquote>
-            </g:else>
+                        </small>
+                    </blockquote>
+                </div>
+            </div>
         </div>
-    </g:each>
+
         <g:if test="${profile.links}">
             <div class="bs-docs-example" id="browse_links" data-content="Links">
                 <ul>
@@ -134,6 +145,7 @@
                 </ul>
             </div>
         </g:if>
+
         <g:if test="${classification}">
             <div class="bs-docs-example" id="browse_taxonomy" data-content="Taxonomy">
                 <ul>
@@ -144,8 +156,7 @@
             </div>
         </g:if>
 
-        <div class="bs-docs-example hide" id="browse_images" data-content="Images" >
-
+        <div class="bs-docs-example hide" id="browse_images" data-content="Images">
         </div>
 
     </div>
@@ -158,8 +169,7 @@
 </div>
 
 <div>
-
-
+</div>
 
 <script>
 
@@ -266,6 +276,61 @@
         });
     }
 </script>
+
+<r:script>
+    var attributeEditor = angular.module('attributes', [])
+        .controller('AttributeEditor', ['$scope', function($scope) {
+
+            $scope.readonly = ${!edit};
+            $scope.attributes = [];
+
+            $.ajax({
+                type:"GET",
+                url: "http://localhost:8081/profile-service/profile/${profile.uuid}",
+                success: function( data ) {
+                     $scope.attributes = data.attributes;
+                     $scope.$apply();
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    console.log("There was a problem retrieving profile..." + textStatus);
+                }
+            })
+
+            $scope.addAttribute = function(){
+                $scope.attributes.unshift(
+                    {"uuid":"", "title":"to-be-added", "text":"to-be-added", contributor: []}
+                );
+                console.log("adding attributes: " + $scope.attributes.length);
+            }
+
+            $scope.saveAttribute = function(idx) {
+                console.log("Saving attribute " + idx);
+                var attribute = $scope.attributes[idx];
+                $scope.attributes[idx].status = "Saving...";
+
+                //ajax post
+                $.ajax({
+                    type: "POST",
+                    url: "${createLink(controller:"profile", action:"updateAttribute")}/" + attribute.uuid,
+                    dataType: "json",
+                    data: {
+                        profileUuid:"${profile.uuid}",
+                        uuid:attribute.uuid,
+                        title:attribute.title,
+                        text:attribute.text
+                    },
+
+                    success: function( response ) {
+                         $scope.attributes[idx].status = "Saved";
+                         //$scope.$apply();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        $scope.attributes[idx].status = "There was a problem saving...";
+                    }
+                });
+            };
+    }]);
+</r:script>
 
 
 </body>

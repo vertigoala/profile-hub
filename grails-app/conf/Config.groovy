@@ -94,6 +94,8 @@ grails.hibernate.osiv.readonly = false
 
 layout = 'custom'
 skin.fluidLayout = true
+app.http.header.userId = "X-ALA-userId"
+api_key = "XXXXXXXXXXXXXXXX"
 
 environments {
     development {

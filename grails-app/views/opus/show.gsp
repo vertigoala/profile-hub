@@ -65,7 +65,7 @@
             </tr>
         </table>
 
-        <div  ng-show="profiles.length == 0">
+        <div ng-show="profiles.length == 0">
             <p>No matching results</p>
         </div>
     </div>
