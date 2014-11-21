@@ -16,9 +16,6 @@ class ProfileController {
         render(view: "show", model: model)
     }
 
-    def save(){
-    }
-
     def show(){
         buildProfile(params.uuid)
     }
@@ -35,13 +32,18 @@ class ProfileController {
         ])
         response.setContentType("application/json")
         response.setStatus(201)
-        render resp as JSON
+        render resp.resp as JSON
     }
 
     def deleteAttribute(){
         //TODO check user in ROLE.....
+        def resp = webService.doDelete("http://localhost:8081/profile-service/attribute/" + params.uuid +"?profileUuid=" + params.profileUuid)
+        response.setContentType("application/json")
+        response.setStatus(201)
+//        render resp as JSON
+        def model = ["success":true]
+        render model as JSON
     }
-
 
     private def buildProfile(String uuid){
 
@@ -78,6 +80,11 @@ class ProfileController {
             classification = js.parseText(new URL("http://bie.ala.org.au/ws/classification/" + profile.guid).text)
         }
 
+        def speciesProfile
+        if(profile.guid){
+            speciesProfile = js.parseText(new URL("http://bie.ala.org.au/ws/species/" + profile.guid).text)
+        }
+
         //WMS URL
         def listsURL = "http://lists.ala.org.au/ws/species/${profile.guid}"
         [
@@ -86,6 +93,7 @@ class ProfileController {
             opus: opus,
             profile: profile,
             classification: classification,
+            speciesProfile: speciesProfile,
             lists: [],
             logoUrl: opus.logoUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
             bannerUrl: opus.bannerUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/bg.jpg',

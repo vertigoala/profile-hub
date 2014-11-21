@@ -120,7 +120,14 @@
                 <div class="well attribute-edit" id="browse_attributes_edit" class=" ng-show" ng-show="!readonly">
                     <g:textField class="attribute-header-input" ng-model="attribute.title" name="title"/>
                     <g:textArea class="field span12" rows="10" ng-model="attribute.text" name="text" />
-                    <button class="btn" ng-click="saveAttribute($index)"> Save </button>
+                    <div class="row-fluid">
+                        <span class="span8"></span>
+                        <span class="span4">
+                            <button class="btn btn-danger pull-right" ng-click="deleteAttribute($index)"> Delete </button>
+                            &nbsp;
+                            <button class="btn btn pull-right" ng-click="saveAttribute($index)"> Save </button>
+                        </span>
+                    </div>
                 </div>
                 <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}" class="ng-show" ng-show="readonly">
                     <blockquote style="border-left:none;" >
@@ -147,10 +154,30 @@
         </g:if>
 
         <g:if test="${classification}">
-            <div class="bs-docs-example" id="browse_taxonomy" data-content="Taxonomy">
+            <div class="bs-docs-example" id="browse_taxonomy" data-content="Taxonomy from ${speciesProfile.taxonConcept.infoSourceName}">
                 <ul>
                     <g:each in="${classification}" var="taxon">
-                        <li><g:link mapping="viewProfile" params="${[uuid: taxon.guid]}">${taxon.rank}: ${taxon.scientificName}</g:link></li>
+                        <li><g:link mapping="viewProfile" params="${[uuid: taxon.guid]}">${taxon.rank.capitalize()}: ${taxon.scientificName}</g:link></li>
+                    </g:each>
+                </ul>
+            </div>
+        </g:if>
+
+        <g:if test="${speciesProfile}">
+            <div class="bs-docs-example" id="browse_names" data-content="Nomenclature">
+                <ul style="list-style: none; margin-left:0px;">
+                    <li>
+                        <blockquote style="border-left:none;">
+                            <p>${speciesProfile.taxonName.nameComplete} ${speciesProfile.taxonName.authorship}</p>
+                        </blockquote>
+                     </li>
+                    <g:each in="${speciesProfile.synonyms}" var="synonym">
+                        <li>
+                            <blockquote  style="border-left:none;" >
+                            <p>${synonym.nameString}</p>
+                            <cite>- ${synonym.referencedIn}</cite>
+                            </blockquote>
+                        </li>
                     </g:each>
                 </ul>
             </div>
@@ -295,7 +322,30 @@
                     console.log("There was a problem retrieving profile..." + textStatus);
                 }
             })
-
+            $scope.deleteAttribute = function(idx){
+                var confirmed = window.confirm("Are you sure?")
+                if(confirmed){
+                    var attribute =  $scope.attributes[idx];
+                    //delete with ajax
+                    $.ajax({
+                        type: "DELETE",
+                        url: "${createLink(mapping: "deleteAttribute")}/" + attribute.uuid +"?profileUuid=${profile.uuid}",
+                        dataType: "json",
+                        data: {
+                            uuid: attribute.uuid,
+                            profileUuid: "${profile.uuid}"
+                        },
+                        success: function( response ) {
+                            $scope.attributes.splice(idx, 1);
+                            console.log("deleting attributes: " + $scope.attributes.length);
+                            $scope.$apply();
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            $scope.attributes[idx].status = "There was a problem deleting...";
+                        }
+                    });
+                }
+            }
             $scope.addAttribute = function(){
                 $scope.attributes.unshift(
                     {"uuid":"", "title":"to-be-added", "text":"to-be-added", contributor: []}
@@ -320,8 +370,11 @@
                         text:attribute.text
                     },
 
-                    success: function( response ) {
+                    success: function( data ) {
                          $scope.attributes[idx].status = "Saved";
+                         console.log("uuid before save: " + $scope.attributes[idx].uuid )
+                         $scope.attributes[idx].uuid = data.uuid;
+                         console.log("uuid after save: " + $scope.attributes[idx].uuid )
                          //$scope.$apply();
                     },
                     error: function(jqXHR, textStatus, errorThrown){

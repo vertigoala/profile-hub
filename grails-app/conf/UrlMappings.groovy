@@ -2,8 +2,9 @@ class UrlMappings {
 
 	static mappings = {
 
+        name deleteAttribute: "/profile/deleteAttribute/$uuid"(controller: 'profile', action: 'deleteAttribute')
         name updateAttribute: "/profile/updateAttribute/$uuid"(controller: 'profile', action: 'updateAttribute')
-        name updateAttribute: "/profile/updateAttribute/"(controller: 'profile', action: 'updateAttribute')
+        name createAttribute: "/profile/updateAttribute/"(controller: 'profile', action: 'updateAttribute')
 
 
         name editProfile: "/profile/edit/$uuid"(controller: 'profile', action: 'edit')
