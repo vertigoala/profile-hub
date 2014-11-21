@@ -325,25 +325,31 @@
             $scope.deleteAttribute = function(idx){
                 var confirmed = window.confirm("Are you sure?")
                 if(confirmed){
-                    var attribute =  $scope.attributes[idx];
-                    //delete with ajax
-                    $.ajax({
-                        type: "DELETE",
-                        url: "${createLink(mapping: "deleteAttribute")}/" + attribute.uuid +"?profileUuid=${profile.uuid}",
-                        dataType: "json",
-                        data: {
-                            uuid: attribute.uuid,
-                            profileUuid: "${profile.uuid}"
-                        },
-                        success: function( response ) {
-                            $scope.attributes.splice(idx, 1);
-                            console.log("deleting attributes: " + $scope.attributes.length);
-                            $scope.$apply();
-                        },
-                        error: function(jqXHR, textStatus, errorThrown){
-                            $scope.attributes[idx].status = "There was a problem deleting...";
-                        }
-                    });
+                    if($scope.attributes[idx].uuid !== ""){
+                        var attribute =  $scope.attributes[idx];
+                        //delete with ajax
+                        $.ajax({
+                            type: "DELETE",
+                            url: "${createLink(mapping: "deleteAttribute")}/" + attribute.uuid +"?profileUuid=${profile.uuid}",
+                            dataType: "json",
+                            data: {
+                                uuid: attribute.uuid,
+                                profileUuid: "${profile.uuid}"
+                            },
+                            success: function( response ) {
+                                $scope.attributes.splice(idx, 1);
+                                console.log("deleting attributes: " + $scope.attributes.length);
+                                $scope.$apply();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown){
+                                $scope.attributes[idx].status = "There was a problem deleting...";
+                            }
+                        });
+                    } else {
+                        $scope.attributes.splice(idx, 1);
+                        console.log("Local delete only deleting attributes: " + $scope.attributes.length);
+//                        $scope.$apply();
+                    }
                 }
             }
             $scope.addAttribute = function(){
