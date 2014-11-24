@@ -33,19 +33,32 @@ class OpusController {
     def show(){
         def js = new JsonSlurper()
         def opus = js.parseText(new URL("http://localhost:8081/profile-service/opus/" + params.uuid ).text)
+        def vocab
+        if(opus.attributeVocabUuid){
+            vocab = js.parseText(new URL("http://localhost:8081/profile-service/vocab/" + opus.attributeVocabUuid ).text)
+        }
+
         def dataResource = js.parseText(new URL("http://collections.ala.org.au/ws/dataResource/" + opus.dataResourceUid).text)
-        [opus: opus, dataResource:dataResource, dataResources: getDataResources(),
+        [
+         opus: opus,
+         dataResource:dataResource,
+         dataResources: getDataResources(),
          logoUrl: opus.logoUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
          bannerUrl: opus.bannerUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/bg.jpg',
-         pageTitle: opus.title?:'Profile collections'
+         pageTitle: opus.title?:'Profile collections',
+         vocab: vocab?.name?:'Not specified'
         ]
     }
 
     def getDataResources(){
         def dataResources = [:]
         def js = new JsonSlurper()
-        js.parseText(new URL("http://collections.ala.org.au/ws/dataResource").text).each {
-            dataResources.put(it.uid, it.name)
+        try {
+            js.parseText(new URL("http://collections.ala.org.au/ws/dataResource").text).each {
+                dataResources.put(it.uid, it.name)
+            }
+        } catch(Exception e){
+            log.error(e.getMessage(), e)
         }
         dataResources
     }

@@ -91,6 +91,7 @@
     <script src="http://leafletjs.com/dist/leaflet.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js" type="text/javascript" ></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
 </head>
 
 <body>
@@ -118,7 +119,7 @@
             </div>
             <div ng-repeat="attribute in attributes">
                 <div class="well attribute-edit" id="browse_attributes_edit" class=" ng-show" ng-show="!readonly">
-                    <g:textField class="attribute-header-input" ng-model="attribute.title" name="title"/>
+                    <g:textField typeahead="attributeTitle.name for attributeTitle in attributeTitles | filter:$viewValue" class="form-control attribute-header-input" ng-model="attribute.title" name="title" value="title"/>
                     <g:textArea class="field span12" rows="10" ng-model="attribute.text" name="text" />
                     <div class="row-fluid">
                         <span class="span8"></span>
@@ -305,12 +306,12 @@
 </script>
 
 <r:script>
-    var attributeEditor = angular.module('attributes', [])
+    var attributeEditor = angular.module('attributes', ['ui.bootstrap'])
         .controller('AttributeEditor', ['$scope', function($scope) {
 
             $scope.readonly = ${!edit};
             $scope.attributes = [];
-
+            $scope.attributeTitles = [];
             $.ajax({
                 type:"GET",
                 url: "http://localhost:8081/profile-service/profile/${profile.uuid}",
@@ -322,6 +323,21 @@
                     console.log("There was a problem retrieving profile..." + textStatus);
                 }
             })
+
+
+            $.ajax({
+                type:"GET",
+                url: "http://localhost:8081/profile-service/vocab/${opus.attributeVocabUuid}",
+                success: function( data ) {
+                     $scope.attributeTitles = data.terms;
+//                     $scope.$apply();
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    console.log("There was a problem retrieving profile..." + textStatus);
+                }
+            });
+
+
             $scope.deleteAttribute = function(idx){
                 var confirmed = window.confirm("Are you sure?")
                 if(confirmed){
@@ -390,6 +406,8 @@
             };
     }]);
 </r:script>
+
+
 
 
 </body>

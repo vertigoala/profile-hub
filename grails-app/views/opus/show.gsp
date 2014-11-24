@@ -35,6 +35,12 @@
                 <li><a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a></li>
             </g:each>
         </ul>
+        <h3>
+            Attribute vocabulary
+        </h3>
+        <ul>
+            <li>${vocab}</li>
+        </ul>
     </div>
 
     <div id="opusInfo">
@@ -73,6 +79,7 @@
 </div>
 
 <script>
+
     var searchModule = angular.module('searchProfiles', [])
         .controller('ProfileSearch', ['$scope', function($scope) {
 
@@ -102,6 +109,7 @@
             };
         }]);
 </script>
+
 
 
 </body>
