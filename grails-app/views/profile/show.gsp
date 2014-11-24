@@ -191,7 +191,7 @@
 
     <div class="span4">
         <div id="map" style="height: 400px; margin-top:10px;"> </div>
-        <a class="btn" href="http://avh.ala.org.au/occurrences/search?q=${occurrenceQuery}">View in AVH</a>
+        <a class="btn" href="http://avh.ala.org.au/occurrences/search?q=${occurrenceQuery}">View in Australian Virtual Herbarium</a>
         <div id="firstImage" class="hide" style="margin-top:15px;"></div>
     </div>
 </div>
