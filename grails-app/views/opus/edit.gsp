@@ -21,10 +21,9 @@
     </p>
 
     <div id="opusInfo" class="well">
-        <h2>Metadata - edited in the <a href="http://collections.ala.org.au/public/show/${opus.dataResourceUid}">collectory</a></h2>
         <h4>Description</h4>
         <p>
-            ${dataResource.pubDescription?:'No description  available.'}
+            ${dataResource.pubDescription?:'No description available.'}
         </p>
         <h4>Rights</h4>
         <p>
@@ -35,6 +34,24 @@
             ${dataResource.citation?:'No citation statement available.'}
         </p>
     </div>
+
+    <div id="opusInfo" class="well">
+        <h3>Map configuration</h3>
+        <p>
+            <label>Attribution:</label>
+            <input type="text" class="input-xxlarge" name="mapAttribution" value="${opus.mapAttribution}"/>
+        </p>
+        <p>
+            <label>Biocache instance to link to:</label>
+            <input type="text" class="input-xxlarge" name="biocacheUrl" value="${opus.biocacheUrl}"/>
+        </p>
+        <p>
+            <label>Biocache instance name:</label>
+            <input type="text" class="input-xxlarge" name="biocacheName" value="${opus.biocacheName}"/>
+        </p>
+        <a class="btn" href="javascript:alert('Not implemented yet')">Save</a>
+    </div>
+
 
     <g:if test="${opus.enableTaxaUpload}">
     <div class="well">
@@ -73,7 +90,7 @@
 
     <div class="well">
         <h3>Approved Image sources</h3>
-        <p>Configure the image sources to be included in your profile pages</p>
+        <p>Configure the image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
         <ul>
             <g:each in="${opus.imageSources}" var="imageSource">
                 <li><a href="http://collections.ala.org.au/public/show/${imageSource}">${dataResources[imageSource]}</a></li>
@@ -83,7 +100,9 @@
 
     <div class="well">
         <h3>Approved Specimen/Observation sources</h3>
-        <p>Configure the record sources to be included in your profile pages. This will set what data is used on maps</p>
+        <p>Configure the record sources to be included in your profile pages. This will set what data is used on maps.
+            These are data resources accessible via Atlas API's.
+        </p>
         <ul>
             <g:each in="${opus.recordSources}" var="recordSource">
                 <li><a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a></li>
@@ -95,6 +114,7 @@
         <h3>
             Attribute vocabulary
         </h3>
+        <p>Select a vocabulary to use, add new terms to an existing vocabulary.</p>
         <ul>
             <li>${vocab}</li>
         </ul>

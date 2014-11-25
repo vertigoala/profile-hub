@@ -151,6 +151,7 @@
                         <li><a href="${link.url}">${link.title}</a>${link.description ? ' - ' + link.description : ''}</li>
                     </g:each>
                 </ul>
+                <a class="btn" href="javascript:alert('not implemented yet')"><i class="icon icon-plus"> </i> Add link</a>
             </div>
         </g:if>
 
@@ -195,7 +196,7 @@
 
     <div class="span4">
         <div id="map" style="height: 400px; margin-top:10px;"> </div>
-        <a class="btn" href="http://avh.ala.org.au/occurrences/search?q=${occurrenceQuery}">View in Australian Virtual Herbarium</a>
+        <a class="btn" href="${opus.biocacheUrl}/occurrences/search?q=${occurrenceQuery}">View in ${opus.biocacheName}</a>
         <div id="firstImage" class="hide" style="margin-top:15px;"></div>
     </div>
 </div>
@@ -276,7 +277,7 @@
             layers: 'ALA:occurrences',
             format: 'image/png',
             transparent: true,
-            attribution: "Australian Virtual Herbarium (CHAH)",
+            attribution: "${opus.mapAttribution}",
             bgcolor: "0x000000",
             outline: "true",
             ENV: "color:FF9900;name:circle;size:4;opacity:1"
