@@ -64,7 +64,7 @@
                 <th>Taxon</th>
             </tr>
             <tr ng-repeat="profile in profiles">
-                <td><a href="${createLink(mapping: 'viewProfile')}/{{profile.guid}}">{{profile.scientificName}}</a></td>
+                <td><a href="${createLink(mapping: 'viewProfile')}/{{ profile.guid ? profile.guid : profile.uuid}}">{{profile.scientificName}}</a></td>
             </tr>
         </table>
 
