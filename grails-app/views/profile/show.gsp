@@ -151,7 +151,9 @@
                         <li><a href="${link.url}">${link.title}</a>${link.description ? ' - ' + link.description : ''}</li>
                     </g:each>
                 </ul>
+                <g:if test="${edit}">
                 <a class="btn" href="javascript:alert('not implemented yet')"><i class="icon icon-plus"> </i> Add link</a>
+                </g:if>
             </div>
         </g:if>
 

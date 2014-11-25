@@ -8,11 +8,11 @@
 
 <body>
 
-<h1>Profile collections</h1>
-
+<div style="margin-top:20px;">
 <p class="lead">
    A list of all the profile collections in this system.
 </p>
+</div>
 
 <div class="row-fluid">
 <ul>

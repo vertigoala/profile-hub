@@ -18,40 +18,38 @@
         </g:else>
     </div>
 
-    <h1>${opus.title}</h1>
-
     <div class="well pull-right">
 
-        <h3>Approved Image sources</h3>
+        <h3>Image sources</h3>
         <ul>
             <g:each in="${opus.imageSources}" var="imageSource">
                 <li><a href="http://collections.ala.org.au/public/show/${imageSource}">${dataResources[imageSource]}</a></li>
             </g:each>
         </ul>
-        <h3>Approved Specimen/Observation sources</h3>
+        <h3>Specimen sources</h3>
         <ul>
             <g:each in="${opus.recordSources}" var="recordSource">
                 <li><a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a></li>
             </g:each>
         </ul>
-        <h3>
-            Attribute vocabulary
-        </h3>
-        <ul>
-            <li>${vocab}</li>
-        </ul>
+        %{--<h3>--}%
+            %{--Attribute vocabulary--}%
+        %{--</h3>--}%
+        %{--<ul>--}%
+            %{--<li>${vocab}</li>--}%
+        %{--</ul>--}%
     </div>
 
-    <div id="opusInfo">
-        <p>
+    <div id="opusInfo" style="margin-top:20px;">
+        <p class="lead">
             ${dataResource.pubDescription}
         </p>
-        <p>
-            ${dataResource.rights}
-        </p>
-        <p>
-            ${dataResource.citation}
-        </p>
+        %{--<p>--}%
+            %{--${dataResource.rights}--}%
+        %{--</p>--}%
+        %{--<p>--}%
+            %{--${dataResource.citation}--}%
+        %{--</p>--}%
     </div>
 
     <h2>Quick search</h2>

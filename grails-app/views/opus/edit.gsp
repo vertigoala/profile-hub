@@ -10,15 +10,16 @@
 
 <div ng-app="searchProfiles">
 
-    <h1>${opus.title}</h1>
-
     <div class="pull-right">
         <g:link class="btn pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
     </div>
 
+    <div style="margin-top:20px;">
     <p class="lead">
         Configure your profile collection, uploading existing datasets to be incorporated in your profile.
     </p>
+    </div>
+
 
     <div id="opusInfo" class="well">
         <h4>Description</h4>
