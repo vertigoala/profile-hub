@@ -105,7 +105,7 @@
 <g:else>
     <g:link class="btn" mapping="viewProfile"  params="[uuid:profile.uuid]">Public view</g:link>
 </g:else>
-<a class="btn btn" href="http://localhost:8081/profile-service/profile/${profile.uuid}">JSON</a>
+<a class="btn btn" href="${grailsApplication.config.profile.service.url}/profile/${profile.uuid}">JSON</a>
 </div>
 
 <h1>${profile.scientificName?:'empty'}</h1>
@@ -314,7 +314,7 @@
             $scope.attributeTitles = [];
             $.ajax({
                 type:"GET",
-                url: "http://localhost:8081/profile-service/profile/${profile.uuid}",
+                url: "${grailsApplication.config.profile.service.url}/profile/${profile.uuid}",
                 success: function( data ) {
                      $scope.attributes = data.attributes;
                      $scope.$apply();
@@ -327,7 +327,7 @@
 
             $.ajax({
                 type:"GET",
-                url: "http://localhost:8081/profile-service/vocab/${opus.attributeVocabUuid}",
+                url: "${grailsApplication.config.profile.service.url}/vocab/${opus.attributeVocabUuid}",
                 success: function( data ) {
                      $scope.attributeTitles = data.terms;
 //                     $scope.$apply();

@@ -1,4 +1,3 @@
-
 def appName = 'profile-hub'
 def ENV_NAME = "${appName.toUpperCase()}_CONFIG"
 default_config = "/data/${appName}/config/${appName}-config.properties"
@@ -66,7 +65,6 @@ grails {
     }
 }
 
-
 grails.converters.encoding = "UTF-8"
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
@@ -97,6 +95,10 @@ skin.fluidLayout = true
 app.http.header.userId = "X-ALA-userId"
 api_key = "XXXXXXXXXXXXXXXX"
 
+if(!profile.service.url){
+    profile.service.url="http://localhost:8081/profile-service"
+}
+
 environments {
     development {
         grails.logging.jul.usebridge = true
@@ -106,13 +108,14 @@ environments {
     }
 }
 
+grails.cache.config = {
+    provider {
+        name "ehcache-profile-hub-"+(new Date().format("yyyyMMddHHmmss"))
+    }
+}
+
 // log4j configuration
 log4j.main = {
-    // Example of changing the log pattern for the default console appender:
-    //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP

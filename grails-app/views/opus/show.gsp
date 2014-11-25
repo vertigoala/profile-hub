@@ -4,24 +4,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js" type="text/javascript" ></script>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>${opus.title} | Profile collections</title>
-
 </head>
 <body>
 
 <div ng-app="searchProfiles">
 
-    <h1>${opus.title}</h1>
-
-    <div class="well pull-right">
-
-        <div class="pull-right">
+    <div class="pull-right">
         <g:if test="${!edit}">
             <g:link class="btn pull-right" mapping="editOpus"  params="[uuid:opus.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
         </g:if>
         <g:else>
             <g:link class="btn pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
         </g:else>
-        </div>
+    </div>
+
+    <h1>${opus.title}</h1>
+
+    <div class="well pull-right">
 
         <h3>Approved Image sources</h3>
         <ul>
@@ -86,7 +85,7 @@
             $scope.search = function() {
 
                 $.ajax({
-                    url: "http://localhost:8081/profile-service/profile/search",
+                    url: "${grailsApplication.config.profile.service.url}/profile/search",
                     jsonp: "callback",
                     dataType: "jsonp",
                     data: {

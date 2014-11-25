@@ -23,7 +23,7 @@ class ProfileController {
     def updateAttribute() {
         println "Updating attributing....."
         //TODO check user in ROLE.....
-        def resp = webService.doPost("http://localhost:8081/profile-service/attribute/" + params.uuid?:'', [
+        def resp = webService.doPost(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid?:'', [
                 userId: "to-be-added",
                 title : params.title,
                 text : params.text,
@@ -37,7 +37,7 @@ class ProfileController {
 
     def deleteAttribute(){
         //TODO check user in ROLE.....
-        def resp = webService.doDelete("http://localhost:8081/profile-service/attribute/" + params.uuid +"?profileUuid=" + params.profileUuid)
+        def resp = webService.doDelete(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid +"?profileUuid=" + params.profileUuid)
         response.setContentType("application/json")
         response.setStatus(201)
 //        render resp as JSON
@@ -51,9 +51,9 @@ class ProfileController {
 
         def js = new JsonSlurper()
 
-        def profile = js.parseText(new URL("http://localhost:8081/profile-service/profile/" + URLEncoder.encode(uuid, "UTF-8")).text)
+        def profile = js.parseText(new URL(grailsApplication.config.profile.service.url + "/profile/" + URLEncoder.encode(uuid, "UTF-8")).text)
 
-        def opus = js.parseText(new URL("http://localhost:8081/profile-service/opus/${profile.opusId}").text)
+        def opus = js.parseText(new URL(grailsApplication.config.profile.service.url + "/opus/${profile.opusId}").text)
 
         def query = ""
 
