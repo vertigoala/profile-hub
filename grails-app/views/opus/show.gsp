@@ -9,16 +9,17 @@
 
 <div ng-app="searchProfiles">
 
-    <div class="pull-right">
-        <g:if test="${!edit}">
-            <g:link class="btn pull-right" mapping="editOpus"  params="[uuid:opus.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
-        </g:if>
-        <g:else>
-            <g:link class="btn pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
-        </g:else>
-    </div>
+
 
     <div class="well pull-right">
+        <div class="pull-right">
+            <g:if test="${!edit}">
+                <g:link class="btn pull-right" mapping="editOpus"  params="[uuid:opus.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
+            </g:if>
+            <g:else>
+                <g:link class="btn pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
+            </g:else>
+        </div>
 
         <h3>Image sources</h3>
         <ul>
