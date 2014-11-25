@@ -101,38 +101,6 @@
     </div>
 </div>
 
-<script>
-
-    var searchModule = angular.module('searchProfiles', [])
-            .controller('ProfileSearch', ['$scope', function($scope) {
-
-                $scope.search = function() {
-
-                    $.ajax({
-                        url: "${grailsApplication.config.profile.service.url}/profile/search",
-                        jsonp: "callback",
-                        dataType: "jsonp",
-                        data: {
-                            opusUuid: "${opus.uuid}",
-                            scientificName: $scope.searchTerm,
-                            format: 'json'
-                        },
-                        success: function( data, status ) {
-                            console.log("Success - " + data.length );
-                            $scope.profiles = data;
-                            if(data.length > 0){
-                                console.log("Success - " + data[0].scientificName );
-                            }
-                            $scope.$apply();
-                        },
-                        error: function(jqXHR, textStatus, errorThrown){
-                            console.log("Error completing images - JSON - " + errorThrown);
-                        }
-                    });
-                };
-            }]);
-</script>
-
 
 </body>
 

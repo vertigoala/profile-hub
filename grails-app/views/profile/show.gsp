@@ -187,6 +187,10 @@
         <div class="bs-docs-example hide" id="browse_images" data-content="Images">
         </div>
 
+        <div class="bs-docs-example hide" id="browse_lists" data-content="Conservation & sensitivity lists">
+            <ul></ul>
+        </div>
+
     </div>
 
     <div class="span4">
@@ -204,7 +208,33 @@
     $(function() {
         addTaxonMap();
         addImages();
+        addLists();
     });
+
+    function addLists(){
+        $.ajax({
+            url: "http://lists.ala.org.au/ws/species/${profile.guid}",
+            jsonp: "callback",
+            dataType: "jsonp",
+            data: {
+                format: 'json'
+            },
+            success: function( response ) {
+                if(response.length > 0) {
+                    console.log("number of list entries: " + response.length);
+                    for(var i=0; i< response.length; i++){
+                        $('#browse_lists ul').append('<li><a href="http://lists.ala.org.au/speciesListItem/list/' + response[i].dataResourceUid +'">' + response[i].list.listName + '</a></li>');
+                    }
+                    $('#browse_lists').show();
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                console.log("Error collecting lists JSON - " + errorThrown);
+            }
+        });
+
+    }
+
 
     function addImages(){
 
