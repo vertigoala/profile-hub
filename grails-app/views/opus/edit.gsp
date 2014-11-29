@@ -4,11 +4,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js" type="text/javascript" ></script>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>${opus.title} | Profile collections</title>
-
+    <script type="text/javascript" src="http://markusslima.github.io/bootstrap-filestyle/1.0.6/js/bootstrap-filestyle.min.js"> </script>
+    <style type="text/css">
+    .bootstrap-filestyle label { margin-bottom:8px; }
+    </style>
 </head>
 <body>
 
-<div ng-app="searchProfiles">
+<div ng-app="opusEditor">
 
     <div class="pull-right">
         <g:link class="btn pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
@@ -20,6 +23,18 @@
     </p>
     </div>
 
+    <div id="opusInfo" class="well">
+        <h4>Styling</h4>
+        <p>
+            <label>Banner image:</label>
+            <input type="text" class="input-xxlarge" name="bannerUrl" value="${opus.bannerUrl}"/>
+        </p>
+        <p>
+            <label>Logo:</label>
+            <input type="text" class="input-xxlarge" name="logoUrl" value="${opus.logoUrl}"/>
+        </p>
+        <a class="btn" href="javascript:alert('Not implemented yet')">Save</a>
+    </div>
 
     <div id="opusInfo" class="well">
         <h4>Description</h4>
@@ -55,13 +70,18 @@
 
 
     <g:if test="${opus.enableTaxaUpload}">
-    <div class="well">
+    <div class="well" ng-controller="TaxaController">
         <h3>Upload taxa</h3>
         <p>Click below to upload your own list of taxa in CSV format. A profile page will be created for each scientific name uploaded.<br/>
             This list can in include recognised scientific names and/or operational taxonomic unit (OTUs).
             Recognised names will be linked the Australian National Checklists.
         </p>
-        <a href="javascript:alert('Not implemented yet!');" class="btn"><i class="icon-upload" ></i> Upload</a>
+        <br/>
+        <div>
+            <input type="file" id="taxaUploadFile" name="taxaUploadFile" />
+        </div>
+        <br/>
+        <button class="btn" ng-click="taxaUpload()"><i class="icon-upload"></i> Upload taxa</button>
     </div>
     </g:if>
 
@@ -97,6 +117,7 @@
                 <li><a href="http://collections.ala.org.au/public/show/${imageSource}">${dataResources[imageSource]}</a></li>
             </g:each>
         </ul>
+        <a href="javascript:alert('Not implemented yet!');" class="btn"><i class="" onclick="alert('Not implemented yet!');"></i> Save</a>
     </div>
 
     <div class="well">
@@ -109,6 +130,7 @@
                 <li><a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a></li>
             </g:each>
         </ul>
+        <a href="javascript:alert('Not implemented yet!');" class="btn"><i class="" onclick="alert('Not implemented yet!');"></i> Save</a>
     </div>
 
     <div class="well">
@@ -119,8 +141,45 @@
         <ul>
             <li>${vocab}</li>
         </ul>
+        <a href="javascript:alert('Not implemented yet!');" class="btn"><i class="icon-edit" onclick="alert('Not implemented yet!');"></i> Update vocabulary</a>
     </div>
 </div>
+
+<r:script>
+    var opusEditor = angular.module('opusEditor', [])
+        .controller('TaxaController', ['$scope', function($scope) {
+            $scope.taxaUpload = function(){
+                console.log("Taxa upload....");
+                var file = document.getElementById('taxaUploadFile').files[0];
+	            var formData = new FormData();
+                formData.append("taxaUploadFile", file);
+                formData.append("opusId", "${opus.uuid}");
+
+                //send you binary data via $http or $resource or do anything else with it
+                $.ajax({
+                    url: '${grailsApplication.config.profile.service.url}/opus/taxaUpload',
+                    type: 'POST',
+                    data: formData,
+                    cache: false,
+                    dataType: 'json',
+                    processData: false, // Don't process the files
+                    contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+                    success: function(data, textStatus, jqXHR){
+                        alert("Successful upload - Loaded:" + data.taxaCreated + ", lines skipped: " + data.linesSkipped + ", already exists: " + data.alreadyExists);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        // Handle errors here
+                        alert("error upload - " + textStatus);
+                        console.log('ERRORS: ' + textStatus);
+                        console.log(errorThrown)
+                        // STOP LOADING SPINNER
+                    }
+                });
+            }
+
+            $(":file").filestyle();
+    }]);
+</r:script>
 
 
 </body>

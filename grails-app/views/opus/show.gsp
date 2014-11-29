@@ -9,71 +9,62 @@
 
 <div ng-app="searchProfiles">
 
+    <div class="row-fluid">
 
+     <div class="span8">
 
-    <div class="well pull-right">
-        <div class="pull-right">
-            <g:if test="${!edit}">
-                <g:link class="btn pull-right" mapping="editOpus"  params="[uuid:opus.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
-            </g:if>
-            <g:else>
-                <g:link class="btn pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
-            </g:else>
+        <div id="opusInfo" style="margin-top:20px;">
+            <p class="lead">
+                ${dataResource.pubDescription}
+            </p>
         </div>
 
-        <h3>Image sources</h3>
-        <ul>
-            <g:each in="${opus.imageSources}" var="imageSource">
-                <li><a href="http://collections.ala.org.au/public/show/${imageSource}">${dataResources[imageSource]}</a></li>
-            </g:each>
-        </ul>
-        <h3>Specimen sources</h3>
-        <ul>
-            <g:each in="${opus.recordSources}" var="recordSource">
-                <li><a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a></li>
-            </g:each>
-        </ul>
-        %{--<h3>--}%
-            %{--Attribute vocabulary--}%
-        %{--</h3>--}%
-        %{--<ul>--}%
-            %{--<li>${vocab}</li>--}%
-        %{--</ul>--}%
-    </div>
+        <h2>Quick search</h2>
+        <div ng-controller="ProfileSearch">
+            <div class="input-append">
+                <input ng-change="search()" ng-model="searchTerm" name="searchTerm" class="input-xxlarge" id="searchTerm" type="text" ng-model="scientificName" />
+                <button class="btn" type="button">Search</button>
+            </div>
 
-    <div id="opusInfo" style="margin-top:20px;">
-        <p class="lead">
-            ${dataResource.pubDescription}
-        </p>
-        %{--<p>--}%
-            %{--${dataResource.rights}--}%
-        %{--</p>--}%
-        %{--<p>--}%
-            %{--${dataResource.citation}--}%
-        %{--</p>--}%
-    </div>
+            <table class="table table-striped" ng-show="profiles.length > 0">
+                <tr>
+                    <th>Taxon</th>
+                </tr>
+                <tr ng-repeat="profile in profiles">
+                    <td><a href="${createLink(mapping: 'viewProfile')}/{{ profile.uuid }}">{{profile.scientificName}}</a></td>
+                </tr>
+            </table>
 
-    <h2>Quick search</h2>
-    <div ng-controller="ProfileSearch">
-        <div class="input-append">
-            <input ng-change="search()" ng-model="searchTerm" name="searchTerm" class="input-xxlarge" id="searchTerm" type="text" ng-model="scientificName" />
-            <button class="btn" type="button">Search</button>
-        </div>
-
-        <table class="table table-striped" ng-show="profiles.length > 0">
-            <tr>
-                <th>Taxon</th>
-            </tr>
-            <tr ng-repeat="profile in profiles">
-                <td><a href="${createLink(mapping: 'viewProfile')}/{{ profile.guid ? profile.guid : profile.uuid}}">{{profile.scientificName}}</a></td>
-            </tr>
-        </table>
-
-        <div ng-show="profiles.length == 0">
-            <p>No matching results</p>
+            <div ng-show="profiles.length == 0">
+                <p>No matching results</p>
+            </div>
         </div>
     </div>
+    <div class="span4">
+        <div class="well" style="margin-top:20px;">
+            <div>
+                <g:if test="${!edit}">
+                    <g:link class="btn pull-right" mapping="editOpus"  params="[uuid:opus.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
+                </g:if>
+                <g:else>
+                    <g:link class="btn pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
+                </g:else>
+            </div>
 
+            <h3>Image sources</h3>
+            <ul>
+                <g:each in="${opus.imageSources}" var="imageSource">
+                    <li><a href="http://collections.ala.org.au/public/show/${imageSource}">${dataResources[imageSource]}</a></li>
+                </g:each>
+            </ul>
+            <h3>Specimen sources</h3>
+            <ul>
+                <g:each in="${opus.recordSources}" var="recordSource">
+                    <li><a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a></li>
+                </g:each>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <script>

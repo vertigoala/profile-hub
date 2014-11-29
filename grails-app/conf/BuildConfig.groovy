@@ -43,5 +43,7 @@ grails.project.dependency.resolution = {
         build ":tomcat:7.0.55"
         compile ":scaffolding:2.1.2"
         compile ':cache:1.1.6'
+        compile ':uploadr:0.8.2'
+        compile ":modernizr:2.7.1.1"
     }
 }

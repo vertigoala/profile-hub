@@ -77,12 +77,20 @@ class ProfileController {
         def classification = []
         def availableProfiles = []
         if(profile.guid){
-            classification = js.parseText(new URL("http://bie.ala.org.au/ws/classification/" + profile.guid).text)
+            try {
+                classification = js.parseText(new URL("http://bie.ala.org.au/ws/classification/" + profile.guid).text)
+            } catch (Exception e){
+                println "Unable to load classification for " + profile.guid
+            }
         }
 
         def speciesProfile
         if(profile.guid){
-            speciesProfile = js.parseText(new URL("http://bie.ala.org.au/ws/species/" + profile.guid).text)
+            try {
+                speciesProfile = js.parseText(new URL("http://bie.ala.org.au/ws/species/" + profile.guid).text)
+            } catch (Exception e){
+                println "Unable to load profile for " + profile.guid
+            }
         }
 
         //WMS URL
