@@ -103,6 +103,7 @@
     <g:link class="btn btn" mapping="editProfile"  params="[uuid:profile.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
 </g:if>
 <g:else>
+    <button class="btn" onclick="javascript:alert('Not implemented - through to users edits')">Logged in: ${currentUser}</button>
     <g:link class="btn" mapping="viewProfile"  params="[uuid:profile.uuid]">Public view</g:link>
 </g:else>
 <a class="btn btn" href="${grailsApplication.config.profile.service.url}/profile/${profile.uuid}">JSON</a>

@@ -18,10 +18,13 @@ class UserService {
         def user
 
         if (u?.userId) {
-            user = new UserDetails(u.userDisplayName, u.email, u.userId)
+            user = new UserDetails()
+            user.displayName = u.userDisplayName
+            user.userId = u.userId
+            user.userName = u.email
         }
 
-        return null
+        return user
     }
 
     def userInRole(role) {

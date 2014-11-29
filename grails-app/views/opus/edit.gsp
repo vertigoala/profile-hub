@@ -1,3 +1,4 @@
+<%@ page import="au.org.ala.web.AuthService" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +15,8 @@
 <div ng-app="opusEditor">
 
     <div class="pull-right">
-        <g:link class="btn pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
+        <button class="btn" onclick="javascript:alert('Not implemented - through to users edits')">Logged in: ${currentUser}</button>
+        <g:link class="btn " mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
     </div>
 
     <div style="margin-top:20px;">

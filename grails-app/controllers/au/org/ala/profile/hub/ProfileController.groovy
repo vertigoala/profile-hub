@@ -6,6 +6,7 @@ import groovy.json.JsonSlurper
 class ProfileController {
 
     WebService webService
+    def authService
 
     def index() {}
 
@@ -13,6 +14,7 @@ class ProfileController {
         def model = buildProfile(params.uuid)
         //need CAS check here
         model.put("edit", true)
+        model.put("currentUser", authService.getDisplayName())
         render(view: "show", model: model)
     }
 
@@ -29,6 +31,8 @@ class ProfileController {
                 text : params.text,
                 profileUuid : params.profileUuid,
                 uuid : params.uuid?:'',
+                userId : authService.getUserId(),
+                userDisplayName:authService.getDisplayName()
         ])
         response.setContentType("application/json")
         response.setStatus(201)

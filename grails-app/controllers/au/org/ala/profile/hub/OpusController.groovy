@@ -4,6 +4,8 @@ import groovy.json.JsonSlurper
 
 class OpusController {
 
+    def authService
+
     def index() {
         def js = new JsonSlurper()
         def opui = js.parseText(new URL(grailsApplication.config.profile.service.url + "/opus/" ).text)
@@ -32,7 +34,8 @@ class OpusController {
                 logoUrl: opus.logoUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
                 bannerUrl: opus.bannerUrl?:'http://images.ala.org.au/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original',
                 pageTitle: opus.title?:'Profile collections',
-                vocab: vocab?.name?:'Not specified'
+                vocab: vocab?.name?:'Not specified',
+                "currentUser": authService.getDisplayName()
         ])
     }
 
