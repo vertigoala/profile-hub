@@ -88,7 +88,11 @@
     <g:if test="${opus.enableOccurrenceUpload}">
     <div class="well">
         <h3>Occurrence datasets</h3>
-        <p>Click below to upload your own occurrence data</p>
+        <p>Click below to upload your own occurrence data. This will upload data into the <b>sandbox</b>
+        (separate from main Atlas index).
+        <br/>You can <b>upload multiple datasets</b> and
+            <b>overlay with data from the Atlas</b> index on the maps on profile pages.
+        </p>
         <a href="javascript:alert('Not implemented yet!');" class="btn"><i class="icon-upload" ></i> Upload</a>
     </div>
     </g:if>
@@ -96,7 +100,9 @@
     <g:if test="${opus.enablePhyloUpload}">
     <div class="well">
         <h3>Phylogenetic trees</h3>
-        <p>Click below to upload your nexus tree or select from existing trees stored in the or Treebase</p>
+        <p>Click below to upload your nexus tree or select from existing trees stored in the or Treebase.
+            Phylogenetic tree will then be included on profile pages.
+        </p>
         <a href="javascript:alert('Not implemented yet!');" class="btn"><i class="icon-upload" onclick="alert('Not implemented yet!');"></i> Upload</a>
     </div>
     </g:if>
@@ -125,11 +131,14 @@
         <p>Configure the record sources to be included in your profile pages. This will set what data is used on maps.
             These are data resources accessible via Atlas API's.
         </p>
-        <ul>
+        <table>
             <g:each in="${opus.recordSources}" var="recordSource">
-                <li><a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a></li>
+                <tr>
+                    <td><a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a></td>
+                    <td><button class="btn btn-mini btn-danger"><i class="icon-minus icon-white"></i></button></td>
+                </tr>
             </g:each>
-        </ul>
+        </table>
         <a href="javascript:alert('Not implemented yet!');" class="btn"><i class="" onclick="alert('Not implemented yet!');"></i> Save</a>
     </div>
 

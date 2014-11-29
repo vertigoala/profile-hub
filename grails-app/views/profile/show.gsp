@@ -116,17 +116,21 @@
         <div ng-controller="AttributeEditor">
             <div class="ng-show" ng-show="!readonly">
                 <button ng-click="addAttribute()" class="btn"><i class="icon icon-plus"></i>Add attribute</button>
+                <button ng-click="addImage()" class="btn"><i class="icon icon-plus"></i>Add image</button>
             </div>
             <div ng-repeat="attribute in attributes">
                 <div class="well attribute-edit" id="browse_attributes_edit" class=" ng-show" ng-show="!readonly">
                     <g:textField typeahead="attributeTitle.name for attributeTitle in attributeTitles | filter:$viewValue" class="form-control attribute-header-input" ng-model="attribute.title" name="title" value="title"/>
                     <g:textArea class="field span12" rows="10" ng-model="attribute.text" name="text" />
                     <div class="row-fluid">
-                        <span class="span8"></span>
+                        <span class="span8"><span class="pull-left">{{ attribute.status }}</span></span>
                         <span class="span4">
                             <button class="btn btn-danger pull-right" ng-click="deleteAttribute($index)"> Delete </button>
                             &nbsp;
-                            <button class="btn btn pull-right" ng-click="saveAttribute($index)"> Save </button>
+                            <button class="btn btn pull-right" ng-click="saveAttribute($index)">
+                                <span ng-show="!isSaving($index)" id="saved">Save</span>
+                                <span ng-show="isSaving($index)" id="saving">Saving....</span>
+                            </button>
                         </span>
                     </div>
                 </div>
@@ -167,7 +171,7 @@
             </div>
         </g:if>
 
-        <g:if test="${speciesProfile}">
+        <g:if test="${speciesProfile && speciesProfile.taxonName}">
             <div class="bs-docs-example" id="browse_names" data-content="Nomenclature">
                 <ul style="list-style: none; margin-left:0px;">
                     <li>
@@ -345,6 +349,8 @@
             $scope.readonly = ${!edit};
             $scope.attributes = [];
             $scope.attributeTitles = [];
+            $scope.isSaving = false;
+
             $.ajax({
                 type:"GET",
                 url: "${grailsApplication.config.profile.service.url}/profile/${profile.uuid}",
@@ -403,15 +409,23 @@
             }
             $scope.addAttribute = function(){
                 $scope.attributes.unshift(
-                    {"uuid":"", "title":"to-be-added", "text":"to-be-added", contributor: []}
+                    {"uuid":"", "title":"Description", "text":"My description....", contributor: []}
                 );
                 console.log("adding attributes: " + $scope.attributes.length);
+            }
+
+            $scope.addImage = function(){
+                alert("Not implemented yet. Would upload to biocache & store image in image service");
+            }
+
+            $scope.isSaving = function(idx){
+                return $scope.attributes[idx].saving;
             }
 
             $scope.saveAttribute = function(idx) {
                 console.log("Saving attribute " + idx);
                 var attribute = $scope.attributes[idx];
-                $scope.attributes[idx].status = "Saving...";
+                $scope.attributes[idx].saving = true;
 
                 //ajax post
                 $.ajax({
@@ -426,14 +440,17 @@
                     },
 
                     success: function( data ) {
-                         $scope.attributes[idx].status = "Saved";
+                         $scope.attributes[idx].saving = false;
+                         $scope.attributes[idx].status = "Last saved " + new Date();
                          console.log("uuid before save: " + $scope.attributes[idx].uuid )
                          $scope.attributes[idx].uuid = data.uuid;
                          console.log("uuid after save: " + $scope.attributes[idx].uuid )
-                         //$scope.$apply();
+                         $scope.$apply();
                     },
                     error: function(jqXHR, textStatus, errorThrown){
+                        $scope.attributes[idx].saving = false;
                         $scope.attributes[idx].status = "There was a problem saving...";
+                        $scope.$apply();
                     }
                 });
             };
