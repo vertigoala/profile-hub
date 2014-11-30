@@ -163,6 +163,10 @@
         </g:if>
         <g:elseif test="${edit}">
             <div ng-controller="LinksEditor" class="bs-docs-example" id="browse_links" data-content="Links">
+                <div style="margin-bottom: 10px;">
+                    <button class="btn">Save changes</button>
+                    <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
+                </div>
                 <table class="table table-striped">
                     <tr ng-repeat="link in links">
                         <td>
@@ -176,7 +180,6 @@
                         <td><button class="btn" ng-click="deleteLink($index)"><i class="icon icon-minus"></i> Remove</button></td>
                     </tr>
                 </table>
-                 <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
             </div>
         </g:elseif>
 
@@ -188,12 +191,12 @@
                 <b>http://biodiversitylibrary.org/page/29003916</b>
             </p>
 
-            <div>
-                <button class="btn pull-right">Save changes</button>
-                <button class="btn  pull-right" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
+            <div style="margin-bottom: 10px;">
+                <button class="btn">Save changes</button>
+                <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
             </div>
 
-            <table class="table table-striped" >
+            <table class="table table-striped">
                 <tr ng-repeat="link in bhlLinks">
                     <td>
                         <label>URL</label>
@@ -202,6 +205,25 @@
                         <input type="text" class="input-xxlarge" ng-model="link.title"  value="{{link.title}}"/><br/>
                         <label>Description</label>
                         <textarea rows="3" class="input-xxlarge" ng-model="link.description">{{link.description}}</textarea>
+                        <br/>
+                        <cite ng-show="hasThumbnail($index)">
+                            <span><b>BHL metadata</b></span><br/>
+                            <span>
+                                {{link.bhlFullTitle}}
+                            </span>
+                            <br/>
+                            <span>
+                                {{link.bhlEdition}}
+                            </span>
+                            <br/>
+                            <span>
+                                {{link.bhlPublisherName}}
+                            </span>
+                            <br/>
+                            <span>
+                                {{link.bhlDoi}}
+                            </span>
+                        </cite>
                     </td>
                     <td>
                         <button class="btn" ng-click="deleteLink($index)"><i class="icon icon-minus"></i> Remove</button>
@@ -273,6 +295,9 @@
     });
 
     function addLists(){
+
+
+
         $.ajax({
             url: "http://lists.ala.org.au/ws/species/${profile.guid}",
             jsonp: "callback",
@@ -423,9 +448,24 @@
                     //TODO trailing slash ?
 
                     var lastSlash = url.lastIndexOf("/");
-                    var pageId = url.substring(lastSlash );
+                    var pageId = url.substring(lastSlash + 1);
                     console.log("URL - pageId " + pageId);
                     $scope.bhlLinks[idx].thumbnail = "http://biodiversitylibrary.org/pagethumb/" + pageId;
+
+                    $.ajax({
+                        type:"GET",
+                        url: "${createLink(controller: "BHL", action:"pageLookup")}/" + pageId,
+                        success: function( data ) {
+                             $scope.bhlLinks[idx].bhlFullTitle = data.Result.FullTitle;
+                             $scope.bhlLinks[idx].bhlEdition = data.Result.Edition;
+                             $scope.bhlLinks[idx].bhlPublisherName = data.Result.PublisherName;
+                             $scope.bhlLinks[idx].bhlDoi = data.Result.Doi;
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            console.log("There was a problem retrieving profile..." + textStatus);
+                        }
+                    })
+
                     $scope.$apply();
                 }
             }

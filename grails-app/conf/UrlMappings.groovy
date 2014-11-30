@@ -15,6 +15,8 @@ class UrlMappings {
         name viewOpus: "/opus/$uuid"(controller: 'opus', action: 'show')
         name editOpus: "/opus/edit/$uuid"(controller: 'opus', action: 'edit')
 
+        name bhl: "/bhl/$pageId"(controller: 'BHL', action: 'pageLookup')
+
         "/$controller/$action?/$id?(.$format)?"{
             constraints {
                 // apply constraints here
