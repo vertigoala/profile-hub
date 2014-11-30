@@ -161,7 +161,7 @@
                 </g:if>
             </div>
         </g:if>
-        <g:else>
+        <g:elseif test="${edit}">
             <div ng-controller="LinksEditor" class="bs-docs-example" id="browse_links" data-content="Links">
                 <table class="table table-striped">
                     <tr ng-repeat="link in links">
@@ -178,14 +178,22 @@
                 </table>
                  <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
             </div>
-        </g:else>
+        </g:elseif>
 
+        <g:if test="${edit}">
         <div ng-controller="BHLLinksEditor" class="bs-docs-example" id="browse_bhllinks" data-content="Biodiversity Heritage Library references">
+
             <p class="lead">
                 Add links to the biodiversity heritage library. Links should be of the form:
                 <b>http://biodiversitylibrary.org/page/29003916</b>
             </p>
-            <table class="table table-striped">
+
+            <div>
+                <button class="btn pull-right">Save changes</button>
+                <button class="btn  pull-right" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
+            </div>
+
+            <table class="table table-striped" >
                 <tr ng-repeat="link in bhlLinks">
                     <td>
                         <label>URL</label>
@@ -199,13 +207,13 @@
                         <button class="btn" ng-click="deleteLink($index)"><i class="icon icon-minus"></i> Remove</button>
                         <br/>
                         <div ng-show="hasThumbnail($index)">
-                            <img ng-model="link.thumbnail" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
+                            <img ng-model="link.thumbnail" style="max-height:200px;" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
                         </div>
                     </td>
                 </tr>
             </table>
-            <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
         </div>
+        </g:if>
 
         <g:if test="${classification}">
             <div class="bs-docs-example" id="browse_taxonomy" data-content="Taxonomy from ${speciesProfile.taxonConcept.infoSourceName}">
