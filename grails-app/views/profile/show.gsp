@@ -96,7 +96,7 @@
 
 <body>
 
-<div id="container"  ng-app="attributes">
+<div id="container" ng-app="profileEditor">
 <div class="pull-right" style="margin-top:20px;">
 
 <g:if test="${!edit}">
@@ -149,7 +149,7 @@
             </div>
         </div>
 
-        <g:if test="${profile.links}">
+        <g:if test="${profile.links && !edit}">
             <div class="bs-docs-example" id="browse_links" data-content="Links">
                 <ul>
                     <g:each in="${profile.links}" var="link">
@@ -161,6 +161,51 @@
                 </g:if>
             </div>
         </g:if>
+        <g:else>
+            <div ng-controller="LinksEditor" class="bs-docs-example" id="browse_links" data-content="Links">
+                <table class="table table-striped">
+                    <tr ng-repeat="link in links">
+                        <td>
+                            <label>URL</label>
+                            <input type="text" class="input-xxlarge" value="{{link.url}}"/><br/>
+                            <label>Title</label>
+                            <input type="text" class="input-xxlarge" value="{{link.title}}"/><br/>
+                            <label>Description</label>
+                            <textarea rows="3" class="input-xxlarge">{{link.description}}</textarea>
+                        </td>
+                        <td><button class="btn" ng-click="deleteLink($index)"><i class="icon icon-minus"></i> Remove</button></td>
+                    </tr>
+                </table>
+                 <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
+            </div>
+        </g:else>
+
+        <div ng-controller="BHLLinksEditor" class="bs-docs-example" id="browse_bhllinks" data-content="Biodiversity Heritage Library references">
+            <p class="lead">
+                Add links to the biodiversity heritage library. Links should be of the form:
+                <b>http://biodiversitylibrary.org/page/29003916</b>
+            </p>
+            <table class="table table-striped">
+                <tr ng-repeat="link in bhlLinks">
+                    <td>
+                        <label>URL</label>
+                        <input type="text" class="input-xxlarge" ng-model="link.url" value="{{link.url}}"  ng-change="updateThumbnail($index)"/><br/>
+                        <label>Title</label>
+                        <input type="text" class="input-xxlarge" ng-model="link.title"  value="{{link.title}}"/><br/>
+                        <label>Description</label>
+                        <textarea rows="3" class="input-xxlarge" ng-model="link.description">{{link.description}}</textarea>
+                    </td>
+                    <td>
+                        <button class="btn" ng-click="deleteLink($index)"><i class="icon icon-minus"></i> Remove</button>
+                        <br/>
+                        <div ng-show="hasThumbnail($index)">
+                            <img ng-model="link.thumbnail" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
+        </div>
 
         <g:if test="${classification}">
             <div class="bs-docs-example" id="browse_taxonomy" data-content="Taxonomy from ${speciesProfile.taxonConcept.infoSourceName}">
@@ -240,7 +285,6 @@
                 console.log("Error collecting lists JSON - " + errorThrown);
             }
         });
-
     }
 
 
@@ -344,7 +388,62 @@
 </script>
 
 <r:script>
-    var attributeEditor = angular.module('attributes', ['ui.bootstrap'])
+
+    var profileEditor = angular.module('profileEditor', ['ui.bootstrap'])
+        .controller('BHLLinksEditor', ['$scope', function($scope) {
+            $scope.bhlLinks = [];
+
+            $scope.hasThumbnail = function(idx){
+                if($scope.bhlLinks[idx].thumbnail != ''){
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            $scope.updateThumbnail = function(idx){
+                console.log("Updating...");
+                var url = $scope.bhlLinks[idx].url.trim();
+                if(url != ""){
+                    //remove any anchors
+                    console.log("URL " + url);
+                    var anchorIdx = url.lastIndexOf("#");
+                    if(anchorIdx > 0) {
+                        url = url.substring(0, anchorIdx - 1);
+                    }
+                    console.log("URL -stripped " + url);
+                    //TODO trailing slash ?
+
+                    var lastSlash = url.lastIndexOf("/");
+                    var pageId = url.substring(lastSlash );
+                    console.log("URL - pageId " + pageId);
+                    $scope.bhlLinks[idx].thumbnail = "http://biodiversitylibrary.org/pagethumb/" + pageId;
+                    $scope.$apply();
+                }
+            }
+            $scope.addLink = function(){
+                $scope.bhlLinks.unshift(
+                {   url:"",
+                    description: "",
+                    title: "",
+                    thumbnail: ""
+                });
+            }
+            $scope.deleteLink = function(idx){
+                $scope.bhlLinks.splice(idx, 1);
+            }
+
+        }])
+        .controller('LinksEditor', ['$scope', function($scope) {
+            $scope.links = [];
+            $scope.addLink = function(){
+                $scope.links.unshift({url:"http://", description:"Add description", title:"Title"});
+            }
+            $scope.deleteLink = function(idx){
+                $scope.links.splice(idx, 1);
+            }
+
+        }])
         .controller('AttributeEditor', ['$scope', function($scope) {
 
             $scope.readonly = ${!edit};
@@ -363,7 +462,6 @@
                     console.log("There was a problem retrieving profile..." + textStatus);
                 }
             })
-
 
             $.ajax({
                 type:"GET",
@@ -457,8 +555,6 @@
             };
     }]);
 </r:script>
-
-
 
 
 </body>
