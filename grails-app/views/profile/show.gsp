@@ -209,19 +209,19 @@
                         <cite ng-show="hasThumbnail($index)">
                             <span><b>BHL metadata</b></span><br/>
                             <span>
-                                {{link.bhlFullTitle}}
+                                Title: {{link.bhlFullTitle}}
                             </span>
                             <br/>
                             <span>
-                                {{link.bhlEdition}}
+                                Edition: {{link.bhlEdition}}
                             </span>
                             <br/>
                             <span>
-                                {{link.bhlPublisherName}}
+                                Publisher: {{link.bhlPublisherName}}
                             </span>
                             <br/>
                             <span>
-                                {{link.bhlDoi}}
+                               DOI: <a href="http://dx.doi.org/{{link.bhlDoi}}">{{link.bhlDoi}}</a>
                             </span>
                         </cite>
                     </td>
@@ -229,7 +229,7 @@
                         <button class="btn" ng-click="deleteLink($index)"><i class="icon icon-minus"></i> Remove</button>
                         <br/>
                         <div ng-show="hasThumbnail($index)">
-                            <img ng-model="link.thumbnail" style="max-height:200px;" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
+                            <img ng-model="link.thumbnail" style="margin-top:20px; max-height:200px;" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
                         </div>
                     </td>
                 </tr>
@@ -460,6 +460,7 @@
                              $scope.bhlLinks[idx].bhlEdition = data.Result.Edition;
                              $scope.bhlLinks[idx].bhlPublisherName = data.Result.PublisherName;
                              $scope.bhlLinks[idx].bhlDoi = data.Result.Doi;
+                             $scope.$apply();
                         },
                         error: function(jqXHR, textStatus, errorThrown){
                             console.log("There was a problem retrieving profile..." + textStatus);
