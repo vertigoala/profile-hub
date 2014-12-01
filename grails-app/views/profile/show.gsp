@@ -231,7 +231,11 @@
                         <br/>
                         <div ng-show="hasThumbnail($index)">
                             <a href="{{link.url}}" target="_blank">
-                                <img ng-model="link.thumbnail" style="margin-top:20px; max-height:200px;" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
+                                <img
+                                     style="margin-top:20px; max-height:200px;"
+                                     ng-src="{{link.thumbnail}}"
+                                     alt="{{link.title}}"
+                                     class="img-rounded"/>
                             </a>
                         </div>
                     </td>
@@ -244,9 +248,9 @@
                 <table class="table table-striped">
                     <tr ng-repeat="link in bhl">
                         <td>
-                            <span>
+                            <h4 style="margin-bottom: 0; padding-bottom:0;">
                                 Title: {{link.title}}
-                            </span>
+                            </h4>
                             <br/>
                             <span>
                                 Description: {{link.description}}
@@ -255,7 +259,7 @@
 
                             <cite ng-show="hasThumbnail($index)">
                                 <span>
-                                    Title: {{link.fullTitle}}
+                                    BHL title: {{link.fullTitle}}
                                 </span>
                                 <br/>
                                 <span>
@@ -288,7 +292,13 @@
             <div class="bs-docs-example" id="browse_taxonomy" data-content="Taxonomy from ${speciesProfile.taxonConcept.infoSourceName}">
                 <ul>
                     <g:each in="${classification}" var="taxon">
-                        <li><g:link mapping="viewProfile" params="${[uuid: taxon.guid]}">${taxon.rank.capitalize()}: ${taxon.scientificName}</g:link></li>
+                        <g:if test="${taxon.profileUuid}">
+                            <li><g:link mapping="viewProfile" params="${[uuid: taxon.profileUuid]}">${taxon.rank.capitalize()}: ${taxon.scientificName}</g:link></li>
+                        </g:if>
+                        <g:else>
+                            <li>${taxon.rank.capitalize()}: ${taxon.scientificName}</li>
+                        </g:else>
+
                     </g:each>
                 </ul>
             </div>
@@ -316,8 +326,6 @@
 
         <div class="bs-docs-example hide" id="browse_images" data-content="Images">
         </div>
-
-
     </div>
 
     <div class="span4">
@@ -477,6 +485,9 @@
                 url: "${grailsApplication.config.profile.service.url}/profile/${profile.uuid}",
                 success: function( data ) {
                      $scope.bhl = data.bhl;
+                     for(var i=0; i<$scope.bhl.length; i++){
+                        $scope.bhl[i].thumbnail = "http://biodiversitylibrary.org/pagethumb/" + extractPageId($scope.bhl[i].url);
+                     }
                      $scope.$apply();
                 },
                 error: function(jqXHR, textStatus, errorThrown){
@@ -484,10 +495,23 @@
                 }
             })
 
+            function extractPageId(url){
+                console.log("URL " + url);
+                var anchorIdx = url.lastIndexOf("#");
+                if(anchorIdx > 0) {
+                    url = url.substring(0, anchorIdx - 1);
+                }
+                console.log("URL - stripped: " + url);
+
+                var lastSlash = url.lastIndexOf("/");
+                var pageId = url.substring(lastSlash + 1);
+                console.log("URL - pageId " + pageId);
+                return pageId;
+            }
 
             $scope.hasThumbnail = function(idx){
-                $scope.updateThumbnail(idx);
-                if($scope.bhl[idx].thumbnail != ''){
+//                $scope.updateThumbnail(idx);
+                if($scope.bhl[idx].thumbnail !== undefined && $scope.bhl[idx].thumbnail != ''){
                     return true;
                 } else {
                     return false;
@@ -500,16 +524,7 @@
                 if(url != ""){
                     //remove any anchors
                     console.log("URL " + url);
-                    var anchorIdx = url.lastIndexOf("#");
-                    if(anchorIdx > 0) {
-                        url = url.substring(0, anchorIdx - 1);
-                    }
-                    console.log("URL -stripped " + url);
-                    //TODO trailing slash ?
-
-                    var lastSlash = url.lastIndexOf("/");
-                    var pageId = url.substring(lastSlash + 1);
-                    console.log("URL - pageId " + pageId);
+                    var pageId = extractPageId(url);
                     $scope.bhl[idx].thumbnail = "http://biodiversitylibrary.org/pagethumb/" + pageId;
 
                     $.ajax({
@@ -526,8 +541,6 @@
                             console.log("There was a problem retrieving profile..." + textStatus);
                         }
                     })
-
-//                    $scope.$apply();
                 }
             }
             $scope.addLink = function(){
@@ -543,7 +556,7 @@
             }
             $scope.saveLinks = function(){
                 //ajax post
-                alert("Saving BHL links");
+                //alert("Saving BHL links");
                 $.ajax({
                     type: "POST",
                     url: "${createLink(controller: 'profile', action: 'updateBHLLinks')}/${profile.uuid}",
@@ -551,7 +564,7 @@
                     contentType: 'application/json',
                     data: JSON.stringify({ profileUuid: "${profile.uuid}", links: $scope.bhl }),
                     success: function( data ) {
-                        alert("Saved!");
+                        //alert("Saved!");
                         $scope.$apply();
                     },
                     error: function(jqXHR, textStatus, errorThrown){

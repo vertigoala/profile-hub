@@ -109,10 +109,9 @@ class ProfileController {
         }
 
         def classification = []
-        def availableProfiles = []
         if(profile.guid){
             try {
-                classification = js.parseText(new URL("http://bie.ala.org.au/ws/classification/" + profile.guid).text)
+                classification = js.parseText(new URL(grailsApplication.config.profile.service.url + "/classification?guid=" + profile.guid).text)
             } catch (Exception e){
                 println "Unable to load classification for " + profile.guid
             }
