@@ -22,11 +22,42 @@ class ProfileController {
         buildProfile(params.uuid)
     }
 
+    def updateBHLLinks() {
+        def jsonSlurper = new JsonSlurper()
+        def json = jsonSlurper.parse(request.getReader())
+        println "Updating attributing....."
+        //TODO check user in ROLE.....
+        def resp = webService.doPost(grailsApplication.config.profile.service.url + "/profile/bhl/" + json.profileUuid, [
+                profileUuid : json.profileUuid,
+                links : json.links,
+                userId : authService.getUserId(),
+                userDisplayName:authService.getDisplayName()
+        ])
+        response.setContentType("application/json")
+        response.setStatus(201)
+        render resp.resp as JSON
+    }
+
+    def updateLinks() {
+        def jsonSlurper = new JsonSlurper()
+        def json = jsonSlurper.parse(request.getReader())
+        println "Updating attributing....."
+        //TODO check user in ROLE.....
+        def resp = webService.doPost(grailsApplication.config.profile.service.url + "/profile/links/" + json.profileUuid, [
+                profileUuid : json.profileUuid,
+                links : json.links,
+                userId : authService.getUserId(),
+                userDisplayName:authService.getDisplayName()
+        ])
+        response.setContentType("application/json")
+        response.setStatus(201)
+        render resp.resp as JSON
+    }
+
     def updateAttribute() {
         println "Updating attributing....."
         //TODO check user in ROLE.....
         def resp = webService.doPost(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid?:'', [
-                userId: "to-be-added",
                 title : params.title,
                 text : params.text,
                 profileUuid : params.profileUuid,
@@ -44,7 +75,6 @@ class ProfileController {
         def resp = webService.doDelete(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid +"?profileUuid=" + params.profileUuid)
         response.setContentType("application/json")
         response.setStatus(201)
-//        render resp as JSON
         def model = ["success":true]
         render model as JSON
     }
@@ -61,7 +91,7 @@ class ProfileController {
 
         def query = ""
 
-        if(profile.guid){
+        if(profile.guid && profile.guid != "null"){
             query = "lsid:" + profile.guid
         } else {
             query = profile.scientificName

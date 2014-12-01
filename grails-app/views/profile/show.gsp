@@ -164,7 +164,7 @@
         <g:elseif test="${edit}">
             <div ng-controller="LinksEditor" class="bs-docs-example" id="browse_links" data-content="Links">
                 <div style="margin-bottom: 10px;">
-                    <button class="btn">Save changes</button>
+                    <button class="btn" ng-click="saveLinks()">Save changes</button>
                     <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
                 </div>
                 <table class="table table-striped">
@@ -192,13 +192,14 @@
             </p>
 
             <div style="margin-bottom: 10px;">
-                <button class="btn">Save changes</button>
-                <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new link</button>
+                <button class="btn" ng-click="saveLinks()">Save changes</button>
+                <button class="btn" ng-click="addLink()"><i class="icon icon-plus"> </i> Add new reference</button>
             </div>
 
             <table class="table table-striped">
-                <tr ng-repeat="link in bhlLinks">
+                <tr ng-repeat="link in bhl">
                     <td>
+                        <input type="hidden" name="link.uuid" value="{{link.uuid}}"/>
                         <label>URL</label>
                         <input type="text" class="input-xxlarge" ng-model="link.url" value="{{link.url}}"  ng-change="updateThumbnail($index)"/><br/>
                         <label>Title</label>
@@ -209,19 +210,19 @@
                         <cite ng-show="hasThumbnail($index)">
                             <span><b>BHL metadata</b></span><br/>
                             <span>
-                                Title: {{link.bhlFullTitle}}
+                                Title: {{link.fullTitle}}
                             </span>
                             <br/>
                             <span>
-                                Edition: {{link.bhlEdition}}
+                                Edition: {{link.edition}}
                             </span>
                             <br/>
                             <span>
-                                Publisher: {{link.bhlPublisherName}}
+                                Publisher: {{link.publisherName}}
                             </span>
                             <br/>
                             <span>
-                               DOI: <a href="http://dx.doi.org/{{link.bhlDoi}}">{{link.bhlDoi}}</a>
+                               DOI: <a href="http://dx.doi.org/{{link.bhlDoi}}">{{link.doi}}</a>
                             </span>
                         </cite>
                     </td>
@@ -229,13 +230,59 @@
                         <button class="btn" ng-click="deleteLink($index)"><i class="icon icon-minus"></i> Remove</button>
                         <br/>
                         <div ng-show="hasThumbnail($index)">
-                            <img ng-model="link.thumbnail" style="margin-top:20px; max-height:200px;" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
+                            <a href="{{link.url}}" target="_blank">
+                                <img ng-model="link.thumbnail" style="margin-top:20px; max-height:200px;" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
+                            </a>
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
         </g:if>
+        <g:elseif test="${profile.bhl}">
+            <div ng-controller="BHLLinksEditor" class="bs-docs-example" id="browse_bhllinks" data-content="Biodiversity Heritage Library references">
+                <table class="table table-striped">
+                    <tr ng-repeat="link in bhl">
+                        <td>
+                            <span>
+                                Title: {{link.title}}
+                            </span>
+                            <br/>
+                            <span>
+                                Description: {{link.description}}
+                            </span>
+                            <br/>
+
+                            <cite ng-show="hasThumbnail($index)">
+                                <span>
+                                    Title: {{link.fullTitle}}
+                                </span>
+                                <br/>
+                                <span>
+                                    Edition: {{link.edition}}
+                                </span>
+                                <br/>
+                                <span>
+                                    Publisher: {{link.publisherName}}
+                                </span>
+                                <br/>
+                                <span>
+                                    DOI: <a href="http://dx.doi.org/{{link.bhlDoi}}">{{link.doi}}</a>
+                                </span>
+                            </cite>
+                        </td>
+                        <td>
+                            <div ng-show="hasThumbnail($index)">
+                                <a href="{{link.url}}" target="_blank">
+                                    <img ng-model="link.thumbnail" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </g:elseif>
+
 
         <g:if test="${classification}">
             <div class="bs-docs-example" id="browse_taxonomy" data-content="Taxonomy from ${speciesProfile.taxonConcept.infoSourceName}">
@@ -257,7 +304,7 @@
                      </li>
                     <g:each in="${speciesProfile.synonyms}" var="synonym">
                         <li>
-                            <blockquote  style="border-left:none;" >
+                            <blockquote  style="border-left:none;">
                             <p>${synonym.nameString}</p>
                             <cite>- ${synonym.referencedIn}</cite>
                             </blockquote>
@@ -295,8 +342,6 @@
     });
 
     function addLists(){
-
-
 
         $.ajax({
             url: "http://lists.ala.org.au/ws/species/${profile.guid}",
@@ -424,10 +469,25 @@
 
     var profileEditor = angular.module('profileEditor', ['ui.bootstrap'])
         .controller('BHLLinksEditor', ['$scope', function($scope) {
-            $scope.bhlLinks = [];
+
+            $scope.bhl = [];
+
+            $.ajax({
+                type:"GET",
+                url: "${grailsApplication.config.profile.service.url}/profile/${profile.uuid}",
+                success: function( data ) {
+                     $scope.bhl = data.bhl;
+                     $scope.$apply();
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    console.log("There was a problem retrieving profile..." + textStatus);
+                }
+            })
+
 
             $scope.hasThumbnail = function(idx){
-                if($scope.bhlLinks[idx].thumbnail != ''){
+                $scope.updateThumbnail(idx);
+                if($scope.bhl[idx].thumbnail != ''){
                     return true;
                 } else {
                     return false;
@@ -436,7 +496,7 @@
 
             $scope.updateThumbnail = function(idx){
                 console.log("Updating...");
-                var url = $scope.bhlLinks[idx].url.trim();
+                var url = $scope.bhl[idx].url.trim();
                 if(url != ""){
                     //remove any anchors
                     console.log("URL " + url);
@@ -450,16 +510,16 @@
                     var lastSlash = url.lastIndexOf("/");
                     var pageId = url.substring(lastSlash + 1);
                     console.log("URL - pageId " + pageId);
-                    $scope.bhlLinks[idx].thumbnail = "http://biodiversitylibrary.org/pagethumb/" + pageId;
+                    $scope.bhl[idx].thumbnail = "http://biodiversitylibrary.org/pagethumb/" + pageId;
 
                     $.ajax({
                         type:"GET",
                         url: "${createLink(controller: "BHL", action:"pageLookup")}/" + pageId,
                         success: function( data ) {
-                             $scope.bhlLinks[idx].bhlFullTitle = data.Result.FullTitle;
-                             $scope.bhlLinks[idx].bhlEdition = data.Result.Edition;
-                             $scope.bhlLinks[idx].bhlPublisherName = data.Result.PublisherName;
-                             $scope.bhlLinks[idx].bhlDoi = data.Result.Doi;
+                             $scope.bhl[idx].fullTitle = data.Result.FullTitle;
+                             $scope.bhl[idx].edition = data.Result.Edition;
+                             $scope.bhl[idx].publisherName = data.Result.PublisherName;
+                             $scope.bhl[idx].doi = data.Result.Doi;
                              $scope.$apply();
                         },
                         error: function(jqXHR, textStatus, errorThrown){
@@ -467,11 +527,11 @@
                         }
                     })
 
-                    $scope.$apply();
+//                    $scope.$apply();
                 }
             }
             $scope.addLink = function(){
-                $scope.bhlLinks.unshift(
+                $scope.bhl.unshift(
                 {   url:"",
                     description: "",
                     title: "",
@@ -479,19 +539,67 @@
                 });
             }
             $scope.deleteLink = function(idx){
-                $scope.bhlLinks.splice(idx, 1);
+                $scope.bhl.splice(idx, 1);
             }
-
+            $scope.saveLinks = function(){
+                //ajax post
+                alert("Saving BHL links");
+                $.ajax({
+                    type: "POST",
+                    url: "${createLink(controller: 'profile', action: 'updateBHLLinks')}/${profile.uuid}",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: JSON.stringify({ profileUuid: "${profile.uuid}", links: $scope.bhl }),
+                    success: function( data ) {
+                        alert("Saved!");
+                        $scope.$apply();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        alert("Errored " + textStatus);
+                        $scope.$apply();
+                    }
+                });
+            }
         }])
         .controller('LinksEditor', ['$scope', function($scope) {
             $scope.links = [];
+
+            $.ajax({
+                type:"GET",
+                url: "${grailsApplication.config.profile.service.url}/profile/${profile.uuid}",
+                success: function( data ) {
+                     $scope.links = data.links;
+                     $scope.$apply();
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    console.log("There was a problem retrieving profile..." + textStatus);
+                }
+            })
+
             $scope.addLink = function(){
-                $scope.links.unshift({url:"http://", description:"Add description", title:"Title"});
+                $scope.links.unshift({uuid:"", url:"http://", description:"Add description", title:"Title"});
             }
             $scope.deleteLink = function(idx){
                 $scope.links.splice(idx, 1);
             }
-
+            $scope.saveLinks = function(){
+                //ajax post
+                $.ajax({
+                    type: "POST",
+                    url: "${createLink(controller: 'profile', action: 'updateLinks')}/${profile.uuid}",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: JSON.stringify({ profileUuid: "${profile.uuid}", links: $scope.links }),
+                    success: function( data ) {
+                        alert("Saved!");
+                        $scope.$apply();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        alert("Errored " + textStatus);
+                        $scope.$apply();
+                    }
+                });
+            }
         }])
         .controller('AttributeEditor', ['$scope', function($scope) {
 
@@ -517,7 +625,6 @@
                 url: "${grailsApplication.config.profile.service.url}/vocab/${opus.attributeVocabUuid}",
                 success: function( data ) {
                      $scope.attributeTitles = data.terms;
-//                     $scope.$apply();
                 },
                 error: function(jqXHR, textStatus, errorThrown){
                     console.log("There was a problem retrieving profile..." + textStatus);

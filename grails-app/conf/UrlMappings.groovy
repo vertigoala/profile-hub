@@ -6,6 +6,8 @@ class UrlMappings {
         name updateAttribute: "/profile/updateAttribute/$uuid"(controller: 'profile', action: 'updateAttribute')
         name createAttribute: "/profile/updateAttribute/"(controller: 'profile', action: 'updateAttribute')
 
+        name updateLinks: "/profile/updateLinks/$uuid"(controller: 'profile', action: 'updateLinks')
+        name updateBHLLinks: "/profile/updateBHLLinks/$uuid"(controller: 'profile', action: 'updateBHLLinks')
 
         name editProfile: "/profile/edit/$uuid"(controller: 'profile', action: 'edit')
         name viewProfile: "/profile/$uuid"(controller: 'profile', action: 'show')
