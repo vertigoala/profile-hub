@@ -141,9 +141,17 @@
                         <small>
                         Contributed by
                         <cite title="Contributors to this text">
-                            {{ attribute.contributor.join(', ') }}
+                            {{ attribute.creators.join(', ') }}
                         </cite>
                         </small>
+                        <span ng-show="attribute.editors.length > 0">
+                            <small>
+                                Edited by
+                                <cite title="Editors to this text">
+                                    {{ attribute.editors.join(', ') }}
+                                </cite>
+                            </small>
+                        </span>
                     </blockquote>
                 </div>
             </div>
@@ -287,7 +295,6 @@
             </div>
         </g:elseif>
 
-
         <g:if test="${classification}">
             <div class="bs-docs-example" id="browse_taxonomy" data-content="Taxonomy from ${speciesProfile.taxonConcept.infoSourceName}">
                 <ul>
@@ -410,7 +417,7 @@
     function addTaxonMap(){
 
         //add an occurrence layer for macropus
-        var acacia = L.tileLayer.wms("http://biocache.ala.org.au/ws/mapping/wms/reflect?q=${occurrenceQuery}", {
+        var speciesLayer = L.tileLayer.wms("http://biocache.ala.org.au/ws/mapping/wms/reflect?q=${occurrenceQuery}", {
             layers: 'ALA:occurrences',
             format: 'image/png',
             transparent: true,
@@ -421,7 +428,7 @@
         });
 
         var speciesLayers = new L.LayerGroup();
-        acacia.addTo(speciesLayers);
+        speciesLayer.addTo(speciesLayers);
 
         var map = L.map('map', {
             center: [-23.6, 133.6],
@@ -442,7 +449,7 @@
         };
 
         var overlays = {
-            "${profile.scientificName}": acacia
+            "${profile.scientificName}": speciesLayer
         };
 
         L.control.layers(baseLayers, overlays).addTo(map);

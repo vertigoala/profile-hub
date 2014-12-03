@@ -2,6 +2,7 @@ package au.org.ala.profile.hub
 
 import grails.converters.JSON
 import groovy.json.JsonSlurper
+import org.springframework.web.context.request.RequestContextHolder
 
 class ProfileController {
 
@@ -31,7 +32,7 @@ class ProfileController {
                 profileUuid : json.profileUuid,
                 links : json.links,
                 userId : authService.getUserId(),
-                userDisplayName:authService.getDisplayName()
+                userDisplayName:authService.userDetails().userDisplayName
         ])
         response.setContentType("application/json")
         response.setStatus(201)
@@ -47,7 +48,7 @@ class ProfileController {
                 profileUuid : json.profileUuid,
                 links : json.links,
                 userId : authService.getUserId(),
-                userDisplayName:authService.getDisplayName()
+                userDisplayName:authService.userDetails().userDisplayName
         ])
         response.setContentType("application/json")
         response.setStatus(201)
@@ -55,6 +56,10 @@ class ProfileController {
     }
 
     def updateAttribute() {
+
+
+        def userPrinc = RequestContextHolder.currentRequestAttributes()?.getUserPrincipal()
+
         println "Updating attributing....."
         //TODO check user in ROLE.....
         def resp = webService.doPost(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid?:'', [
@@ -63,7 +68,7 @@ class ProfileController {
                 profileUuid : params.profileUuid,
                 uuid : params.uuid?:'',
                 userId : authService.getUserId(),
-                userDisplayName:authService.getDisplayName()
+                userDisplayName:authService.userDetails().userDisplayName
         ])
         response.setContentType("application/json")
         response.setStatus(201)
