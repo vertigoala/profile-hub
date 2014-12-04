@@ -124,11 +124,13 @@
                     <g:textField typeahead="attributeTitle.name for attributeTitle in attributeTitles | filter:$viewValue" class="form-control attribute-header-input" ng-model="attribute.title" name="title" value="title"/>
                     <g:textArea class="field span12" rows="10" ng-model="attribute.text" name="text" />
                     <div class="row-fluid">
-                        <span class="span8">
-                            <button class="btn" ng-click="showAudit($index)">Show history</button><br/>
-                            <span class="pull-left">{{ attribute.status }}</span>
-                        </span>
                         <span class="span4">
+                            <button class="btn" ng-click="showAudit($index)">Show history</button><br/>
+                        </span>
+                        <span class="span8">
+
+                            <span class="info">{{ attribute.status }}</span>
+
                             <button class="btn btn-danger pull-right" ng-click="deleteAttribute($index)"> Delete </button>
                             &nbsp;
                             <button class="btn btn pull-right" ng-click="saveAttribute($index)">
