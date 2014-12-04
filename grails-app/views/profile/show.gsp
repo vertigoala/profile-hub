@@ -142,16 +142,24 @@
                     <div ng-show="attribute.uuid != ''" class="attribute-audit">
                         <div class="audit-history" style="margin-top:20px;">
                             <table class="table table-striped">
-                            <tr ng-repeat="auditItem in attribute.audit">
-                                <td>
-                                    <b>{{ auditItem.object.title }}</b>
-                                    <br/>
-                                    {{ auditItem.object.text }}
-                                </td>
-                                <td>{{ auditItem.userDisplayName }}</td>
-                                <td>{{ auditItem.date }}</td>
-                                <td><button class="btn btn-mini" ng-click="revertAttribute($index)">Revert</button></td>
-                            </tr>
+                                <thead ng-show="attribute.audit !== undefined && attribute.audit.length > 0">
+                                    <th>Content</th>
+                                    <th>Editor</th>
+                                    <th>Date</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="auditItem in attribute.audit">
+                                        <td>
+                                            <b>{{ auditItem.object.title }}</b>
+                                            <br/>
+                                            {{ auditItem.object.text }}
+                                        </td>
+                                        <td>{{ auditItem.userDisplayName }}</td>
+                                        <td>{{ auditItem.date }}</td>
+                                        <td><button class="btn btn-mini" ng-click="revertAttribute($parent.$index, $index)">Revert</button></td>
+                                    </tr>
+                                %{--</tbody>--}%
                             </table>
                         </div>
                     </div>
@@ -387,7 +395,7 @@
                 format: 'json'
             },
             success: function( response ) {
-                if(response.length > 0) {
+                if(response instanceof Array && response.length > 0) {
                     console.log("number of list entries: " + response.length);
                     for(var i=0; i< response.length; i++){
                         $('#browse_lists ul').append('<li><a href="http://lists.ala.org.au/speciesListItem/list/' + response[i].dataResourceUid +'">' + response[i].list.listName + '</a></li>');
@@ -672,8 +680,10 @@
                 }
             });
 
-            $scope.revertAttribute = function(idx){
-                alert("Not implemented yet");
+            $scope.revertAttribute = function(attributeIdx, auditIdx){
+                $scope.attributes[attributeIdx].title = $scope.attributes[attributeIdx].audit[auditIdx].object.title;
+                $scope.attributes[attributeIdx].text = $scope.attributes[attributeIdx].audit[auditIdx].object.text;
+                $scope.$apply();
             }
             $scope.showAudit = function(idx){
                 $.ajax({
