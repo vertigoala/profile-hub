@@ -125,7 +125,7 @@
                     <g:textArea class="field span12" rows="10" ng-model="attribute.text" name="text" />
                     <div class="row-fluid">
                         <span class="span8">
-                            <button class="btn" ng-click="showAudit($index)">Show history</button>
+                            <button class="btn" ng-click="showAudit($index)">Show history</button><br/>
                             <span class="pull-left">{{ attribute.status }}</span>
                         </span>
                         <span class="span4">
@@ -146,8 +146,8 @@
                                     <br/>
                                     {{ auditItem.object.text }}
                                 </td>
-                                <td>User</td>
-                                <td>Date</td>
+                                <td>{{ auditItem.userDisplayName }}</td>
+                                <td>{{ auditItem.date }}</td>
                                 <td><button class="btn btn-mini" ng-click="revertAttribute($index)">Revert</button></td>
                             </tr>
                             </table>
