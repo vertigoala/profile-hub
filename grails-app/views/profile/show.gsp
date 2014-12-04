@@ -122,7 +122,7 @@
             <div ng-repeat="attribute in attributes">
                 <div class="well attribute-edit" id="browse_attributes_edit" class="ng-show" ng-show="!readonly">
                     <g:textField typeahead="attributeTitle.name for attributeTitle in attributeTitles | filter:$viewValue" class="form-control attribute-header-input" ng-model="attribute.title" name="title" value="title"/>
-                    <g:textArea class="field span12" rows="10" ng-model="attribute.text" name="text" />
+                    <g:textArea class="field span12" rows="4" ng-model="attribute.text" name="text" />
                     <div class="row-fluid">
                         <span class="span4">
                             <button class="btn" ng-click="showAudit($index)">Show history</button><br/>
@@ -157,7 +157,7 @@
                                         </td>
                                         <td>{{ auditItem.userDisplayName }}</td>
                                         <td>{{ auditItem.date }}</td>
-                                        <td><button class="btn btn-mini" ng-click="revertAttribute($parent.$index, $index)">Revert</button></td>
+                                        <td><button class="btn btn-mini" title="Revert to this version" ng-click="revertAttribute($parent.$index, $index)">Revert</button></td>
                                     </tr>
                                 %{--</tbody>--}%
                             </table>
@@ -282,18 +282,15 @@
         </g:if>
         <g:elseif test="${profile.bhl}">
             <div ng-controller="BHLLinksEditor" class="bs-docs-example" id="browse_bhllinks" data-content="Biodiversity Heritage Library references">
-                <table class="table table-striped">
+                <table class="table">
                     <tr ng-repeat="link in bhl">
                         <td>
-                            <h4 style="margin-bottom: 0; padding-bottom:0;">
+                            <h4 ng-show="link.title != ''" style="margin-bottom: 0; padding-bottom:0;">
                                 Title: {{link.title}}
                             </h4>
-                            <br/>
-                            <span>
+                            <span ng-show="link.description != ''">
                                 Description: {{link.description}}
                             </span>
-                            <br/>
-
                             <cite ng-show="hasThumbnail($index)">
                                 <span>
                                     BHL title: {{link.fullTitle}}
@@ -315,7 +312,7 @@
                         <td>
                             <div ng-show="hasThumbnail($index)">
                                 <a href="{{link.url}}" target="_blank">
-                                    <img ng-model="link.thumbnail" src="{{link.thumbnail}}" alt="{{link.title}}" class="img-rounded"/>
+                                    <img ng-model="link.thumbnail" src="{{link.thumbnail}}" style="max-height:150px;" alt="{{link.title}}" class="img-rounded"/>
                                 </a>
                             </div>
                         </td>
