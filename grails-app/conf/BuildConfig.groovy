@@ -6,7 +6,7 @@ grails.project.work.dir = "target/work"
 grails.project.target.level = 1.7
 grails.project.source.level = 1.7
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
-grails.plugin.location.'custom-layout' = "../ala-web-theme"
+grails.plugin.location.'ala-web-theme' = "../ala-web-theme"
 
 grails.project.fork = [
         test: false,

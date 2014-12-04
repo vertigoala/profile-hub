@@ -1,8 +1,6 @@
 package au.org.ala.profile.hub
-
 import grails.converters.JSON
 import groovy.json.JsonSlurper
-import org.springframework.web.context.request.RequestContextHolder
 
 class ProfileController {
 
@@ -57,9 +55,6 @@ class ProfileController {
 
     def updateAttribute() {
 
-
-        def userPrinc = RequestContextHolder.currentRequestAttributes()?.getUserPrincipal()
-
         println "Updating attributing....."
         //TODO check user in ROLE.....
         def resp = webService.doPost(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid?:'', [
@@ -77,7 +72,7 @@ class ProfileController {
 
     def deleteAttribute(){
         //TODO check user in ROLE.....
-        def resp = webService.doDelete(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid +"?profileUuid=" + params.profileUuid)
+        def resp = webService.doDelete(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid + "?profileUuid=" + params.profileUuid)
         response.setContentType("application/json")
         response.setStatus(201)
         def model = ["success":true]
@@ -86,7 +81,7 @@ class ProfileController {
 
     private def buildProfile(String uuid){
 
-        println("getProfile " + uuid )
+        log.debug("Loading profile " + uuid )
 
         def js = new JsonSlurper()
 

@@ -120,11 +120,14 @@
                 <button ng-click="addImage()" class="btn"><i class="icon icon-plus"></i>Add image</button>
             </div>
             <div ng-repeat="attribute in attributes">
-                <div class="well attribute-edit" id="browse_attributes_edit" class=" ng-show" ng-show="!readonly">
+                <div class="well attribute-edit" id="browse_attributes_edit" class="ng-show" ng-show="!readonly">
                     <g:textField typeahead="attributeTitle.name for attributeTitle in attributeTitles | filter:$viewValue" class="form-control attribute-header-input" ng-model="attribute.title" name="title" value="title"/>
                     <g:textArea class="field span12" rows="10" ng-model="attribute.text" name="text" />
                     <div class="row-fluid">
-                        <span class="span8"><span class="pull-left">{{ attribute.status }}</span></span>
+                        <span class="span8">
+                            <button class="btn" ng-click="showAudit($index)">Show history</button>
+                            <span class="pull-left">{{ attribute.status }}</span>
+                        </span>
                         <span class="span4">
                             <button class="btn btn-danger pull-right" ng-click="deleteAttribute($index)"> Delete </button>
                             &nbsp;
@@ -133,6 +136,22 @@
                                 <span ng-show="isSaving($index)" id="saving">Saving....</span>
                             </button>
                         </span>
+                    </div>
+                    <div ng-show="attribute.uuid != ''" class="attribute-audit">
+                        <div class="audit-history" style="margin-top:20px;">
+                            <table class="table table-striped">
+                            <tr ng-repeat="auditItem in attribute.audit">
+                                <td>
+                                    <b>{{ auditItem.object.title }}</b>
+                                    <br/>
+                                    {{ auditItem.object.text }}
+                                </td>
+                                <td>User</td>
+                                <td>Date</td>
+                                <td><button class="btn btn-mini" ng-click="revertAttribute($index)">Revert</button></td>
+                            </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}" class="ng-show" ng-show="readonly">
@@ -644,14 +663,30 @@
                 type:"GET",
                 url: "${grailsApplication.config.profile.service.url}/vocab/${opus.attributeVocabUuid}",
                 success: function( data ) {
-                     $scope.attributeTitles = data.terms;
+                    $scope.attributeTitles = data.terms;
                 },
                 error: function(jqXHR, textStatus, errorThrown){
                     console.log("There was a problem retrieving profile..." + textStatus);
                 }
             });
 
-
+            $scope.revertAttribute = function(idx){
+                alert("Not implemented yet");
+            }
+            $scope.showAudit = function(idx){
+                $.ajax({
+                    type:"GET",
+                    url: "${grailsApplication.config.profile.service.url}/audit/object/" + $scope.attributes[idx].uuid,
+                    success: function( data ) {
+                        console.log( data);
+                        $scope.attributes[idx].audit = data;
+                        $scope.$apply();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        console.log("There was a problem retrieving profile..." + textStatus);
+                    }
+                })
+            }
             $scope.deleteAttribute = function(idx){
                 var confirmed = window.confirm("Are you sure?")
                 if(confirmed){
