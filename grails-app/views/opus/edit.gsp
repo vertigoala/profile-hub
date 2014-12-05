@@ -25,6 +25,66 @@
     </p>
     </div>
 
+    <div class="well row-fluid" ng-controller="UserController">
+        <div class="span6">
+            <h3>Access control</h3>
+            <p>Assign users Admin or Editor roles to this profile collection.
+            <ul>
+                <li><b>Admin</b> - can edit content on this page and any profile in the collection</li>
+                <li><b>Editor</b> - can edit content on any profile page with this collection. Can not edit this page.</li>
+            </ul>
+
+            <div style="border:solid white 1px; border-radius: 10px; padding:20px; margin-bottom:10px;">
+                To add users, search for them by <b>email address</b>. <br/>
+                <b>Note:</b> users will need to create their ALA account before they can be added.
+                </p>
+
+                <div class="input-append">
+                    <input class="span12" id="appendedInputButton" type="text" ng-model="searchTerm" name="searchTerm" value="{{ searchTerm }}">
+                    <button class="btn" type="button" ng-click="userSearch()">Search for user</button>
+                </div>
+                <p class="info" ng-show="retrievedUser != null">
+                    <span>{{ retrievedUser.firstName }} {{ retrievedUser.lastName }}</span>
+                     -
+                    <span>{{ retrievedUser.email }}</span>
+                    <span style="padding-left:30px;">
+                        <button class="btn" ng-click="addAdmin()"><i class="icon icon-plus"></i> Add admin</button>
+                        <button class="btn" ng-click="addEditor()"><i class="icon icon-plus"></i> Add editor</button>
+                    </span>
+                </p>
+            </div>
+            <p>
+                <button class="btn" ng-click="save()">Save changes</button>
+            </p>
+        </div>
+
+        <div class="span6">
+            <h4 ng-show="admins.length > 0">Admins</h4>
+            <ul>
+                <li ng-repeat="user in admins">
+                    <span>{{ user.displayName }}</span>
+                    -
+                    <span>{{ user.email }}</span>
+                    &nbsp;
+                    <button class="btn" ng-click="remove('admins', $index)"><i class="icon icon-minus"></i> Remove</button>
+                </li>
+            </ul>
+
+            <h4 ng-show="editors.length > 0">Editors</h4>
+            <ul>
+                <li ng-repeat="user in editors">
+                    <span>{{ user.displayName }}</span>
+                    -
+                    <span>{{ user.email }}</span>
+                    &nbsp;
+                    <button class="btn" ng-click="remove('editors', $index)"><i class="icon icon-minus"></i> Remove</button>
+                </li>
+            </ul>
+        </div>
+
+
+    </div>
+
     <div id="opusInfo" class="well">
         <h4>Styling</h4>
         <p>
@@ -69,7 +129,6 @@
         </p>
         <a class="btn" href="javascript:alert('Not implemented yet')">Save</a>
     </div>
-
 
     <g:if test="${opus.enableTaxaUpload}">
     <div class="well" ng-controller="TaxaController">
@@ -122,7 +181,10 @@
         <p>Configure the image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
         <ul>
             <g:each in="${opus.imageSources}" var="imageSource">
-                <li><a href="http://collections.ala.org.au/public/show/${imageSource}">${dataResources[imageSource]}</a></li>
+                <li style="padding:5px;">
+                    <a href="http://collections.ala.org.au/public/show/${imageSource}">${dataResources[imageSource]}</a>
+                    &nbsp;<button class="btn btn-mini btn-danger" title="Remove this resource"><i class="icon-minus icon-white"></i></button>
+                </li>
             </g:each>
         </ul>
         <a href="javascript:alert('Not implemented yet!');" class="btn"><i class="" onclick="alert('Not implemented yet!');"></i> Save</a>
@@ -133,14 +195,14 @@
         <p>Configure the record sources to be included in your profile pages. This will set what data is used on maps.
             These are data resources accessible via Atlas API's.
         </p>
-        <table>
+        <ul>
             <g:each in="${opus.recordSources}" var="recordSource">
-                <tr>
-                    <td><a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a></td>
-                    <td><button class="btn btn-mini btn-danger"><i class="icon-minus icon-white"></i></button></td>
-                </tr>
+                <li style="padding:5px;">
+                    <a href="http://collections.ala.org.au/public/show/${recordSource}">${dataResources[recordSource]}</a>
+                    &nbsp;<button class="btn btn-mini btn-danger" title="Remove this resource"><i class="icon-minus icon-white"></i></button>
+                </li>
             </g:each>
-        </table>
+        </ul>
         <a href="javascript:alert('Not implemented yet!');" class="btn"><i class="" onclick="alert('Not implemented yet!');"></i> Save</a>
     </div>
 
@@ -158,6 +220,94 @@
 
 <r:script>
     var opusEditor = angular.module('opusEditor', [])
+        .controller('UserController', ['$scope', function($scope) {
+
+            $scope.admins = [];
+            $scope.editors = [];
+            $scope.searchTerm = "";
+            $scope.retrievedUser = null;
+
+            $scope.containsUser = function(user, users) {
+                for (var i = 0; i < users.length; i++) {
+                    if (users[i].userId === user.userId) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            $scope.save = function(){
+                $.ajax({
+                    url: '${createLink(controller:'opus', action:'updateUsers')}',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: {
+                        opusId: "${opus.uuid}",
+                        admins: $scope.admins,
+                        editors: $scope.editors
+                    },
+                    success: function(data, textStatus, jqXHR){
+                        console.log('success:  ' + data);
+                        $scope.$apply();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        // Handle errors here
+                        alert("error upload - " + textStatus);
+                        console.log('ERRORS: ' + textStatus);
+                        console.log(errorThrown)
+                        // STOP LOADING SPINNER
+                    }
+                });
+            }
+            $scope.remove = function(group, idx){
+                if(group == 'admins'){
+                    $scope.admins.splice(idx);
+                }
+
+                if (group == 'editors'){
+                   $scope.editors.splice(idx);
+                }
+            }
+            $scope.addAdmin = function(){
+                if($scope.retrievedUser  != null){
+                    if(!$scope.containsUser($scope.retrievedUser, $scope.admins)){
+                        $scope.admins.push($scope.retrievedUser);
+                    }
+                }
+            }
+
+            $scope.addEditor = function(){
+                if($scope.retrievedUser  != null){
+                    if(!$scope.containsUser($scope.retrievedUser, $scope.editors)){
+                        $scope.editors.push($scope.retrievedUser);
+                    }
+                }
+            }
+
+            $scope.userSearch = function(){
+
+                $.ajax({
+                    url: '${createLink(controller:'opus', action:'findUser')}',
+                    type: 'POST',
+                    data: { userName: $scope.searchTerm},
+                    success: function(data, textStatus, jqXHR){
+                        console.log('success:  ' + data);
+                        if(data !== undefined && data.email){
+                            $scope.retrievedUser = data;
+                            $scope.retrievedUser.displayName = data.firstName + ' ' + data.lastName;
+                        }
+                        $scope.$apply();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        // Handle errors here
+                        alert("error upload - " + textStatus);
+                        console.log('ERRORS: ' + textStatus);
+                        console.log(errorThrown)
+                        // STOP LOADING SPINNER
+                    }
+                });
+            }
+        }])
         .controller('TaxaController', ['$scope', function($scope) {
             $scope.taxaUpload = function(){
                 console.log("Taxa upload....");

@@ -12,6 +12,8 @@ class UrlMappings {
         name editProfile: "/profile/edit/$uuid"(controller: 'profile', action: 'edit')
         name viewProfile: "/profile/$uuid"(controller: 'profile', action: 'show')
 
+
+        name findUser: "/opus/findUser"(controller: 'opus', action: 'findUser')
         name uploadTaxaToOpus: "/opus/uploadTaxa"(controller: 'opus', action: 'taxaUpload')
 
         name viewOpus: "/opus/$uuid"(controller: 'opus', action: 'show')

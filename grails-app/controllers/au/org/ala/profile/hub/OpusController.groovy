@@ -5,6 +5,7 @@ import groovy.json.JsonSlurper
 class OpusController {
 
     def authService
+    def webService
 
     def index() {
         def js = new JsonSlurper()
@@ -18,6 +19,14 @@ class OpusController {
 
         ]
     }
+
+    def findUser(){
+        //http://auth.ala.org.au/userdetails/userDetails/getUserDetails?userName=david.martin@csiro.au
+        def resp = webService.doPost("http://auth.ala.org.au/userdetails/userDetails/getUserDetails?userName=" + params.userName,[:])
+        response.setContentType("application/json")
+        render resp.resp
+    }
+
 
     def edit(){
         def js = new JsonSlurper()
