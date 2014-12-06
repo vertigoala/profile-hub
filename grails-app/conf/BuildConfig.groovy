@@ -3,8 +3,8 @@ grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 grails.project.work.dir = "target/work"
-grails.project.target.level = 1.7
-grails.project.source.level = 1.7
+grails.project.target.level = 1.6
+grails.project.source.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 //grails.plugin.location.'ala-web-theme' = "../ala-web-theme"
 
@@ -46,6 +46,6 @@ grails.project.dependency.resolution = {
         compile ':cache:1.1.6'
         compile ':uploadr:0.8.2'
         compile ":modernizr:2.7.1.1"
-        compile ":pretty-time:2.1.3.Final-1.0.1"
+        //compile ":pretty-time:2.1.3.Final-1.0.1"
     }
 }
