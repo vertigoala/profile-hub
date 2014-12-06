@@ -6,7 +6,7 @@ grails.project.work.dir = "target/work"
 grails.project.target.level = 1.7
 grails.project.source.level = 1.7
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
-grails.plugin.location.'ala-web-theme' = "../ala-web-theme"
+//grails.plugin.location.'ala-web-theme' = "../ala-web-theme"
 
 grails.project.fork = [
         test: false,
@@ -41,7 +41,8 @@ grails.project.dependency.resolution = {
     plugins {
         build ":release:3.0.1"
         build ":tomcat:7.0.55"
-        compile ":scaffolding:2.1.2"
+        //compile ":scaffolding:2.1.2"
+        compile ":ala-web-theme:1.0.1"
         compile ':cache:1.1.6'
         compile ':uploadr:0.8.2'
         compile ":modernizr:2.7.1.1"
