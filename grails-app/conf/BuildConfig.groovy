@@ -21,7 +21,7 @@ grails.project.dependency.resolution = {
     checksums true // Whether to verify checksums on resolve
     legacyResolve false // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
 
-    def httpmimeVersion = "4.1.2"
+    def httpmimeVersion = "4.3.3"
 
     repositories {
         inherits true // Whether to inherit repository definitions from plugins
