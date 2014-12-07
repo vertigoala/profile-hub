@@ -261,11 +261,11 @@
             }
             $scope.remove = function(group, idx){
                 if(group == 'admins'){
-                    $scope.admins.splice(idx);
+                    $scope.admins.splice(idx, 1);
                 }
 
                 if (group == 'editors'){
-                   $scope.editors.splice(idx);
+                   $scope.editors.splice(idx, 1);
                 }
             }
             $scope.addAdmin = function(){
