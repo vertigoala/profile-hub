@@ -42,5 +42,6 @@ grails.project.dependency.resolution = {
         compile ':cache:1.1.6'
         compile ':uploadr:0.8.2'
         compile ":modernizr:2.7.1.1"
+        runtime ':resources:1.2.8'
     }
 }
