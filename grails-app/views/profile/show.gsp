@@ -4,6 +4,13 @@
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>${profile.scientificName} | ${profile.opusName}</title>
     <style type="text/css">
+
+    .ng-dirty {
+        background-color: #fffafa;
+        border-color: #ffc40d;
+    }
+
+
     /* Base class */
     .bs-docs-example {
         position: relative;
@@ -119,8 +126,8 @@
                 <button ng-click="addAttribute()" class="btn"><i class="icon icon-plus"></i>Add attribute</button>
                 <button ng-click="addImage()" class="btn"><i class="icon icon-plus"></i>Add image</button>
             </div>
-            <div ng-repeat="attribute in attributes">
-                <div class="well attribute-edit" id="browse_attributes_edit" class="ng-show" ng-show="!readonly">
+            <div ng-repeat="attribute in attributes" ng-form="AttributeForm">
+                <div class="well attribute-edit" id="browse_attributes_edit" ng-show="!readonly">
                     <g:textField typeahead="attributeTitle.name for attributeTitle in attributeTitles | filter:$viewValue" class="form-control attribute-header-input" ng-model="attribute.title" name="title" value="title"/>
                     <g:textArea class="field span12" rows="4" ng-model="attribute.text" name="text" />
                     <div class="row-fluid">
@@ -128,13 +135,11 @@
                             <button class="btn" ng-click="showAudit($index)">Show history</button><br/>
                         </span>
                         <span class="span8">
-
                             <span class="info">{{ attribute.status }}</span>
-
                             <button class="btn btn-danger pull-right" ng-click="deleteAttribute($index)"> Delete </button>
                             &nbsp;
-                            <button class="btn btn pull-right" ng-click="saveAttribute($index)">
-                                <span ng-show="!isSaving($index)" id="saved">Save</span>
+                            <button class="btn btn pull-right" ng-click="saveAttribute($index, AttributeForm)">
+                                <span ng-show="!isSaving($index)" id="saved"><span ng-show="AttributeForm.$dirty">*</span> Save</span>
                                 <span ng-show="isSaving($index)" id="saving">Saving....</span>
                             </button>
                         </span>
@@ -159,12 +164,12 @@
                                         <td>{{ auditItem.date }}</td>
                                         <td><button class="btn btn-mini" title="Revert to this version" ng-click="revertAttribute($parent.$index, $index)">Revert</button></td>
                                     </tr>
-                                %{--</tbody>--}%
+                                </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-                <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}" class="ng-show" ng-show="readonly">
+                <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}"  ng-show="readonly">
                     <blockquote style="border-left:none;" >
                         <p>{{ attribute.text }}</p>
                         <small>
@@ -349,7 +354,7 @@
                         <li>
                             <blockquote  style="border-left:none;">
                             <p>${synonym.nameString}</p>
-                            <cite>- ${synonym.referencedIn}</cite>
+                            <cite>- ${synonym.referencedIn?:'Reference not available'}</cite>
                             </blockquote>
                         </li>
                     </g:each>
@@ -376,6 +381,39 @@
 
 <script>
 
+    var PROFILE = {
+        edit: ${edit?:'false'},
+        uuid: '${profile.uuid}',
+        scientificName: '${profile.scientificName}',
+        listUrl: 'http://lists.ala.org.au/speciesListItem/list/',
+        listsUrl: 'http://lists.ala.org.au/ws/species/${profile.guid}',
+        biocacheUrl: 'http://biocache.ala.org.au/ws/occurrences/search.json',
+        recordUrl: 'http://biocache.ala.org.au/occurrences/',
+        imagesQuery: '${imagesQuery}',
+        wmsLayer: "http://biocache.ala.org.au/ws/mapping/wms/reflect?q=${URLEncoder.encode(occurrenceQuery, 'UTF-8')}",
+        mapAttribution: '${opus.mapAttribution}',
+        mapPointColour: '${opus.mapPointColour}',
+        mapCenter: [${opus.mapDefaultLatitude}, ${opus.mapDefaultLongitude}],
+        mapZoom:'${opus.mapZoom}',
+        mapBaseLayer: '${opus.mapBaseLayer}',
+        mapBaseLayerAttribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+
+        profileServiceUrl: '${grailsApplication.config.profile.service.url}',
+        bhlLookupUrl :'${createLink(controller: "BHL", action: "pageLookup")}',
+        bhlUpdateUrl: '${createLink(controller: "profile", action: "updateBHLLinks")}',
+        deleteAttributeUrl: '${createLink(mapping: "deleteAttribute")}',
+        vocabUuid: '${opus.attributeVocabUuid}',
+        linksUpdateUrl: '${createLink(controller: "profile", action: "updateLinks")}',
+        updateAttribute: '${createLink(controller:"profile", action:"updateAttribute")}',
+        bhlThumbUrl : "http://biodiversitylibrary.org/pagethumb/"
+    }
+
+</script>
+
+<script>
+
     $(function() {
         addTaxonMap();
         addImages();
@@ -385,17 +423,15 @@
     function addLists(){
 
         $.ajax({
-            url: "http://lists.ala.org.au/ws/species/${profile.guid}",
+            url: PROFILE.listsUrl,
             jsonp: "callback",
             dataType: "jsonp",
-            data: {
-                format: 'json'
-            },
+            data: { format: 'json' },
             success: function( response ) {
                 if(response instanceof Array && response.length > 0) {
                     console.log("number of list entries: " + response.length);
                     for(var i=0; i< response.length; i++){
-                        $('#browse_lists ul').append('<li><a href="http://lists.ala.org.au/speciesListItem/list/' + response[i].dataResourceUid +'">' + response[i].list.listName + '</a></li>');
+                        $('#browse_lists ul').append('<li><a href="' + PROFILE.listUrl + response[i].dataResourceUid +'">' + response[i].list.listName + '</a></li>');
                     }
                     $('#browse_lists').show();
                 }
@@ -406,15 +442,14 @@
         });
     }
 
-
     function addImages(){
 
         $.ajax({
-            url: "http://biocache.ala.org.au/ws/occurrences/search.json",
+            url: PROFILE.biocacheUrl,
             jsonp: "callback",
             dataType: "jsonp",
             data: {
-                q: "${imagesQuery}",
+                q: PROFILE.imagesQuery,
                 fq: "multimedia:Image",
                 format: 'json'
             },
@@ -424,12 +459,11 @@
 
                     var firstImage = response.occurrences[0];
 
-                    $('#firstImage').append('<div class="imgConXXX"><a href="http://biocache.ala.org.au/occurrences/'+firstImage.uuid+'"><img src="'+firstImage.largeImageUrl+'"/></a> <div class="meta">' + firstImage.dataResourceName + '</div></div>');
+                    $('#firstImage').append('<div class="imgConXXX"><a href="'+ PROFILE.recordUrl + firstImage.uuid+'"><img src="'+firstImage.largeImageUrl+'"/></a> <div class="meta">' + firstImage.dataResourceName + '</div></div>');
                     $('#firstImage').show();
 
-
                     $.each(response.occurrences, function( key, record ) {
-                        $('#browse_images').append('<div class="imgCon"><a href="http://biocache.ala.org.au/occurrences/'+record.uuid+'"><img src="'+record.largeImageUrl+'"/></a> <div class="meta">' + record.dataResourceName + '</div></div>');
+                        $('#browse_images').append('<div class="imgCon"><a href="'+ PROFILE.recordUrl + record.uuid+'"><img src="'+record.largeImageUrl+'"/></a> <div class="meta">' + record.dataResourceName + '</div></div>');
                     });
                     $('#browse_images').show();
                 }
@@ -442,31 +476,28 @@
 
     function addTaxonMap(){
 
-        //add an occurrence layer for macropus
-        var speciesLayer = L.tileLayer.wms("http://biocache.ala.org.au/ws/mapping/wms/reflect?q=${occurrenceQuery}", {
+        var speciesLayer = L.tileLayer.wms(PROFILE.wmsLayer, {
             layers: 'ALA:occurrences',
             format: 'image/png',
             transparent: true,
-            attribution: "${opus.mapAttribution}",
+            attribution: PROFILE.mapAttribution,
             bgcolor: "0x000000",
             outline: "true",
-            ENV: "color:FF9900;name:circle;size:4;opacity:1"
+            ENV: "color:" + PROFILE.mapPointColour + ";name:circle;size:4;opacity:1"
         });
 
         var speciesLayers = new L.LayerGroup();
         speciesLayer.addTo(speciesLayers);
 
         var map = L.map('map', {
-            center: [-23.6, 133.6],
-            zoom: 3,
+            center: PROFILE.mapCenter,
+            zoom: PROFILE.mapZoom,
             layers: [speciesLayers]
         });
 
-        var streetView = L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+        var streetView = L.tileLayer(PROFILE.mapBaseLayer, {
             maxZoom: 18,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                    'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            attribution: PROFILE.mapBaseLayerAttribution,
             id: 'examples.map-i875mjb7'
         }).addTo(map);
 
@@ -474,8 +505,10 @@
             "Street": streetView
         };
 
+        var layerTitle =  "Layer for " + PROFILE.scientificName;
+
         var overlays = {
-            "${profile.scientificName}": speciesLayer
+            layerTitle: speciesLayer
         };
 
         L.control.layers(baseLayers, overlays).addTo(map);
@@ -515,11 +548,11 @@
 
             $.ajax({
                 type:"GET",
-                url: "${grailsApplication.config.profile.service.url}/profile/${profile.uuid}",
+                url: PROFILE.profileServiceUrl + "/profile/" + PROFILE.uuid,
                 success: function( data ) {
                      $scope.bhl = data.bhl;
                      for(var i=0; i<$scope.bhl.length; i++){
-                        $scope.bhl[i].thumbnail = "http://biodiversitylibrary.org/pagethumb/" + extractPageId($scope.bhl[i].url);
+                        $scope.bhl[i].thumbnail = PROFILE.bhlThumbUrl + extractPageId($scope.bhl[i].url);
                      }
                      $scope.$apply();
                 },
@@ -543,12 +576,7 @@
             }
 
             $scope.hasThumbnail = function(idx){
-//                $scope.updateThumbnail(idx);
-                if($scope.bhl[idx].thumbnail !== undefined && $scope.bhl[idx].thumbnail != ''){
-                    return true;
-                } else {
-                    return false;
-                }
+                return $scope.bhl[idx].thumbnail !== undefined && $scope.bhl[idx].thumbnail != '';
             }
 
             $scope.updateThumbnail = function(idx){
@@ -558,11 +586,11 @@
                     //remove any anchors
                     console.log("URL " + url);
                     var pageId = extractPageId(url);
-                    $scope.bhl[idx].thumbnail = "http://biodiversitylibrary.org/pagethumb/" + pageId;
+                    $scope.bhl[idx].thumbnail = PROFILE.bhlThumbUrl + pageId;
 
                     $.ajax({
                         type:"GET",
-                        url: "${createLink(controller: "BHL", action:"pageLookup")}/" + pageId,
+                        url: PROFILE.bhlLookupUrl + "/" + pageId,
                         success: function( data ) {
                              $scope.bhl[idx].fullTitle = data.Result.FullTitle;
                              $scope.bhl[idx].edition = data.Result.Edition;
@@ -592,12 +620,11 @@
                 //alert("Saving BHL links");
                 $.ajax({
                     type: "POST",
-                    url: "${createLink(controller: 'profile', action: 'updateBHLLinks')}/${profile.uuid}",
+                    url: PROFILE.bhlUpdateUrl + "/" + PROFILE.uuid,
                     dataType: "json",
                     contentType: 'application/json',
-                    data: JSON.stringify({ profileUuid: "${profile.uuid}", links: $scope.bhl }),
+                    data: JSON.stringify({ profileUuid: PROFILE.uuid, links: $scope.bhl }),
                     success: function( data ) {
-                        //alert("Saved!");
                         $scope.$apply();
                     },
                     error: function(jqXHR, textStatus, errorThrown){
@@ -612,7 +639,7 @@
 
             $.ajax({
                 type:"GET",
-                url: "${grailsApplication.config.profile.service.url}/profile/${profile.uuid}",
+                url: PROFILE.profileServiceUrl + "/profile/" + PROFILE.uuid,
                 success: function( data ) {
                      $scope.links = data.links;
                      $scope.$apply();
@@ -632,12 +659,11 @@
                 //ajax post
                 $.ajax({
                     type: "POST",
-                    url: "${createLink(controller: 'profile', action: 'updateLinks')}/${profile.uuid}",
+                    url: PROFILE.linksUpdateUrl  + "/" + PROFILE.uuid,
                     dataType: "json",
                     contentType: 'application/json',
-                    data: JSON.stringify({ profileUuid: "${profile.uuid}", links: $scope.links }),
+                    data: JSON.stringify({ profileUuid: PROFILE.uuid, links: $scope.links }),
                     success: function( data ) {
-                        alert("Saved!");
                         $scope.$apply();
                     },
                     error: function(jqXHR, textStatus, errorThrown){
@@ -649,14 +675,14 @@
         }])
         .controller('AttributeEditor', ['$scope', function($scope) {
 
-            $scope.readonly = ${!edit};
+            $scope.readonly = !PROFILE.edit;
             $scope.attributes = [];
             $scope.attributeTitles = [];
             $scope.isSaving = false;
 
             $.ajax({
                 type:"GET",
-                url: "${grailsApplication.config.profile.service.url}/profile/${profile.uuid}",
+                url: PROFILE.profileServiceUrl + "/profile/" + PROFILE.uuid,
                 success: function( data ) {
                      $scope.attributes = data.attributes;
                      $scope.$apply();
@@ -668,7 +694,7 @@
 
             $.ajax({
                 type:"GET",
-                url: "${grailsApplication.config.profile.service.url}/vocab/${opus.attributeVocabUuid}",
+                url: PROFILE.profileServiceUrl + "/vocab/" + PROFILE.vocabUuid,
                 success: function( data ) {
                     $scope.attributeTitles = data.terms;
                 },
@@ -685,7 +711,7 @@
             $scope.showAudit = function(idx){
                 $.ajax({
                     type:"GET",
-                    url: "${grailsApplication.config.profile.service.url}/audit/object/" + $scope.attributes[idx].uuid,
+                    url: PROFILE.profileServiceUrl + "/audit/object/" + $scope.attributes[idx].uuid,
                     success: function( data ) {
                         console.log( data);
                         $scope.attributes[idx].audit = data;
@@ -704,7 +730,7 @@
                         //delete with ajax
                         $.ajax({
                             type: "DELETE",
-                            url: "${createLink(mapping: "deleteAttribute")}/" + attribute.uuid +"?profileUuid=${profile.uuid}",
+                            url: PROFILE.deleteAttributeUrl + "/" + attribute.uuid + "?profileUuid=" + PROFILE.uuid,
                             dataType: "json",
                             data: {
                                 uuid: attribute.uuid,
@@ -722,7 +748,6 @@
                     } else {
                         $scope.attributes.splice(idx, 1);
                         console.log("Local delete only deleting attributes: " + $scope.attributes.length);
-//                        $scope.$apply();
                     }
                 }
             }
@@ -741,7 +766,7 @@
                 return $scope.attributes[idx].saving;
             }
 
-            $scope.saveAttribute = function(idx) {
+            $scope.saveAttribute = function(idx, attributeForm) {
                 console.log("Saving attribute " + idx);
                 var attribute = $scope.attributes[idx];
                 $scope.attributes[idx].saving = true;
@@ -749,7 +774,7 @@
                 //ajax post
                 $.ajax({
                     type: "POST",
-                    url: "${createLink(controller:"profile", action:"updateAttribute")}/" + attribute.uuid,
+                    url: PROFILE.updateAttribute + "/" + attribute.uuid,
                     dataType: "json",
                     data: {
                         profileUuid:"${profile.uuid}",
@@ -764,6 +789,7 @@
                          console.log("uuid before save: " + $scope.attributes[idx].uuid )
                          $scope.attributes[idx].uuid = data.uuid;
                          console.log("uuid after save: " + $scope.attributes[idx].uuid )
+                         attributeForm.$setPristine();
                          $scope.$apply();
                     },
                     error: function(jqXHR, textStatus, errorThrown){
