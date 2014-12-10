@@ -24,10 +24,10 @@ grails.project.dependency.resolution = {
     def httpmimeVersion = "4.3.3"
 
     repositories {
-        inherits true // Whether to inherit repository definitions from plugins
         mavenLocal()
-        mavenRepo "http://nexus.ala.org.au/content/groups/public/"
-        mavenRepo "http://maven.ala.org.au/repository/"
+        mavenRepo ("http://nexus.ala.org.au/content/groups/public/") {
+            updatePolicy 'always'
+        }
     }
 
     dependencies {
