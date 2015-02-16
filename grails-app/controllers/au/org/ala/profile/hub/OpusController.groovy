@@ -1,83 +1,78 @@
 package au.org.ala.profile.hub
 
-import groovy.json.JsonSlurper
+import static au.org.ala.profile.hub.util.HubConstants.*
+import au.org.ala.profile.hub.util.JsonUtil
+import au.org.ala.web.AuthService
 
 class OpusController {
 
-    def authService
-    def webService
+    AuthService authService
+    CollectoryService collectoryService
+    UserService userService
+    ProfileService profileService
+
+    JsonUtil jsonUtil = new JsonUtil()
 
     def index() {
-        def js = new JsonSlurper()
-        def opui = js.parseText(new URL(grailsApplication.config.profile.service.url + "/opus/" ).text)
-        [
-         opui: opui,
-         dataResources: getDataResources(),
-         logoUrl: 'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
-         bannerUrl: 'http://images.ala.org.au/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original',
-         pageTitle: 'Profile collections',
+        def opui = profileService.getOpus()
 
+        render view: 'index', model: [
+                opui         : opui ?: [],
+                dataResources: collectoryService.getDataResources(),
+                logoUrl      : DEFAULT_OPUS_LOGO_URL,
+                bannerUrl    : DEFAULT_OPUS_BANNER_URL,
+                pageTitle    : DEFAULT_OPUS_TITLE
         ]
     }
 
-    def findUser(){
-        //http://auth.ala.org.au/userdetails/userDetails/getUserDetails?userName=david.martin@csiro.au
-        def resp = webService.doPost("http://auth.ala.org.au/userdetails/userDetails/getUserDetails?userName=" + params.userName,[:])
+    def findUser() {
+        def user = userService.findUser(params.userName)
         response.setContentType("application/json")
-        render resp.resp
+        render user
     }
 
 
-    def edit(){
-        def js = new JsonSlurper()
-        def opus = js.parseText(new URL(grailsApplication.config.profile.service.url + "/opus/" + params.uuid ).text)
-        def dataResource = js.parseText(new URL("http://collections.ala.org.au/ws/dataResource/" + opus.dataResourceUid).text)
-        def vocab
-        if(opus.attributeVocabUuid){
-            vocab = js.parseText(new URL(grailsApplication.config.profile.service.url + "/vocab/" + opus.attributeVocabUuid ).text)
+    def edit() {
+        def opus = jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/opus/${params.opusId}")
+        def dataResource = jsonUtil.fromUrl("${grailsApplication.config.collectory.service.url}/dataResource/${opus.dataResourceUid}")
+
+        def vocab = null
+        if (opus.attributeVocabUuid) {
+            vocab = jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/vocab/${opus.attributeVocabUuid}")
         }
-        render(view:'edit', model:[
-                opus: opus,
-                dataResource:dataResource,
-                dataResources: getDataResources(),
-                logoUrl: opus.logoUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
-                bannerUrl: opus.bannerUrl?:'http://images.ala.org.au/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original',
-                pageTitle: opus.title?:'Profile collections',
-                vocab: vocab?.name?:'Not specified',
-                "currentUser": authService.getDisplayName()
+
+        render(view: 'edit', model: [
+                opus         : opus,
+                dataResource : dataResource,
+                dataResources: collectoryService.getDataResources(),
+                logoUrl      : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                bannerUrl    : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                pageTitle    : opus.title ?: DEFAULT_OPUS_TITLE,
+                vocab        : vocab?.name ?: DEFAULT_OPUS_VOCAB,
+                currentUser  : authService.getDisplayName()
         ])
     }
 
-    def show(){
-        def js = new JsonSlurper()
-        def opus = js.parseText(new URL(grailsApplication.config.profile.service.url + "/opus/" + params.uuid ).text)
-        def vocab
-        if(opus.attributeVocabUuid){
-            vocab = js.parseText(new URL(grailsApplication.config.profile.service.url + "/vocab/" + opus.attributeVocabUuid ).text)
+    def show() {
+        def opus = jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/opus/${params.opusId}")
+
+        def vocab = null
+        if (opus.attributeVocabUuid) {
+            vocab = jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/vocab/${opus.attributeVocabUuid}")
         }
 
-        def dataResource = js.parseText(new URL("http://collections.ala.org.au/ws/dataResource/" + opus.dataResourceUid).text)
-        [
-         opus: opus,
-         dataResource:dataResource,
-         dataResources: getDataResources(),
-         logoUrl: opus.logoUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
-         bannerUrl: opus.bannerUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/bg.jpg',
-         pageTitle: opus.title?:'Profile collections',
-         vocab: vocab?.name?:'Not specified'
+        def dataResource = jsonUtil.fromUrl("${grailsApplication.config.collectory.service.url}/dataResource/${opus.dataResourceUid}")
+
+        render view: 'show', model: [
+                opus         : opus,
+                dataResource : dataResource,
+                dataResources: collectoryService.getDataResources(),
+                logoUrl      : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                bannerUrl    : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                pageTitle    : opus.title ?: DEFAULT_OPUS_TITLE,
+                vocab        : vocab?.name ?: DEFAULT_OPUS_VOCAB,
         ]
     }
 
-    def getDataResources(){
-        def dataResources = [:]
-        def js = new JsonSlurper()
-        try {
-            js.parseText(new URL("http://collections.ala.org.au/ws/dataResource").text).each {
-                dataResources.put(it.uid, it.name)
-            }
-        } catch(Exception e){
-            log.error(e.getMessage(), e)
-        }
-        dataResources
-    }
+
 }

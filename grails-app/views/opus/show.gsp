@@ -31,7 +31,7 @@
                     <th>Taxon</th>
                 </tr>
                 <tr ng-repeat="profile in profiles">
-                    <td><a href="${createLink(mapping: 'viewProfile')}/{{ profile.uuid }}">{{profile.scientificName}}</a></td>
+                    <td><a href="${createLink(mapping: 'viewProfile')}/{{ profile.profileId }}">{{profile.scientificName}}</a></td>
                 </tr>
             </table>
 
@@ -44,10 +44,10 @@
         <div class="well" style="margin-top:20px;">
             <div>
                 <g:if test="${!edit}">
-                    <g:link class="btn pull-right" mapping="editOpus"  params="[uuid:opus.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
+                    <g:link class="btn pull-right" mapping="editOpus"  params="[opusId:opus.uuid]"><i class="icon-edit"></i>&nbsp;Edit</g:link>
                 </g:if>
                 <g:else>
-                    <g:link class="btn pull-right" mapping="viewOpus"  params="[uuid:opus.uuid]">Public view</g:link>
+                    <g:link class="btn pull-right" mapping="viewOpus"  params="[opusId:opus.uuid]">Public view</g:link>
                 </g:else>
             </div>
 
@@ -79,7 +79,7 @@
                     jsonp: "callback",
                     dataType: "jsonp",
                     data: {
-                        opusUuid: "${opus.uuid}",
+                        opusId: "${opus.uuid}",
                         scientificName: $scope.searchTerm,
                         format: 'json'
                     },

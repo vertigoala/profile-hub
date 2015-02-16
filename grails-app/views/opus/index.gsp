@@ -4,6 +4,8 @@
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <meta name="logoUrl" content="${logoUrl}"/>
     <title>Profile collections | Atlas of Living Australia</title>
+
+    <r:require module="profiles"/>
 </head>
 
 <body>
@@ -18,7 +20,7 @@
 <ul>
 <g:each in="${opui}" var="opus">
     <li>
-        <g:link mapping="viewOpus" params="[uuid:opus.uuid]">${opus.title}</g:link>
+        <g:link mapping="viewOpus" params="[opusId:opus.uuid]">${opus.title}</g:link>
     </li>
 </g:each>
 </ul>

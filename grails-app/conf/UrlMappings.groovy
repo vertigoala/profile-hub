@@ -2,22 +2,22 @@ class UrlMappings {
 
 	static mappings = {
 
-        name deleteAttribute: "/profile/deleteAttribute/$uuid"(controller: 'profile', action: 'deleteAttribute')
-        name updateAttribute: "/profile/updateAttribute/$uuid"(controller: 'profile', action: 'updateAttribute')
+        name deleteAttribute: "/profile/deleteAttribute/$attributeId"(controller: 'profile', action: 'deleteAttribute')
+        name updateAttribute: "/profile/updateAttribute/$profileId"(controller: 'profile', action: 'updateAttribute')
         name createAttribute: "/profile/updateAttribute/"(controller: 'profile', action: 'updateAttribute')
 
-        name updateLinks: "/profile/updateLinks/$uuid"(controller: 'profile', action: 'updateLinks')
-        name updateBHLLinks: "/profile/updateBHLLinks/$uuid"(controller: 'profile', action: 'updateBHLLinks')
+        name updateLinks: "/profile/updateLinks/$profileId"(controller: 'profile', action: 'updateLinks')
+        name updateBHLLinks: "/profile/updateBHLLinks/$profileId"(controller: 'profile', action: 'updateBHLLinks')
 
-        name editProfile: "/profile/edit/$uuid"(controller: 'profile', action: 'edit')
-        name viewProfile: "/profile/$uuid"(controller: 'profile', action: 'show')
+        name editProfile: "/profile/edit/$profileId"(controller: 'profile', action: 'edit')
+        name viewProfile: "/profile/$profileId"(controller: 'profile', action: 'show')
 
 
         name findUser: "/opus/findUser"(controller: 'opus', action: 'findUser')
         name uploadTaxaToOpus: "/opus/uploadTaxa"(controller: 'opus', action: 'taxaUpload')
 
-        name viewOpus: "/opus/$uuid"(controller: 'opus', action: 'show')
-        name editOpus: "/opus/edit/$uuid"(controller: 'opus', action: 'edit')
+        name viewOpus: "/opus/$opusId"(controller: 'opus', action: 'show')
+        name editOpus: "/opus/edit/$opusId"(controller: 'opus', action: 'edit')
 
         name bhl: "/bhl/$pageId"(controller: 'BHL', action: 'pageLookup')
 

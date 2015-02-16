@@ -93,11 +93,6 @@ grails.hibernate.osiv.readonly = false
 layout = 'custom'
 skin.fluidLayout = true
 app.http.header.userId = "X-ALA-userId"
-api_key = "XXXXXXXXXXXXXXXX"
-
-if(!profile.service.url){
-    profile.service.url="http://localhost:8081/profile-service"
-}
 
 environments {
     development {
@@ -115,17 +110,41 @@ grails.cache.config = {
 }
 
 // log4j configuration
-log4j.main = {
+def loggingDir = (System.getProperty('catalina.base') ? System.getProperty('catalina.base') + '/logs' : './logs')
 
-    error  'org.codehaus.groovy.grails.web.servlet',        // controllers
-           'org.codehaus.groovy.grails.web.pages',          // GSP
-           'org.codehaus.groovy.grails.web.sitemesh',       // layouts
-           'org.codehaus.groovy.grails.web.mapping.filter', // URL mapping
-           'org.codehaus.groovy.grails.web.mapping',        // URL mapping
-           'org.codehaus.groovy.grails.commons',            // core / classloading
-           'org.codehaus.groovy.grails.plugins',            // plugins
-           'org.codehaus.groovy.grails.orm.hibernate',      // hibernate integration
-           'org.springframework',
-           'org.hibernate',
-           'net.sf.ehcache.hibernate'
+log4j = {
+    appenders {
+        environments {
+            production {
+                println "Log4j logs will be written to : ${loggingDir}"
+                rollingFile name: "tomcatLog", maxFileSize: '1MB', file: "${loggingDir}/${appName}.log", threshold: Level.ERROR, layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n")
+            }
+            development {
+                console name: "stdout", layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n"), threshold: Level.DEBUG
+            }
+            test {
+                println "Log4j logs will be written to : ${loggingDir}"
+                rollingFile name: "tomcatLog", maxFileSize: '1MB', file: "/tmp/${appName}", threshold: Level.DEBUG, layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n")
+                console name: "stdout", layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n"), threshold: Level.DEBUG
+            }
+        }
+    }
+    root {
+        // change the root logger to my tomcatLog file
+        error 'tomcatLog'
+        warn 'tomcatLog'
+        additivity = true
+    }
+
+    error   'au.org.ala.cas.client',
+            "au.org.ala",
+            'grails.spring.BeanBuilder',
+            'grails.plugin.webxml',
+            'grails.plugin.cache.web.filter',
+            'grails.app.services.org.grails.plugin.resource',
+            'grails.app.taglib.org.grails.plugin.resource',
+            'grails.app.resourceMappers.org.grails.plugin.resource'
+
+    debug   "grails.app",
+            "au.org.ala"
 }

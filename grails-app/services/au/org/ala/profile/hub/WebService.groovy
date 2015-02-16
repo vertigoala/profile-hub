@@ -1,4 +1,5 @@
 package au.org.ala.profile.hub
+
 import grails.converters.JSON
 import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
 
@@ -8,7 +9,8 @@ class WebService {
 
     static transactional = false
 
-    def grailsApplication, userService
+    def grailsApplication
+    UserService userService
 
     def get(String url, boolean includeUserId) {
         def conn = null
@@ -23,19 +25,23 @@ class WebService {
             def error = [error     : "Failed calling web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
                          statusCode: conn?.responseCode ?: "",
                          detail    : conn?.errorStream?.text]
-            log.error error
+            log.error error, e
             return error
         }
     }
 
-    private int defaultTimeout() {
+    private int defaultReadTimeout() {
         grailsApplication.config.webservice.readTimeout as int
+    }
+
+    private int defaultConnectTimeout() {
+        grailsApplication.config.webservice.connectTimeout as int
     }
 
     private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null) {
         URLConnection conn = new URL(url).openConnection()
 
-        def readTimeout = timeout ?: defaultTimeout()
+        def readTimeout = timeout ?: defaultReadTimeout()
         conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
         conn.setReadTimeout(readTimeout)
         def user = userService.getUser()
@@ -166,43 +172,52 @@ class WebService {
     }
 
     def doPost(String url, Map postBody) {
-        def conn = null
-        def charEncoding = 'utf-8'
+        def charEncoding = "utf-8"
+
+        URLConnection conn = null
+        Map response = [:]
+        OutputStreamWriter writer = null
         try {
             conn = new URL(url).openConnection()
             conn.setDoOutput(true)
             conn.setRequestProperty("Content-Type", "application/json;charset=${charEncoding}");
-            conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
+            conn.setRequestProperty("Authorization", grailsApplication.config.api_key as String);
 
             def user = userService.getUser()
             if (user) {
-                conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId) // used by ecodata
-                conn.setRequestProperty("Cookie", "ALA-Auth=" + java.net.URLEncoder.encode(user.userName, charEncoding))
-                // used by specieslist
+                conn.setRequestProperty(grailsApplication.config.app.http.header.userId as String, user.userId as String)
+                conn.setRequestProperty("Cookie", "ALA-Auth=${URLEncoder.encode(user.userName, charEncoding)}")
             }
-            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
-            wr.write((postBody as JSON).toString())
-            wr.flush()
+
+            writer = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
+            writer.write((postBody as JSON).toString())
+            writer.flush()
             def resp = conn.inputStream.text
-            wr.close()
-            return [resp: JSON.parse(resp ?: "{}")]
+
+            response = [resp: JSON.parse(resp ?: "{}")]
             // fail over to empty json object if empty response string otherwise JSON.parse fails
         } catch (SocketTimeoutException e) {
-            def error = [error: "Timed out calling web service. URL= ${url}."]
-            log.error(error, e)
-            return error
+            response = [error: "Timed out calling web service. URL= ${url}."]
+            log.error(response, e)
         } catch (Exception e) {
-            def error = [error     : "Failed calling web service. ${e.getMessage()} URL= ${url}.",
-                         statusCode: conn?.responseCode ?: "",
-                         detail    : conn?.errorStream?.text]
-            log.error(error, e)
-            return error
+            response = [error     : "Failed calling web service. ${e.getMessage()} URL= ${url}.",
+                        statusCode: conn?.responseCode ?: "",
+                        detail    : conn?.errorStream?.text]
+            log.error(response, e)
         }
+        finally {
+            if (writer) {
+                writer.close()
+            }
+        }
+
+        response
     }
 
     def doDelete(String url) {
-        url += (url.indexOf('?') == -1 ? '?' : '&') + "api_key=${grailsApplication.config.api_key}"
-        def conn = null
+        url += (url.contains('?') ? '?' : '&') + "api_key=${grailsApplication.config.api_key}"
+        Map response
+        URLConnection conn = null
         try {
             conn = new URL(url).openConnection()
             conn.setRequestMethod("DELETE")
@@ -211,56 +226,22 @@ class WebService {
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
             }
-            return conn.getResponseCode()
+            response = [resp: JSON.parse(resp ?: "{}")]
         } catch (Exception e) {
-            println e.message
-            return 500
+            response = [error     : "Failed calling web service. ${e.getMessage()} URL= ${url}.",
+                        statusCode: conn?.responseCode ?: "",
+                        detail    : conn?.errorStream?.text]
+            log.error(response, e)
         } finally {
             if (conn != null) {
-                conn?.disconnect()
+                conn?.close()
             }
         }
+        response
     }
 
-//    /**
-//     * Forwards a HTTP multipart/form-data request to ecodata.
-//     * @param url the URL to forward to.
-//     * @param params the (string typed) HTTP parameters to be attached.
-//     * @param file the Multipart file object to forward.
-//     * @return [status:<request status>, content:<The response content from the server, assumed to be JSON>
-//     */
-//    def postMultipart(url, Map params, MultipartFile file, fileParam = null) {
-//
-//        def result = [:]
-//        def user = userService.getUser()
-//
-//        def fileParamName = fileParam ?: file.name
-//        HTTPBuilder builder = new HTTPBuilder(url)
-//        builder.request(Method.POST) { request ->
-//            requestContentType: 'multipart/form-data'
-//            MultipartEntity content = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE)
-//            content.addPart(fileParamName, new InputStreamBody(file.inputStream, file.contentType, file.originalFilename))
-//            params.each { key, value ->
-//                content.addPart(key, new StringBody(value))
-//            }
-//            headers.'Authorization' = grailsApplication.config.api_key
-//            if (user) {
-//                headers[grailsApplication.config.app.http.header.userId] = user.userId
-//            } else {
-//                log.warn("No user associated with request: ${url}")
-//            }
-//            request.setEntity(content)
-//
-//            response.success = { resp, message ->
-//                result.status = resp.status
-//                result.content = message
-//            }
-//
-//            response.failure = { resp ->
-//                result.status = resp.status
-//                result.error = "Error POSTing to ${url}"
-//            }
-//        }
-//        result
-//    }
+    private getConnection(String url, Map properties, String method, int connectTimeout = -1, int readTimeout = -1) {
+
+    }
+
 }

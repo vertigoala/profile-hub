@@ -6,11 +6,11 @@ class UserService {
     def grailsApplication, authService, webService
 
     def getCurrentUserDisplayName() {
-        getUser()?.displayName?:"" //?:"mark.woolston@csiro.au"
+        getUser()?.displayName ?: "" //?:"mark.woolston@csiro.au"
     }
 
     def getCurrentUserId() {
-        getUser()?.userId?:""
+        getUser()?.userId ?: ""
     }
 
     public UserDetails getUser() {
@@ -27,6 +27,11 @@ class UserService {
         return user
     }
 
+    def findUser(String username) {
+        def result = webService.doPost("${grailsApplication.config.userdetails.service.url}/userDetails/getUserDetails?userName=${username}", [:])
+        result.resp
+    }
+
     def userInRole(role) {
         authService.userInRole(role)
     }
@@ -38,6 +43,6 @@ class UserService {
     def checkEmailExists(String email) {
         def url = "http://auth.ala.org.au/userdetails/userDetails/getUserDetails?userName=${email}"
         def resp = webService.doPost(url.toString(), [:])
-        return resp?.resp?.userId?:""
+        return resp?.resp?.userId ?: ""
     }
 }
