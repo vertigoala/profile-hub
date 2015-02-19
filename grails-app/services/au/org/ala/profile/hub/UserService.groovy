@@ -1,9 +1,12 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.web.AuthService
 import au.org.ala.web.UserDetails
 
 class UserService {
-    def grailsApplication, authService, webService
+    def grailsApplication
+    AuthService authService
+    WebService webService
 
     def getCurrentUserDisplayName() {
         getUser()?.displayName ?: "" //?:"mark.woolston@csiro.au"
@@ -37,11 +40,13 @@ class UserService {
     }
 
     def userIsSiteAdmin() {
-        authService.userInRole(grailsApplication.config.security.cas.officerRole) || authService.userInRole(grailsApplication.config.security.cas.adminRole) || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole)
+        (authService.userInRole(grailsApplication.config.security.cas.officerRole)
+                || authService.userInRole(grailsApplication.config.security.cas.adminRole)
+                || authService.userInRole(grailsApplication.config.security.cas.alaAdminRole))
     }
 
     def checkEmailExists(String email) {
-        def url = "http://auth.ala.org.au/userdetails/userDetails/getUserDetails?userName=${email}"
+        def url = "${grailsApplication.config.userdetails.service.url}/userdetails/userDetails/getUserDetails?userName=${email}"
         def resp = webService.doPost(url.toString(), [:])
         return resp?.resp?.userId ?: ""
     }

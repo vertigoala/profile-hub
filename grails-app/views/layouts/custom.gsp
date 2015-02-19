@@ -10,7 +10,7 @@
     <link href="http://www.ala.org.au/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon"
           type="image/x-icon"/>
     <title><g:layoutTitle/></title>
-    <r:require modules="bootstrap, application, jqueryui"/>
+    <r:require modules="bootstrap"/>
     <r:layoutResources/>
     <g:layoutHead/>
     <style type="text/css">

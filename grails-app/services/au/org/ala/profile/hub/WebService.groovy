@@ -1,12 +1,15 @@
 package au.org.ala.profile.hub
 
 import grails.converters.JSON
+import org.apache.http.HttpHeaders
+import org.apache.http.HttpStatus
 import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
+import org.springframework.http.MediaType
 
 import javax.servlet.http.HttpServletResponse
 
 class WebService {
-
+    // TODO refactor this class, it's really ugly
     static transactional = false
 
     def grailsApplication
@@ -18,12 +21,12 @@ class WebService {
             conn = configureConnection(url, includeUserId)
             return responseText(conn)
         } catch (SocketTimeoutException e) {
-            def error = [error: "Timed out calling web service. URL= ${url}."]
+            def error = [error: "Timed out calling web service. URL= ${url}.", statusCode: HttpStatus.SC_GATEWAY_TIMEOUT]
             log.error error
             return error
         } catch (Exception e) {
             def error = [error     : "Failed calling web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
-                         statusCode: conn?.responseCode ?: "",
+                         statusCode: conn?.responseCode ?: HttpStatus.SC_INTERNAL_SERVER_ERROR,
                          detail    : conn?.errorStream?.text]
             log.error error, e
             return error
@@ -94,18 +97,19 @@ class WebService {
             log.error error
             return error
         } catch (SocketTimeoutException e) {
-            def error = [error: "Timed out getting json. URL= ${url}."]
+            def error = [error: "Timed out getting json. URL= ${url}.",
+                    statusCode: HttpStatus.SC_GATEWAY_TIMEOUT]
             println error
             return error
         } catch (ConnectException ce) {
             log.info "Exception class = ${ce.getClass().name} - ${ce.getMessage()}"
-            def error = [error: "ecodata service not available. URL= ${url}."]
+            def error = [error: "ecodata service not available. URL= ${url}.", statusCode: HttpStatus.SC_INTERNAL_SERVER_ERROR]
             println error
             return error
         } catch (Exception e) {
             log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
             def error = [error     : "Failed to get json from web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
-                         statusCode: conn?.responseCode ?: "",
+                         statusCode: conn?.responseCode ?: HttpStatus.SC_INTERNAL_SERVER_ERROR,
                          detail    : conn?.errorStream?.text]
             log.error error
             return error
@@ -131,6 +135,7 @@ class WebService {
     def doPostWithParams(String url, Map params) {
         def conn = null
         def charEncoding = 'utf-8'
+        OutputStreamWriter writer = null
         try {
             String query = ""
             boolean first = true
@@ -151,23 +156,26 @@ class WebService {
                 conn.setRequestProperty("Cookie", "ALA-Auth=" + java.net.URLEncoder.encode(user.userName, charEncoding))
                 // used by specieslist
             }
-            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
+            writer = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
 
-            wr.flush()
+            writer.flush()
             def resp = conn.inputStream.text
-            wr.close()
-            return [resp: JSON.parse(resp ?: "{}")]
+            writer.close()
+            return [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
             // fail over to empty json object if empty response string otherwise JSON.parse fails
         } catch (SocketTimeoutException e) {
-            def error = [error: "Timed out calling web service. URL= ${url}."]
-            log.error(error, e)
-            return error
+            response = [error: "Timed out calling web service. URL= ${url}.",
+                        statusCode: conn?.responseCode ?: HttpStatus.SC_GATEWAY_TIMEOUT]
+            log.error(response, e)
         } catch (Exception e) {
-            def error = [error     : "Failed calling web service. ${e.getMessage()} URL= ${url}.",
-                         statusCode: conn?.responseCode ?: "",
-                         detail    : conn?.errorStream?.text]
-            log.error(error, e)
-            return error
+            response = [error     : "Failed calling web service. ${e.getMessage()} URL= ${url}.",
+                        statusCode: conn?.responseCode ?: HttpStatus.SC_INTERNAL_SERVER_ERROR,
+                        detail    : conn?.errorStream?.text]
+            log.error(response, e)
+        } finally {
+            if (writer) {
+                writer.close()
+            }
         }
     }
 
@@ -175,7 +183,7 @@ class WebService {
         def charEncoding = "utf-8"
 
         URLConnection conn = null
-        Map response = [:]
+        def response = [:]
         OutputStreamWriter writer = null
         try {
             conn = new URL(url).openConnection()
@@ -194,18 +202,23 @@ class WebService {
             writer.flush()
             def resp = conn.inputStream.text
 
-            response = [resp: JSON.parse(resp ?: "{}")]
+            response = [resp:JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+            log.debug("Response from POST = ${response}")
             // fail over to empty json object if empty response string otherwise JSON.parse fails
+        } catch (FileNotFoundException e) {
+            response = [error: "Not Found: URL= ${url}.",
+                        statusCode: conn?.responseCode ?: HttpStatus.SC_NOT_FOUND]
+            log.error(response, e)
         } catch (SocketTimeoutException e) {
-            response = [error: "Timed out calling web service. URL= ${url}."]
+            response = [error: "Timed out calling web service. URL= ${url}.",
+                        statusCode: conn?.responseCode ?: HttpStatus.SC_GATEWAY_TIMEOUT]
             log.error(response, e)
         } catch (Exception e) {
             response = [error     : "Failed calling web service. ${e.getMessage()} URL= ${url}.",
-                        statusCode: conn?.responseCode ?: "",
+                        statusCode: conn?.responseCode ?: HttpStatus.SC_INTERNAL_SERVER_ERROR,
                         detail    : conn?.errorStream?.text]
             log.error(response, e)
-        }
-        finally {
+        } finally {
             if (writer) {
                 writer.close()
             }
@@ -215,7 +228,7 @@ class WebService {
     }
 
     def doDelete(String url) {
-        url += (url.contains('?') ? '?' : '&') + "api_key=${grailsApplication.config.api_key}"
+        url += (url.contains('?') ? '&' : '?') + "api_key=${grailsApplication.config.api_key}"
         Map response
         URLConnection conn = null
         try {
@@ -226,16 +239,25 @@ class WebService {
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
             }
-            response = [resp: JSON.parse(resp ?: "{}")]
+            int responseCode = conn.getResponseCode()
+            if (responseCode == HttpStatus.SC_OK || responseCode == HttpStatus.SC_NO_CONTENT) {
+                response = [success: true, statusCode: responseCode]
+            } else {
+                response = [error: "Delete Failed",
+                           statusCode: responseCode]
+                log.error("Delete failed with response code ${responseCode}")
+            }
+        } catch (SocketTimeoutException e) {
+            response = [error: "Timed out calling web service. URL= ${url}.",
+                        statusCode: conn?.responseCode ?: HttpStatus.SC_GATEWAY_TIMEOUT]
+            log.error(response, e)
         } catch (Exception e) {
             response = [error     : "Failed calling web service. ${e.getMessage()} URL= ${url}.",
-                        statusCode: conn?.responseCode ?: "",
+                        statusCode: conn?.responseCode ?: HttpStatus.SC_INTERNAL_SERVER_ERROR,
                         detail    : conn?.errorStream?.text]
             log.error(response, e)
         } finally {
-            if (conn != null) {
-                conn?.close()
-            }
+
         }
         response
     }

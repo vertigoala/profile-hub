@@ -2,7 +2,6 @@ package au.org.ala.profile.hub
 
 import au.org.ala.web.AuthService
 import grails.converters.JSON
-import groovy.json.JsonSlurper
 import org.apache.http.HttpStatus
 
 class ProfileController {
@@ -13,80 +12,162 @@ class ProfileController {
     def index() {}
 
     def edit() {
-        def model = profileService.getProfile(params.profileId)
-
-        if (!model) {
-            notFound
+        if (!params.profileId) {
+            badRequest()
         } else {
-            // TODO need CAS check here
-            model.put("edit", true)
-            model.put("currentUser", authService.getDisplayName())
-            render view: "show", model: model
+            def profile = profileService.getProfile(params.profileId as String)
+
+            if (!profile) {
+                notFound()
+            } else {
+                // TODO need CAS check here
+                Map model = profile
+                model << [edit: true, currentUser: authService.getDisplayName()]
+                render view: "show", model: model
+            }
         }
     }
 
     def show() {
-        def model = profileService.getProfile(params.profileId)
-
-        if (!model) {
-            notFound
+        if (!params.profileId) {
+            badRequest()
         } else {
-            model.put("edit", false)
-            render view: "show", model: model
+            def profile = profileService.getProfile(params.profileId as String)
+
+            if (!profile) {
+                notFound()
+            } else {
+                Map model = profile
+                model << [edit: false]
+                render view: "show", model: model
+            }
+        }
+    }
+
+    def getJson() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            response.setContentType("application/json")
+            def profile = profileService.getProfile(params.profileId as String)
+
+            if (!profile) {
+                notFound()
+            } else {
+                render profile as JSON
+            }
         }
     }
 
     def updateBHLLinks() {
-        def jsonRequest = getJsonRequest()
+        def jsonRequest = request.getJSON()
 
-        log.debug "Updating attributing....."
-        //TODO check user in ROLE.....
-        def resp = profileService.updateBHLLinks(jsonRequest.profileId as String, jsonRequest.links)
+        if (!jsonRequest || !jsonRequest.profileId || !jsonRequest.links) {
+            badRequest()
+        } else {
+            log.debug "Updating attributing....."
+            //TODO check user in ROLE.....
+            def resp = profileService.updateBHLLinks(jsonRequest.profileId as String, jsonRequest.links)
 
-        response.setContentType("application/json")
-        render resp.resp as JSON
+            if (resp.statusCode != HttpStatus.SC_OK) {
+                response.status = resp.statusCode
+                response.sendError(resp.statusCode, resp.error ?: "")
+            } else {
+                response.setContentType("application/json")
+                render resp.resp as JSON
+            }
+        }
     }
 
     def updateLinks() {
         log.debug "Updating attributing....."
 
-        def jsonRequest = getJsonRequest()
+        def jsonRequest = request.getJSON()
+        if (!jsonRequest || !jsonRequest.profileId || !jsonRequest.links) {
+            badRequest()
+        } else {
 
-        //TODO check user in ROLE.....
-        def resp = profileService.updateLinks(jsonRequest.profileId as String, jsonRequest.links)
+            //TODO check user in ROLE.....
+            def resp = profileService.updateLinks(jsonRequest.profileId as String, jsonRequest.links)
 
-        response.setContentType("application/json")
-        render resp.resp as JSON
+            if (resp.statusCode != HttpStatus.SC_OK) {
+                response.status = resp.statusCode
+                response.sendError(resp.statusCode, resp.error ?: "")
+            } else {
+                response.setContentType("application/json")
+                render resp.resp as JSON
+            }
+        }
     }
 
     def updateAttribute() {
         log.debug "Updating attributing....."
+        def jsonRequest = request.getJSON()
 
-        //TODO check user in ROLE.....
-        def resp = profileService.updateAttributes(params.profileId, params.attributeId, params.titel, params.text)
+        // the attributeId may be blank (e.g. when creating a new attribute), but the request should still have it
+        if (!jsonRequest || !jsonRequest.has("attributeId") || !jsonRequest.profileId) {
+            badRequest()
+        } else {
+            //TODO check user in ROLE.....
+            def resp = profileService.updateAttribute(jsonRequest.profileId, jsonRequest.attributeId, jsonRequest.title, jsonRequest.text)
 
-        response.setContentType("application/json")
-        render resp.resp as JSON
+            if (resp.statusCode != HttpStatus.SC_OK) {
+                response.status = resp.statusCode
+                response.sendError(resp.statusCode, resp.error ?: "")
+            } else {
+                response.setContentType("application/json")
+                render resp.resp as JSON
+            }
+        }
     }
 
     def deleteAttribute() {
-        //TODO check user in ROLE.....
-        def resp = profileService.deleteAttribute(params.attributeId)
+        if (!params.attributeId || !params.profileId) {
+            badRequest()
+        } else {
+            //TODO check user in ROLE.....
+            def resp = profileService.deleteAttribute(params.attributeId, params.profileId)
 
-        response.setContentType("application/json")
-        response.setStatus(resp.resultCode)
-
-        def model = ["success": resultCode == HttpStatus.SC_OK]
-        render model as JSON
+            if (resp.statusCode != HttpStatus.SC_OK) {
+                response.status = resp.statusCode
+                response.sendError(resp.statusCode, resp.error ?: "")
+            } else {
+                response.setContentType("application/json")
+                def model = ["success": resp.statusCode == HttpStatus.SC_OK]
+                render model as JSON
+            }
+        }
     }
 
-    private getJsonRequest() {
-        JsonSlurper slurper = new JsonSlurper()
-        slurper.parse(request.getReader())
-    }
-
-    private notFound = {
+    private notFound() {
         response.status = HttpStatus.SC_NOT_FOUND
         response.sendError(HttpStatus.SC_NOT_FOUND)
+    }
+
+    private badRequest() {
+        response.status = HttpStatus.SC_BAD_REQUEST
+        response.sendError(HttpStatus.SC_BAD_REQUEST)
+    }
+
+    def attributesPanel = {
+        render template: "attributes"
+    }
+    def linksPanel = {
+        render template: "links"
+    }
+    def bhlLinksPanel = {
+        render template: "bhlLinks"
+    }
+    def classificationPanel = {
+        render template: "classification"
+    }
+    def taxonPanel = {
+        render template: "taxon"
+    }
+    def imagesPanel = {
+        render template: "images"
+    }
+    def mapPanel = {
+        render template: "map"
     }
 }
