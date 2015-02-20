@@ -1,6 +1,6 @@
 package au.org.ala.profile.hub
 
-class VocabController {
+class VocabController extends BaseController {
 
     ProfileService profileService
 

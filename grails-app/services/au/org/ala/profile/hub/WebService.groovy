@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.hub.util.JsonUtil
 import grails.converters.JSON
 import org.apache.http.HttpHeaders
 import org.apache.http.HttpStatus
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType
 import javax.servlet.http.HttpServletResponse
 
 class WebService {
+    static final DEFAULT_TIMEOUT_MILLIS = 600000; // five minutes
     // TODO refactor this class, it's really ugly
     static transactional = false
 
@@ -16,10 +18,12 @@ class WebService {
     UserService userService
 
     def get(String url, boolean includeUserId) {
+        log.debug("Fetching data from ${url}")
         def conn = null
         try {
             conn = configureConnection(url, includeUserId)
-            return responseText(conn)
+            String resp = responseText(conn)
+            return [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out calling web service. URL= ${url}.", statusCode: HttpStatus.SC_GATEWAY_TIMEOUT]
             log.error error
@@ -33,19 +37,19 @@ class WebService {
         }
     }
 
-    private int defaultReadTimeout() {
-        grailsApplication.config.webservice.readTimeout as int
+    private int getReadTimeout() {
+        (grailsApplication.config.webservice.readTimeout ?: DEFAULT_TIMEOUT_MILLIS) as int
     }
 
-    private int defaultConnectTimeout() {
-        grailsApplication.config.webservice.connectTimeout as int
+    private int getConnectTimeout() {
+        (grailsApplication.config.webservice.connectTimeout ?: DEFAULT_TIMEOUT_MILLIS) as int
     }
 
     private URLConnection configureConnection(String url, boolean includeUserId, Integer timeout = null) {
         URLConnection conn = new URL(url).openConnection()
 
-        def readTimeout = timeout ?: defaultReadTimeout()
-        conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
+        def readTimeout = timeout ?: getReadTimeout()
+        conn.setConnectTimeout(getConnectTimeout())
         conn.setReadTimeout(readTimeout)
         def user = userService.getUser()
         if (includeUserId && user) {
@@ -91,7 +95,7 @@ class WebService {
         try {
             conn = configureConnection(url, true, timeout)
             def json = responseText(conn)
-            return JSON.parse(json)
+            return [resp: JSON.parse(json ?: "{}"), statusCode: HttpStatus.SC_OK]
         } catch (ConverterException e) {
             def error = ['error': "Failed to parse json. ${e.getClass()} ${e.getMessage()} URL= ${url}."]
             log.error error

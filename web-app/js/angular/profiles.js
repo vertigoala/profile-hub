@@ -18,37 +18,6 @@ var profiles = {
         profiles.urls.biocacheWMSUrl = options.urls.biocacheBaseUrl + options.urls.biocacheWmsPath;
     },
 
-    addImages: function (imagesQuery) {
-        $.ajax({
-            url: profiles.urls.biocacheSearchUrl,
-            jsonp: "callback",
-            dataType: "jsonp",
-            data: {
-                q: imagesQuery,
-                fq: "multimedia:Image",
-                format: 'json'
-            },
-            success: function (response) {
-                if (response.totalRecords > 0) {
-                    console.log("number of records with images: " + response.totalRecords);
-
-                    var firstImage = response.occurrences[0];
-
-                    var firstImageDiv = $("#firstImage")
-                    firstImageDiv.append('<div class="imgConXXX"><a href="' + profiles.urls.biocacheRecordUrl + firstImage.uuid + '"><img src="' + firstImage.largeImageUrl + '"/></a> <div class="meta">' + firstImage.dataResourceName + '</div></div>');
-                    firstImageDiv.show();
-
-                    $.each(response.occurrences, function (key, record) {
-                        $('#browse_images').append('<div class="imgCon"><a href="' + profiles.urls.biocacheRecordUrl + record.uuid + '"><img src="' + record.largeImageUrl + '"/></a> <div class="meta">' + record.dataResourceName + '</div></div>');
-                    });
-                    $('#browse_images').show();
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("Error completing images - JSON - " + errorThrown + ", status = " + jqXHR.status);
-            }
-        });
-    },
 
     addTaxonMap: function (opus, profile, occurrenceQuery) {
         opus = $.parseJSON(opus)
@@ -158,9 +127,6 @@ profileEditor.config(function ($locationProvider) {
     // TODO remove this when all JS has been converted to Angular
     initialiseUrls();
 });
-
-
-
 
 
 

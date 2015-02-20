@@ -4,7 +4,7 @@ import static au.org.ala.profile.hub.util.HubConstants.*
 import au.org.ala.profile.hub.util.JsonUtil
 import au.org.ala.web.AuthService
 
-class OpusController {
+class OpusController extends BaseController {
 
     AuthService authService
     CollectoryService collectoryService

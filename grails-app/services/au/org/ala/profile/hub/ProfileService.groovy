@@ -149,4 +149,8 @@ class ProfileService {
 
         webService.doDelete("${grailsApplication.config.profile.service.url}/attribute/${attributeId}?profileId=${profileId}")
     }
+
+    def getAuditHistory(String objectId, String userId) {
+        jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${objectId ?: userId}")
+    }
 }

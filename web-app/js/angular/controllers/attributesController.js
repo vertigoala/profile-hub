@@ -80,7 +80,6 @@ profileEditor.controller('AttributeEditor', function ($scope, profileService, ut
     };
 
     $scope.saveAttribute = function (idx, attributeForm) {
-        console.log("Saving attribute " + idx);
         var attribute = $scope.attributes[idx];
         $scope.attributes[idx].saving = true;
 

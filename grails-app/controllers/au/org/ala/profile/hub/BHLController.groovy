@@ -3,7 +3,7 @@ package au.org.ala.profile.hub
 import org.apache.http.HttpStatus
 
 
-class BHLController {
+class BHLController extends BaseController {
 
     BiodiversityLibraryService biodiversityLibraryService
 

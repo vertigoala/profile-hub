@@ -1,4 +1,4 @@
-<div ng-controller="AttributeEditor" ng-init="init('${edit}')" class="ng-cloak">
+<div ng-controller="AttributeEditor" ng-init="init('${edit}')" class="ng-cloak" ng-cloak>
     <div class="ng-show" ng-show="!readonly">
         <button ng-click="addAttribute()" class="btn"><i class="icon icon-plus"></i>Add attribute</button>
         <button ng-click="addImage()" class="btn"><i class="icon icon-plus"></i>Add Image</button>
@@ -13,7 +13,7 @@
             <g:textField
                     typeahead="attributeTitle.name for attributeTitle in attributeTitles | filter: $viewValue"
                     class="form-control attribute-header-input" ng-model="attribute.title" name="title"
-                    value="title" placeholder="Name..."/>
+                    value="title" placeholder="Title..."/>
             <g:textArea class="field span12" rows="4" ng-model="attribute.text" name="text"
                         placeholder="Description..."/>
 
@@ -61,8 +61,7 @@
             </div>
         </div>
 
-        <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}"
-             ng-show="readonly">
+        <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}" ng-show="readonly">
             <blockquote style="border-left:none;">
                 <p>{{ attribute.text }}</p>
                 <small>

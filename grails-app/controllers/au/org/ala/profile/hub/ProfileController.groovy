@@ -4,10 +4,11 @@ import au.org.ala.web.AuthService
 import grails.converters.JSON
 import org.apache.http.HttpStatus
 
-class ProfileController {
+class ProfileController extends BaseController {
 
     AuthService authService
     ProfileService profileService
+    BiocacheService biocacheService
 
     def index() {}
 
@@ -139,14 +140,20 @@ class ProfileController {
         }
     }
 
-    private notFound() {
-        response.status = HttpStatus.SC_NOT_FOUND
-        response.sendError(HttpStatus.SC_NOT_FOUND)
-    }
+    def retrieveImages() {
+        if (!params.imageSources || !params.searchIdentifier) {
+            badRequest()
+        } else {
+            def resp = biocacheService.retrieveImages(params.searchIdentifier, params.imageSources)
 
-    private badRequest() {
-        response.status = HttpStatus.SC_BAD_REQUEST
-        response.sendError(HttpStatus.SC_BAD_REQUEST)
+            if (resp.statusCode != HttpStatus.SC_OK) {
+                response.status = resp.statusCode
+                sendError(resp.statusCode, resp.error)
+            } else {
+                response.setContentType("application/json")
+                render resp.resp as JSON
+            }
+        }
     }
 
     def attributesPanel = {
