@@ -447,21 +447,7 @@ class ProfileControllerSpec extends Specification {
 
         then:
         assert response.status == HttpStatus.SC_OK
-        assert response.json == [classifications: [resp: "classification"], speciesProfile: [resp: "speciesProfile"]]
-    }
-
-    def "retrieveClassifications should still return the classifications even if the speciesProfile lookup fails"() {
-        setup:
-        profileService.getClassification(_) >> [resp: [resp: "classification"], statusCode: 200]
-        profileService.getSpeciesProfile(_) >> [resp: [error: "ahhh"], statusCode: 400]
-
-        when:
-        params.guid = "guid1"
-        controller.retrieveClassifications()
-
-        then:
-        assert response.status == HttpStatus.SC_OK
-        assert response.json == [classifications: [resp: "classification"], speciesProfile: [error: "ahhh"]]
+        assert response.json == [resp: "classification"]
     }
 
     def "retrieveClassifications should return the error code from the service on failure of the service call"() {
@@ -471,6 +457,39 @@ class ProfileControllerSpec extends Specification {
         when:
         params.guid = "guid1"
         controller.retrieveClassifications()
+
+        then:
+        assert response.status == 666
+    }
+
+    def "retrieveSpeciesProfile should return a 400 (BAD REQUEST) if the guid parameter is not set"() {
+        when:
+        controller.retrieveSpeciesProfile()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "retrieveSpeciesProfile should return the resp element of the response from the service call on success"() {
+        setup:
+        profileService.getSpeciesProfile(_) >> [resp: [resp: "SpeciesProfile"], statusCode: 200]
+
+        when:
+        params.guid = "guid1"
+        controller.retrieveSpeciesProfile()
+
+        then:
+        assert response.status == HttpStatus.SC_OK
+        assert response.json == [resp: "SpeciesProfile"]
+    }
+
+    def "retrieveSpeciesProfile should return the error code from the service on failure of the service call"() {
+        setup:
+        profileService.getSpeciesProfile(_) >> [error: "something died!", statusCode: 666]
+
+        when:
+        params.guid = "guid1"
+        controller.retrieveSpeciesProfile()
 
         then:
         assert response.status == 666

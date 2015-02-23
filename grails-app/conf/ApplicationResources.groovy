@@ -12,7 +12,7 @@ modules = {
         resource url:"js/angular/controllers/LinksController.js"
         resource url:"js/angular/controllers/ImagesController.js"
         resource url:"js/angular/controllers/ListsController.js"
-        resource url:"js/angular/controllers/ClassificationController.js"
+        resource url:"js/angular/controllers/TaxonController.js"
         resource url:"css/profiles.css"
     }
 

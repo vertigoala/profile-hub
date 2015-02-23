@@ -177,18 +177,30 @@ class ProfileController extends BaseController {
         if (!params.guid) {
             badRequest()
         } else {
-            def classifications = profileService.getClassification(params.guid)
-            def speciesProfile = profileService.getSpeciesProfile(params.guid)
+            def resp = profileService.getClassification(params.guid)
 
-            // we only care if the classification lookup failed at this point: we can still display the classifications
-            // even if the species profile lookup failed
-            if (classifications.statusCode != HttpStatus.SC_OK) {
-                response.status = classifications.statusCode
-                sendError(classifications.statusCode, classifications.error)
+            if (resp.statusCode != HttpStatus.SC_OK) {
+                response.status = resp.statusCode
+                sendError(resp.statusCode, resp.error)
             } else {
-                Map resp = [classifications: classifications.resp, speciesProfile: speciesProfile.resp]
                 response.setContentType("application/json")
-                render resp as JSON
+                render resp.resp as JSON
+            }
+        }
+    }
+
+    def retrieveSpeciesProfile() {
+        if (!params.guid) {
+            badRequest()
+        } else {
+            def resp = profileService.getSpeciesProfile(params.guid)
+
+            if (resp.statusCode != HttpStatus.SC_OK) {
+                response.status = resp.statusCode
+                sendError(resp.statusCode, resp.error)
+            } else {
+                response.setContentType("application/json")
+                render resp.resp as JSON
             }
         }
     }
@@ -203,10 +215,6 @@ class ProfileController extends BaseController {
 
     def bhlLinksPanel = {
         render template: "bhlLinks"
-    }
-
-    def classificationPanel = {
-        render template: "classification"
     }
 
     def taxonPanel = {

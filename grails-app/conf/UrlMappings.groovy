@@ -16,6 +16,7 @@ class UrlMappings {
         name getImages: "/profile/images"(controller: "profile", action: "retrieveImages")
         name getLists: "/profile/lists"(controller: "profile", action: "retrieveLists")
         name getClassifications: "/profile/classifications"(controller: "profile", action: "retrieveClassifications")
+        name getSpeciesProfile: "/profile/speciesProfile"(controller: "profile", action: "retrieveSpeciesProfile")
 
         name findVocab: "/vocab/$vocabId" (controller: "vocab", action: "show")
 

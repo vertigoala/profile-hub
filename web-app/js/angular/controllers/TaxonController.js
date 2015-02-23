@@ -1,9 +1,10 @@
 /**
- * Classifications controller
+ * Taxon controller
  */
-profileEditor.controller('ClassificationsController', function ($scope, profileService, util, messageService) {
+profileEditor.controller('TaxonController', function ($scope, profileService, util, messageService) {
 
-    $scope.classifications = [];
+    $scope.speciesProfile = null;
+    $scope.classifications = null;
 
     $scope.init = function (edit) {
         $scope.readonly = edit != 'true';
@@ -15,6 +16,7 @@ profileEditor.controller('ClassificationsController', function ($scope, profileS
             $scope.profile = data.profile;
             $scope.opus = data.opus;
 
+            loadSpeciesProfile();
             loadClassifications();
         });
         profilePromise.error(function (data, status, headers, config) {
@@ -28,13 +30,27 @@ profileEditor.controller('ClassificationsController', function ($scope, profileS
 
         var promise = profileService.getClassifications($scope.profile.guid);
         promise.success(function (data, status, headers, config) {
-            console.log("Fetched " + data.classifications.length + " classifications");
-            $scope.classifications = data.classifications;
-            $scope.speciesProfile = data.speciesProfile;
+            console.log("Fetched " + data.length + " classifications");
+            $scope.classifications = data;
             messageService.pop();
         });
         promise.error(function (data, status, headers, config) {
             console.log("There was a problem retrieving classification for profile..." + status);
+            messageService.alert("An error occurred while retrieving the taxonomy.");
+        });
+    };
+
+    function loadSpeciesProfile() {
+        messageService.info("Loading taxon...");
+
+        var promise = profileService.getSpeciesProfile($scope.profile.guid);
+        promise.success(function (data, status, headers, config) {
+            console.log("Fetched species profile");
+            $scope.speciesProfile = data;
+            messageService.pop();
+        });
+        promise.error(function (data, status, headers, config) {
+            console.log("There was a problem retrieving species profile for profile..." + status);
             messageService.alert("An error occurred while retrieving the taxonomy.");
         });
     };
