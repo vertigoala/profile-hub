@@ -4,6 +4,7 @@ import grails.test.mixin.TestFor
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
 import spock.lang.Specification
+import org.codehaus.groovy.grails.plugins.codecs.URLCodec
 
 @TestFor(BiocacheService)
 @TestMixin(GrailsUnitTestMixin)
@@ -22,7 +23,7 @@ class BiocacheServiceSpec extends Specification {
         service.init()
         service.webService = webService
 
-        mockCodec(org.codehaus.groovy.grails.plugins.codecs.URLCodec)
+        mockCodec(URLCodec)
     }
 
     def "retrieveImages() should construct the correct Biocache Occurrance Search URL"() {

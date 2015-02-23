@@ -11,6 +11,3 @@
     </div>
 </div>
 
-<div class="bs-docs-example hide" id="browse_lists" data-content="Conservation & sensitivity lists">
-    <ul></ul>
-</div>

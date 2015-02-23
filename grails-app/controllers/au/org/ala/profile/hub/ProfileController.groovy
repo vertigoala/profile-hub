@@ -9,6 +9,7 @@ class ProfileController extends BaseController {
     AuthService authService
     ProfileService profileService
     BiocacheService biocacheService
+    SpeciesListService speciesListService
 
     def index() {}
 
@@ -156,25 +157,51 @@ class ProfileController extends BaseController {
         }
     }
 
+    def retrieveLists() {
+        if (!params.guid) {
+            badRequest()
+        } else {
+            def resp = speciesListService.getListsForGuid(params.guid)
+
+            if (resp.statusCode != HttpStatus.SC_OK) {
+                response.status = resp.statusCode
+                sendError(resp.statusCode, resp.error)
+            } else {
+                response.setContentType("application/json")
+                render resp.resp as JSON
+            }
+        }
+    }
+
     def attributesPanel = {
         render template: "attributes"
     }
+
     def linksPanel = {
         render template: "links"
     }
+
     def bhlLinksPanel = {
         render template: "bhlLinks"
     }
+
     def classificationPanel = {
         render template: "classification"
     }
+
     def taxonPanel = {
         render template: "taxon"
     }
+
     def imagesPanel = {
         render template: "images"
     }
+
     def mapPanel = {
         render template: "map"
+    }
+
+    def listsPanel = {
+        render template: "lists"
     }
 }

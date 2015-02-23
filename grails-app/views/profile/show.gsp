@@ -40,6 +40,7 @@
 
         <div class="span4">
             <g:include controller="profile" action="mapPanel"/>
+            <g:include controller="profile" action="listsPanel"/>
         </div>
 
         <r:script>
@@ -48,7 +49,6 @@
             <g:applyCodec encodeAs="none">
                 $(function() {
                     profiles.addTaxonMap('${opus.encodeAsJSON()}', '${profile.encodeAsJSON()}', '${occurrenceQuery}');
-                    profiles.addLists('${profile.encodeAsJSON()}');
                 });
             </g:applyCodec>
         </r:script>

@@ -1,7 +1,5 @@
 package au.org.ala.profile.hub
 
-import org.springframework.web.util.HtmlUtils
-
 import javax.annotation.PostConstruct
 
 class BiocacheService {

@@ -26,7 +26,7 @@ profileEditor.controller('ImagesController', function ($scope, profileService, u
     function loadImages() {
         messageService.info("Loading images...");
 
-        var searchIdentifier = $scope.profile.lsid ? $scope.profile.lsid : $scope.profile.scientificName;
+        var searchIdentifier = $scope.profile.guid ? "lsid:" + $scope.profile.guid : $scope.profile.scientificName;
         var imagesPromise = profileService.retrieveImages(searchIdentifier, $scope.opus.imageSources.join());
 
         imagesPromise.success(function (data, status, headers, config) {

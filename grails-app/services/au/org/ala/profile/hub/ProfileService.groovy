@@ -51,8 +51,8 @@ class ProfileService {
             def opus = getOpus(profile.opusId)
 
             def query
-            if (profile.lsid && profile.lsid != "null") {
-                query = "lsid:" + profile.lsid
+            if (profile.guid && profile.guid != "null") {
+                query = "lsid:" + profile.guid
             } else {
                 query = profile.scientificName
             }

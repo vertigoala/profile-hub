@@ -11,14 +11,20 @@ class ProfileControllerSpec extends Specification {
     ProfileController controller
     ProfileService profileService
     AuthService authService
+    BiocacheService biocacheService
+    SpeciesListService speciesListService
 
     def setup() {
         controller = new ProfileController()
 
         profileService = Mock(ProfileService)
         authService = Mock(AuthService)
+        biocacheService = Mock(BiocacheService)
+        speciesListService = Mock(SpeciesListService)
         controller.profileService = profileService
         controller.authService = authService
+        controller.biocacheService = biocacheService
+        controller.speciesListService = speciesListService
 
         authService.getDisplayName() >> "Fred Bloggs"
     }
@@ -339,6 +345,84 @@ class ProfileControllerSpec extends Specification {
         params.profileId = "profile1"
         params.attributeId = "att1"
         controller.deleteAttribute()
+
+        then:
+        assert response.status == 666
+    }
+
+    def "retrieveImages should return a 400 (BAD REQUEST) if the searchIdentifier parameter is not set"() {
+        when:
+        params.imageSources = "1,2,3"
+        controller.retrieveImages()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "retrieveImages should return a 400 (BAD REQUEST) if the imagesSources parameter is not set"() {
+        when:
+        params.searchIdentifier = "blabla"
+        controller.retrieveImages()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "retrieveImages should return the resp element of the response from the service call on success"() {
+        setup:
+        biocacheService.retrieveImages(_, _) >> [resp:[resp: "bla"], statusCode: 200]
+
+        when:
+        params.searchIdentifier = "blabla"
+        params.imageSources = "1,2,3"
+        controller.retrieveImages()
+
+        then:
+        assert response.status == HttpStatus.SC_OK
+        assert response.json == [resp: "bla"]
+    }
+
+    def "retrieveImages should return the error code from the service on failure of the service call"() {
+        setup:
+        biocacheService.retrieveImages(_, _)>> [error: "something died!", statusCode: 666]
+
+        when:
+        params.searchIdentifier = "blabla"
+        params.imageSources = "1,2,3"
+        controller.retrieveImages()
+
+        then:
+        assert response.status == 666
+    }
+
+    def "retrieveLists should return a 400 (BAD REQUEST) if the guid parameter is not set"() {
+        when:
+        controller.retrieveLists()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "retrieveLists should return the resp element of the response from the service call on success"() {
+        setup:
+        speciesListService.getListsForGuid(_) >> [resp:[resp: "bla"], statusCode: 200]
+
+        when:
+        params.guid = "guid1"
+        controller.retrieveLists()
+
+        then:
+        assert response.status == HttpStatus.SC_OK
+        assert response.json == [resp: "bla"]
+    }
+
+    def "retrieveLists should return the error code from the service on failure of the service call"() {
+        setup:
+        speciesListService.getListsForGuid(_) >> [error: "something died!", statusCode: 666]
+
+        when:
+        params.guid = "guid1"
+        controller.retrieveLists()
 
         then:
         assert response.status == 666

@@ -90,27 +90,6 @@ var profiles = {
                 console.log("Error completing images - JSON - " + errorThrown + ", status = " + jqXHR.text);
             }
         })
-    },
-
-    addLists: function (profile) {
-        $.ajax({
-            url: profiles.urls.listsBaseUrl + "/ws/species/" + profile.lsid,
-            jsonp: "callback",
-            dataType: "jsonp",
-            data: {format: 'json'},
-            success: function (response) {
-                if (response instanceof Array && response.length > 0) {
-                    console.log("number of list entries: " + response.length);
-                    for (var i = 0; i < response.length; i++) {
-                        $('#browse_lists ul').append('<li><a href="' + profile.urls.listsBaseUrl + "/speciesListItem/list/" + response[i].dataResourceUid + '">' + response[i].list.listName + '</a></li>');
-                    }
-                    $('#browse_lists').show();
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("Error collecting lists JSON - " + errorThrown);
-            }
-        });
     }
 };
 

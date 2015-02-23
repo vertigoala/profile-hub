@@ -50,9 +50,18 @@ profileEditor.service('profileService', function ($http, util, $q) {
 
         retrieveImages: function (searchIdentifier, imageSources) {
             console.log("Retrieving images for " + searchIdentifier);
-            var future = $http.get(util.contextRoot() + "/profile/retrieveImages?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources, {cache: true});
+            var future = $http.get(util.contextRoot() + "/profile/images?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources, {cache: true});
             future.then(function (response) {
                 console.log("Images retrieved with response code " + response.status)
+            });
+            return future
+        },
+
+        retrieveLists: function (guid) {
+            console.log("Retrieving lists for " + guid);
+            var future = $http.get(util.contextRoot() + "/profile/lists?guid=" + guid, {cache: true});
+            future.then(function (response) {
+                console.log("Lists retrieved with response code " + response.status)
             });
             return future
         }

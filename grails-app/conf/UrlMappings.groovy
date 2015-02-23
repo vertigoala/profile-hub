@@ -13,7 +13,8 @@ class UrlMappings {
         name viewProfile: "/profile/$profileId"(controller: "profile", action: "show")
         name getProfile: "/profile/json/$profileId"(controller: "profile", action: "getJson")
 
-        name getImages: "/profile/retrieveImages"(controller: "profile", action: "retrieveImages")
+        name getImages: "/profile/images"(controller: "profile", action: "retrieveImages")
+        name getLists: "/profile/lists"(controller: "profile", action: "retrieveLists")
 
         name findVocab: "/vocab/$vocabId" (controller: "vocab", action: "show")
 
