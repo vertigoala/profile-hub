@@ -64,6 +64,24 @@ profileEditor.service('profileService', function ($http, util, $q) {
                 console.log("Lists retrieved with response code " + response.status)
             });
             return future
+        },
+
+        getClassifications: function (guid) {
+            console.log("Retrieving classifications for " + guid);
+            var future = $http.get(util.contextRoot() + "/profile/classifications?guid=" + guid, {cache: true});
+            future.then(function (response) {
+                console.log("Classifications retrieved with response code " + response.status)
+            });
+            return future
+        },
+
+        getSpeciesProfile: function (guid) {
+            console.log("Retrieving species profile for " + guid);
+            var future = $http.get(util.contextRoot() + "/profile/speciesProfile?guid=" + guid, {cache: true});
+            future.then(function (response) {
+                console.log("Species Profile retrieved with response code " + response.status)
+            });
+            return future
         }
     }
 });

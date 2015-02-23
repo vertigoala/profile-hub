@@ -106,17 +106,3 @@ profileEditor.config(function ($locationProvider) {
     // TODO remove this when all JS has been converted to Angular
     initialiseUrls();
 });
-
-profileEditor.filter('capitalize', function () {
-    return function (input) {
-        if (input) {
-            return input[0].toUpperCase() + input.slice(1);
-        }
-    };
-});
-
-
-
-
-
-

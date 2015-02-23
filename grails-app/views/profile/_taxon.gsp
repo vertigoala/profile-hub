@@ -11,7 +11,7 @@
     </div>
 
     <div class="bs-docs-example ng-cloak" id="browse_names" data-content="Nomenclature" ng-cloak
-         ng-show="speciesProfile and speciesProfile.taxonName">
+         ng-show="speciesProfile && speciesProfile.taxonName">
         <ul style="list-style: none; margin-left:0px;">
             <li>
                 <blockquote style="border-left:none;">
@@ -21,8 +21,7 @@
             <li ng-repeat="synonym in speciesProfile.synonyms">
                 <blockquote style="border-left:none;">
                     <p>{{synonym.nameString}}</p>
-                    <cite ng-if="synonym.referencedIn">- {{synonym.referencedIn}}</cite>
-                    <cite ng-if="!synonym.referencedIn">- Reference not available</cite>
+                    <cite ng-if="synonym.referencedIn">- {{synonym.referencedIn | default:"Reference not available"}}</cite>
                 </blockquote>
             </li>
         </ul>

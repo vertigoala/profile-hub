@@ -5,6 +5,7 @@ modules = {
         dependsOn "leaflet"
         resource url:"js/angular/Profiles.js"
         resource url:"js/angular/utils/Utils.js"
+        resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/controllers/AttributesController.js"
