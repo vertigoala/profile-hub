@@ -33,7 +33,7 @@ profileEditor.controller('ListsEditor', function ($scope, profileService, util, 
             console.log("Fetched " + data.length + " lists");
 
             $scope.lists = data;
-console.log($scope.lists[0].dataResourceUid);
+
             messageService.pop();
         });
         listsPromise.error(function (data, status, headers, config) {

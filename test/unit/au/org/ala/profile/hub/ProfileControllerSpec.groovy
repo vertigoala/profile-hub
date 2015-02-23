@@ -370,7 +370,7 @@ class ProfileControllerSpec extends Specification {
 
     def "retrieveImages should return the resp element of the response from the service call on success"() {
         setup:
-        biocacheService.retrieveImages(_, _) >> [resp:[resp: "bla"], statusCode: 200]
+        biocacheService.retrieveImages(_, _) >> [resp: [resp: "bla"], statusCode: 200]
 
         when:
         params.searchIdentifier = "blabla"
@@ -384,7 +384,7 @@ class ProfileControllerSpec extends Specification {
 
     def "retrieveImages should return the error code from the service on failure of the service call"() {
         setup:
-        biocacheService.retrieveImages(_, _)>> [error: "something died!", statusCode: 666]
+        biocacheService.retrieveImages(_, _) >> [error: "something died!", statusCode: 666]
 
         when:
         params.searchIdentifier = "blabla"
@@ -405,7 +405,7 @@ class ProfileControllerSpec extends Specification {
 
     def "retrieveLists should return the resp element of the response from the service call on success"() {
         setup:
-        speciesListService.getListsForGuid(_) >> [resp:[resp: "bla"], statusCode: 200]
+        speciesListService.getListsForGuid(_) >> [resp: [resp: "bla"], statusCode: 200]
 
         when:
         params.guid = "guid1"
@@ -423,6 +423,54 @@ class ProfileControllerSpec extends Specification {
         when:
         params.guid = "guid1"
         controller.retrieveLists()
+
+        then:
+        assert response.status == 666
+    }
+
+    def "retrieveClassifications should return a 400 (BAD REQUEST) if the guid parameter is not set"() {
+        when:
+        controller.retrieveClassifications()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "retrieveClassifications should return the resp element of the response from the service call on success"() {
+        setup:
+        profileService.getClassification(_) >> [resp: [resp: "classification"], statusCode: 200]
+        profileService.getSpeciesProfile(_) >> [resp: [resp: "speciesProfile"], statusCode: 200]
+
+        when:
+        params.guid = "guid1"
+        controller.retrieveClassifications()
+
+        then:
+        assert response.status == HttpStatus.SC_OK
+        assert response.json == [classifications: [resp: "classification"], speciesProfile: [resp: "speciesProfile"]]
+    }
+
+    def "retrieveClassifications should still return the classifications even if the speciesProfile lookup fails"() {
+        setup:
+        profileService.getClassification(_) >> [resp: [resp: "classification"], statusCode: 200]
+        profileService.getSpeciesProfile(_) >> [resp: [error: "ahhh"], statusCode: 400]
+
+        when:
+        params.guid = "guid1"
+        controller.retrieveClassifications()
+
+        then:
+        assert response.status == HttpStatus.SC_OK
+        assert response.json == [classifications: [resp: "classification"], speciesProfile: [error: "ahhh"]]
+    }
+
+    def "retrieveClassifications should return the error code from the service on failure of the service call"() {
+        setup:
+        profileService.getClassification(_) >> [error: "something died!", statusCode: 666]
+
+        when:
+        params.guid = "guid1"
+        controller.retrieveClassifications()
 
         then:
         assert response.status == 666

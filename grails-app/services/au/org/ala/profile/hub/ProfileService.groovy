@@ -14,24 +14,14 @@ class ProfileService {
     WebService webService
     AuthService authService
 
-    String profileServiceUrl
-
     JsonUtil jsonUtil = new JsonUtil()
 
-    ProfileService() {
-    }
-
-    @PostConstruct
-    def init() {
-        profileServiceUrl = grailsApplication.config.profile.service.url
-    }
-
     def getOpus(String opusId = "") {
-        jsonUtil.fromUrl("${profileServiceUrl}/opus/${opusId}")
+        jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/opus/${opusId}")
     }
 
     def getVocab(String vocabId = "") {
-        jsonUtil.fromUrl("${profileServiceUrl}/vocab/${vocabId}")
+        jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")
     }
 
     def getProfile(String profileId) {
@@ -42,7 +32,7 @@ class ProfileService {
         Map result = [:]
 
         try {
-            def profile = jsonUtil.fromUrl("${profileServiceUrl}/profile/${encodedProfileId}")
+            def profile = jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/profile/${encodedProfileId}")
 
             if (!profile) {
                 return null
@@ -68,9 +58,9 @@ class ProfileService {
                 imagesQuery = query + " AND (data_resource_uid:" + opus.imageSources.join(" OR data_resource_uid:") + ")"
             }
 
-            def classification = getClassification(profile.profileId)
+            def classification = getClassification(profile.guid)
 
-            def speciesProfile = bieService.getSpeciesProfile(profile.profileId)
+            def speciesProfile = bieService.getSpeciesProfile(profile.guid)
 
             result = [
                     occurrenceQuery: occurrenceQuery,
@@ -95,24 +85,22 @@ class ProfileService {
         result
     }
 
-    def getClassification(String profileId) {
-        def classification = []
+    def getClassification(String guid) {
+        log.debug("Retrieving classification for ${guid}")
 
-        if (profileId) {
-            try {
-                classification = jsonUtil.fromUrl("${profileServiceUrl}/classification?profileId=${profileId}")
-            } catch (Exception e) {
-                log.warn("Unable to load classification for ${profileId}", e)
-            }
-        }
+        webService.get("${grailsApplication.config.profile.service.url}/classification?profileId=${guid}")
+    }
 
-        classification
+    def getSpeciesProfile(String guid) {
+        log.debug("Retrieving species profile for ${guid}")
+
+        bieService.getSpeciesProfile(guid)
     }
 
     def updateBHLLinks(String profileId, def links) {
         log.debug("Updating BHL links ${links} for profile ${profileId}")
 
-        webService.doPost("${profileServiceUrl}/profile/bhl/${profileId}", [
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/bhl/${profileId}", [
                 profileId      : profileId,
                 links          : links,
                 userId         : authService.getUserId(),
@@ -123,7 +111,7 @@ class ProfileService {
     def updateLinks(String profileId, def links) {
         log.debug("Updating links ${links} for profile ${profileId}")
 
-        webService.doPost("${profileServiceUrl}/profile/links/${profileId}", [
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/links/${profileId}", [
                 profileId      : profileId,
                 links          : links,
                 userId         : authService.getUserId(),
@@ -134,7 +122,7 @@ class ProfileService {
     def updateAttribute(String profileId, String attributeId, String title, String text) {
         log.debug("Updating attribute ${attributeId} with title ${title} for profile ${profileId}")
 
-        webService.doPost("${profileServiceUrl}/attribute/${attributeId ?: ''}", [
+        webService.doPost("${grailsApplication.config.profile.service.url}/attribute/${attributeId ?: ''}", [
                 title          : title,
                 text           : text,
                 profileId      : profileId,
@@ -151,6 +139,8 @@ class ProfileService {
     }
 
     def getAuditHistory(String objectId, String userId) {
+        log.debug("Retrieving audit history for ${objectId ?: userId}")
+
         jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${objectId ?: userId}")
     }
 }
