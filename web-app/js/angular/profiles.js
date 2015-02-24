@@ -102,7 +102,4 @@ profileEditor.config(function ($locationProvider) {
     // link, add target="_self".
     $locationProvider.html5Mode({enabled: true, requireBase: false});
     console.log("HTML 5 mode enabled");
-
-    // TODO remove this when all JS has been converted to Angular
-    initialiseUrls();
 });
