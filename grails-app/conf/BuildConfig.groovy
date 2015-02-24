@@ -42,7 +42,7 @@ grails.project.dependency.resolution = {
         compile ":uploadr:0.8.2"
         compile ":modernizr:2.7.1.1"
         runtime ":resources:1.2.14"
-        runtime ":ala-bootstrap2:1.3"
-        runtime ":ala-auth:1.0"
+        runtime ":ala-bootstrap2:1.4"
+        runtime ":ala-auth:1.2"
     }
 }
