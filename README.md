@@ -1,7 +1,7 @@
 # Profile Hub
 [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub.svg?branch=master)](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub)
 
-# Design 
+# Design
 
 # Testing
 
@@ -22,6 +22,7 @@ This guide tells how to install and run the tests on Mac OS (tested with Yosemit
    1. ```npm install karma```
    1. ```npm install karma-jasmine karma-chrome-launcher --save-dev```
    1. ```npm install -g karma-cli```
+   1. ```npm install karma-coverage```
 1. The source repository contains a karma.conf.js file: this is configures the Karma test runner
 1. (Optional) Install the IntelliJ Karma test runner:
   1. Preferences -> Plugins -> Search for Karma -> Install (at the time of writing there was only 1 matching plugin)
@@ -49,3 +50,15 @@ files: [
 *The order is important!*
 
 Jasmine tests live in the ```tests/js/specs/``` directory. Update existing files or add new ones as necessary.
+
+### Code Coverage
+
+You can see a code coverage report for the javascript files by following these steps:
+
+1. Command Line
+   1. Run ```karma start```
+   1. Open ```coverage/<browser>/index.html```
+1. IntelliJ
+   1. Run the karma configuration using the ```Run 'karma' with Coverage``` option (the 3rd toolbar button after the run dropdown).
+   1. Open ```coverage/<browser>/index.html```
+   1. IntelliJ will also annotate the filenames in the project explorer with a percentage of lines covered.

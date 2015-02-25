@@ -10,14 +10,11 @@ profileEditor.controller('BHLLinksEditor', function ($scope, profileService) {
 
         var future = profileService.getProfile(util.getPathItem(util.LAST));
 
-        future.success(function (data) {
+        future.then(function (data) {
             $scope.bhl = data.bhl;
             for (var i = 0; i < $scope.bhl.length; i++) {
                 $scope.bhl[i].thumbnail = profiles.urls.bhlThumbUrl + extractPageId($scope.bhl[i].url);
             }
-        });
-        future.error(function (data, status, headers, config) {
-            console.log("There was a problem retrieving profile..." + status);
         });
     };
 

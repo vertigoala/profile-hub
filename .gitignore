@@ -80,3 +80,4 @@ grails-app/assets/stylesheets/mobile.css
 
 # karma files
 node_modules/*
+coverage/*

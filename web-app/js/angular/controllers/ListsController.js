@@ -3,25 +3,22 @@
  */
 profileEditor.controller('ListsEditor', function ($scope, profileService, util, messageService) {
 
-    $scope.attributes = [];
-    $scope.attributeTitles = [];
     $scope.lists = [];
 
     $scope.init = function (edit) {
         $scope.readonly = edit != 'true';
 
         var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
-        messageService.info("Loading profile data...");
-        profilePromise.success(function (data, status, headers, config) {
-            messageService.pop();
-            $scope.profile = data.profile;
+        profilePromise.then(function (data) {
+                $scope.profile = data.profile;
+                $scope.opus = data.opus;
 
-            loadLists();
-        });
-        profilePromise.error(function (data, status, headers, config) {
-            console.log("There was a problem retrieving profile..." + status);
-            messageService.alert("An error occurred while retrieving the profile.");
-        });
+                loadLists();
+            },
+            function () {
+                messageService.alert("An error occurred while retrieving the profile.");
+            }
+        );
     };
 
     function loadLists() {
@@ -29,16 +26,16 @@ profileEditor.controller('ListsEditor', function ($scope, profileService, util, 
 
         var listsPromise = profileService.retrieveLists($scope.profile.guid);
 
-        listsPromise.success(function (data, status, headers, config) {
-            console.log("Fetched " + data.length + " lists");
+        listsPromise.then(function (data) {
+                console.log("Fetched " + data.length + " lists");
 
-            $scope.lists = data;
+                $scope.lists = data;
 
-            messageService.pop();
-        });
-        listsPromise.error(function (data, status, headers, config) {
-            console.log("There was a problem retrieving lists..." + status);
-            messageService.alert("An error occurred while retrieving the lists.");
-        });
-    };
+                messageService.pop();
+            },
+            function () {
+                messageService.alert("An error occurred while retrieving the lists.");
+            }
+        );
+    }
 });

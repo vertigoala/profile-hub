@@ -33,9 +33,21 @@ profileEditor.factory('util', function ($location) {
                 break;
             case "last":
                 item = items[items.length - 1];
+                item = stripQueryString(item);
                 break;
             default:
                 item = items[index];
+                if (index == items.length - 1) {
+                    item = stripQueryString(item);
+                }
+        }
+
+        return item;
+    }
+
+    function stripQueryString(item) {
+        if (item && item.indexOf("?") > 0) {
+            item = item.substring(0, item.indexOf("?"));
         }
 
         return item;
