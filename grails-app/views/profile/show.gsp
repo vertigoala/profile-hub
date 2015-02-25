@@ -30,6 +30,10 @@
     <div class="row-fluid">
 
         <div class="span8">
+            <div ng-show="messages.length">
+                <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
+            </div>
+
             <g:include controller="profile" action="attributesPanel"/>
             <g:include controller="profile" action="linksPanel"/>
             <g:include controller="profile" action="bhlLinksPanel"/>

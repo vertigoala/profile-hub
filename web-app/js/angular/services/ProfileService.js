@@ -103,6 +103,16 @@ profileEditor.service('profileService', function ($http, util, $q) {
                 console.log("Species Profile retrieved with response code " + response.status)
             });
             return toStandardPromise(future);
+        },
+
+        updateLinks: function(profileId, links) {
+            console.log("Updating links for profile " + profileId);
+            var future = $http.post(util.contextRoot() + "/profile/updateLinks/" + profileId, links);
+            future.then(function (response) {
+                console.log("Links updated with response code " + response.status);
+                console.log(response)
+            });
+            return toStandardPromise(future);
         }
     }
 });

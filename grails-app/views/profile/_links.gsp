@@ -1,37 +1,32 @@
-<g:if test="${profile.links && !edit}">
-    <div class="bs-docs-example" id="browse_links" data-content="Links">
+<div ng-controller="LinksEditor" ng-init="init('${edit}')">
+    <div class="bs-docs-example ng-cloak" id="browse_links" data-content="Links" ng-show="links.length > 0">
         <ul>
-            <g:each in="${profile.links}" var="link">
-                <li><a href="${link.url}">${link.title}</a>${link.description ? ' - ' + link.description : ''}
-                </li>
-            </g:each>
+            <li ng-repeat="link in links" ng-if="link.uuid"><a href="link.url">{{ link.title }}</a>
+                <span ng-if="link.description">&nbsp-&nbsp</span>{{ link.description }}
+                <a class="btn" ng-click="deleteLink($index)" ng-show="!readonly">
+                    <i class="icon icon-minus"></i> Remove
+                </a>
+            </li>
         </ul>
-        <g:if test="${edit}">
-            <a class="btn" href="javascript:alert('not implemented yet')"><i
-                    class="icon icon-plus"></i> Add link</a>
-        </g:if>
-    </div>
-</g:if>
-<g:elseif test="${edit}">
-    <div ng-controller="LinksEditor" class="bs-docs-example ng-cloak" id="browse_links" data-content="Links">
-        <div style="margin-bottom: 10px;">
+
+
+        <div style="margin-bottom: 10px;" ng-show="!readonly">
             <button class="btn" ng-click="saveLinks()">Save changes</button>
             <button class="btn" ng-click="addLink()"><i class="icon icon-plus"></i> Add new link
             </button>
         </div>
-        <table class="table table-striped">
-            <tr ng-repeat="link in links">
+        <table class="table table-striped" ng-show="!readonly">
+            <tr ng-repeat="link in links" ng-if="!link.uuid">
                 <td>
                     <label>URL</label>
-                    <input type="text" class="input-xxlarge" value="{{link.url}}"/><br/>
+                    <input type="text" class="input-xxlarge" ng-model="link.url"/><br/>
                     <label>Title</label>
-                    <input type="text" class="input-xxlarge" value="{{link.title}}"/><br/>
+                    <input type="text" class="input-xxlarge" ng-model="link.title"/><br/>
                     <label>Description</label>
-                    <textarea rows="3" class="input-xxlarge">{{link.description}}</textarea>
+                    <textarea rows="3" class="input-xxlarge" ng-model="link.description"></textarea>
                 </td>
-                <td><button class="btn" ng-click="deleteLink($index)"><i
-                        class="icon icon-minus"></i> Remove</button></td>
+                <td><button class="btn" ng-click="deleteLink($index)"><i class="icon icon-minus"></i> Remove</button></td>
             </tr>
         </table>
     </div>
-</g:elseif>
+</div>

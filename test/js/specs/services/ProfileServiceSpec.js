@@ -88,4 +88,11 @@ describe("ProfileService tests", function () {
 
         http.expectGET("/someContext/profile/speciesProfile?guid=guid1").respond("bla");
     });
+
+    it("should invoke the update links service on the context root when updateLinks is called", function() {
+        var data = "list of links";
+        service.updateLinks("profileId", data);
+
+        http.expectPOST("/someContext/profile/updateLinks/profileId", data).respond("bla");
+    })
 });

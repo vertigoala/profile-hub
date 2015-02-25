@@ -4,10 +4,6 @@
         <button ng-click="addImage()" class="btn"><i class="icon icon-plus"></i>Add Image</button>
     </div>
 
-    <div ng-show="messages.length">
-        <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
-    </div>
-
     <div ng-repeat="attribute in attributes" ng-form="AttributeForm">
         <div class="well attribute-edit" id="browse_attributes_edit" ng-show="!readonly">
             <g:textField

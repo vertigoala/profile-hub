@@ -1,30 +1,30 @@
 /**
  *  Links controller
  */
-profileEditor.controller('LinksEditor', function ($scope) {
+profileEditor.controller('LinksEditor', function ($scope, profileService, util, messageService) {
     $scope.links = [];
 
-    $scope.init = function (opus, profile, edit) {
-        $scope.opus = $.parseJSON(opus);
-        $scope.profile = $.parseJSON(profile);
+    $scope.init = function (edit) {
         $scope.readonly = edit != 'true';
-        initialiseUrls();
 
-        $.ajax({
-            type: "GET",
-            url: profiles.urls.profileServiceBaseUrl + "/profile/" + $scope.profile.uuid,
-            success: function (data) {
-                $scope.links = data.links;
-                $scope.$apply();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("There was a problem retrieving profile..." + textStatus);
-            }
-        })
+        loadLinks();
     };
 
+    function loadLinks() {
+        var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
+        profilePromise.then(function (data) {
+                $scope.profile = data.profile;
+                $scope.opus = data.opus;
+                $scope.links = data.profile.links;
+            },
+            function () {
+                messageService.alert("An error occurred while retrieving the links.");
+            }
+        );
+    }
+
     $scope.addLink = function () {
-        $scope.links.unshift({uuid: "", url: "http://", description: "Add description", title: "Title"});
+        $scope.links.unshift({uuid: null, url: "http://", description: "", title: ""});
     };
 
     $scope.deleteLink = function (idx) {
@@ -32,20 +32,14 @@ profileEditor.controller('LinksEditor', function ($scope) {
     };
 
     $scope.saveLinks = function () {
-        //ajax post
-        $.ajax({
-            type: "POST",
-            url: profiles.urls.linksUpdateUrl + "/" + $scope.profile.uuid,
-            dataType: "json",
-            contentType: 'application/json',
-            data: JSON.stringify({profileUuid: $scope.profile.uuid, links: $scope.links}),
-            success: function (data) {
-                $scope.$apply();
+        var promise = profileService.updateLinks($scope.profile.uuid, JSON.stringify({profileId: $scope.profile.uuid, links: $scope.links}));
+        promise.then(function () {
+                messageService.success("Links successfully updated.");
+                loadLinks();
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert("Errored " + textStatus);
-                $scope.$apply();
+            function () {
+                messageService.alert("An error occurred while updating the links.");
             }
-        });
-    }
+        );
+    };
 });
