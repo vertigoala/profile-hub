@@ -110,7 +110,24 @@ profileEditor.service('profileService', function ($http, util, $q) {
             var future = $http.post(util.contextRoot() + "/profile/updateLinks/" + profileId, links);
             future.then(function (response) {
                 console.log("Links updated with response code " + response.status);
-                console.log(response)
+            });
+            return toStandardPromise(future);
+        },
+
+        updateBhlLinks: function(profileId, links) {
+            console.log("Updating BHL links for profile " + profileId);
+            var future = $http.post(util.contextRoot() + "/profile/updateBHLLinks/" + profileId, links);
+            future.then(function (response) {
+                console.log("BHL Links updated with response code " + response.status);
+            });
+            return toStandardPromise(future);
+        },
+
+        lookupBhlPage: function(pageId) {
+            console.log("Looking up BHL page " + pageId);
+            var future = $http.get(util.contextRoot() + "/bhl/" + pageId);
+            future.then(function (response) {
+                console.log("BHL page retrieved with response code " + response.status);
             });
             return toStandardPromise(future);
         }

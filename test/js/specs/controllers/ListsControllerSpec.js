@@ -128,4 +128,16 @@ describe("ListsController tests", function () {
         expect(messageService.pop.calls.count()).toBe(1);
     });
 
+    it("should not attempt to load lists if the profile.guid attribute is not present", function () {
+        var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        profileDefer.resolve(JSON.parse(getProfileResponse));
+        listsDefer.resolve(JSON.parse(listsResponse));
+
+        scope.init("false");
+        scope.$apply();
+
+        expect(profileService.retrieveLists).not.toHaveBeenCalled();
+        expect(messageService.info).not.toHaveBeenCalled();
+    });
+
 });

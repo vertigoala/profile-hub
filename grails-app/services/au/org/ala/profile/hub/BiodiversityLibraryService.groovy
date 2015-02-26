@@ -1,8 +1,5 @@
 package au.org.ala.profile.hub
 
-import au.org.ala.profile.hub.util.JsonUtil
-
-
 /**
  * Service for interacting with the Biodiversity Library
  *
@@ -13,15 +10,14 @@ class BiodiversityLibraryService {
     // TODO use metaprogramming to create a dynamic method of the form lookupXYZMetadataAsJSON|Text(id) e.g. lookupPageMetadataAsJSON(id) or lookupTitleMetadataAsText(id)
 
     def grailsApplication
-
-    JsonUtil jsonUtil = new JsonUtil()
+    WebService webService
 
     def lookupItem(Integer itemId) {
         lookup("Item", itemId, true)
     }
 
     def lookupTitle(Integer titleId) {
-        lookup("Title", titleId, false, "&items=t")
+        lookup("Title", titleId, true, "&items=t")
     }
 
     def lookupPage(Integer pageId) {
@@ -35,7 +31,7 @@ class BiodiversityLibraryService {
 
         try {
             if (json) {
-                jsonUtil.fromUrl(url)
+                webService.get(url).resp
             } else {
                 new URL(url).text
             }

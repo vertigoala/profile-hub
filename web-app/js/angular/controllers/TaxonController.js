@@ -24,34 +24,38 @@ profileEditor.controller('TaxonController', function ($scope, profileService, ut
     };
 
     function loadClassifications() {
-        messageService.info("Loading taxonomy...");
+        if ($scope.profile.guid) {
+            messageService.info("Loading taxonomy...");
 
-        var promise = profileService.getClassifications($scope.profile.guid);
-        promise.then(function (data) {
-                console.log("Fetched " + data.length + " classifications");
+            var promise = profileService.getClassifications($scope.profile.guid);
+            promise.then(function (data) {
+                    console.log("Fetched " + data.length + " classifications");
 
-                $scope.classifications = data;
-                messageService.pop();
-            },
-            function () {
-                messageService.alert("An error occurred while retrieving the taxonomy.");
-            }
-        );
+                    $scope.classifications = data;
+                    messageService.pop();
+                },
+                function () {
+                    messageService.alert("An error occurred while retrieving the taxonomy.");
+                }
+            );
+        }
     }
 
     function loadSpeciesProfile() {
-        messageService.info("Loading taxon...");
+        if ($scope.profile.guid) {
+            messageService.info("Loading taxon...");
 
-        var promise = profileService.getSpeciesProfile($scope.profile.guid);
-        promise.then(function (data) {
-                console.log("Fetched species profile");
+            var promise = profileService.getSpeciesProfile($scope.profile.guid);
+            promise.then(function (data) {
+                    console.log("Fetched species profile");
 
-                $scope.speciesProfile = data;
-                messageService.pop();
-            },
-            function () {
-                messageService.alert("An error occurred while retrieving the taxonomy.");
-            }
-        );
+                    $scope.speciesProfile = data;
+                    messageService.pop();
+                },
+                function () {
+                    messageService.alert("An error occurred while retrieving the taxonomy.");
+                }
+            );
+        }
     }
 });

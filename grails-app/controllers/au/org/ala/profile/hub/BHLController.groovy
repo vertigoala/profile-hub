@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import grails.converters.JSON
 import org.apache.http.HttpStatus
 
 
@@ -10,7 +11,7 @@ class BHLController extends BaseController {
     def index() {}
 
     def pageLookup() {
-        def titleMetadata = null
+        def titleMetadata = [:]
 
         if (params.pageId) {
             Integer itemId = biodiversityLibraryService.lookupPage(params.pageId as int)?.Result?.ItemID
@@ -19,17 +20,18 @@ class BHLController extends BaseController {
 
                 if (titleId) {
                     titleMetadata = biodiversityLibraryService.lookupTitle(titleId)
+                    titleMetadata.thumbnailUrl = "${grailsApplication.config.biodiv.library.thumb.url}${params.pageId}"
                 }
             }
         }
 
         if (titleMetadata) {
             response.setContentType("application/json")
-            render titleMetadata
+            println titleMetadata as JSON
+            render titleMetadata as JSON
         } else {
             response.status = HttpStatus.SC_NOT_FOUND
             response.sendError(HttpStatus.SC_NOT_FOUND)
         }
-
     }
 }

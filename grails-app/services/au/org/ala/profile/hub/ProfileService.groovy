@@ -34,6 +34,8 @@ class ProfileService {
         try {
             def profile = jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/profile/${encodedProfileId}")
 
+            injectThumbnailUrls(profile)
+
             if (!profile) {
                 return null
             }
@@ -58,17 +60,11 @@ class ProfileService {
                 imagesQuery = query + " AND (data_resource_uid:" + opus.imageSources.join(" OR data_resource_uid:") + ")"
             }
 
-            def classification = getClassification(profile.guid)
-
-            def speciesProfile = bieService.getSpeciesProfile(profile.guid)
-
             result = [
                     occurrenceQuery: occurrenceQuery,
                     imagesQuery    : imagesQuery,
                     opus           : opus,
                     profile        : profile,
-                    classification : classification,
-                    speciesProfile : speciesProfile,
                     lists          : [],
                     logoUrl        : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
                     bannerUrl      : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
@@ -83,6 +79,17 @@ class ProfileService {
         }
 
         result
+    }
+
+    void injectThumbnailUrls(profile) {
+        profile.bhl.each({
+            String pageId = it.url.split("/").last()
+            if (pageId =~ /\?#/) {
+                pageId = pageId.split(/\?#/).first()
+            }
+            it.thumbnailUrl = "${grailsApplication.config.biodiv.library.thumb.url}${pageId}"
+        })
+        profile
     }
 
     def getClassification(String guid) {

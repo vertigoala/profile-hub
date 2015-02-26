@@ -150,4 +150,32 @@ describe("TaxonController tests", function () {
         expect(messageService.pop).toHaveBeenCalledWith();
         expect(messageService.pop.calls.count()).toBe(2);
     });
+
+    it("should add a 'loading taxonomy' info message when retrieving the classification and species profile (ie 2 messages), and remove them when done", function () {
+        profileDefer.resolve(JSON.parse(getProfileResponse));
+        classificationDefer.resolve(JSON.parse(classifcationResponse));
+        speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
+
+        scope.init("false");
+        scope.$apply();
+
+        expect(messageService.info).toHaveBeenCalledWith("Loading taxonomy..."); // twice
+        expect(messageService.info.calls.count()).toBe(2);
+        expect(messageService.pop).toHaveBeenCalledWith();
+        expect(messageService.pop.calls.count()).toBe(2);
+    });
+
+    it("should not attempt to load classifications or the species profile if the profile.guid attribute is not present", function () {
+        var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        profileDefer.resolve(JSON.parse(getProfileResponse));
+        classificationDefer.resolve(JSON.parse(classifcationResponse));
+        speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
+
+        scope.init("false");
+        scope.$apply();
+
+        expect(profileService.getClassifications).not.toHaveBeenCalled();
+        expect(profileService.getSpeciesProfile).not.toHaveBeenCalled();
+        expect(messageService.info).not.toHaveBeenCalled();
+    });
 });

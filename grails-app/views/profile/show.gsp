@@ -52,6 +52,7 @@
 
             <g:applyCodec encodeAs="none">
                 $(function() {
+                    initialiseUrls();
                     profiles.addTaxonMap('${opus.encodeAsJSON()}', '${profile.encodeAsJSON()}', '${occurrenceQuery}');
                 });
             </g:applyCodec>

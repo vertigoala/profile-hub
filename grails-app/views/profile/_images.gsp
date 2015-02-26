@@ -1,5 +1,5 @@
 <div ng-controller="ImagesController" ng-init="init('${edit}')">
-    <div class="bs-docs-example" id="browse_images" data-content="Images" ng-show="images">
+    <div class="bs-docs-example" id="browse_images" data-content="Images" ng-show="images.length > 0">
         <div ng-repeat="image in images" class="imgCon">
             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.uuid}}"
                target="_self">

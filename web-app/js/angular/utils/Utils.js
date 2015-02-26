@@ -17,7 +17,23 @@ profileEditor.factory('util', function ($location) {
      * @returns the specified item in the url
      */
     function getPathItem(index) {
-        var path = getPath();
+        return getPathItemFromUrl(index, getPath());
+    }
+
+    /**
+     * Retrieves a specific item from the path of the provided URL. Items are defined as anything between two slashes.
+     *
+     * NOTE: The path INCLUDES the context root
+     *
+     * e.g. for the URL http://hostname.com/path/item1/item2/, getPathItem('first') will return 'path',
+     * getPathItem(1) will return 'item1', getPathItem('last') will return 'item2'.
+     *
+     * @param index can be a numeric index or 'first' as an alias for 0 or 'last' as an alias for the last item in the url
+     * @param url The URL to parse
+     * @returns the specified item in the url
+     */
+    function getPathItemFromUrl(index, url) {
+        var path = url;
 
         // remove a leading slash so we don't get an empty item at the start of the array
         if (path.indexOf("/") == 0) {
@@ -45,9 +61,13 @@ profileEditor.factory('util', function ($location) {
         return item;
     }
 
-    function stripQueryString(item) {
+    function stripQueryString(item, url) {
         if (item && item.indexOf("?") > 0) {
             item = item.substring(0, item.indexOf("?"));
+        }
+
+        if (item && item.indexOf("#") > 0) {
+            item = item.substring(0, item.indexOf("#"));
         }
 
         return item;
@@ -95,6 +115,7 @@ profileEditor.factory('util', function ($location) {
     return {
         contextRoot: contextRoot,
         getPathItem: getPathItem,
+        getPathItemFromUrl: getPathItemFromUrl,
 
         LAST: LAST,
         FIRST: FIRST

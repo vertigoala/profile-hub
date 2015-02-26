@@ -94,5 +94,18 @@ describe("ProfileService tests", function () {
         service.updateLinks("profileId", data);
 
         http.expectPOST("/someContext/profile/updateLinks/profileId", data).respond("bla");
+    });
+
+    it("should invoke the update BHL links service on the context root when updateBhlLinks is called", function() {
+        var data = "list of links";
+        service.updateBhlLinks("profileId", data);
+
+        http.expectPOST("/someContext/profile/updateBHLLinks/profileId", data).respond("bla");
+    });
+
+    it("should invoke the BHL lookup service on the context root when lookupBhlPage is called", function() {
+        service.lookupBhlPage("pageId");
+
+        http.expectGET("/someContext/bhl/pageId").respond("bla");
     })
 });

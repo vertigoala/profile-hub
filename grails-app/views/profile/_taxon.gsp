@@ -1,6 +1,6 @@
 <div ng-controller="TaxonController" ng-init="init('${edit}')">
     <div id="browse_taxonomy" class="bs-docs-example ng-cloak"
-         data-content="Taxonomy from {{speciesProfile.taxonConcept.infoSourceName}}" ng-show="classifications" ng-cloak>
+         data-content="Taxonomy from {{speciesProfile.taxonConcept.infoSourceName}}" ng-show="classifications.length > 0" ng-cloak>
         <ul>
             <li ng-repeat="classification in classifications">
                 <a href="{{classification.profileId}}"

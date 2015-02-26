@@ -22,20 +22,22 @@ profileEditor.controller('ListsEditor', function ($scope, profileService, util, 
     };
 
     function loadLists() {
-        messageService.info("Loading lists...");
+        if ($scope.profile.guid) {
+            messageService.info("Loading lists...");
 
-        var listsPromise = profileService.retrieveLists($scope.profile.guid);
+            var listsPromise = profileService.retrieveLists($scope.profile.guid);
 
-        listsPromise.then(function (data) {
-                console.log("Fetched " + data.length + " lists");
+            listsPromise.then(function (data) {
+                    console.log("Fetched " + data.length + " lists");
 
-                $scope.lists = data;
+                    $scope.lists = data;
 
-                messageService.pop();
-            },
-            function () {
-                messageService.alert("An error occurred while retrieving the lists.");
-            }
-        );
+                    messageService.pop();
+                },
+                function () {
+                    messageService.alert("An error occurred while retrieving the lists.");
+                }
+            );
+        }
     }
 });
