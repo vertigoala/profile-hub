@@ -2,8 +2,8 @@
     <div class="bs-docs-example" id="browse_images" data-content="Images" ng-show="images.length > 0">
         <div ng-repeat="image in images" class="imgCon">
             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.uuid}}"
-               target="_self">
-                <img src="{{image.largeImageUrl}}"/>
+               target="_self" ng-if="image.largeImageUrl">
+                <img src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl"/>
             </a>
 
             <div class="meta">{{ image.dataResourceName }}</div>

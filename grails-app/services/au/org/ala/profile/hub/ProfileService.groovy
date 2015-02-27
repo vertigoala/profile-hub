@@ -2,6 +2,7 @@ package au.org.ala.profile.hub
 
 import au.org.ala.profile.hub.util.JsonUtil
 import au.org.ala.web.AuthService
+import grails.converters.JSON
 
 import javax.annotation.PostConstruct
 
@@ -14,61 +15,37 @@ class ProfileService {
     WebService webService
     AuthService authService
 
-    JsonUtil jsonUtil = new JsonUtil()
-
     def getOpus(String opusId = "") {
-        jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/opus/${opusId}")
+        webService.get("${grailsApplication.config.profile.service.url}/opus/${opusId}")?.resp
     }
 
     def getVocab(String vocabId = "") {
-        jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")
+        webService.get("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")?.resp
     }
 
     def getProfile(String profileId) {
         log.debug("Loading profile " + profileId)
 
-        String encodedProfileId = URLEncoder.encode(profileId, "UTF-8")
-
-        Map result = [:]
+        Map result
 
         try {
-            def profile = jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/profile/${encodedProfileId}")
-
-            injectThumbnailUrls(profile)
+            String encodedProfileId = URLEncoder.encode(profileId, "UTF-8")
+            def profile = webService.get("${grailsApplication.config.profile.service.url}/profile/${encodedProfileId}")?.resp
 
             if (!profile) {
                 return null
             }
 
+            injectThumbnailUrls(profile)
+
             def opus = getOpus(profile.opusId)
 
-            def query
-            if (profile.guid && profile.guid != "null") {
-                query = "lsid:" + profile.guid
-            } else {
-                query = profile.scientificName
-            }
-
-            def occurrenceQuery = query
-
-            if (opus.recordSources) {
-                occurrenceQuery = query + " AND (data_resource_uid:" + opus.recordSources.join(" OR data_resource_uid:") + ")"
-            }
-
-            def imagesQuery = query
-            if (opus.imageSources) {
-                imagesQuery = query + " AND (data_resource_uid:" + opus.imageSources.join(" OR data_resource_uid:") + ")"
-            }
-
             result = [
-                    occurrenceQuery: occurrenceQuery,
-                    imagesQuery    : imagesQuery,
-                    opus           : opus,
-                    profile        : profile,
-                    lists          : [],
-                    logoUrl        : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
-                    bannerUrl      : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    pageTitle      : opus.title ?: DEFAULT_OPUS_TITLE
+                    opus     : opus,
+                    profile  : profile,
+                    logoUrl  : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                    bannerUrl: opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                    pageTitle: opus.title ?: DEFAULT_OPUS_TITLE
             ]
         } catch (FileNotFoundException e) {
             log.error("Profile ${profileId} not found")
@@ -148,6 +125,6 @@ class ProfileService {
     def getAuditHistory(String objectId, String userId) {
         log.debug("Retrieving audit history for ${objectId ?: userId}")
 
-        jsonUtil.fromUrl("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${objectId ?: userId}")
+        webService.get("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${objectId ?: userId}")?.resp
     }
 }

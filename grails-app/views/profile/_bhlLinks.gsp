@@ -30,7 +30,7 @@
                 </td>
                 <td>
                     <div ng-show="link.thumbnailUrl">
-                        <a href="{{link.url}}" target="_blank">
+                        <a href="{{link.url}}" target="_blank" ng-if="image.thumbnailUrl">
                             <img ng-model="link.thumbnailUrl" src="{{link.thumbnailUrl}}"
                                  style="max-height:150px;" alt="{{link.title}}" class="img-rounded"/>
                         </a>

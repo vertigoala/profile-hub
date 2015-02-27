@@ -14,6 +14,7 @@ modules = {
         resource url:"js/angular/controllers/ImagesController.js"
         resource url:"js/angular/controllers/ListsController.js"
         resource url:"js/angular/controllers/TaxonController.js"
+        resource url:"js/angular/controllers/MapController.js"
         resource url:"css/profiles.css"
     }
 

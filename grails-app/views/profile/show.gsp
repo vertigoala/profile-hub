@@ -46,18 +46,6 @@
             <g:include controller="profile" action="mapPanel"/>
             <g:include controller="profile" action="listsPanel"/>
         </div>
-
-        <r:script>
-            <g:render template="/scriptInit"/>
-
-            <g:applyCodec encodeAs="none">
-                $(function() {
-                    initialiseUrls();
-                    profiles.addTaxonMap('${opus.encodeAsJSON()}', '${profile.encodeAsJSON()}', '${occurrenceQuery}');
-                });
-            </g:applyCodec>
-        </r:script>
-
 </body>
 
 </html>
