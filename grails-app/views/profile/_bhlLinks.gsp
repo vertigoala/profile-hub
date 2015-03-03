@@ -86,8 +86,7 @@
                     </cite>
                 </td>
                 <td>
-                    <button class="btn" ng-click="deleteLink($index)"><i
-                            class="icon icon-minus"></i> Remove</button>
+                    <button class="btn btn-danger" ng-click="deleteLink($index)">Delete</button>
                     <br/>
 
                     <div ng-show="link.thumbnailUrl">

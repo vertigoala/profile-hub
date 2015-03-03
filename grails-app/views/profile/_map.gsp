@@ -1,12 +1,11 @@
 <div ng-controller="MapController"
-     ng-init="init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')">
-    %{--<div id="map" style="height: 400px; margin-top:10px;"></div>--}%
+     ng-init="init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')"
+     class="panel">
 
-    <leaflet style="height: 400px; margin-top:10px;" center="center" layers="layers" event-broadcast="events"></leaflet>
+        <leaflet style="height: 400px; margin-top:10px;" center="center" layers="layers" event-broadcast="events"></leaflet>
 
-
-    <a class="btn"
-       href="${opus.biocacheUrl}/occurrences/search?q={{constructQuery()}}" >View in ${opus.biocacheName}</a>
+        <a class="btn"
+           href="${opus.biocacheUrl}/occurrences/search?q={{constructQuery()}}" >View in ${opus.biocacheName}</a>
 
 </div>
 

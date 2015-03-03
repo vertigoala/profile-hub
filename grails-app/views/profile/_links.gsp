@@ -3,8 +3,8 @@
         <ul>
             <li ng-repeat="link in links" ng-if="link.uuid"><a href="link.url">{{ link.title }}</a>
                 <span ng-if="link.description">&nbsp-&nbsp</span>{{ link.description }}
-                <a class="btn" ng-click="deleteLink($index)" ng-show="!readonly">
-                    <i class="icon icon-minus"></i> Remove
+                <a class="btn btn-mini btn-danger" ng-click="deleteLink($index)" ng-show="!readonly" title="Delete">
+                    <i class="icon-minus icon-white"></i>
                 </a>
             </li>
         </ul>
@@ -25,7 +25,7 @@
                     <label>Description</label>
                     <textarea rows="3" class="input-xxlarge" ng-model="link.description"></textarea>
                 </td>
-                <td><button class="btn" ng-click="deleteLink($index)"><i class="icon icon-minus"></i> Remove</button></td>
+                <td><button class="btn btn-danger" ng-click="deleteLink($index)">Delete</button></td>
             </tr>
         </table>
     </div>
