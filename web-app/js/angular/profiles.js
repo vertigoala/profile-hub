@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['ui.bootstrap']);
+var profileEditor = angular.module('profileEditor', ['ui.bootstrap', 'leaflet-directive']);
 
 profileEditor.config(function ($locationProvider) {
     // This disables 'hashbang' mode and removes the need to specify <base href="/my-base"> in the views.

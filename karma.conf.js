@@ -15,9 +15,11 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'web-app/js/thirdparty/angular-1.3.13.min.js',
-            'web-app/js/thirdparty/angular-mocks-1.3.13.js',
-            'web-app/js/thirdparty/ui-bootstrap-tpls-0.12.0.js',
+            'web-app/thirdparty/angular/angular-1.3.13.min.js',
+            'test/js/thirdparty/angular-mocks-1.3.13.js',
+            'web-app/thirdparty/angular/ui-bootstrap-tpls-0.12.0.js',
+            'web-app/thirdparty/leaflet/leaflet-0.7.3.js',
+            'web-app/thirdparty/angular-leaflet/angular-leaflet-directive.min.js',
             'web-app/js/angular/profiles.js',
             'web-app/js/angular/utils/*.js',
             'web-app/js/angular/services/*.js',

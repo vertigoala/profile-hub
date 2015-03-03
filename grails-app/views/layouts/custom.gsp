@@ -114,10 +114,6 @@
     }
 </r:script>
 
-<r:script>
-    <g:render template="/scriptInit"/>
-</r:script>
-
 <!-- JS resources-->
 <r:layoutResources/>
 

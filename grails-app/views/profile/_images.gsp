@@ -3,7 +3,7 @@
         <div ng-repeat="image in images" class="imgCon">
             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.uuid}}"
                target="_self" ng-if="image.largeImageUrl">
-                <img src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl"/>
+                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl"/>
             </a>
 
             <div class="meta">{{ image.dataResourceName }}</div>

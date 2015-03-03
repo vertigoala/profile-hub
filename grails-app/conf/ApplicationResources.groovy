@@ -19,13 +19,14 @@ modules = {
     }
 
     angular {
-        resource url:"js/thirdparty/angular-1.3.13.min.js"
-        resource url:"js/thirdparty/ui-bootstrap-tpls-0.12.0.js"
-        resource url:"css/bootstrap-3.1.1.min.css"
+        resource url:"thirdparty/angular/angular-1.3.13.min.js"
+        resource url:"thirdparty/angular/ui-bootstrap-tpls-0.12.0.js"
+        resource url:"thirdparty/bootstrap/css/bootstrap-3.1.1.min.css"
     }
 
     leaflet {
-        resource url:"js/thirdparty/leaflet-0.7.2.js"
-        resource url:"css/leaflet.css"
+        resource url:"thirdparty/leaflet/leaflet-0.7.3.js"
+        resource url:"thirdparty/angular-leaflet/angular-leaflet-directive.min.js"
+        resource url:"thirdparty/leaflet/leaflet.css"
     }
 }
