@@ -1,10 +1,6 @@
 package au.org.ala.profile.hub
 
-import au.org.ala.profile.hub.util.JsonUtil
 import au.org.ala.web.AuthService
-import grails.converters.JSON
-
-import javax.annotation.PostConstruct
 
 import static au.org.ala.profile.hub.util.HubConstants.*
 
@@ -79,6 +75,13 @@ class ProfileService {
         log.debug("Retrieving species profile for ${guid}")
 
         bieService.getSpeciesProfile(guid)
+    }
+
+    def search(String opusId, String scientificName) {
+        log.debug("Searching for '${scientificName}' in opus ${opusId}")
+
+        String searchTermEncoded = URLEncoder.encode(scientificName, "UTF-8")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${opusId}&scientificName=${searchTermEncoded}")
     }
 
     def updateBHLLinks(String profileId, def links) {

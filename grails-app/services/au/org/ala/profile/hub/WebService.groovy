@@ -1,6 +1,5 @@
 package au.org.ala.profile.hub
 
-import au.org.ala.profile.hub.util.JsonUtil
 import grails.converters.JSON
 import org.apache.http.HttpHeaders
 import org.apache.http.HttpStatus

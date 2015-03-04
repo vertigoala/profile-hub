@@ -4,6 +4,8 @@ import static org.apache.http.HttpStatus.*
 
 class BaseController {
 
+    public static final String CONTEXT_TYPE_JSON = "application/json"
+
     def notFound() {
         sendError(SC_NOT_FOUND)
     }

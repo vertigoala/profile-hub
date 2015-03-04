@@ -1,5 +1,6 @@
 modules = {
     profiles {
+        resource url:"css/profiles.css"
         dependsOn "jquery"
         dependsOn "angular"
         dependsOn "leaflet"
@@ -8,6 +9,8 @@ modules = {
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
+        resource url:"js/angular/controllers/OpusController.js"
+        resource url:"js/angular/controllers/SearchController.js"
         resource url:"js/angular/controllers/AttributesController.js"
         resource url:"js/angular/controllers/BhlLinksController.js"
         resource url:"js/angular/controllers/LinksController.js"
@@ -15,7 +18,6 @@ modules = {
         resource url:"js/angular/controllers/ListsController.js"
         resource url:"js/angular/controllers/TaxonController.js"
         resource url:"js/angular/controllers/MapController.js"
-        resource url:"css/profiles.css"
     }
 
     angular {

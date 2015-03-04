@@ -494,4 +494,52 @@ class ProfileControllerSpec extends Specification {
         then:
         assert response.status == 666
     }
+
+
+
+
+    def "search should return a 400 (BAD REQUEST) if the opusId parameter is not set"() {
+        when:
+        params.scientificName = "bla"
+        controller.search()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "search should return a 400 (BAD REQUEST) if the scientificName parameter is not set"() {
+        when:
+        params.opusId = "bla"
+        controller.search()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "search should return the resp element of the response from the service call on success"() {
+        setup:
+        profileService.search(_, _) >> [resp: [resp: "search results"], statusCode: 200]
+
+        when:
+        params.opusId = "guid1"
+        params.scientificName = "name1"
+        controller.search()
+
+        then:
+        assert response.status == HttpStatus.SC_OK
+        assert response.json == [resp: "search results"]
+    }
+
+    def "search should return the error code from the service on failure of the service call"() {
+        setup:
+        profileService.search(_, _) >> [error: "something died!", statusCode: 666]
+
+        when:
+        params.opusId = "guid1"
+        params.scientificName = "name1"
+        controller.search()
+
+        then:
+        assert response.status == 666
+    }
 }

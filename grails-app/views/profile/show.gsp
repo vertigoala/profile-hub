@@ -10,6 +10,11 @@
 <body>
 
 <div id="container" ng-app="profileEditor">
+    <ol class="breadcrumb" role="navigation">
+        <li><g:link mapping="viewOpus" params="[opusId:opus.uuid]" target="_self">${profile.opusName} <span class="divider"><i class="fa fa-arrow-right"></i></span></g:link></li>
+        <li class="active">${profile.scientificName}</li>
+    </ol>
+
     <div class="pull-right" style="margin-top:20px;">
 
         <g:if test="${!edit}">
@@ -46,6 +51,8 @@
             <g:include controller="profile" action="mapPanel"/>
             <g:include controller="profile" action="listsPanel"/>
         </div>
+    </div>
+</div>
 </body>
 
 </html>

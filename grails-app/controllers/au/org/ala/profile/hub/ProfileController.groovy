@@ -2,7 +2,7 @@ package au.org.ala.profile.hub
 
 import au.org.ala.web.AuthService
 import grails.converters.JSON
-import org.apache.http.HttpStatus
+import static org.apache.http.HttpStatus.*
 
 class ProfileController extends BaseController {
 
@@ -50,7 +50,7 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest()
         } else {
-            response.setContentType("application/json")
+            response.setContentType(CONTEXT_TYPE_JSON)
             def profile = profileService.getProfile(params.profileId as String)
 
             if (!profile) {
@@ -71,11 +71,11 @@ class ProfileController extends BaseController {
             //TODO check user in ROLE.....
             def resp = profileService.updateBHLLinks(jsonRequest.profileId as String, jsonRequest.links)
 
-            if (resp.statusCode != HttpStatus.SC_OK) {
+            if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode
                 response.sendError(resp.statusCode, resp.error ?: "")
             } else {
-                response.setContentType("application/json")
+                response.setContentType(CONTEXT_TYPE_JSON)
                 render resp.resp as JSON
             }
         }
@@ -92,11 +92,11 @@ class ProfileController extends BaseController {
             //TODO check user in ROLE.....
             def resp = profileService.updateLinks(jsonRequest.profileId as String, jsonRequest.links)
 
-            if (resp.statusCode != HttpStatus.SC_OK) {
+            if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode
                 response.sendError(resp.statusCode, resp.error ?: "")
             } else {
-                response.setContentType("application/json")
+                response.setContentType(CONTEXT_TYPE_JSON)
                 render resp.resp as JSON
             }
         }
@@ -113,11 +113,11 @@ class ProfileController extends BaseController {
             //TODO check user in ROLE.....
             def resp = profileService.updateAttribute(jsonRequest.profileId, jsonRequest.attributeId, jsonRequest.title, jsonRequest.text)
 
-            if (resp.statusCode != HttpStatus.SC_OK) {
+            if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode
                 response.sendError(resp.statusCode, resp.error ?: "")
             } else {
-                response.setContentType("application/json")
+                response.setContentType(CONTEXT_TYPE_JSON)
                 render resp.resp as JSON
             }
         }
@@ -130,12 +130,12 @@ class ProfileController extends BaseController {
             //TODO check user in ROLE.....
             def resp = profileService.deleteAttribute(params.attributeId, params.profileId)
 
-            if (resp.statusCode != HttpStatus.SC_OK) {
+            if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode
                 response.sendError(resp.statusCode, resp.error ?: "")
             } else {
-                response.setContentType("application/json")
-                def model = ["success": resp.statusCode == HttpStatus.SC_OK]
+                response.setContentType(CONTEXT_TYPE_JSON)
+                def model = ["success": resp.statusCode == SC_OK]
                 render model as JSON
             }
         }
@@ -147,11 +147,11 @@ class ProfileController extends BaseController {
         } else {
             def resp = biocacheService.retrieveImages(params.searchIdentifier, params.imageSources)
 
-            if (resp.statusCode != HttpStatus.SC_OK) {
+            if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode
                 sendError(resp.statusCode, resp.error)
             } else {
-                response.setContentType("application/json")
+                response.setContentType(CONTEXT_TYPE_JSON)
                 render resp.resp as JSON
             }
         }
@@ -163,11 +163,11 @@ class ProfileController extends BaseController {
         } else {
             def resp = speciesListService.getListsForGuid(params.guid)
 
-            if (resp.statusCode != HttpStatus.SC_OK) {
+            if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode
                 sendError(resp.statusCode, resp.error)
             } else {
-                response.setContentType("application/json")
+                response.setContentType(CONTEXT_TYPE_JSON)
                 render resp.resp as JSON
             }
         }
@@ -179,11 +179,11 @@ class ProfileController extends BaseController {
         } else {
             def resp = profileService.getClassification(params.guid)
 
-            if (resp.statusCode != HttpStatus.SC_OK) {
+            if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode
                 sendError(resp.statusCode, resp.error)
             } else {
-                response.setContentType("application/json")
+                response.setContentType(CONTEXT_TYPE_JSON)
                 render resp.resp as JSON
             }
         }
@@ -195,12 +195,28 @@ class ProfileController extends BaseController {
         } else {
             def resp = profileService.getSpeciesProfile(params.guid)
 
-            if (resp.statusCode != HttpStatus.SC_OK) {
+            if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode
                 sendError(resp.statusCode, resp.error)
             } else {
-                response.setContentType("application/json")
+                response.setContentType(CONTEXT_TYPE_JSON)
                 render resp.resp as JSON
+            }
+        }
+    }
+
+    def search() {
+        if (!params.opusId || !params.scientificName) {
+            badRequest()
+        } else {
+            def resp = profileService.search(params.opusId, params.scientificName);
+
+            if (resp.statusCode != SC_OK) {
+                response.status = resp.statusCode;
+                sendError(resp.statusCode, resp.error);
+            } else {
+                response.setContentType(CONTEXT_TYPE_JSON);
+                render resp.resp as JSON;
             }
         }
     }

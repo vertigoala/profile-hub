@@ -23,6 +23,11 @@ This guide tells how to install and run the tests on Mac OS (tested with Yosemit
    1. ```npm install karma-jasmine karma-chrome-launcher --save-dev```
    1. ```npm install -g karma-cli```
    1. ```npm install karma-coverage```
+1. Install other optional browser launchers:
+   1. ```npm install karma-firefox-launcher```
+   1. ```npm install karma-safari-launcher```
+   1. ```npm install karma-ie-launcher```
+   1. Update the ```browsers: ['Chrome']``` property in karma.conf.js to add additional browsers to test against.
 1. The source repository contains a karma.conf.js file: this is configures the Karma test runner
 1. (Optional) Install the IntelliJ Karma test runner:
   1. Preferences -> Plugins -> Search for Karma -> Install (at the time of writing there was only 1 matching plugin)

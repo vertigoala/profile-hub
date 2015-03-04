@@ -7,6 +7,9 @@ describe("ProfileService tests", function () {
     var mockUtil = {
         contextRoot: function () {
             return "/someContext"
+        },
+        toStandardPromise: function() {
+            return {then: function() {}};
         }
     };
 
@@ -38,6 +41,12 @@ describe("ProfileService tests", function () {
         service.getProfile("profileId1");
 
         http.expectGET("/someContext/profile/json/profileId1").respond("bla");
+    });
+
+    it("should invoke the get opus as json service on the context root when getOpus is called", function () {
+        service.getOpus("opusId");
+
+        http.expectGET("/someContext/opus/json/opusId").respond("bla");
     });
 
     it("should invoke the get opus vocab service on the context root when getOpusVocabulary is called", function () {
@@ -107,5 +116,23 @@ describe("ProfileService tests", function () {
         service.lookupBhlPage("pageId");
 
         http.expectGET("/someContext/bhl/pageId").respond("bla");
+    });
+
+    it("should invoke the collectory data resource service on the context root when getResource ", function() {
+        service.getResource("resId");
+
+        http.expectGET("/someContext/dataResource/resId").respond("bla");
+    });
+
+    it("should invoke the list collectory data resource service on the context root when listResources", function() {
+        service.listResources();
+
+        http.expectGET("/someContext/dataResource/list").respond("bla");
+    });
+
+    it("should invoke the search operation on the context root when search is called ", function() {
+        service.search("opusId", "scientificName");
+
+        http.expectGET("/someContext/profile/search?opusId=opusId&scientificName=scientificName").respond("bla");
     })
 });

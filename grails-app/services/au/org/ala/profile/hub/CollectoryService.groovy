@@ -1,18 +1,16 @@
 package au.org.ala.profile.hub
 
-import au.org.ala.profile.hub.util.JsonUtil
-
 class CollectoryService {
 
     def grailsApplication
-
-    JsonUtil jsonUtil = new JsonUtil()
+    WebService webService
 
     Map<String, String> getDataResources() {
         def dataResources = [:]
 
         try {
-            jsonUtil.fromUrl("${grailsApplication.config.collectory.service.url}/dataResource").each {
+            def resources = webService.get("${grailsApplication.config.collectory.base.url}ws/dataResource")
+            resources?.resp.each {
                 dataResources.put(it.uid, it.name)
             }
         } catch (Exception e) {
@@ -22,5 +20,9 @@ class CollectoryService {
         }
 
         dataResources
+    }
+
+    def getDataResource(dataResourceUid) {
+        webService.get("${grailsApplication.config.collectory.base.url}ws/dataResource/${dataResourceUid}")
     }
 }

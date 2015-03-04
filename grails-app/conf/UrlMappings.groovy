@@ -2,6 +2,8 @@ class UrlMappings {
 
 	static mappings = {
 
+        name search: "/profile/search"(controller: "profile", action: "search")
+
         name deleteAttribute: "/profile/deleteAttribute/$attributeId"(controller: "profile", action: "deleteAttribute")
         name updateAttribute: "/profile/updateAttribute/$profileId"(controller: "profile", action: "updateAttribute")
         name createAttribute: "/profile/updateAttribute/"(controller: "profile", action: "updateAttribute")
@@ -25,8 +27,13 @@ class UrlMappings {
 
         name viewOpus: "/opus/$opusId"(controller: "opus", action: "show")
         name editOpus: "/opus/edit/$opusId"(controller: "opus", action: "edit")
+        name getOpus: "/opus/json/$opusId"(controller: "opus", action: "getJson")
+
+        name getResource: "/dataResource/list"(controller: "collectory", action: "list")
+        name getResource: "/dataResource/$dataResourceUid"(controller: "collectory", action: "getResource")
 
         name bhl: "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
+
 
         "/$controller/$action?/$id?(.$format)?"{
             constraints {

@@ -1,7 +1,7 @@
 /**
  * Utility functions
  */
-profileEditor.factory('util', function ($location) {
+profileEditor.factory('util', function ($location, $q) {
     var LAST = "last";
     var FIRST = "first";
 
@@ -61,7 +61,7 @@ profileEditor.factory('util', function ($location) {
         return item;
     }
 
-    function stripQueryString(item, url) {
+    function stripQueryString(item) {
         if (item && item.indexOf("?") > 0) {
             item = item.substring(0, item.indexOf("?"));
         }
@@ -103,10 +103,34 @@ profileEditor.factory('util', function ($location) {
      * e.g. for a URL of http://hostname.com/contextPath/bla/bla, this method will return '/contextPath'
      * e.g. for a URL of http://hostname.com/, this method will return '/'
      *
-     * @returns the context path of the current URL, with a leading slash but no trailing slash
+     * @returns String the context path of the current URL, with a leading slash but no trailing slash
      */
     function contextRoot() {
         return "/" + getPathItem(FIRST);
+    }
+
+    /**
+     * The $http service returns an extended promise object which has success and error functions.
+     * This introduces inconsistency with other code that deals with promises, and complicates the unit tests.
+     * Therefore, we will create a new standard promise (which just uses then()) and return it instead.
+     * http://weblog.west-wind.com/posts/2014/Oct/24/AngularJs-and-Promises-with-the-http-Service has a good explanation.
+     *
+     * @param httpPromise $http extended promise
+     * @return standard promise
+     */
+    function toStandardPromise(httpPromise) {
+        var defer = $q.defer();
+
+        httpPromise.success(function (data) {
+            defer.resolve(data);
+        });
+        httpPromise.error(function (data, status, context, request) {
+            var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
+            console.log(msg);
+            defer.reject(msg);
+        });
+
+        return defer.promise;
     }
 
     /**
@@ -116,6 +140,7 @@ profileEditor.factory('util', function ($location) {
         contextRoot: contextRoot,
         getPathItem: getPathItem,
         getPathItemFromUrl: getPathItemFromUrl,
+        toStandardPromise: toStandardPromise,
 
         LAST: LAST,
         FIRST: FIRST
