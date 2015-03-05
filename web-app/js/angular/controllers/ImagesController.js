@@ -1,21 +1,22 @@
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function ($scope, profileService, util, messageService) {
+profileEditor.controller('ImagesController', function (profileService, util, messageService) {
+    var self = this;
+    
+    self.images = [];
 
-    $scope.images = [];
-
-    $scope.init = function (edit) {
-        $scope.readonly = edit != 'true';
-        $scope.imagesSlideShowInterval = 5000; // milliseconds
-        $scope.slides = [];
-        $scope.images = [];
+    self.init = function (edit) {
+        self.readonly = edit != 'true';
+        self.imagesSlideShowInterval = 5000; // milliseconds
+        self.slides = [];
+        self.images = [];
 
         var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
 
         profilePromise.then(function (data) {
-                $scope.profile = data.profile;
-                $scope.opus = data.opus;
+                self.profile = data.profile;
+                self.opus = data.opus;
 
                 loadImages()
             },
@@ -28,21 +29,21 @@ profileEditor.controller('ImagesController', function ($scope, profileService, u
     function loadImages() {
         messageService.info("Loading images...");
 
-        var searchIdentifier = $scope.profile.guid ? "lsid:" + $scope.profile.guid : $scope.profile.scientificName;
-        var imagesPromise = profileService.retrieveImages(searchIdentifier, $scope.opus.imageSources.join());
+        var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : self.profile.scientificName;
+        var imagesPromise = profileService.retrieveImages(searchIdentifier, self.opus.imageSources.join());
 
         imagesPromise.then(function (data) {
                 console.log("Fetched " + data.occurrences.length + " images");
 
-                $scope.firstImage = data.occurrences[0];
-                $scope.images = data.occurrences;
+                self.firstImage = data.occurrences[0];
+                self.images = data.occurrences;
 
                 angular.forEach(data.occurrences, function (image) {
-                    $scope.slides.push({
+                    self.slides.push({
                         image: image.largeImageUrl,
                         text: image.dataResourceName
                     })
-                }, $scope.slides);
+                }, self.slides);
 
                 messageService.pop();
             },
@@ -52,7 +53,7 @@ profileEditor.controller('ImagesController', function ($scope, profileService, u
         );
     }
 
-    $scope.addImage = function () {
+    self.addImage = function () {
         alert("Not implemented yet. Would upload to biocache & store image in image service");
     };
 });

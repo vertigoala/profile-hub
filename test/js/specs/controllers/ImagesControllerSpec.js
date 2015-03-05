@@ -35,7 +35,7 @@ describe("ImagesController tests", function () {
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
-        controller = $controller("ImagesController", {
+        controller = $controller("ImagesController as imageCtrl", {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
@@ -47,71 +47,71 @@ describe("ImagesController tests", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(scope.profile).toBeDefined();
+        expect(scope.imageCtrl.profile).toBeDefined();
     });
 
     it("should set the opus attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(scope.opus).toBeDefined();
+        expect(scope.imageCtrl.opus).toBeDefined();
     });
 
     it("should set the readonly flag to false when init is called with edit=false", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(scope.readonly).toBe(true);
+        expect(scope.imageCtrl.readonly).toBe(true);
     });
 
     it("should set the readonly flag to false when init is called with edit=true", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
-        scope.init("true");
+        scope.imageCtrl.init("true");
         scope.$apply();
 
-        expect(scope.readonly).toBe(false);
+        expect(scope.imageCtrl.readonly).toBe(false);
     });
 
     it("should set the images array on the scope with the results from the retrieveImages call", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(scope.images).toBeDefined();
-        expect(scope.images.length).toBe(2);
+        expect(scope.imageCtrl.images).toBeDefined();
+        expect(scope.imageCtrl.images.length).toBe(2);
     });
 
     it("should set the firstImage attribute of the array to the first item in the retrieveImages response", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(scope.firstImage).toBeDefined();
-        expect(scope.firstImage.largeImageUrl).toBe("url1");
+        expect(scope.imageCtrl.firstImage).toBeDefined();
+        expect(scope.imageCtrl.firstImage.largeImageUrl).toBe("url1");
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {
         profileDefer.reject();
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(scope.profile).not.toBeDefined();
+        expect(scope.imageCtrl.profile).not.toBeDefined();
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the profile.");
     });
 
@@ -119,10 +119,10 @@ describe("ImagesController tests", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.reject();
 
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(scope.images.length).toBe(0);
+        expect(scope.imageCtrl.images.length).toBe(0);
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the images.");
     });
 
@@ -130,7 +130,7 @@ describe("ImagesController tests", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
         expect(messageService.info).toHaveBeenCalledWith("Loading images...");
@@ -145,7 +145,7 @@ describe("ImagesController tests", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
         expect(profileService.retrieveImages).toHaveBeenCalledWith("profileName", "source1,source2");
@@ -157,7 +157,7 @@ describe("ImagesController tests", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
-        scope.init("false");
+        scope.imageCtrl.init("false");
         scope.$apply();
 
         expect(profileService.retrieveImages).toHaveBeenCalledWith("lsid:guid1", "source1,source2");

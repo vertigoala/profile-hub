@@ -1,18 +1,19 @@
 /**
  * Taxon controller
  */
-profileEditor.controller('TaxonController', function ($scope, profileService, util, messageService) {
+profileEditor.controller('TaxonController', function (profileService, util, messageService) {
+    var self = this;
+    
+    self.speciesProfile = null;
+    self.classifications = [];
 
-    $scope.speciesProfile = null;
-    $scope.classifications = [];
-
-    $scope.init = function (edit) {
-        $scope.readonly = edit != 'true';
+    self.init = function (edit) {
+        self.readonly = edit != 'true';
 
         var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
         profilePromise.then(function (data) {
-                $scope.profile = data.profile;
-                $scope.opus = data.opus;
+                self.profile = data.profile;
+                self.opus = data.opus;
 
                 loadSpeciesProfile();
                 loadClassifications();
@@ -24,14 +25,14 @@ profileEditor.controller('TaxonController', function ($scope, profileService, ut
     };
 
     function loadClassifications() {
-        if ($scope.profile.guid) {
+        if (self.profile.guid) {
             messageService.info("Loading taxonomy...");
 
-            var promise = profileService.getClassifications($scope.profile.guid);
+            var promise = profileService.getClassifications(self.profile.guid);
             promise.then(function (data) {
                     console.log("Fetched " + data.length + " classifications");
 
-                    $scope.classifications = data;
+                    self.classifications = data;
                     messageService.pop();
                 },
                 function () {
@@ -42,14 +43,14 @@ profileEditor.controller('TaxonController', function ($scope, profileService, ut
     }
 
     function loadSpeciesProfile() {
-        if ($scope.profile.guid) {
+        if (self.profile.guid) {
             messageService.info("Loading taxon...");
 
-            var promise = profileService.getSpeciesProfile($scope.profile.guid);
+            var promise = profileService.getSpeciesProfile(self.profile.guid);
             promise.then(function (data) {
                     console.log("Fetched species profile");
 
-                    $scope.speciesProfile = data;
+                    self.speciesProfile = data;
                     messageService.pop();
                 },
                 function () {
@@ -59,7 +60,7 @@ profileEditor.controller('TaxonController', function ($scope, profileService, ut
         }
     }
 
-    //$scope.taxaUpload = function(){
+    //self.taxaUpload = function(){
     //    console.log("Taxa upload....");
     //    var file = document.getElementById('taxaUploadFile').files[0];
     //    var formData = new FormData();

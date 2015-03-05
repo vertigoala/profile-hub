@@ -1,21 +1,22 @@
 /**
  * Atributes controller
  */
-profileEditor.controller('AttributeEditor', function ($scope, profileService, util, messageService, $window) {
+profileEditor.controller('AttributeEditor', function (profileService, util, messageService, $window) {
+    var self = this;
+    
+    self.attributes = [];
+    self.attributeTitles = [];
 
-    $scope.attributes = [];
-    $scope.attributeTitles = [];
-
-    $scope.init = function (edit) {
-        $scope.readonly = edit != 'true';
+    self.init = function (edit) {
+        self.readonly = edit != 'true';
 
         var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
         messageService.info("Loading profile data...");
         profilePromise.then(function (data) {
                 messageService.pop();
-                $scope.profile = data.profile;
-                $scope.opus = data.opus;
-                $scope.attributes = data.profile.attributes;
+                self.profile = data.profile;
+                self.opus = data.opus;
+                self.attributes = data.profile.attributes;
 
                 loadVocabulary();
             },
@@ -26,24 +27,24 @@ profileEditor.controller('AttributeEditor', function ($scope, profileService, ut
     };
 
     function loadVocabulary() {
-        if ($scope.opus.attributeVocabUuid != null) {
-            var vocabPromise = profileService.getOpusVocabulary($scope.opus.attributeVocabUuid);
+        if (self.opus.attributeVocabUuid != null) {
+            var vocabPromise = profileService.getOpusVocabulary(self.opus.attributeVocabUuid);
             vocabPromise.then(function (data) {
-                $scope.attributeTitles = data.terms;
+                self.attributeTitles = data.terms;
             });
         }
     }
 
-    $scope.revertAttribute = function (attributeIdx, auditIdx) {
-        $scope.attributes[attributeIdx].title = $scope.attributes[attributeIdx].audit[auditIdx].object.title;
-        $scope.attributes[attributeIdx].text = $scope.attributes[attributeIdx].audit[auditIdx].object.text;
-        $scope.$apply();
+    self.revertAttribute = function (attributeIdx, auditIdx) {
+        self.attributes[attributeIdx].title = self.attributes[attributeIdx].audit[auditIdx].object.title;
+        self.attributes[attributeIdx].text = self.attributes[attributeIdx].audit[auditIdx].object.text;
+        self.$apply();
     };
 
-    $scope.showAudit = function (idx) {
-        var future = profileService.getAuditForAttribute($scope.attributes[idx].uuid);
+    self.showAudit = function (idx) {
+        var future = profileService.getAuditForAttribute(self.attributes[idx].uuid);
         future.then(function (audit) {
-                $scope.attributes[idx].audit = audit;
+                self.attributes[idx].audit = audit;
             },
             function () {
                 messageService.alert("An error occurred while retrieving the audit history.")
@@ -51,53 +52,53 @@ profileEditor.controller('AttributeEditor', function ($scope, profileService, ut
         );
     };
 
-    $scope.deleteAttribute = function (idx) {
+    self.deleteAttribute = function (idx) {
         var confirmed = $window.confirm("Are you sure?");
 
         if (confirmed) {
-            if ($scope.attributes[idx].uuid !== "") {
-                var future = profileService.deleteAttribute($scope.attributes[idx].uuid, $scope.profile.uuid);
+            if (self.attributes[idx].uuid !== "") {
+                var future = profileService.deleteAttribute(self.attributes[idx].uuid, self.profile.uuid);
                 future.then(function () {
-                        $scope.attributes.splice(idx, 1);
+                        self.attributes.splice(idx, 1);
                     },
                     function () {
                         messageService.alert("An error occurred while deleting the record.");
                     }
                 );
             } else {
-                $scope.attributes.splice(idx, 1);
-                console.log("Local delete only deleting attributes: " + $scope.attributes.length);
+                self.attributes.splice(idx, 1);
+                console.log("Local delete only deleting attributes: " + self.attributes.length);
             }
         }
     };
 
-    $scope.addAttribute = function () {
-        $scope.attributes.unshift(
+    self.addAttribute = function () {
+        self.attributes.unshift(
             {"uuid": "", "title": "", "text": "", contributor: []}
         );
-        console.log("adding attributes: " + $scope.attributes.length);
+        console.log("adding attributes: " + self.attributes.length);
     };
 
-    $scope.saveAttribute = function (idx, attributeForm) {
-        var attribute = $scope.attributes[idx];
-        $scope.attributes[idx].saving = true;
+    self.saveAttribute = function (idx, attributeForm) {
+        var attribute = self.attributes[idx];
+        self.attributes[idx].saving = true;
 
-        var future = profileService.saveAttribute($scope.profile.uuid, attribute.uuid, {
-            profileId: $scope.profile.uuid,
+        var future = profileService.saveAttribute(self.profile.uuid, attribute.uuid, {
+            profileId: self.profile.uuid,
             attributeId: attribute.uuid,
             title: attribute.title,
             text: attribute.text
         });
 
         future.then(function (attribute) {
-                $scope.attributes[idx].saving = false;
+                self.attributes[idx].saving = false;
                 messageService.success("Last saved " + new Date());
 
-                $scope.attributes[idx].uuid = attribute.attributeId;
+                self.attributes[idx].uuid = attribute.attributeId;
                 attributeForm.$setPristine();
             },
             function () {
-                $scope.attributes[idx].saving = false;
+                self.attributes[idx].saving = false;
                 messageService.alert("An error has occurred while saving.");
             }
         );

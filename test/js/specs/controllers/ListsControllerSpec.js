@@ -35,7 +35,7 @@ describe("ListsController tests", function () {
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
-        controller = $controller("ListsEditor", {
+        controller = $controller("ListsEditor as listCtrl", {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
@@ -47,60 +47,60 @@ describe("ListsController tests", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.resolve(JSON.parse(listsResponse));
 
-        scope.init("false");
+        scope.listCtrl.init("false");
         scope.$apply();
 
-        expect(scope.profile).toBeDefined();
+        expect(scope.listCtrl.profile).toBeDefined();
     });
 
     it("should set the opus attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.resolve(JSON.parse(listsResponse));
 
-        scope.init("false");
+        scope.listCtrl.init("false");
         scope.$apply();
 
-        expect(scope.opus).toBeDefined();
+        expect(scope.listCtrl.opus).toBeDefined();
     });
 
     it("should set the readonly flag to false when init is called with edit=false", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.resolve(JSON.parse(listsResponse));
 
-        scope.init("false");
+        scope.listCtrl.init("false");
         scope.$apply();
 
-        expect(scope.readonly).toBe(true);
+        expect(scope.listCtrl.readonly).toBe(true);
     });
 
     it("should set the readonly flag to false when init is called with edit=true", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.resolve(JSON.parse(listsResponse));;
 
-        scope.init("true");
+        scope.listCtrl.init("true");
         scope.$apply();
 
-        expect(scope.readonly).toBe(false);
+        expect(scope.listCtrl.readonly).toBe(false);
     });
 
     it("should set the lists array on the scope with the results from the retrieveLists call", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.resolve(JSON.parse(listsResponse));
 
-        scope.init("false");
+        scope.listCtrl.init("false");
         scope.$apply();
 
-        expect(scope.lists.length).toBe(2);
+        expect(scope.listCtrl.lists.length).toBe(2);
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {
         profileDefer.reject();
         listsDefer.resolve(JSON.parse(listsResponse));
 
-        scope.init("false");
+        scope.listCtrl.init("false");
         scope.$apply();
 
-        expect(scope.profile).not.toBeDefined();
+        expect(scope.listCtrl.profile).not.toBeDefined();
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the profile.");
     });
 
@@ -108,10 +108,10 @@ describe("ListsController tests", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.reject();
 
-        scope.init("false");
+        scope.listCtrl.init("false");
         scope.$apply();
 
-        expect(scope.lists.length).toBe(0);
+        expect(scope.listCtrl.lists.length).toBe(0);
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the lists.");
     });
 
@@ -119,7 +119,7 @@ describe("ListsController tests", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.resolve(JSON.parse(listsResponse));
 
-        scope.init("false");
+        scope.listCtrl.init("false");
         scope.$apply();
 
         expect(messageService.info).toHaveBeenCalledWith("Loading lists...");
@@ -133,7 +133,7 @@ describe("ListsController tests", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.resolve(JSON.parse(listsResponse));
 
-        scope.init("false");
+        scope.listCtrl.init("false");
         scope.$apply();
 
         expect(profileService.retrieveLists).not.toHaveBeenCalled();

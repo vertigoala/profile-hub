@@ -1,11 +1,13 @@
 /**
  *  Links controller
  */
-profileEditor.controller('LinksEditor', function ($scope, profileService, util, messageService) {
-    $scope.links = [];
+profileEditor.controller('LinksEditor', function (profileService, util, messageService) {
+    var self = this;
+    
+    self.links = [];
 
-    $scope.init = function (edit) {
-        $scope.readonly = edit != 'true';
+    self.init = function (edit) {
+        self.readonly = edit != 'true';
 
         loadLinks();
     };
@@ -13,9 +15,9 @@ profileEditor.controller('LinksEditor', function ($scope, profileService, util, 
     function loadLinks() {
         var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
         profilePromise.then(function (data) {
-                $scope.profile = data.profile;
-                $scope.opus = data.opus;
-                $scope.links = data.profile.links;
+                self.profile = data.profile;
+                self.opus = data.opus;
+                self.links = data.profile.links;
             },
             function () {
                 messageService.alert("An error occurred while retrieving the links.");
@@ -23,16 +25,16 @@ profileEditor.controller('LinksEditor', function ($scope, profileService, util, 
         );
     }
 
-    $scope.addLink = function () {
-        $scope.links.unshift({uuid: null, url: "http://", description: "", title: ""});
+    self.addLink = function () {
+        self.links.unshift({uuid: null, url: "http://", description: "", title: ""});
     };
 
-    $scope.deleteLink = function (idx) {
-        $scope.links.splice(idx, 1);
+    self.deleteLink = function (idx) {
+        self.links.splice(idx, 1);
     };
 
-    $scope.saveLinks = function () {
-        var promise = profileService.updateLinks($scope.profile.uuid, JSON.stringify({profileId: $scope.profile.uuid, links: $scope.links}));
+    self.saveLinks = function () {
+        var promise = profileService.updateLinks(self.profile.uuid, JSON.stringify({profileId: self.profile.uuid, links: self.links}));
         promise.then(function () {
                 messageService.success("Links successfully updated.");
                 loadLinks();

@@ -2,10 +2,11 @@
  * Map controller
  */
 profileEditor.controller('MapController', function ($scope, profileService, util, messageService, $http, leafletData) {
+    var self = this;
 
     var mapBaseLayerAttribution = "Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>";
 
-    $scope.layers = {
+    self.layers = {
         baselayers: {
             xyz: {
                 name: 'Street',
@@ -20,39 +21,39 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         },
         overlays: {}
     };
-    $scope.events = {
+    self.events = {
         map: {
             enable: ['click'],
             logic: 'emit'
         }
     };
-    $scope.center = {};
+    self.center = {};
 
-    $scope.init = function (biocacheWMSUrl, biocacheInfoUrl) {
-        $scope.biocacheInfoUrl = biocacheInfoUrl;
-        $scope.biocacheWMSUrl = biocacheWMSUrl;
+    self.init = function (biocacheWMSUrl, biocacheInfoUrl) {
+        self.biocacheInfoUrl = biocacheInfoUrl;
+        self.biocacheWMSUrl = biocacheWMSUrl;
 
         messageService.info("Loading map...");
         var future = profileService.getProfile(util.getPathItem(util.LAST));
 
         future.then(function (data) {
-                $scope.profile = data.profile;
-                $scope.opus = data.opus;
+                self.profile = data.profile;
+                self.opus = data.opus;
 
-                var occurrenceQuery = $scope.constructQuery();
+                var occurrenceQuery = self.constructQuery();
 
                 var wmsLayer = biocacheWMSUrl + occurrenceQuery;
 
-                angular.extend($scope, {
+                angular.extend(self, {
                     center: {
-                        lat: $scope.opus.mapDefaultLatitude,
-                        lng: $scope.opus.mapDefaultLongitude,
-                        zoom: $scope.opus.mapZoom
+                        lat: self.opus.mapDefaultLatitude,
+                        lng: self.opus.mapDefaultLongitude,
+                        zoom: self.opus.mapZoom
                     },
                     layers: {
                         overlays: {
                             wms: {
-                                name: $scope.profile.scientificName,
+                                name: self.profile.scientificName,
                                 url: wmsLayer,
                                 type: "wms",
                                 visible: true,
@@ -60,11 +61,11 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                                     layers: 'ALA:occurrences',
                                     format: 'image/png',
                                     transparent: true,
-                                    attribution: $scope.opus.mapAttribution,
+                                    attribution: self.opus.mapAttribution,
                                     id: "bla",
                                     bgcolor: "0x000000",
                                     outline: "true",
-                                    ENV: "color:" + $scope.opus.mapPointColour + ";name:circle;size:4;opacity:1"
+                                    ENV: "color:" + self.opus.mapPointColour + ";name:circle;size:4;opacity:1"
                                 }
                             }
                         }
@@ -79,8 +80,8 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
     $scope.$on('leafletDirectiveMap.click', function(event, args){
         console.log(args.leafletEvent.latlng);
-        var url = $scope.biocacheInfoUrl + "?"
-            + $scope.constructQuery()
+        var url = self.biocacheInfoUrl + "?"
+            + self.constructQuery()
             + "&zoom=6"
             + "&lat=" + args.leafletEvent.latlng.lat
             + "&lon=" + args.leafletEvent.latlng.lng
@@ -102,20 +103,20 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         );
     });
 
-    $scope.constructQuery = function () {
+    self.constructQuery = function () {
         var result = "";
-        if ($scope.profile && $scope.opus) {
+        if (self.profile && self.opus) {
             var query;
-            if ($scope.profile.guid && $scope.profile.guid != "null") {
-                query = "lsid:" + $scope.profile.guid;
+            if (self.profile.guid && self.profile.guid != "null") {
+                query = "lsid:" + self.profile.guid;
             } else {
-                query = $scope.profile.scientificName;
+                query = self.profile.scientificName;
             }
 
             var occurrenceQuery = query;
 
-            if ($scope.opus.recordSources) {
-                occurrenceQuery = query + " AND (data_resource_uid:" + $scope.opus.recordSources.join(" OR data_resource_uid:") + ")"
+            if (self.opus.recordSources) {
+                occurrenceQuery = query + " AND (data_resource_uid:" + self.opus.recordSources.join(" OR data_resource_uid:") + ")"
             }
 
             result = encodeURIComponent(occurrenceQuery);

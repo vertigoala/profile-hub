@@ -1,8 +1,8 @@
-<div ng-controller="BHLLinksEditor" ng-init="init('${edit}')" class="bs-docs-example ng-cloak" ng-cloak id="browse_bhllinks"
-     data-content="Biodiversity Heritage Library references" ng-show="bhl.length > 0">
-    <div ng-show="readonly">
+<div ng-controller="BHLLinksEditor as bhlCtrl" ng-init="bhlCtrl.init('${edit}')" class="bs-docs-example ng-cloak" ng-cloak id="browse_bhllinks"
+     data-content="Biodiversity Heritage Library references" ng-show="bhlCtrl.bhl.length > 0">
+    <div ng-show="bhlCtrl.readonly">
         <table class="table">
-            <tr ng-repeat="link in bhl" ng-if="link.uuid">
+            <tr ng-repeat="link in bhlCtrl.bhl" ng-if="link.uuid">
                 <td>
                     <h4 ng-show="link.title != ''" style="margin-bottom: 0; padding-bottom:0;">
                         Title: {{link.title}}
@@ -40,7 +40,7 @@
         </table>
     </div>
 
-    <div ng-show="!readonly">
+    <div ng-show="!bhlCtrl.readonly">
 
         <p class="lead">
             Add links to the biodiversity heritage library. Links should be of the form:
@@ -48,17 +48,17 @@
         </p>
 
         <div style="margin-bottom: 10px;" ng-show="!readonly">
-            <button class="btn" ng-click="saveLinks()">Save changes</button>
-            <button class="btn" ng-click="addLink()"><i class="icon icon-plus"></i> Add new reference
+            <button class="btn" ng-click="bhlCtrl.saveLinks()">Save changes</button>
+            <button class="btn" ng-click="bhlCtrl.addLink()"><i class="icon icon-plus"></i> Add new reference
             </button>
         </div>
 
         <table class="table table-striped">
-            <tr ng-repeat="link in bhl">
+            <tr ng-repeat="link in bhlCtrl.bhl">
                 <td>
                     <label>URL</label>
                     <input type="text" class="input-xxlarge" ng-model="link.url" value="{{link.url}}"
-                           ng-change="updateThumbnail($index)"/><br/>
+                           ng-change="bhlCtrl.updateThumbnail($index)"/><br/>
                     <label>Title</label>
                     <input type="text" class="input-xxlarge" ng-model="link.title"
                            value="{{link.title}}"/><br/>
@@ -86,7 +86,7 @@
                     </cite>
                 </td>
                 <td>
-                    <button class="btn btn-danger" ng-click="deleteLink($index)">Delete</button>
+                    <button class="btn btn-danger" ng-click="bhlCtrl.deleteLink($index)">Delete</button>
                     <br/>
 
                     <div ng-show="link.thumbnailUrl">
@@ -102,5 +102,4 @@
             </tr>
         </table>
     </div>
-
 </div>

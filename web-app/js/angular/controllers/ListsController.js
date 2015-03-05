@@ -1,17 +1,18 @@
 /**
  * Species Lists controller
  */
-profileEditor.controller('ListsEditor', function ($scope, profileService, util, messageService) {
+profileEditor.controller('ListsEditor', function (profileService, util, messageService) {
+    var self = this;
+    
+    self.lists = [];
 
-    $scope.lists = [];
-
-    $scope.init = function (edit) {
-        $scope.readonly = edit != 'true';
+    self.init = function (edit) {
+        self.readonly = edit != 'true';
 
         var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
         profilePromise.then(function (data) {
-                $scope.profile = data.profile;
-                $scope.opus = data.opus;
+                self.profile = data.profile;
+                self.opus = data.opus;
 
                 loadLists();
             },
@@ -22,15 +23,15 @@ profileEditor.controller('ListsEditor', function ($scope, profileService, util, 
     };
 
     function loadLists() {
-        if ($scope.profile.guid) {
+        if (self.profile.guid) {
             messageService.info("Loading lists...");
 
-            var listsPromise = profileService.retrieveLists($scope.profile.guid);
+            var listsPromise = profileService.retrieveLists(self.profile.guid);
 
             listsPromise.then(function (data) {
                     console.log("Fetched " + data.length + " lists");
 
-                    $scope.lists = data;
+                    self.lists = data;
 
                     messageService.pop();
                 },

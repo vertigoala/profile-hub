@@ -34,7 +34,7 @@ describe("LinksController tests", function () {
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
-        controller = $controller("LinksEditor", {
+        controller = $controller("LinksEditor as linkCtrl", {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
@@ -45,87 +45,87 @@ describe("LinksController tests", function () {
     it("should set the profile attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("false");
+        scope.linkCtrl.init("false");
         scope.$apply();
 
-        expect(scope.profile).toBeDefined();
+        expect(scope.linkCtrl.profile).toBeDefined();
     });
 
     it("should set the opus attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("false");
+        scope.linkCtrl.init("false");
         scope.$apply();
 
-        expect(scope.opus).toBeDefined();
+        expect(scope.linkCtrl.opus).toBeDefined();
     });
 
     it("should set the readonly flag to false when init is called with edit=false", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("false");
+        scope.linkCtrl.init("false");
         scope.$apply();
 
-        expect(scope.readonly).toBe(true);
+        expect(scope.linkCtrl.readonly).toBe(true);
     });
 
     it("should set the readonly flag to false when init is called with edit=true", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("true");
+        scope.linkCtrl.init("true");
         scope.$apply();
 
-        expect(scope.readonly).toBe(false);
+        expect(scope.linkCtrl.readonly).toBe(false);
     });
 
     it("should set the links array on the scope with the results from the getProfile call", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("false");
+        scope.linkCtrl.init("false");
         scope.$apply();
 
-        expect(scope.links.length).toBe(2);
+        expect(scope.linkCtrl.links.length).toBe(2);
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {
         profileDefer.reject();
 
-        scope.init("false");
+        scope.linkCtrl.init("false");
         scope.$apply();
 
-        expect(scope.links.length).toBe(0);
+        expect(scope.linkCtrl.links.length).toBe(0);
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the links.");
     });
 
     it("should create a new empty link object at the start of the list when addLink is invoked", function () {
-        scope.links = [{"url": "blabla", "title": "linkTitle", "description": "desc"}];
-        scope.addLink();
+        scope.linkCtrl.links = [{"url": "blabla", "title": "linkTitle", "description": "desc"}];
+        scope.linkCtrl.addLink();
 
-        expect(scope.links.length).toBe(2);
-        expect(scope.links[0].uuid).toBeNull();
-        expect(scope.links[0].title).toBe("");
-        expect(scope.links[0].url).toBe("http://");
-        expect(scope.links[0].description.length).toBe(0);
+        expect(scope.linkCtrl.links.length).toBe(2);
+        expect(scope.linkCtrl.links[0].uuid).toBeNull();
+        expect(scope.linkCtrl.links[0].title).toBe("");
+        expect(scope.linkCtrl.links[0].url).toBe("http://");
+        expect(scope.linkCtrl.links[0].description.length).toBe(0);
     });
 
     it("it should remove the specified link from the list when deleteLink is invoked", function () {
-        scope.links = [{"url": "url1", "title": "first", "description": "desc1"},
+        scope.linkCtrl.links = [{"url": "url1", "title": "first", "description": "desc1"},
             {"url": "url2", "title": "second", "description": "desc2"},
             {"url": "url3", "title": "third", "description": "desc3"}];
-        scope.deleteLink(1);
+        scope.linkCtrl.deleteLink(1);
 
-        expect(scope.links.length).toBe(2);
-        expect(scope.links[0].title).toBe("first");
-        expect(scope.links[1].title).toBe("third");
+        expect(scope.linkCtrl.links.length).toBe(2);
+        expect(scope.linkCtrl.links[0].title).toBe("first");
+        expect(scope.linkCtrl.links[1].title).toBe("third");
     });
 
     it("should invoke the updateLinks method of the profile service with the correct values when saveLinks is invoked", function () {
         var links = '[{"uuid":"uuid1","url":"url1","title":"first","description":"desc1"},{"uuid":"uuid1","url":"url2","title":"second","description":"desc2"}]';
-        scope.profile = {"uuid": "profileId1"};
-        scope.links = JSON.parse(links);
+        scope.linkCtrl.profile = {"uuid": "profileId1"};
+        scope.linkCtrl.links = JSON.parse(links);
 
         saveLinksDefer.resolve("bla");
-        scope.saveLinks();
+        scope.linkCtrl.saveLinks();
         scope.$apply();
 
         var data = '{"profileId":"profileId1","links":' + links + '}';
@@ -136,11 +136,11 @@ describe("LinksController tests", function () {
 
     it("should raise an alert message if the call to saveLinks fails", function () {
         var links = '[{"uuid":"uuid1","url":"url1","title":"first","description":"desc1"},{"uuid":"uuid1","url":"url2","title":"second","description":"desc2"}]';
-        scope.profile = {"uuid": "profileId1"};
-        scope.links = JSON.parse(links);
+        scope.linkCtrl.profile = {"uuid": "profileId1"};
+        scope.linkCtrl.links = JSON.parse(links);
 
         saveLinksDefer.reject();
-        scope.saveLinks();
+        scope.linkCtrl.saveLinks();
         scope.$apply();
 
         expect(messageService.alert).toHaveBeenCalled();

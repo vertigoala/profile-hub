@@ -38,7 +38,7 @@ describe("TaxonController tests", function () {
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
-        controller = $controller("TaxonController", {
+        controller = $controller("TaxonController as taxonCtrl", {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
@@ -51,10 +51,10 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
-        expect(scope.profile).toBeDefined();
+        expect(scope.taxonCtrl.profile).toBeDefined();
     });
 
     it("should set the opus attribute of the current scope when init is called", function () {
@@ -62,10 +62,10 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
-        expect(scope.opus).toBeDefined();
+        expect(scope.taxonCtrl.opus).toBeDefined();
     });
 
     it("should set the readonly flag to false when init is called with edit=false", function () {
@@ -73,10 +73,10 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
-        expect(scope.readonly).toBe(true);
+        expect(scope.taxonCtrl.readonly).toBe(true);
     });
 
     it("should set the readonly flag to false when init is called with edit=true", function () {
@@ -84,10 +84,10 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("true");
+        scope.taxonCtrl.init("true");
         scope.$apply();
 
-        expect(scope.readonly).toBe(false);
+        expect(scope.taxonCtrl.readonly).toBe(false);
     });
 
     it("should set the classifications array on the scope with the results from the getClassification call", function () {
@@ -95,10 +95,10 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
-        expect(scope.classifications.length).toBe(2);
+        expect(scope.taxonCtrl.classifications.length).toBe(2);
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {
@@ -106,10 +106,10 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
-        expect(scope.profile).not.toBeDefined();
+        expect(scope.taxonCtrl.profile).not.toBeDefined();
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the profile.");
     });
 
@@ -118,10 +118,10 @@ describe("TaxonController tests", function () {
         classificationDefer.reject();
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
-        expect(scope.classifications.length).toBe(0);
+        expect(scope.taxonCtrl.classifications.length).toBe(0);
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the taxonomy.");
     });
 
@@ -130,10 +130,10 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.reject();
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
-        expect(scope.speciesProfile).toBeNull();
+        expect(scope.taxonCtrl.speciesProfile).toBeNull();
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the taxonomy.");
     });
 
@@ -142,7 +142,7 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
         expect(messageService.info).toHaveBeenCalledWith("Loading taxonomy..."); // twice
@@ -156,7 +156,7 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
         expect(messageService.info).toHaveBeenCalledWith("Loading taxonomy..."); // twice
@@ -171,7 +171,7 @@ describe("TaxonController tests", function () {
         classificationDefer.resolve(JSON.parse(classifcationResponse));
         speciesProfileDefer.resolve(JSON.parse(speciesProfileResposne));
 
-        scope.init("false");
+        scope.taxonCtrl.init("false");
         scope.$apply();
 
         expect(profileService.getClassifications).not.toHaveBeenCalled();

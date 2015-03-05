@@ -34,7 +34,7 @@ describe("MapController tests", function () {
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
-        controller = $controller("MapController", {
+        controller = $controller("MapController as mapCtrl", {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
@@ -47,67 +47,67 @@ describe("MapController tests", function () {
     it("should set the profile attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
         scope.$apply();
 
-        expect(scope.profile).toBeDefined();
+        expect(scope.mapCtrl.profile).toBeDefined();
     });
 
     it("should set the opus attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
         scope.$apply();
 
-        expect(scope.opus).toBeDefined();
+        expect(scope.mapCtrl.opus).toBeDefined();
     });
 
     it("should set the biocache urls to the provided values when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
         scope.$apply();
 
-        expect(scope.biocacheInfoUrl).toBe("biocacheInfoUrl");
-        expect(scope.biocacheWMSUrl).toBe("biocacheWmsUrl");
+        expect(scope.mapCtrl.biocacheInfoUrl).toBe("biocacheInfoUrl");
+        expect(scope.mapCtrl.biocacheWMSUrl).toBe("biocacheWmsUrl");
     });
 
     it("should specify the map center when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
         scope.$apply();
 
-        expect(scope.center).toEqual({lat: '123', lng: '987', zoom: '2'});
+        expect(scope.mapCtrl.center).toEqual({lat: '123', lng: '987', zoom: '2'});
     });
 
     it("should specify the base layer when the controller loads", function () {
-        expect(scope.layers.baselayers.xyz).toBeDefined();
-        expect(scope.layers.baselayers.xyz.name).toBe("Street");
-        expect(scope.layers.baselayers.xyz.layerParams).toBeDefined();
+        expect(scope.mapCtrl.layers.baselayers.xyz).toBeDefined();
+        expect(scope.mapCtrl.layers.baselayers.xyz.name).toBe("Street");
+        expect(scope.mapCtrl.layers.baselayers.xyz.layerParams).toBeDefined();
     });
 
     it("should register a click event listener when the controller loads", function () {
-        expect(scope.events).toEqual({map: {enable: ['click'], logic: 'emit'}});
+        expect(scope.mapCtrl.events).toEqual({map: {enable: ['click'], logic: 'emit'}});
     });
 
     it("should specify the overlay layer for the profile when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.init("http://biocacheWmsUrl/bla?q=", "biocacheInfoUrl");
+        scope.mapCtrl.init("http://biocacheWmsUrl/bla?q=", "biocacheInfoUrl");
         scope.$apply();
 
-        expect(scope.layers.overlays.wms).toBeDefined();
-        expect(scope.layers.overlays.wms.name).toBe("profileName");
-        expect(scope.layers.overlays.wms.visible).toBe(true);
-        expect(scope.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?q=lsid%3Aguid1");
-        expect(scope.layers.overlays.wms.layerOptions.attribution).toBe("mapAttr1");
+        expect(scope.mapCtrl.layers.overlays.wms).toBeDefined();
+        expect(scope.mapCtrl.layers.overlays.wms.name).toBe("profileName");
+        expect(scope.mapCtrl.layers.overlays.wms.visible).toBe(true);
+        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?q=lsid%3Aguid1");
+        expect(scope.mapCtrl.layers.overlays.wms.layerOptions.attribution).toBe("mapAttr1");
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {
         profileDefer.reject();
 
-        scope.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
         scope.$apply();
 
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the map information.");

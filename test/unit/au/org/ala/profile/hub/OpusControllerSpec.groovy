@@ -1,8 +1,6 @@
 package au.org.ala.profile.hub
 
-import au.org.ala.profile.hub.util.JsonUtil
 import au.org.ala.web.AuthService
-import grails.converters.JSON
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import spock.lang.Specification

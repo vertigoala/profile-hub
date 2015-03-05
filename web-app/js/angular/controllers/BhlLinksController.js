@@ -1,39 +1,40 @@
 /**
  * BHL Links controller
  */
-profileEditor.controller('BHLLinksEditor', function ($scope, profileService, util, messageService) {
+profileEditor.controller('BHLLinksEditor', function (profileService, util, messageService) {
+    var self = this;
+    
+    self.bhl = [];
 
-    $scope.bhl = [];
-
-    $scope.init = function (edit) {
-        $scope.readonly = edit != 'true';
+    self.init = function (edit) {
+        self.readonly = edit != 'true';
 
         var future = profileService.getProfile(util.getPathItem(util.LAST));
 
         future.then(function (data) {
-            $scope.profile = data.profile;
-            $scope.opus = data.opus;
-            $scope.bhl = data.profile.bhl;
-            console.log("Fetched " + $scope.bhl.length + " BHL links");
+            self.profile = data.profile;
+            self.opus = data.opus;
+            self.bhl = data.profile.bhl;
+            console.log("Fetched " + self.bhl.length + " BHL links");
         },
         function () {
             messageService.alert("An error occurred while retrieving the Biodiversity Heritage References.");
         });
     };
 
-    $scope.updateThumbnail = function (idx) {
+    self.updateThumbnail = function (idx) {
         console.log("Updating...");
-        var url = $scope.bhl[idx].url.trim();
+        var url = self.bhl[idx].url.trim();
         if (url) {
             var pageId = util.getPathItemFromUrl(util.LAST, url);
 
             var bhlPromise = profileService.lookupBhlPage(pageId);
             bhlPromise.then(function (data) {
-                    $scope.bhl[idx].thumbnailUrl = data.thumbnailUrl;
-                    $scope.bhl[idx].fullTitle = data.Result.FullTitle;
-                    $scope.bhl[idx].edition = data.Result.Edition;
-                    $scope.bhl[idx].publisherName = data.Result.PublisherName;
-                    $scope.bhl[idx].doi = data.Result.Doi;
+                    self.bhl[idx].thumbnailUrl = data.thumbnailUrl;
+                    self.bhl[idx].fullTitle = data.Result.FullTitle;
+                    self.bhl[idx].edition = data.Result.Edition;
+                    self.bhl[idx].publisherName = data.Result.PublisherName;
+                    self.bhl[idx].doi = data.Result.Doi;
                 },
                 function () {
                     messageService.alert("Failed to lookup page information from the biodiversity heritage library.");
@@ -42,8 +43,8 @@ profileEditor.controller('BHLLinksEditor', function ($scope, profileService, uti
         }
     };
 
-    $scope.addLink = function () {
-        $scope.bhl.unshift(
+    self.addLink = function () {
+        self.bhl.unshift(
             {
                 url: "",
                 description: "",
@@ -52,14 +53,14 @@ profileEditor.controller('BHLLinksEditor', function ($scope, profileService, uti
             });
     };
 
-    $scope.deleteLink = function (idx) {
-        $scope.bhl.splice(idx, 1);
+    self.deleteLink = function (idx) {
+        self.bhl.splice(idx, 1);
     };
 
-    $scope.saveLinks = function () {
-        var promise = profileService.updateBhlLinks($scope.profile.uuid, JSON.stringify({
-            profileId: $scope.profile.uuid,
-            links: $scope.bhl
+    self.saveLinks = function () {
+        var promise = profileService.updateBhlLinks(self.profile.uuid, JSON.stringify({
+            profileId: self.profile.uuid,
+            links: self.bhl
         }));
         promise.then(function () {
                 messageService.success("Links successfully updated.");
