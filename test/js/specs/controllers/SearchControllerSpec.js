@@ -28,7 +28,7 @@ describe("SearchController tests", function () {
 
         searchDefer = $q.defer();
 
-        spyOn(profileService, "search").and.returnValue(searchDefer.promise);
+        spyOn(profileService, "profileSearch").and.returnValue(searchDefer.promise);
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -57,6 +57,6 @@ describe("SearchController tests", function () {
         scope.searchCtrl.search();
         scope.$apply();
 
-        expect(profileService.search).toHaveBeenCalledWith("12345", searchTerm);
+        expect(profileService.profileSearch).toHaveBeenCalledWith("12345", searchTerm);
     });
 });

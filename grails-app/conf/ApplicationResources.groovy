@@ -10,6 +10,7 @@ modules = {
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/controllers/OpusController.js"
+        resource url:"js/angular/controllers/UserAccessController.js"
         resource url:"js/angular/controllers/SearchController.js"
         resource url:"js/angular/controllers/AttributesController.js"
         resource url:"js/angular/controllers/BhlLinksController.js"

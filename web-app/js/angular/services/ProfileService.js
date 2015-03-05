@@ -55,7 +55,7 @@ profileEditor.service('profileService', function ($http, util) {
 
         saveAttribute: function (profileId, attributeId, data) {
             console.log("Saving attribute " + attributeId);
-            var future = $http.post(util.contextRoot() + "/profile/updateAttribute/" + profileId, data, {cache: true});
+            var future = $http.post(util.contextRoot() + "/profile/updateAttribute/" + profileId, data);
             future.then(function (response) {
                 console.log("Attribute saved with response code " + response.status)
             });
@@ -125,7 +125,7 @@ profileEditor.service('profileService', function ($http, util) {
             return util.toStandardPromise(future);
         },
 
-        search: function(opusId, scientificName) {
+        profileSearch: function(opusId, scientificName) {
             console.log("Searching for " + scientificName);
             var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&scientificName=" + scientificName);
             future.then(function (response) {
@@ -148,9 +148,37 @@ profileEditor.service('profileService', function ($http, util) {
         getResource: function (dataResourceId) {
             console.log("Fetching resource " + dataResourceId);
 
-            var future = $http.get(util.contextRoot()+ "/dataResource/" + (dataResourceId ? dataResourceId : ''));
+            var future = $http.get(util.contextRoot()+ "/dataResource/" + dataResourceId);
             future.then(function (response) {
                 console.log("Resource fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        userSearch: function(email) {
+            console.log("Searching for user " + email);
+
+            var future = $http.post(util.contextRoot() + "/opus/findUser", {userName: email});
+            future.then(function (response) {
+                console.log("Search completed with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        updateUsers: function(opusId, admins, editors) {
+            console.log("Updating users for opus " + opusId);
+
+            var data = {
+                opusId: opusId,
+                admins: admins,
+                editors: editors
+            };
+
+            var future = $http.post(util.contextRoot() + "/opus/updateUsers", data);
+            future.then(function (response) {
+                console.log("Update Users completed with response code " + response.status);
             });
 
             return util.toStandardPromise(future);

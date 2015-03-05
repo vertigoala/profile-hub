@@ -495,9 +495,6 @@ class ProfileControllerSpec extends Specification {
         assert response.status == 666
     }
 
-
-
-
     def "search should return a 400 (BAD REQUEST) if the opusId parameter is not set"() {
         when:
         params.scientificName = "bla"

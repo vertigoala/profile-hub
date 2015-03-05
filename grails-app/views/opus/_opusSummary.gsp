@@ -1,14 +1,8 @@
 <div class="well" style="margin-top:20px;">
-    <div>
-        <g:if test="${!edit}">
-            <g:link class="btn pull-right" mapping="editOpus" params="[opusId: opus.uuid]" target="_self">
-                <i class="icon-edit"></i>&nbsp;Edit
-            </g:link>
-        </g:if>
-        <g:else>
-            <g:link class="btn pull-right" mapping="viewOpus" params="[opusId: opus.uuid]" target="_self">Public view</g:link>
-        </g:else>
-    </div>
+
+    <g:link class="btn pull-right" mapping="editOpus" params="[opusId: opus.uuid]" target="_self">
+        <span class="icon-edit"></span>&nbsp; Edit
+    </g:link>
 
     <div ng-show="opusCtrl.opus.imageSources.length > 0">
         <h3>Image sources</h3>

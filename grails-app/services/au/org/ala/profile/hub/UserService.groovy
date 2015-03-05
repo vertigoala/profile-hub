@@ -31,8 +31,7 @@ class UserService {
     }
 
     def findUser(String username) {
-        def result = webService.doPost("${grailsApplication.config.userdetails.service.url}/userDetails/getUserDetails?userName=${username}", [:])
-        result.resp
+        webService.doPost("${grailsApplication.config.userdetails.service.url}/userDetails/getUserDetails?userName=${username}", [:])
     }
 
     def userInRole(role) {

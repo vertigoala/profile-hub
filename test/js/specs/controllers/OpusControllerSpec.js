@@ -64,13 +64,14 @@ describe("OpusController tests", function () {
         expect(scope.opusCtrl.dataResources.length).toBe(2);
     });
 
-    it("should set the opus description on the scope when the controller loads", function () {
+    it("should set the opus data resource on the scope when the controller loads", function () {
         opusDefer.resolve(JSON.parse(getOpusResponse));
         getResourceDefer.resolve(JSON.parse(getResourceResponse));
 
         scope.$apply();
 
-        expect(scope.opusCtrl.opusDescription).toBe("resource description");
+        expect(scope.opusCtrl.dataResource).toBeDefined();
+        expect(scope.opusCtrl.dataResource.pubDescription).toBe("resource description");
     });
 
     it("should raise an alert message when the call to getOpus fails", function () {

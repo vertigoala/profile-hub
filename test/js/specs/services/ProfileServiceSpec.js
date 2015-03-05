@@ -130,9 +130,21 @@ describe("ProfileService tests", function () {
         http.expectGET("/someContext/dataResource/list").respond("bla");
     });
 
-    it("should invoke the search operation on the context root when search is called ", function() {
-        service.search("opusId", "scientificName");
+    it("should invoke the profile search operation on the context root when profileSearch is called ", function() {
+        service.profileSearch("opusId", "scientificName");
 
         http.expectGET("/someContext/profile/search?opusId=opusId&scientificName=scientificName").respond("bla");
+    });
+
+    it("should invoke the user search operation on the context root when userSearch is called ", function() {
+        service.userSearch("fred");
+
+        http.expectPOST("/someContext/opus/findUser", {userName: "fred"}).respond("bla");
+    });
+
+    it("should invoke the update user operation on the context root when updateUser is called ", function() {
+        service.updateUsers("opus1", "admins", "editors");
+
+        http.expectPOST("/someContext/opus/updateUsers", {opusId: "opus1", admins: "admins", editors: "editors"}).respond("bla");
     })
 });
