@@ -15,6 +15,10 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${opusId}")?.resp
     }
 
+    def updateOpus(String opusId, json) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}", json)
+    }
+
     def getVocab(String vocabId = "") {
         webService.get("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")?.resp
     }

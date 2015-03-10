@@ -21,13 +21,17 @@
     <div class="pull-right">
         <button class="btn"
                 onclick="javascript:alert('Not implemented - through to users edits')">Logged in: ${currentUser}</button>
-        <g:link class="btn " mapping="viewOpus" params="[opusId: opus.uuid]">Public view</g:link>
+        <g:link class="btn " mapping="viewOpus" params="[opusId: opus.uuid]" target="_self">Public view</g:link>
     </div>
 
     <div style="margin-top:20px;">
         <p class="lead">
             Configure your profile collection, uploading existing datasets to be incorporated in your profile.
         </p>
+    </div>
+
+    <div ng-show="messages.length">
+        <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
     </div>
 
     <g:include controller="opus" action="editAccessControlPanel"/>

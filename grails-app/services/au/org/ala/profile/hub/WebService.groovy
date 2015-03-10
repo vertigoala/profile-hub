@@ -57,67 +57,10 @@ class WebService {
         conn
     }
 
-    /**
-     * Proxies a request URL but doesn't assume the response is text based. (Used for proxying requests to
-     * ecodata for excel-based reports)
-     */
-    def proxyGetRequest(HttpServletResponse response, String url, boolean includeUserId = true, boolean includeApiKey = false, Integer timeout = null) {
-
-        HttpURLConnection conn = configureConnection(url, includeUserId)
-        def readTimeout = timeout ?: defaultTimeout()
-        conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
-        conn.setReadTimeout(readTimeout)
-
-        if (includeApiKey) {
-            conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
-        }
-
-        def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.TRANSFER_ENCODING]
-        response.setContentType(conn.getContentType())
-        response.setContentLength(conn.getContentLength())
-
-        headers.each { header ->
-            response.setHeader(header, conn.getHeaderField(header))
-        }
-        response.status = conn.responseCode
-        response.outputStream << conn.inputStream
-
-    }
-
     def get(String url) {
         return get(url, true)
     }
 
-
-    def getJson(String url, Integer timeout = null) {
-        def conn = null
-        try {
-            conn = configureConnection(url, true, timeout)
-            def json = responseText(conn)
-            return [resp: JSON.parse(json ?: "{}"), statusCode: HttpStatus.SC_OK]
-        } catch (ConverterException e) {
-            def error = ['error': "Failed to parse json. ${e.getClass()} ${e.getMessage()} URL= ${url}."]
-            log.error error
-            return error
-        } catch (SocketTimeoutException e) {
-            def error = [error: "Timed out getting json. URL= ${url}.",
-                    statusCode: HttpStatus.SC_GATEWAY_TIMEOUT]
-            println error
-            return error
-        } catch (ConnectException ce) {
-            log.info "Exception class = ${ce.getClass().name} - ${ce.getMessage()}"
-            def error = [error: "ecodata service not available. URL= ${url}.", statusCode: HttpStatus.SC_INTERNAL_SERVER_ERROR]
-            println error
-            return error
-        } catch (Exception e) {
-            log.info "Exception class = ${e.getClass().name} - ${e.getMessage()}"
-            def error = [error     : "Failed to get json from web service. ${e.getClass()} ${e.getMessage()} URL= ${url}.",
-                         statusCode: conn?.responseCode ?: HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                         detail    : conn?.errorStream?.text]
-            log.error error
-            return error
-        }
-    }
 
     /**
      * Reads the response from a URLConnection taking into account the character encoding.
@@ -135,52 +78,6 @@ class WebService {
         return urlConnection.content.getText(charset)
     }
 
-    def doPostWithParams(String url, Map params) {
-        def conn = null
-        def charEncoding = 'utf-8'
-        OutputStreamWriter writer = null
-        try {
-            String query = ""
-            boolean first = true
-            for (String name : params.keySet()) {
-                query += first ? "?" : "&"
-                first = false
-                query += name.encodeAsURL() + "=" + params.get(name).encodeAsURL()
-            }
-            conn = new URL(url + query).openConnection()
-            conn.setRequestMethod("POST")
-            conn.setDoOutput(true)
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
-
-            def user = userService.getUser()
-            if (user) {
-                conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId) // used by ecodata
-                conn.setRequestProperty("Cookie", "ALA-Auth=" + java.net.URLEncoder.encode(user.userName, charEncoding))
-                // used by specieslist
-            }
-            writer = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
-
-            writer.flush()
-            def resp = conn.inputStream.text
-            writer.close()
-            return [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
-            // fail over to empty json object if empty response string otherwise JSON.parse fails
-        } catch (SocketTimeoutException e) {
-            response = [error: "Timed out calling web service. URL= ${url}.",
-                        statusCode: conn?.responseCode ?: HttpStatus.SC_GATEWAY_TIMEOUT]
-            log.error(response, e)
-        } catch (Exception e) {
-            response = [error     : "Failed calling web service. ${e.getMessage()} URL= ${url}.",
-                        statusCode: conn?.responseCode ?: HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                        detail    : conn?.errorStream?.text]
-            log.error(response, e)
-        } finally {
-            if (writer) {
-                writer.close()
-            }
-        }
-    }
 
     def doPost(String url, Map postBody) {
         def charEncoding = "utf-8"

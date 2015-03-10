@@ -49,6 +49,13 @@ describe("ProfileService tests", function () {
         http.expectGET("/someContext/opus/json/opusId").respond("bla");
     });
 
+    it("should invoke the update opus as json service on the context root when saveOpus is called", function () {
+        var data = {opusId: "opusId", imageSources: ["one", "two"]};
+        service.saveOpus("opusId", data);
+
+        http.expectPOST("/someContext/opus/opusId", data).respond("bla");
+    });
+
     it("should invoke the get opus vocab service on the context root when getOpusVocabulary is called", function () {
         service.getOpusVocabulary("vocabId1");
 
@@ -65,6 +72,14 @@ describe("ProfileService tests", function () {
         service.deleteAttribute("attrId1", "profileId1");
 
         http.expectDELETE("/someContext/profile/deleteAttribute/attrId1?profileId=profileId1").respond("bla");
+    });
+
+    xit("should clear the http cache after calling delete attribute", function () {
+        service.deleteAttribute("attrId1", "profileId1");
+
+        http.expectDELETE("/someContext/profile/deleteAttribute/attrId1?profileId=profileId1").respond("bla");
+        scope.$apply();
+        expect(httpCache.removeAll).toHaveBeenCalled();
     });
 
     it("should invoke the update attribute service on the context root when saveAttribute is called", function () {

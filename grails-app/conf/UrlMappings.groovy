@@ -1,41 +1,41 @@
 class UrlMappings {
 
-	static mappings = {
+    static mappings = {
 
-        name search: "/profile/search"(controller: "profile", action: "search")
+        "/profile/search"(controller: "profile", action: "search")
 
-        name deleteAttribute: "/profile/deleteAttribute/$attributeId"(controller: "profile", action: "deleteAttribute")
-        name updateAttribute: "/profile/updateAttribute/$profileId"(controller: "profile", action: "updateAttribute")
-        name createAttribute: "/profile/updateAttribute/"(controller: "profile", action: "updateAttribute")
+        "/profile/deleteAttribute/$attributeId"(controller: "profile", action: "deleteAttribute")
+        "/profile/updateAttribute/$profileId"(controller: "profile", action: "updateAttribute")
+        "/profile/updateAttribute/"(controller: "profile", action: "updateAttribute")
 
-        name updateLinks: "/profile/updateLinks/$profileId"(controller: "profile", action: "updateLinks")
-        name updateBHLLinks: "/profile/updateBHLLinks/$profileId"(controller: "profile", action: "updateBHLLinks")
+        "/profile/updateLinks/$profileId"(controller: "profile", action: "updateLinks")
+        "/profile/updateBHLLinks/$profileId"(controller: "profile", action: "updateBHLLinks")
 
         name editProfile: "/profile/edit/$profileId"(controller: "profile", action: "edit")
         name viewProfile: "/profile/$profileId"(controller: "profile", action: "show")
-        name getProfile: "/profile/json/$profileId"(controller: "profile", action: "getJson")
+        "/profile/json/$profileId"(controller: "profile", action: "getJson")
 
-        name getImages: "/profile/images"(controller: "profile", action: "retrieveImages")
-        name getLists: "/profile/lists"(controller: "profile", action: "retrieveLists")
-        name getClassifications: "/profile/classifications"(controller: "profile", action: "retrieveClassifications")
-        name getSpeciesProfile: "/profile/speciesProfile"(controller: "profile", action: "retrieveSpeciesProfile")
+        "/profile/images"(controller: "profile", action: "retrieveImages")
+        "/profile/lists"(controller: "profile", action: "retrieveLists")
+        "/profile/classifications"(controller: "profile", action: "retrieveClassifications")
+        "/profile/speciesProfile"(controller: "profile", action: "retrieveSpeciesProfile")
 
-        name findVocab: "/vocab/$vocabId" (controller: "vocab", action: "show")
+        "/vocab/$vocabId"(controller: "vocab", action: "show")
 
-        name findUser: "/opus/findUser"(controller: "opus", action: "findUser")
-        name uploadTaxaToOpus: "/opus/uploadTaxa"(controller: "opus", action: "taxaUpload")
+        "/opus/findUser"(controller: "opus", action: "findUser")
+        "/opus/uploadTaxa"(controller: "opus", action: "taxaUpload")
 
-        name viewOpus: "/opus/$opusId"(controller: "opus", action: "show")
+        name viewOpus: "/opus/$opusId"(controller: "opus", action: [GET: "show", POST: "updateOpus"])
         name editOpus: "/opus/edit/$opusId"(controller: "opus", action: "edit")
         name getOpus: "/opus/json/$opusId"(controller: "opus", action: "getJson")
 
-        name getResource: "/dataResource/list"(controller: "collectory", action: "list")
-        name getResource: "/dataResource/$dataResourceUid"(controller: "collectory", action: "getResource")
+        "/dataResource/list"(controller: "collectory", action: "list")
+        "/dataResource/$dataResourceUid"(controller: "collectory", action: "getResource")
 
-        name bhl: "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
+        "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
 
 
-        "/$controller/$action?/$id?(.$format)?"{
+        "/$controller/$action?/$id?(.$format)?" {
             constraints {
                 // apply constraints here
             }
@@ -43,7 +43,7 @@ class UrlMappings {
 
         "/"(controller: "opus", action: "index")
 
-        "500"(view:"/error")
-        "404"(view:"/notFound")
-	}
+        "500"(view: "/error")
+        "404"(view: "/notFound")
+    }
 }

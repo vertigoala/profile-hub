@@ -1,7 +1,13 @@
 /**
  * Angular service for interacting with the profile service application
  */
-profileEditor.service('profileService', function ($http, util) {
+profileEditor.service('profileService', function ($http, util, $cacheFactory) {
+
+    function clearCache() {
+        console.log("Clearing $http cache");
+        var httpCache = $cacheFactory.get('$http');
+        httpCache.removeAll();
+    }
 
     return {
         getProfile: function (profileId) {
@@ -21,6 +27,19 @@ profileEditor.service('profileService', function ($http, util) {
             var future = $http.get(util.contextRoot() + "/opus/json/" + opusId, {cache: true});
             future.then(function (response) {
                 console.log("Opus fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        saveOpus: function(opusId, opus) {
+            console.log("Saving opus " + opusId);
+
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId, opus);
+            future.then(function(response) {
+                console.log("Opus saved with response code " + response.status);
+
+                clearCache();
             });
 
             return util.toStandardPromise(future);
@@ -49,6 +68,8 @@ profileEditor.service('profileService', function ($http, util) {
             var future = $http.delete(util.contextRoot() + "/profile/deleteAttribute/" + attributeId + "?profileId=" + profileId, {cache: true});
             future.then(function (response) {
                 console.log("Attribute deleted with response code " + response.status)
+
+                clearCache();
             });
             return util.toStandardPromise(future);
         },
@@ -58,6 +79,8 @@ profileEditor.service('profileService', function ($http, util) {
             var future = $http.post(util.contextRoot() + "/profile/updateAttribute/" + profileId, data);
             future.then(function (response) {
                 console.log("Attribute saved with response code " + response.status)
+
+                clearCache();
             });
             return util.toStandardPromise(future);
         },
@@ -103,6 +126,8 @@ profileEditor.service('profileService', function ($http, util) {
             var future = $http.post(util.contextRoot() + "/profile/updateLinks/" + profileId, links);
             future.then(function (response) {
                 console.log("Links updated with response code " + response.status);
+
+                clearCache();
             });
             return util.toStandardPromise(future);
         },
@@ -112,6 +137,8 @@ profileEditor.service('profileService', function ($http, util) {
             var future = $http.post(util.contextRoot() + "/profile/updateBHLLinks/" + profileId, links);
             future.then(function (response) {
                 console.log("BHL Links updated with response code " + response.status);
+
+                clearCache();
             });
             return util.toStandardPromise(future);
         },
@@ -179,6 +206,8 @@ profileEditor.service('profileService', function ($http, util) {
             var future = $http.post(util.contextRoot() + "/opus/updateUsers", data);
             future.then(function (response) {
                 console.log("Update Users completed with response code " + response.status);
+
+                clearCache();
             });
 
             return util.toStandardPromise(future);

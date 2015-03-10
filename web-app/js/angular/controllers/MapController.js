@@ -75,11 +75,11 @@ profileEditor.controller('MapController', function ($scope, profileService, util
             },
             function () {
                 messageService.alert("An error occurred while retrieving the map information.");
-            });
+            }
+        );
     };
 
     $scope.$on('leafletDirectiveMap.click', function(event, args){
-        console.log(args.leafletEvent.latlng);
         var url = self.biocacheInfoUrl + "?"
             + self.constructQuery()
             + "&zoom=6"

@@ -1,7 +1,7 @@
 <div ng-controller="LinksEditor as linkCtrl" ng-init="linkCtrl.init('${edit}')">
     <div class="bs-docs-example ng-cloak" id="browse_links" data-content="Links" ng-show="linkCtrl.links.length > 0">
         <ul>
-            <li ng-repeat="link in linkCtrl.links" ng-if="link.uuid"><a href="link.url">{{ link.title }}</a>
+            <li ng-repeat="link in linkCtrl.links" ng-if="link.uuid"><a href="{{link.url}}">{{ link.title }}</a>
                 <span ng-if="link.description">&nbsp-&nbsp</span>{{ link.description }}
                 <a class="btn btn-mini btn-danger" ng-click="linkCtrl.deleteLink($index)" ng-show="!linkCtrl.readonly" title="Delete">
                     <i class="icon-minus icon-white"></i>

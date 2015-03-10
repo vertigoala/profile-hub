@@ -92,6 +92,24 @@ class OpusController extends BaseController {
         }
     }
 
+    def updateOpus() {
+        def jsonRequest = request.getJSON();
+
+        if (!params.opusId || !jsonRequest) {
+            badRequest()
+        } else {
+            def resp = profileService.updateOpus(params.opusId, jsonRequest)
+
+            if (resp.statusCode != SC_OK) {
+                response.status = resp.statusCode
+                response.sendError(resp.statusCode, resp.error ?: "");
+            } else {
+                response.setContentType(CONTEXT_TYPE_JSON)
+                render resp.resp as JSON
+            }
+        }
+    }
+
     def searchPanel = {
         render template: "search"
     }

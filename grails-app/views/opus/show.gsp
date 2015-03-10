@@ -12,7 +12,7 @@
 
     <div class="row-fluid" ng-if="opusCtrl.readonly">
         <div class="span8">
-            <div id="opusInfo" class="ng-cloak" ng-if="opusCtrl.opusDescription" ng-cloak style="margin-top:20px;">
+            <div id="opusInfo" class="ng-cloak" ng-cloak style="margin-top:20px;">
                 <p class="lead">
                     {{opusCtrl.dataResource.pubDescription}}
                 </p>

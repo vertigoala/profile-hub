@@ -1,12 +1,15 @@
-<div id="opusInfo" class="well">
+<div id="opusInfo" class="well" ng-form="StyleForm">
     <h4>Styling</h4>
     <p>
         <label>Banner image:</label>
-        <input type="text" class="input-xxlarge" name="bannerUrl" value="${opus.bannerUrl}"/>
+        <input type="text" class="input-xxlarge" name="bannerUrl" ng-model="opusCtrl.opus.bannerUrl"/>
     </p>
     <p>
         <label>Logo:</label>
-        <input type="text" class="input-xxlarge" name="logoUrl" value="${opus.logoUrl}"/>
+        <input type="text" class="input-xxlarge" name="logoUrl" ng-model="opusCtrl.opus.logoUrl"/>
     </p>
-    <a class="btn" href="javascript:alert('Not implemented yet')">Save</a>
+    <button class="btn" ng-click="opusCtrl.saveOpus(StyleForm)">
+        <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="StyleForm.$dirty">*</span> Save</span>
+        <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
+    </button>
 </div>

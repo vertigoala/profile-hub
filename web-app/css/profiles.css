@@ -90,3 +90,21 @@
 input[type="text"] {
      height: 30px !important;
 }
+
+.square {
+    width: 1.5em;
+    max-width: 1.5em;
+    min-widows: 1.5em;
+    height: 1.5em;
+    min-height: 1.5em;
+    max-height: 1.5em;
+    display: inline-block;
+}
+
+.list-input {
+    padding: 2px;
+}
+
+.red {
+    color: red;
+}

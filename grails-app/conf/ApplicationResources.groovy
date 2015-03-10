@@ -4,6 +4,8 @@ modules = {
         dependsOn "jquery"
         dependsOn "angular"
         dependsOn "leaflet"
+        dependsOn "angular_bootstrap_colourpicker"
+        dependsOn "fontawesome"
         resource url:"js/angular/Profiles.js"
         resource url:"js/angular/utils/Utils.js"
         resource url:"js/angular/utils/Filters.js"
@@ -31,5 +33,14 @@ modules = {
         resource url:"thirdparty/leaflet/leaflet-0.7.3.js"
         resource url:"thirdparty/angular-leaflet/angular-leaflet-directive.min.js"
         resource url:"thirdparty/leaflet/leaflet.css"
+    }
+
+    angular_bootstrap_colourpicker {
+        resource url:"thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js"
+        resource url:"thirdparty/angular-bootstrap-colorpicker-3.0.11/css/colorpicker.min.css"
+    }
+
+    fontawesome {
+        resource url:"thirdparty/font-awesome-4.3.0/css/font-awesome.min.css"
     }
 }
