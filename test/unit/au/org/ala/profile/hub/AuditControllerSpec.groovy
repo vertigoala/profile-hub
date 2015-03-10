@@ -23,7 +23,7 @@ class AuditControllerSpec extends Specification {
         controller.object()
 
         then:
-        1 * profileService.getAuditHistory("12345", null)
+        1 * profileService.getAuditHistory("12345", null) >> [resp: [], statusCode: 200]
     }
 
     def "object() should return a 400 (BAD_REQUEST) if no id has been provided"() {
@@ -41,7 +41,7 @@ class AuditControllerSpec extends Specification {
         controller.user()
 
         then:
-        1 * profileService.getAuditHistory(null, "12345")
+        1 * profileService.getAuditHistory(null, "12345") >> [resp: [], statusCode: 200]
     }
 
     def "user() should return a 400 (BAD_REQUEST) if no id has been provided"() {

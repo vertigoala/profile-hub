@@ -19,16 +19,16 @@ class AuditController extends BaseController {
     private getAudit(String objectId, String userId) {
         if (!objectId && !userId) {
             badRequest()
-        }
-
-        def resp = profileService.getAuditHistory(objectId, userId)
-
-        if (resp.statusCode != SC_OK) {
-            response.status = resp.statusCode
-            response.sendError(resp.statusCode, resp.error ?: "")
         } else {
-            response.setContentType(CONTEXT_TYPE_JSON)
-            render resp.resp as JSON
+            def resp = profileService.getAuditHistory(objectId, userId)
+
+            if (resp.statusCode != SC_OK) {
+                response.status = resp.statusCode
+                response.sendError(resp.statusCode, resp.error ?: "")
+            } else {
+                response.setContentType(CONTEXT_TYPE_JSON)
+                render resp.resp as JSON
+            }
         }
     }
 }
