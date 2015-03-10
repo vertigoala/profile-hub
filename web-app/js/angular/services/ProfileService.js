@@ -33,9 +33,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
         },
 
         saveOpus: function(opusId, opus) {
-            console.log("Saving opus " + opusId);
-
-            var future = $http.post(util.contextRoot() + "/opus/" + opusId, opus);
+            var future;
+            if (opusId) {
+                console.log("Saving opus " + opusId);
+                future = $http.post(util.contextRoot() + "/opus/" + opusId, opus);
+            } else {
+                console.log("Creating new opus...");
+                future = $http.put(util.contextRoot() + "/opus/", opus);
+            }
             future.then(function(response) {
                 console.log("Opus saved with response code " + response.status);
 

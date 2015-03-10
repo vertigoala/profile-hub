@@ -26,6 +26,16 @@ class OpusController extends BaseController {
         ]
     }
 
+    def create() {
+        render view: "edit", model: [
+                opus       : [],
+                logoUrl    : DEFAULT_OPUS_LOGO_URL,
+                bannerUrl  : DEFAULT_OPUS_BANNER_URL,
+                pageTitle  : DEFAULT_OPUS_TITLE,
+                currentUser: authService.getDisplayName()
+        ]
+    }
+
     def edit() {
         def opus = profileService.getOpus(params.opusId as String)
 
@@ -99,6 +109,24 @@ class OpusController extends BaseController {
             badRequest()
         } else {
             def resp = profileService.updateOpus(params.opusId, jsonRequest)
+
+            if (resp.statusCode != SC_OK) {
+                response.status = resp.statusCode
+                response.sendError(resp.statusCode, resp.error ?: "");
+            } else {
+                response.setContentType(CONTEXT_TYPE_JSON)
+                render resp.resp as JSON
+            }
+        }
+    }
+
+    def createOpus() {
+        def jsonRequest = request.getJSON();
+
+        if (!jsonRequest) {
+            badRequest()
+        } else {
+            def resp = profileService.createOpus(jsonRequest)
 
             if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode

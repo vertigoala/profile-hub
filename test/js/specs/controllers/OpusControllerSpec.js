@@ -1,9 +1,10 @@
 describe("OpusController tests", function () {
+    var OPUS_ID = "281ff2a5-e8d9-43ff-aff9-e20144b6a94c";
     var controller;
     var scope;
     var mockUtil = {
         getPathItem: function () {
-            return "12345"
+            return OPUS_ID;
         },
         LAST: "last"
     };
@@ -194,7 +195,7 @@ describe("OpusController tests", function () {
             recordSources: ["source1", "source2", "source3"]
         };
 
-        expect(profileService.saveOpus).toHaveBeenCalledWith("12345", expectedOpus);
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
     it("should validate that image sources have an associated data resource object", function() {
@@ -224,7 +225,7 @@ describe("OpusController tests", function () {
             recordSources: ["source1", "source2", "source3"]
         };
 
-        expect(profileService.saveOpus).toHaveBeenCalledWith("12345", expectedOpus);
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
     it("should merge newRecordSources with the existing record sources when saveRecordSources is called", function () {
@@ -243,7 +244,7 @@ describe("OpusController tests", function () {
             recordSources: ["source1", "source2", "source3", "newId1"] // new id added here
         };
 
-        expect(profileService.saveOpus).toHaveBeenCalledWith("12345", expectedOpus);
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
     it("should validate that record sources have an associated data resource object", function() {
@@ -273,7 +274,7 @@ describe("OpusController tests", function () {
             recordSources: ["source1", "source3"] // existing source (index 1) removed
         };
 
-        expect(profileService.saveOpus).toHaveBeenCalledWith("12345", expectedOpus);
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
     it("should raise an alert message if the call to saveOpus fails", function() {

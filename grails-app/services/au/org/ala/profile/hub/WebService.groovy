@@ -1,12 +1,11 @@
 package au.org.ala.profile.hub
 
 import grails.converters.JSON
-import org.apache.http.HttpHeaders
+import groovyx.net.http.HTTPBuilder
+import static groovyx.net.http.Method.*
+import static groovyx.net.http.ContentType.*
 import org.apache.http.HttpStatus
-import org.codehaus.groovy.grails.web.converters.exceptions.ConverterException
 import org.springframework.http.MediaType
-
-import javax.servlet.http.HttpServletResponse
 
 class WebService {
     static final DEFAULT_TIMEOUT_MILLIS = 600000; // five minutes
@@ -78,8 +77,15 @@ class WebService {
         return urlConnection.content.getText(charset)
     }
 
+    def doPut(String url, Map data) {
+        send(url, data, "PUT")
+    }
 
-    def doPost(String url, Map postBody) {
+    def doPost(String url, Map data) {
+        send(url, data, "POST")
+    }
+
+    def send = {String url, Map postBody, String method ->
         def charEncoding = "utf-8"
 
         URLConnection conn = null
@@ -88,6 +94,7 @@ class WebService {
         try {
             conn = new URL(url).openConnection()
             conn.setDoOutput(true)
+            conn.setRequestMethod(method)
             conn.setRequestProperty("Content-Type", "application/json;charset=${charEncoding}");
             conn.setRequestProperty("Authorization", grailsApplication.config.api_key as String);
 

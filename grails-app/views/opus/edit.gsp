@@ -21,7 +21,7 @@
     <div class="pull-right">
         <button class="btn"
                 onclick="javascript:alert('Not implemented - through to users edits')">Logged in: ${currentUser}</button>
-        <g:link class="btn " mapping="viewOpus" params="[opusId: opus.uuid]" target="_self">Public view</g:link>
+        <g:link class="btn " mapping="viewOpus" params="[opusId: opus.uuid]" target="_self" ng-show="opusCtrl.opus.uuid">Public view</g:link>
     </div>
 
     <div style="margin-top:20px;">
@@ -34,11 +34,11 @@
         <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
     </div>
 
+    <g:include controller="opus" action="editOpusDetailsPanel"/>
+
     <g:include controller="opus" action="editAccessControlPanel"/>
 
     <g:include controller="opus" action="editStylingPanel"/>
-
-    <g:include controller="opus" action="editOpusDetailsPanel"/>
 
     <g:include controller="opus" action="editMapConfigPanel"/>
 

@@ -2,6 +2,8 @@
  * Opus controller
  */
 profileEditor.controller('OpusController', function ($rootScope, profileService, util, messageService) {
+    var UUID_REGEX_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
     var self = this;
 
     self.opus = null;
@@ -13,18 +15,24 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
     self.newImageSources = [];
     self.newRecordSources = [];
 
+    // make sure we have a UUID, not just the last element of some other URL (e.g. create)
+    if (!self.opusId.match(UUID_REGEX_PATTERN)) {
+        self.opusId = null;
+        self.opus = {uuid: null, title: ""};
+        console.log("Creating new opus....");
+    }
+
     loadOpus();
+    loadResources();
 
     self.saveOpus = function (form) {
         messageService.info("Saving...");
         self.saving = true;
 
-        console.log("a")
         toggleMapPointerColourHash();
-console.log("here " + self.opus.mapPointColour)
+
         var promise = profileService.saveOpus(self.opusId, self.opus);
         promise.then(function () {
-                console.log("b")
                 toggleMapPointerColourHash();
 
                 messageService.pop();
@@ -122,7 +130,17 @@ console.log("here " + self.opus.mapPointColour)
         form.$setDirty();
     };
 
+    self.opusResourceChanged = function($item, $model, $label) {
+        self.opus.title = $label;
+        self.opus.dataResourceUid = $item.id;
+
+        loadDescription();
+    };
+
     function loadOpus() {
+        if (!self.opusId) {
+            return;
+        }
         var promise = profileService.getOpus(self.opusId);
 
         messageService.info("Loading opus data...");
@@ -130,10 +148,8 @@ console.log("here " + self.opus.mapPointColour)
                 console.log("Retrieved " + data.title);
                 self.opus = data;
 
-                console.log("c")
                 toggleMapPointerColourHash();
 
-                loadResources();
                 loadDescription();
 
                 messageService.pop();
@@ -146,16 +162,12 @@ console.log("here " + self.opus.mapPointColour)
 
     function toggleMapPointerColourHash() {
         if (self.opus.mapPointColour) {
-            console.log("1")
             if (self.opus.mapPointColour.indexOf("#") > -1) {
-                console.log("2 - removing")
                 self.opus.mapPointColour = self.opus.mapPointColour.substr(1);
             } else {
-                console.log("3 - adding")
                 self.opus.mapPointColour = "#" + self.opus.mapPointColour;
             }
         }
-        console.log(" = " + self.opus.mapPointColour)
     }
 
     function loadResources() {
