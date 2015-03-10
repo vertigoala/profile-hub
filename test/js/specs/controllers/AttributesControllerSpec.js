@@ -9,13 +9,14 @@ describe("AttributesController tests", function () {
     };
     var messageService;
     var profileService;
-    var profileDefer, vocabDefer, saveAttrDefer, deleteAttrDefer;
+    var profileDefer, vocabDefer, saveAttrDefer, deleteAttrDefer, showAuditDefer;
     var window;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
     var vocabResponse = '{"terms": ["term1", "term2"]}';
     var saveAttributeResponse = '{"attributeId": "newId"}';
     var deleteAttributeResponse = '{}';
+    var showAuditResponse = '[{"userId": "1", "object": {"text":"auditText1", "title":"auditTitle1"}}, {"userId": "2", "object": {"text":"auditText2", "title":"auditTitle2"}}]';
 
     beforeAll(function () {
         console.log("****** Attributes Controller Tests ******");
@@ -35,11 +36,13 @@ describe("AttributesController tests", function () {
         vocabDefer = $q.defer();
         deleteAttrDefer = $q.defer();
         saveAttrDefer = $q.defer();
+        showAuditDefer = $q.defer();
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "getOpusVocabulary").and.returnValue(vocabDefer.promise);
         spyOn(profileService, "saveAttribute").and.returnValue(saveAttrDefer.promise);
         spyOn(profileService, "deleteAttribute").and.returnValue(deleteAttrDefer.promise);
+        spyOn(profileService, "getAuditForAttribute").and.returnValue(showAuditDefer.promise);
 
         spyOn(window, "confirm").and.returnValue(true);
 
@@ -249,7 +252,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes[0].uuid).toBe("newId");
     });
 
-    it("should display a confirmation dialog when deleteAttribute is invoked", function() {
+    it("should display a confirmation dialog when deleteAttribute is invoked", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
@@ -261,7 +264,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes.length).toBe(0);
     });
 
-    it("should not delete the attribute if the confirmation is cancelled", function() {
+    it("should not delete the attribute if the confirmation is cancelled", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
         window.confirm.and.returnValue(false);
@@ -274,7 +277,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes.length).toBe(1);
     });
 
-    it("should not invoke profileService if the attribute has not been saved (i.e. Uuid is null)", function() {
+    it("should not invoke profileService if the attribute has not been saved (i.e. Uuid is null)", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "", "title": "attrTitle", "text": "attrText"}];
 
@@ -286,7 +289,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes.length).toBe(0);
     });
 
-    it("should invoke profileService if the attribute has been saved", function() {
+    it("should invoke profileService if the attribute has been saved", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
@@ -298,7 +301,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes.length).toBe(0);
     });
 
-    it("should raise an alert message if the delete fails", function() {
+    it("should raise an alert message if the delete fails", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
@@ -309,4 +312,61 @@ describe("AttributesController tests", function () {
         expect(messageService.alert).toHaveBeenCalled();
         expect(scope.attrCtrl.attributes.length).toBe(1);
     });
+
+    it("should set the title and text to the selected audit item when revertAttribute is invoked", function () {
+        scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
+            {
+                title: "originalTitle2",
+                text: "originalText2",
+                audit: [{object: {title: "auditTitle1", text: "auditText1"}},
+                    {object: {title: "auditTitle2", text: "auditText2"}}]
+            }];
+
+        var form = {
+            $setDirty: function () {
+            }
+        };
+        spyOn(form, "$setDirty");
+
+        scope.attrCtrl.revertAttribute(1, 1, form);
+
+        expect(scope.attrCtrl.attributes[1].text).toBe("auditText2");
+        expect(scope.attrCtrl.attributes[1].title).toBe("auditTitle2");
+        expect(form.$setDirty).toHaveBeenCalled();
+    });
+
+    it("should populate the audit and auditShowing properties of the selected attribute when showAudit is invoked", function () {
+        scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
+            {title: "originalTitle2", text: "originalText2"}];
+
+        showAuditDefer.resolve(JSON.parse(showAuditResponse));
+        scope.attrCtrl.showAudit(1);
+        scope.$apply();
+
+        expect(scope.attrCtrl.attributes[0].audit).not.toBeDefined();
+        expect(scope.attrCtrl.attributes[1].audit).toEqual([{
+            userId: "1",
+            object: {text: "auditText1", title: "auditTitle1"}
+        }, {userId: "2", object: {text: "auditText2", title: "auditTitle2"}}]);
+    });
+
+    it("should raise an alert message when the audit history cannot be retrieved", function () {
+        scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
+            {title: "originalTitle2", text: "originalText2"}];
+
+        showAuditDefer.reject();
+        scope.attrCtrl.showAudit(1);
+        scope.$apply();
+
+        expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the audit history.");
+    });
+
+    it("should set the auditShowing property of the selected attribute to false when hideAudit is invoked", function() {
+        scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
+            {title: "originalTitle2", text: "originalText2"}];
+
+        scope.attrCtrl.hideAudit(1);
+
+        expect(scope.attrCtrl.attributes[1].auditShowing).toBe(false);
+    })
 });

@@ -3,9 +3,10 @@
  */
 profileEditor.controller('AttributeEditor', function (profileService, util, messageService, $window) {
     var self = this;
-    
+
     self.attributes = [];
     self.attributeTitles = [];
+    self.historyShowing = {};
 
     self.init = function (edit) {
         self.readonly = edit != 'true';
@@ -35,21 +36,26 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         }
     }
 
-    self.revertAttribute = function (attributeIdx, auditIdx) {
+    self.revertAttribute = function (attributeIdx, auditIdx, form) {
         self.attributes[attributeIdx].title = self.attributes[attributeIdx].audit[auditIdx].object.title;
         self.attributes[attributeIdx].text = self.attributes[attributeIdx].audit[auditIdx].object.text;
-        self.$apply();
+        form.$setDirty();
     };
 
     self.showAudit = function (idx) {
         var future = profileService.getAuditForAttribute(self.attributes[idx].uuid);
         future.then(function (audit) {
                 self.attributes[idx].audit = audit;
+                self.attributes[idx].auditShowing = true;
             },
             function () {
                 messageService.alert("An error occurred while retrieving the audit history.")
             }
         );
+    };
+
+    self.hideAudit = function (idx) {
+        self.attributes[idx].auditShowing = false;
     };
 
     self.deleteAttribute = function (idx) {
@@ -95,6 +101,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 messageService.success("Last saved " + new Date());
 
                 self.attributes[idx].uuid = attribute.attributeId;
+                self.attributes[idx].auditShowing = false;
                 attributeForm.$setPristine();
             },
             function () {

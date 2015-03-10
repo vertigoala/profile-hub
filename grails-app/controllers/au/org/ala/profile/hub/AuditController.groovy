@@ -1,6 +1,8 @@
 package au.org.ala.profile.hub
 
-import net.sf.json.JSON
+import grails.converters.JSON
+
+import static org.apache.http.HttpStatus.SC_OK
 
 class AuditController extends BaseController {
 
@@ -19,8 +21,14 @@ class AuditController extends BaseController {
             badRequest()
         }
 
-        def audit = profileService.getAuditHistory(objectId, userId)
+        def resp = profileService.getAuditHistory(objectId, userId)
 
-        render audit as JSON
+        if (resp.statusCode != SC_OK) {
+            response.status = resp.statusCode
+            response.sendError(resp.statusCode, resp.error ?: "")
+        } else {
+            response.setContentType(CONTEXT_TYPE_JSON)
+            render resp.resp as JSON
+        }
     }
 }

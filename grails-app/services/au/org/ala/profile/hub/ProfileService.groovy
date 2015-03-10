@@ -136,6 +136,6 @@ class ProfileService {
     def getAuditHistory(String objectId, String userId) {
         log.debug("Retrieving audit history for ${objectId ?: userId}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${objectId ?: userId}")?.resp
+        webService.get("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${objectId ?: userId}")
     }
 }

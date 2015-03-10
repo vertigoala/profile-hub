@@ -13,7 +13,7 @@ class UrlMappings {
 
         name editProfile: "/profile/edit/$profileId"(controller: "profile", action: "edit")
         name viewProfile: "/profile/$profileId"(controller: "profile", action: "show")
-        "/profile/json/$profileId"(controller: "profile", action: "getJson")
+        name getProfile: "/profile/json/$profileId"(controller: "profile", action: "getJson")
 
         "/profile/images"(controller: "profile", action: "retrieveImages")
         "/profile/lists"(controller: "profile", action: "retrieveLists")
