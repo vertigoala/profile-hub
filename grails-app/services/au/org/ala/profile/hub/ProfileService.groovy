@@ -2,8 +2,6 @@ package au.org.ala.profile.hub
 
 import au.org.ala.web.AuthService
 
-import static au.org.ala.profile.hub.util.HubConstants.*
-
 class ProfileService {
 
     def grailsApplication
@@ -24,7 +22,7 @@ class ProfileService {
     }
 
     def getVocab(String vocabId = "") {
-        webService.get("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")?.resp
+        webService.get("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")
     }
 
     def getProfile(String profileId) {
@@ -137,5 +135,23 @@ class ProfileService {
         log.debug("Retrieving audit history for ${objectId ?: userId}")
 
         webService.get("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${objectId ?: userId}")
+    }
+
+    def updateVocabulary(String vocabId, vocab) {
+        log.debug("Updating vocabulary ${vocabId} with data ${vocab}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/vocab/${vocabId}", vocab)
+    }
+
+    def findUsagesOfVocabTerm(String vocabId, String termName) {
+        log.debug("Finding usages of term ${termName} from vocab ${vocabId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/vocab/usages/find?vocabId=${vocabId}&term=${termName}")
+    }
+
+    def replaceUsagesOfVocabTerm(Map json) {
+        log.debug("Replacing usages of vocab term(s): ${json}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/vocab/usages/replace", json)
     }
 }

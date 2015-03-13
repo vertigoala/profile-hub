@@ -51,10 +51,39 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
         },
 
         getOpusVocabulary: function (vocubularyId) {
-            console.log("Fetching vocabulary...");
+            console.log("Fetching vocabulary " + vocubularyId);
             var future = $http.get(util.contextRoot() + "/vocab/" + vocubularyId, {cache: true});
             future.then(function (response) {
-                console.log("Vocab fetched with response code " + response.status)
+                console.log("Vocab fetched with response code " + response.status);
+
+                clearCache();
+            });
+            return util.toStandardPromise(future);
+        },
+
+        updateVocabulary: function(vocabularyId, data) {
+            console.log("Updating vocabulary " + vocabularyId);
+            var future = $http.post(util.contextRoot() + "/vocab/" + vocabularyId, data);
+            future.then(function(response) {
+                console.log("Vocab updated with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
+        findUsagesOfVocabTerm: function(vocabularyId, termName) {
+            console.log("Finding usages of vocab term " + termName + " from vocab " + vocabularyId);
+            var future = $http.get(util.contextRoot() + "/vocab/usages/find?vocabId=" + vocabularyId + "&termName=" + termName);
+            future.then(function (response) {
+                console.log("Usages found with response code " + response.status)
+            });
+            return util.toStandardPromise(future);
+        },
+
+        replaceUsagesOfVocabTerm: function(data) {
+            console.log("Replacing usages of vocab terms");
+            var future = $http.post(util.contextRoot() + "/vocab/usages/replace", data);
+            future.then(function (response) {
+                console.log("Terms replaced with response code " + response.status)
             });
             return util.toStandardPromise(future);
         },

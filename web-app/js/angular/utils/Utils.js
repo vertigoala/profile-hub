@@ -2,6 +2,8 @@
  * Utility functions
  */
 profileEditor.factory('util', function ($location, $q) {
+
+    var UUID_REGEX_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     var LAST = "last";
     var FIRST = "first";
 
@@ -134,6 +136,17 @@ profileEditor.factory('util', function ($location, $q) {
     }
 
     /**
+     * Checks if the provided identifier matches the regex pattern for a UUID.
+     * @see UUID_REGEX_PATTERN
+     *
+     * @param id the id to check
+     * @returns {Array|{index: number, input: string}|*}
+     */
+    function isUuid(id) {
+        return id.match(UUID_REGEX_PATTERN)
+    }
+
+    /**
      * Public API
      */
     return {
@@ -141,9 +154,11 @@ profileEditor.factory('util', function ($location, $q) {
         getPathItem: getPathItem,
         getPathItemFromUrl: getPathItemFromUrl,
         toStandardPromise: toStandardPromise,
+        isUuid: isUuid,
 
         LAST: LAST,
-        FIRST: FIRST
+        FIRST: FIRST,
+        UUID_REGEX_PATTERN: UUID_REGEX_PATTERN
     };
 
 });

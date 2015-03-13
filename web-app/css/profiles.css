@@ -105,6 +105,48 @@ input[type="text"] {
     padding: 2px;
 }
 
+.inline-label {
+    display: inline-block;
+    padding-right: 20px;
+}
+
 .red {
     color: red;
+}
+
+.column-item {
+    display: inline-block;
+    width: 25%;
+    padding: 5px;
+}
+
+.newItem {
+    font-style: italic;
+}
+
+.modal-content, .modal {
+    width: 650px !important;
+    height: 250px;
+    min-height: 250px;
+    max-height: 250px;
+}
+
+.modal-dialog {
+    margin: 0;
+}
+
+.subpanel {
+    border:solid white 1px;
+    border-radius: 10px;
+    padding:20px;
+    margin-bottom:10px;
+}
+
+input[type=checkbox],input[type=radio] {
+    vertical-align: initial;
+    padding-right: 10px;
+}
+
+input[type=checkbox]+label,input[type=radio]+label {
+    margin-left: 10px;
 }

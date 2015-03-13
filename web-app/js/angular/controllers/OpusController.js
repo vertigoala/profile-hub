@@ -1,9 +1,7 @@
 /**
  * Opus controller
  */
-profileEditor.controller('OpusController', function ($rootScope, profileService, util, messageService) {
-    var UUID_REGEX_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
+profileEditor.controller('OpusController', function (profileService, util, messageService) {
     var self = this;
 
     self.opus = null;
@@ -16,7 +14,7 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
     self.newRecordSources = [];
 
     // make sure we have a UUID, not just the last element of some other URL (e.g. create)
-    if (!self.opusId.match(UUID_REGEX_PATTERN)) {
+    if (!util.isUuid(self.opusId)) {
         self.opusId = null;
         self.opus = {uuid: null, title: ""};
         console.log("Creating new opus....");
@@ -50,11 +48,11 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
         );
     };
 
-    self.addImageSource = function() {
+    self.addImageSource = function () {
         self.newImageSources.push({});
     };
 
-    self.saveImageSources = function(form) {
+    self.saveImageSources = function (form) {
         var invalid = [];
         var valid = [];
 
@@ -71,7 +69,7 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
         if (invalid.length == 0) {
             self.newImageSources = [];
             if (valid.length > 0) {
-                angular.forEach(valid, function(image) {
+                angular.forEach(valid, function (image) {
                     self.opus.imageSources.push(image);
                 });
             }
@@ -81,7 +79,7 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
         }
     };
 
-    self.removeImageSource = function(index, list, form) {
+    self.removeImageSource = function (index, list, form) {
         if (list == 'existing') {
             self.opus.imageSources.splice(index, 1);
         } else {
@@ -90,11 +88,11 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
         form.$setDirty();
     };
 
-    self.addRecordSource = function() {
+    self.addRecordSource = function () {
         self.newRecordSources.push({});
     };
 
-    self.saveRecordSources = function(form) {
+    self.saveRecordSources = function (form) {
         var invalid = [];
         var valid = [];
 
@@ -111,7 +109,7 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
         if (invalid.length == 0) {
             self.newRecordSources = [];
             if (valid.length > 0) {
-                angular.forEach(valid, function(record) {
+                angular.forEach(valid, function (record) {
                     self.opus.recordSources.push(record);
                 });
             }
@@ -121,7 +119,7 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
         }
     };
 
-    self.removeRecordSource = function(index, list, form) {
+    self.removeRecordSource = function (index, list, form) {
         if (list == 'existing') {
             self.opus.recordSources.splice(index, 1);
         } else {
@@ -130,11 +128,11 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
         form.$setDirty();
     };
 
-    self.opusResourceChanged = function($item, $model, $label) {
+    self.opusResourceChanged = function ($item, $model, $label) {
         self.opus.title = $label;
         self.opus.dataResourceUid = $item.id;
 
-        loadDescription();
+        loadDataResource(self.opus.dataResourceUid);
     };
 
     function loadOpus() {
@@ -150,7 +148,7 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
 
                 toggleMapPointerColourHash();
 
-                loadDescription();
+                loadDataResource(self.opus.dataResourceUid);
 
                 messageService.pop();
             },
@@ -177,7 +175,7 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
                 self.dataResources = data;
 
                 self.dataResourceList = [];
-                angular.forEach(self.dataResources, function(key, value) {
+                angular.forEach(self.dataResources, function (key, value) {
                     self.dataResourceList.push({id: value, name: key.trim()});
                 });
             },
@@ -187,8 +185,8 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
         );
     }
 
-    function loadDescription() {
-        var promise = profileService.getResource(self.opus.dataResourceUid);
+    function loadDataResource(dataResourceId) {
+        var promise = profileService.getResource(dataResourceId);
         console.log("Loading opus description...");
         promise.then(function (data) {
                 self.dataResource = data;
@@ -198,5 +196,4 @@ profileEditor.controller('OpusController', function ($rootScope, profileService,
             }
         );
     }
-
 });

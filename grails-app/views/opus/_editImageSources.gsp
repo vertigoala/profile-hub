@@ -24,9 +24,9 @@
             </button>
         </li>
     </ul>
-    <button class="btn" ng-click="opusCtrl.saveImageSources(ImageForm)">
+    <button class="btn btn-primary" ng-click="opusCtrl.saveImageSources(ImageForm)">
         <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="ImageForm.$dirty">*</span> Save</span>
         <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
     </button>
-    <button class="btn" ng-click="opusCtrl.addImageSource()"><i class="icon icon-plus"></i>  Add image source</button>
+    <button class="btn btn-info" ng-click="opusCtrl.addImageSource()"><i class="icon icon-plus"></i>  Add image source</button>
 </div>

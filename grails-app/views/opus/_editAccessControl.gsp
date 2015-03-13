@@ -7,7 +7,7 @@
             <li><b>Editor</b> - can edit content on any profile page with this collection. Can not edit this page.</li>
         </ul>
 
-        <div style="border:solid white 1px; border-radius: 10px; padding:20px; margin-bottom:10px;">
+        <div class="subpanel">
             To add users, search for them by <b>email address</b>. <br/>
             <b>Note:</b> users will need to create their ALA account before they can be added.
         </p>
@@ -27,7 +27,7 @@
             </p>
         </div>
         <p>
-            <button class="btn" ng-click="userCtrl.save()">Save changes</button>
+            <button class="btn btn-primary" ng-click="userCtrl.save()">Save</button>
         </p>
     </div>
 

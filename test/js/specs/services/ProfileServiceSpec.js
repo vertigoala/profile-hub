@@ -62,6 +62,27 @@ describe("ProfileService tests", function () {
         http.expectGET("/someContext/vocab/vocabId1").respond("bla")
     });
 
+
+    it("should invoke the update vocab service on the context root when updateVocabulary is called", function () {
+        var data = {name: "vocab1", "strict": "true", "terms": []};
+        service.updateVocabulary("vocabId1", data);
+
+        http.expectPOST("/someContext/vocab/vocabId1", data).respond("bla")
+    });
+
+    it("should invoke the find term usages service on the context root when findUsagesOfVocabTerm is called", function () {
+        service.findUsagesOfVocabTerm("vocabId1", "termName");
+
+        http.expectGET("/someContext/vocab/usages/find?vocabId=vocabId1&termName=termName").respond("bla")
+    });
+
+    it("should invoke the get opus vocab service on the context root when getOpusVocabulary is called", function () {
+        var replacements = [{vocabId: "vocab1", existingTermName: "old name", newTermName: "new name"}];
+        service.replaceUsagesOfVocabTerm(replacements);
+
+        http.expectPOST("/someContext/vocab/usages/replace", replacements).respond("bla")
+    });
+
     it("should invoke the get object audit service on the context root when getAuditForAttribute is called", function () {
         service.getAuditForAttribute("attrId1");
 

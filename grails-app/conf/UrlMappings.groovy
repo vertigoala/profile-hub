@@ -20,7 +20,9 @@ class UrlMappings {
         "/profile/classifications"(controller: "profile", action: "retrieveClassifications")
         "/profile/speciesProfile"(controller: "profile", action: "retrieveSpeciesProfile")
 
-        "/vocab/$vocabId"(controller: "vocab", action: "show")
+        "/vocab/$vocabId"(controller: "vocab", action: [GET: "show", POST: "update"])
+        "/vocab/usages/find"(controller: "vocab", action: [GET: "findUsagesOfTerm"])
+        "/vocab/usages/replace"(controller: "vocab", action: [POST: "replaceUsagesOfTerm"])
 
         "/opus/findUser"(controller: "opus", action: "findUser")
         "/opus/uploadTaxa"(controller: "opus", action: "taxaUpload")

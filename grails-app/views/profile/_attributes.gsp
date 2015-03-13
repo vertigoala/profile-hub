@@ -1,14 +1,15 @@
 <div ng-controller="AttributeEditor as attrCtrl" ng-init="attrCtrl.init('${edit}')" class="ng-cloak" ng-cloak>
     <div class="ng-show" ng-show="!attrCtrl.readonly">
-        <button ng-click="attrCtrl.addAttribute()" class="btn"><i class="icon icon-plus"></i>Add attribute</button>
+        <button ng-click="attrCtrl.addAttribute()" class="btn btn-info"><i class="icon icon-plus"></i>Add attribute</button>
     </div>
 
     <div ng-repeat="attribute in attrCtrl.attributes" ng-form="AttributeForm">
         <div class="well attribute-edit" id="browse_attributes_edit" ng-show="!attrCtrl.readonly">
             <input type="text"
-                   typeahead="attributeTitle.name for attributeTitle in attrCtrl.attributeTitles | filter: $viewValue"
+                   typeahead="attributeTitle for attributeTitle in attrCtrl.attributeTitles | filter: $viewValue"
                    class="form-control attribute-header-input" ng-model="attribute.title" name="title"
                    value="title" placeholder="Title..."/>
+            <alert ng-show="attribute.title && !attrCtrl.isValid(attribute.title)" type="danger">You must select a value from the list of approved titles.</alert>
             <textarea class="field span12" rows="4" ng-model="attribute.text" name="text"
                       placeholder="Description..."></textarea>
 
@@ -26,7 +27,7 @@
                     <button class="btn btn-danger pull-right"
                             ng-click="attrCtrl.deleteAttribute($index)">Delete</button>
                     &nbsp;
-                    <button class="btn btn pull-right" ng-click="attrCtrl.saveAttribute($index, AttributeForm)">
+                    <button class="btn btn-primary pull-right" ng-click="attrCtrl.saveAttribute($index, AttributeForm)" ng-disabled="!attrCtrl.isValid(attribute.title)">
                         <span ng-show="!attrCtrl.saving" id="saved"><span
                                 ng-show="AttributeForm.$dirty">*</span> Save</span>
                         <span ng-show="attrCtrl.saving" id="saving">Saving....</span>

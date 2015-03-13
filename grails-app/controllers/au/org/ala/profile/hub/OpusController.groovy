@@ -90,15 +90,9 @@ class OpusController extends BaseController {
         } else {
             log.debug "Searching for user ${jsonRequest.userName}....."
 
-            def resp = userService.findUser(jsonRequest.userName)
+            def response = userService.findUser(jsonRequest.userName)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                response.sendError(resp.statusCode, resp.error ?: "")
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 
@@ -108,15 +102,9 @@ class OpusController extends BaseController {
         if (!params.opusId || !jsonRequest) {
             badRequest()
         } else {
-            def resp = profileService.updateOpus(params.opusId, jsonRequest)
+            def response = profileService.updateOpus(params.opusId, jsonRequest)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                response.sendError(resp.statusCode, resp.error ?: "");
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 
@@ -126,15 +114,9 @@ class OpusController extends BaseController {
         if (!jsonRequest) {
             badRequest()
         } else {
-            def resp = profileService.createOpus(jsonRequest)
+            def response = profileService.createOpus(jsonRequest)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                response.sendError(resp.statusCode, resp.error ?: "");
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 

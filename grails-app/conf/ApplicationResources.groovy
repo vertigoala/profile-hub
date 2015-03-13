@@ -21,6 +21,7 @@ modules = {
         resource url:"js/angular/controllers/ListsController.js"
         resource url:"js/angular/controllers/TaxonController.js"
         resource url:"js/angular/controllers/MapController.js"
+        resource url:"js/angular/controllers/VocabController.js"
     }
 
     angular {

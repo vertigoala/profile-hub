@@ -27,7 +27,7 @@ describe("AttributesController tests", function () {
 
     beforeEach(module("profileEditor"));
 
-    beforeEach(inject(function ($controller, $rootScope, _profileService_, $q, _messageService_, _$window_) {
+    beforeEach(inject(function ($controller, $rootScope, _profileService_, $q, _messageService_, _$window_, _$filter_) {
         scope = $rootScope.$new();
         profileService = _profileService_;
         window = _$window_;
@@ -52,7 +52,8 @@ describe("AttributesController tests", function () {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
-            messageService: messageService
+            messageService: messageService,
+            $filter: _$filter_
         });
     }));
 
@@ -179,7 +180,7 @@ describe("AttributesController tests", function () {
         expect(profileService.saveAttribute).toHaveBeenCalledWith("profileId1", "uuid1", {
             "profileId": "profileId1",
             "attributeId": "uuid1",
-            "title": "attrTitle",
+            "title": "AttrTitle", // titles are capitalized on save
             "text": "attrText"
         });
     });
@@ -368,5 +369,32 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.hideAudit(1);
 
         expect(scope.attrCtrl.attributes[1].auditShowing).toBe(false);
-    })
+    });
+
+    it("should return true if the vocabulary is NOT strict when isValid is invoked with a value not in the vocab", function() {
+        scope.attrCtrl.vocabularyStrict = false;
+        scope.attrCtrl.attributeTitles = ["term1", "term2", "term3"];
+
+        var valid = scope.attrCtrl.isValid("something else");
+
+        expect(valid).toBe(true);
+    });
+
+    it("should return false if the vocabulary IS strict when isValid is invoked with a value not in the vocab", function() {
+        scope.attrCtrl.vocabularyStrict = true;
+        scope.attrCtrl.attributeTitles = ["term1", "term2", "term3"];
+
+        var valid = scope.attrCtrl.isValid("something else");
+
+        expect(valid).toBe(false);
+    });
+
+    it("should return true if the vocabulary IS strict when isValid is invoked with a value in the vocab", function() {
+        scope.attrCtrl.vocabularyStrict = true;
+        scope.attrCtrl.attributeTitles = ["term1", "term2", "term3"];
+
+        var valid = scope.attrCtrl.isValid("term2");
+
+        expect(valid).toBe(false);
+    });
 });

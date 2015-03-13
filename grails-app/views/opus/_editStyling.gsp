@@ -8,7 +8,7 @@
         <label>Logo:</label>
         <input type="text" class="input-xxlarge" name="logoUrl" ng-model="opusCtrl.opus.logoUrl"/>
     </p>
-    <button class="btn" ng-click="opusCtrl.saveOpus(StyleForm)">
+    <button class="btn btn-primary" ng-click="opusCtrl.saveOpus(StyleForm)">
         <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="StyleForm.$dirty">*</span> Save</span>
         <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
     </button>

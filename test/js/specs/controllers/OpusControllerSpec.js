@@ -6,6 +6,9 @@ describe("OpusController tests", function () {
         getPathItem: function () {
             return OPUS_ID;
         },
+        isUuid: function() {
+            return true;
+        },
         LAST: "last"
     };
     var form;

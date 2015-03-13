@@ -1,4 +1,4 @@
-<div id="opusInfo" class="well" ng-form="MapForm">
+<div id="opusMapInfo" class="well" ng-form="MapForm">
     <h3>Map configuration</h3>
     <p>
         <label>Attribution:</label>
@@ -27,7 +27,7 @@
         <span>Default longitude: </span><input type="text" class="input-medium" name="mapDefaultLongitude" ng-model="opusCtrl.opus.mapDefaultLongitude"/>
         <span>Zoom level: </span><input type="text" class="input-medium" name="mapZoom" ng-model="opusCtrl.opus.mapZoom"/>
     </p>
-    <button class="btn" ng-click="opusCtrl.saveOpus(MapForm)">
+    <button class="btn btn-primary" ng-click="opusCtrl.saveOpus(MapForm)">
         <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="MapForm.$dirty">*</span> Save</span>
         <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
     </button>

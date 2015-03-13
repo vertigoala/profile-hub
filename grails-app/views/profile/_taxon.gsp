@@ -3,9 +3,9 @@
          data-content="Taxonomy from {{taxonCtrl.speciesProfile.taxonConcept.infoSourceName}}" ng-show="taxonCtrl.classifications.length > 0" ng-cloak>
         <ul>
             <li ng-repeat="classification in taxonCtrl.classifications">
-                <a href="{{classification.profileId}}"
-                   ng-if="classification.profileId">{{classification.rank | capitalize}}: {{classification.scientificName}}</a>
-                <span ng-if="!classification.profileId">{{classification.rank | capitalize}}: {{classification.scientificName}}</span>
+                <a href="{{classification.profileUuid}}"
+                   ng-if="classification.profileUuid">{{classification.rank | capitalize}}: {{classification.scientificName}}</a>
+                <span ng-if="!classification.profileUuid">{{classification.rank | capitalize}}: {{classification.scientificName}}</span>
             </li>
         </ul>
     </div>

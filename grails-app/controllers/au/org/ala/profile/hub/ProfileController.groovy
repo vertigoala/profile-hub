@@ -69,15 +69,9 @@ class ProfileController extends BaseController {
         } else {
             log.debug "Updating attributing....."
             //TODO check user in ROLE.....
-            def resp = profileService.updateBHLLinks(jsonRequest.profileId as String, jsonRequest.links)
+            def response = profileService.updateBHLLinks(jsonRequest.profileId as String, jsonRequest.links)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                response.sendError(resp.statusCode, resp.error ?: "")
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 
@@ -90,15 +84,9 @@ class ProfileController extends BaseController {
         } else {
 
             //TODO check user in ROLE.....
-            def resp = profileService.updateLinks(jsonRequest.profileId as String, jsonRequest.links)
+            def response = profileService.updateLinks(jsonRequest.profileId as String, jsonRequest.links)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                response.sendError(resp.statusCode, resp.error ?: "")
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 
@@ -145,15 +133,9 @@ class ProfileController extends BaseController {
         if (!params.imageSources || !params.searchIdentifier) {
             badRequest()
         } else {
-            def resp = biocacheService.retrieveImages(params.searchIdentifier, params.imageSources)
+            def response = biocacheService.retrieveImages(params.searchIdentifier, params.imageSources)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                sendError(resp.statusCode, resp.error)
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 
@@ -161,15 +143,9 @@ class ProfileController extends BaseController {
         if (!params.guid) {
             badRequest()
         } else {
-            def resp = speciesListService.getListsForGuid(params.guid)
+            def response = speciesListService.getListsForGuid(params.guid)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                sendError(resp.statusCode, resp.error)
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 
@@ -177,15 +153,9 @@ class ProfileController extends BaseController {
         if (!params.guid) {
             badRequest()
         } else {
-            def resp = profileService.getClassification(params.guid)
+            def response = profileService.getClassification(params.guid)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                sendError(resp.statusCode, resp.error)
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 
@@ -193,15 +163,9 @@ class ProfileController extends BaseController {
         if (!params.guid) {
             badRequest()
         } else {
-            def resp = profileService.getSpeciesProfile(params.guid)
+            def response = profileService.getSpeciesProfile(params.guid)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                sendError(resp.statusCode, resp.error)
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 
@@ -209,15 +173,9 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.scientificName) {
             badRequest()
         } else {
-            def resp = profileService.search(params.opusId, params.scientificName);
+            def response = profileService.search(params.opusId, params.scientificName);
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode;
-                sendError(resp.statusCode, resp.error);
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON);
-                render resp.resp as JSON;
-            }
+            handle response
         }
     }
 

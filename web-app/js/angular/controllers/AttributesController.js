@@ -1,12 +1,15 @@
 /**
  * Atributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, util, messageService, $window) {
+profileEditor.controller('AttributeEditor', function (profileService, util, messageService, $window, $filter) {
     var self = this;
 
     self.attributes = [];
     self.attributeTitles = [];
     self.historyShowing = {};
+    self.vocabularyStrict = false;
+
+    var capitalize = $filter("capitalize");
 
     self.init = function (edit) {
         self.readonly = edit != 'true';
@@ -27,11 +30,21 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         );
     };
 
+    self.isValid = function(attributeTitle) {
+        attributeTitle = capitalize(attributeTitle);
+        return !self.vocabularyStrict || (self.vocabularyStrict && self.attributeTitles.indexOf(attributeTitle) > -1)
+    };
+
     function loadVocabulary() {
         if (self.opus.attributeVocabUuid != null) {
             var vocabPromise = profileService.getOpusVocabulary(self.opus.attributeVocabUuid);
             vocabPromise.then(function (data) {
-                self.attributeTitles = data.terms;
+                self.attributeTitles = [];
+                angular.forEach(data.terms, function(term) {
+                    self.attributeTitles.push(term.name);
+                });
+                //self.attributeTitles = data.terms;
+                self.vocabularyStrict = data.strict;
             });
         }
     }
@@ -92,7 +105,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         var future = profileService.saveAttribute(self.profile.uuid, attribute.uuid, {
             profileId: self.profile.uuid,
             attributeId: attribute.uuid,
-            title: attribute.title,
+            title: capitalize(attribute.title),
             text: attribute.text
         });
 
