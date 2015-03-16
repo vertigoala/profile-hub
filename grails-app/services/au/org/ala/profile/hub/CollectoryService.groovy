@@ -14,7 +14,6 @@ class CollectoryService {
                 dataResources.put(it.uid, it.name)
             }
         } catch (Exception e) {
-            e.printStackTrace()
             dataResources = null
             log.error("Unable to retrieve data resources", e)
         }

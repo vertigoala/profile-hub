@@ -27,7 +27,7 @@
 
             <div class="row-fluid">
                 <span ng-repeat="term in vocabCtrl.vocabulary.terms | orderBy:'name'" class="column-item" ng-if="!vocabCtrl.termIsInReplacementList(term)">
-                    <span ng-class="term.vocabId ? '' : 'newItem'">{{ term.name }}</span>
+                    <span ng-class="term.termId ? '' : 'newItem'">{{ term.name }}</span>
                     <button class="btn-link fa fa-edit" title="Edit the {{ term.name }} term"
                             ng-click="vocabCtrl.editVocabTerm($index, VocabForm)"></button>
                     <button class="btn-link fa fa-trash" title="Delete the {{ term.name }} term"

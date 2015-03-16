@@ -27,7 +27,6 @@ class BHLController extends BaseController {
 
         if (titleMetadata) {
             response.setContentType("application/json")
-            println titleMetadata as JSON
             render titleMetadata as JSON
         } else {
             response.status = HttpStatus.SC_NOT_FOUND

@@ -99,15 +99,9 @@ class ProfileController extends BaseController {
             badRequest()
         } else {
             //TODO check user in ROLE.....
-            def resp = profileService.updateAttribute(jsonRequest.profileId, jsonRequest.attributeId, jsonRequest.title, jsonRequest.text)
+            def response = profileService.updateAttribute(jsonRequest.profileId, jsonRequest.attributeId, jsonRequest.title, jsonRequest.text)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                response.sendError(resp.statusCode, resp.error ?: "")
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.resp as JSON
-            }
+            handle response
         }
     }
 
@@ -120,11 +114,10 @@ class ProfileController extends BaseController {
 
             if (resp.statusCode != SC_OK) {
                 response.status = resp.statusCode
-                response.sendError(resp.statusCode, resp.error ?: "")
+                sendError(resp.statusCode, resp.error ?: "")
             } else {
                 response.setContentType(CONTEXT_TYPE_JSON)
-                def model = ["success": resp.statusCode == SC_OK]
-                render model as JSON
+                render ([success: true] as JSON)
             }
         }
     }

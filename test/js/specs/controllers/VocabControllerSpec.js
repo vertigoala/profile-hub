@@ -22,7 +22,7 @@ describe("VocabController tests", function () {
     var opusDefer, findUsagesDefer, replaceUsagesDefer, updateVocabDefer, getVocabDefer;
 
     var getOpusResponse = '{"title": "OpusName", "dataResourceUid":"dataUid1", "imageSources": ["source1", "source2", "source3"], "recordSources": ["source1", "source2", "source3"], "mapPointColour": "12345"}';
-    var getVocabResponse = '{"name":"vocab name", "strict":"true","terms":[{"name":"term1", "vocabId":"vocab1"},{"name":"term2", "vocabId":"vocab1"},{"name":"term3", "vocabId":"vocab1"}]}';
+    var getVocabResponse = '{"name":"vocab name", "strict":"true","terms":[{"name":"term1", "termId":"term1"},{"name":"term2", "termId":"term2"},{"name":"term3", "termId":"term3"}]}';
 
     beforeAll(function () {
         console.log("****** Vocab Controller Tests ******");
@@ -116,7 +116,7 @@ describe("VocabController tests", function () {
         scope.vocabCtrl.addVocabTerm(form);
 
         expect(scope.vocabCtrl.vocabulary.terms.length).toBe(1);
-        expect(scope.vocabCtrl.vocabulary.terms[0].vocabId).toBe("vocabId");
+        expect(scope.vocabCtrl.vocabulary.terms[0].termId).toBe("");
         expect(scope.vocabCtrl.vocabulary.terms[0].name).toBe("NEW");
     });
 
@@ -163,7 +163,7 @@ describe("VocabController tests", function () {
         findUsagesDefer.resolve(JSON.parse('{"usageCount": 0}'));
 
         scope.vocabCtrl.opus = {attributeVocabUuid: "vocabId"};
-        scope.vocabCtrl.vocabulary = {terms: [{name:"term1", vocabId:"vocab1"},{name:"term2", vocabId:"vocab1"},{name:"term3", vocabId:"vocab1"}]};
+        scope.vocabCtrl.vocabulary = {terms: [{name:"term1", termId:"term1"},{name:"term2", termId:"term2"},{name:"term3", termId:"term3"}]};
 
         scope.vocabCtrl.removeVocabTerm(1, form);
         scope.$apply();
@@ -179,7 +179,7 @@ describe("VocabController tests", function () {
         findUsagesDefer.resolve(JSON.parse('{"usageCount": 2}'));
 
         scope.vocabCtrl.opus = {attributeVocabUuid: "vocabId"};
-        scope.vocabCtrl.vocabulary = {terms: [{name:"term1", vocabId:"vocab1"},{name:"term2", vocabId:"vocab1"},{name:"term3", vocabId:"vocab1"}]};
+        scope.vocabCtrl.vocabulary = {terms: [{name:"term1", termId:"term1"},{name:"term2", termId:"term2"},{name:"term3", termId:"term3"}]};
 
         scope.vocabCtrl.removeVocabTerm(1, form);
         scope.$apply();
@@ -200,7 +200,7 @@ describe("VocabController tests", function () {
     it("should invoke the updateVocabulary service method, then reload the vocabulary when saveVocabulary is invoked", function() {
         updateVocabDefer.resolve({});
 
-        var vocab = {terms: [{name:"term1", vocabId:"vocab1"},{name:"term2", vocabId:"vocab1"},{name:"term3", vocabId:"vocab1"}]};
+        var vocab = {terms: [{name:"term1", termId:"term1"},{name:"term2", termId:"term2"},{name:"term3", termId:"term3"}]};
 
         scope.vocabCtrl.opus = {attributeVocabUuid: "vocabId"};
         scope.vocabCtrl.vocabulary = vocab;
@@ -216,7 +216,7 @@ describe("VocabController tests", function () {
         updateVocabDefer.reject();
 
         scope.vocabCtrl.opus = {attributeVocabUuid: "vocabId"};
-        scope.vocabCtrl.vocabulary = {terms: [{name:"term1", vocabId:"vocab1"},{name:"term2", vocabId:"vocab1"},{name:"term3", vocabId:"vocab1"}]};
+        scope.vocabCtrl.vocabulary = {terms: [{name:"term1", termId:"term1"},{name:"term2", termId:"term2"},{name:"term3", termId:"term3"}]};
 
         scope.vocabCtrl.saveVocabulary(form);
         scope.$apply();
@@ -228,7 +228,7 @@ describe("VocabController tests", function () {
         updateVocabDefer.resolve({});
         replaceUsagesDefer.resolve(JSON.parse('{"usages":{"Test":1}}'));
 
-        var vocab = {terms: [{name:"term1", vocabId:"vocab1"},{name:"term2", vocabId:"vocab1"},{name:"term3", vocabId:"vocab1"}]};
+        var vocab = {terms: [{name:"term1", termId:"term1"},{name:"term2", termId:"term2"},{name:"term3", termId:"term3"}]};
         var replacements = [{vocabId: "vocab1", existingTermName: "old term", newTermName: "new term"}];
 
         scope.vocabCtrl.opus = {attributeVocabUuid: "vocabId"};

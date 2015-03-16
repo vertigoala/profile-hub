@@ -18,7 +18,7 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
 
     self.addVocabTerm = function (form) {
         if (self.newVocabTerm) {
-            self.vocabulary.terms.push({vocabId: self.opus.attributeVocabUuid, name: capitalize(self.newVocabTerm)});
+            self.vocabulary.terms.push({termId: "", name: capitalize(self.newVocabTerm)});
             self.newVocabTerm = "";
             sortVocabTerms();
             form.$setDirty();
