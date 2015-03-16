@@ -6,7 +6,7 @@ modules = {
         dependsOn "leaflet"
         dependsOn "angular_bootstrap_colourpicker"
         dependsOn "fontawesome"
-        resource url:"js/angular/Profiles.js"
+        resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Utils.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/services/ProfileService.js"
