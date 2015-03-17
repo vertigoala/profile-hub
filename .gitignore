@@ -31,7 +31,7 @@ grailsw.bat
 
 # "temporary" build files
 /target
-
+/out
 /.idea
 
 *.iml
@@ -77,3 +77,7 @@ grails-app/assets/stylesheets/errors.css
 grails-app/assets/stylesheets/main.css
 
 grails-app/assets/stylesheets/mobile.css
+
+# karma files
+node_modules/*
+coverage/*

@@ -1,145 +1,202 @@
 package au.org.ala.profile.hub
+
+import au.org.ala.web.AuthService
 import grails.converters.JSON
-import groovy.json.JsonSlurper
+import static org.apache.http.HttpStatus.*
 
-class ProfileController {
+class ProfileController extends BaseController {
 
-    WebService webService
-    def authService
+    AuthService authService
+    ProfileService profileService
+    BiocacheService biocacheService
+    SpeciesListService speciesListService
 
     def index() {}
 
-    def edit(){
-        def model = buildProfile(params.uuid)
-        //need CAS check here
-        model.put("edit", true)
-        model.put("currentUser", authService.getDisplayName())
-        render(view: "show", model: model)
+    def edit() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            def profile = profileService.getProfile(params.profileId as String)
+
+            if (!profile) {
+                notFound()
+            } else {
+                // TODO need CAS check here
+                Map model = profile
+                model << [edit: true, currentUser: authService.getDisplayName()]
+                render view: "show", model: model
+            }
+        }
     }
 
-    def show(){
-        buildProfile(params.uuid)
+    def show() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            def profile = profileService.getProfile(params.profileId as String)
+
+            if (!profile) {
+                notFound()
+            } else {
+                Map model = profile
+                model << [edit: false]
+                render view: "show", model: model
+            }
+        }
+    }
+
+    def getJson() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            response.setContentType(CONTEXT_TYPE_JSON)
+            def profile = profileService.getProfile(params.profileId as String)
+
+            if (!profile) {
+                notFound()
+            } else {
+                render profile as JSON
+            }
+        }
     }
 
     def updateBHLLinks() {
-        def jsonSlurper = new JsonSlurper()
-        def json = jsonSlurper.parse(request.getReader())
-        println "Updating attributing....."
-        //TODO check user in ROLE.....
-        def resp = webService.doPost(grailsApplication.config.profile.service.url + "/profile/bhl/" + json.profileUuid, [
-                profileUuid : json.profileUuid,
-                links : json.links,
-                userId : authService.getUserId(),
-                userDisplayName:authService.userDetails().userDisplayName
-        ])
-        response.setContentType("application/json")
-        response.setStatus(201)
-        render resp.resp as JSON
+        def jsonRequest = request.getJSON()
+
+        if (!jsonRequest || !jsonRequest.profileId || !jsonRequest.links) {
+            badRequest()
+        } else {
+            log.debug "Updating attributing....."
+            //TODO check user in ROLE.....
+            def response = profileService.updateBHLLinks(jsonRequest.profileId as String, jsonRequest.links)
+
+            handle response
+        }
     }
 
     def updateLinks() {
-        def jsonSlurper = new JsonSlurper()
-        def json = jsonSlurper.parse(request.getReader())
-        println "Updating attributing....."
-        //TODO check user in ROLE.....
-        def resp = webService.doPost(grailsApplication.config.profile.service.url + "/profile/links/" + json.profileUuid, [
-                profileUuid : json.profileUuid,
-                links : json.links,
-                userId : authService.getUserId(),
-                userDisplayName:authService.userDetails().userDisplayName
-        ])
-        response.setContentType("application/json")
-        response.setStatus(201)
-        render resp.resp as JSON
+        log.debug "Updating attributing....."
+
+        def jsonRequest = request.getJSON()
+        if (!jsonRequest || !jsonRequest.profileId || !jsonRequest.links) {
+            badRequest()
+        } else {
+
+            //TODO check user in ROLE.....
+            def response = profileService.updateLinks(jsonRequest.profileId as String, jsonRequest.links)
+
+            handle response
+        }
     }
 
     def updateAttribute() {
+        log.debug "Updating attributing....."
+        def jsonRequest = request.getJSON()
 
-        println "Updating attributing....."
-        //TODO check user in ROLE.....
-        def resp = webService.doPost(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid?:'', [
-                title : params.title,
-                text : params.text,
-                profileUuid : params.profileUuid,
-                uuid : params.uuid?:'',
-                userId : authService.getUserId(),
-                userDisplayName:authService.userDetails().userDisplayName
-        ])
-        response.setContentType("application/json")
-        response.setStatus(201)
-        render resp.resp as JSON
-    }
-
-    def deleteAttribute(){
-        //TODO check user in ROLE.....
-        def resp = webService.doDelete(grailsApplication.config.profile.service.url + "/attribute/" + params.uuid + "?profileUuid=" + params.profileUuid)
-        response.setContentType("application/json")
-        response.setStatus(201)
-        def model = ["success":true]
-        render model as JSON
-    }
-
-    private def buildProfile(String uuid){
-
-        log.debug("Loading profile " + uuid )
-
-        def js = new JsonSlurper()
-
-        def profile = js.parseText(new URL(grailsApplication.config.profile.service.url + "/profile/" + URLEncoder.encode(uuid, "UTF-8")).text)
-
-        def opus = js.parseText(new URL(grailsApplication.config.profile.service.url + "/opus/${profile.opusId}").text)
-
-        def query = ""
-
-        if(profile.guid && profile.guid != "null"){
-            query = "lsid:" + profile.guid
+        // the attributeId may be blank (e.g. when creating a new attribute), but the request should still have it
+        if (!jsonRequest || !jsonRequest.has("attributeId") || !jsonRequest.profileId) {
+            badRequest()
         } else {
-            query = profile.scientificName
+            //TODO check user in ROLE.....
+            def response = profileService.updateAttribute(jsonRequest.profileId, jsonRequest.attributeId, jsonRequest.title, jsonRequest.text)
+
+            handle response
         }
+    }
 
-        def occurrenceQuery = query
+    def deleteAttribute() {
+        if (!params.attributeId || !params.profileId) {
+            badRequest()
+        } else {
+            //TODO check user in ROLE.....
+            def resp = profileService.deleteAttribute(params.attributeId, params.profileId)
 
-        if(opus.recordSources){
-            occurrenceQuery = query + " AND (data_resource_uid:" + opus.recordSources.join(" OR data_resource_uid:") + ")"
-        }
-
-        def imagesQuery = query
-        if(opus.imageSources){
-            imagesQuery = query + " AND (data_resource_uid:" + opus.imageSources.join(" OR data_resource_uid:") + ")"
-        }
-
-        def classification = []
-        if(profile.guid){
-            try {
-                classification = js.parseText(new URL(grailsApplication.config.profile.service.url + "/classification?guid=" + profile.guid).text)
-            } catch (Exception e){
-                println "Unable to load classification for " + profile.guid
+            if (resp.statusCode != SC_OK) {
+                response.status = resp.statusCode
+                sendError(resp.statusCode, resp.error ?: "")
+            } else {
+                response.setContentType(CONTEXT_TYPE_JSON)
+                render ([success: true] as JSON)
             }
         }
+    }
 
-        def speciesProfile
-        if(profile.guid){
-            try {
-                speciesProfile = js.parseText(new URL("http://bie.ala.org.au/ws/species/" + profile.guid).text)
-            } catch (Exception e){
-                println "Unable to load profile for " + profile.guid
-            }
+    def retrieveImages() {
+        if (!params.imageSources || !params.searchIdentifier) {
+            badRequest()
+        } else {
+            def response = biocacheService.retrieveImages(params.searchIdentifier, params.imageSources)
+
+            handle response
         }
+    }
 
-        //WMS URL
-        def listsURL = "http://lists.ala.org.au/ws/species/${profile.guid}"
-        [
-            occurrenceQuery: occurrenceQuery,
-            imagesQuery: imagesQuery,
-            opus: opus,
-            profile: profile,
-            classification: classification,
-            speciesProfile: speciesProfile,
-            lists: [],
-            logoUrl: opus.logoUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/logo.png',
-            bannerUrl: opus.bannerUrl?:'http://www.ala.org.au/wp-content/themes/ala2011/images/bg.jpg',
-            pageTitle: opus.title?:'Profile collections',
-            pageTitleLink: createLink(mapping: 'viewOpus', params: ['uuid': opus.uuid])
-        ]
+    def retrieveLists() {
+        if (!params.guid) {
+            badRequest()
+        } else {
+            def response = speciesListService.getListsForGuid(params.guid)
+
+            handle response
+        }
+    }
+
+    def retrieveClassifications() {
+        if (!params.guid) {
+            badRequest()
+        } else {
+            def response = profileService.getClassification(params.guid)
+
+            handle response
+        }
+    }
+
+    def retrieveSpeciesProfile() {
+        if (!params.guid) {
+            badRequest()
+        } else {
+            def response = profileService.getSpeciesProfile(params.guid)
+
+            handle response
+        }
+    }
+
+    def search() {
+        if (!params.opusId || !params.scientificName) {
+            badRequest()
+        } else {
+            def response = profileService.search(params.opusId, params.scientificName);
+
+            handle response
+        }
+    }
+
+    def attributesPanel = {
+        render template: "attributes"
+    }
+
+    def linksPanel = {
+        render template: "links"
+    }
+
+    def bhlLinksPanel = {
+        render template: "bhlLinks"
+    }
+
+    def taxonPanel = {
+        render template: "taxon"
+    }
+
+    def imagesPanel = {
+        render template: "images"
+    }
+
+    def mapPanel = {
+        render template: "map"
+    }
+
+    def listsPanel = {
+        render template: "lists"
     }
 }

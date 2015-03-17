@@ -1,45 +1,157 @@
 package au.org.ala.profile.hub
 
-import grails.transaction.Transactional
-import groovy.json.JsonSlurper
+import au.org.ala.web.AuthService
 
-@Transactional
 class ProfileService {
 
-    def serviceMethod() {}
+    def grailsApplication
+    BieService bieService
+    WebService webService
+    AuthService authService
 
-    def getProfile(String uuid){
+    def getOpus(String opusId = "") {
+        webService.get("${grailsApplication.config.profile.service.url}/opus/${opusId}")?.resp
+    }
 
-        println("getProfile " + uuid )
+    def updateOpus(String opusId, json) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}", json)
+    }
 
-        def js = new JsonSlurper()
+    def createOpus(json) {
+        webService.doPut("${grailsApplication.config.profile.service.url}/opus/", json)
+    }
 
-        def profile = js.parseText(new URL("http://localhost:8081/profile-service/profile/" + URLEncoder.encode(uuid, "UTF-8")).text)
+    def getVocab(String vocabId = "") {
+        webService.get("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")
+    }
 
-        def opus = js.parseText(new URL("http://localhost:8081/profile-service/opus/${profile.opusId}").text)
+    def getProfile(String profileId) {
+        log.debug("Loading profile " + profileId)
 
-        def query = ""
+        Map result
 
-        if(profile.guid){
-            query = "lsid:" + profile.guid
-        } else {
-            query = profile.scientificName
+        try {
+            String encodedProfileId = URLEncoder.encode(profileId, "UTF-8")
+            def profile = webService.get("${grailsApplication.config.profile.service.url}/profile/${encodedProfileId}")?.resp
+
+            if (!profile) {
+                return null
+            }
+
+            injectThumbnailUrls(profile)
+
+            def opus = getOpus(profile.opusId)
+
+            result = [
+                    opus     : opus,
+                    profile  : profile,
+                    logoUrl  : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                    bannerUrl: opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                    pageTitle: opus.title ?: DEFAULT_OPUS_TITLE
+            ]
+        } catch (FileNotFoundException e) {
+            log.error("Profile ${profileId} not found")
+            result = null
+        } catch (Exception e) {
+            log.error("Failed to retrieve profile ${profileId}", e)
+            result = [error: "Failed to retrieve profile ${profileId} due to ${e.getMessage()}"]
         }
 
-        if(opus.recordSources){
-            query = query + " AND (data_resource_uid:" + opus.recordSources.join(" OR ") + ")"
-        }
+        result
+    }
 
-        def imagesQuery = query + "&fq=multimedia:Image"
+    void injectThumbnailUrls(profile) {
+        profile.bhl.each({
+            String pageId = it.url.split("/").last()
+            if (pageId =~ /\?#/) {
+                pageId = pageId.split(/\?#/).first()
+            }
+            it.thumbnailUrl = "${grailsApplication.config.biodiv.library.thumb.url}${pageId}"
+        })
+        profile
+    }
 
-        //WMS URL
-        def listsURL = "http://lists.ala.org.au/ws/species/${profile.guid}"
-        [
-            occurrenceQuery: query,
-            imagesQuery: imagesQuery,
-            opus: opus,
-            profile: profile,
-            lists: []
-        ]
+    def getClassification(String guid) {
+        log.debug("Retrieving classification for ${guid}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/classification?profileId=${guid}")
+    }
+
+    def getSpeciesProfile(String guid) {
+        log.debug("Retrieving species profile for ${guid}")
+
+        bieService.getSpeciesProfile(guid)
+    }
+
+    def search(String opusId, String scientificName) {
+        log.debug("Searching for '${scientificName}' in opus ${opusId}")
+
+        String searchTermEncoded = URLEncoder.encode(scientificName, "UTF-8")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${opusId}&scientificName=${searchTermEncoded}")
+    }
+
+    def updateBHLLinks(String profileId, def links) {
+        log.debug("Updating BHL links ${links} for profile ${profileId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/bhl/${profileId}", [
+                profileId      : profileId,
+                links          : links,
+                userId         : authService.getUserId(),
+                userDisplayName: authService.userDetails().userDisplayName
+        ])
+    }
+
+    def updateLinks(String profileId, def links) {
+        log.debug("Updating links ${links} for profile ${profileId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/links/${profileId}", [
+                profileId      : profileId,
+                links          : links,
+                userId         : authService.getUserId(),
+                userDisplayName: authService.userDetails().userDisplayName
+        ])
+    }
+
+    def updateAttribute(String profileId, String attributeId, String title, String text) {
+        log.debug("Updating attribute ${attributeId} with title ${title} for profile ${profileId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/attribute/${attributeId ?: ''}", [
+                title          : title,
+                text           : text,
+                profileId      : profileId,
+                attributeId    : attributeId ?: '',
+                userId         : authService.getUserId(),
+                userDisplayName: authService.userDetails().userDisplayName
+        ])
+    }
+
+    def deleteAttribute(String attributeId, String profileId) {
+        log.debug("Deleting attribute ${attributeId} of profile ${profileId}")
+
+        webService.doDelete("${grailsApplication.config.profile.service.url}/attribute/${attributeId}?profileId=${profileId}")
+    }
+
+    def getAuditHistory(String objectId, String userId) {
+        log.debug("Retrieving audit history for ${objectId ?: userId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${objectId ?: userId}")
+    }
+
+    def updateVocabulary(String vocabId, vocab) {
+        log.debug("Updating vocabulary ${vocabId} with data ${vocab}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/vocab/${vocabId}", vocab)
+    }
+
+    def findUsagesOfVocabTerm(String vocabId, String termName) {
+        log.debug("Finding usages of term ${termName} from vocab ${vocabId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/vocab/usages/find?vocabId=${vocabId}&term=${termName}")
+    }
+
+    def replaceUsagesOfVocabTerm(Map json) {
+        log.debug("Replacing usages of vocab term(s): ${json}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/vocab/usages/replace", json)
     }
 }
