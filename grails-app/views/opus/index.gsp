@@ -24,6 +24,9 @@
             </li>
         </g:each>
     </ul>
+    <g:if test="${isAdmin}">
+        <g:link mapping="createOpus">Create new</g:link>
+    </g:if>
 </div>
 </body>
 

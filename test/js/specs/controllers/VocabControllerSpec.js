@@ -6,6 +6,9 @@ describe("VocabController tests", function () {
         getPathItem: function () {
             return "12345";
         },
+        isUuid: function() {
+            return true;
+        },
         LAST: "last"
     };
     var mockPopup = {

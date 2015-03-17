@@ -21,7 +21,7 @@
     <div class="pull-right">
         <button class="btn"
                 onclick="javascript:alert('Not implemented - through to users edits')">Logged in: ${currentUser}</button>
-        <g:link class="btn " mapping="viewOpus" params="[opusId: opus.uuid]" target="_self" ng-show="opusCtrl.opus.uuid">Public view</g:link>
+        <a href="${request.contextPath}/opus/{{opusCtrl.opus.uuid}}" class="btn" target="_self" ng-show="opusCtrl.opus.uuid">Public View</a>
     </div>
 
     <div style="margin-top:20px;">

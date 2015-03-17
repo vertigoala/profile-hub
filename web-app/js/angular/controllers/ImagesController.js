@@ -27,6 +27,10 @@ profileEditor.controller('ImagesController', function (profileService, util, mes
     };
 
     function loadImages() {
+        if (self.opus.imageSources.length == 0) {
+            return;
+        }
+
         messageService.info("Loading images...");
 
         var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : self.profile.scientificName;

@@ -15,7 +15,7 @@ class ProfileController extends BaseController {
 
     def edit() {
         if (!params.profileId) {
-            badRequest()
+            badRequest "profileId is a required parameter"
         } else {
             def profile = profileService.getProfile(params.profileId as String)
 
@@ -32,7 +32,7 @@ class ProfileController extends BaseController {
 
     def show() {
         if (!params.profileId) {
-            badRequest()
+            badRequest "profileId is a required parameter"
         } else {
             def profile = profileService.getProfile(params.profileId as String)
 
@@ -48,7 +48,7 @@ class ProfileController extends BaseController {
 
     def getJson() {
         if (!params.profileId) {
-            badRequest()
+            badRequest "profileId is a required parameter"
         } else {
             response.setContentType(CONTEXT_TYPE_JSON)
             def profile = profileService.getProfile(params.profileId as String)
@@ -107,7 +107,7 @@ class ProfileController extends BaseController {
 
     def deleteAttribute() {
         if (!params.attributeId || !params.profileId) {
-            badRequest()
+            badRequest "attributeId and profileId are required parameters"
         } else {
             //TODO check user in ROLE.....
             def resp = profileService.deleteAttribute(params.attributeId, params.profileId)
@@ -117,14 +117,14 @@ class ProfileController extends BaseController {
                 sendError(resp.statusCode, resp.error ?: "")
             } else {
                 response.setContentType(CONTEXT_TYPE_JSON)
-                render ([success: true] as JSON)
+                render([success: true] as JSON)
             }
         }
     }
 
     def retrieveImages() {
         if (!params.imageSources || !params.searchIdentifier) {
-            badRequest()
+            badRequest "Image sources and searchIdentifier are required parameters"
         } else {
             def response = biocacheService.retrieveImages(params.searchIdentifier, params.imageSources)
 
@@ -134,7 +134,7 @@ class ProfileController extends BaseController {
 
     def retrieveLists() {
         if (!params.guid) {
-            badRequest()
+            badRequest "GUID is a required parameter"
         } else {
             def response = speciesListService.getListsForGuid(params.guid)
 
@@ -143,10 +143,10 @@ class ProfileController extends BaseController {
     }
 
     def retrieveClassifications() {
-        if (!params.guid) {
-            badRequest()
+        if (!params.guid || !params.opusId) {
+            badRequest "GUID and opusId are required parameters"
         } else {
-            def response = profileService.getClassification(params.guid)
+            def response = profileService.getClassification(params.guid, params.opusId)
 
             handle response
         }
@@ -154,7 +154,7 @@ class ProfileController extends BaseController {
 
     def retrieveSpeciesProfile() {
         if (!params.guid) {
-            badRequest()
+            badRequest "GUID is a required parameter"
         } else {
             def response = profileService.getSpeciesProfile(params.guid)
 
@@ -164,7 +164,7 @@ class ProfileController extends BaseController {
 
     def search() {
         if (!params.opusId || !params.scientificName) {
-            badRequest()
+            badRequest "opusId and scientificName are required parameters"
         } else {
             def response = profileService.search(params.opusId, params.scientificName);
 

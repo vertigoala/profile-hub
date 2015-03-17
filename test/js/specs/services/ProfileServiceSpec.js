@@ -10,6 +10,9 @@ describe("ProfileService tests", function () {
         },
         toStandardPromise: function() {
             return {then: function() {}};
+        },
+        isUuid: function() {
+            return true;
         }
     };
 
@@ -123,9 +126,9 @@ describe("ProfileService tests", function () {
     });
 
     it("should invoke the retrieve classifications service on the context root when getClassifications is called", function () {
-        service.getClassifications("guid1");
+        service.getClassifications("guid1", "opus1");
 
-        http.expectGET("/someContext/profile/classifications?guid=guid1").respond("bla");
+        http.expectGET("/someContext/profile/classifications?guid=guid1&opusId=opus1").respond("bla");
     });
 
     it("should invoke the retrieve species profile service on the context root when getSpeciesProfile is called", function () {

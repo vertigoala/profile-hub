@@ -1,11 +1,8 @@
 package au.org.ala.profile.hub
 
-import grails.converters.JSON
-
 import static au.org.ala.profile.hub.util.HubConstants.*
+import grails.converters.JSON
 import au.org.ala.web.AuthService
-
-import static org.apache.http.HttpStatus.SC_OK
 
 class OpusController extends BaseController {
 
@@ -22,7 +19,8 @@ class OpusController extends BaseController {
                 dataResources: collectoryService.getDataResources(),
                 logoUrl      : DEFAULT_OPUS_LOGO_URL,
                 bannerUrl    : DEFAULT_OPUS_BANNER_URL,
-                pageTitle    : DEFAULT_OPUS_TITLE
+                pageTitle    : DEFAULT_OPUS_TITLE,
+                isAdmin      : true // TODO determine ADMIN group membership
         ]
     }
 
@@ -65,6 +63,10 @@ class OpusController extends BaseController {
                     pageTitle: opus.title ?: DEFAULT_OPUS_TITLE,
             ]
         }
+    }
+
+    def list() {
+        render profileService.getOpus() as JSON
     }
 
     def getJson() {

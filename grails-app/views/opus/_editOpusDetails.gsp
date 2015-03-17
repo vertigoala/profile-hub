@@ -6,8 +6,10 @@
                    class="input-xxlarge"
                    name="opusName"
                    ng-model="opusCtrl.opus.dataResource"
+                   typeahead-editable="false"
                    typeahead-on-select="opusCtrl.opusResourceChanged($item, $model, $label)"
                    typeahead="source as source.name for source in opusCtrl.dataResourceList | filter:$viewValue | limitTo:10"/>
+            <alert type="danger" ng-show="!opusCtrl.opus.dataResource">You must select a value from the list.</alert>
         </p>
 
     </div>
@@ -24,7 +26,7 @@
         {{opusCtrl.dataResource.citation | default:'No citation statement available.'}}
     </p>
 
-    <button class="btn" ng-click="opusCtrl.saveOpus(OpusForm)" ng-show="!opusCtrl.opus.uuid">
+    <button class="btn btn-primary" ng-click="opusCtrl.saveOpus(OpusForm)" ng-show="!opusCtrl.opus.uuid" ng-disabled="!opusCtrl.opus.dataResource">
         <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="OpusForm.$dirty">*</span> Save</span>
         <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
     </button>

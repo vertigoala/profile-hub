@@ -8,12 +8,27 @@ class BaseController {
 
     public static final String CONTEXT_TYPE_JSON = "application/json"
 
-    def notFound() {
-        sendError(SC_NOT_FOUND)
+    def notFound = {String message = null ->
+        sendError(SC_NOT_FOUND, message ?: "")
     }
 
-    def badRequest() {
-        sendError(SC_BAD_REQUEST)
+    def badRequest = {String message = null ->
+        sendError(SC_BAD_REQUEST, message ?: "")
+    }
+
+    def success = { resp ->
+        response.status = SC_OK
+        response.setContentType(CONTEXT_TYPE_JSON)
+        render resp as JSON
+    }
+
+    def saveFailed = {
+        sendError(SC_INTERNAL_SERVER_ERROR)
+    }
+
+    def sendError = {int status, String msg = null ->
+        response.status = status
+        response.sendError(status, msg)
     }
 
     def handle (resp) {
@@ -25,10 +40,4 @@ class BaseController {
             render resp.resp as JSON
         }
     }
-
-    def sendError = {int status, String msg = null ->
-        response.status = status
-        response.sendError(status, msg)
-    }
-
 }

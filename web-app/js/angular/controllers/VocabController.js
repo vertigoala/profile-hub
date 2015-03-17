@@ -148,12 +148,12 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
     };
 
     function loadOpus() {
-        if (!self.opusId) {
+        if (!self.opusId || !util.isUuid(self.opusId)) {
             return;
         }
+
         var promise = profileService.getOpus(self.opusId);
 
-        messageService.info("Loading opus data...");
         promise.then(function (data) {
                 console.log("Retrieved " + data.title);
                 self.opus = data;

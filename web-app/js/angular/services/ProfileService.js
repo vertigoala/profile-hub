@@ -22,6 +22,11 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
         },
 
         getOpus: function (opusId) {
+            // make sure we have a UUID, not just the last element of some other URL (e.g. create)
+            if (!util.isUuid(opusId)) {
+                return;
+            }
+
             console.log("Fetching opus " + opusId);
 
             var future = $http.get(util.contextRoot() + "/opus/json/" + opusId, {cache: true});
@@ -137,9 +142,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
-        getClassifications: function (guid) {
+        getClassifications: function (guid, opusId) {
             console.log("Retrieving classifications for " + guid);
-            var future = $http.get(util.contextRoot() + "/profile/classifications?guid=" + guid, {cache: true});
+            var future = $http.get(util.contextRoot() + "/profile/classifications?guid=" + guid + "&opusId=" + opusId, {cache: true});
             future.then(function (response) {
                 console.log("Classifications retrieved with response code " + response.status)
             });

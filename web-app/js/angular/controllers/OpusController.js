@@ -12,6 +12,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.saving = false;
     self.newImageSources = [];
     self.newRecordSources = [];
+    self.valid = false;
 
     // make sure we have a UUID, not just the last element of some other URL (e.g. create)
     if (!util.isUuid(self.opusId)) {
@@ -30,7 +31,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         toggleMapPointerColourHash();
 
         var promise = profileService.saveOpus(self.opusId, self.opus);
-        promise.then(function () {
+        promise.then(function (data) {
                 toggleMapPointerColourHash();
 
                 messageService.pop();
@@ -38,6 +39,11 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 self.saving = false;
                 if (form) {
                     form.$setPristine();
+                }
+
+                if (!self.opus.uuid) {
+                    self.opusId = data.uuid;
+                    self.opus = data;
                 }
             },
             function () {
@@ -136,6 +142,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     };
 
     function loadOpus() {
+        console.log(self.opusId)
         if (!self.opusId) {
             return;
         }

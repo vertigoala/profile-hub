@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.web.AuthService
 
 class ProfileService {
@@ -45,9 +46,9 @@ class ProfileService {
             result = [
                     opus     : opus,
                     profile  : profile,
-                    logoUrl  : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
-                    bannerUrl: opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    pageTitle: opus.title ?: DEFAULT_OPUS_TITLE
+                    logoUrl  : opus.logoUrl ?: HubConstants.DEFAULT_OPUS_LOGO_URL,
+                    bannerUrl: opus.bannerUrl ?: HubConstants.DEFAULT_OPUS_BANNER_URL,
+                    pageTitle: opus.title ?: HubConstants.DEFAULT_OPUS_TITLE
             ]
         } catch (FileNotFoundException e) {
             log.error("Profile ${profileId} not found")
@@ -71,10 +72,10 @@ class ProfileService {
         profile
     }
 
-    def getClassification(String guid) {
-        log.debug("Retrieving classification for ${guid}")
+    def getClassification(String guid, String opusId) {
+        log.debug("Retrieving classification for ${guid} in opus ${opusId}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/classification?profileId=${guid}")
+        webService.get("${grailsApplication.config.profile.service.url}/classification?guid=${guid}&opusId=${opusId}")
     }
 
     def getSpeciesProfile(String guid) {

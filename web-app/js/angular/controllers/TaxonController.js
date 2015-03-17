@@ -28,7 +28,7 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
         if (self.profile.guid) {
             messageService.info("Loading taxonomy...");
 
-            var promise = profileService.getClassifications(self.profile.guid);
+            var promise = profileService.getClassifications(self.profile.guid, self.opus.uuid);
             promise.then(function (data) {
                     console.log("Fetched " + data.length + " classifications");
 

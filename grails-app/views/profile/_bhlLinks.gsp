@@ -1,6 +1,6 @@
 <div ng-controller="BHLLinksEditor as bhlCtrl" ng-init="bhlCtrl.init('${edit}')" class="bs-docs-example ng-cloak" ng-cloak id="browse_bhllinks"
-     data-content="Biodiversity Heritage Library references" ng-show="bhlCtrl.bhl.length > 0">
-    <div ng-show="bhlCtrl.readonly">
+     data-content="Biodiversity Heritage Library references" ng-show="!bhlCtrl.readonly || bhlCtrl.bhl.length > 0">
+    <div ng-show="bhlCtrl.readonly && bhlCtrl.bhl.length > 0">
         <table class="table">
             <tr ng-repeat="link in bhlCtrl.bhl" ng-if="link.uuid">
                 <td>

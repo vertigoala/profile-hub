@@ -9,6 +9,9 @@
 <body>
 
 <div ng-app="profileEditor" ng-controller="OpusController as opusCtrl">
+    <ol class="breadcrumb" role="navigation">
+        <li><i class="fa fa-arrow-left"></i></span><span class="divider"><a href="${request.contextPath}/" target="_self">View all profile collections</a></li>
+    </ol>
 
     <div class="row-fluid" ng-if="opusCtrl.readonly">
         <div class="span8">

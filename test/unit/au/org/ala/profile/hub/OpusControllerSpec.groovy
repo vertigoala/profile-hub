@@ -41,12 +41,13 @@ class OpusControllerSpec extends Specification {
         controller.index()
 
         then:
-        assert model.size() == 5
+        assert model.size() == 6
         assert model.containsKey("opui")
         assert model.containsKey("dataResources")
         assert model.containsKey("logoUrl")
         assert model.containsKey("bannerUrl")
         assert model.containsKey("opui")
+        assert model.containsKey("isAdmin")
     }
 
     def "edit should render the edit view"() {
