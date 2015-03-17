@@ -19,7 +19,7 @@
                 </blockquote>
             </li>
             <li ng-repeat="synonym in taxonCtrl.speciesProfile.synonyms">
-                <blockquote style="border-left:none;">
+                <blockquote class="small no-border">
                     <p>{{synonym.nameString}}</p>
                     <cite ng-if="synonym.referencedIn">- {{synonym.referencedIn | default:"Reference not available"}}</cite>
                 </blockquote>

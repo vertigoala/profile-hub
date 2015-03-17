@@ -150,3 +150,7 @@ input[type=checkbox],input[type=radio] {
 input[type=checkbox]+label,input[type=radio]+label {
     margin-left: 10px;
 }
+
+.no-border {
+    border: none;
+}
