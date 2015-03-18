@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['ui.bootstrap', 'leaflet-directive', 'colorpicker.module']);
+var profileEditor = angular.module('profileEditor', ['grails.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module']);
 
 profileEditor.config(function ($locationProvider) {
     // This disables 'hashbang' mode and removes the need to specify <base href="/my-base"> in the views.

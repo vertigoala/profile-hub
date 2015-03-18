@@ -114,6 +114,10 @@
     }
 </r:script>
 
+<r:script>
+    angular.module('grails.config', []).constant('contextPath', '${request.contextPath}');
+</r:script>
+
 <!-- JS resources-->
 <r:layoutResources/>
 

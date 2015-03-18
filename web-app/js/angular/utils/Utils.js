@@ -1,7 +1,7 @@
 /**
  * Utility functions
  */
-profileEditor.factory('util', function ($location, $q) {
+profileEditor.factory('util', function ($location, $q, contextPath) {
 
     var UUID_REGEX_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     var LAST = "last";
@@ -90,7 +90,7 @@ profileEditor.factory('util', function ($location, $q) {
 
             var offset = $location.protocol().length + 3; // ignore the length of the protocol plus ://
             var startIndex = path.indexOf("/", offset);
-            var endIndex = path.indexOf("?") == -1 ? path.length() : path.indexOf("?");
+            var endIndex = path.indexOf("?") == -1 ? path.length : path.indexOf("?");
 
             path = url.substring(startIndex, endIndex)
         }
@@ -108,7 +108,7 @@ profileEditor.factory('util', function ($location, $q) {
      * @returns String the context path of the current URL, with a leading slash but no trailing slash
      */
     function contextRoot() {
-        return "/" + getPathItem(FIRST);
+        return contextPath;
     }
 
     /**
