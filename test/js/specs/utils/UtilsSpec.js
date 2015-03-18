@@ -39,10 +39,5 @@ describe("Util tests", function () {
         expect(service.getPathItem(service.LAST)).toBe("part3");
     });
 
-    it("should return the first item in the path with a leading slash when contextPath is called", function () {
-        location.path("/part1/part2/part3");
-
-        expect(service.contextRoot()).toBe("/part1");
-    });
 });
 

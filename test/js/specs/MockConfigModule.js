@@ -1,0 +1,1 @@
+angular.module('grails.config', []).constant('contextPath', '/path');

@@ -25,6 +25,7 @@ module.exports = function (config) {
             'web-app/js/angular/utils/*.js',
             'web-app/js/angular/services/*.js',
             'web-app/js/angular/controllers/*.js',
+            'test/js/specs/MockConfigModule.js',
             'test/js/specs/**/*.js'
         ],
 
