@@ -108,7 +108,7 @@ profileEditor.factory('util', function ($location, $q, contextPath) {
      * @returns String the context path of the current URL, with a leading slash but no trailing slash
      */
     function contextRoot() {
-        return contextPath;
+        return contextPath == "" ? "/" : contextPath;
     }
 
     /**
