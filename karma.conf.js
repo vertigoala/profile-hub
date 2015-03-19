@@ -21,6 +21,7 @@ module.exports = function (config) {
             'web-app/thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js',
             'web-app/thirdparty/leaflet/leaflet-0.7.3.js',
             'web-app/thirdparty/angular-leaflet/angular-leaflet-directive.min.js',
+            'web-app/thirdparty/angular-loading-bar/loading-bar-0.7.1.min.js',
             'web-app/js/angular/profiles.js',
             'web-app/js/angular/utils/*.js',
             'web-app/js/angular/services/*.js',

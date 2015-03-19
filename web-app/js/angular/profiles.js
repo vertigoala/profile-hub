@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['grails.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module']);
+var profileEditor = angular.module('profileEditor', ['grails.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar']);
 
 profileEditor.config(function ($locationProvider) {
     // This disables 'hashbang' mode and removes the need to specify <base href="/my-base"> in the views.
@@ -6,3 +6,7 @@ profileEditor.config(function ($locationProvider) {
     // link, add target="_self".
     $locationProvider.html5Mode({enabled: true, requireBase: false});
 });
+
+profileEditor.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+    cfpLoadingBarProvider.includeSpinner = false;
+}]);

@@ -5,13 +5,16 @@ modules = {
         dependsOn "angular"
         dependsOn "leaflet"
         dependsOn "angular_bootstrap_colourpicker"
+        dependsOn "angular_loading_bar"
         dependsOn "fontawesome"
         resource url:"js/angular/profiles.js"
-        resource url:"js/angular/utils/Utils.js"
+        resource url:"js/angular/utils/Confirmation.js"
         resource url:"js/angular/utils/Filters.js"
+        resource url:"js/angular/utils/Utils.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/controllers/OpusController.js"
+        resource url:"js/angular/controllers/ProfileController.js"
         resource url:"js/angular/controllers/UserAccessController.js"
         resource url:"js/angular/controllers/SearchController.js"
         resource url:"js/angular/controllers/AttributesController.js"
@@ -39,6 +42,11 @@ modules = {
     angular_bootstrap_colourpicker {
         resource url:"thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js"
         resource url:"thirdparty/angular-bootstrap-colorpicker-3.0.11/css/colorpicker.min.css"
+    }
+
+    angular_loading_bar {
+        resource url:"thirdparty/angular-loading-bar/loading-bar-0.7.1.min.js"
+        resource url:"thirdparty/angular-loading-bar/loading-bar-0.7.1.min.css"
     }
 
     fontawesome {
