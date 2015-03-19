@@ -37,6 +37,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
+        listOpus: function() {
+            console.log("Fetching all opuses");
+            var future = $http.get(util.contextRoot() + "/opus/list", {cache: true});
+            future.then(function(response) {
+                console.log("Opus list fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         saveOpus: function(opusId, opus) {
             var future;
             if (opusId) {
@@ -191,9 +201,12 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
-        profileSearch: function(opusId, scientificName) {
+        profileSearch: function(opusId, scientificName, useWildcard) {
             console.log("Searching for " + scientificName);
-            var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&scientificName=" + scientificName);
+            if (typeof useWildcard == 'undefined') {
+                useWildcard = true;
+            }
+            var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard);
             future.then(function (response) {
                 console.log("Profile search returned with response code " + response.status);
             });

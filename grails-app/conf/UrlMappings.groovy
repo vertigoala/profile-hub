@@ -28,6 +28,7 @@ class UrlMappings {
         "/opus/uploadTaxa"(controller: "opus", action: "taxaUpload")
 
         "/opus/"(controller: "opus", action: [PUT: "createOpus"])
+        "/opus/list"(controller: "opus", action: "list")
         name viewOpus: "/opus/$opusId"(controller: "opus", action: [GET: "show", POST: "updateOpus", PUT: "createOpus"])
         name editOpus: "/opus/edit/$opusId"(controller: "opus", action: "edit")
         name getOpus: "/opus/json/$opusId"(controller: "opus", action: "getJson")

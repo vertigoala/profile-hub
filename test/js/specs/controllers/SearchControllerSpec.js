@@ -57,6 +57,6 @@ describe("SearchController tests", function () {
         scope.searchCtrl.search();
         scope.$apply();
 
-        expect(profileService.profileSearch).toHaveBeenCalledWith("12345", searchTerm);
+        expect(profileService.profileSearch).toHaveBeenCalledWith("12345", searchTerm, true);
     });
 });

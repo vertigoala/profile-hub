@@ -259,12 +259,23 @@ class ProfileControllerSpec extends Specification {
         assert response.status == HttpStatus.SC_BAD_REQUEST
     }
 
+    def "updateAttribute should return a 400 (BAD REQUEST) if the profile id parameter is not provided"() {
+        when:
+
+        request.JSON = """{profileId: "1", "uuid": "1"}"""
+        controller.updateAttribute()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
     def "updateAttribute should accept a blank attribute id to create a new Attribute"() {
         setup:
-        profileService.updateAttribute(_, _, _, _) >> [resp: [attributeId: "id1", success: true], statusCode: 200]
+        profileService.updateAttribute(_, _) >> [resp: [attributeId: "id1", success: true], statusCode: 200]
 
         when:
-        request.JSON = """{profileId: "1", attributeId: ""}"""
+        params.profileId = "profile1"
+        request.JSON = """{profileId: "1", uuid: ""}"""
         controller.updateAttribute()
 
         then:
@@ -274,10 +285,11 @@ class ProfileControllerSpec extends Specification {
 
     def "updateAttribute should return the updated attribute id and a success indicator as JSON on success"() {
         setup:
-        profileService.updateAttribute(_, _, _, _) >> [resp: [attributeId: "id1", success: true], statusCode: 200]
+        profileService.updateAttribute(_, _) >> [resp: [attributeId: "id1", success: true], statusCode: 200]
 
         when:
-        request.JSON = """{profileId: "1", attributeId: "xyz"}"""
+        params.profileId = "profile1"
+        request.JSON = """{profileId: "1", uuid: "xyz"}"""
         controller.updateAttribute()
 
         then:
@@ -287,10 +299,11 @@ class ProfileControllerSpec extends Specification {
 
     def "updateAttribute should return the error code from the service on failure of the service call"() {
         setup:
-        profileService.updateAttribute(_, _, _, _) >> [error: "something died!", statusCode: 666]
+        profileService.updateAttribute(_, _) >> [error: "something died!", statusCode: 666]
 
         when:
-        request.JSON = """{profileId: "1", attributeId: "xyz"}"""
+        params.profileId = "profile1"
+        request.JSON = """{profileId: "1", uuid: "xyz"}"""
         controller.updateAttribute()
 
         then:
@@ -507,15 +520,6 @@ class ProfileControllerSpec extends Specification {
         assert response.status == 666
     }
 
-    def "search should return a 400 (BAD REQUEST) if the opusId parameter is not set"() {
-        when:
-        params.scientificName = "bla"
-        controller.search()
-
-        then:
-        assert response.status == HttpStatus.SC_BAD_REQUEST
-    }
-
     def "search should return a 400 (BAD REQUEST) if the scientificName parameter is not set"() {
         when:
         params.opusId = "bla"
@@ -527,7 +531,7 @@ class ProfileControllerSpec extends Specification {
 
     def "search should return the resp element of the response from the service call on success"() {
         setup:
-        profileService.search(_, _) >> [resp: [resp: "search results"], statusCode: 200]
+        profileService.search(_, _, _) >> [resp: [resp: "search results"], statusCode: 200]
 
         when:
         params.opusId = "guid1"
@@ -541,7 +545,7 @@ class ProfileControllerSpec extends Specification {
 
     def "search should return the error code from the service on failure of the service call"() {
         setup:
-        profileService.search(_, _) >> [error: "something died!", statusCode: 666]
+        profileService.search(_, _, _) >> [error: "something died!", statusCode: 666]
 
         when:
         params.opusId = "guid1"

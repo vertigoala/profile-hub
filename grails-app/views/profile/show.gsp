@@ -11,7 +11,7 @@
 
 <div id="container" ng-app="profileEditor">
     <ol class="breadcrumb" role="navigation">
-        <li><i class="fa fa-arrow-left"></i></span><span class="divider"><g:link mapping="viewOpus" params="[opusId:opus.uuid]" target="_self">Return to ${profile.opusName}</g:link></li>
+        <li><i class="fa fa-arrow-left"></i><span class="divider"/><g:link mapping="viewOpus" params="[opusId:opus.uuid]" target="_self">Return to ${profile.opusName}</g:link></li>
     </ol>
 
     <div class="pull-right" style="margin-top:20px;">

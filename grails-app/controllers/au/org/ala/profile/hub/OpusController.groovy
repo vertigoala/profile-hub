@@ -154,6 +154,10 @@ class OpusController extends BaseController {
         render template: "editRecordSources"
     }
 
+    def editSupportingOpusPanel = {
+        render template: "editSupportingOpuses"
+    }
+
     def editVocabPanel = {
         render template: "editVocab"
     }

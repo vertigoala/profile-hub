@@ -15,6 +15,7 @@
         <li ng-repeat="imageSource in opusCtrl.newImageSources">
             <input placeholder="Image source name..."
                    ng-model="imageSource.dataResource"
+                   autocomplete="off"
                    class="input-xlarge"
                    typeahead="source as source.name for source in opusCtrl.dataResourceList | filter:$viewValue | limitTo:10"/>
             <span class="fa fa-ban red" ng-if="imageSource.dataResource && !imageSource.dataResource.id"></span>

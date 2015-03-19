@@ -10,6 +10,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.vocabularyStrict = false;
 
     var capitalize = $filter("capitalize");
+    var sort = $filter("orderBy");
 
     self.init = function (edit) {
         self.readonly = edit != 'true';
@@ -21,6 +22,10 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 self.profile = data.profile;
                 self.opus = data.opus;
                 self.attributes = data.profile.attributes;
+
+                if (self.opus.showLinkedOpusAttributes && self.opus.supportingOpuses.length > 0) {
+                    self.loadAttributesFromSupportingCollections();
+                }
 
                 loadVocabulary();
             },
@@ -43,7 +48,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 angular.forEach(data.terms, function(term) {
                     self.attributeTitles.push(term.name);
                 });
-                //self.attributeTitles = data.terms;
+
                 self.vocabularyStrict = data.strict;
             });
         }
@@ -91,23 +96,44 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         }
     };
 
-    self.addAttribute = function () {
+    self.addAttribute = function (form) {
         self.attributes.unshift(
             {"uuid": "", "title": "", "text": "", contributor: []}
         );
-        console.log("adding attributes: " + self.attributes.length);
+        form.$setDirty();
+    };
+
+    self.copyAttribute = function(index, form) {
+        var copy = angular.copy(self.attributes[index]);
+        copy.source = null;
+        copy.original = self.attributes[index];
+        copy.uuid = "";
+        self.attributes[index] = copy;
+        form.$setDirty();
     };
 
     self.saveAttribute = function (idx, attributeForm) {
         var attribute = self.attributes[idx];
         self.attributes[idx].saving = true;
 
-        var future = profileService.saveAttribute(self.profile.uuid, attribute.uuid, {
+        var data = {
             profileId: self.profile.uuid,
-            attributeId: attribute.uuid,
+            uuid: attribute.uuid,
             title: capitalize(attribute.title),
             text: attribute.text
-        });
+        };
+
+        if (attribute.original) {
+            data.original = attribute.original;
+        }
+        if (attribute.creators) {
+            data.creators = attribute.creators;
+        }
+        if (attribute.editors) {
+            data.editors = attribute.editors;
+        }
+
+        var future = profileService.saveAttribute(self.profile.uuid, attribute.uuid, data);
 
         future.then(function (attribute) {
                 self.attributes[idx].saving = false;
@@ -123,4 +149,37 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             }
         );
     };
+
+    self.loadAttributesFromSupportingCollections = function() {
+        var profileAttributeMap = [];
+        angular.forEach(self.attributes, function(attribute) {
+            profileAttributeMap.push(attribute.title)
+        });
+
+        var supportingOpusList = [];
+        angular.forEach(self.opus.supportingOpuses, function(opus) {
+            supportingOpusList.push(opus.uuid)
+        });
+
+        var searchResult = profileService.profileSearch(supportingOpusList.join(","), self.profile.scientificName, false);
+        searchResult.then(function (searchResults) {
+                angular.forEach(searchResults, function(result) {
+                    var profilePromise = profileService.getProfile(result.profileId);
+                    profilePromise.then(function (supporting) {
+
+                        angular.forEach(supporting.profile.attributes, function(attribute) {
+                            if (profileAttributeMap.indexOf(attribute.title) == -1) {
+                                attribute.source = {opusId: supporting.opus.uuid,
+                                                    opusTitle: supporting.opus.title,
+                                                    profileId: supporting.profile.uuid};
+                                self.attributes.push(attribute);
+                            }
+                        });
+
+                        self.attributes = sort(self.attributes, "title")
+                    });
+                });
+            }
+        );
+    }
 });

@@ -52,6 +52,12 @@ describe("ProfileService tests", function () {
         http.expectGET("/someContext/opus/json/opusId").respond("bla");
     });
 
+    it("should invoke the list opus service on the context root when listOpus is called", function() {
+        service.listOpus();
+
+        http.expectGET("/someContext/opus/list").respond("bla");
+    });
+
     it("should invoke the update opus as json service on the context root when saveOpus is called", function () {
         var data = {opusId: "opusId", imageSources: ["one", "two"]};
         service.saveOpus("opusId", data);
@@ -64,7 +70,6 @@ describe("ProfileService tests", function () {
 
         http.expectGET("/someContext/vocab/vocabId1").respond("bla")
     });
-
 
     it("should invoke the update vocab service on the context root when updateVocabulary is called", function () {
         var data = {name: "vocab1", "strict": "true", "terms": []};
@@ -172,7 +177,7 @@ describe("ProfileService tests", function () {
     it("should invoke the profile search operation on the context root when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName");
 
-        http.expectGET("/someContext/profile/search?opusId=opusId&scientificName=scientificName").respond("bla");
+        http.expectGET("/someContext/profile/search?opusId=opusId&scientificName=scientificName&useWildcard=true").respond("bla");
     });
 
     it("should invoke the user search operation on the context root when userSearch is called ", function() {

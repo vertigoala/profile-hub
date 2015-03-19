@@ -7,9 +7,14 @@ describe("AttributesController tests", function () {
         },
         LAST: "last"
     };
+    var form = {
+        $setPristine: function () {},
+        $setDirty: function () {}
+    };
     var messageService;
     var profileService;
-    var profileDefer, vocabDefer, saveAttrDefer, deleteAttrDefer, showAuditDefer;
+    var profileDefer, vocabDefer, saveAttrDefer, deleteAttrDefer, showAuditDefer, searchDefer;
+    var getProfileSpy;
     var window;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
@@ -37,12 +42,17 @@ describe("AttributesController tests", function () {
         deleteAttrDefer = $q.defer();
         saveAttrDefer = $q.defer();
         showAuditDefer = $q.defer();
+        searchDefer = $q.defer();
 
-        spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
+        getProfileSpy = spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "getOpusVocabulary").and.returnValue(vocabDefer.promise);
         spyOn(profileService, "saveAttribute").and.returnValue(saveAttrDefer.promise);
         spyOn(profileService, "deleteAttribute").and.returnValue(deleteAttrDefer.promise);
         spyOn(profileService, "getAuditForAttribute").and.returnValue(showAuditDefer.promise);
+        spyOn(profileService, "profileSearch").and.returnValue(searchDefer.promise);
+
+        spyOn(form, "$setPristine");
+        spyOn(form, "$setDirty");
 
         spyOn(window, "confirm").and.returnValue(true);
 
@@ -156,7 +166,8 @@ describe("AttributesController tests", function () {
 
     it("should create a new empty attribute object at the start of the attributes list when addAttribute is invoked", function () {
         expect(scope.attrCtrl.attributes.length).toBe(0);
-        scope.attrCtrl.addAttribute();
+
+        scope.attrCtrl.addAttribute(form);
 
         expect(scope.attrCtrl.attributes.length).toBe(1);
         expect(scope.attrCtrl.attributes[0].title).toBe("");
@@ -167,10 +178,6 @@ describe("AttributesController tests", function () {
     it("should invoke the saveAttribute method of the profile service when saveAttribute is invoked", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
-        var form = {
-            $setPristine: function () {
-            }
-        };
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -179,7 +186,7 @@ describe("AttributesController tests", function () {
 
         expect(profileService.saveAttribute).toHaveBeenCalledWith("profileId1", "uuid1", {
             "profileId": "profileId1",
-            "attributeId": "uuid1",
+            "uuid": "uuid1",
             "title": "AttrTitle", // titles are capitalized on save
             "text": "attrText"
         });
@@ -188,11 +195,6 @@ describe("AttributesController tests", function () {
     it("should set the form to pristine after the attribute is successfully saved", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
-        var form = {
-            $setPristine: function () {
-            }
-        };
-        spyOn(form, "$setPristine");
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -202,14 +204,63 @@ describe("AttributesController tests", function () {
         expect(form.$setPristine).toHaveBeenCalled();
     });
 
+    it("should include the original attribute when saving (if present)", function() {
+        scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", original: {uuid: "uuid2"}}];
+
+        saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
+
+        scope.attrCtrl.saveAttribute(0, form);
+        scope.$apply();
+
+        expect(profileService.saveAttribute).toHaveBeenCalledWith("profileId1", "uuid1", {
+            "profileId": "profileId1",
+            "uuid": "uuid1",
+            "title": "AttrTitle", // titles are capitalized on save
+            "text": "attrText",
+            "original": {uuid: "uuid2"}
+        });
+    });
+
+    it("should include the creators when saving (if present)", function() {
+        scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", "creators": "creatorList"}];
+
+        saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
+
+        scope.attrCtrl.saveAttribute(0, form);
+        scope.$apply();
+
+        expect(profileService.saveAttribute).toHaveBeenCalledWith("profileId1", "uuid1", {
+            "profileId": "profileId1",
+            "uuid": "uuid1",
+            "title": "AttrTitle", // titles are capitalized on save
+            "text": "attrText",
+            "creators": "creatorList"
+        });
+    });
+
+    it("should include the editors when saving (if present)", function() {
+        scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", "editors": "editorList"}];
+
+        saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
+
+        scope.attrCtrl.saveAttribute(0, form);
+        scope.$apply();
+
+        expect(profileService.saveAttribute).toHaveBeenCalledWith("profileId1", "uuid1", {
+            "profileId": "profileId1",
+            "uuid": "uuid1",
+            "title": "AttrTitle", // titles are capitalized on save
+            "text": "attrText",
+            "editors": "editorList"
+        });
+    });
+
     it("should raise an alert message if the attribute could not be saved", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
-        var form = {
-            $setPristine: function () {
-            }
-        };
-        spyOn(form, "$setPristine");
 
         saveAttrDefer.reject();
 
@@ -222,11 +273,6 @@ describe("AttributesController tests", function () {
     it("should display a success message when the attribute is saved", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
-        var form = {
-            $setPristine: function () {
-            }
-        };
-        spyOn(form, "$setPristine");
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -239,11 +285,6 @@ describe("AttributesController tests", function () {
     it("should update the uuid of the attribute when it is saved", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
-        var form = {
-            $setPristine: function () {
-            }
-        };
-        spyOn(form, "$setPristine");
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -323,12 +364,6 @@ describe("AttributesController tests", function () {
                     {object: {title: "auditTitle2", text: "auditText2"}}]
             }];
 
-        var form = {
-            $setDirty: function () {
-            }
-        };
-        spyOn(form, "$setDirty");
-
         scope.attrCtrl.revertAttribute(1, 1, form);
 
         expect(scope.attrCtrl.attributes[1].text).toBe("auditText2");
@@ -397,4 +432,67 @@ describe("AttributesController tests", function () {
 
         expect(valid).toBe(false);
     });
+
+    it("should create a COPY of the specified attribute and set the original property when copyAttribute is called", function() {
+        var attribute1 = {uuid: "uuid1", title: "title1"};
+        var attribute2 = {uuid: "uuid2", title: "title2"};
+        var attribute3 = {uuid: "uuid3", title: "title3"};
+        scope.attrCtrl.attributes = [attribute1, attribute2, attribute3];
+
+        scope.attrCtrl.copyAttribute(1, form);
+
+        expect(scope.attrCtrl.attributes.length).toBe(3);
+        expect(scope.attrCtrl.attributes[1].uuid).toBe("");
+        expect(scope.attrCtrl.attributes[1].original).toBe(attribute2);
+    });
+
+    it("should not include the current opus in the search when loadAttributesFromSupportingCollections is called", function() {
+        scope.attrCtrl.profile = {scientificName: "profile1"};
+        scope.attrCtrl.opus = {supportingOpuses: [{uuid: "support1"}, {uuid: "support2"}]};
+
+        scope.attrCtrl.loadAttributesFromSupportingCollections();
+
+        expect(profileService.profileSearch).toHaveBeenCalledWith("support1,support2", "profile1", false);
+    });
+
+    it("should do nothing if the call to profileSearch fails when loadAttributesFromSupportingCollections is called", function() {
+        searchDefer.reject();
+
+        scope.attrCtrl.profile = {scientificName: "profile1"};
+        scope.attrCtrl.opus = {supportingOpuses: [{uuid: "support1"}, {uuid: "support2"}]};
+
+        scope.attrCtrl.loadAttributesFromSupportingCollections();
+        scope.$apply();
+
+        expect(profileService.profileSearch).toHaveBeenCalledWith("support1,support2", "profile1", false);
+        expect(profileService.getProfile).not.toHaveBeenCalled();
+    });
+
+    it("should call add each attribute that does not exist to the list when loadAttributesFromSupportingCollections is called", function() {
+        var attribute1 = {uuid: "uuid1", title: "title1"};
+        var attribute2 = {uuid: "uuid2", title: "title2"};
+        var attribute3 = {uuid: "uuid3", title: "title3"};
+
+        var searchResult = [{profileId: "profile2", opus: {uuid: "support1", title: "supporting opus 1"}}];
+            //{profileId: "profile3", opus: {uuid: "support2", title: "supporting opus 2"}}];
+        searchDefer.resolve(searchResult);
+
+        var profile2 = {profile: {uuid: "profile2", attributes: [attribute1, attribute3]}, opus: {uuid: "support1", title: "supporting opus 1"}};
+
+        profileDefer.resolve(profile2);
+
+        scope.attrCtrl.profile = {scientificName: "profile1"};
+        scope.attrCtrl.opus = {supportingOpuses: [{uuid: "support1"}, {uuid: "support2"}]};
+        scope.attrCtrl.attributes = [attribute1, attribute2];
+
+        scope.attrCtrl.loadAttributesFromSupportingCollections();
+        scope.$apply();
+
+        expect(profileService.getProfile).toHaveBeenCalledWith("profile2");
+        expect(scope.attrCtrl.attributes.length).toBe(3);
+        expect(scope.attrCtrl.attributes[0].title).toBe("title1");
+        expect(scope.attrCtrl.attributes[1].title).toBe("title2");
+        expect(scope.attrCtrl.attributes[2].title).toBe("title3");
+    });
+
 });

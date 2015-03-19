@@ -84,11 +84,11 @@ class ProfileService {
         bieService.getSpeciesProfile(guid)
     }
 
-    def search(String opusId, String scientificName) {
+    def search(String opusId, String scientificName, boolean useWildcard = true) {
         log.debug("Searching for '${scientificName}' in opus ${opusId}")
 
         String searchTermEncoded = URLEncoder.encode(scientificName, "UTF-8")
-        webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${opusId}&scientificName=${searchTermEncoded}")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${opusId}&scientificName=${searchTermEncoded}&useWildcard=${useWildcard}")
     }
 
     def updateBHLLinks(String profileId, def links) {
@@ -113,17 +113,14 @@ class ProfileService {
         ])
     }
 
-    def updateAttribute(String profileId, String attributeId, String title, String text) {
-        log.debug("Updating attribute ${attributeId} with title ${title} for profile ${profileId}")
+    def updateAttribute(String profileId, Map attribute) {
+        log.debug("Updating attribute ${attribute.uuid} with title ${attribute.title} for profile ${profileId}")
 
-        webService.doPost("${grailsApplication.config.profile.service.url}/attribute/${attributeId ?: ''}", [
-                title          : title,
-                text           : text,
-                profileId      : profileId,
-                attributeId    : attributeId ?: '',
-                userId         : authService.getUserId(),
-                userDisplayName: authService.userDetails().userDisplayName
-        ])
+        attribute.profileId = profileId
+        attribute.userId = authService.getUserId()
+        attribute.userDisplayName = authService.userDetails().userDisplayName
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/attribute/${attribute.uuid ?: ''}", attribute)
     }
 
     def deleteAttribute(String attributeId, String profileId) {

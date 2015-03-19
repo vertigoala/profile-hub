@@ -6,12 +6,14 @@ profileEditor.controller('OpusController', function (profileService, util, messa
 
     self.opus = null;
     self.opusId = util.getPathItem(util.LAST);
+    self.opusList = [];
     self.readonly = true;
     self.dataResource = null;
     self.dataResourceList = [];
     self.saving = false;
     self.newImageSources = [];
     self.newRecordSources = [];
+    self.newSupportingOpuses = [];
     self.valid = false;
 
     // make sure we have a UUID, not just the last element of some other URL (e.g. create)
@@ -23,6 +25,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
 
     loadOpus();
     loadResources();
+    loadOpusList();
 
     self.saveOpus = function (form) {
         messageService.info("Saving...");
@@ -134,6 +137,46 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         form.$setDirty();
     };
 
+    self.addSupportingOpus = function () {
+        self.newSupportingOpuses.push({});
+    };
+
+    self.saveSupportingOpuses = function (form) {
+        var invalid = [];
+        var valid = [];
+
+        angular.forEach(self.newSupportingOpuses, function (selectedObject) {
+            if (selectedObject.opus) {
+                if (selectedObject.opus.uuid) {
+                    valid.push(selectedObject.opus);
+                } else {
+                    invalid.push(selectedObject);
+                }
+            }
+        });
+
+        if (invalid.length == 0) {
+            self.newSupportingOpuses = [];
+            if (valid.length > 0) {
+                angular.forEach(valid, function (opus) {
+                    self.opus.supportingOpuses.push(opus);
+                });
+            }
+            self.saveOpus(form);
+        } else if (invalid.length > 0) {
+            messageService.alert(invalid.length + " supporting collection" + (invalid.length > 1 ? "s are" : " is") + " not valid. You must select items from the list.")
+        }
+    };
+
+    self.removeSupportingOpus = function (index, list, form) {
+        if (list == 'existing') {
+            self.opus.supportingOpuses.splice(index, 1);
+        } else {
+            self.newSupportingOpuses.splice(index, 1);
+        }
+        form.$setDirty();
+    };
+
     self.opusResourceChanged = function ($item, $model, $label) {
         self.opus.title = $label;
         self.opus.dataResourceUid = $item.id;
@@ -142,7 +185,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     };
 
     function loadOpus() {
-        console.log(self.opusId)
         if (!self.opusId) {
             return;
         }
@@ -202,5 +244,17 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 console.log("Failed to retrieve opus description from collectory.");
             }
         );
+    }
+
+    function loadOpusList() {
+        console.log("Fetching opus list...");
+        var promise = profileService.listOpus();
+        promise.then(function (data) {
+            angular.forEach(data, function (opus) {
+                if (opus.uuid != self.opus.uuid) {
+                    self.opusList.push({uuid: opus.uuid, title: opus.title})
+                }
+            });
+        })
     }
 });

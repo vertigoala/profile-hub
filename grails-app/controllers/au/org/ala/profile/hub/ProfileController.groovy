@@ -95,11 +95,11 @@ class ProfileController extends BaseController {
         def jsonRequest = request.getJSON()
 
         // the attributeId may be blank (e.g. when creating a new attribute), but the request should still have it
-        if (!jsonRequest || !jsonRequest.has("attributeId") || !jsonRequest.profileId) {
+        if (!jsonRequest || !jsonRequest.has("uuid") || !params.profileId) {
             badRequest()
         } else {
             //TODO check user in ROLE.....
-            def response = profileService.updateAttribute(jsonRequest.profileId, jsonRequest.attributeId, jsonRequest.title, jsonRequest.text)
+            def response = profileService.updateAttribute(params.profileId, jsonRequest)
 
             handle response
         }
@@ -163,10 +163,10 @@ class ProfileController extends BaseController {
     }
 
     def search() {
-        if (!params.opusId || !params.scientificName) {
-            badRequest "opusId and scientificName are required parameters"
+        if (!params.scientificName) {
+            badRequest "scientificName is a required parameter. opusId and useWildcard are optional."
         } else {
-            def response = profileService.search(params.opusId, params.scientificName);
+            def response = profileService.search(params.opusId, params.scientificName, params.useWildcard as boolean);
 
             handle response
         }

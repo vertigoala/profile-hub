@@ -2,8 +2,14 @@
 
 <div ng-controller="SearchController as searchCtrl">
     <div class="input-append">
-        <input ng-change="searchCtrl.search()" ng-model="searchCtrl.searchTerm" name="searchTerm" class="input-xxlarge form-control"
-               id="searchTerm" type="text" ng-model="searchCtrl.scientificName"/>
+        <input id="searchTerm"
+               ng-change="searchCtrl.search()"
+               ng-model="searchCtrl.searchTerm"
+               name="searchTerm"
+               class="input-xxlarge form-control"
+               autocomplete="off"
+               type="text"
+               ng-model="searchCtrl.scientificName"/>
         <button class="btn" type="button">Search</button>
     </div>
 

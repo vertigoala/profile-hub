@@ -54,6 +54,8 @@
 
     <g:include controller="opus" action="editRecordSourcesPanel"/>
 
+    <g:include controller="opus" action="editSupportingOpusPanel"/>
+
     <g:include controller="opus" action="editVocabPanel"/>
 
 </div>

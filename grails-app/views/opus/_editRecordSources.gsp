@@ -16,6 +16,7 @@
         <li ng-repeat="recordSource in opusCtrl.newRecordSources">
             <input placeholder="Record source name..."
                    ng-model="recordSource.dataResource"
+                   autocomplete="off"
                    class="input-xlarge"
                    typeahead="source as source.name for source in opusCtrl.dataResourceList | filter:$viewValue | limitTo:10"/>
             <span class="fa fa-ban red" ng-if="recordSource.dataResource && !recordSource.dataResource.id"></span>
