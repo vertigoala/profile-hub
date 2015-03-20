@@ -118,7 +118,7 @@ class ProfileControllerSpec extends Specification {
         assert response.status == HttpStatus.SC_BAD_REQUEST
     }
 
-    def "getJson should return the profile, with edit = false added to the model"() {
+    def "getJson should return the profile added to the model"() {
         setup:
         profileService.getProfile(_) >> [profile: "bla"]
 
@@ -129,6 +129,72 @@ class ProfileControllerSpec extends Specification {
         then:
         assert response.status == HttpStatus.SC_OK
         assert response.getJson() != null
+    }
+
+    def "createProfile should return a 400 (BAD REQUEST) if a json body is not provided"() {
+        when:
+        controller.createProfile()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "createProfile should return the new profile"() {
+        setup:
+        profileService.createProfile(_) >> [resp: [profile: "bla"], statusCode: 200]
+
+        when:
+        request.JSON = """{"opusId": "1234", "scientificName":"name"}"""
+        controller.createProfile()
+
+        then:
+        assert response.status == HttpStatus.SC_OK
+        assert response.getJson() != null
+    }
+
+    def "deleteProfile should return a 400 (BAD REQUEST) if a profileId is not provided"() {
+        when:
+        params.opusId = "1234"
+        controller.deleteProfile()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "deleteProfile should return a 400 (BAD REQUEST) if an opusId is not provided"() {
+        when:
+        params.profileId = "1234"
+        controller.deleteProfile()
+
+        then:
+        assert response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "deleteProfile should return the error code from the service on failure of the service call"() {
+        setup:
+        profileService.deleteProfile(_) >> [error: "something died!", statusCode: 666]
+
+        when:
+        params.profileId = "profile1"
+        params.opusId = "opus1"
+        controller.deleteProfile()
+
+        then:
+        assert response.status == 666
+    }
+
+    def "deleteProfile should redirect to the show opus view on success"() {
+        setup:
+        profileService.deleteProfile(_) >> [resp: [], statusCode: 200]
+
+        when:
+        params.profileId = "profile1"
+        params.opusId = "opus1"
+        controller.deleteProfile()
+
+        then:
+        assert response.status == HttpStatus.SC_MOVED_TEMPORARILY
+        assert response.redirectUrl == "/opus/show?opusId=opus1"
     }
 
     def "updateBHLLinks should return a 400 (BAD REQUEST) if the json body is empty"() {

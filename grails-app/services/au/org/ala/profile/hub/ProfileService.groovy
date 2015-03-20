@@ -26,6 +26,10 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")
     }
 
+    def createProfile(json) {
+        webService.doPut("${grailsApplication.config.profile.service.url}/profile/", json)
+    }
+
     def getProfile(String profileId) {
         log.debug("Loading profile " + profileId)
 
@@ -89,7 +93,7 @@ class ProfileService {
         bieService.getSpeciesProfile(guid)
     }
 
-    def search(String opusId, String scientificName, boolean useWildcard = true) {
+    def search(String opusId, String scientificName, boolean useWildcard) {
         log.debug("Searching for '${scientificName}' in opus ${opusId}")
 
         String searchTermEncoded = URLEncoder.encode(scientificName, "UTF-8")

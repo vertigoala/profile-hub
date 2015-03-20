@@ -7,7 +7,11 @@ describe("ProfileController tests", function () {
     var profileService;
     var util;
     var window;
-    var profileDefer, deleteDefer, confirmDefer;
+    var profileDefer, deleteDefer, confirmDefer, modalDefer;
+
+    var modal = {
+        open: function() {}
+    };
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
 
@@ -29,9 +33,16 @@ describe("ProfileController tests", function () {
         profileDefer = $q.defer();
         deleteDefer = $q.defer();
         confirmDefer = $q.defer();
+        modalDefer = $q.defer();
+
+        var popup = {
+            result: modalDefer.promise
+        };
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "deleteProfile").and.returnValue(deleteDefer.promise);
+
+        spyOn(modal, "open").and.returnValue(popup);
 
         spyOn(util, "getPathItem").and.returnValue(PROFILE_ID);
         spyOn(util, "confirm").and.returnValue(confirmDefer.promise);
@@ -45,6 +56,7 @@ describe("ProfileController tests", function () {
             profileService: profileService,
             util: util,
             messageService: messageService,
+            $modal: modal
         });
 
         form = {
@@ -125,4 +137,22 @@ describe("ProfileController tests", function () {
 
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while deleting the profile.");
     });
+
+    it("should open the modal dialog, and redirect to the edit profile page when it is closed, when createProfile is invoked", function() {
+        scope.profileCtrl.createProfile("opusId");
+
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "createProfile.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({ controller: "CreateProfileController"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "createProfileCtrl"}));
+    });
+
+    it("should open the modal dialog, and redirect to the edit profile page when it is closed, when createProfile is invoked", function() {
+        modalDefer.resolve({uuid: "newProfileId"});
+
+        scope.profileCtrl.createProfile("opusId");
+        scope.$apply();
+
+        expect(util.redirect).toHaveBeenCalledWith("/context/profile/edit/newProfileId");
+    });
 });
+

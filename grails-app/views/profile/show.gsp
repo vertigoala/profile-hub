@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
-    <title>${profile.scientificName} | ${profile.opusName}</title>
+    <title>${profile?.scientificName ?: "New Profile"} | ${profile?.opusName}</title>
 
     <r:require module="profiles"/>
 </head>
@@ -11,27 +11,23 @@
 
 <div id="container" ng-app="profileEditor" ng-controller="ProfileController as profileCtrl">
     <ol class="breadcrumb" role="navigation">
-        <li><i class="fa fa-arrow-left"></i><span class="divider"/><g:link mapping="viewOpus" params="[opusId:opus.uuid]" target="_self">Return to ${profile.opusName}</g:link></li>
+        <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/opus/{{profileCtrl.opus.uuid}}" target="_self">Return to {{profileCtrl.opus.title}}</a>
     </ol>
 
     <div class="row-fluid">
 
         <div class="span8">
-            <h1>${profile.scientificName ?: 'empty'}{{profileCtrl.readonly()}}<button class="btn btn-link fa fa-remove fa-2x red pull-right" style="padding-top:15px" ng-click="profileCtrl.deleteProfile()" target="_self" ng-hide="profileCtrl.readonly()"> Delete this profile</button></h1>
+            <h1>{{profileCtrl.profile.scientificName | default:"New Profile"}}<button class="btn btn-link fa fa-remove fa-2x red pull-right" style="padding-top:15px" ng-click="profileCtrl.deleteProfile()" target="_self" ng-hide="profileCtrl.readonly() || !profileCtrl.profileId"> Delete this profile</button></h1>
         </div>
         <div class="span4">
             <div class="pull-right vertical-pad">
-                <g:if test="${!edit}">
-                    <g:link class="btn btn" mapping="editProfile" params="[profileId: profile.uuid]" target="_self"><i
-                            class="icon-edit"></i>&nbsp;Edit</g:link>
-                </g:if>
-                <g:else>
-                    <button class="btn"
-                            onclick="alert('Not implemented - through to users edits')">Logged in: ${currentUser}</button>
-                    <g:link class="btn" mapping="viewProfile" params="[profileId: profile.uuid]"
-                            target="_self">Public view</g:link>
-                </g:else>
-                <g:link class="btn" mapping="getProfile" params="[profileId: profile.uuid]" target="_self">JSON</g:link>
+                <a href="${request.contextPath}/profile/edit/{{profileCtrl.profileId}}" target="_self" class="btn" ng-hide="!profileCtrl.readonly()"><i class="icon-edit"></i> Edit</a>
+
+                <button class="btn" ng-hide="profileCtrl.readonly()" onclick="alert('Not implemented - through to users edits')">Logged in: ${currentUser}</button>
+
+                <a href="${request.contextPath}/profile/{{profileCtrl.profileId}}" target="_self" class="btn" ng-show="!profileCtrl.readonly()">Public View</a>
+
+                <a href="${request.contextPath}/profile/json/{{profileCtrl.profileId}}" target="_self" class="btn">JSON</a>
             </div>
         </div>
     </div>

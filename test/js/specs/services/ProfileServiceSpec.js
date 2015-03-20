@@ -46,6 +46,18 @@ describe("ProfileService tests", function () {
         http.expectGET("/someContext/profile/json/profileId1").respond("bla");
     });
 
+    it("should invoke the delete profile service on the context root when deleteProfile is called", function () {
+        service.deleteProfile("profileId", "opusId");
+
+        http.expectDELETE("/someContext/profile/delete?profileId=profileId&opusId=opusId").respond("bla");
+    });
+
+    it("should invoke the createProfile service on the context root when createProfile is called", function() {
+        service.createProfile("opusId", "scientificName");
+
+        http.expectPUT("/someContext/profile/", {opusId: "opusId", scientificName: "scientificName"}).respond("bla");
+    })
+
     it("should invoke the get opus as json service on the context root when getOpus is called", function () {
         service.getOpus("opusId");
 
@@ -178,6 +190,12 @@ describe("ProfileService tests", function () {
         service.profileSearch("opusId", "scientificName");
 
         http.expectGET("/someContext/profile/search?opusId=opusId&scientificName=scientificName&useWildcard=true").respond("bla");
+    });
+
+    it("should invoke the profile search operation on the context root with wildcard=false if false is passed in when profileSearch is called ", function() {
+        service.profileSearch("opusId", "scientificName", false);
+
+        http.expectGET("/someContext/profile/search?opusId=opusId&scientificName=scientificName&useWildcard=false").respond("bla");
     });
 
     it("should invoke the user search operation on the context root when userSearch is called ", function() {

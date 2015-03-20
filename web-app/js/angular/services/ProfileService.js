@@ -31,6 +31,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
+        createProfile: function(opusId, scientificName) {
+            console.log("Creating profile for " + scientificName + " in opus " + opusId);
+            var future = $http.put(util.contextRoot() + "/profile/", {opusId: opusId, scientificName: scientificName});
+            future.then(function(response) {
+                console.log("Profile created with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         getOpus: function (opusId) {
             // make sure we have a UUID, not just the last element of some other URL (e.g. create)
             if (!util.isUuid(opusId)) {
@@ -212,7 +222,8 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
         },
 
         profileSearch: function(opusId, scientificName, useWildcard) {
-            console.log("Searching for " + scientificName);
+            console.log("Searching for " + scientificName + (useWildcard ? " with wildcard" : ""));
+
             if (typeof useWildcard == 'undefined') {
                 useWildcard = true;
             }

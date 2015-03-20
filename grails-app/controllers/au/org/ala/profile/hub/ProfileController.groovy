@@ -46,6 +46,18 @@ class ProfileController extends BaseController {
         }
     }
 
+    def createProfile() {
+        def jsonRequest = request.getJSON();
+
+        if (!jsonRequest) {
+            badRequest()
+        } else {
+            def response = profileService.createProfile(jsonRequest)
+
+            handle response
+        }
+    }
+
     def getJson() {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
@@ -182,7 +194,8 @@ class ProfileController extends BaseController {
         if (!params.scientificName) {
             badRequest "scientificName is a required parameter. opusId and useWildcard are optional."
         } else {
-            def response = profileService.search(params.opusId, params.scientificName, params.useWildcard as boolean);
+            boolean wildcard = params.useWildcard ? params.useWildcard.toBoolean() : true
+            def response = profileService.search(params.opusId, params.scientificName, wildcard);
 
             handle response
         }

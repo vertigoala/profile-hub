@@ -30,4 +30,26 @@
             </li>
         </ul>
     </div>
+
+    <hr/>
+    <div ng-controller="ProfileController as profileCtrl">
+        <button class="btn btn-info vertical-pad" ng-click="profileCtrl.createProfile(opusCtrl.opusId)">Add new profile</button>
+    </div>
 </div>
+
+<script type="text/ng-template" id="createProfile.html">
+<div class="modal-header">
+    <h3 class="modal-title">Create new profile</h3>
+</div>
+
+<div class="modal-body">
+    <alert type="danger" class="error" ng-show="createProfileCtrl.error">{{createProfileCtrl.error}}</alert>
+    <label for="scientificName" class="inline-label">Scientific Name</label>
+    <input id="scientificName" type="text" ng-model="createProfileCtrl.scientificName" class="input-xlarge" required/>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="createProfileCtrl.ok()" ng-disabled="!createProfileCtrl.scientificName">OK</button>
+    <button class="btn btn-warning" ng-click="createProfileCtrl.cancel()">Cancel</button>
+</div>
+</script>

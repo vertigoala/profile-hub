@@ -5,7 +5,7 @@
         <leaflet style="height: 400px; margin-top:10px;" center="mapCtrl.center" layers="mapCtrl.layers" event-broadcast="mapCtrl.events"></leaflet>
 
         <a class="btn"
-           href="${opus.biocacheUrl}/occurrences/search?q={{mapCtrl.constructQuery()}}" >View in ${opus.biocacheName}</a>
+           href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?q={{mapCtrl.constructQuery()}}" >View in {{profileCtrl.opus.biocacheName}}</a>
 
 </div>
 

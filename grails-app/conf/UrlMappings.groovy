@@ -2,6 +2,8 @@ class UrlMappings {
 
     static mappings = {
 
+
+
         "/profile/search"(controller: "profile", action: "search")
 
         "/profile/deleteAttribute/$attributeId"(controller: "profile", action: "deleteAttribute")
@@ -10,6 +12,8 @@ class UrlMappings {
 
         "/profile/updateLinks/$profileId"(controller: "profile", action: "updateLinks")
         "/profile/updateBHLLinks/$profileId"(controller: "profile", action: "updateBHLLinks")
+
+        "/profile/"(controller: "profile", action: [PUT: "createProfile"])
 
         name editProfile: "/profile/edit/$profileId"(controller: "profile", action: "edit")
         name viewProfile: "/profile/$profileId"(controller: "profile", action: "show")

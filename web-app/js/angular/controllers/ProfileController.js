@@ -1,20 +1,13 @@
 /**
  * Profile controller
  */
-profileEditor.controller('ProfileController', function (profileService, util, messageService, config) {
+profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal) {
     var self = this;
 
     self.profile = null;
     self.opus = null;
     self.profileId = util.getPathItem(util.LAST);
     self.readonly = true;
-
-    // make sure we have a UUID, not just the last element of some other URL (e.g. create)
-    if (!util.isUuid(self.profileId)) {
-        self.profileId = null;
-        self.profile = {uuid: null, scientificName: ""};
-        console.log("Creating new profile....");
-    }
 
     self.readonly = function() {
         return config.readonly
@@ -49,4 +42,63 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         });
     };
 
+    self.createProfile = function (opusId) {
+        var popup = $modal.open({
+            templateUrl: "createProfile.html",
+            controller: "CreateProfileController",
+            controllerAs: "createProfileCtrl",
+            size: "sm",
+            resolve: {
+                opusId: function() {
+                    return opusId;
+                }
+            }
+        });
+
+        popup.result.then(function (profile) {
+            messageService.success("Prifile for " + profile.scientificName + " has been successfully created.");
+            util.redirect(util.contextRoot() + "/profile/edit/" + profile.uuid);
+        });
+    };
+});
+
+
+/**
+ * Create profile popup controller
+ */
+profileEditor.controller('CreateProfileController', function (profileService, $modalInstance, opusId) {
+    var self = this;
+
+    self.opusId = opusId;
+    self.scientificName = "";
+    self.error = "";
+
+    self.ok = function () {
+        var promise = profileService.profileSearch(self.opusId, self.scientificName, false);
+        promise.then(function (matches) {
+            if (matches.length > 0) {
+                self.error = "A profile already exists for this scientific name.";
+            } else {
+                var future = profileService.createProfile(self.opusId, self.scientificName);
+                future.then(function (profile) {
+                        if (profile) {
+                            $modalInstance.close(profile);
+                        } else {
+                            self.error = "An error occurred while creating the profile.";
+                        }
+                    },
+                    function () {
+                        self.error = "An error occurred while creating the profile.";
+                    }
+                );
+            }
+        },
+        function() {
+            self.error = "An error occurred while searching for existing profiles.";
+        })
+    };
+
+    self.cancel = function () {
+        $modalInstance.dismiss("Cancelled")
+    };
 });
