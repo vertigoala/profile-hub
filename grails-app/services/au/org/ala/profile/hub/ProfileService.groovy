@@ -22,6 +22,11 @@ class ProfileService {
         webService.doPut("${grailsApplication.config.profile.service.url}/opus/", json)
     }
 
+    def deleteOpus(String opusId) {
+        log.debug("Deleting opus ${opusId}")
+        webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${opusId}")
+    }
+
     def getVocab(String vocabId = "") {
         webService.get("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")
     }

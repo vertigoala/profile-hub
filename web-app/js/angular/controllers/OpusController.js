@@ -184,6 +184,19 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         loadDataResource(self.opus.dataResourceUid);
     };
 
+    self.deleteOpus = function() {
+        var deleteConf = util.confirm("Are you sure you wish to delete this entire collection? This operation cannot be undone.");
+        deleteConf.then(function() {
+            var promise = profileService.deleteOpus(self.opus.uuid);
+            promise.then(function() {
+                    util.redirect(util.contextRoot() + "/opus/");
+                },
+                function() {
+                    messageService.alert("An error occurred while deleting the collection.")
+                });
+        });
+    };
+
     function loadOpus() {
         if (!self.opusId) {
             return;

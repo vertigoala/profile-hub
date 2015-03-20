@@ -2,8 +2,6 @@ class UrlMappings {
 
     static mappings = {
 
-
-
         "/profile/search"(controller: "profile", action: "search")
 
         "/profile/deleteAttribute/$attributeId"(controller: "profile", action: "deleteAttribute")
@@ -18,7 +16,7 @@ class UrlMappings {
         name editProfile: "/profile/edit/$profileId"(controller: "profile", action: "edit")
         name viewProfile: "/profile/$profileId"(controller: "profile", action: "show")
         name getProfile: "/profile/json/$profileId"(controller: "profile", action: "getJson")
-        name deleteProfile: "/profile/delete"(controller: "profile", action: [DELETE: "deleteProfile"])
+        "/profile/delete"(controller: "profile", action: [DELETE: "deleteProfile"])
 
         "/profile/images"(controller: "profile", action: "retrieveImages")
         "/profile/lists"(controller: "profile", action: "retrieveLists")
@@ -32,12 +30,12 @@ class UrlMappings {
         "/opus/findUser"(controller: "opus", action: "findUser")
         "/opus/uploadTaxa"(controller: "opus", action: "taxaUpload")
 
-        "/opus/"(controller: "opus", action: [PUT: "createOpus"])
         "/opus/list"(controller: "opus", action: "list")
-        name viewOpus: "/opus/$opusId"(controller: "opus", action: [GET: "show", POST: "updateOpus", PUT: "createOpus"])
+        name viewOpus: "/opus/$opusId"(controller: "opus", action: [GET: "show", POST: "updateOpus", PUT: "createOpus", DELETE: "deleteOpus"])
         name editOpus: "/opus/edit/$opusId"(controller: "opus", action: "edit")
         name getOpus: "/opus/json/$opusId"(controller: "opus", action: "getJson")
         name createOpus: "/opus/create"(controller: "opus", action: "create")
+        "/opus/"(controller: "opus", action: [PUT: "createOpus"])
 
         "/dataResource/list"(controller: "collectory", action: "list")
         "/dataResource/$dataResourceUid"(controller: "collectory", action: "getResource")

@@ -1,8 +1,6 @@
 <div class="well" style="margin-top:20px;">
 
-    <g:link class="btn pull-right" mapping="editOpus" params="[opusId: opus.uuid]" target="_self">
-        <span class="icon-edit"></span>&nbsp; Edit
-    </g:link>
+    <a href="${request.contextPath}/opus/edit/{{opusCtrl.opusId}}" target="_self" class="btn btn-warning pull-right" ng-hide="!config.readonly"><i class="icon-edit icon-white"></i> Edit</a>
 
     <div ng-show="opusCtrl.opus.imageSources.length > 0">
         <h3>Image sources</h3>

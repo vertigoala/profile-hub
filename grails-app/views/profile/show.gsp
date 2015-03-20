@@ -10,24 +10,32 @@
 <body>
 
 <div id="container" ng-app="profileEditor" ng-controller="ProfileController as profileCtrl">
-    <ol class="breadcrumb" role="navigation">
-        <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/opus/{{profileCtrl.opus.uuid}}" target="_self">Return to {{profileCtrl.opus.title}}</a>
-    </ol>
+    <div class="row-fluid">
+        <div class="span6">
+            <ol class="breadcrumb" role="navigation">
+                <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/opus/{{profileCtrl.opus.uuid}}" target="_self">Return to {{profileCtrl.opus.title}}</a>
+            </ol>
+        </div>
+        <div class="span6">
+            <div class="pull-right">
+                <a href="#"onclick="javascript:alert('Not implemented - through to users edits')" ng-hide="!config.currentUser">Logged in: {{config.currentUser}}</a>
+            </div>
+        </div>
+    </div>
 
     <div class="row-fluid">
-
         <div class="span8">
-            <h1>{{profileCtrl.profile.scientificName | default:"New Profile"}}<button class="btn btn-link fa fa-remove fa-2x red pull-right" style="padding-top:15px" ng-click="profileCtrl.deleteProfile()" target="_self" ng-hide="profileCtrl.readonly() || !profileCtrl.profileId"> Delete this profile</button></h1>
+            <h1>{{profileCtrl.profile.scientificName | default:"New Profile"}}</h1>
         </div>
         <div class="span4">
             <div class="pull-right vertical-pad">
-                <a href="${request.contextPath}/profile/edit/{{profileCtrl.profileId}}" target="_self" class="btn" ng-hide="!profileCtrl.readonly()"><i class="icon-edit"></i> Edit</a>
+                <a href="${request.contextPath}/profile/edit/{{profileCtrl.profileId}}" target="_self" class="btn btn-warning" ng-hide="!profileCtrl.readonly()"><i class="icon-edit icon-white"></i> Edit</a>
 
-                <button class="btn" ng-hide="profileCtrl.readonly()" onclick="alert('Not implemented - through to users edits')">Logged in: ${currentUser}</button>
+                <a href="${request.contextPath}/profile/{{profileCtrl.profileId}}" target="_self" class="btn btn-success" ng-show="!profileCtrl.readonly()"><i class="icon-eye-open icon-white"></i> Public View</a>
 
-                <a href="${request.contextPath}/profile/{{profileCtrl.profileId}}" target="_self" class="btn" ng-show="!profileCtrl.readonly()">Public View</a>
+                <a href="${request.contextPath}/profile/json/{{profileCtrl.profileId}}" target="_self" class="btn btn-info">JSON</a>
 
-                <a href="${request.contextPath}/profile/json/{{profileCtrl.profileId}}" target="_self" class="btn">JSON</a>
+                <button class="btn btn-danger" ng-click="profileCtrl.deleteProfile()" target="_self" ng-hide="profileCtrl.readonly() || !profileCtrl.profileId"><i class="icon-remove icon-white"></i> Delete this profile</button>
             </div>
         </div>
     </div>

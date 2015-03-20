@@ -4,6 +4,8 @@ import static au.org.ala.profile.hub.util.HubConstants.*
 import grails.converters.JSON
 import au.org.ala.web.AuthService
 
+import static org.apache.http.HttpStatus.SC_OK
+
 class OpusController extends BaseController {
 
     AuthService authService
@@ -119,6 +121,22 @@ class OpusController extends BaseController {
             def response = profileService.createOpus(jsonRequest)
 
             handle response
+        }
+    }
+
+    def deleteOpus() {
+        if (!params.opusId) {
+            badRequest "opusId is a required parameter"
+        } else {
+            def resp = profileService.deleteOpus(params.opusId as String)
+
+            if (resp.statusCode != SC_OK) {
+                response.status = resp.statusCode
+                sendError(resp.statusCode, resp.error ?: "")
+            } else {
+                response.setContentType(CONTEXT_TYPE_JSON)
+                render resp.success as JSON
+            }
         }
     }
 

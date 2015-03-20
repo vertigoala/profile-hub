@@ -75,9 +75,10 @@
 </r:script>
 
 <r:script>
-    angular.module('grails.config', []).constant('config', {
+    angular.module('app.config', []).constant('config', {
         contextPath: '${request.contextPath}',
-        readonly: ${!edit}
+        readonly: ${!edit},
+        currentUser: '${currentUser}'
      });
 </r:script>
 

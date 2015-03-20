@@ -67,6 +67,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
+        deleteOpus: function(opusId) {
+            console.log("Deleting opus " + opusId);
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId);
+            future.then(function(response) {
+                console.log("Opus deleted with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         saveOpus: function(opusId, opus) {
             var future;
             if (opusId) {
