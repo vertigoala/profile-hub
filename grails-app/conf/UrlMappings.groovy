@@ -14,6 +14,7 @@ class UrlMappings {
         name editProfile: "/profile/edit/$profileId"(controller: "profile", action: "edit")
         name viewProfile: "/profile/$profileId"(controller: "profile", action: "show")
         name getProfile: "/profile/json/$profileId"(controller: "profile", action: "getJson")
+        name deleteProfile: "/profile/delete"(controller: "profile", action: [DELETE: "deleteProfile"])
 
         "/profile/images"(controller: "profile", action: "retrieveImages")
         "/profile/lists"(controller: "profile", action: "retrieveLists")

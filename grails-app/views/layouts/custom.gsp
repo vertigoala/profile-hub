@@ -10,53 +10,13 @@
     <link href="http://www.ala.org.au/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon"
           type="image/x-icon"/>
     <title><g:layoutTitle/></title>
-    <r:require modules="bootstrap"/>
+    <r:require modules="profiles, bootstrap"/>
     <r:layoutResources/>
     <g:layoutHead/>
     <style type="text/css">
-    .customizable-banner {
-        height: 200px;
-        background-color: #000000;
-        color: #FFF;
-        overflow: hidden;
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: 50% 50%;
-        background-image: url(${bannerUrl});
-    }
-
-    .customizable-logo {
-        margin-left: 0px;
-        height: 100px;
-        padding: 15px 15px 15px 25px;
-    }
-
-    .customizable-logo-img {
-        max-width: 300px;
-    }
-
-    .customizable-subbanner {
-        background-color: rgba(0, 0, 0, 0.5);
-        margin-top: 20px;
-        height: 50px;
-        margin-bottom: 0;
-        padding: 15px;
-    }
-
-    .customizable-subbanner-title {
-        font-size: 28px;
-        margin-left: 10px;
-    }
-
-    .customizable-subbanner-title a {
-        color: #FFF;
-    }
-
-    .nav-menu a {
-        margin-right: 40px;
-        color: #FFF;
-        font-size: 20px;
-    }
+        .customizable-banner {
+            background-image: url(${bannerUrl});
+        }
     </style>
 </head>
 
@@ -115,7 +75,10 @@
 </r:script>
 
 <r:script>
-    angular.module('grails.config', []).constant('contextPath', '${request.contextPath}');
+    angular.module('grails.config', []).constant('config', {
+        contextPath: '${request.contextPath}',
+        readonly: ${!edit}
+     });
 </r:script>
 
 <!-- JS resources-->

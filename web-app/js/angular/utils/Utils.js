@@ -1,7 +1,7 @@
 /**
  * Utility functions
  */
-profileEditor.factory('util', function ($location, $q, contextPath) {
+profileEditor.factory('util', function ($location, $q, config, $modal, $window) {
 
     var UUID_REGEX_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     var LAST = "last";
@@ -108,7 +108,7 @@ profileEditor.factory('util', function ($location, $q, contextPath) {
      * @returns String the context path of the current URL, with a leading slash but no trailing slash
      */
     function contextRoot() {
-        return contextPath;
+        return config.contextPath;
     }
 
     /**
@@ -147,6 +147,44 @@ profileEditor.factory('util', function ($location, $q, contextPath) {
     }
 
     /**
+     * Displays a confirmation popup
+     *
+     * @param message The message text to display
+     * @returns {Promise}
+     */
+    function confirm(message) {
+        var html = '<div class="modal-header confirm">' +
+            '<h3 class="modal-title">Confirmation</h3>' +
+            '</div>' +
+            '<div class="modal-body">' +
+            '{{ confirmCtrl.message | default:"Are you sure you wish to continue with this operation?"}}' +
+            '</div>' +
+
+            '<div class="modal-footer">' +
+            '<button class="btn btn-primary" ng-click="confirmCtrl.ok()">OK</button>' +
+            '<button class="btn btn-warning" ng-click="confirmCtrl.cancel()">Cancel</button>' +
+            '</div>';
+
+        var popup = $modal.open({
+            template: html,
+            controller: "ConfirmationController",
+            controllerAs: "confirmCtrl",
+            size: "sm",
+            resolve: {
+                message: function() {
+                    return message
+                }
+            }
+        });
+
+        return popup.result;
+    }
+
+    function redirect(url) {
+        $window.location = url;
+    }
+
+    /**
      * Public API
      */
     return {
@@ -155,10 +193,30 @@ profileEditor.factory('util', function ($location, $q, contextPath) {
         getPathItemFromUrl: getPathItemFromUrl,
         toStandardPromise: toStandardPromise,
         isUuid: isUuid,
+        confirm: confirm,
+        redirect: redirect,
 
         LAST: LAST,
         FIRST: FIRST,
         UUID_REGEX_PATTERN: UUID_REGEX_PATTERN
     };
 
+});
+
+
+/**
+ * Confirmation modal dialog controller
+ */
+profileEditor.controller('ConfirmationController', function ($modalInstance, message) {
+    var self = this;
+
+    self.message = message;
+
+    self.ok = function() {
+        $modalInstance.close({continue: true});
+    };
+
+    self.cancel = function() {
+        $modalInstance.dismiss("cancel");
+    }
 });

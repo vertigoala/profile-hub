@@ -1,1 +1,4 @@
-angular.module('grails.config', []).constant('contextPath', '/path');
+angular.module('grails.config', []).constant('config', {
+    contextPath: '/path',
+    readonly: false
+});

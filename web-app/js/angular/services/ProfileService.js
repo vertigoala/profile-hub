@@ -21,6 +21,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
+        deleteProfile: function(profileId, opusId) {
+            console.log("Deleting profile " + profileId + " from opus " + opusId);
+            var future = $http.delete(util.contextRoot() + "/profile/delete?profileId=" + profileId + "&opusId=" + opusId);
+            future.then(function (response) {
+                console.log("Profile deleted with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         getOpus: function (opusId) {
             // make sure we have a UUID, not just the last element of some other URL (e.g. create)
             if (!util.isUuid(opusId)) {

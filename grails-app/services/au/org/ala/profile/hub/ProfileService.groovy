@@ -61,6 +61,11 @@ class ProfileService {
         result
     }
 
+    def deleteProfile(String profileId) {
+        log.debug("Deleting profile ${profileId}")
+        webService.doDelete("${grailsApplication.config.profile.service.url}/profile/${profileId}")
+    }
+
     void injectThumbnailUrls(profile) {
         profile.bhl.each({
             String pageId = it.url.split("/").last()

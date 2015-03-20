@@ -61,6 +61,22 @@ class ProfileController extends BaseController {
         }
     }
 
+    def deleteProfile() {
+        if (!params.profileId || !params.opusId) {
+            badRequest "profileId and opusId are required parameters"
+        } else {
+            def resp = profileService.deleteProfile(params.profileId as String)
+
+            if (resp.statusCode != SC_OK) {
+                response.status = resp.statusCode
+                sendError(resp.statusCode, resp.error ?: "")
+            } else {
+                response.setContentType(CONTEXT_TYPE_JSON)
+                redirect(controller: "opus", action: "show", params: [opusId: params.opusId])
+            }
+        }
+    }
+
     def updateBHLLinks() {
         def jsonRequest = request.getJSON()
 

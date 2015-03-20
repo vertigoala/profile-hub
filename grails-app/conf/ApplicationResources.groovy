@@ -8,7 +8,6 @@ modules = {
         dependsOn "angular_loading_bar"
         dependsOn "fontawesome"
         resource url:"js/angular/profiles.js"
-        resource url:"js/angular/utils/Confirmation.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
         resource url:"js/angular/services/ProfileService.js"
