@@ -1,6 +1,6 @@
 <div ng-controller="AttributeEditor as attrCtrl" ng-init="attrCtrl.init('${edit}')" class="ng-cloak">
     <div class="ng-show" ng-show="!attrCtrl.readonly">
-        <button ng-click="attrCtrl.addAttribute(AttributeForm)" class="btn btn-info"><i class="icon icon-plus"></i>Add attribute
+        <button ng-click="attrCtrl.addAttribute()" class="btn btn-info"><i class="icon icon-plus"></i>Add attribute
         </button>
     </div>
 

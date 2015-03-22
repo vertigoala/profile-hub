@@ -77,9 +77,9 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     };
 
     self.deleteAttribute = function (idx) {
-        var confirmed = $window.confirm("Are you sure?");
+        var confirmed = util.confirm("Are you sure you wish to delete this attribute?");
 
-        if (confirmed) {
+        confirmed.then(function() {
             if (self.attributes[idx].uuid !== "") {
                 var future = profileService.deleteAttribute(self.attributes[idx].uuid, self.profile.uuid);
                 future.then(function () {
@@ -93,14 +93,16 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 self.attributes.splice(idx, 1);
                 console.log("Local delete only deleting attributes: " + self.attributes.length);
             }
-        }
+        });
     };
 
     self.addAttribute = function (form) {
         self.attributes.unshift(
             {"uuid": "", "title": "", "text": "", contributor: []}
         );
-        form.$setDirty();
+        if (form) {
+            form.$setDirty();
+        }
     };
 
     self.copyAttribute = function(index, form) {

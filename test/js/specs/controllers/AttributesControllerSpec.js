@@ -5,15 +5,19 @@ describe("AttributesController tests", function () {
         getPathItem: function () {
             return "12345"
         },
+        confirm: function() {},
         LAST: "last"
     };
     var form = {
         $setPristine: function () {},
         $setDirty: function () {}
     };
+    var modal = {
+        open: function() {}
+    };
     var messageService;
     var profileService;
-    var profileDefer, vocabDefer, saveAttrDefer, deleteAttrDefer, showAuditDefer, searchDefer;
+    var profileDefer, vocabDefer, saveAttrDefer, deleteAttrDefer, showAuditDefer, searchDefer, confirmDefer;
     var getProfileSpy;
     var window;
 
@@ -43,6 +47,7 @@ describe("AttributesController tests", function () {
         saveAttrDefer = $q.defer();
         showAuditDefer = $q.defer();
         searchDefer = $q.defer();
+        confirmDefer = $q.defer();
 
         getProfileSpy = spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "getOpusVocabulary").and.returnValue(vocabDefer.promise);
@@ -51,10 +56,10 @@ describe("AttributesController tests", function () {
         spyOn(profileService, "getAuditForAttribute").and.returnValue(showAuditDefer.promise);
         spyOn(profileService, "profileSearch").and.returnValue(searchDefer.promise);
 
+        spyOn(mockUtil, "confirm").and.returnValue(confirmDefer.promise);
+
         spyOn(form, "$setPristine");
         spyOn(form, "$setDirty");
-
-        spyOn(window, "confirm").and.returnValue(true);
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -295,27 +300,21 @@ describe("AttributesController tests", function () {
     });
 
     it("should display a confirmation dialog when deleteAttribute is invoked", function () {
-        scope.attrCtrl.profile = {"uuid": "profileId1"};
-        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
-
-        deleteAttrDefer.resolve(JSON.parse(deleteAttributeResponse));
         scope.attrCtrl.deleteAttribute(0);
         scope.$apply();
 
-        expect(window.confirm).toHaveBeenCalled();
-        expect(scope.attrCtrl.attributes.length).toBe(0);
+        expect(mockUtil.confirm).toHaveBeenCalled();
     });
 
     it("should not delete the attribute if the confirmation is cancelled", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
-        window.confirm.and.returnValue(false);
 
-        deleteAttrDefer.resolve(JSON.parse(deleteAttributeResponse));
+        confirmDefer.reject();
         scope.attrCtrl.deleteAttribute(0);
         scope.$apply();
 
-        expect(window.confirm).toHaveBeenCalled();
+        expect(mockUtil.confirm).toHaveBeenCalled();
         expect(scope.attrCtrl.attributes.length).toBe(1);
     });
 
@@ -323,7 +322,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "", "title": "attrTitle", "text": "attrText"}];
 
-        deleteAttrDefer.resolve(JSON.parse(deleteAttributeResponse));
+        confirmDefer.resolve({});
         scope.attrCtrl.deleteAttribute(0);
         scope.$apply();
 
@@ -335,6 +334,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
+        confirmDefer.resolve({});
         deleteAttrDefer.resolve(JSON.parse(deleteAttributeResponse));
         scope.attrCtrl.deleteAttribute(0);
         scope.$apply();
@@ -347,6 +347,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
+        confirmDefer.resolve({});
         deleteAttrDefer.reject();
         scope.attrCtrl.deleteAttribute(0);
         scope.$apply();
