@@ -5,29 +5,30 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     var self = this;
 
     self.profile = null;
+    self.profileId = null;
     self.opus = null;
-    self.profileId = util.getPathItem(util.LAST);
     self.readonly = true;
 
     self.readonly = function() {
         return config.readonly
     };
 
-    loadProfile();
+    self.loadProfile = function() {
+        var profileId = util.getPathItem(util.LAST);
 
-    function loadProfile() {
-        if (self.profileId) {
-            var promise = profileService.getProfile(self.profileId);
+        if (profileId) {
+            var promise = profileService.getProfile(profileId);
             promise.then(function (data) {
                     self.profile = data.profile;
+                    self.profileId = data.profile.uuid;
                     self.opus = data.opus;
                 },
                 function () {
-                    messageService.alert("An error occurred while loading the profile.")
+                    messageService.alert("An error occurred while loading the profile.");
                 }
             );
         }
-    }
+    };
 
     self.deleteProfile = function() {
         var deleteConf = util.confirm("Are you sure you wish to delete this profile? This operation cannot be undone.");
@@ -37,7 +38,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                     util.redirect(util.contextRoot() + "/opus/" + self.opus.uuid);
                 },
                 function() {
-                    messageService.alert("An error occurred while deleting the profile.")
+                    messageService.alert("An error occurred while deleting the profile.");
                 });
         });
     };
@@ -99,6 +100,6 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
     };
 
     self.cancel = function () {
-        $modalInstance.dismiss("Cancelled")
+        $modalInstance.dismiss("Cancelled");
     };
 });

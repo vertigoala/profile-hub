@@ -9,7 +9,7 @@
 
 <body>
 
-<div id="container" ng-app="profileEditor" ng-controller="ProfileController as profileCtrl">
+<div id="container" ng-app="profileEditor" ng-controller="ProfileController as profileCtrl" ng-init="profileCtrl.loadProfile()">
     <div class="row-fluid">
         <div class="span6">
             <ol class="breadcrumb" role="navigation">
