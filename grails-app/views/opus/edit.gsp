@@ -4,7 +4,7 @@
 <head>
     <r:require module="profiles"/>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
-    <title>${opus.title} | Profile collections</title>
+    <title>Profile collections</title>
     <script type="text/javascript"
             src="http://markusslima.github.io/bootstrap-filestyle/1.0.6/js/bootstrap-filestyle.min.js"></script>
     <style type="text/css">

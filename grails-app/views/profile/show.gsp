@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
-    <title>${profile?.scientificName ?: "New Profile"} | ${profile?.opusName}</title>
+    <title>Profile</title>
 
     <r:require module="profiles"/>
 </head>

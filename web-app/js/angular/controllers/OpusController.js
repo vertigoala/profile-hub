@@ -1,7 +1,7 @@
 /**
  * Opus controller
  */
-profileEditor.controller('OpusController', function (profileService, util, messageService) {
+profileEditor.controller('OpusController', function (profileService, util, messageService, $window) {
     var self = this;
 
     self.opus = null;
@@ -211,6 +211,8 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 toggleMapPointerColourHash();
 
                 loadDataResource(self.opus.dataResourceUid);
+
+                $window.document.title = self.opus.title + " | Profile Collections";
 
                 messageService.pop();
             },

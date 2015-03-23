@@ -1,7 +1,7 @@
 /**
  * Profile controller
  */
-profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal) {
+profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal, $window) {
     var self = this;
 
     self.profile = null;
@@ -22,6 +22,8 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                     self.profile = data.profile;
                     self.profileId = data.profile.uuid;
                     self.opus = data.opus;
+
+                    $window.document.title = self.profile.scientificName + " | " + self.opus.title;
                 },
                 function () {
                     messageService.alert("An error occurred while loading the profile.");
