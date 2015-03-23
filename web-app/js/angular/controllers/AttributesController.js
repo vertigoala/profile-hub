@@ -1,13 +1,14 @@
 /**
  * Atributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, util, messageService, $window, $filter) {
+profileEditor.controller('AttributeEditor', function (profileService, util, messageService, $window, $filter, $modal) {
     var self = this;
 
     self.attributes = [];
     self.attributeTitles = [];
     self.historyShowing = {};
     self.vocabularyStrict = false;
+    self.supportingAttributes = {};
 
     var capitalize = $filter("capitalize");
     var sort = $filter("orderBy");
@@ -35,7 +36,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         );
     };
 
-    self.isValid = function(attributeTitle) {
+    self.isValid = function (attributeTitle) {
         attributeTitle = capitalize(attributeTitle);
         return !self.vocabularyStrict || (self.vocabularyStrict && self.attributeTitles.indexOf(attributeTitle) > -1)
     };
@@ -45,7 +46,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             var vocabPromise = profileService.getOpusVocabulary(self.opus.attributeVocabUuid);
             vocabPromise.then(function (data) {
                 self.attributeTitles = [];
-                angular.forEach(data.terms, function(term) {
+                angular.forEach(data.terms, function (term) {
                     self.attributeTitles.push(term.name);
                 });
 
@@ -79,7 +80,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.deleteAttribute = function (idx) {
         var confirmed = util.confirm("Are you sure you wish to delete this attribute?");
 
-        confirmed.then(function() {
+        confirmed.then(function () {
             if (self.attributes[idx].uuid !== "") {
                 var future = profileService.deleteAttribute(self.attributes[idx].uuid, self.profile.uuid);
                 future.then(function () {
@@ -105,7 +106,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         }
     };
 
-    self.copyAttribute = function(index, form) {
+    self.copyAttribute = function (index, form) {
         var copy = angular.copy(self.attributes[index]);
         copy.source = null;
         copy.original = self.attributes[index];
@@ -152,36 +153,81 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         );
     };
 
-    self.loadAttributesFromSupportingCollections = function() {
+    self.loadAttributesFromSupportingCollections = function () {
         var profileAttributeMap = [];
-        angular.forEach(self.attributes, function(attribute) {
+        angular.forEach(self.attributes, function (attribute) {
             profileAttributeMap.push(attribute.title)
         });
 
         var supportingOpusList = [];
-        angular.forEach(self.opus.supportingOpuses, function(opus) {
+        angular.forEach(self.opus.supportingOpuses, function (opus) {
             supportingOpusList.push(opus.uuid)
         });
 
         var searchResult = profileService.profileSearch(supportingOpusList.join(","), self.profile.scientificName, false);
         searchResult.then(function (searchResults) {
-                angular.forEach(searchResults, function(result) {
+                angular.forEach(searchResults, function (result) {
                     var profilePromise = profileService.getProfile(result.profileId);
                     profilePromise.then(function (supporting) {
 
-                        angular.forEach(supporting.profile.attributes, function(attribute) {
+                        angular.forEach(supporting.profile.attributes, function (attribute) {
                             if (profileAttributeMap.indexOf(attribute.title) == -1) {
-                                attribute.source = {opusId: supporting.opus.uuid,
-                                                    opusTitle: supporting.opus.title,
-                                                    profileId: supporting.profile.uuid};
+                                attribute.source = {
+                                    opusId: supporting.opus.uuid,
+                                    opusTitle: supporting.opus.title,
+                                    profileId: supporting.profile.uuid
+                                };
                                 self.attributes.push(attribute);
                             }
+
+                            if (!self.supportingAttributes[attribute.title]) {
+                                self.supportingAttributes[attribute.title] = [];
+                            }
+                            self.supportingAttributes[attribute.title].push({
+                                opusId: supporting.opus.uuid,
+                                opusTitle: supporting.opus.title,
+                                profileId: supporting.profile.uuid,
+                                title: attribute.title,
+                                text: attribute.text
+                            });
                         });
 
-                        self.attributes = sort(self.attributes, "title")
+                        self.attributes = sort(self.attributes, "title");
                     });
                 });
             }
         );
-    }
+    };
+
+    self.viewInOtherCollections = function (index) {
+        var attribute = self.attributes[index];
+
+        var supporting = self.supportingAttributes[attribute.title];
+
+        $modal.open({
+            templateUrl: "supportingCollections.html",
+            controller: "AttributePopupController",
+            controllerAs: "attrModalCtrl",
+            size: "lg",
+            resolve: {
+                supporting: function() {
+                    return supporting;
+                }
+            }
+        });
+    };
+});
+
+
+/**
+ * Atributes controller
+ */
+profileEditor.controller('AttributePopupController', function ($modalInstance, supporting) {
+    var self = this;
+
+    self.supporting = supporting;
+
+    self.close = function() {
+        $modalInstance.dismiss();
+    };
 });

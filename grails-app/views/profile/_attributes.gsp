@@ -102,17 +102,20 @@
                 </span>
             </blockquote>
 
-            <div class="row-fluid" ng-show="attribute.source">
+            <div class="row-fluid">
                 <span class="span12">
                     <span class="pull-right">
-                        <span class="blockquote small">
+                        <span class="small pull-right" ng-show="attribute.source">
                             Source: <a
                                 href="${request.contextPath}/profile/{{attribute.source.profileId}}" target="_self">{{attribute.source.opusTitle}}</a>
+                        </span>
+                        <span class="small" ng-show="attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes">
+                           <br/><a href="#" ng-click="attrCtrl.viewInOtherCollections($index)">Show {{attribute.title}} in other collections</a>
                         </span>
                     </span>
                 </span>
             </div>
-            <div class="row-fluid" ng-show="!attrCtrl.readonly && attrCtrl.opus.allowCopyFromLinkedOpus">
+            <div class="row-fluid" ng-show="attrCtrl.opus.allowCopyFromLinkedOpus && !attrCtrl.readonly">
                 <span class="span12">
                     <span class="pull-right">
                         <button class="btn btn-info" ng-click="attrCtrl.copyAttribute($index, AttributeForm)">Copy to this profile</button>
@@ -122,3 +125,23 @@
         </div>
     </div>
 </div>
+
+<script type="text/ng-template" id="supportingCollections.html">
+<div class="modal-header">
+    <h3 class="modal-title">Usages in other collections</h3>
+</div>
+
+<div class="modal-body">
+    <alert type="info" ng-show="!attrModalCtrl.supporting || attrModalCtrl.supporting.length == 0">This attribute is not used in the supporting collection(s).</alert>
+
+    <div class="bs-docs-example" ng-repeat="attribute in attrModalCtrl.supporting" data-content="{{ attribute.opusTitle }}" ng-show="attrModalCtrl.supporting.length > 0">
+        <blockquote style="border-left:none;">
+            <p>{{ attribute.text }}</p>
+        </blockquote>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="attrModalCtrl.close()">Close</button>
+</div>
+</script>

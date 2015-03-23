@@ -74,6 +74,7 @@ describe("ProfileController tests", function () {
 
     it("should set the profile attribute of the current scope when the controller is loaded", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
+        scope.profileCtrl.loadProfile();
         scope.$apply();
 
         expect(profileService.getProfile).toHaveBeenCalled();
@@ -82,6 +83,8 @@ describe("ProfileController tests", function () {
 
     it("should raise an alert message when getProfile fails", function () {
         profileDefer.reject();
+
+        scope.profileCtrl.loadProfile();
         scope.$apply();
 
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while loading the profile.");
@@ -104,6 +107,7 @@ describe("ProfileController tests", function () {
 
     it("should invoke profileService.deleteProfile when deleteProfile is confirmed", function() {
         scope.profileCtrl.profile = {profileId: PROFILE_ID};
+        scope.profileCtrl.profileId = PROFILE_ID;
         scope.profileCtrl.opus = {uuid: "opusId"};
         confirmDefer.resolve();
 
