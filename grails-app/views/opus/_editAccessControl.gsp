@@ -1,4 +1,4 @@
-<div class="well row-fluid" ng-controller="UserAccessController as userCtrl">
+<div class="well row-fluid" ng-controller="UserAccessController as userCtrl" ng-cloak>
     <div class="span6">
         <h3>Access control</h3>
         <p>Assign users Admin or Editor roles to this profile collection.

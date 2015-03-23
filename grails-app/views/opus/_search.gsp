@@ -1,6 +1,6 @@
 <h2>Quick search</h2>
 
-<div ng-controller="SearchController as searchCtrl">
+<div ng-controller="SearchController as searchCtrl" ng-cloak>
     <div class="input-append">
         <input id="searchTerm"
                ng-change="searchCtrl.search()"

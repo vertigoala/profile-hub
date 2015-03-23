@@ -1,4 +1,4 @@
-<div class="well" ng-form="RecordForm">
+<div class="well" ng-form="RecordForm" ng-cloak>
     <h3>Approved Specimen/Observation sources</h3>
 
     <p>Configure the record sources to be included in your profile pages. This will set what data is used on maps.

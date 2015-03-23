@@ -1,4 +1,4 @@
-<div id="opusInfo" class="well" ng-form="OpusForm">
+<div id="opusInfo" class="well" ng-form="OpusForm" ng-cloak>
     <div ng-show="!opusCtrl.opus.uuid">
         <p>
             <label>Name</label>

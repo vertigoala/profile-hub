@@ -1,11 +1,11 @@
-<div ng-controller="AttributeEditor as attrCtrl" ng-init="attrCtrl.init('${edit}')" class="ng-cloak">
-    <div class="ng-show" ng-show="!attrCtrl.readonly">
+<div ng-controller="AttributeEditor as attrCtrl" ng-init="attrCtrl.init('${edit}')">
+    <div class="ng-show" ng-show="!attrCtrl.readonly" ng-cloak>
         <button ng-click="attrCtrl.addAttribute()" class="btn btn-info"><i class="icon icon-plus"></i>Add attribute
         </button>
     </div>
 
-    <div ng-repeat="attribute in attrCtrl.attributes" ng-cloak ng-form="AttributeForm">
-        <div class="well attribute-edit" id="browse_attributes_edit" ng-if="!attrCtrl.readonly && !attribute.source">
+    <div ng-repeat="attribute in attrCtrl.attributes" ng-form="AttributeForm">
+        <div class="well attribute-edit" id="browse_attributes_edit" ng-if="!attrCtrl.readonly && !attribute.source" ng-cloak>
             <input type="text"
                    autocomplete="off"
                    typeahead="attributeTitle for attributeTitle in attrCtrl.attributeTitles | filter: $viewValue"
@@ -83,7 +83,7 @@
         </div>
 
         <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}"
-             ng-if="attribute.source || attrCtrl.readonly">
+             ng-if="attribute.source || attrCtrl.readonly" ng-cloak>
             <blockquote style="border-left:none;">
                 <p>{{ attribute.text }}</p>
                 <small>
@@ -110,7 +110,7 @@
                                 href="${request.contextPath}/profile/{{attribute.source.profileId}}" target="_self">{{attribute.source.opusTitle}}</a>
                         </span>
                         <span class="small" ng-show="attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes">
-                           <br/><a href="#" ng-click="attrCtrl.viewInOtherCollections($index)">Show {{attribute.title}} in other collections</a>
+                           <a href="#" ng-click="attrCtrl.viewInOtherCollections($index)">Show {{attribute.title}} in other collections</a>
                         </span>
                     </span>
                 </span>

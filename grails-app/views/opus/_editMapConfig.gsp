@@ -1,4 +1,4 @@
-<div id="opusMapInfo" class="well" ng-form="MapForm">
+<div id="opusMapInfo" class="well" ng-form="MapForm" ng-cloak>
     <h3>Map configuration</h3>
     <p>
         <label>Attribution:</label>

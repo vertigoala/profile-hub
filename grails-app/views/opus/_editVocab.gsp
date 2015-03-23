@@ -1,4 +1,4 @@
-<div class="well" ng-controller="VocabController as vocabCtrl" ng-form="VocabForm">
+<div class="well" ng-controller="VocabController as vocabCtrl" ng-form="VocabForm" ng-cloak>
     <h3>
         Attribute vocabulary
     </h3>

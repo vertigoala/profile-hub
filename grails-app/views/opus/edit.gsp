@@ -17,7 +17,7 @@
 <body>
 
 <div ng-app="profileEditor" ng-controller="OpusController as opusCtrl">
-    <div class="row-fluid">
+    <div class="row-fluid" ng-cloak>
         <div class="span6">
             <ol class="breadcrumb" role="navigation">
                 <li><i class="fa fa-arrow-left"></i></span><span class="divider"><a href="${request.contextPath}/" target="_self">View all profile collections</a></li>
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <div class="row-fluid">
+    <div class="row-fluid" ng-cloak>
         <div class="span8">
             <div style="margin-top:20px;">
                 <p class="lead">
@@ -38,7 +38,7 @@
                 </p>
             </div>
         </div>
-        <div class="span4">
+        <div class="span4" ng-cloak>
             <div class="pull-right">
                 <a href="${request.contextPath}/opus/{{opusCtrl.opus.uuid}}" class="btn btn-success" target="_self" ng-show="opusCtrl.opus.uuid"><i class="icon-eye-open icon-white"></i> Public View</a>
                 <button ng-click="opusCtrl.deleteOpus()" class="btn btn-danger" target="_self" ng-show="opusCtrl.opus.uuid"><i class="icon-remove icon-white"></i> Delete this collection</button>
@@ -46,11 +46,7 @@
         </div>
     </div>
 
-
-
-
-
-    <div ng-show="messages.length">
+    <div ng-show="messages.length" ng-cloak>
         <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
     </div>
 

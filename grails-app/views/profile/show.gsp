@@ -10,20 +10,20 @@
 <body>
 
 <div id="container" ng-app="profileEditor" ng-controller="ProfileController as profileCtrl" ng-init="profileCtrl.loadProfile()">
-    <div class="row-fluid">
+    <div class="row-fluid" ng-cloak>
         <div class="span6">
             <ol class="breadcrumb" role="navigation">
                 <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/opus/{{profileCtrl.opus.uuid}}" target="_self">Return to {{profileCtrl.opus.title}}</a>
             </ol>
         </div>
-        <div class="span6">
+        <div class="span6" ng-cloak>
             <div class="pull-right">
                 <a href="#"onclick="javascript:alert('Not implemented - through to users edits')" ng-hide="!config.currentUser">Logged in: {{config.currentUser}}</a>
             </div>
         </div>
     </div>
 
-    <div class="row-fluid">
+    <div class="row-fluid" ng-cloak>
         <div class="span8">
             <h1>{{profileCtrl.profile.scientificName | default:"New Profile"}}</h1>
         </div>
@@ -44,7 +44,7 @@
     <div class="row-fluid">
 
         <div class="span8">
-            <div ng-show="messages.length">
+            <div ng-show="messages.length" ng-cloak>
                 <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
             </div>
 

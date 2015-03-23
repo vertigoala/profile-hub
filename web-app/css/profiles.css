@@ -239,3 +239,15 @@ input[type=checkbox] + label, input[type=radio] + label {
     background: #dddb0b;
     height: 3px;
 }
+
+/**
+ * Angular uses ng-cloak to hide dynamic content until the data is available. This causes screen flicker that shows the {{}} tags.
+ * Angular (as per best practise) is loaded at the bottom of the page. The CSS it uses to hide dynamic content in in-lined in the AngularJS script file, so it also loads at the bottom of the page.
+ * This means that even with ng-cloak we still get the flicker.
+ *
+ * Our CSS is loaded earlier, so we can specify the rule here and avoid most of the flicker.
+ */
+[ng-cloak]
+{
+    display: none !important;
+}

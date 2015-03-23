@@ -1,4 +1,4 @@
-<div id="opusInfo" class="well" ng-form="StyleForm">
+<div id="opusInfo" class="well" ng-form="StyleForm" ng-cloak>
     <h4>Styling</h4>
     <p>
         <label>Banner image:</label>

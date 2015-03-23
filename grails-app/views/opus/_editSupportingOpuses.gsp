@@ -1,4 +1,4 @@
-<div class="well control-group" ng-form="OpusForm">
+<div class="well control-group" ng-form="OpusForm" ng-cloak>
     <h3>Approved Supporting Collections</h3>
 
     <p>Configure the profile collections to be used to support profile pages. Information from these collections can be included in the profile pages of your collection.</p>

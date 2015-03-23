@@ -1,4 +1,4 @@
-<div ng-controller="TaxonController as taxonCtrl" ng-init="taxonCtrl.init('${edit}')">
+<div ng-controller="TaxonController as taxonCtrl" ng-init="taxonCtrl.init('${edit}')" ng-cloak>
     <div id="browse_taxonomy" class="bs-docs-example ng-cloak"
          data-content="Taxonomy from {{taxonCtrl.speciesProfile.taxonConcept.infoSourceName}}" ng-show="taxonCtrl.classifications.length > 0" ng-cloak>
         <ul>
