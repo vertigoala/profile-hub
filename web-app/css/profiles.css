@@ -251,3 +251,26 @@ input[type=checkbox] + label, input[type=radio] + label {
 {
     display: none !important;
 }
+
+.collection-thumbnail {
+    width: 350px;
+    height:100px
+}
+
+.center {
+    align-content: center;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    display: flex;
+}
+
+.flexbox {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}

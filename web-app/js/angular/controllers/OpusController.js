@@ -23,9 +23,33 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         console.log("Creating new opus....");
     }
 
-    loadOpus();
     loadResources();
     loadOpusList();
+
+    self.loadOpus = function() {
+        if (!self.opusId) {
+            return;
+        }
+        var promise = profileService.getOpus(self.opusId);
+
+        messageService.info("Loading opus data...");
+        promise.then(function (data) {
+                console.log("Retrieved " + data.title);
+                self.opus = data;
+
+                toggleMapPointerColourHash();
+
+                loadDataResource(self.opus.dataResourceUid);
+
+                $window.document.title = self.opus.title + " | Profile Collections";
+
+                messageService.pop();
+            },
+            function () {
+                messageService.alert("An error occurred while retrieving the opus.");
+            }
+        );
+    };
 
     self.saveOpus = function (form) {
         messageService.info("Saving...");
@@ -197,31 +221,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         });
     };
 
-    function loadOpus() {
-        if (!self.opusId) {
-            return;
-        }
-        var promise = profileService.getOpus(self.opusId);
-
-        messageService.info("Loading opus data...");
-        promise.then(function (data) {
-                console.log("Retrieved " + data.title);
-                self.opus = data;
-
-                toggleMapPointerColourHash();
-
-                loadDataResource(self.opus.dataResourceUid);
-
-                $window.document.title = self.opus.title + " | Profile Collections";
-
-                messageService.pop();
-            },
-            function () {
-                messageService.alert("An error occurred while retrieving the opus.");
-            }
-        );
-    }
-
     function toggleMapPointerColourHash() {
         if (self.opus.mapPointColour) {
             if (self.opus.mapPointColour.indexOf("#") > -1) {
@@ -267,7 +266,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         promise.then(function (data) {
             angular.forEach(data, function (opus) {
                 if (opus.uuid != self.opus.uuid) {
-                    self.opusList.push({uuid: opus.uuid, title: opus.title})
+                    self.opusList.push({uuid: opus.uuid, title: opus.title, thumbnailUrl: opus.thumbnailUrl, pubDescription: opus.pubDescription})
                 }
             });
         })

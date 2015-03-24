@@ -14,11 +14,8 @@ class OpusController extends BaseController {
     ProfileService profileService
 
     def index() {
-        def opui = profileService.getOpus()
-
         render view: 'index', model: [
-                opui         : opui ?: [],
-                dataResources: collectoryService.getDataResources(),
+                opui         : [],
                 logoUrl      : DEFAULT_OPUS_LOGO_URL,
                 bannerUrl    : DEFAULT_OPUS_BANNER_URL,
                 pageTitle    : DEFAULT_OPUS_TITLE,

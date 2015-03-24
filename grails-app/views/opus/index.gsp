@@ -10,24 +10,26 @@
 
 <body>
 
-<div style="margin-top:20px;">
-    <p class="lead">
-        A list of all the profile collections in this system.
-    </p>
+<div class="vertical-pad"/>
+
+<div class="container" ng-app="profileEditor" ng-controller="OpusController as opusCtrl">
+    <div class="row flexbox">
+        <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-lg-3 col-md-3 col-sm-3">
+            <a href="${request.contextPath}/opus/{{opus.uuid}}" target="_self">
+                <img src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
+                     alt="{{opus.title}} logo" title="{{opus.title}}"
+                     class="img-thumbnail img-responsive img-circle collection-thumbnail">
+            </a>
+
+            <h3 class="text-center">{{opus.title}}</h3>
+        </div>
+    </div>
 </div>
 
-<div class="row-fluid">
-    <ul>
-        <g:each in="${opui}" var="opus">
-            <li>
-                <g:link mapping="viewOpus" params="[opusId: opus.uuid]">${opus.title}</g:link>
-            </li>
-        </g:each>
-    </ul>
-    <g:if test="${isAdmin}">
-        <g:link mapping="createOpus">Create new</g:link>
-    </g:if>
+<div class="pull-right">
+    <a href="${request.contextPath}/opus/create" target="_self">Create a new collection</a>
 </div>
+
 </body>
 
 </html>

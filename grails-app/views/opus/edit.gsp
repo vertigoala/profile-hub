@@ -16,7 +16,7 @@
 
 <body>
 
-<div ng-app="profileEditor" ng-controller="OpusController as opusCtrl">
+<div ng-app="profileEditor" ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
     <div class="row-fluid" ng-cloak>
         <div class="span6">
             <ol class="breadcrumb" role="navigation">
