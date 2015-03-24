@@ -3,6 +3,30 @@
 
 # Design
 
+# Security
+## Profile Hub
+There are 4 roles: ALA\_ADMIN, ADMIN, EDITOR, USER. The level of access is as follows: ALA\_ADMIN > ADMIN > EDITOR > USER. I.e. an ALA\_ADMIN can do everything an ADMIN can do, and an ADMIN can do everything that and EDITOR can do, etc.
+
+|Action|Required Role|Notes|
+|------|-------------|-----|
+|Create collection|ALA_ADMIN| |
+|View collection|All| |
+|Edit Collection|ADMIN| |
+|Delete Collection|ALA_ADMIN| |
+|Add new Profile|EDITOR| |
+|View Profile|USER| |
+|Edit Profile|EDITOR| |
+|Delete Profile|EDITOR| |
+
+Admins and Editors are defined per-opus and only have permissions for that particular opus.
+
+## Profile Service
+Services exposed by the Profile Service are categorised into two buckets: secured and public.
+
+Secured services require an API Key and are intended to only be called by the Profile Hub.
+
+Public services require not form of authentication.
+
 # Testing
 
 ## Grails
