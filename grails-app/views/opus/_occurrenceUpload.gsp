@@ -1,4 +1,4 @@
-<g:if test="${opus.enableOccurrenceUpload}">
+<g:if test="${opus?.enableOccurrenceUpload}">
     <div class="well">
         <h3>Occurrence datasets</h3>
         <p>Click below to upload your own occurrence data. This will upload data into the <b>sandbox</b>

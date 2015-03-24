@@ -41,12 +41,9 @@ class OpusControllerSpec extends Specification {
         controller.index()
 
         then:
-        assert model.size() == 6
-        assert model.containsKey("opui")
-        assert model.containsKey("dataResources")
+        assert model.size() == 4
         assert model.containsKey("logoUrl")
         assert model.containsKey("bannerUrl")
-        assert model.containsKey("opui")
         assert model.containsKey("isAdmin")
     }
 
@@ -69,8 +66,7 @@ class OpusControllerSpec extends Specification {
         controller.edit()
 
         then:
-        assert model.size() == 5
-        assert model.containsKey("opus")
+        assert model.size() == 4
         assert model.containsKey("logoUrl")
         assert model.containsKey("bannerUrl")
         assert model.containsKey("pageTitle")

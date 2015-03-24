@@ -1,4 +1,4 @@
-<g:if test="${opus.enableTaxaUpload}">
+<g:if test="${opus?.enableTaxaUpload}">
     <div class="well" ng-controller="TaxaController">
         <h3>Upload taxa</h3>
         <p>Click below to upload your own list of taxa in CSV format. A profile page will be created for each scientific name uploaded.<br/>

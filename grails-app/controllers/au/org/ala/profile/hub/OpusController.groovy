@@ -15,7 +15,6 @@ class OpusController extends BaseController {
 
     def index() {
         render view: 'index', model: [
-                opui         : [],
                 logoUrl      : DEFAULT_OPUS_LOGO_URL,
                 bannerUrl    : DEFAULT_OPUS_BANNER_URL,
                 pageTitle    : DEFAULT_OPUS_TITLE,
@@ -25,7 +24,6 @@ class OpusController extends BaseController {
 
     def create() {
         render view: "edit", model: [
-                opus       : [],
                 logoUrl    : DEFAULT_OPUS_LOGO_URL,
                 bannerUrl  : DEFAULT_OPUS_BANNER_URL,
                 pageTitle  : DEFAULT_OPUS_TITLE,
@@ -40,7 +38,6 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render(view: 'edit', model: [
-                    opus       : opus,
                     logoUrl    : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
                     bannerUrl  : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     pageTitle  : opus.title ?: DEFAULT_OPUS_TITLE,
@@ -56,7 +53,6 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render view: 'show', model: [
-                    opus     : opus,
                     logoUrl  : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
                     bannerUrl: opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     pageTitle: opus.title ?: DEFAULT_OPUS_TITLE,
