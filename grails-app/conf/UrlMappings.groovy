@@ -2,56 +2,61 @@ class UrlMappings {
 
     static mappings = {
 
-        "/profile/search"(controller: "profile", action: "search")
+        "/user/search" controller: "user", action: [GET: "findUser"]
 
-        "/profile/deleteAttribute/$attributeId"(controller: "profile", action: "deleteAttribute")
-        "/profile/updateAttribute/$profileId"(controller: "profile", action: "updateAttribute")
-        "/profile/updateAttribute/"(controller: "profile", action: "updateAttribute")
+        "/opus/create" controller: "opus", action: [GET: "create", PUT: "createOpus"]
 
-        "/profile/updateLinks/$profileId"(controller: "profile", action: "updateLinks")
-        "/profile/updateBHLLinks/$profileId"(controller: "profile", action: "updateBHLLinks")
+        "/opus/list" controller: "opus", action: [GET: "list"]
 
-        "/profile/"(controller: "profile", action: [PUT: "createProfile"])
+        "/profile/search" controller: "profile", action: [GET: "search"]
 
-        name editProfile: "/profile/edit/$profileId"(controller: "profile", action: "edit")
-        name viewProfile: "/profile/$profileId"(controller: "profile", action: "show")
-        name getProfile: "/profile/json/$profileId"(controller: "profile", action: "getJson")
-        "/profile/delete"(controller: "profile", action: [DELETE: "deleteProfile"])
+        "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
+        "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
+        "/opus/$opusId/profile/$profileId/update" controller: "profile", action: [GET: "edit", POST: "updateProfile"]
+        "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
+        "/opus/$opusId/profile/$profileId/images" controller: "profile", action: [GET: "retrieveImages"]
+        "/opus/$opusId/profile/$profileId/lists" controller: "profile", action: [GET: "retrieveLists"]
+        "/opus/$opusId/profile/$profileId/classifications" controller: "profile", action: [GET: "retrieveClassifications"]
+        "/opus/$opusId/profile/$profileId/speciesProfile" controller: "profile", action: [GET: "retrieveSpeciesProfile"]
+        "/opus/$opusId/profile/$profileId/attribute/$attributeId/update" controller: "profile", action: [POST: "updateAttribute"]
+        "/opus/$opusId/profile/$profileId/attribute/create" controller: "profile", action: [PUT: "updateAttribute"]
+        "/opus/$opusId/profile/$profileId/attribute/$attributeId/delete" controller: "profile", action: [DELETE: "deleteAttribute"]
+        "/opus/$opusId/profile/$profileId/links/update" controller: "profile", action: [POST: "updateLinks"]
+        "/opus/$opusId/profile/$profileId/bhllinks/update" controller: "profile", action: [POST: "updateBHLLinks"]
+        "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
 
-        "/profile/images"(controller: "profile", action: "retrieveImages")
-        "/profile/lists"(controller: "profile", action: "retrieveLists")
-        "/profile/classifications"(controller: "profile", action: "retrieveClassifications")
-        "/profile/speciesProfile"(controller: "profile", action: "retrieveSpeciesProfile")
+        "/opus/$opusId/vocab/$vocabId/update" controller: "vocab", action: [POST: "update"]
+        "/opus/$opusId/vocab/$vocabId/findUsages" controller: "vocab", action: [GET: "findUsagesOfTerm"]
+        "/opus/$opusId/vocab/$vocabId/replaceUsages" controller: "vocab", action: [POST: "replaceUsagesOfTerm"]
+        "/opus/$opusId/vocab/$vocabId" controller: "vocab", action: [GET: "show"]
 
-        "/vocab/$vocabId"(controller: "vocab", action: [GET: "show", POST: "update"])
-        "/vocab/usages/find"(controller: "vocab", action: [GET: "findUsagesOfTerm"])
-        "/vocab/usages/replace"(controller: "vocab", action: [POST: "replaceUsagesOfTerm"])
+        "/opus/$opusId/users/update" controller: "opus", action: [POST: "updateUsers"]
 
-        "/opus/findUser"(controller: "opus", action: "findUser")
-        "/opus/uploadTaxa"(controller: "opus", action: "taxaUpload")
+        "/opus/$opusId/update" controller: "opus", action: [GET: "edit", POST: "updateOpus"]
+        "/opus/$opusId/json" controller: "opus", action: [GET: "getJson"]
+        "/opus/$opusId/delete" controller: "opus", action: [DELETE: "deleteOpus"]
+        "/opus/$opusId" controller: "opus", action: [GET: "show"]
+        "/opus" controller: "opus", action: [GET: "index"]
 
-        "/opus/list"(controller: "opus", action: "list")
-        name viewOpus: "/opus/$opusId"(controller: "opus", action: [GET: "show", POST: "updateOpus", PUT: "createOpus", DELETE: "deleteOpus"])
-        name editOpus: "/opus/edit/$opusId"(controller: "opus", action: "edit")
-        name getOpus: "/opus/json/$opusId"(controller: "opus", action: "getJson")
-        name createOpus: "/opus/create"(controller: "opus", action: "create")
-        "/opus/"(controller: "opus", action: [PUT: "createOpus"])
-
-        "/dataResource/list"(controller: "collectory", action: "list")
-        "/dataResource/$dataResourceUid"(controller: "collectory", action: "getResource")
+        "/dataResource/$dataResourceUid" controller: "collectory", action: [GET: "getResource"]
+        "/dataResource/" controller: "collectory", action: [GET: "list"]
 
         "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
 
+        "/audit/object/$id" controller: "audit", action: [GET: "object"]
+        "/audit/user/$id" controller: "audit", action: [GET: "user"]
 
-        "/$controller/$action?/$id?(.$format)?" {
-            constraints {
-                // apply constraints here
-            }
-        }
+        "/" controller: "opus", action: [GET: "index"]
 
-        "/"(controller: "opus", action: "index")
+        "/logout/logout" controller: "logout", action: "logout"
 
         "500"(view: "/error")
         "404"(view: "/notFound")
+        "403"(view: "/notAuthorised")
+        "401"(view: "/notAuthorised")
+        "/notAuthorised"(view: "/notAuthorised")
+        "/error"(view: "/error")
+        "/notFound"(view: "/notFound")
+
     }
 }

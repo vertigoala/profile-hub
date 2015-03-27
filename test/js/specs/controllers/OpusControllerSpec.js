@@ -6,6 +6,13 @@ describe("OpusController tests", function () {
         getPathItem: function () {
             return OPUS_ID;
         },
+        getEntityId: function (str) {
+            if (str == "opus") {
+                return OPUS_ID
+            } else if (str == "profile") {
+                return "profileId1"
+            }
+        },
         isUuid: function() {
             return true;
         },
@@ -70,6 +77,7 @@ describe("OpusController tests", function () {
 
     it("should set the opus attribute of the current scope when the controller is loaded", function () {
         opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.loadOpus();
         scope.$apply();
 
         expect(profileService.getOpus).toHaveBeenCalled();
@@ -81,6 +89,7 @@ describe("OpusController tests", function () {
         opusDefer.resolve(JSON.parse(getOpusResponse));
         listResourcesDefer.resolve(JSON.parse(listResourceResponse));
 
+        scope.opusCtrl.loadOpus();
         scope.$apply();
 
         expect(Object.keys(scope.opusCtrl.dataResources).length).toBe(2);
@@ -91,6 +100,7 @@ describe("OpusController tests", function () {
         opusDefer.resolve(JSON.parse(getOpusResponse));
         getResourceDefer.resolve(JSON.parse(getResourceResponse));
 
+        scope.opusCtrl.loadOpus();
         scope.$apply();
 
         expect(scope.opusCtrl.dataResource).toBeDefined();
@@ -100,6 +110,7 @@ describe("OpusController tests", function () {
     it("should raise an alert message when the call to getOpus fails", function () {
         opusDefer.reject();
 
+        scope.opusCtrl.loadOpus();
         scope.$apply();
 
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the opus.");
@@ -124,7 +135,7 @@ describe("OpusController tests", function () {
     });
 
     it("should remove an existing imageSource from the opus when removeImageSource is invoked with 'existing'", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
         scope.$apply();
         scope.opusCtrl.removeImageSource(1, 'existing', form);
@@ -135,7 +146,7 @@ describe("OpusController tests", function () {
     });
 
     it("should remove an imageSource from the list of new sources when removeImageSource is invoked with 'new'", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
         scope.$apply();
         scope.opusCtrl.newImageSources = ["newSource1", "newSource2", "newSource3"];
@@ -148,7 +159,7 @@ describe("OpusController tests", function () {
     });
 
     it("should remove an existing recordSource from the opus when removeRecordSource is invoked with 'existing'", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
         scope.$apply();
         scope.opusCtrl.removeRecordSource(1, 'existing', form);
@@ -159,7 +170,7 @@ describe("OpusController tests", function () {
     });
 
     it("should remove an recordSource from the list of new sources when removeRecordSource is invoked with 'new'", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
         scope.$apply();
         scope.opusCtrl.newRecordSources = ["newSource1", "newSource2", "newSource3"];
@@ -172,7 +183,7 @@ describe("OpusController tests", function () {
     });
 
     it("should remove an existing supporting opus from the opus when removeSupportingOpus is invoked with 'existing'", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.$apply();
         scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {opusId: "opus2", title: "Opus 2"}, {opusId: "opus3", title: "Opus 3"}];
 
@@ -185,7 +196,7 @@ describe("OpusController tests", function () {
     });
 
     it("should remove a supportingOpus from the list of new supportingOpuses when removeSupportingOpus is invoked with 'new'", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.$apply();
         scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {opusId: "opus2", title: "Opus 2"}, {opusId: "opus3", title: "Opus 3"}];
 
@@ -200,7 +211,7 @@ describe("OpusController tests", function () {
     });
 
     it("should set the form to Dirty removeImageSource is invoked", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
         scope.$apply();
         scope.opusCtrl.newImageSources = ["newSource1", "newSource2", "newSource3"];
@@ -210,7 +221,7 @@ describe("OpusController tests", function () {
     });
 
     it("should set the form to Dirty removeRecordSource is invoked", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
         scope.$apply();
         scope.opusCtrl.newRecordSources = ["newSource1", "newSource2", "newSource3"];
@@ -220,7 +231,7 @@ describe("OpusController tests", function () {
     });
 
     it("should set the form to Dirty removeSupportingOpus is invoked", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.$apply();
 
         scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {opusId: "opus2", title: "Opus 2"}, {opusId: "opus3", title: "Opus 3"}];
@@ -231,7 +242,8 @@ describe("OpusController tests", function () {
     });
 
     it("should merge newImageSources with the existing image sources when saveImageSources is called", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opusId = OPUS_ID;
 
         scope.$apply();
         scope.opusCtrl.newImageSources = [{dataResource: {id: "newId1"}}];
@@ -241,9 +253,9 @@ describe("OpusController tests", function () {
         var expectedOpus = {
             title: "OpusName",
             dataResourceUid: "dataUid1",
-            mapPointColour: "12345",
             imageSources: ["source1", "source2", "source3", "newId1"], // new id added here
             recordSources: ["source1", "source2", "source3"],
+            mapPointColour: "12345",
             supportingOpuses: []
         };
 
@@ -251,7 +263,8 @@ describe("OpusController tests", function () {
     });
 
     it("should validate that image sources have an associated data resource object", function() {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
 
         scope.opusCtrl.newImageSources = [{dataResource: {}}];
@@ -263,7 +276,8 @@ describe("OpusController tests", function () {
     });
 
     it("should save the opus if no new image sources have been added but existing image sources have been removed", function() {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
 
         scope.opusCtrl.removeImageSource(1, 'existing', form);
@@ -282,7 +296,8 @@ describe("OpusController tests", function () {
     });
 
     it("should merge newRecordSources with the existing record sources when saveRecordSources is called", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opusId = OPUS_ID;
 
         scope.$apply();
         scope.opusCtrl.newRecordSources = [{dataResource: {id: "newId1"}}];
@@ -292,9 +307,9 @@ describe("OpusController tests", function () {
         var expectedOpus = {
             title: "OpusName",
             dataResourceUid: "dataUid1",
-            mapPointColour: "12345",
             imageSources: ["source1", "source2", "source3"],
             recordSources: ["source1", "source2", "source3", "newId1"], // new id added here
+            mapPointColour: "12345",
             supportingOpuses: []
         };
 
@@ -302,7 +317,8 @@ describe("OpusController tests", function () {
     });
 
     it("should validate that record sources have an associated data resource object", function() {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
 
         scope.opusCtrl.newRecordSources = [{dataResource: {}}];
@@ -314,7 +330,8 @@ describe("OpusController tests", function () {
     });
 
     it("should save the opus if no new record sources have been added but existing record sources have been removed", function() {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
 
         scope.opusCtrl.removeRecordSource(1, 'existing', form);
@@ -333,7 +350,8 @@ describe("OpusController tests", function () {
     });
 
     it("should merge newSupportingOpuses with the existing supporting opuses when saveSupportingOpus is called", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opusId = OPUS_ID;
 
         scope.$apply();
         scope.opusCtrl.opus.supportingOpuses = [{uuid: "opus1", title: "Opus 1"}];
@@ -354,7 +372,8 @@ describe("OpusController tests", function () {
     });
 
     it("should validate that supporting opuses have an associated opus object with and id", function() {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
 
         scope.opusCtrl.newSupportingOpuses = [{opus: {title: "bla"}}];
@@ -366,7 +385,8 @@ describe("OpusController tests", function () {
     });
 
     it("should save the opus if no new supporting opuses have been added but existing ones have been removed", function() {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
         scope.opusCtrl.opus.supportingOpuses = [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus2", title: "Opus 2"}, {uuid: "opus3", title: "Opus 3"}];
 
@@ -386,7 +406,7 @@ describe("OpusController tests", function () {
     });
 
     it("should raise an alert message if the call to saveOpus fails", function() {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         saveOpusDefer.reject();
         scope.$apply();
         scope.opusCtrl.saveOpus(form);
@@ -396,7 +416,7 @@ describe("OpusController tests", function () {
     });
 
     it("should raise a success message and set the form to pristine if the call to saveOpus succeeds", function() {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         saveOpusDefer.resolve({});
         scope.$apply();
         scope.opusCtrl.saveOpus(form);

@@ -5,6 +5,13 @@ describe("ImagesController tests", function () {
         getPathItem: function () {
             return "12345"
         },
+        getEntityId: function (str) {
+            if (str == "opus") {
+                return "opusId1"
+            } else if (str == "profile") {
+                return "profileId1"
+            }
+        },
         LAST: "last"
     };
     var messageService;
@@ -140,6 +147,8 @@ describe("ImagesController tests", function () {
     });
 
     it("should use the scientificName to retrieve images if the profile.guid attribute is not present", function () {
+        scope.imageCtrl.opusId = "opusId1";
+        scope.imageCtrl.profileId = "profileId1";
         var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
 
         profileDefer.resolve(JSON.parse(getProfileResponse));
@@ -148,10 +157,12 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImages).toHaveBeenCalledWith("profileName", "source1,source2");
+        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "profileName", "source1,source2");
     });
 
     it("should use the profile.guid attribute prefixed with 'lsid:' to retrieve images if it is present", function () {
+        scope.imageCtrl.opusId = "opusId1";
+        scope.imageCtrl.profileId = "profileId1";
         var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
 
         profileDefer.resolve(JSON.parse(getProfileResponse));
@@ -160,6 +171,6 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImages).toHaveBeenCalledWith("lsid:guid1", "source1,source2");
+        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "lsid:guid1", "source1,source2");
     });
 });

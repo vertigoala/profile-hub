@@ -247,8 +247,7 @@ input[type=checkbox] + label, input[type=radio] + label {
  *
  * Our CSS is loaded earlier, so we can specify the rule here and avoid most of the flicker.
  */
-[ng-cloak]
-{
+[ng-cloak] {
     display: none !important;
 }
 
@@ -274,3 +273,15 @@ input[type=checkbox] + label, input[type=radio] + label {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
 }
+
+.menu-bar a, .menu-bar a:visited, .menu-bar a:focus {
+    /*color: black;*/
+}
+
+.menu-bar ul, .menu-bar li {
+    list-style: none;
+}
+
+/*.menu-bar a:hover {*/
+    /*color: wheat;*/
+/*}*/

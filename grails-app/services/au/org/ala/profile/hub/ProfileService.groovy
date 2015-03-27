@@ -18,6 +18,10 @@ class ProfileService {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}", json)
     }
 
+    def updateOpusUsers(String opusId, json) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}/updateUsers", json)
+    }
+
     def createOpus(json) {
         webService.doPut("${grailsApplication.config.profile.service.url}/opus/", json)
     }

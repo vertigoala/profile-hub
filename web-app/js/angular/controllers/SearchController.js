@@ -5,8 +5,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     var self = this;
 
     self.search = function () {
-        var opusId = util.getPathItem(util.LAST);
-        var searchResult = profileService.profileSearch(opusId, self.searchTerm, true);
+        self.opusId = util.getEntityId("opus");
+        var searchResult = profileService.profileSearch(self.opusId, self.searchTerm, true);
         searchResult.then(function (data) {
                 console.log("Found " + data.length + " results");
                 self.profiles = data;

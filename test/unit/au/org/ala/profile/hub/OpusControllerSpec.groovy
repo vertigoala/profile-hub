@@ -41,10 +41,9 @@ class OpusControllerSpec extends Specification {
         controller.index()
 
         then:
-        assert model.size() == 4
+        assert model.size() == 3
         assert model.containsKey("logoUrl")
         assert model.containsKey("bannerUrl")
-        assert model.containsKey("isAdmin")
     }
 
     def "edit should render the edit view"() {
@@ -130,38 +129,4 @@ class OpusControllerSpec extends Specification {
         then:
         assert response.status == HttpStatus.SC_NOT_FOUND
     }
-
-    def "findUser should return a 400 (BAD REQUEST) if the userName parameter is not set"() {
-        when:
-        controller.findUser()
-
-        then:
-        assert response.status == HttpStatus.SC_BAD_REQUEST
-    }
-
-    def "findUser should return the resp element of the response from the service call on success"() {
-        setup:
-        mockUserService.findUser(_) >> [resp: [resp: [userId: "user1"]], statusCode: 200]
-
-        when:
-        request.JSON = """{"userName": "fred"}"""
-        controller.findUser()
-
-        then:
-        assert response.status == HttpStatus.SC_OK
-        assert response.json == [resp: [userId: "user1"]]
-    }
-
-    def "findUser should return the error code from the service on failure of the service call"() {
-        setup:
-        mockUserService.findUser(_) >> [error: "something died!", statusCode: 666]
-
-        when:
-        request.JSON = """{"userName": "fred"}"""
-        controller.findUser()
-
-        then:
-        assert response.status == 666
-    }
-
 }

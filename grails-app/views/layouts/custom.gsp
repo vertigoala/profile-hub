@@ -15,7 +15,7 @@
     <g:layoutHead/>
     <style type="text/css">
         .customizable-banner {
-            background-image: url(${bannerUrl});
+            background-image: url(${bannerUrl ?: grailsApplication.config.images.service.url + '/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original'});
         }
     </style>
 </head>
@@ -25,30 +25,28 @@
        value="${pageProperty(name: 'meta.fluidLayout') ?: grailsApplication.config.skin?.fluidLayout}"/>
 
 <div class="customizable-banner">
-    <div class="row-fluid">
-        <g:if test="${logoUrl}">
+    <div class="row-fluid span12">
+        <div class="span6">
             <div class="customizable-logo pull-left">
-                <img class="customizable-logo-img" src="${logoUrl}" alt="${logoAlt ?: 'logo'}"/>
+                <img class="customizable-logo-img" src="${logoUrl ?: grailsApplication.config.ala.base.url + '/wp-content/themes/ala2011/images/logo.png'}" alt="${logoAlt ?: 'logo'}"/>
             </div>
-        </g:if>
+        </div>
+
     </div>
 
     <div class="row-fluid">
         <div class="span12 customizable-subbanner">
-            <div class="pull-left customizable-subbanner-title">
+            <div class="span6 pull-left customizable-subbanner-title">
                 ${pageTitle}
             </div>
-            <g:if test="${menuLinks}">
-                <nav class="nav-menu pull-right">
-                    <g:each in="${menuLinks}" var="menuLink">
-                        <a href="${menuLink.key}" class="menulink">${menuLink.value}</a>
-                    </g:each>
-                </nav>
-            </g:if>
+
         </div>
     </div>
 </div>
 
+
+
+<div class="vertical-pad"/>
 <div class="${fluidLayout ? 'container-fluid' : 'container'}" id="main-content">
     <g:layoutBody/>
 </div><!--/.container-->
@@ -78,7 +76,7 @@
     angular.module('app.config', []).constant('config', {
         contextPath: '${request.contextPath}',
         readonly: ${!edit},
-        currentUser: '${currentUser}'
+        currentUser: '${params.currentUser}'
      });
 </r:script>
 

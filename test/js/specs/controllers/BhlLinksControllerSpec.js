@@ -8,6 +8,13 @@ describe("BHLLinksController tests", function () {
         getPathItemFromUrl: function(index, url) {
             return "98765"
         },
+        getEntityId: function (str) {
+            if (str == "opus") {
+                return "opusId1"
+            } else if (str == "profile") {
+                return "profileId1"
+            }
+        },
         LAST: "last"
     };
     var messageService;
@@ -126,6 +133,8 @@ describe("BHLLinksController tests", function () {
     });
 
     it("should invoke the updateLinks method of the profile service with the correct values when saveLinks is invoked", function () {
+        scope.bhlCtrl.profileId = "profileId1";
+        scope.bhlCtrl.opusId = "opusId1";
         var links = '[{"uuid":"uuid1","url":"url1","title":"first","description":"desc1"},{"uuid":"uuid1","url":"url2","title":"second","description":"desc2"}]';
         scope.bhlCtrl.profile = {"uuid": "profileId1"};
         scope.bhlCtrl.bhl = JSON.parse(links);
@@ -136,7 +145,7 @@ describe("BHLLinksController tests", function () {
 
         var data = '{"profileId":"profileId1","links":' + links + '}';
 
-        expect(profileService.updateBhlLinks).toHaveBeenCalledWith("profileId1", data);
+        expect(profileService.updateBhlLinks).toHaveBeenCalledWith("opusId1", "profileId1", data);
         expect(messageService.success).toHaveBeenCalled();
     });
 

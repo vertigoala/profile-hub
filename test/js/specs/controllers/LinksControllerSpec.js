@@ -5,6 +5,13 @@ describe("LinksController tests", function () {
         getPathItem: function () {
             return "12345"
         },
+        getEntityId: function (str) {
+            if (str == "opus") {
+                return "opusId1"
+            } else if (str == "profile") {
+                return "profileId1"
+            }
+        },
         LAST: "last"
     };
     var messageService;
@@ -120,6 +127,8 @@ describe("LinksController tests", function () {
     });
 
     it("should invoke the updateLinks method of the profile service with the correct values when saveLinks is invoked", function () {
+        scope.linkCtrl.opusId = "opusId1";
+        scope.linkCtrl.profileId = "profileId1";
         var links = '[{"uuid":"uuid1","url":"url1","title":"first","description":"desc1"},{"uuid":"uuid1","url":"url2","title":"second","description":"desc2"}]';
         scope.linkCtrl.profile = {"uuid": "profileId1"};
         scope.linkCtrl.links = JSON.parse(links);
@@ -130,7 +139,7 @@ describe("LinksController tests", function () {
 
         var data = '{"profileId":"profileId1","links":' + links + '}';
 
-        expect(profileService.updateLinks).toHaveBeenCalledWith("profileId1", data);
+        expect(profileService.updateLinks).toHaveBeenCalledWith("opusId1", "profileId1", data);
         expect(messageService.success).toHaveBeenCalled();
     });
 

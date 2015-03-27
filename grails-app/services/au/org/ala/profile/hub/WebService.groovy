@@ -148,7 +148,7 @@ class WebService {
             }
             int responseCode = conn.getResponseCode()
             if (responseCode == HttpStatus.SC_OK || responseCode == HttpStatus.SC_NO_CONTENT) {
-                response = [success: true, statusCode: responseCode]
+                response = [resp: [success: true], statusCode: responseCode]
             } else {
                 response = [error: "Delete Failed",
                            statusCode: responseCode]

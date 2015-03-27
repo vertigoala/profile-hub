@@ -2,8 +2,6 @@ package au.org.ala.profile.hub
 
 import grails.converters.JSON
 
-import static org.apache.http.HttpStatus.SC_OK
-
 class CollectoryController extends BaseController {
 
     CollectoryService collectoryService

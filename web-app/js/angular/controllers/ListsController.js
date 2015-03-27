@@ -9,7 +9,10 @@ profileEditor.controller('ListsEditor', function (profileService, util, messageS
     self.init = function (edit) {
         self.readonly = edit != 'true';
 
-        var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
+        self.opusId = util.getEntityId("opus");
+        self.profileId = util.getEntityId("profile");
+
+        var profilePromise = profileService.getProfile(self.opusId, self.profileId);
         profilePromise.then(function (data) {
                 self.profile = data.profile;
                 self.opus = data.opus;
@@ -26,7 +29,7 @@ profileEditor.controller('ListsEditor', function (profileService, util, messageS
         if (self.profile.guid) {
             messageService.info("Loading lists...");
 
-            var listsPromise = profileService.retrieveLists(self.profile.guid);
+            var listsPromise = profileService.retrieveLists(self.opusId, self.profileId, self.profile.guid);
 
             listsPromise.then(function (data) {
                     console.log("Fetched " + data.length + " lists");

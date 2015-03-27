@@ -9,7 +9,10 @@ profileEditor.controller('BHLLinksEditor', function (profileService, util, messa
     self.init = function (edit) {
         self.readonly = edit != 'true';
 
-        var future = profileService.getProfile(util.getPathItem(util.LAST));
+        self.opusId = util.getEntityId("opus");
+        self.profileId = util.getEntityId("profile");
+
+        var future = profileService.getProfile(self.opusId, self.profileId);
 
         future.then(function (data) {
             self.profile = data.profile;
@@ -58,7 +61,7 @@ profileEditor.controller('BHLLinksEditor', function (profileService, util, messa
     };
 
     self.saveLinks = function () {
-        var promise = profileService.updateBhlLinks(self.profile.uuid, JSON.stringify({
+        var promise = profileService.updateBhlLinks(self.opusId, self.profile.uuid, JSON.stringify({
             profileId: self.profile.uuid,
             links: self.bhl
         }));

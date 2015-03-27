@@ -33,8 +33,11 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         self.biocacheInfoUrl = biocacheInfoUrl;
         self.biocacheWMSUrl = biocacheWMSUrl;
 
+        self.opusId = util.getEntityId("opus");
+        self.profileId = util.getEntityId("profile");
+
         messageService.info("Loading map...");
-        var future = profileService.getProfile(util.getPathItem(util.LAST));
+        var future = profileService.getProfile(self.opusId, self.profileId);
 
         future.then(function (data) {
                 self.profile = data.profile;

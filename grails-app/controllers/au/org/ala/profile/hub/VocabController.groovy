@@ -1,5 +1,8 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.security.Role
+import au.org.ala.profile.security.Secured
+
 class VocabController extends BaseController {
 
     ProfileService profileService
@@ -14,6 +17,7 @@ class VocabController extends BaseController {
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_ADMIN)
     def update() {
         def json = request.getJSON();
         if (!params.vocabId || !json) {
@@ -25,6 +29,7 @@ class VocabController extends BaseController {
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_ADMIN)
     def findUsagesOfTerm() {
         if (!params.vocabId || !params.termName) {
             badRequest()
@@ -35,6 +40,7 @@ class VocabController extends BaseController {
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_ADMIN)
     def replaceUsagesOfTerm() {
         def json = request.getJSON();
         if (!json) {

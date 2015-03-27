@@ -1,10 +1,11 @@
 package au.org.ala.profile.hub
 
+import static au.org.ala.profile.security.Role.*
+import au.org.ala.profile.security.Secured
+
 import static au.org.ala.profile.hub.util.HubConstants.*
 import grails.converters.JSON
 import au.org.ala.web.AuthService
-
-import static org.apache.http.HttpStatus.SC_OK
 
 class OpusController extends BaseController {
 
@@ -17,11 +18,11 @@ class OpusController extends BaseController {
         render view: 'index', model: [
                 logoUrl      : DEFAULT_OPUS_LOGO_URL,
                 bannerUrl    : DEFAULT_OPUS_BANNER_URL,
-                pageTitle    : DEFAULT_OPUS_TITLE,
-                isAdmin      : true // TODO determine ADMIN group membership
+                pageTitle    : DEFAULT_OPUS_TITLE
         ]
     }
 
+    @Secured(role = ROLE_ADMIN, opusSpecific = false)
     def create() {
         render view: "edit", model: [
                 logoUrl    : DEFAULT_OPUS_LOGO_URL,
@@ -31,6 +32,7 @@ class OpusController extends BaseController {
         ]
     }
 
+    @Secured(role = ROLE_PROFILE_ADMIN)
     def edit() {
         def opus = profileService.getOpus(params.opusId as String)
 
@@ -79,20 +81,20 @@ class OpusController extends BaseController {
         }
     }
 
-    def findUser() {
-        def jsonRequest = request.getJSON()
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def updateUsers() {
+        def jsonRequest = request.getJSON();
 
-        if (!jsonRequest || !jsonRequest.userName) {
+        if (!params.opusId || !jsonRequest) {
             badRequest()
         } else {
-            log.debug "Searching for user ${jsonRequest.userName}....."
-
-            def response = userService.findUser(jsonRequest.userName)
+            def response = profileService.updateOpusUsers(params.opusId, jsonRequest)
 
             handle response
         }
     }
 
+    @Secured(role = ROLE_PROFILE_ADMIN)
     def updateOpus() {
         def jsonRequest = request.getJSON();
 
@@ -105,6 +107,7 @@ class OpusController extends BaseController {
         }
     }
 
+    @Secured(role = ROLE_ADMIN, opusSpecific = false)
     def createOpus() {
         def jsonRequest = request.getJSON();
 
@@ -117,19 +120,14 @@ class OpusController extends BaseController {
         }
     }
 
+    @Secured(role = ROLE_ADMIN, opusSpecific = false)
     def deleteOpus() {
         if (!params.opusId) {
             badRequest "opusId is a required parameter"
         } else {
-            def resp = profileService.deleteOpus(params.opusId as String)
+            def response = profileService.deleteOpus(params.opusId as String)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                sendError(resp.statusCode, resp.error ?: "")
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render resp.success as JSON
-            }
+            handle response
         }
     }
 

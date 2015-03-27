@@ -13,7 +13,10 @@ profileEditor.controller('LinksEditor', function (profileService, util, messageS
     };
 
     function loadLinks() {
-        var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
+        self.opusId = util.getEntityId("opus");
+        self.profileId = util.getEntityId("profile");
+
+        var profilePromise = profileService.getProfile(self.opusId, self.profileId);
         profilePromise.then(function (data) {
                 self.profile = data.profile;
                 self.opus = data.opus;
@@ -34,7 +37,7 @@ profileEditor.controller('LinksEditor', function (profileService, util, messageS
     };
 
     self.saveLinks = function () {
-        var promise = profileService.updateLinks(self.profile.uuid, JSON.stringify({profileId: self.profile.uuid, links: self.links}));
+        var promise = profileService.updateLinks(self.opusId, self.profile.uuid, JSON.stringify({profileId: self.profile.uuid, links: self.links}));
         promise.then(function () {
                 messageService.success("Links successfully updated.");
                 loadLinks();

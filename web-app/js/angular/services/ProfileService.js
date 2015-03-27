@@ -10,10 +10,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
     }
 
     return {
-        getProfile: function (profileId) {
+        getProfile: function (opusId, profileId) {
             console.log("Fetching profile " + profileId);
 
-            var future = $http.get(util.contextRoot() + "/profile/json/" + profileId, {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {cache: true});
             future.then(function (response) {
                 console.log("Profile fetched with response code " + response.status);
             });
@@ -21,9 +21,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
-        deleteProfile: function(profileId, opusId) {
+        deleteProfile: function(opusId, profileId) {
             console.log("Deleting profile " + profileId + " from opus " + opusId);
-            var future = $http.delete(util.contextRoot() + "/profile/delete?profileId=" + profileId + "&opusId=" + opusId);
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/delete");
             future.then(function (response) {
                 console.log("Profile deleted with response code " + response.status);
             });
@@ -33,7 +33,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
 
         createProfile: function(opusId, scientificName) {
             console.log("Creating profile for " + scientificName + " in opus " + opusId);
-            var future = $http.put(util.contextRoot() + "/profile/", {opusId: opusId, scientificName: scientificName});
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/create", {opusId: opusId, scientificName: scientificName});
             future.then(function(response) {
                 console.log("Profile created with response code " + response.status);
             });
@@ -49,7 +49,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
 
             console.log("Fetching opus " + opusId);
 
-            var future = $http.get(util.contextRoot() + "/opus/json/" + opusId, {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/json", {cache: true});
             future.then(function (response) {
                 console.log("Opus fetched with response code " + response.status);
             });
@@ -69,7 +69,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
 
         deleteOpus: function(opusId) {
             console.log("Deleting opus " + opusId);
-            var future = $http.delete(util.contextRoot() + "/opus/" + opusId);
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/delete");
             future.then(function(response) {
                 console.log("Opus deleted with response code " + response.status);
             });
@@ -81,10 +81,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             var future;
             if (opusId) {
                 console.log("Saving opus " + opusId);
-                future = $http.post(util.contextRoot() + "/opus/" + opusId, opus);
+                future = $http.post(util.contextRoot() + "/opus/" + opusId + "/update", opus);
             } else {
                 console.log("Creating new opus...");
-                future = $http.put(util.contextRoot() + "/opus/", opus);
+                future = $http.put(util.contextRoot() + "/opus/create", opus);
             }
             future.then(function(response) {
                 console.log("Opus saved with response code " + response.status);
@@ -95,9 +95,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
-        getOpusVocabulary: function (vocubularyId) {
+        getOpusVocabulary: function (opusId, vocubularyId) {
             console.log("Fetching vocabulary " + vocubularyId);
-            var future = $http.get(util.contextRoot() + "/vocab/" + vocubularyId, {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/vocab/" + vocubularyId, {cache: true});
             future.then(function (response) {
                 console.log("Vocab fetched with response code " + response.status);
 
@@ -106,27 +106,27 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
-        updateVocabulary: function(vocabularyId, data) {
+        updateVocabulary: function(opusId, vocabularyId, data) {
             console.log("Updating vocabulary " + vocabularyId);
-            var future = $http.post(util.contextRoot() + "/vocab/" + vocabularyId, data);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/vocab/" + vocabularyId + "/update", data);
             future.then(function(response) {
                 console.log("Vocab updated with response code " + response.status);
             });
             return util.toStandardPromise(future);
         },
 
-        findUsagesOfVocabTerm: function(vocabularyId, termName) {
+        findUsagesOfVocabTerm: function(opusId, vocabularyId, termName) {
             console.log("Finding usages of vocab term " + termName + " from vocab " + vocabularyId);
-            var future = $http.get(util.contextRoot() + "/vocab/usages/find?vocabId=" + vocabularyId + "&termName=" + termName);
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/vocab/" + vocabularyId + "/findUsages?termName=" + termName);
             future.then(function (response) {
                 console.log("Usages found with response code " + response.status)
             });
             return util.toStandardPromise(future);
         },
 
-        replaceUsagesOfVocabTerm: function(data) {
+        replaceUsagesOfVocabTerm: function(opusId, vocabularyId, data) {
             console.log("Replacing usages of vocab terms");
-            var future = $http.post(util.contextRoot() + "/vocab/usages/replace", data);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/vocab/" + vocabularyId + "/replaceUsages", data);
             future.then(function (response) {
                 console.log("Terms replaced with response code " + response.status)
             });
@@ -142,67 +142,74 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
-        deleteAttribute: function (attributeId, profileId) {
+        deleteAttribute: function (opusId, profileId, attributeId) {
             console.log("Deleting attribute " + attributeId);
-            var future = $http.delete(util.contextRoot() + "/profile/deleteAttribute/" + attributeId + "?profileId=" + profileId, {cache: true});
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/attribute/" + attributeId + "/delete", {cache: true});
             future.then(function (response) {
-                console.log("Attribute deleted with response code " + response.status)
+                console.log("Attribute deleted with response code " + response.status);
 
                 clearCache();
             });
             return util.toStandardPromise(future);
         },
 
-        saveAttribute: function (profileId, attributeId, data) {
+        saveAttribute: function (opusId, profileId, attributeId, data) {
             console.log("Saving attribute " + attributeId);
-            var future = $http.post(util.contextRoot() + "/profile/updateAttribute/" + profileId, data);
+            var future = null;
+
+            if (attributeId) {
+                future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/attribute/" + attributeId + "/update", data);
+            } else {
+                future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/attribute/create", data);
+            }
+
             future.then(function (response) {
-                console.log("Attribute saved with response code " + response.status)
+                console.log("Attribute saved with response code " + response.status);
 
                 clearCache();
             });
             return util.toStandardPromise(future);
         },
 
-        retrieveImages: function (searchIdentifier, imageSources) {
+        retrieveImages: function (opusId, profileId, searchIdentifier, imageSources) {
             console.log("Retrieving images for " + searchIdentifier);
-            var future = $http.get(util.contextRoot() + "/profile/images?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources, {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/images?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources, {cache: true});
             future.then(function (response) {
                 console.log("Images retrieved with response code " + response.status)
             });
             return util.toStandardPromise(future);
         },
 
-        retrieveLists: function (guid) {
+        retrieveLists: function (opusId, profileId, guid) {
             console.log("Retrieving lists for " + guid);
-            var future = $http.get(util.contextRoot() + "/profile/lists?guid=" + guid, {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/lists?guid=" + guid, {cache: true});
             future.then(function (response) {
                 console.log("Lists retrieved with response code " + response.status)
             });
             return util.toStandardPromise(future);
         },
 
-        getClassifications: function (guid, opusId) {
+        getClassifications: function (opusId, profileId, guid) {
             console.log("Retrieving classifications for " + guid);
-            var future = $http.get(util.contextRoot() + "/profile/classifications?guid=" + guid + "&opusId=" + opusId, {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/classifications?guid=" + guid, {cache: true});
             future.then(function (response) {
                 console.log("Classifications retrieved with response code " + response.status)
             });
             return util.toStandardPromise(future);
         },
 
-        getSpeciesProfile: function (guid) {
+        getSpeciesProfile: function (opusId, profileId, guid) {
             console.log("Retrieving species profile for " + guid);
-            var future = $http.get(util.contextRoot() + "/profile/speciesProfile?guid=" + guid, {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/speciesProfile?guid=" + guid, {cache: true});
             future.then(function (response) {
                 console.log("Species Profile retrieved with response code " + response.status)
             });
             return util.toStandardPromise(future);
         },
 
-        updateLinks: function(profileId, links) {
+        updateLinks: function(opusId, profileId, links) {
             console.log("Updating links for profile " + profileId);
-            var future = $http.post(util.contextRoot() + "/profile/updateLinks/" + profileId, links);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/links/update", links);
             future.then(function (response) {
                 console.log("Links updated with response code " + response.status);
 
@@ -211,9 +218,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
-        updateBhlLinks: function(profileId, links) {
+        updateBhlLinks: function(opusId, profileId, links) {
             console.log("Updating BHL links for profile " + profileId);
-            var future = $http.post(util.contextRoot() + "/profile/updateBHLLinks/" + profileId, links);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/bhllinks/update", links);
             future.then(function (response) {
                 console.log("BHL Links updated with response code " + response.status);
 
@@ -247,7 +254,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
         listResources: function () {
             console.log("Fetching all resources");
 
-            var future = $http.get(util.contextRoot()+ "/dataResource/list");
+            var future = $http.get(util.contextRoot()+ "/dataResource");
             future.then(function (response) {
                 console.log("Resources fetched with response code " + response.status);
             });
@@ -269,7 +276,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
         userSearch: function(email) {
             console.log("Searching for user " + email);
 
-            var future = $http.post(util.contextRoot() + "/opus/findUser", {userName: email});
+            var future = $http.get(util.contextRoot() + "/user/search?userName=" + email);
             future.then(function (response) {
                 console.log("Search completed with response code " + response.status);
             });
@@ -286,7 +293,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
                 editors: editors
             };
 
-            var future = $http.post(util.contextRoot() + "/opus/updateUsers", data);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/users/update", data);
             future.then(function (response) {
                 console.log("Update Users completed with response code " + response.status);
 

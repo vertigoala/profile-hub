@@ -5,6 +5,13 @@ describe("MapController tests", function () {
         getPathItem: function () {
             return "12345"
         },
+        getEntityId: function (str) {
+            if (str == "opus") {
+                return "opusId1"
+            } else if (str == "profile") {
+                return "profileId1"
+            }
+        },
         LAST: "last"
     };
     var messageService;

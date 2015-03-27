@@ -75,7 +75,7 @@
                     <span class="pull-right">
                         <span class="blockquote small">
                             Originally copied from: <a
-                                href="${request.contextPath}/profile/{{attribute.original.profile.uuid}}" target="_self">{{attribute.original.profile.opus.title}}</a>
+                                href="${request.contextPath}/opus/{{attrCtrl.opusId}}/profile/{{attribute.original.profile.uuid}}" target="_self">{{attribute.original.profile.opus.title}}</a>
                         </span>
                     </span>
                 </span>
@@ -107,7 +107,7 @@
                     <span class="pull-right">
                         <span class="small pull-right" ng-show="attribute.source">
                             Source: <a
-                                href="${request.contextPath}/profile/{{attribute.source.profileId}}" target="_self">{{attribute.source.opusTitle}}</a>
+                                href="${request.contextPath}/opus/{{attrCtrl.opusId}}/profile/{{attribute.source.profileId}}" target="_self">{{attribute.source.opusTitle}}</a>
                         </span>
                         <span class="small" ng-show="attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes">
                            <a href="#" ng-click="attrCtrl.viewInOtherCollections($index)">Show {{attribute.title}} in other collections</a>

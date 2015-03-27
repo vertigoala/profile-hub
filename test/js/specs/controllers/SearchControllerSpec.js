@@ -5,6 +5,13 @@ describe("SearchController tests", function () {
         getPathItem: function () {
             return "12345"
         },
+        getEntityId: function (str) {
+            if (str == "opus") {
+                return "opusId1"
+            } else if (str == "profile") {
+                return "profileId1"
+            }
+        },
         LAST: "last"
     };
     var messageService;
@@ -57,6 +64,6 @@ describe("SearchController tests", function () {
         scope.searchCtrl.search();
         scope.$apply();
 
-        expect(profileService.profileSearch).toHaveBeenCalledWith("12345", searchTerm, true);
+        expect(profileService.profileSearch).toHaveBeenCalledWith("opusId1", searchTerm, true);
     });
 });

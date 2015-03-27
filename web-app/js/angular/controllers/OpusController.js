@@ -5,7 +5,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     var self = this;
 
     self.opus = null;
-    self.opusId = util.getPathItem(util.LAST);
+    self.opusId = null;
     self.opusList = [];
     self.readonly = true;
     self.dataResource = null;
@@ -16,17 +16,12 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.newSupportingOpuses = [];
     self.valid = false;
 
-    // make sure we have a UUID, not just the last element of some other URL (e.g. create)
-    if (!util.isUuid(self.opusId)) {
-        self.opusId = null;
-        self.opus = {uuid: null, title: ""};
-        console.log("Creating new opus....");
-    }
-
     loadResources();
     loadOpusList();
 
     self.loadOpus = function() {
+        self.opusId = util.getEntityId("opus");
+
         if (!self.opusId) {
             return;
         }
@@ -37,7 +32,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 console.log("Retrieved " + data.title);
                 self.opus = data;
 
-                toggleMapPointerColourHash();
+                toggleMapPointerColourHash(true);
 
                 loadDataResource(self.opus.dataResourceUid);
 
@@ -55,11 +50,11 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         messageService.info("Saving...");
         self.saving = true;
 
-        toggleMapPointerColourHash();
+        toggleMapPointerColourHash(false);
 
         var promise = profileService.saveOpus(self.opusId, self.opus);
         promise.then(function (data) {
-                toggleMapPointerColourHash();
+                toggleMapPointerColourHash(true);
 
                 messageService.pop();
                 messageService.success("Successfully updated " + self.opus.title + ".");
@@ -213,7 +208,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         deleteConf.then(function() {
             var promise = profileService.deleteOpus(self.opus.uuid);
             promise.then(function() {
-                    util.redirect(util.contextRoot() + "/opus/");
+                    util.redirect(util.contextRoot() + "/");
                 },
                 function() {
                     messageService.alert("An error occurred while deleting the collection.")
@@ -221,11 +216,13 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         });
     };
 
-    function toggleMapPointerColourHash() {
+    function toggleMapPointerColourHash(shouldExist) {
         if (self.opus.mapPointColour) {
-            if (self.opus.mapPointColour.indexOf("#") > -1) {
+            if (!shouldExist && self.opus.mapPointColour.indexOf("#") > -1) {
+                console.log("removing #")
                 self.opus.mapPointColour = self.opus.mapPointColour.substr(1);
-            } else {
+            } else if (shouldExist && self.opus.mapPointColour.indexOf("#") == -1) {
+                console.log("adding #")
                 self.opus.mapPointColour = "#" + self.opus.mapPointColour;
             }
         }
@@ -265,9 +262,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         var promise = profileService.listOpus();
         promise.then(function (data) {
             angular.forEach(data, function (opus) {
-                if (opus.uuid != self.opus.uuid) {
-                    self.opusList.push({uuid: opus.uuid, title: opus.title, thumbnailUrl: opus.thumbnailUrl, pubDescription: opus.pubDescription})
-                }
+                self.opusList.push({uuid: opus.uuid, title: opus.title, thumbnailUrl: opus.thumbnailUrl, pubDescription: opus.pubDescription})
             });
         })
     }

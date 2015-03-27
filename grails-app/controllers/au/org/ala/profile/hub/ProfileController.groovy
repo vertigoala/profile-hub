@@ -1,5 +1,7 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.security.Role
+import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
 import static org.apache.http.HttpStatus.*
@@ -13,6 +15,7 @@ class ProfileController extends BaseController {
 
     def index() {}
 
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def edit() {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
@@ -22,7 +25,6 @@ class ProfileController extends BaseController {
             if (!profile) {
                 notFound()
             } else {
-                // TODO need CAS check here
                 Map model = profile
                 model << [edit: true, currentUser: authService.getDisplayName()]
                 render view: "show", model: model
@@ -46,6 +48,7 @@ class ProfileController extends BaseController {
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def createProfile() {
         def jsonRequest = request.getJSON();
 
@@ -73,51 +76,47 @@ class ProfileController extends BaseController {
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def deleteProfile() {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
         } else {
-            def resp = profileService.deleteProfile(params.profileId as String)
+            def response = profileService.deleteProfile(params.profileId as String)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                sendError(resp.statusCode, resp.error ?: "")
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                redirect(controller: "opus", action: "show", params: [opusId: params.opusId])
-            }
+            handle response
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def updateBHLLinks() {
         def jsonRequest = request.getJSON()
 
-        if (!jsonRequest || !jsonRequest.profileId || !jsonRequest.links) {
+        if (!jsonRequest || !params.profileId) {
             badRequest()
         } else {
-            log.debug "Updating attributing....."
-            //TODO check user in ROLE.....
-            def response = profileService.updateBHLLinks(jsonRequest.profileId as String, jsonRequest.links)
+            log.debug "Updating bhl links....."
+            def response = profileService.updateBHLLinks(params.profileId as String, jsonRequest.links)
 
             handle response
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def updateLinks() {
-        log.debug "Updating attributing....."
-
         def jsonRequest = request.getJSON()
-        if (!jsonRequest || !jsonRequest.profileId || !jsonRequest.links) {
+
+        if (!jsonRequest || !params.profileId) {
             badRequest()
         } else {
+            log.debug "Updating links....."
 
-            //TODO check user in ROLE.....
-            def response = profileService.updateLinks(jsonRequest.profileId as String, jsonRequest.links)
+            def response = profileService.updateLinks(params.profileId as String, jsonRequest.links)
 
             handle response
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def updateAttribute() {
         log.debug "Updating attributing....."
         def jsonRequest = request.getJSON()
@@ -126,27 +125,20 @@ class ProfileController extends BaseController {
         if (!jsonRequest || !jsonRequest.has("uuid") || !params.profileId) {
             badRequest()
         } else {
-            //TODO check user in ROLE.....
             def response = profileService.updateAttribute(params.profileId, jsonRequest)
 
             handle response
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def deleteAttribute() {
         if (!params.attributeId || !params.profileId) {
             badRequest "attributeId and profileId are required parameters"
         } else {
-            //TODO check user in ROLE.....
-            def resp = profileService.deleteAttribute(params.attributeId, params.profileId)
+            def response = profileService.deleteAttribute(params.attributeId, params.profileId)
 
-            if (resp.statusCode != SC_OK) {
-                response.status = resp.statusCode
-                sendError(resp.statusCode, resp.error ?: "")
-            } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
-                render([success: true] as JSON)
-            }
+            handle response
         }
     }
 

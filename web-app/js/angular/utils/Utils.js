@@ -99,6 +99,28 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Get the specified entity id from the URL.
+     *
+     * Assumes all urls are in the form http://.../entity1/entity1Id/entity2/entity2Id/...
+     */
+    function getEntityId(entity) {
+        var entityId = null;
+
+        var path = getPath().split("/");
+        if (path) {
+            var entityIndex = path.indexOf(entity);
+            entityId = path[entityIndex + 1];
+
+            // make sure we have a UUID, not just the last element of some other URL (e.g. create)
+            if (!isUuid(entityId)) {
+                entityId = null;
+            }
+        }
+
+        return entityId;
+    }
+
+    /**
      * Take the current URL and work out the context path.
      * $location.path only works when HTML 5 mode is enabled. This approach works in both HTML 5 and HashBang modes.
      *
@@ -130,6 +152,10 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
             var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
             console.log(msg);
             defer.reject(msg);
+            if (status == 403) {
+                console.log("not authorised")
+                redirect(contextRoot() + "/notAuthorised");
+            }
         });
 
         return defer.promise;
@@ -195,6 +221,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         isUuid: isUuid,
         confirm: confirm,
         redirect: redirect,
+        getEntityId: getEntityId,
 
         LAST: LAST,
         FIRST: FIRST,

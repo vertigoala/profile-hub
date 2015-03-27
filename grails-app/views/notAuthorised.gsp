@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
-    <title>Error</title>
+    <title>Not Authorised</title>
     <r:require module="profiles"/>
 </head>
 
@@ -18,7 +18,7 @@
     </div>
 
     <div class="row-fluid">
-        <div class="alert alert-danger">An unexpected error has occurred while processing your request.</div>
+        <div class="alert alert-danger">You do not have the necessary permissions to perform this action.</div>
     </div>
 </div>
 </body>

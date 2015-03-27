@@ -9,6 +9,13 @@ describe("VocabController tests", function () {
         isUuid: function() {
             return true;
         },
+        getEntityId: function (str) {
+            if (str == "opus") {
+                return "opusId1"
+            } else if (str == "profile") {
+                return "profileId1"
+            }
+        },
         LAST: "last"
     };
     var mockPopup = {
@@ -171,7 +178,7 @@ describe("VocabController tests", function () {
         scope.vocabCtrl.removeVocabTerm(1, form);
         scope.$apply();
 
-        expect(profileService.findUsagesOfVocabTerm).toHaveBeenCalledWith("vocabId", "term2");
+        expect(profileService.findUsagesOfVocabTerm).toHaveBeenCalledWith("opusId1", "vocabId", "term2");
         expect(scope.vocabCtrl.vocabulary.terms.length).toBe(2);
         expect(scope.vocabCtrl.vocabulary.terms[0].name).toBe("term1");
         expect(scope.vocabCtrl.vocabulary.terms[1].name).toBe("term3");
@@ -211,8 +218,8 @@ describe("VocabController tests", function () {
         scope.vocabCtrl.saveVocabulary(form);
         scope.$apply();
 
-        expect(profileService.updateVocabulary).toHaveBeenCalledWith("vocabId", vocab);
-        expect(profileService.getOpusVocabulary).toHaveBeenCalledWith("vocabId");
+        expect(profileService.updateVocabulary).toHaveBeenCalledWith("opusId1", "vocabId", vocab);
+        expect(profileService.getOpusVocabulary).toHaveBeenCalledWith("opusId1", "vocabId");
     });
 
     it("should raise an alert message if the call to updateVocabulary fails", function() {
@@ -241,6 +248,6 @@ describe("VocabController tests", function () {
         scope.vocabCtrl.saveVocabulary(form);
         scope.$apply();
 
-        expect(profileService.replaceUsagesOfVocabTerm).toHaveBeenCalledWith(replacements);
+        expect(profileService.replaceUsagesOfVocabTerm).toHaveBeenCalledWith("opusId1", "vocabId", replacements);
     });
 });

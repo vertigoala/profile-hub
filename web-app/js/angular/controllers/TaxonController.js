@@ -10,7 +10,10 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
     self.init = function (edit) {
         self.readonly = edit != 'true';
 
-        var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
+        self.opusId = util.getEntityId("opus");
+        self.profileId = util.getEntityId("profile");
+
+        var profilePromise = profileService.getProfile(self.opusId, self.profileId);
         profilePromise.then(function (data) {
                 self.profile = data.profile;
                 self.opus = data.opus;
@@ -28,7 +31,7 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
         if (self.profile.guid) {
             messageService.info("Loading taxonomy...");
 
-            var promise = profileService.getClassifications(self.profile.guid, self.opus.uuid);
+            var promise = profileService.getClassifications(self.opusId, self.profileId, self.profile.guid);
             promise.then(function (data) {
                     console.log("Fetched " + data.length + " classifications");
 
@@ -46,7 +49,7 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
         if (self.profile.guid) {
             messageService.info("Loading taxon...");
 
-            var promise = profileService.getSpeciesProfile(self.profile.guid);
+            var promise = profileService.getSpeciesProfile(self.opusId, self.profileId, self.profile.guid);
             promise.then(function (data) {
                     console.log("Fetched species profile");
 

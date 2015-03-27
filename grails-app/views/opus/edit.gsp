@@ -23,11 +23,7 @@
                 <li><i class="fa fa-arrow-left"></i></span><span class="divider"><a href="${request.contextPath}/" target="_self">View all profile collections</a></li>
             </ol>
         </div>
-        <div class="span6">
-            <div class="pull-right">
-                <a href="#" onclick="javascript:alert('Not implemented - through to users edits')" ng-hide="!config.currentUser">Logged in: {{config.currentUser}}</a>
-            </div>
-        </div>
+        <g:render template="../layouts/login"/>
     </div>
 
     <div class="row-fluid" ng-cloak>
@@ -41,7 +37,9 @@
         <div class="span4" ng-cloak>
             <div class="pull-right">
                 <a href="${request.contextPath}/opus/{{opusCtrl.opus.uuid}}" class="btn btn-success" target="_self" ng-show="opusCtrl.opus.uuid"><i class="icon-eye-open icon-white"></i> Public View</a>
-                <button ng-click="opusCtrl.deleteOpus()" class="btn btn-danger" target="_self" ng-show="opusCtrl.opus.uuid"><i class="icon-remove icon-white"></i> Delete this collection</button>
+                <g:if test="${params.isOpusAdmin}">
+                    <button ng-click="opusCtrl.deleteOpus()" class="btn btn-danger" target="_self" ng-show="opusCtrl.opus.uuid"><i class="icon-remove icon-white"></i> Delete this collection</button>
+                </g:if>
             </div>
         </div>
     </div>
@@ -50,29 +48,29 @@
         <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
     </div>
 
-    <g:include controller="opus" action="editOpusDetailsPanel"/>
+    <g:include controller="opus" action="editOpusDetailsPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editAccessControlPanel"/>
+    <g:include controller="opus" action="editAccessControlPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editStylingPanel"/>
+    <g:include controller="opus" action="editStylingPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editMapConfigPanel"/>
+    <g:include controller="opus" action="editMapConfigPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="taxaUploadPanel"/>
+    <g:include controller="opus" action="taxaUploadPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="occurrenceUploadPanel"/>
+    <g:include controller="opus" action="occurrenceUploadPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="phyloUploadPanel"/>
+    <g:include controller="opus" action="phyloUploadPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="keyUploadPanel"/>
+    <g:include controller="opus" action="keyUploadPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editImageSourcesPanel"/>
+    <g:include controller="opus" action="editImageSourcesPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editRecordSourcesPanel"/>
+    <g:include controller="opus" action="editRecordSourcesPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editSupportingOpusPanel"/>
+    <g:include controller="opus" action="editSupportingOpusPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editVocabPanel"/>
+    <g:include controller="opus" action="editVocabPanel" params="[opusId: params.opusId]"/>
 
 </div>
 

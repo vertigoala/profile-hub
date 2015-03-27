@@ -183,9 +183,9 @@ class ProfileControllerSpec extends Specification {
         assert response.status == 666
     }
 
-    def "deleteProfile should redirect to the show opus view on success"() {
+    def "deleteProfile should return the success indicator on success"() {
         setup:
-        profileService.deleteProfile(_) >> [resp: [], statusCode: 200]
+        profileService.deleteProfile(_) >> [resp: [success: true], statusCode: 200]
 
         when:
         params.profileId = "profile1"
@@ -193,8 +193,8 @@ class ProfileControllerSpec extends Specification {
         controller.deleteProfile()
 
         then:
-        assert response.status == HttpStatus.SC_MOVED_TEMPORARILY
-        assert response.redirectUrl == "/opus/show?opusId=opus1"
+        assert response.status == HttpStatus.SC_OK
+        assert response.json == [success: true]
     }
 
     def "updateBHLLinks should return a 400 (BAD REQUEST) if the json body is empty"() {
@@ -228,6 +228,7 @@ class ProfileControllerSpec extends Specification {
         profileService.updateBHLLinks(_, _) >> [resp: ["link1", "link2"], statusCode: 200]
 
         when:
+        params.profileId = "1"
         request.JSON = """{profileId: "1", links: "xyz"}"""
         controller.updateBHLLinks()
 
@@ -241,6 +242,7 @@ class ProfileControllerSpec extends Specification {
         profileService.updateBHLLinks(_, _) >> [error: "something died!", statusCode: 666]
 
         when:
+        params.profileId = "1"
         request.JSON = """{profileId: "1", links: "xyz"}"""
         controller.updateBHLLinks()
 
@@ -279,6 +281,7 @@ class ProfileControllerSpec extends Specification {
         profileService.updateLinks(_, _) >> [resp: ["link1", "link2"], statusCode: 200]
 
         when:
+        params.profileId = "1"
         request.JSON = """{profileId: "1", links: "xyz"}"""
         controller.updateLinks()
 
@@ -292,6 +295,7 @@ class ProfileControllerSpec extends Specification {
         profileService.updateLinks(_, _) >> [error: "something died!", statusCode: 666]
 
         when:
+        params.profileId = "1"
         request.JSON = """{profileId: "1", links: "xyz"}"""
         controller.updateLinks()
 
@@ -404,7 +408,7 @@ class ProfileControllerSpec extends Specification {
 
     def "deleteAttribute should return a success indicator as JSON"() {
         setup:
-        profileService.deleteAttribute(_, _) >> [success: true, statusCode: 200]
+        profileService.deleteAttribute(_, _) >> [resp: [success: true], statusCode: 200]
 
         when:
         params.profileId = "profile1"

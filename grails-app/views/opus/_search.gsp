@@ -18,8 +18,7 @@
             <th>Taxon</th>
         </tr>
         <tr ng-repeat="profile in searchCtrl.profiles">
-            <td><a href="${createLink(mapping: 'viewProfile')}/{{ profile.profileId }}"
-                   target="_self">{{profile.scientificName}}</a>
+            <td><a href="${request.contextPath}/opus/{{ searchCtrl.opusId }}/profile/{{ profile.profileId }}" target="_self">{{profile.scientificName}}</a>
             </td>
         </tr>
     </table>

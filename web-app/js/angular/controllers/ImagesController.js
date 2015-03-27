@@ -12,7 +12,10 @@ profileEditor.controller('ImagesController', function (profileService, util, mes
         self.slides = [];
         self.images = [];
 
-        var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
+        self.opusId = util.getEntityId("opus");
+        self.profileId = util.getEntityId("profile");
+
+        var profilePromise = profileService.getProfile(self.opusId, self.profileId);
 
         profilePromise.then(function (data) {
                 self.profile = data.profile;
@@ -34,7 +37,7 @@ profileEditor.controller('ImagesController', function (profileService, util, mes
         messageService.info("Loading images...");
 
         var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : self.profile.scientificName;
-        var imagesPromise = profileService.retrieveImages(searchIdentifier, self.opus.imageSources.join());
+        var imagesPromise = profileService.retrieveImages(self.opusId, self.profileId, searchIdentifier, self.opus.imageSources.join());
 
         imagesPromise.then(function (data) {
                 console.log("Fetched " + data.occurrences.length + " images");

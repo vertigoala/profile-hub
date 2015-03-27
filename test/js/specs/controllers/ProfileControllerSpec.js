@@ -48,6 +48,7 @@ describe("ProfileController tests", function () {
         spyOn(util, "confirm").and.returnValue(confirmDefer.promise);
         spyOn(util, "contextRoot").and.returnValue("/context");
         spyOn(util, "redirect");
+        spyOn(util, "getEntityId").and.returnValue("profileId");
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -114,7 +115,7 @@ describe("ProfileController tests", function () {
         scope.profileCtrl.deleteProfile();
         scope.$apply();
 
-        expect(profileService.deleteProfile).toHaveBeenCalledWith(PROFILE_ID, "opusId");
+        expect(profileService.deleteProfile).toHaveBeenCalledWith("opusId", PROFILE_ID);
     });
 
     it("should redirect to the opus main page when deleteProfile succeeds", function() {
@@ -152,11 +153,12 @@ describe("ProfileController tests", function () {
 
     it("should open the modal dialog, and redirect to the edit profile page when it is closed, when createProfile is invoked", function() {
         modalDefer.resolve({uuid: "newProfileId"});
+        scope.profileCtrl.opusId = "opusId1";
 
         scope.profileCtrl.createProfile("opusId");
         scope.$apply();
 
-        expect(util.redirect).toHaveBeenCalledWith("/context/profile/edit/newProfileId");
+        expect(util.redirect).toHaveBeenCalledWith("/context/opus/opusId1/profile/newProfileId/update");
     });
 });
 

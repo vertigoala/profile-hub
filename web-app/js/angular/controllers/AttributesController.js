@@ -16,7 +16,10 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.init = function (edit) {
         self.readonly = edit != 'true';
 
-        var profilePromise = profileService.getProfile(util.getPathItem(util.LAST));
+        self.profileId = util.getEntityId("profile");
+        self.opusId = util.getEntityId("opus");
+
+        var profilePromise = profileService.getProfile(self.opusId, self.profileId);
         messageService.info("Loading profile data...");
         profilePromise.then(function (data) {
                 messageService.pop();
@@ -43,7 +46,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
     function loadVocabulary() {
         if (self.opus.attributeVocabUuid != null) {
-            var vocabPromise = profileService.getOpusVocabulary(self.opus.attributeVocabUuid);
+            var vocabPromise = profileService.getOpusVocabulary(self.opusId, self.opus.attributeVocabUuid);
             vocabPromise.then(function (data) {
                 self.attributeTitles = [];
                 angular.forEach(data.terms, function (term) {
@@ -82,7 +85,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
         confirmed.then(function () {
             if (self.attributes[idx].uuid !== "") {
-                var future = profileService.deleteAttribute(self.attributes[idx].uuid, self.profile.uuid);
+                var future = profileService.deleteAttribute(self.opusId, self.profileId, self.attributes[idx].uuid);
                 future.then(function () {
                         self.attributes.splice(idx, 1);
                     },
@@ -136,7 +139,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             data.editors = attribute.editors;
         }
 
-        var future = profileService.saveAttribute(self.profile.uuid, attribute.uuid, data);
+        var future = profileService.saveAttribute(self.opusId, self.profileId, attribute.uuid, data);
 
         future.then(function (attribute) {
                 self.attributes[idx].saving = false;
@@ -167,7 +170,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         var searchResult = profileService.profileSearch(supportingOpusList.join(","), self.profile.scientificName, false);
         searchResult.then(function (searchResults) {
                 angular.forEach(searchResults, function (result) {
-                    var profilePromise = profileService.getProfile(result.profileId);
+                    var profilePromise = profileService.getProfile(result.opus.uuid, result.profileId);
                     profilePromise.then(function (supporting) {
 
                         angular.forEach(supporting.profile.attributes, function (attribute) {

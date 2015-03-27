@@ -8,11 +8,18 @@
 
 <body>
 
-<div id="container">
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span6">
+            <ol class="breadcrumb" role="navigation">
+                <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/" target="_self">Home</a></li>
+            </ol>
+        </div>
+    </div>
 
-    <ul class="errors">
-        <li>The requested page does not exist</li>
-    </ul>
+    <div class="row-fluid">
+        <div class="alert alert-danger">The requested page does not exist</div>
+    </div>
 </div>
 </body>
 </html>

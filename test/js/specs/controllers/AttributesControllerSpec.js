@@ -5,6 +5,13 @@ describe("AttributesController tests", function () {
         getPathItem: function () {
             return "12345"
         },
+        getEntityId: function (str) {
+            if (str == "opus") {
+                return "opusId1"
+            } else if (str == "profile") {
+                return "profileId1"
+            }
+        },
         confirm: function() {},
         LAST: "last"
     };
@@ -182,6 +189,8 @@ describe("AttributesController tests", function () {
 
     it("should invoke the saveAttribute method of the profile service when saveAttribute is invoked", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
@@ -189,7 +198,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.saveAttribute(0, form);
         scope.$apply();
 
-        expect(profileService.saveAttribute).toHaveBeenCalledWith("profileId1", "uuid1", {
+        expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
             "title": "AttrTitle", // titles are capitalized on save
@@ -211,6 +220,8 @@ describe("AttributesController tests", function () {
 
     it("should include the original attribute when saving (if present)", function() {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", original: {uuid: "uuid2"}}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
@@ -218,7 +229,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.saveAttribute(0, form);
         scope.$apply();
 
-        expect(profileService.saveAttribute).toHaveBeenCalledWith("profileId1", "uuid1", {
+        expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
             "title": "AttrTitle", // titles are capitalized on save
@@ -229,6 +240,8 @@ describe("AttributesController tests", function () {
 
     it("should include the creators when saving (if present)", function() {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", "creators": "creatorList"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
@@ -236,7 +249,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.saveAttribute(0, form);
         scope.$apply();
 
-        expect(profileService.saveAttribute).toHaveBeenCalledWith("profileId1", "uuid1", {
+        expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
             "title": "AttrTitle", // titles are capitalized on save
@@ -247,6 +260,8 @@ describe("AttributesController tests", function () {
 
     it("should include the editors when saving (if present)", function() {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", "editors": "editorList"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
@@ -254,7 +269,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.saveAttribute(0, form);
         scope.$apply();
 
-        expect(profileService.saveAttribute).toHaveBeenCalledWith("profileId1", "uuid1", {
+        expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
             "title": "AttrTitle", // titles are capitalized on save
@@ -265,6 +280,8 @@ describe("AttributesController tests", function () {
 
     it("should raise an alert message if the attribute could not be saved", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
         saveAttrDefer.reject();
@@ -277,6 +294,8 @@ describe("AttributesController tests", function () {
 
     it("should display a success message when the attribute is saved", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
@@ -289,6 +308,8 @@ describe("AttributesController tests", function () {
 
     it("should update the uuid of the attribute when it is saved", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
@@ -301,6 +322,8 @@ describe("AttributesController tests", function () {
 
     it("should display a confirmation dialog when deleteAttribute is invoked", function () {
         scope.attrCtrl.deleteAttribute(0);
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.$apply();
 
         expect(mockUtil.confirm).toHaveBeenCalled();
@@ -308,6 +331,8 @@ describe("AttributesController tests", function () {
 
     it("should not delete the attribute if the confirmation is cancelled", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
         confirmDefer.reject();
@@ -320,6 +345,8 @@ describe("AttributesController tests", function () {
 
     it("should not invoke profileService if the attribute has not been saved (i.e. Uuid is null)", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "", "title": "attrTitle", "text": "attrText"}];
 
         confirmDefer.resolve({});
@@ -332,6 +359,8 @@ describe("AttributesController tests", function () {
 
     it("should invoke profileService if the attribute has been saved", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
         confirmDefer.resolve({});
@@ -339,12 +368,14 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.deleteAttribute(0);
         scope.$apply();
 
-        expect(profileService.deleteAttribute).toHaveBeenCalledWith("uuid1", "profileId1");
+        expect(profileService.deleteAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1");
         expect(scope.attrCtrl.attributes.length).toBe(0);
     });
 
     it("should raise an alert message if the delete fails", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
 
         confirmDefer.resolve({});
@@ -357,6 +388,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should set the title and text to the selected audit item when revertAttribute is invoked", function () {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
             {
                 title: "originalTitle2",
@@ -373,6 +406,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should populate the audit and auditShowing properties of the selected attribute when showAudit is invoked", function () {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
             {title: "originalTitle2", text: "originalText2"}];
 
@@ -388,6 +423,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should raise an alert message when the audit history cannot be retrieved", function () {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
             {title: "originalTitle2", text: "originalText2"}];
 
@@ -399,6 +436,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should set the auditShowing property of the selected attribute to false when hideAudit is invoked", function() {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
             {title: "originalTitle2", text: "originalText2"}];
 
@@ -408,6 +447,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should return true if the vocabulary is NOT strict when isValid is invoked with a value not in the vocab", function() {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.vocabularyStrict = false;
         scope.attrCtrl.attributeTitles = ["term1", "term2", "term3"];
 
@@ -417,6 +458,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should return false if the vocabulary IS strict when isValid is invoked with a value not in the vocab", function() {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.vocabularyStrict = true;
         scope.attrCtrl.attributeTitles = ["term1", "term2", "term3"];
 
@@ -426,6 +469,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should return true if the vocabulary IS strict when isValid is invoked with a value in the vocab", function() {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.vocabularyStrict = true;
         scope.attrCtrl.attributeTitles = ["term1", "term2", "term3"];
 
@@ -435,6 +480,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should create a COPY of the specified attribute and set the original property when copyAttribute is called", function() {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         var attribute1 = {uuid: "uuid1", title: "title1"};
         var attribute2 = {uuid: "uuid2", title: "title2"};
         var attribute3 = {uuid: "uuid3", title: "title3"};
@@ -448,6 +495,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should not include the current opus in the search when loadAttributesFromSupportingCollections is called", function() {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.profile = {scientificName: "profile1"};
         scope.attrCtrl.opus = {supportingOpuses: [{uuid: "support1"}, {uuid: "support2"}]};
 
@@ -457,6 +506,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should do nothing if the call to profileSearch fails when loadAttributesFromSupportingCollections is called", function() {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         searchDefer.reject();
 
         scope.attrCtrl.profile = {scientificName: "profile1"};
@@ -470,6 +521,8 @@ describe("AttributesController tests", function () {
     });
 
     it("should call add each attribute that does not exist to the list when loadAttributesFromSupportingCollections is called", function() {
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
         var attribute1 = {uuid: "uuid1", title: "title1"};
         var attribute2 = {uuid: "uuid2", title: "title2"};
         var attribute3 = {uuid: "uuid3", title: "title3"};
@@ -489,7 +542,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.loadAttributesFromSupportingCollections();
         scope.$apply();
 
-        expect(profileService.getProfile).toHaveBeenCalledWith("profile2");
+        expect(profileService.getProfile).toHaveBeenCalledWith("support1", "profile2");
         expect(scope.attrCtrl.attributes.length).toBe(3);
         expect(scope.attrCtrl.attributes[0].title).toBe("title1");
         expect(scope.attrCtrl.attributes[1].title).toBe("title2");

@@ -1,9 +1,5 @@
 package au.org.ala.profile.hub
 
-import grails.converters.JSON
-
-import static org.apache.http.HttpStatus.SC_OK
-
 class AuditController extends BaseController {
 
     ProfileService profileService

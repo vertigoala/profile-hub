@@ -14,10 +14,11 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     };
 
     self.loadProfile = function() {
-        var profileId = util.getPathItem(util.LAST);
+        self.profileId = util.getEntityId("profile");
+        self.opusId = util.getEntityId("opus");
 
-        if (profileId) {
-            var promise = profileService.getProfile(profileId);
+        if (self.profileId) {
+            var promise = profileService.getProfile(self.opusId, self.profileId);
             promise.then(function (data) {
                     self.profile = data.profile;
                     self.profileId = data.profile.uuid;
@@ -35,7 +36,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.deleteProfile = function() {
         var deleteConf = util.confirm("Are you sure you wish to delete this profile? This operation cannot be undone.");
         deleteConf.then(function() {
-            var promise = profileService.deleteProfile(self.profileId, self.opus.uuid);
+            var promise = profileService.deleteProfile(self.opus.uuid, self.profileId);
             promise.then(function() {
                     util.redirect(util.contextRoot() + "/opus/" + self.opus.uuid);
                 },
@@ -59,8 +60,8 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         });
 
         popup.result.then(function (profile) {
-            messageService.success("Prifile for " + profile.scientificName + " has been successfully created.");
-            util.redirect(util.contextRoot() + "/profile/edit/" + profile.uuid);
+            messageService.success("Profile for " + profile.scientificName + " has been successfully created.");
+            util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.uuid + "/update");
         });
     };
 });

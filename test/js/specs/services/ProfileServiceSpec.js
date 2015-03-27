@@ -41,27 +41,27 @@ describe("ProfileService tests", function () {
     });
 
     it("should invoke the get profile as json service on the context root when getProfile is called", function () {
-        service.getProfile("profileId1");
+        service.getProfile("opusId1", "profileId1");
 
-        http.expectGET("/someContext/profile/json/profileId1").respond("bla");
+        http.expectGET("/someContext/opus/opusId1/profile/profileId1/json").respond("bla");
     });
 
     it("should invoke the delete profile service on the context root when deleteProfile is called", function () {
-        service.deleteProfile("profileId", "opusId");
+        service.deleteProfile("opusId", "profileId");
 
-        http.expectDELETE("/someContext/profile/delete?profileId=profileId&opusId=opusId").respond("bla");
+        http.expectDELETE("/someContext/opus/opusId/profile/profileId/delete").respond("bla");
     });
 
     it("should invoke the createProfile service on the context root when createProfile is called", function() {
         service.createProfile("opusId", "scientificName");
 
-        http.expectPUT("/someContext/profile/", {opusId: "opusId", scientificName: "scientificName"}).respond("bla");
+        http.expectPUT("/someContext/opus/opusId/profile/create", {opusId: "opusId", scientificName: "scientificName"}).respond("bla");
     })
 
     it("should invoke the get opus as json service on the context root when getOpus is called", function () {
         service.getOpus("opusId");
 
-        http.expectGET("/someContext/opus/json/opusId").respond("bla");
+        http.expectGET("/someContext/opus/opusId/json").respond("bla");
     });
 
     it("should invoke the list opus service on the context root when listOpus is called", function() {
@@ -74,33 +74,33 @@ describe("ProfileService tests", function () {
         var data = {opusId: "opusId", imageSources: ["one", "two"]};
         service.saveOpus("opusId", data);
 
-        http.expectPOST("/someContext/opus/opusId", data).respond("bla");
+        http.expectPOST("/someContext/opus/opusId/update", data).respond("bla");
     });
 
     it("should invoke the get opus vocab service on the context root when getOpusVocabulary is called", function () {
-        service.getOpusVocabulary("vocabId1");
+        service.getOpusVocabulary("opusId", "vocabId1");
 
-        http.expectGET("/someContext/vocab/vocabId1").respond("bla")
+        http.expectGET("/someContext/opus/opusId/vocab/vocabId1").respond("bla")
     });
 
     it("should invoke the update vocab service on the context root when updateVocabulary is called", function () {
         var data = {name: "vocab1", "strict": "true", "terms": []};
-        service.updateVocabulary("vocabId1", data);
+        service.updateVocabulary("opusId", "vocabId1", data);
 
-        http.expectPOST("/someContext/vocab/vocabId1", data).respond("bla")
+        http.expectPOST("/someContext/opus/opusId/vocab/vocabId1/update", data).respond("bla")
     });
 
     it("should invoke the find term usages service on the context root when findUsagesOfVocabTerm is called", function () {
-        service.findUsagesOfVocabTerm("vocabId1", "termName");
+        service.findUsagesOfVocabTerm("opusId", "vocabId1", "termName");
 
-        http.expectGET("/someContext/vocab/usages/find?vocabId=vocabId1&termName=termName").respond("bla")
+        http.expectGET("/someContext/opus/opusId/vocab/vocabId1/findUsages?termName=termName").respond("bla")
     });
 
     it("should invoke the get opus vocab service on the context root when getOpusVocabulary is called", function () {
         var replacements = [{vocabId: "vocab1", existingTermName: "old name", newTermName: "new name"}];
-        service.replaceUsagesOfVocabTerm(replacements);
+        service.replaceUsagesOfVocabTerm("opusId", "vocabId", replacements);
 
-        http.expectPOST("/someContext/vocab/usages/replace", replacements).respond("bla")
+        http.expectPOST("/someContext/opus/opusId/vocab/vocabId/replaceUsages", replacements).respond("bla")
     });
 
     it("should invoke the get object audit service on the context root when getAuditForAttribute is called", function () {
@@ -110,62 +110,54 @@ describe("ProfileService tests", function () {
     });
 
     it("should invoke the delete attribute service on the context root when deleteAttribute is called", function () {
-        service.deleteAttribute("attrId1", "profileId1");
+        service.deleteAttribute("opusId", "profileId1", "attrId1");
 
-        http.expectDELETE("/someContext/profile/deleteAttribute/attrId1?profileId=profileId1").respond("bla");
-    });
-
-    xit("should clear the http cache after calling delete attribute", function () {
-        service.deleteAttribute("attrId1", "profileId1");
-
-        http.expectDELETE("/someContext/profile/deleteAttribute/attrId1?profileId=profileId1").respond("bla");
-        scope.$apply();
-        expect(httpCache.removeAll).toHaveBeenCalled();
+        http.expectDELETE("/someContext/opus/opusId/profile/profileId1/attribute/attrId1/delete").respond("bla");
     });
 
     it("should invoke the update attribute service on the context root when saveAttribute is called", function () {
         var data = "{attribute data}";
-        service.saveAttribute("profileId1", "attrId1", data);
+        service.saveAttribute("opusId", "profileId1", "attrId1", data);
 
-        http.expectPOST("/someContext/profile/updateAttribute/profileId1", data).respond("bla");
+        http.expectPOST("/someContext/opus/opusId/profile/profileId1/attribute/attrId1/update", data).respond("bla");
     });
 
     it("should invoke the retrieve images service on the context root when retrieveImages is called", function () {
-        service.retrieveImages("searchId1", "sourceList");
+        service.retrieveImages("opusId", "profileId", "searchId1", "sourceList");
 
-        http.expectGET("/someContext/profile/images?searchIdentifier=searchId1&imageSources=sourceList").respond("bla");
+        http.expectGET("/someContext/opus/opusId/profile/profileId/images?searchIdentifier=searchId1&imageSources=sourceList").respond("bla");
     });
 
     it("should invoke the retrieve lists service on the context root when retrieveLists is called", function () {
-        service.retrieveLists("guid1");
+        service.retrieveLists("opusId", "profileId", "guid1");
 
-        http.expectGET("/someContext/profile/lists?guid=guid1").respond("bla");
+        http.expectGET("/someContext/opus/opusId/profile/profileId/lists?guid=guid1").respond("bla");
     });
 
     it("should invoke the retrieve classifications service on the context root when getClassifications is called", function () {
-        service.getClassifications("guid1", "opus1");
+        service.getClassifications("opusId", "profileId", "guid1");
 
-        http.expectGET("/someContext/profile/classifications?guid=guid1&opusId=opus1").respond("bla");
+        http.expectGET("/someContext/opus/opusId/profile/profileId/classifications?guid=guid1").respond("bla");
     });
 
     it("should invoke the retrieve species profile service on the context root when getSpeciesProfile is called", function () {
-        service.getSpeciesProfile("guid1");
+        service.getSpeciesProfile("opusId", "profileId", "guid1");
 
-        http.expectGET("/someContext/profile/speciesProfile?guid=guid1").respond("bla");
+        http.expectGET("/someContext/opus/opusId/profile/profileId/speciesProfile?guid=guid1").respond("bla");
     });
 
     it("should invoke the update links service on the context root when updateLinks is called", function() {
         var data = "list of links";
-        service.updateLinks("profileId", data);
+        service.updateLinks("opusId", "profileId", data);
 
-        http.expectPOST("/someContext/profile/updateLinks/profileId", data).respond("bla");
+        http.expectPOST("/someContext/opus/opusId/profile/profileId/links/update", data).respond("bla");
     });
 
     it("should invoke the update BHL links service on the context root when updateBhlLinks is called", function() {
         var data = "list of links";
-        service.updateBhlLinks("profileId", data);
+        service.updateBhlLinks("opusId", "profileId", data);
 
-        http.expectPOST("/someContext/profile/updateBHLLinks/profileId", data).respond("bla");
+        http.expectPOST("/someContext/opus/opusId/profile/profileId/bhllinks/update", data).respond("bla");
     });
 
     it("should invoke the BHL lookup service on the context root when lookupBhlPage is called", function() {
@@ -183,7 +175,7 @@ describe("ProfileService tests", function () {
     it("should invoke the list collectory data resource service on the context root when listResources", function() {
         service.listResources();
 
-        http.expectGET("/someContext/dataResource/list").respond("bla");
+        http.expectGET("/someContext/dataResource").respond("bla");
     });
 
     it("should invoke the profile search operation on the context root when profileSearch is called ", function() {
@@ -201,12 +193,12 @@ describe("ProfileService tests", function () {
     it("should invoke the user search operation on the context root when userSearch is called ", function() {
         service.userSearch("fred");
 
-        http.expectPOST("/someContext/opus/findUser", {userName: "fred"}).respond("bla");
+        http.expectGET("/someContext/user/search?userName=fred").respond("bla");
     });
 
     it("should invoke the update user operation on the context root when updateUser is called ", function() {
         service.updateUsers("opus1", "admins", "editors");
 
-        http.expectPOST("/someContext/opus/updateUsers", {opusId: "opus1", admins: "admins", editors: "editors"}).respond("bla");
+        http.expectPOST("/someContext/opus/opus1/users/update", {opusId: "opus1", admins: "admins", editors: "editors"}).respond("bla");
     })
 });

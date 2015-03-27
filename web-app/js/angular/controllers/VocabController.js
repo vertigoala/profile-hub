@@ -5,7 +5,7 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
     var self = this;
 
     self.opus = null;
-    self.opusId = util.getPathItem(util.LAST);
+    self.opusId = util.getEntityId("opus");
     self.saving = false;
     self.newVocabTerm = null;
     self.vocabulary = null;
@@ -26,7 +26,7 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
     };
 
     self.removeVocabTerm = function (index, form) {
-        var promise = profileService.findUsagesOfVocabTerm(self.opus.attributeVocabUuid, self.vocabulary.terms[index].name);
+        var promise = profileService.findUsagesOfVocabTerm(self.opusId, self.opus.attributeVocabUuid, self.vocabulary.terms[index].name);
         promise.then(function (data) {
             if (data.usageCount == 0) {
                 self.vocabulary.terms.splice(index, 1);
@@ -104,10 +104,10 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
     };
 
     self.saveVocabulary = function (form) {
-        var promise = profileService.updateVocabulary(self.opus.attributeVocabUuid, self.vocabulary);
+        var promise = profileService.updateVocabulary(self.opusId, self.opus.attributeVocabUuid, self.vocabulary);
         promise.then(function () {
                 if (self.replacements.length > 0) {
-                    var promise = profileService.replaceUsagesOfVocabTerm(self.replacements);
+                    var promise = profileService.replaceUsagesOfVocabTerm(self.opusId, self.opus.attributeVocabUuid, self.replacements);
                     promise.then(function() {
                         console.log("Replacements saved");
 
@@ -129,7 +129,7 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
         messageService.info("Loading vocabulary...");
         self.replacements = [];
 
-        var promise = profileService.getOpusVocabulary(vocabId);
+        var promise = profileService.getOpusVocabulary(self.opusId, vocabId);
         promise.then(function (data) {
                 messageService.pop();
 

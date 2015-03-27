@@ -1,6 +1,8 @@
 <div class="well" style="margin-top:20px;">
 
-    <a href="${request.contextPath}/opus/edit/{{opusCtrl.opusId}}" target="_self" class="btn btn-warning pull-right" ng-hide="!config.readonly"><i class="icon-edit icon-white"></i> Edit</a>
+    <g:if test="${params.isOpusAdmin}">
+        <a href="${request.contextPath}/opus/{{opusCtrl.opusId}}/update" target="_self" class="btn btn-warning pull-right" ng-hide="!config.readonly"><i class="icon-edit icon-white"></i> Edit</a>
+    </g:if>
 
     <div ng-show="opusCtrl.opus.imageSources.length > 0">
         <h3>Image sources</h3>
@@ -30,9 +32,11 @@
     </div>
 
     <hr/>
-    <div ng-controller="ProfileController as profileCtrl">
-        <button class="btn btn-info vertical-pad" ng-click="profileCtrl.createProfile(opusCtrl.opusId)">Add new profile</button>
-    </div>
+    <g:if test="${params.isOpusEditor}">
+        <div ng-controller="ProfileController as profileCtrl">
+            <button class="btn btn-info vertical-pad" ng-click="profileCtrl.createProfile(opusCtrl.opusId)">Add new profile</button>
+        </div>
+    </g:if>
 </div>
 
 <script type="text/ng-template" id="createProfile.html">

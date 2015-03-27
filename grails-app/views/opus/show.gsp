@@ -9,9 +9,14 @@
 <body>
 
 <div ng-app="profileEditor" ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
-    <ol class="breadcrumb" role="navigation">
-        <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/" target="_self">View all profile collections</a></li>
-    </ol>
+    <div class="row-fluid" ng-cloak>
+        <div class="span6">
+            <ol class="breadcrumb" role="navigation">
+                <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/" target="_self">View all profile collections</a></li>
+            </ol>
+        </div>
+        <g:render template="../layouts/login"/>
+    </div>
 
     <div class="row-fluid" ng-if="opusCtrl.readonly">
         <div class="span8">
@@ -21,12 +26,12 @@
                 </p>
             </div>
 
-            <g:include controller="opus" action="searchPanel"/>
+            <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
         </div>
 
         <div class="span4">
 
-            <g:include controller="opus" action="opusSummaryPanel"/>
+            <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
         </div>
     </div>
 
