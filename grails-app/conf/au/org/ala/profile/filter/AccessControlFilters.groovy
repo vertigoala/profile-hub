@@ -23,6 +23,7 @@ class AccessControlFilters {
 
                     try {
                         log.debug "Checking security for ${actionFullName}"
+
                         def controllerClass = grailsApplication.controllerClasses.find {
                             it.shortName.equalsIgnoreCase("${controllerName.capitalize()}Controller")
                         }
@@ -75,6 +76,7 @@ class AccessControlFilters {
                                     log.trace "Action ${actionFullName} is not secured"
                                     authorised = true
                                 }
+                                params.isALAAdmin = false
                             } else {
                                 params.isALAAdmin = true
                                 params.isOpusAdmin = true

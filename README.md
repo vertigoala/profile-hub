@@ -156,9 +156,6 @@ Due to limitations of the ala-cas-client library used to intercept HTTP requests
 
 # Security
 ### Implementation
-Security is implemented at two levels:
-1. Authentication -
-1. Authorisation - role specific permissions on certain operations (see below for details).
 
 #### Authentication
 Authentication is controlled via CAS URL pattern matching (see below for the patterns).
