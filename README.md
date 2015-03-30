@@ -1,6 +1,71 @@
 # Profile Hub
 [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub.svg?branch=master)](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub)
 
+# Importing Data
+The Profile Service provides an API for importing profiles into the system.
+
+The main web service is ```[host]/import/profile```, which takes a JSON request (as a POST) with the following structure:
+
+```
+{
+    "opusId": "",
+    "profiles":[{
+        "scientificName": "",
+        "links":[{
+            "creators": [""],
+            "edition": "",
+            "title": "",
+            "publisherName": "",
+            "fullTitle":"",
+            "description": "",
+            "url":"",
+            "doi":""
+            }],
+        "bhl":[{
+            "creators": [""],
+            "edition": "",
+            "title": "",
+            "publisherName": "",
+            "fullTitle":"",
+            "description": "",
+            "url":"",
+            "doi":""
+            }],
+        "attributes": [{
+            "creators": [""],
+            "editors": [""],
+            "title": "",
+            "text": ""
+            }]
+    }]
+}
+```
+
+NOTES:
+
+* The import service will not allow two profiles with the same scientific names.
+
+The response will be a JSON document mapping Scientific Name to a status. For example:
+```
+{
+    Name1: Success,
+    Name2: Exists,
+    Name3: Failed
+    ...
+}
+```
+
+## Creating a new collection
+This section lists the steps required to create a completely new collection and import data. You will need to be an ALA Administrator to create a new collection.
+
+1. Create 2 Data Resources in the ALA Collections admin UI (one for the organisation, one for its images)
+1. Create a new collection in Profiles Hub, selecting the data resource of the organisation
+1. Edit the opus and add the data resource for the images as an approved image source
+1. Create a script that parses your existing data set and produces the JSON document to be sent to the import profile web service
+1. Generate a CSV file containing a mapping between Scientific Name and URL for each image in your dataset
+1. Execute the script against the profile service's web service
+1. Upload the image file to the ALA Collections admin interface, then trigger the injest process.
+
 # Design
 This document covers the design considerations of both the Profile Hub and the Profile Service.
 ## URL Patterns
@@ -202,7 +267,7 @@ Services exposed by the Profile Service are categorised into two buckets: secure
 
 Secured services require an API Key and are intended to only be called by the Profile Hub.
 
-Public services require not form of authentication.
+Public services require no form of authentication.
 
 # Testing
 

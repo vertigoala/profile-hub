@@ -85,7 +85,7 @@
         <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}"
              ng-if="attribute.source || attrCtrl.readonly" ng-cloak>
             <blockquote style="border-left:none;">
-                <p>{{ attribute.text }}</p>
+                <p class="display-text">{{ attribute.text }}</p>
                 <small>
                     Contributed by
                     <cite title="Contributors to this text">
@@ -136,7 +136,7 @@
 
     <div class="bs-docs-example" ng-repeat="attribute in attrModalCtrl.supporting" data-content="{{ attribute.opusTitle }}" ng-show="attrModalCtrl.supporting.length > 0">
         <blockquote style="border-left:none;">
-            <p>{{ attribute.text }}</p>
+            <p class="display-text">{{ attribute.text }}</p>
         </blockquote>
     </div>
 </div>

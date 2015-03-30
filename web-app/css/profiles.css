@@ -282,6 +282,6 @@ input[type=checkbox] + label, input[type=radio] + label {
     list-style: none;
 }
 
-/*.menu-bar a:hover {*/
-    /*color: wheat;*/
-/*}*/
+.display-text {
+    white-space: pre-wrap;
+}

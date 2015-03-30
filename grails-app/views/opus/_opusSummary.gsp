@@ -4,6 +4,10 @@
         <a href="${request.contextPath}/opus/{{opusCtrl.opusId}}/update" target="_self" class="btn btn-warning pull-right" ng-hide="!config.readonly"><i class="icon-edit icon-white"></i> Edit</a>
     </g:if>
 
+    <div ng-cloak>
+        Number of profiles: {{opusCtrl.opus.profileCount}}
+    </div>
+
     <div ng-show="opusCtrl.opus.imageSources.length > 0">
         <h3>Image sources</h3>
         <ul ng-cloak>
