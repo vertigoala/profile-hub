@@ -1,9 +1,20 @@
 <div ng-controller="AttributeEditor as attrCtrl" ng-init="attrCtrl.init('${edit}')">
-    <div class="ng-show" ng-show="!attrCtrl.readonly" ng-cloak>
-        <button ng-click="attrCtrl.addAttribute()" class="btn btn-info"><i class="icon icon-plus"></i>Add attribute
-        </button>
-    </div>
+    <div class="row-fluid">
+        <div class="span4" ng-cloak>
+            <button  ng-show="!attrCtrl.readonly" ng-click="attrCtrl.addAttribute()" class="btn btn-info"><i class="icon icon-plus"></i>Add attribute
+            </button>
+        </div>
+        <div class="span8">
+            <div class="small pull-right" style="padding-top: 10px">
+                Show information from supporting collections:
+                <div class="btn-group">
+                    <label class="btn btn-mini" ng-class="attrCtrl.showSupportingData ? 'btn-success' : ''" ng-model="attrCtrl.showSupportingData" btn-radio="true">On</label>
+                    <label class="btn btn-mini" ng-class="attrCtrl.showSupportingData ? '' : 'btn-success'" ng-model="attrCtrl.showSupportingData" btn-radio="false">Off</label>
+                </div>
+            </div>
+        </div>
 
+    </div>
     <div ng-repeat="attribute in attrCtrl.attributes" ng-form="AttributeForm">
         <div class="well attribute-edit" id="browse_attributes_edit" ng-if="!attrCtrl.readonly && !attribute.source" ng-cloak>
             <input type="text"
@@ -83,7 +94,7 @@
         </div>
 
         <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}"
-             ng-if="(attrCtrl.readonly && (!attribute.source || (attribute.source && attrCtrl.opus.showLinkedOpusAttributes))) || (!attrCtrl.readonly && attribute.source && attrCtrl.opus.allowCopyFromLinkedOpus)" ng-cloak>
+             ng-if="(attrCtrl.readonly && (!attribute.source || (attribute.source && attrCtrl.opus.showLinkedOpusAttributes && attrCtrl.showSupportingData))) || (!attrCtrl.readonly && attribute.source && attrCtrl.opus.allowCopyFromLinkedOpus && attrCtrl.showSupportingData)" ng-cloak>
             <blockquote style="border-left:none;">
                 <p class="display-text">{{ attribute.text }}</p>
                 <small>

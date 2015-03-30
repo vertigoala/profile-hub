@@ -9,6 +9,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.historyShowing = {};
     self.vocabularyStrict = false;
     self.supportingAttributes = {};
+    self.showSupportingData = true;
 
     var capitalize = $filter("capitalize");
     var sort = $filter("orderBy");
