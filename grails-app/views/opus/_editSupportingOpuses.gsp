@@ -9,7 +9,7 @@
     </label>
     <br/>
     <label for="allowCopying" class="inline-label">
-        <input id="allowCopying" type="checkbox" name="allowCopying" ng-model="opusCtrl.opus.allowCopyFromLinkedOpus" ng-false-value="false" ng-disabled="opusCtrl.opus.supportingOpuses.length == 0 || !opusCtrl.opus.showLinkedOpusAttributes">
+        <input id="allowCopying" type="checkbox" name="allowCopying" ng-model="opusCtrl.opus.allowCopyFromLinkedOpus" ng-false-value="false" ng-disabled="opusCtrl.opus.supportingOpuses.length == 0">
         Allow profile editors to copy data from supporting collections on the profile pages.
     </label>
 

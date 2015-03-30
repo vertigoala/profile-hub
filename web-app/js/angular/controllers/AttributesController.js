@@ -27,7 +27,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 self.opus = data.opus;
                 self.attributes = data.profile.attributes;
 
-                if (self.opus.showLinkedOpusAttributes && self.opus.supportingOpuses.length > 0) {
+                if (self.opus.supportingOpuses && self.opus.supportingOpuses.length > 0) {
                     self.loadAttributesFromSupportingCollections();
                 }
 
@@ -167,39 +167,41 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             supportingOpusList.push(opus.uuid)
         });
 
-        var searchResult = profileService.profileSearch(supportingOpusList.join(","), self.profile.scientificName, false);
-        searchResult.then(function (searchResults) {
-                angular.forEach(searchResults, function (result) {
-                    var profilePromise = profileService.getProfile(result.opus.uuid, result.profileId);
-                    profilePromise.then(function (supporting) {
+        if (supportingOpusList) {
+            var searchResult = profileService.profileSearch(supportingOpusList.join(","), self.profile.scientificName, false);
+            searchResult.then(function (searchResults) {
+                    angular.forEach(searchResults, function (result) {
+                        var profilePromise = profileService.getProfile(result.opus.uuid, result.profileId);
+                        profilePromise.then(function (supporting) {
 
-                        angular.forEach(supporting.profile.attributes, function (attribute) {
-                            if (profileAttributeMap.indexOf(attribute.title) == -1) {
-                                attribute.source = {
+                            angular.forEach(supporting.profile.attributes, function (attribute) {
+                                if (profileAttributeMap.indexOf(attribute.title) == -1) {
+                                    attribute.source = {
+                                        opusId: supporting.opus.uuid,
+                                        opusTitle: supporting.opus.title,
+                                        profileId: supporting.profile.uuid
+                                    };
+                                    self.attributes.push(attribute);
+                                }
+
+                                if (!self.supportingAttributes[attribute.title]) {
+                                    self.supportingAttributes[attribute.title] = [];
+                                }
+                                self.supportingAttributes[attribute.title].push({
                                     opusId: supporting.opus.uuid,
                                     opusTitle: supporting.opus.title,
-                                    profileId: supporting.profile.uuid
-                                };
-                                self.attributes.push(attribute);
-                            }
-
-                            if (!self.supportingAttributes[attribute.title]) {
-                                self.supportingAttributes[attribute.title] = [];
-                            }
-                            self.supportingAttributes[attribute.title].push({
-                                opusId: supporting.opus.uuid,
-                                opusTitle: supporting.opus.title,
-                                profileId: supporting.profile.uuid,
-                                title: attribute.title,
-                                text: attribute.text
+                                    profileId: supporting.profile.uuid,
+                                    title: attribute.title,
+                                    text: attribute.text
+                                });
                             });
-                        });
 
-                        self.attributes = sort(self.attributes, "title");
+                            self.attributes = sort(self.attributes, "title");
+                        });
                     });
-                });
-            }
-        );
+                }
+            );
+        }
     };
 
     self.viewInOtherCollections = function (index) {

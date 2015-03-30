@@ -83,7 +83,7 @@
         </div>
 
         <div class="bs-docs-example" id="browse_attributes" data-content="{{ attribute.title }}"
-             ng-if="attribute.source || attrCtrl.readonly" ng-cloak>
+             ng-if="(attrCtrl.readonly && (!attribute.source || (attribute.source && attrCtrl.opus.showLinkedOpusAttributes))) || (!attrCtrl.readonly && attribute.source && attrCtrl.opus.allowCopyFromLinkedOpus)" ng-cloak>
             <blockquote style="border-left:none;">
                 <p class="display-text">{{ attribute.text }}</p>
                 <small>
@@ -115,6 +115,7 @@
                     </span>
                 </span>
             </div>
+
             <div class="row-fluid" ng-show="attrCtrl.opus.allowCopyFromLinkedOpus && !attrCtrl.readonly">
                 <span class="span12">
                     <span class="pull-right">
