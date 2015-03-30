@@ -26,6 +26,11 @@
                    type="danger">You must select a value from the list of approved titles.</alert>
             <textarea class="field span12" rows="4" ng-model="attribute.text" name="text"
                       placeholder="Description..."></textarea>
+            <label for="significantEdit" class="inline-label" ng-show="attribute.uuid">
+                <input id="significantEdit" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit" ng-false-value="false">
+                    This is a significant edit
+                </input>
+            </label>
 
             <div class="row-fluid">
                 <span class="span4">

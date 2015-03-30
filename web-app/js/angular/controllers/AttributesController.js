@@ -139,6 +139,9 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         if (attribute.editors) {
             data.editors = attribute.editors;
         }
+        if (attribute.uuid) {
+            data.significantEdit = attribute.significantEdit ? attribute.significantEdit : false;
+        }
 
         var future = profileService.saveAttribute(self.opusId, self.profileId, attribute.uuid, data);
 
