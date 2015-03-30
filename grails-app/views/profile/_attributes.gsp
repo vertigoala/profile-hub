@@ -5,7 +5,7 @@
             </button>
         </div>
         <div class="span8">
-            <div class="small pull-right" style="padding-top: 10px">
+            <div class="small pull-right" style="padding-top: 10px" ng-show="(attrCtrl.readonly && attrCtrl.opus.showLinkedOpusAttributes) || (!attrCtrl.readonly && attrCtrl.opus.allowCopyFromLinkedOpus)">
                 Show information from supporting collections:
                 <div class="btn-group">
                     <label class="btn btn-mini" ng-class="attrCtrl.showSupportingData ? 'btn-success' : ''" ng-model="attrCtrl.showSupportingData" btn-radio="true">On</label>
