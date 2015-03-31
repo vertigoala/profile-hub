@@ -9,13 +9,15 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.opus = null;
     self.readonly = true;
 
+    self.opusId = util.getEntityId("opus");
+
     self.readonly = function() {
         return config.readonly
     };
 
     self.loadProfile = function() {
         self.profileId = util.getEntityId("profile");
-        self.opusId = util.getEntityId("opus");
+
 
         if (self.profileId) {
             var promise = profileService.getProfile(self.opusId, self.profileId);

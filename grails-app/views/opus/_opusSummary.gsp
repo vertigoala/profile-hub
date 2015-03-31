@@ -4,11 +4,29 @@
         <a href="${request.contextPath}/opus/{{opusCtrl.opusId}}/update" target="_self" class="btn btn-warning pull-right" ng-hide="!config.readonly"><i class="icon-edit icon-white"></i> Edit</a>
     </g:if>
 
-    <div ng-cloak>
-        Number of profiles: {{opusCtrl.opus.profileCount}}
+    <div class="row-fluid">
+        <h3>Statistics</h3>
+        <div ng-cloak>
+            <div class="row-fluid">
+            <div class="span6">
+                Profiles in collection
+            </div>
+            <div class="span3">
+                {{opusCtrl.opus.profileCount}}
+            </div>
+            </div>
+            <div class="row-fluid">
+            <div class="span6">
+                Editors
+            </div>
+            <div class="span3">
+                {{opusCtrl.opus.editors.length}}
+            </div>
+                </div>
+        </div>
     </div>
 
-    <div ng-show="opusCtrl.opus.imageSources.length > 0">
+    <div class="row-fluid" ng-show="opusCtrl.opus.imageSources.length > 0">
         <h3>Image sources</h3>
         <ul ng-cloak>
             <li ng-repeat="imageSource in opusCtrl.opus.imageSources">
@@ -17,7 +35,7 @@
         </ul>
     </div>
 
-    <div ng-show="opusCtrl.opus.recordSources.length > 0">
+    <div class="row-fluid" ng-show="opusCtrl.opus.recordSources.length > 0">
         <h3>Specimen sources</h3>
         <ul ng-cloak>
             <li ng-repeat="recordSource in opusCtrl.opus.recordSources">
@@ -26,7 +44,7 @@
         </ul>
     </div>
 
-    <div ng-show="opusCtrl.opus.supportingOpuses.length > 0">
+    <div class="row-fluid" ng-show="opusCtrl.opus.supportingOpuses.length > 0">
         <h3>Supporting collections</h3>
         <ul ng-cloak>
             <li ng-repeat="opus in opusCtrl.opus.supportingOpuses">
