@@ -9,7 +9,7 @@
                 Show information from supporting collections:
                 <div class="btn-group">
                     <label class="btn btn-mini" ng-class="attrCtrl.showSupportingData ? 'btn-success' : ''" ng-model="attrCtrl.showSupportingData" btn-radio="true">On</label>
-                    <label class="btn btn-mini" ng-class="attrCtrl.showSupportingData ? '' : 'btn-success'" ng-model="attrCtrl.showSupportingData" btn-radio="false">Off</label>
+                    <label class="btn btn-mini" ng-class="attrCtrl.showSupportingData ? '' : 'btn-danger'" ng-model="attrCtrl.showSupportingData" btn-radio="false">Off</label>
                 </div>
             </div>
         </div>

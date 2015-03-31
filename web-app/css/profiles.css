@@ -282,6 +282,16 @@ input[type=checkbox] + label, input[type=radio] + label {
     list-style: none;
 }
 
+.btn+.dropdown-menu {
+    left: auto !important;
+    z-index: 9999 !important;
+    margin-top: 15px !important;
+}
+
+.dropdown-menu .divider {
+    border-bottom: none !important;
+}
+
 .display-text {
     white-space: pre-wrap;
 }

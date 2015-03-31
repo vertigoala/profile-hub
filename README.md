@@ -64,7 +64,7 @@ This section lists the steps required to create a completely new collection and 
 1. Create a script that parses your existing data set and produces the JSON document to be sent to the import profile web service
 1. Generate a CSV file containing a mapping between Scientific Name and URL for each image in your dataset
 1. Execute the script against the profile service's web service
-1. Upload the image file to the ALA Collections admin interface, then trigger the injest process.
+1. Upload the image file to the ALA Collections admin interface, then trigger the ingest process.
 
 # Design
 This document covers the design considerations of both the Profile Hub and the Profile Service.
@@ -220,12 +220,17 @@ Due to limitations of the ala-cas-client library used to intercept HTTP requests
 ### Profile Service
 
 # Security
-### Implementation
+## Profile Hub
 
-#### Authentication
+### Authentication
 Authentication is controlled via CAS URL pattern matching (see below for the patterns).
 
-#### Authorisation
+#### Secured URL Patterns
+```
+/.*/update.*, /.*/create.*, /.*/delete.*, /user/.*, /audit/.*
+```
+
+### Authorisation
 Authorisation is implemented by way of a custom annotation (```src/java/au.org.ala.profile.security.Secured```) that is
 applied to the controller actions where authorisation is required, and a filter (```grails-app/conf/au.org.ala.profile.filter.AccessControlFilters```).
 Whenever a request is made to the server, the filter:
@@ -241,7 +246,7 @@ Whenever a request is made to the server, the filter:
   * If the action requires the ROLE\_PROFILE\_ADMIN role, the user must be in the Admin list for the opus
   * If the action requires the ROLE\_PROFILE\_EDITOR role, the user must be in the Editors list for the ops
 
-## Profile Hub
+#### Roles
 There are 4 roles: ALA\_ADMIN, ADMIN, EDITOR, USER. The level of access is as follows: ALA\_ADMIN > ADMIN > EDITOR > USER. I.e. an ALA\_ADMIN can do everything an ADMIN can do, and an ADMIN can do everything that and EDITOR can do, etc.
 
 |Action|Required Role|Notes|
@@ -257,10 +262,7 @@ There are 4 roles: ALA\_ADMIN, ADMIN, EDITOR, USER. The level of access is as fo
 
 Admins and Editors are defined per-opus and only have permissions for that particular opus.
 
-### Secured URL Patterns
-```
-/.*/update.*, /.*/create.*, /.*/delete.*, /user/.*, /audit/.*
-```
+
 
 ## Profile Service
 Services exposed by the Profile Service are categorised into two buckets: secured and public.
@@ -269,12 +271,13 @@ Secured services require an API Key and are intended to only be called by the Pr
 
 Public services require no form of authentication.
 
+
+
 # Testing
 
 ## Grails
 
 The grails/groovy code is tested using the Spock framework. Tests live in the ```tests/unit/``` and ```tests/integration``` directories.
-
 
 ## Angular JS
 

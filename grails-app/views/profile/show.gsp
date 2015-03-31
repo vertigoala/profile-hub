@@ -9,11 +9,14 @@
 
 <body>
 
-<div id="container" ng-app="profileEditor" ng-controller="ProfileController as profileCtrl" ng-init="profileCtrl.loadProfile()">
+<div id="container" ng-app="profileEditor" ng-controller="ProfileController as profileCtrl"
+     ng-init="profileCtrl.loadProfile()">
     <div class="row-fluid" ng-cloak>
         <div class="span6">
             <ol class="breadcrumb" role="navigation">
-                <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/opus/{{profileCtrl.opus.uuid}}" target="_self">Return to {{profileCtrl.opus.title}}</a>
+                <li><i class="fa fa-arrow-left"></i><span class="divider"/><a
+                        href="${request.contextPath}/opus/{{profileCtrl.opus.uuid}}"
+                        target="_self">Return to {{profileCtrl.opus.title}}</a>
             </ol>
         </div>
         <g:render template="../layouts/login"/>
@@ -23,18 +26,46 @@
         <div class="span8">
             <h1>{{profileCtrl.profile.scientificName | default:"New Profile"}}</h1>
         </div>
+
         <div class="span4">
             <div class="pull-right vertical-pad">
-                <g:if test="${params.isOpusEditor}">
-                    <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/update" target="_self" class="btn btn-warning" ng-hide="!profileCtrl.readonly()"><i class="icon-edit icon-white"></i> Edit</a>
-                </g:if>
-                <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}" target="_self" class="btn btn-success" ng-show="!profileCtrl.readonly()"><i class="icon-eye-open icon-white"></i> Public View</a>
+                <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}"
+                   target="_self" class="btn btn-success" ng-show="!profileCtrl.readonly()"><i
+                        class="icon-eye-open icon-white"></i> Public View</a>
 
-                <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/json" target="_self" class="btn btn-info">JSON</a>
-
-                <g:if test="${params.isOpusAdmin}">
-                    <button class="btn btn-danger" ng-click="profileCtrl.deleteProfile()" target="_self" ng-hide="profileCtrl.readonly() || !profileCtrl.profileId"><i class="icon-remove icon-white"></i> Delete this profile</button>
-                </g:if>
+                <span class="dropdown">
+                    <a class="dropdown-toggle btn btn-info"
+                       id="optionsDropdown"
+                       role="button"
+                       data-toggle="dropdown"
+                       href="#"><span class="fa fa-angle-double-down"></span> Options</a>
+                    <ul class="dropdown-menu dropdown-menu-right"
+                        role="menu"
+                        aria-labelledby="optionsDropdown">
+                        <li role="presentation">
+                            <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/json"
+                               target="_blank"><span class="fa fa-file-text-o"></span>&nbsp;&nbsp;Export as JSON</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/pdf"
+                               target="_blank"><span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;Export as PDF</a>
+                        </li>
+                        <g:if test="${params.isOpusEditor}">
+                            <li class="divider" ng-hide="!profileCtrl.readonly()"></li>
+                            <li role="presentation">
+                                <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/update"
+                                   target="_self" ng-hide="!profileCtrl.readonly()"><span class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
+                            </li>
+                        </g:if>
+                        <g:if test="${params.isOpusAdmin}">
+                            <li class="divider" ng-hide="profileCtrl.readonly()"></li>
+                            <li role="presentation">
+                                <a href="" ng-click="profileCtrl.deleteProfile()" target="_self"
+                                   ng-hide="profileCtrl.readonly() || !profileCtrl.profileId"><span class="fa fa-trash-o"></span>&nbsp;&nbsp;Delete this profile</a>
+                            </li>
+                        </g:if>
+                    </ul>
+                </span>
             </div>
         </div>
     </div>

@@ -14,6 +14,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
         "/opus/$opusId/profile/$profileId/update" controller: "profile", action: [GET: "edit", POST: "updateProfile"]
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
+        "/opus/$opusId/profile/$profileId/pdf" controller: "export", action: [GET: "getPdf"]
         "/opus/$opusId/profile/$profileId/images" controller: "profile", action: [GET: "retrieveImages"]
         "/opus/$opusId/profile/$profileId/lists" controller: "profile", action: [GET: "retrieveLists"]
         "/opus/$opusId/profile/$profileId/classifications" controller: "profile", action: [GET: "retrieveClassifications"]

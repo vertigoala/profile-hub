@@ -42,6 +42,7 @@ grails.project.dependency.resolution = {
         compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
         compile ":modernizr:2.7.1.1"
+        compile ":rendering:1.0.0"
         runtime ":resources:1.2.14"
         runtime ":ala-bootstrap2:1.4"
         runtime ":ala-auth:1.2"
