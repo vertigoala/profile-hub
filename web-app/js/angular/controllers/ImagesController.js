@@ -9,7 +9,6 @@ profileEditor.controller('ImagesController', function (profileService, util, mes
     self.init = function (edit) {
         self.readonly = edit != 'true';
         self.imagesSlideShowInterval = 5000; // milliseconds
-        self.slides = [];
         self.images = [];
 
         self.opusId = util.getEntityId("opus");
@@ -44,13 +43,6 @@ profileEditor.controller('ImagesController', function (profileService, util, mes
 
                 self.firstImage = data.occurrences[0];
                 self.images = data.occurrences;
-
-                angular.forEach(data.occurrences, function (image) {
-                    self.slides.push({
-                        image: image.largeImageUrl,
-                        text: image.dataResourceName
-                    })
-                }, self.slides);
 
                 messageService.pop();
             },
