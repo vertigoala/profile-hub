@@ -1,3 +1,5 @@
+import org.apache.log4j.Level
+
 def appName = 'profile-hub'
 def ENV_NAME = "${appName.toUpperCase()}_CONFIG"
 default_config = "/data/${appName}/config/${appName}-config.properties"
