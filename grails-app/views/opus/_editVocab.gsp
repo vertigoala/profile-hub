@@ -53,7 +53,7 @@
 
 <div class="modal-body">
     <label for="editTerm" class="inline-label">New Term:</label>
-    <input id="editTerm" type="text" ng-model="vocabModalCtrl.term.name" class="input-xlarge"/>
+    <input id="editTerm" type="text" ng-model="vocabModalCtrl.term.name" class="input-xlarge" ng-enter="vocabModalCtrl.ok()"/>
 </div>
 
 <div class="modal-footer">
@@ -74,7 +74,7 @@
     </p>
 
     <label for="editTerm" class="inline-label">Replacement Term:</label>
-    <select ng-options="term as term.name for term in removeTermCtrl.terms" ng-model="removeTermCtrl.newTerm" class="input-large"></select>
+    <select ng-options="term as term.name for term in removeTermCtrl.terms" ng-model="removeTermCtrl.newTerm" class="input-large" ng-enter="removeTermCtrl.ok()"></select>
 </div>
 
 <div class="modal-footer">

@@ -13,7 +13,7 @@
         </p>
 
             <div class="input-append">
-                <input class="span12" id="appendedInputButton" type="text" ng-model="userCtrl.searchTerm" name="searchTerm">
+                <input class="span12" id="appendedInputButton" type="text" ng-model="userCtrl.searchTerm" name="searchTerm" ng-enter="userCtrl.userSearch()">
                 <button class="btn" type="button" ng-click="userCtrl.userSearch()">Search for user</button>
             </div>
             <div class="alert alert-danger" ng-show="userCtrl.error">{{userCtrl.error}}</div>

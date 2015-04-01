@@ -69,7 +69,7 @@
 <div class="modal-body">
     <alert type="danger" class="error" ng-show="createProfileCtrl.error">{{createProfileCtrl.error}}</alert>
     <label for="scientificName" class="inline-label">Scientific Name</label>
-    <input id="scientificName" type="text" ng-model="createProfileCtrl.scientificName" class="input-xlarge" required/>
+    <input id="scientificName" type="text" ng-model="createProfileCtrl.scientificName" class="input-xlarge" required ng-enter="createProfileCtrl.ok()"/>
 </div>
 
 <div class="modal-footer">
