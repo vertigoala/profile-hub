@@ -32,3 +32,11 @@ profileEditor.filter("default", function() {
         return result
     }
 });
+
+profileEditor.filter("groupAttributes", function() {
+    return function(attributes, title) {
+        return attributes.filter(function(attribute) {
+            return attribute.title == title;
+        });
+    }
+});

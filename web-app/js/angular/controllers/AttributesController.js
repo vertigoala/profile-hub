@@ -1,5 +1,5 @@
 /**
- * Atributes controller
+ * Attributes controller
  */
 profileEditor.controller('AttributeEditor', function (profileService, util, messageService, $window, $filter, $modal) {
     var self = this;
@@ -45,13 +45,33 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         return !self.vocabularyStrict || (self.vocabularyStrict && self.attributeTitles.indexOf(attributeTitle) > -1)
     };
 
+    self.showAttribute = function(attribute) {
+        return (self.readonly &&
+                    (!attribute.source ||
+                        (attribute.source && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
+                || (!self.readonly &&
+                        attribute.source && self.opus.allowCopyFromLinkedOpus && self.showSupportingData)
+    };
+
+    self.showTitleGroup = function(title) {
+        var show = false;
+
+        angular.forEach(self.attributes, function(attribute) {
+            show = show || (attribute.title == title && self.showAttribute(attribute));
+        });
+
+        return show;
+    };
+
     function loadVocabulary() {
         if (self.opus.attributeVocabUuid != null) {
             var vocabPromise = profileService.getOpusVocabulary(self.opusId, self.opus.attributeVocabUuid);
             vocabPromise.then(function (data) {
                 self.attributeTitles = [];
                 angular.forEach(data.terms, function (term) {
-                    self.attributeTitles.push(term.name);
+                    if (self.attributeTitles.indexOf(term.name) == -1) {
+                        self.attributeTitles.push(term.name);
+                    }
                 });
 
                 self.vocabularyStrict = data.strict;
@@ -116,7 +136,6 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         copy.original = self.attributes[index];
         copy.uuid = "";
         self.attributes[index] = copy;
-        form.$setDirty();
     };
 
     self.saveAttribute = function (idx, attributeForm) {
@@ -229,7 +248,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
 
 /**
- * Atributes controller
+ * Attributes Popup controller
  */
 profileEditor.controller('AttributePopupController', function ($modalInstance, supporting) {
     var self = this;

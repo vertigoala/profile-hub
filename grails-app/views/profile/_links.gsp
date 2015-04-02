@@ -12,7 +12,7 @@
 
         <div style="margin-bottom: 10px;" ng-show="!linkCtrl.readonly">
             <button class="btn btn-primary" ng-click="linkCtrl.saveLinks()">Save changes</button>
-            <button class="btn btn-info" ng-click="linkCtrl.addLink()"><i class="icon icon-plus"></i> Add new link
+            <button class="btn btn-info" ng-click="linkCtrl.addLink()"><i class="icon icon-plus icon-white"></i> Add new link
             </button>
         </div>
         <table class="table table-striped" ng-show="!linkCtrl.readonly">

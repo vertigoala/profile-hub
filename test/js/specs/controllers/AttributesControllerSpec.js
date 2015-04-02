@@ -29,7 +29,7 @@ describe("AttributesController tests", function () {
     var window;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
-    var vocabResponse = '{"terms": ["term1", "term2"]}';
+    var vocabResponse = '{"terms": [{"name": "term1"}, {"name": "term2"}]}';
     var saveAttributeResponse = '{"attributeId": "newId"}';
     var deleteAttributeResponse = '{}';
     var showAuditResponse = '[{"userId": "1", "object": {"text":"auditText1", "title":"auditTitle1"}}, {"userId": "2", "object": {"text":"auditText2", "title":"auditTitle2"}}]';
@@ -484,6 +484,7 @@ describe("AttributesController tests", function () {
     });
 
     it("should create a COPY of the specified attribute and set the original property when copyAttribute is called", function() {
+        scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
         var attribute1 = {uuid: "uuid1", title: "title1"};

@@ -41,6 +41,6 @@
             <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="OpusForm.$dirty">*</span> Save</span>
             <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
         </button>
-        <button class="btn btn-info" ng-click="opusCtrl.addSupportingOpus()"><i class="icon icon-plus"></i>  Add collection</button>
+        <button class="btn btn-info" ng-click="opusCtrl.addSupportingOpus()"><i class="icon icon-plus icon-white"></i>  Add collection</button>
     </div>
 </div>

@@ -31,5 +31,5 @@
         <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="RecordForm.$dirty">*</span> Save</span>
         <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
     </button>
-    <button class="btn btn-info" ng-click="opusCtrl.addRecordSource()"><i class="icon icon-plus"></i>  Add record source</button>
+    <button class="btn btn-info" ng-click="opusCtrl.addRecordSource()"><i class="icon icon-plus icon-white"></i>  Add record source</button>
 </div>

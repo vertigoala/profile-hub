@@ -49,7 +49,7 @@
 
         <div style="margin-bottom: 10px;" ng-show="!readonly">
             <button class="btn btn-primary" ng-click="bhlCtrl.saveLinks()">Save changes</button>
-            <button class="btn btn-info" ng-click="bhlCtrl.addLink()"><i class="icon icon-plus"></i> Add new reference
+            <button class="btn btn-info" ng-click="bhlCtrl.addLink()"><i class="icon icon-plus icon-white"></i> Add new reference
             </button>
         </div>
 
