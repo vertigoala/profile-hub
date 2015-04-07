@@ -4,11 +4,9 @@ import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
-import groovy.json.JsonSlurper
 import org.apache.commons.fileupload.FileItemIterator
 import org.apache.commons.fileupload.FileItemStream
 import org.apache.commons.fileupload.servlet.ServletFileUpload
-import org.apache.http.HttpStatus
 
 class ProfileController extends BaseController {
 
@@ -220,7 +218,7 @@ class ProfileController extends BaseController {
             if (item.fieldName == "file") {
                 file = item.openStream().bytes
             } else {
-                publication = new JsonSlurper().parse(item.openStream())
+                publication = JSON.parse(item.openStream().text)
             }
         }
 
