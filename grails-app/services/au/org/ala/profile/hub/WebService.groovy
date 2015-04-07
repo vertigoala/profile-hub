@@ -2,12 +2,19 @@ package au.org.ala.profile.hub
 
 import grails.converters.JSON
 import groovyx.net.http.HTTPBuilder
+import org.apache.http.entity.mime.MultipartEntityBuilder
+import org.apache.http.entity.mime.content.ByteArrayBody
+import org.apache.http.entity.mime.content.ContentBody
+import org.apache.http.entity.mime.content.StringBody
+
 import static groovyx.net.http.Method.*
 import static groovyx.net.http.ContentType.*
 import org.apache.http.HttpStatus
 import org.springframework.http.MediaType
 
 class WebService {
+    static final String CHAR_ENCODING= "utf-8"
+
     static final DEFAULT_TIMEOUT_MILLIS = 600000; // five minutes
     // TODO refactor this class, it's really ugly
     static transactional = false
@@ -85,9 +92,33 @@ class WebService {
         send(url, data, "POST")
     }
 
-    def send = {String url, Map postBody, String method ->
-        def charEncoding = "utf-8"
+    def postMultipart(String url, Map data, List files) {
+        HTTPBuilder http = new HTTPBuilder(url)
 
+        http.request(POST) { multipartRequest ->
+            MultipartEntityBuilder entityBuilder = new MultipartEntityBuilder()
+            entityBuilder.addPart("data", new StringBody((data as JSON) as String))
+            files.eachWithIndex { it, index ->
+                entityBuilder.addPart("file${index}", new ByteArrayBody(it, "file${index}"))
+            }
+            multipartRequest.entity = entityBuilder.build()
+
+            def user = userService.getUser()
+            if (user) {
+                headers."${grailsApplication.config.app.http.header.userId}" = user.userId as String
+                headers.Cookie = "ALA-Auth=${URLEncoder.encode(user.userName, CHAR_ENCODING)}"
+            }
+
+            def result = null
+            response.success = { resp, rData ->
+                result = [resp: rData as JSON, statusCode: HttpStatus.SC_OK]
+            }
+
+            return result
+        }
+    }
+
+    def send = {String url, Map postBody, String method ->
         URLConnection conn = null
         def response = [:]
         OutputStreamWriter writer = null
@@ -95,16 +126,16 @@ class WebService {
             conn = new URL(url).openConnection()
             conn.setDoOutput(true)
             conn.setRequestMethod(method)
-            conn.setRequestProperty("Content-Type", "application/json;charset=${charEncoding}");
+            conn.setRequestProperty("Content-Type", "application/json;charset=${CHAR_ENCODING}");
             conn.setRequestProperty("Authorization", grailsApplication.config.api_key as String);
 
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId as String, user.userId as String)
-                conn.setRequestProperty("Cookie", "ALA-Auth=${URLEncoder.encode(user.userName, charEncoding)}")
+                conn.setRequestProperty("Cookie", "ALA-Auth=${URLEncoder.encode(user.userName, CHAR_ENCODING)}")
             }
 
-            writer = new OutputStreamWriter(conn.getOutputStream(), charEncoding)
+            writer = new OutputStreamWriter(conn.getOutputStream(), CHAR_ENCODING)
             writer.write((postBody as JSON).toString())
             writer.flush()
             def resp = conn.inputStream.text

@@ -4,7 +4,11 @@ import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
-import static org.apache.http.HttpStatus.*
+import groovy.json.JsonSlurper
+import org.apache.commons.fileupload.FileItemIterator
+import org.apache.commons.fileupload.FileItemStream
+import org.apache.commons.fileupload.servlet.ServletFileUpload
+import org.apache.http.HttpStatus
 
 class ProfileController extends BaseController {
 
@@ -193,6 +197,54 @@ class ProfileController extends BaseController {
         }
     }
 
+    def retrievePublication() {
+        if (!params.profileId) {
+            badRequest "profileId is a required parameter"
+        } else {
+            def response = profileService.getPublications(params.profileId as String)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_ADMIN)
+    def savePublication() {
+        ServletFileUpload upload = new ServletFileUpload();
+        FileItemIterator iterator = upload.getItemIterator(request);
+
+        byte[] file = null
+        def publication = null
+
+        while(iterator.hasNext()) {
+            FileItemStream item = iterator.next();
+            if (item.fieldName == "file") {
+                file = item.openStream().bytes
+            } else {
+                publication = new JsonSlurper().parse(item.openStream())
+            }
+        }
+
+        // the publicationId may be blank (e.g. when creating a new publication), but the request should still have it
+        if (!file || !publication || !params.profileId) {
+            badRequest()
+        } else {
+            def response = profileService.savePublication(params.profileId, publication, file)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_ADMIN)
+    def deletePublication() {
+        if (!params.publicationId) {
+            badRequest "publicationId is a required parameter"
+        } else {
+            def response = profileService.deletePublication(params.publicationId as String)
+
+            handle response
+        }
+    }
+
     def attributesPanel = {
         render template: "attributes"
     }
@@ -219,5 +271,9 @@ class ProfileController extends BaseController {
 
     def listsPanel = {
         render template: "lists"
+    }
+
+    def publicationsPanel = {
+        render template: "publications"
     }
 }

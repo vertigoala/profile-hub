@@ -90,6 +90,30 @@ class ProfileService {
         profile
     }
 
+    def getPublications(String profileId) {
+        log.debug("Retrieving publications for ${profileId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/profile/publication/${profileId}")
+    }
+
+    def getPublicationFile(String publicationId) {
+        log.debug("Retrieving file for publication for ${publicationId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/profile/publication/${publicationId}/file")
+    }
+
+    def savePublication(String profileId, publication, file) {
+        log.debug("Saving publication for profile ${profileId}")
+
+        webService.postMultipart("${grailsApplication.config.profile.service.url}/profile/publication/${profileId}", publication, [file])
+    }
+
+    def deletePublication(String publicationId) {
+        log.debug("Deleting publication ${publicationId}")
+
+        webService.doDelete("${grailsApplication.config.profile.service.url}/profile/publication/${publicationId}/delete")
+    }
+
     def getClassification(String guid, String opusId) {
         log.debug("Retrieving classification for ${guid} in opus ${opusId}")
 

@@ -152,6 +152,18 @@ Due to limitations of the ala-cas-client library used to intercept HTTP requests
   * Public
   * GET - retrieves classifications for the profile
   * PUT, POST, DELETE not allowed
+* ```/opus/[opusId]/profile/[profileId]/publication```
+  * Public
+  * GET - retrieves publications for the profile
+  * PUT, POST, DELETE not allowed
+* ```/opus/[opusId]/profile/[profileId]/publication/create```
+  * Public
+  * PUT - creates a new publication
+  * GET, POST, DELETE not allowed
+* ```/opus/[opusId]/profile/[profileId]/publication/[publicationId]```
+  * Secured
+  * POST - updates a publication
+  * PUT, GET, DELETE not allowed
 * ```/opus/[opusId]/profile/[profileId]/lists```
   * Public
   * GET - retrieves lists for the profile
@@ -259,6 +271,8 @@ There are 4 roles: ALA\_ADMIN, ADMIN, EDITOR, USER. The level of access is as fo
 |View Profile|USER| |
 |Edit Profile|EDITOR| |
 |Delete Profile|EDITOR| |
+|Export to PDF/JSON|USER| |
+|Create new Publication|ADMIN| |
 
 Admins and Editors are defined per-opus and only have permissions for that particular opus.
 

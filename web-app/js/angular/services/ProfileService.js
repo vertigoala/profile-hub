@@ -198,6 +198,45 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             return util.toStandardPromise(future);
         },
 
+        getPublications: function (opusId, profileId) {
+            console.log("Retrieving publications for profile " + profileId);
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication", {cache: true});
+            future.then(function (response) {
+                console.log("Publication retrieved with response code " + response.status)
+            });
+            return util.toStandardPromise(future);
+        },
+
+        deletePublication: function (opusId, profileId, publicationId) {
+            console.log("Deleting publication " + publicationId);
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication/" + publicationId + "/delete");
+            future.then(function (response) {
+                console.log("Publication deleted with response code " + response.status)
+            });
+            return util.toStandardPromise(future);
+        },
+
+        savePublication: function (opusId, profileId, publicationId, data) {
+            console.log("Saving publication " + publicationId);
+            var future = null;
+
+            if (publicationId) {
+                future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication/" + publicationId + "/update", data);
+            } else {
+                future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication/create", data, {
+                    transformRequest: angular.identity,
+                    headers: {'Content-Type': undefined}
+                });
+            }
+
+            future.then(function (response) {
+                console.log("Publication saved with response code " + response.status);
+
+                clearCache();
+            });
+            return util.toStandardPromise(future);
+        },
+
         getSpeciesProfile: function (opusId, profileId, guid) {
             console.log("Retrieving species profile for " + guid);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/speciesProfile?guid=" + guid, {cache: true});
