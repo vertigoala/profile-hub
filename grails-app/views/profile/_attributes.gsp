@@ -96,13 +96,14 @@
 <div class="well attribute-edit" id="browse_attributes_edit">
     <input type="text"
            autocomplete="off"
+           required
            typeahead="attributeTitle for attributeTitle in attrCtrl.attributeTitles | filter: $viewValue"
            class="form-control attribute-header-input" ng-model="attribute.title" name="title"
            value="title" placeholder="Title..."/>
     <alert ng-show="attribute.title && !attrCtrl.isValid(attribute.title)"
            type="danger">You must select a value from the list of approved titles.</alert>
     <textarea class="field span12" rows="4" ng-model="attribute.text" name="text"
-              placeholder="Description..."></textarea>
+              placeholder="Description..." required ng-required></textarea>
     <label for="significantEdit" class="inline-label" ng-show="attribute.uuid">
         <input id="significantEdit" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit"
                ng-false-value="false">
@@ -124,7 +125,7 @@
         <span class="span8">
             <span class="pull-right">
                 <button class="btn btn-primary" ng-click="attrCtrl.saveAttribute($index, AttributeForm)"
-                        ng-disabled="!attrCtrl.isValid(attribute.title)">
+                        ng-disabled="!attrCtrl.isValid(attribute.title) || !attribute.text">
                     <span ng-show="!attrCtrl.saving" id="saved"><span
                             ng-show="AttributeForm.$dirty || !attribute.uuid">*</span> Save</span>
                     <span ng-show="attrCtrl.saving" id="saving">Saving....</span>
