@@ -194,4 +194,34 @@ class ProfileService {
 
         webService.doPost("${grailsApplication.config.profile.service.url}/vocab/usages/replace", json)
     }
+
+    def getGlossary(String opusId) {
+        log.debug("Fetching glossary for opus ${opusId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/glossary/${opusId}")
+    }
+
+    def uploadGlossary(String opusId, String glossaryId, List items) {
+        log.debug("Uploading glossary items for opus ${opusId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/glossary", [opusId: opusId, glossaryId: glossaryId, items: items])
+    }
+
+    def updateGlossaryItem(String opusId, String glossaryItemId, Map data) {
+        log.debug("Updating glossary item ${glossaryItemId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/glossary/${opusId}/item/${glossaryItemId}", data)
+    }
+
+    def createGlossaryItem(String opusId, Map data) {
+        log.debug("Creating glossary item for opus ${opusId}")
+
+        webService.doPut("${grailsApplication.config.profile.service.url}/glossary/${opusId}/item", data)
+    }
+
+    def deleteGlossaryItem(String opusId, String glossaryItemId) {
+        log.debug("Deleting glossary item ${glossaryItemId}")
+
+        webService.doDelete("${grailsApplication.config.profile.service.url}/glossary/${opusId}/item/${glossaryItemId}")
+    }
 }

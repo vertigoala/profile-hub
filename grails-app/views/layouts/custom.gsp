@@ -39,6 +39,11 @@
             <div class="span6 pull-left customizable-subbanner-title">
                 ${pageTitle}
             </div>
+            <div class="span6">
+                <g:if test="${glossaryUrl}">
+                    <a href="${glossaryUrl}" class="pull-right white" target="_blank">Glossary</a>
+                </g:if>
+            </div>
 
         </div>
     </div>
@@ -76,7 +81,8 @@
     angular.module('app.config', []).constant('config', {
         contextPath: '${request.contextPath}',
         readonly: ${!edit},
-        currentUser: '${params.currentUser}'
+        currentUser: '${params.currentUser}',
+        profileServiceUrl: '${grailsApplication.config.profile.service.url}'
      });
 </r:script>
 

@@ -40,3 +40,9 @@ profileEditor.filter("groupAttributes", function() {
         });
     }
 });
+
+profileEditor.filter("sanitizeHtml", function($sce) {
+    return function(htmlCode){
+        return $sce.trustAsHtml(htmlCode);
+    }
+});

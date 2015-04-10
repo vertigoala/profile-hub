@@ -19,7 +19,6 @@ class ExportController extends BaseController {
                 String occurrenceQuery = createOccurrenceQuery(model.profile, model.opus)
                 model.mapImageUrl = createMapImageUrl(model.opus, occurrenceQuery)
 
-                println model.mapImageUrl
                 renderPdf(template: "/pdf/profile", model: model, filename: "${model.profile.scientificName.replaceAll(/\W/, '')}.pdf")
             }
         }

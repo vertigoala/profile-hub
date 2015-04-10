@@ -16,9 +16,9 @@ class OpusController extends BaseController {
 
     def index() {
         render view: 'index', model: [
-                logoUrl      : DEFAULT_OPUS_LOGO_URL,
-                bannerUrl    : DEFAULT_OPUS_BANNER_URL,
-                pageTitle    : DEFAULT_OPUS_TITLE
+                logoUrl  : DEFAULT_OPUS_LOGO_URL,
+                bannerUrl: DEFAULT_OPUS_BANNER_URL,
+                pageTitle: DEFAULT_OPUS_TITLE
         ]
     }
 
@@ -43,9 +43,14 @@ class OpusController extends BaseController {
                     logoUrl    : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
                     bannerUrl  : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     pageTitle  : opus.title ?: DEFAULT_OPUS_TITLE,
+                    glossaryUrl: getGlossaryUrl(opus),
                     currentUser: authService.getDisplayName()
             ])
         }
+    }
+
+    private getGlossaryUrl(opus) {
+        opus.glossaryUuid ? "${request.contextPath}/opus/${opus.uuid}/glossary" : ""
     }
 
     def show() {
@@ -55,9 +60,10 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render view: 'show', model: [
-                    logoUrl  : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
-                    bannerUrl: opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    pageTitle: opus.title ?: DEFAULT_OPUS_TITLE,
+                    logoUrl    : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                    bannerUrl  : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                    pageTitle  : opus.title ?: DEFAULT_OPUS_TITLE,
+                    glossaryUrl: getGlossaryUrl(opus)
             ]
         }
     }
@@ -185,5 +191,9 @@ class OpusController extends BaseController {
 
     def keyUploadPanel = {
         render template: "keyUpload"
+    }
+
+    def editGlossaryPanel = {
+        render template: "editGlossary"
     }
 }

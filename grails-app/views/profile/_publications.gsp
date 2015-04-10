@@ -27,7 +27,7 @@
                 <input id="pubDOI" type="text" class="input-large" ng-model="pubCtrl.newPublication.doi"/>
                 <br/>
                 <label for="file">Reviewed copy</label>
-                <input id="file" type="file" class="input-large" onchange="angular.element(this).scope().pubCtrl.uploadFile(this)" required/>
+                <input id="file" type="file" class="input-large" onchange="angular.element(this).scope().pubCtrl.uploadFile(this)" accept="application/pdf" required/>
                 <br/>
 
                 <button ng-show="!pubCtrl.readonly() && pubCtrl.newPublication"

@@ -2,6 +2,7 @@ modules = {
     profiles {
         resource url:"css/profiles.css"
         dependsOn "jquery"
+        dependsOn "bootstrap_fileupload"
         dependsOn "angular"
         dependsOn "leaflet"
         dependsOn "angular_bootstrap_colourpicker"
@@ -25,6 +26,7 @@ modules = {
         resource url:"js/angular/controllers/MapController.js"
         resource url:"js/angular/controllers/VocabController.js"
         resource url:"js/angular/controllers/PublicationController.js"
+        resource url:"js/angular/controllers/GlossaryController.js"
     }
 
     angular {
@@ -52,4 +54,10 @@ modules = {
     fontawesome {
         resource url:"thirdparty/font-awesome-4.3.0/css/font-awesome.min.css"
     }
+
+    bootstrap_fileupload {
+        resource url:"thirdparty/bootstrap-fileupload/bootstrap-fileupload.min.js"
+        resource url:"thirdparty/bootstrap-fileupload/bootstrap-fileupload.min.css"
+    }
+
 }

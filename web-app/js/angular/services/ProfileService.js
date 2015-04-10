@@ -1,7 +1,7 @@
 /**
  * Angular service for interacting with the profile service application
  */
-profileEditor.service('profileService', function ($http, util, $cacheFactory) {
+profileEditor.service('profileService', function ($http, util, $cacheFactory, config) {
 
     function clearCache() {
         console.log("Clearing $http cache");
@@ -335,6 +335,62 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory) {
             var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/users/update", data);
             future.then(function (response) {
                 console.log("Update Users completed with response code " + response.status);
+
+                clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        uploadGlossary: function(opusId, data) {
+            console.log("Uploading glossary for opus " + opusId);
+
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/glossary/upload", data, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            });
+            future.then(function (response) {
+                console.log("Uploaded glossary with response code " + response.status);
+
+                clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        getGlossary: function(opusId, prefix) {
+            console.log("Fetching glossary for opus " + opusId);
+console.log(JSON.stringify(config))
+            var future = $http.get(config.profileServiceUrl + "/glossary/" + opusId + "/" + prefix);
+            future.then(function (response) {
+                console.log("Glossary fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        deleteGlossaryItem: function(opusId, glossaryItemId) {
+            console.log("Deleting glossary item " + glossaryItemId);
+
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/glossary/item/" + glossaryItemId + "/delete");
+            future.then(function (response) {
+                console.log("Glossary item deleted with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        saveGlossaryItem: function(opusId, glossaryItemId, data) {
+            console.log("Updating glossary item " + glossaryItemId);
+
+            var future;
+            if (glossaryItemId) {
+                future = $http.post(util.contextRoot() + "/opus/" + opusId + "/glossary/item/" + glossaryItemId + "/update", data);
+            } else {
+                future = $http.put(util.contextRoot() + "/opus/" + opusId + "/glossary/item/create", data);
+            }
+            future.then(function (response) {
+                console.log("Glossary item updated with response code " + response.status);
 
                 clearCache();
             });

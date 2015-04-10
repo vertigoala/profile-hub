@@ -77,6 +77,19 @@ describe("ProfileService tests", function () {
         http.expectPOST("/someContext/opus/opusId/update", data).respond("bla");
     });
 
+    it("should invoke the create opus service on the context root when saveOpus is called with no opusid", function () {
+        var data = {imageSources: ["one", "two"]};
+        service.saveOpus(null, data);
+
+        http.expectPUT("/someContext/opus/create", data).respond("bla");
+    });
+
+    it("should invoke the delete opus operation on the context root when deleteOpus is called", function() {
+        service.deleteOpus("opus1");
+
+        http.expectDELETE("/someContext/opus/opus1/delete").respond("bla");
+    });
+
     it("should invoke the get opus vocab service on the context root when getOpusVocabulary is called", function () {
         service.getOpusVocabulary("opusId", "vocabId1");
 
@@ -200,5 +213,38 @@ describe("ProfileService tests", function () {
         service.updateUsers("opus1", "admins", "editors");
 
         http.expectPOST("/someContext/opus/opus1/users/update", {opusId: "opus1", admins: "admins", editors: "editors"}).respond("bla");
-    })
+    });
+
+    it("should invoke the upload glossary operation on the context root when uploadGlossary is called", function() {
+        var formData = new FormData();
+        service.uploadGlossary("opus1", formData);
+
+        http.expectPOST("/someContext/opus/opus1/glossary/upload", formData).respond("bla");
+    });
+
+    it("should invoke the get glossary operation on the PROFILE SERVICE when getGlossary is called", function() {
+        service.getGlossary("opus1", "prefix");
+
+        http.expectGET("http://profileService/glossary/opus1/prefix").respond("bla");
+    });
+
+    it("should invoke the delete glossary item operation on the context root when deleteGlossaryItem is called", function() {
+        service.deleteGlossaryItem("opus1", "item1");
+
+        http.expectDELETE("/someContext/opus/opus1/glossary/item/item1/delete").respond("bla");
+    });
+
+    it("should invoke the create glossary item operation on the context root when saveGlossaryItem is called with no item id", function() {
+        var data = {term: "something"};
+        service.saveGlossaryItem("opus1", null, data);
+
+        http.expectPUT("/someContext/opus/opus1/glossary/item/create", data).respond("bla");
+    });
+
+    it("should invoke the create glossary item operation on the context root when saveGlossaryItem is called with no item id", function() {
+        var data = {term: "something"};
+        service.saveGlossaryItem("opus1", "item1", data);
+
+        http.expectPOST("/someContext/opus/opus1/glossary/item/item1/update", data).respond("bla");
+    });
 });

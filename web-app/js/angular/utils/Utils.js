@@ -99,6 +99,21 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Retrieves the value of the specified parameter from the query string of the url
+     *
+     * @param param The query parameter to return
+     * @returns {*} The value of the specified param, or null if it does not exist
+     */
+    function getQueryParameter(param) {
+        var val = $location.search()[param];
+        if (!val) {
+            val = null;
+        }
+
+        return val
+    }
+
+    /**
      * Get the specified entity id from the URL.
      *
      * Assumes all urls are in the form http://.../entity1/entity1Id/entity2/entity2Id/...
@@ -222,6 +237,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         confirm: confirm,
         redirect: redirect,
         getEntityId: getEntityId,
+        getQueryParameter: getQueryParameter,
 
         LAST: LAST,
         FIRST: FIRST,

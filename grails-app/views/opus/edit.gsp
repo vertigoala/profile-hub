@@ -72,6 +72,7 @@
 
     <g:include controller="opus" action="editVocabPanel" params="[opusId: params.opusId]"/>
 
+    <g:include controller="opus" action="editGlossaryPanel" params="[opusId: params.opusId]"/>
 </div>
 
 </body>

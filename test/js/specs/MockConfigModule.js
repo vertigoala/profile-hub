@@ -1,4 +1,5 @@
 angular.module('app.config', []).constant('config', {
     contextPath: '/path',
-    readonly: false
+    readonly: false,
+    profileServiceUrl: "http://profileService"
 });

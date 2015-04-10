@@ -120,6 +120,12 @@ input[type="text"] {
     color: red;
 }
 
+.white, *.white {
+    color: white !important;
+}
+
+
+
 .column-item {
     display: inline-block;
     width: 25%;
@@ -275,7 +281,7 @@ input[type=checkbox] + label, input[type=radio] + label {
 }
 
 .menu-bar a, .menu-bar a:visited, .menu-bar a:focus {
-    /*color: black;*/
+
 }
 
 .menu-bar ul, .menu-bar li {
@@ -298,4 +304,14 @@ input[type=checkbox] + label, input[type=radio] + label {
 
 hr {
     margin: 5px 0 !important;
+}
+
+input[type=file] {
+    display: inline-block;
+}
+
+.odd {
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd
 }
