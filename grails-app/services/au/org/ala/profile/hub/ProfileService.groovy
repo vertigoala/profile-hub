@@ -39,6 +39,10 @@ class ProfileService {
         webService.doPut("${grailsApplication.config.profile.service.url}/profile/", json)
     }
 
+    def updateProfile(String profileId, json) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/${profileId}", json)
+    }
+
     def getProfile(String profileId) {
         log.debug("Loading profile " + profileId)
 

@@ -14,12 +14,16 @@ describe("ImagesController tests", function () {
         },
         LAST: "last"
     };
+    var form = {
+        $setPristine: function () {},
+        $setDirty: function () {}
+    };
     var messageService;
     var profileService;
-    var profileDefer, imageDefer;
+    var profileDefer, imageDefer, saveDefer;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
-    var retrieveImagesResponse = '{"occurrences": [{"largeImageUrl": "url1", "dataResourceName": "name1"}, {"largeImageUrl": "url1", "dataResourceName": "name2"}]}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "excludedImages": ["imageId2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var retrieveImagesResponse = '{"occurrences": [{"image": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"image": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}]}';
 
     beforeAll(function () {
         console.log("****** Images Controller Tests ******");
@@ -36,9 +40,14 @@ describe("ImagesController tests", function () {
 
         profileDefer = $q.defer();
         imageDefer = $q.defer();
+        saveDefer = $q.defer();
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "retrieveImages").and.returnValue(imageDefer.promise);
+        spyOn(profileService, "updateProfile").and.returnValue(saveDefer.promise);
+
+        spyOn(form, "$setPristine");
+        spyOn(form, "$setDirty");
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -100,15 +109,27 @@ describe("ImagesController tests", function () {
         expect(scope.imageCtrl.images.length).toBe(2);
     });
 
-    it("should set the firstImage attribute of the array to the first item in the retrieveImages response", function () {
+    it("should default the primaryImage to the first item in the retrieveImages response", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(scope.imageCtrl.firstImage).toBeDefined();
-        expect(scope.imageCtrl.firstImage.largeImageUrl).toBe("url1");
+        expect(scope.imageCtrl.primaryImage).toBeDefined();
+        expect(scope.imageCtrl.primaryImage.largeImageUrl).toBe("url1");
+    });
+
+    it("should set the primaryImage to the image identified by the primaryImage attribute of the profile if present", function () {
+        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "primaryImage": "imageId2"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        profileDefer.resolve(JSON.parse(getProfileResponse));
+        imageDefer.resolve(JSON.parse(retrieveImagesResponse));
+
+        scope.imageCtrl.init("false");
+        scope.$apply();
+
+        expect(scope.imageCtrl.primaryImage).toBeDefined();
+        expect(scope.imageCtrl.primaryImage.largeImageUrl).toBe("url2");
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {
@@ -146,6 +167,17 @@ describe("ImagesController tests", function () {
         expect(messageService.pop.calls.count()).toBe(1);
     });
 
+    it("should set the 'excluded' property of each image based on the excludedImages list in the profile", function() {
+        profileDefer.resolve(JSON.parse(getProfileResponse));
+        imageDefer.resolve(JSON.parse(retrieveImagesResponse));
+
+        scope.imageCtrl.init("false");
+        scope.$apply();
+
+        expect(scope.imageCtrl.images[0].excluded).toBeFalsy();
+        expect(scope.imageCtrl.images[1].excluded).toBeTruthy();
+    });
+
     it("should use the scientificName to retrieve images if the profile.guid attribute is not present", function () {
         scope.imageCtrl.opusId = "opusId1";
         scope.imageCtrl.profileId = "profileId1";
@@ -172,5 +204,42 @@ describe("ImagesController tests", function () {
         scope.$apply();
 
         expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "lsid:guid1", "source1,source2");
+    });
+
+    it("should ensure only 1 image is primary when changePrimaryImage is invoked", function() {
+        scope.imageCtrl.images = [{imageId: "image1", primary: true}, {imageId: "image2", primary: false}, {imageId: "image3", primary: false}];
+
+        scope.imageCtrl.changePrimaryImage("image2", form);
+
+        expect(scope.imageCtrl.images[0].primary).toBeFalsy();
+        expect(scope.imageCtrl.images[1].primary).toBeTruthy();
+        expect(scope.imageCtrl.images[2].primary).toBeFalsy();
+        expect(form.$setDirty).toHaveBeenCalled();
+    });
+
+    it("should add all excluded images to the profile's excludedImages list on save", function() {
+        scope.imageCtrl.profile = {uuid: "profile1"};
+        scope.imageCtrl.images = [{imageId: "image1", excluded: true}, {imageId: "image2", excluded: false}, {imageId: "image3", excluded: true}];
+        scope.imageCtrl.opusId = "opusId";
+        scope.imageCtrl.profileId = "profileId";
+
+        var expectedProfile = {uuid: "profile1", excludedImages: ["image1", "image3"]};
+
+        scope.imageCtrl.saveProfile(form);
+
+        expect(profileService.updateProfile).toHaveBeenCalledWith("opusId", "profileId", expectedProfile);
+    });
+
+    it("should set the primary image attribute of the profile on save", function() {
+        scope.imageCtrl.profile = {uuid: "profile1"};
+        scope.imageCtrl.images = [{imageId: "image1", primary: false}, {imageId: "image2", primary: true}, {imageId: "image3", primary: false}];
+        scope.imageCtrl.opusId = "opusId";
+        scope.imageCtrl.profileId = "profileId";
+
+        var expectedProfile = {uuid: "profile1", primaryImage: "image2", excludedImages: []};
+
+        scope.imageCtrl.saveProfile(form);
+
+        expect(profileService.updateProfile).toHaveBeenCalledWith("opusId", "profileId", expectedProfile);
     });
 });

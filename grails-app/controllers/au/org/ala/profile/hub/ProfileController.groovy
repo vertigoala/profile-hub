@@ -63,6 +63,19 @@ class ProfileController extends BaseController {
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def updateProfile() {
+        def json = request.getJSON()
+
+        if (!json || !params.profileId) {
+            badRequest()
+        } else {
+            def response = profileService.updateProfile(params.profileId as String, json)
+
+            handle response
+        }
+    }
+
     def getJson() {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"

@@ -192,6 +192,12 @@ input[type=checkbox] + label, input[type=radio] + label {
     border: none;
 }
 
+.border-bottom {
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eeeeee;
+}
+
 .vertical-pad {
     padding-bottom: 10px;
     padding-top: 10px;

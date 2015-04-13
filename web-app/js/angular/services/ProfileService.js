@@ -41,6 +41,18 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        updateProfile: function(opusId, profileId, data) {
+            console.log("Updating profile " + profileId)
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/update", data);
+            future.then(function(response) {
+                console.log("Profile updated with response code " + response.status);
+
+                clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         getOpus: function (opusId) {
             // make sure we have a UUID, not just the last element of some other URL (e.g. create)
             if (!util.isUuid(opusId)) {
@@ -360,7 +372,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
         getGlossary: function(opusId, prefix) {
             console.log("Fetching glossary for opus " + opusId);
-console.log(JSON.stringify(config))
+
             var future = $http.get(config.profileServiceUrl + "/glossary/" + opusId + "/" + prefix);
             future.then(function (response) {
                 console.log("Glossary fetched with response code " + response.status);

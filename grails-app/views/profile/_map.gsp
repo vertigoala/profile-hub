@@ -1,11 +1,11 @@
-<div id="firstImage" ng-show="imageCtrl.firstImage" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')" ng-cloak>
+<div id="primaryImage" ng-show="imageCtrl.primaryImage" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')" ng-cloak>
     <div class="imgConXXX">
-        <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{imageCtrl.firstImage.uuid}}"
-           target="_self" ng-if="imageCtrl.firstImage.largeImageUrl">
-            <img ng-src="{{imageCtrl.firstImage.largeImageUrl}}" ng-if="imageCtrl.firstImage.largeImageUrl"/>
+        <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{imageCtrl.primaryImage.occurrenceId}}"
+           target="_self" ng-if="imageCtrl.primaryImage.largeImageUrl">
+            <img ng-src="{{imageCtrl.primaryImage.largeImageUrl}}" ng-if="imageCtrl.primaryImage.largeImageUrl"/>
         </a>
 
-        <div class="meta">{{ imageCtrl.firstImage.dataResourceName }}</div>
+        <div class="meta">{{ imageCtrl.primaryImage.dataResourceName }}</div>
     </div>
 </div>
 

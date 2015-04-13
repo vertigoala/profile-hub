@@ -56,7 +56,14 @@ describe("ProfileService tests", function () {
         service.createProfile("opusId", "scientificName");
 
         http.expectPUT("/someContext/opus/opusId/profile/create", {opusId: "opusId", scientificName: "scientificName"}).respond("bla");
-    })
+    });
+
+    it("should invoke the updateProfile service on the context root when udateProfile is called", function() {
+        var data = {primaryImage: "one"};
+        service.updateProfile("opusId", "profileId", data);
+
+        http.expectPOST("/someContext/opus/opusId/profile/profileId/update", data).respond("bla");
+    });
 
     it("should invoke the get opus as json service on the context root when getOpus is called", function () {
         service.getOpus("opusId");
