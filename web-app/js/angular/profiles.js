@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar']);
+var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'textAngular']);
 
 profileEditor.config(function ($locationProvider) {
     // This disables 'hashbang' mode and removes the need to specify <base href="/my-base"> in the views.
@@ -13,6 +13,9 @@ profileEditor.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
 
 profileEditor.run(function($rootScope, config) {
     $rootScope.config = config;
+
+    $rootScope.richTextToolbarFull = "[['h1','h2','h3','p'],['bold','italics','underline'],['ul','ol'],['undo']]";
+    $rootScope.richTextToolbarSimple = "[['bold','italics','underline']]";
 });
 
 profileEditor.directive('ngEnter', function () {

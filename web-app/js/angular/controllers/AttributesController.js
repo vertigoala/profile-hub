@@ -227,10 +227,8 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         }
     };
 
-    self.viewInOtherCollections = function (index) {
-        var attribute = self.attributes[index];
-
-        var supporting = self.supportingAttributes[attribute.title];
+    self.viewInOtherCollections = function (title) {
+        var supporting = self.supportingAttributes[title];
 
         $modal.open({
             templateUrl: "supportingCollections.html",

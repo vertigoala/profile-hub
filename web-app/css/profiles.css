@@ -315,3 +315,12 @@ input[type=file] {
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd
 }
+
+.ta-editor {
+    min-height: 200px !important;
+    height: 200px !important;
+    overflow: scroll;
+    font-family: inherit;
+    font-size: 100%;
+    margin:20px 0;
+}

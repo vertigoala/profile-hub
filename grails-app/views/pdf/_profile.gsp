@@ -18,7 +18,7 @@
         <div>
             <h2>${attribute.title}</h2>
             <blockquote>
-                <p class="display-text">${attribute.text}</p>
+                <p class="display-text">${raw(attribute.text)}</p>
                 <small>
                     Contributed by
                     <cite title="Contributors to this text">

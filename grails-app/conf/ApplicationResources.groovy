@@ -8,6 +8,7 @@ modules = {
         dependsOn "angular_bootstrap_colourpicker"
         dependsOn "angular_loading_bar"
         dependsOn "fontawesome"
+        dependsOn "richText"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -58,6 +59,14 @@ modules = {
     bootstrap_fileupload {
         resource url:"thirdparty/bootstrap-fileupload/bootstrap-fileupload.min.js"
         resource url:"thirdparty/bootstrap-fileupload/bootstrap-fileupload.min.css"
+    }
+
+    richText {
+        resource url:"thirdparty/textAngular/textAngular-1.3.11.min.js"
+        resource url:"thirdparty/textAngular/textAngular-1.3.11.css"
+        resource url:"thirdparty/textAngular/textAngular-rangy-1.3.11.min.js"
+        resource url:"thirdparty/textAngular/textAngular-sanitize-1.3.11.min.js"
+        dependsOn "fontawesome"
     }
 
 }

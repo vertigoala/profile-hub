@@ -23,7 +23,7 @@
     <!-- edit screen -->
     <div ng-repeat="attribute in attrCtrl.attributes" ng-form="AttributeForm" ng-show="!attrCtrl.readonly" ng-cloak>
         <ng-include src="'showEditableAttribute.html'" ng-if="!attribute.source"></ng-include>
-        <div class="bs-docs-example" data-content="{{ attribute.title }}" ng-if="attribute.source">
+        <div class="bs-docs-example" data-content="{{ attribute.title }}" ng-if="attrCtrl.showAttribute(attribute)">
             <ng-include src="'showReadOnlyAttribute.html'"></ng-include>
         </div>
     </div>
@@ -45,7 +45,9 @@
 <script type="text/ng-template" id="showReadOnlyAttribute.html">
 
 <blockquote style="border-left:none;">
-    <p class="display-text">{{ attribute.text }}</p>
+    <p class="display-text">
+        <div ta-bind ng-model="attribute.text"></div>
+    </p>
     <small>
         Contributed by
         <cite title="Contributors to this text">
@@ -73,7 +75,7 @@
             <span class="small"
                   ng-show="attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes && $last">
                 <a href="#"
-                   ng-click="attrCtrl.viewInOtherCollections($index)">Show {{attribute.title}} in other collections</a>
+                   ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</a>
             </span>
         </span>
     </span>
@@ -102,8 +104,11 @@
            value="title" placeholder="Title..."/>
     <alert ng-show="attribute.title && !attrCtrl.isValid(attribute.title)"
            type="danger">You must select a value from the list of approved titles.</alert>
-    <textarea class="field span12" rows="4" ng-model="attribute.text" name="text"
-              placeholder="Description..." required ng-required></textarea>
+
+    <div text-angular text-angular-name="attribute" ng-model="attribute.text" ta-toolbar="{{richTextToolbarFull}}"></div>
+
+    %{--<textarea class="field span12" rows="4" ng-model="attribute.text" name="text"--}%
+              %{--placeholder="Description..." required ng-required></textarea>--}%
     <label for="significantEdit" class="inline-label" ng-show="attribute.uuid">
         <input id="significantEdit" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit"
                ng-false-value="false">
@@ -193,7 +198,8 @@
     <div class="bs-docs-example" ng-repeat="attribute in attrModalCtrl.supporting"
          data-content="{{ attribute.opusTitle }}" ng-show="attrModalCtrl.supporting.length > 0">
         <blockquote style="border-left:none;">
-            <p class="display-text">{{ attribute.text }}</p>
+            <p class="display-text">
+            <div ta-bind ng-model="attribute.text"></div></p>
         </blockquote>
     </div>
 </div>
