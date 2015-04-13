@@ -1,7 +1,7 @@
 /**
  * Opus controller
  */
-profileEditor.controller('OpusController', function (profileService, util, messageService, $window) {
+profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter) {
     var self = this;
 
     self.opus = null;
@@ -10,14 +10,18 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.readonly = true;
     self.dataResource = null;
     self.dataResourceList = [];
+    self.allSpeciesLists = [];
     self.saving = false;
     self.newImageSources = [];
     self.newRecordSources = [];
     self.newSupportingOpuses = [];
+    self.newApprovedLists = [];
     self.valid = false;
 
     loadResources();
     loadOpusList();
+
+    var orderBy = $filter("orderBy");
 
     self.loadOpus = function() {
         self.opusId = util.getEntityId("opus");
@@ -196,6 +200,46 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         form.$setDirty();
     };
 
+    self.addApprovedList = function () {
+        self.newApprovedLists.push({});
+    };
+
+    self.saveApprovedLists = function (form) {
+        var invalid = [];
+        var valid = [];
+
+        angular.forEach(self.newApprovedLists, function (approvedList) {
+            if (approvedList.list) {
+                if (approvedList.list.dataResourceUid) {
+                    valid.push(approvedList.list.dataResourceUid);
+                } else {
+                    invalid.push(approvedList);
+                }
+            }
+        });
+
+        if (invalid.length == 0) {
+            self.newApprovedLists = [];
+            if (valid.length > 0) {
+                angular.forEach(valid, function (record) {
+                    self.opus.approvedLists.push(record);
+                });
+            }
+            self.saveOpus(form);
+        } else if (invalid.length > 0) {
+            messageService.alert(invalid.length + " list" + (invalid.length > 1 ? "s are" : " is") + " not valid. You must select items from the list.")
+        }
+    };
+
+    self.removeApprovedList = function (index, list, form) {
+        if (list == 'existing') {
+            self.opus.approvedLists.splice(index, 1);
+        } else {
+            self.newApprovedLists.splice(index, 1);
+        }
+        form.$setDirty();
+    };
+
     self.opusResourceChanged = function ($item, $model, $label) {
         self.opus.title = $label;
         self.opus.dataResourceUid = $item.id;
@@ -219,10 +263,8 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     function toggleMapPointerColourHash(shouldExist) {
         if (self.opus.mapPointColour) {
             if (!shouldExist && self.opus.mapPointColour.indexOf("#") > -1) {
-                console.log("removing #")
                 self.opus.mapPointColour = self.opus.mapPointColour.substr(1);
             } else if (shouldExist && self.opus.mapPointColour.indexOf("#") == -1) {
-                console.log("adding #")
                 self.opus.mapPointColour = "#" + self.opus.mapPointColour;
             }
         }
@@ -243,6 +285,16 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 console.log("Failed to retrieve opus description from collectory.");
             }
         );
+
+        var lists = profileService.getAllLists();
+        lists.then(function(data) {
+            self.allSpeciesLists = [];
+            angular.forEach(data.lists, function(list) {
+                self.allSpeciesLists.push({dataResourceUid: list.dataResourceUid, listName: list.listName.trim()});
+            });
+            self.allSpeciesLists = orderBy(self.allSpeciesLists, "listName");
+            console.log(JSON.stringify(self.allSpeciesLists['dr1266']))
+        });
     }
 
     function loadDataResource(dataResourceId) {

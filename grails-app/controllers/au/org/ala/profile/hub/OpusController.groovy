@@ -196,4 +196,8 @@ class OpusController extends BaseController {
     def editGlossaryPanel = {
         render template: "editGlossary"
     }
+
+    def editApprovedListsPanel = {
+        render template: "editApprovedLists"
+    }
 }

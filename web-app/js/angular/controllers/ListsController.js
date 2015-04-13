@@ -1,10 +1,12 @@
 /**
  * Species Lists controller
  */
-profileEditor.controller('ListsEditor', function (profileService, util, messageService) {
+profileEditor.controller('ListsEditor', function (profileService, util, messageService, $filter) {
     var self = this;
     
     self.lists = [];
+
+    var orderBy = $filter("orderBy");
 
     self.init = function (edit) {
         self.readonly = edit != 'true';
@@ -34,7 +36,15 @@ profileEditor.controller('ListsEditor', function (profileService, util, messageS
             listsPromise.then(function (data) {
                     console.log("Fetched " + data.length + " lists");
 
-                    self.lists = data;
+                    self.lists = [];
+
+                    angular.forEach(data, function(list) {
+                        if (!self.opus.approvedLists || self.opus.approvedLists.length == 0 || self.opus.approvedLists.indexOf(list.dataResourceUid) > -1) {
+                            self.lists.push(list);
+                        }
+                    });
+
+                    self.lists = orderBy(self.lists, 'listName');
 
                     messageService.pop();
                 },

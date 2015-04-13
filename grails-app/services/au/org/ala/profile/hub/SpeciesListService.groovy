@@ -10,4 +10,7 @@ class SpeciesListService {
         webService.get("${grailsApplication.config.lists.base.url}/ws/species/${guid}")
     }
 
+    def getAllLists() {
+        webService.get("${grailsApplication.config.lists.base.url}/ws/speciesList?max=1000")
+    }
 }

@@ -201,6 +201,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        getAllLists: function () {
+            console.log("Fetching all species lists...");
+
+            var future = $http.get(util.contextRoot() + "/speciesList", {cache: true});
+            future.then(function (response) {
+                console.log("Species lists fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         getClassifications: function (opusId, profileId, guid) {
             console.log("Retrieving classifications for " + guid);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/classifications?guid=" + guid, {cache: true});

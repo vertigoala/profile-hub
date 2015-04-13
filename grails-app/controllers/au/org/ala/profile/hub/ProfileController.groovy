@@ -167,16 +167,6 @@ class ProfileController extends BaseController {
         }
     }
 
-    def retrieveLists() {
-        if (!params.guid) {
-            badRequest "GUID is a required parameter"
-        } else {
-            def response = speciesListService.getListsForGuid(params.guid)
-
-            handle response
-        }
-    }
-
     def retrieveClassifications() {
         if (!params.guid || !params.opusId) {
             badRequest "GUID and opusId are required parameters"

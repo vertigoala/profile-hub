@@ -68,6 +68,8 @@
 
     <g:include controller="opus" action="editRecordSourcesPanel" params="[opusId: params.opusId]"/>
 
+    <g:include controller="opus" action="editApprovedListsPanel" params="[opusId: params.opusId]"/>
+
     <g:include controller="opus" action="editSupportingOpusPanel" params="[opusId: params.opusId]"/>
 
     <g:include controller="opus" action="editVocabPanel" params="[opusId: params.opusId]"/>

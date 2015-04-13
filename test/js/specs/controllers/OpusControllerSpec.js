@@ -21,11 +21,12 @@ describe("OpusController tests", function () {
     var form;
     var messageService;
     var profileService;
-    var opusDefer, getResourceDefer, listResourcesDefer, saveOpusDefer, listOpusDefer;
+    var opusDefer, getResourceDefer, listResourcesDefer, saveOpusDefer, listOpusDefer, getListsDefer;
 
     var getOpusResponse = '{"title": "OpusName", "dataResourceUid":"dataUid1", "imageSources": ["source1", "source2", "source3"], "recordSources": ["source1", "source2", "source3"], "mapPointColour": "12345", "supportingOpuses": []}';
     var getResourceResponse = '{"pubDescription":"resource description"}';
     var listResourceResponse = '{"dr776":" Insect and spider wetland indicator species list","dr774":" Toothed whales found in Australian waters"}';
+    var getAllListsResponse = '{lists: [{"dataResourceUid": "id4", "listName": "list4"}, {"dataResourceUid": "id2", "listName": "list2"}, {"dataResourceUid": "id3", "listName": "list3"}, {"dataResourceUid": "id1", "listName": "list1"}]}';
     var listOpusResponse = '[{"uuid":"opus1", "title":"Opus 1"}, {"uuid":"opus2", "title":"Opus 2"}, {"uuid":"'+OPUS_ID+'", "title":"Opus 3"}]';
 
     beforeAll(function () {
@@ -46,12 +47,14 @@ describe("OpusController tests", function () {
         listResourcesDefer = $q.defer();
         saveOpusDefer = $q.defer();
         listOpusDefer = $q.defer();
+        getListsDefer = $q.defer();
 
         spyOn(profileService, "getOpus").and.returnValue(opusDefer.promise);
         spyOn(profileService, "getResource").and.returnValue(getResourceDefer.promise);
         spyOn(profileService, "listResources").and.returnValue(listResourcesDefer.promise);
         spyOn(profileService, "saveOpus").and.returnValue(saveOpusDefer.promise);
         spyOn(profileService, "listOpus").and.returnValue(listOpusDefer.promise);
+        spyOn(profileService, "getAllLists").and.returnValue(getListsDefer.promise);
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -134,6 +137,12 @@ describe("OpusController tests", function () {
         expect(scope.opusCtrl.newSupportingOpuses.length).toBe(1);
     });
 
+    it("should create a new empty approved list record when addApprovedList is invoked", function () {
+        scope.opusCtrl.addApprovedList()
+
+        expect(scope.opusCtrl.newApprovedLists.length).toBe(1);
+    });
+
     it("should remove an existing imageSource from the opus when removeImageSource is invoked with 'existing'", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
@@ -208,6 +217,29 @@ describe("OpusController tests", function () {
         expect(scope.opusCtrl.newSupportingOpuses.length).toBe(2);
         expect(scope.opusCtrl.newSupportingOpuses[0].opusId).toBe("opus1");
         expect(scope.opusCtrl.newSupportingOpuses[1].opusId).toBe("opus3");
+    });
+
+    it("should remove an existing approved list from the opus when removeApprovedList is invoked with 'existing'", function () {
+        scope.opusCtrl.opus = {approvedLists: ["list1", "list2", "list3"]};
+
+        scope.$apply();
+        scope.opusCtrl.removeApprovedList(1, 'existing', form);
+
+        expect(scope.opusCtrl.opus.approvedLists.length).toBe(2);
+        expect(scope.opusCtrl.opus.approvedLists[0]).toBe("list1");
+        expect(scope.opusCtrl.opus.approvedLists[1]).toBe("list3");
+    });
+
+    it("should remove an approved list from the list of new approved lists when removeApprovedList is invoked with 'new'", function () {
+        scope.opusCtrl.opus = {approvedLists: ["list1", "list2", "list3"]};
+
+        scope.opusCtrl.newApprovedLists = ["list4", "list5", "list6"];
+        scope.opusCtrl.removeApprovedList(1, 'new', form);
+
+        expect(scope.opusCtrl.opus.approvedLists.length).toBe(3);
+        expect(scope.opusCtrl.newApprovedLists.length).toBe(2);
+        expect(scope.opusCtrl.newApprovedLists[0]).toBe("list4");
+        expect(scope.opusCtrl.newApprovedLists[1]).toBe("list6");
     });
 
     it("should set the form to Dirty removeImageSource is invoked", function () {
@@ -404,6 +436,63 @@ describe("OpusController tests", function () {
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
+
+
+
+
+
+
+
+    it("should merge newApprovedLists with the existing approvedLists when saveApprovedLists is called", function () {
+        scope.opusCtrl.opus = {title: "OpusName", approvedLists: ["list1", "list2", "list3"]};
+        scope.opusCtrl.newApprovedLists = [{list: {dataResourceUid: "list4"}}, {list: {dataResourceUid: "list5"}}, {list: {dataResourceUid: "list6"}}];
+        scope.opusCtrl.opusId = OPUS_ID;
+
+        scope.opusCtrl.saveApprovedLists(form);
+
+        var expectedOpus = {
+            title: "OpusName",
+            approvedLists: ["list1", "list2", "list3", "list4", "list5", "list6"]
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
+    });
+
+    it("should validate that approved lists have an associated dataResourceUid", function() {
+        scope.opusCtrl.opusId = OPUS_ID;
+
+        scope.opusCtrl.newApprovedLists = [{list: {listName: "list1"}}];
+
+        scope.opusCtrl.saveApprovedLists(form);
+
+        expect(profileService.saveOpus).not.toHaveBeenCalledWith();
+        expect(messageService.alert).toHaveBeenCalledWith("1 list is not valid. You must select items from the list.");
+    });
+
+    it("should save the opus if no new approved lists have been added but existing ones have been removed", function() {
+        scope.opusCtrl.opus = {title: "OpusName", approvedLists: ["list1", "list2", "list3"]};
+        scope.opusCtrl.opusId = OPUS_ID;
+
+        scope.opusCtrl.removeApprovedList(1, 'existing', form);
+        scope.opusCtrl.saveApprovedLists(form);
+
+        var expectedOpus = {
+            title: "OpusName",
+            approvedLists: ["list1", "list3"]
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
+    });
+
+
+
+
+
+
+
+
+
+
 
     it("should raise an alert message if the call to saveOpus fails", function() {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);

@@ -2,6 +2,8 @@ class UrlMappings {
 
     static mappings = {
 
+        "/speciesList/" controller: "speciesList", action: [GET: "getAllLists"]
+
         "/user/search" controller: "user", action: [GET: "findUser"]
 
         "/opus/create" controller: "opus", action: [GET: "create", PUT: "createOpus"]
@@ -16,7 +18,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
         "/opus/$opusId/profile/$profileId/pdf" controller: "export", action: [GET: "getPdf"]
         "/opus/$opusId/profile/$profileId/images" controller: "profile", action: [GET: "retrieveImages"]
-        "/opus/$opusId/profile/$profileId/lists" controller: "profile", action: [GET: "retrieveLists"]
+        "/opus/$opusId/profile/$profileId/lists" controller: "speciesList", action: [GET: "retrieveLists"]
         "/opus/$opusId/profile/$profileId/classifications" controller: "profile", action: [GET: "retrieveClassifications"]
         "/opus/$opusId/profile/$profileId/publication" controller: "profile", action: [GET: "retrievePublication"]
         "/opus/$opusId/profile/$profileId/publication/create" controller: "profile", action: [PUT: "savePublication"]
