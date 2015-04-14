@@ -23,7 +23,7 @@
         </div>
 
         <div class="span2">
-            <h5>Use as main image</h5>
+            <h5>Use as the main image</h5>
         </div>
 
         <div ng-repeat="image in imageCtrl.images" class="row-fluid border-bottom">

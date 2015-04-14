@@ -88,6 +88,7 @@
             <g:include controller="profile" action="bhlLinksPanel" params="[opusId: params.opusId]"/>
             <g:include controller="profile" action="classificationPanel" params="[opusId: params.opusId]"/>
             <g:include controller="profile" action="taxonPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="profile" action="bibliographyPanel" params="[opusId: params.opusId]"/>
             <g:include controller="profile" action="imagesPanel" params="[opusId: params.opusId]"/>
         </div>
 

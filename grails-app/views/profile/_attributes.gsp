@@ -107,8 +107,6 @@
 
     <div text-angular text-angular-name="attribute" ng-model="attribute.text" ta-toolbar="{{richTextToolbarFull}}"></div>
 
-    %{--<textarea class="field span12" rows="4" ng-model="attribute.text" name="text"--}%
-              %{--placeholder="Description..." required ng-required></textarea>--}%
     <label for="significantEdit" class="inline-label" ng-show="attribute.uuid">
         <input id="significantEdit" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit"
                ng-false-value="false">

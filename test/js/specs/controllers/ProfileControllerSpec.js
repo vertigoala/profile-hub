@@ -160,5 +160,68 @@ describe("ProfileController tests", function () {
 
         expect(util.redirect).toHaveBeenCalledWith("/context/opus/opusId1/profile/newProfileId/update");
     });
+
+    it("should create a new list when addBibliography is invoked if one doesn't exist", function() {
+        scope.profileCtrl.profile = {};
+        scope.profileCtrl.addBibliography(form);
+
+        expect(scope.profileCtrl.profile.bibliography.length).toBe(1);
+        expect(scope.profileCtrl.profile.bibliography[0].order).toBe(0);
+    });
+
+    it("should add new bibliography to the profile's list, with the correct order, when addBibliography is invoked", function() {
+        scope.profileCtrl.profile = {bibliography: [{uuid:"id1", order: 0}, {uuid:"id2", order: 1}]};
+        scope.profileCtrl.addBibliography(form);
+
+        expect(scope.profileCtrl.profile.bibliography.length).toBe(3);
+        expect(scope.profileCtrl.profile.bibliography[2].order).toBe(2);
+    });
+
+    it("should remove the specified bibliography item from the profile's list when deleteBibliography is invoked", function() {
+        scope.profileCtrl.profile = {bibliography: [{uuid:"id1", order: 0}, {uuid:"id2", order: 1}]};
+        scope.profileCtrl.deleteBibliography(1, form);
+
+        expect(scope.profileCtrl.profile.bibliography.length).toBe(1);
+        expect(scope.profileCtrl.profile.bibliography[0].order).toBe(0);
+    });
+
+    it("should remove the re-order all subsequent bibliography items when deleteBibliography is invoked", function() {
+        scope.profileCtrl.profile = {bibliography: [{uuid:"id1", order: 0},
+                                                    {uuid:"id2", order: 1},
+                                                    {uuid:"id3", order: 2},
+                                                    {uuid:"id4", order: 3}]};
+        scope.profileCtrl.deleteBibliography(1, form);
+
+        expect(scope.profileCtrl.profile.bibliography.length).toBe(3);
+        expect(scope.profileCtrl.profile.bibliography[0].order).toBe(0);
+        expect(scope.profileCtrl.profile.bibliography[1].order).toBe(1);
+        expect(scope.profileCtrl.profile.bibliography[2].order).toBe(2);
+    });
+
+    it("should swap the positions of two items when moveBibliographyUp is invoked", function() {
+        scope.profileCtrl.profile = {bibliography: [{uuid:"id1", order: 0},
+            {uuid:"id2", order: 1},
+            {uuid:"id3", order: 2},
+            {uuid:"id4", order: 3}]};
+        scope.profileCtrl.moveBibliographyUp(2, form);
+
+        expect(scope.profileCtrl.profile.bibliography[0].uuid).toBe("id1");
+        expect(scope.profileCtrl.profile.bibliography[1].uuid).toBe("id3");
+        expect(scope.profileCtrl.profile.bibliography[2].uuid).toBe("id2");
+        expect(scope.profileCtrl.profile.bibliography[3].uuid).toBe("id4");
+    });
+
+    it("should swap the positions of two items when moveBibliographyDown is invoked", function() {
+        scope.profileCtrl.profile = {bibliography: [{uuid:"id1", order: 0},
+            {uuid:"id2", order: 1},
+            {uuid:"id3", order: 2},
+            {uuid:"id4", order: 3}]};
+        scope.profileCtrl.moveBibliographyDown(2, form);
+
+        expect(scope.profileCtrl.profile.bibliography[0].uuid).toBe("id1");
+        expect(scope.profileCtrl.profile.bibliography[1].uuid).toBe("id2");
+        expect(scope.profileCtrl.profile.bibliography[2].uuid).toBe("id4");
+        expect(scope.profileCtrl.profile.bibliography[3].uuid).toBe("id3");
+    });
 });
 

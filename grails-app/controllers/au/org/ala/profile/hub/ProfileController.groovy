@@ -28,7 +28,7 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: true, currentUser: authService.getDisplayName()]
+                model << [edit: true, currentUser: authService.getDisplayName(), glossaryUrl: getGlossaryUrl(profile.opus)]
                 render view: "show", model: model
             }
         }
@@ -44,7 +44,7 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: false]
+                model << [edit: false, glossaryUrl: getGlossaryUrl(profile.opus),]
                 render view: "show", model: model
             }
         }
@@ -246,6 +246,10 @@ class ProfileController extends BaseController {
         }
     }
 
+    private getGlossaryUrl(opus) {
+        opus?.glossaryUuid ? "${request.contextPath}/opus/${opus.uuid}/glossary" : ""
+    }
+
     def attributesPanel = {
         render template: "attributes"
     }
@@ -276,5 +280,9 @@ class ProfileController extends BaseController {
 
     def publicationsPanel = {
         render template: "publications"
+    }
+
+    def bibliographyPanel = {
+        render template: "bibliography"
     }
 }

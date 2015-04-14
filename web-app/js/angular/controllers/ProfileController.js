@@ -1,7 +1,7 @@
 /**
  * Profile controller
  */
-profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal, $window) {
+profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal, $window, $filter) {
     var self = this;
 
     self.profile = null;
@@ -10,6 +10,8 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.readonly = true;
 
     self.opusId = util.getEntityId("opus");
+
+    var orderBy = $filter("orderBy");
 
     self.readonly = function() {
         return config.readonly
@@ -66,6 +68,64 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.uuid + "/update");
         });
     };
+
+    self.addBibliography = function(form) {
+        if (!self.profile.bibliography) {
+            self.profile.bibliography = [];
+        }
+        self.profile.bibliography.push({text: "", order: self.profile.bibliography.length});
+
+        form.$setDirty();
+    };
+
+    self.deleteBibliography = function(index, form) {
+        var deletedItemOrder = self.profile.bibliography[index].order;
+        self.profile.bibliography.splice(index, 1);
+
+        angular.forEach(self.profile.bibliography, function(bib) {
+            if (bib.order > deletedItemOrder) {
+                bib.order = bib.order - 1;
+            }
+        });
+
+        form.$setDirty();
+    };
+
+    self.moveBibliographyUp = function(index, form) {
+        if (index > 0) {
+            self.profile.bibliography[index].order = self.profile.bibliography[index].order - 1;
+            self.profile.bibliography[index - 1].order = self.profile.bibliography[index - 1].order + 1;
+
+            self.profile.bibliography = orderBy(self.profile.bibliography, "order");
+
+            form.$setDirty();
+        }
+    };
+
+    self.moveBibliographyDown = function(index, form) {
+        if (index < self.profile.bibliography.length) {
+            self.profile.bibliography[index].order = self.profile.bibliography[index].order + 1;
+            self.profile.bibliography[index + 1].order = self.profile.bibliography[index + 1].order - 1;
+
+            self.profile.bibliography = orderBy(self.profile.bibliography, "order");
+
+            form.$setDirty();
+        }
+    };
+
+    self.saveProfile = function(form) {
+        var future = profileService.updateProfile(self.opusId, self.profileId, self.profile);
+
+        future.then(function(data) {
+            messageService.success("The profile has been successfully updated.");
+
+            self.profile = data;
+
+            form.$setPristine();
+        }, function() {
+            messageService.alert("An error has occurred while updating the profile.");
+        });
+    }
 });
 
 
