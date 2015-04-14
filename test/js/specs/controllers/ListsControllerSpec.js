@@ -16,7 +16,7 @@ describe("ListsController tests", function () {
     };
     var messageService;
     var profileService;
-    var profileDefer, listsDefer;
+    var profileDefer, listsDefer, speciesProfileDefer;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
     var listsResponse = '[{},{}]';
@@ -36,9 +36,11 @@ describe("ListsController tests", function () {
 
         profileDefer = $q.defer();
         listsDefer = $q.defer();
+        speciesProfileDefer = $q.defer();
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "retrieveLists").and.returnValue(listsDefer.promise);
+        spyOn(profileService, "getSpeciesProfile").and.returnValue(speciesProfileDefer.promise);
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -145,6 +147,31 @@ describe("ListsController tests", function () {
 
         expect(profileService.retrieveLists).not.toHaveBeenCalled();
         expect(messageService.info).not.toHaveBeenCalled();
+    });
+
+    it("should return the expected colour code for all conservation statuses when getColourForStatus is called", function() {
+        expect(scope.listCtrl.getColourForStatus("ENDAngered")).toBe("yellow");
+        expect(scope.listCtrl.getColourForStatus("CriTICallY")).toBe("yellow");
+        expect(scope.listCtrl.getColourForStatus("VulNERAble")).toBe("yellow");
+        expect(scope.listCtrl.getColourForStatus("extINCT")).toBe("red");
+        expect(scope.listCtrl.getColourForStatus("wiLD")).toBe("red");
+        expect(scope.listCtrl.getColourForStatus("something ELSE")).toBe("green");
+        expect(scope.listCtrl.getColourForStatus("")).toBe("green");
+        expect(scope.listCtrl.getColourForStatus(null)).toBe("green");
+        expect(scope.listCtrl.getColourForStatus(undefined)).toBe("green");
+    });
+
+    it("should retrieve the species profile and extract the conservation statuses when loadConservationStatus is invoked", function() {
+        scope.listCtrl.opusId = "opusId";
+        scope.listCtrl.profileId = "profileId";
+        scope.listCtrl.profile = {guid: "guid"};
+
+        speciesProfileDefer.resolve({conservationStatuses: [{region: "b"}, {region: "a"}, {region: "c"}]});
+        scope.listCtrl.loadConservationStatus();
+        scope.$apply();
+
+        expect(profileService.getSpeciesProfile).toHaveBeenCalledWith("opusId", "profileId", "guid");
+        expect(scope.listCtrl.conservationStatuses).toEqual([{region: "a"}, {region: "b"}, {region: "c"}])
     });
 
 });

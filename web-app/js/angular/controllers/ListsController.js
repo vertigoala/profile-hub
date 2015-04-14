@@ -3,8 +3,9 @@
  */
 profileEditor.controller('ListsEditor', function (profileService, util, messageService, $filter) {
     var self = this;
-    
+
     self.lists = [];
+    self.conservationStatuses = [];
 
     var orderBy = $filter("orderBy");
 
@@ -27,6 +28,42 @@ profileEditor.controller('ListsEditor', function (profileService, util, messageS
         );
     };
 
+    self.loadConservationStatus = function () {
+        var promise = profileService.getSpeciesProfile(self.opusId, self.profileId, self.profile.guid);
+        promise.then(function (data) {
+            self.conservationStatuses = orderBy(data.conservationStatuses, "region");
+            console.log(self.conservationStatuses.length)
+        });
+    };
+
+    self.getColourForStatus = function (status) {
+        var colour;
+
+        if (/extinct$/i.test(status) || /wild/i.test(status)) {
+            colour = "red";
+        } else if (/Critically/i.test(status) || /^Endangered/i.test(status) || /Vulnerable/i.test(status)) {
+            colour = "yellow";
+        } else {
+            colour = "green";
+        }
+
+        return colour;
+    };
+
+    self.statusRegions = {
+        "": {id: "dr657", abbrev: "IUCN"},
+        "IUCN": {id: "dr657", abbrev: "IUCN"},
+        "Australia": {id: "dr656", abbrev: "AU"},
+        "Australian Capital Territory": {id: "dr649", abbrev: "ACT"},
+        "New South Wales": {id: "dr650", abbrev: "NSW"},
+        "Northern Territory": {id: "dr651", abbrev: "NT"},
+        "Queensland": {id: "dr652", abbrev: "QLD"},
+        "South Australia": {id: "dr653", abbrev: "SA"},
+        "Tasmania": {id: "dr654", abbrev: "TAS"},
+        "Victoria": {id: "dr655", abbrev: "VIC"},
+        "Western Australia": {id: "dr467", abbrev: "WA"}
+    };
+
     function loadLists() {
         if (self.profile.guid) {
             messageService.info("Loading lists...");
@@ -38,13 +75,15 @@ profileEditor.controller('ListsEditor', function (profileService, util, messageS
 
                     self.lists = [];
 
-                    angular.forEach(data, function(list) {
+                    angular.forEach(data, function (list) {
                         if (!self.opus.approvedLists || self.opus.approvedLists.length == 0 || self.opus.approvedLists.indexOf(list.dataResourceUid) > -1) {
                             self.lists.push(list);
                         }
                     });
 
                     self.lists = orderBy(self.lists, 'listName');
+
+                    self.loadConservationStatus();
 
                     messageService.pop();
                 },

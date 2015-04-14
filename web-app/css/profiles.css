@@ -343,3 +343,38 @@ input[type=file] {
 .input-xxxlarge {
     width: 700px;
 }
+
+
+/* Species status icons */
+.status {
+    height:40px;
+    width:40px;
+    margin:0 6px 12px 0;
+    display:inline-block;
+    font-weight:bold;
+    line-height:40px;
+    color:#333a3f;
+    text-align:center;
+    -moz-border-radius: 2em;
+    -webkit-border-radius: 2em;
+    border-radius: 2em; /* Opera 10.5, IE 9 */
+    font-variant:small-caps;
+    border:1px solid #3d464c;
+    background-color:#fff;
+}
+
+.status.green {
+    background-color:#43c205;
+    border-color:#43c205;
+    color:#fff;
+}
+.status.yellow {
+    background-color:#ffbb00;
+    border-color:#ffbb00;
+}
+
+.status.red {
+    background-color:#e30202;
+    border-color:#e30202;
+    color:#fff;
+}
