@@ -9,7 +9,7 @@
     </div>
 
     <div ng-show="listCtrl.conservationStatuses.length > 0"
-         class="bs-docs-example"
+         class="bs-docs-example" ng-cloak
          data-content="Conservation status">
         <div class="row-fluid">
             <div class="span5" ng-repeat="status in listCtrl.conservationStatuses" style="margin-left: 2.5%">

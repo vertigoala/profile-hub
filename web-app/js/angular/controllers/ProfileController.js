@@ -125,7 +125,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         }, function() {
             messageService.alert("An error has occurred while updating the profile.");
         });
-    }
+    };
 });
 
 

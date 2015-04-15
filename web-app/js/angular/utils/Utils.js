@@ -184,7 +184,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @returns {Array|{index: number, input: string}|*}
      */
     function isUuid(id) {
-        return id.match(UUID_REGEX_PATTERN)
+        return id && id.match(UUID_REGEX_PATTERN)
     }
 
     /**

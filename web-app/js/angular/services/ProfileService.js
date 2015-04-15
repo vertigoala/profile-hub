@@ -300,6 +300,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        lookupSpecimenDetails: function(specimenId) {
+            console.log("Looking up specimen details for id " + specimenId);
+
+            var future = $http.get(util.contextRoot() + "/specimen/" + specimenId);
+            future.then(function(response) {
+                console.log("Specimen details retrieved with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
         profileSearch: function(opusId, scientificName, useWildcard) {
             console.log("Searching for " + scientificName + (useWildcard ? " with wildcard" : ""));
 

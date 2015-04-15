@@ -58,6 +58,8 @@ class UrlMappings {
 
         "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
 
+        "/specimen/$specimenId"(controller: "biocache", action: "lookupSpecimen")
+
         "/audit/object/$id" controller: "audit", action: [GET: "object"]
         "/audit/user/$id" controller: "audit", action: [GET: "user"]
 

@@ -32,7 +32,6 @@ profileEditor.controller('ListsEditor', function (profileService, util, messageS
         var promise = profileService.getSpeciesProfile(self.opusId, self.profileId, self.profile.guid);
         promise.then(function (data) {
             self.conservationStatuses = orderBy(data.conservationStatuses, "region");
-            console.log(self.conservationStatuses.length)
         });
     };
 

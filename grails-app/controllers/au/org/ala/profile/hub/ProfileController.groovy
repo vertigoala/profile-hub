@@ -285,4 +285,8 @@ class ProfileController extends BaseController {
     def bibliographyPanel = {
         render template: "bibliography"
     }
+
+    def specimenPanel = {
+        render template: "specimens"
+    }
 }
