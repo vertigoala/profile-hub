@@ -6,6 +6,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
     self.attributes = [];
     self.attributeTitles = [];
+    self.allowedVocabulary = [];
     self.historyShowing = {};
     self.vocabularyStrict = false;
     self.supportingAttributes = {};
@@ -42,7 +43,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
     self.isValid = function (attributeTitle) {
         attributeTitle = capitalize(attributeTitle);
-        return !self.vocabularyStrict || (self.vocabularyStrict && self.attributeTitles.indexOf(attributeTitle) > -1)
+        return !self.vocabularyStrict || (self.vocabularyStrict && self.allowedVocabulary.indexOf(attributeTitle) > -1)
     };
 
     self.showAttribute = function(attribute) {
@@ -68,9 +69,13 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             var vocabPromise = profileService.getOpusVocabulary(self.opusId, self.opus.attributeVocabUuid);
             vocabPromise.then(function (data) {
                 self.attributeTitles = [];
+                self.allowedVocabulary = [];
                 angular.forEach(data.terms, function (term) {
                     if (self.attributeTitles.indexOf(term.name) == -1) {
                         self.attributeTitles.push(term.name);
+                    }
+                    if (self.allowedVocabulary.indexOf(term.name) == -1) {
+                        self.allowedVocabulary.push(term.name);
                     }
                 });
 
@@ -205,6 +210,9 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                                         profileId: supporting.profile.uuid
                                     };
                                     self.attributes.push(attribute);
+                                    if (self.attributeTitles.indexOf(attribute.title) == -1) {
+                                        self.attributeTitles.push(attribute.title);
+                                    }
                                 }
 
                                 if (!self.supportingAttributes[attribute.title]) {
@@ -220,6 +228,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                             });
 
                             self.attributes = sort(self.attributes, "title");
+                            self.attributeTitles = sort(self.attributeTitles);
                         });
                     });
                 }

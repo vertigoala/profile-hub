@@ -554,4 +554,32 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes[2].title).toBe("title3");
     });
 
+    it("should add the title of all supporting attributes to the attributeTitle list, but not the approvedVocabulary list, when loadAttributesFromSupportingCollections is called", function() {
+        scope.attrCtrl.approvedVocabulary = ["title1", "title2"];
+        scope.attrCtrl.attributeTitles = ["title1", "title2"];
+
+        scope.attrCtrl.profileId = "profileId1";
+        scope.attrCtrl.opusId = "opusId1";
+        var attribute1 = {uuid: "uuid1", title: "title1"};
+        var attribute2 = {uuid: "uuid2", title: "title2"};
+        var attribute3 = {uuid: "uuid3", title: "title3"};
+
+        var searchResult = [{profileId: "profile2", opus: {uuid: "support1", title: "supporting opus 1"}}];
+
+        searchDefer.resolve(searchResult);
+
+        var profile2 = {profile: {uuid: "profile2", attributes: [attribute1, attribute3]}, opus: {uuid: "support1", title: "supporting opus 1"}};
+
+        profileDefer.resolve(profile2);
+
+        scope.attrCtrl.profile = {scientificName: "profile1"};
+        scope.attrCtrl.opus = {supportingOpuses: [{uuid: "support1"}, {uuid: "support2"}]};
+        scope.attrCtrl.attributes = [attribute1, attribute2];
+
+        scope.attrCtrl.loadAttributesFromSupportingCollections();
+        scope.$apply();
+
+        expect(scope.attrCtrl.attributeTitles).toEqual(["title1", "title2", "title3"]);
+        expect(scope.attrCtrl.approvedVocabulary).toEqual(["title1", "title2"]);
+    });
 });

@@ -99,7 +99,7 @@
     <input type="text"
            autocomplete="off"
            required
-           typeahead="attributeTitle for attributeTitle in attrCtrl.attributeTitles | filter: $viewValue"
+           typeahead="attributeTitle for attributeTitle in attrCtrl.allowedVocabulary | filter: $viewValue"
            class="form-control attribute-header-input" ng-model="attribute.title" name="title"
            value="title" placeholder="Title..."/>
     <alert ng-show="attribute.title && !attrCtrl.isValid(attribute.title)"
