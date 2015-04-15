@@ -81,7 +81,7 @@
                         </span>
                         <br/>
                         <span>
-                            DOI: <a href="http://dx.doi.org/{{link.bhlDoi}}">{{link.doi}}</a>
+                            DOI: <a href="http://dx.doi.org/{{link.doi}}">{{link.doi}}</a>
                         </span>
                     </cite>
                 </td>

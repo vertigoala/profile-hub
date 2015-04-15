@@ -17,7 +17,7 @@
             <div ng-if="specimen.institutionName">Institution Name: <a href="${grailsApplication.config.collectory.base.url}/public/show/{{specimen.institutionUid}}"target="_blank">{{specimen.institutionName}}</a></div>
             <div ng-if="specimen.collectionName">Collection: <a href="${grailsApplication.config.collectory.base.url}/public/show/{{specimen.collectionUid}}"target="_blank">{{specimen.collectionName}}</a></div>
             <div ng-if="specimen.catalogNumber">Catalog Number: {{specimen.catalogNumber}}</div>
-            <div ng-if="specimen.id"><a href="${grailsApplication.config.biocache.base.url}/ws/occurrences/{{specimen.id}}" target="_blank">View specimen record</a></div>
+            <div ng-if="specimen.id"><a href="${grailsApplication.config.biocache.base.url}/occurrences/{{specimen.id}}" target="_blank">View specimen record</a></div>
 
             <div class="row-fluid">
             <div ng-if="!specCtrl.readonly()" class="pull-right">
