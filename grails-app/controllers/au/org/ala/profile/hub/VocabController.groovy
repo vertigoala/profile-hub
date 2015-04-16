@@ -8,10 +8,10 @@ class VocabController extends BaseController {
     ProfileService profileService
 
     def show() {
-        if (!params.vocabId) {
+        if (!params.opusId || !params.vocabId) {
             badRequest()
         } else {
-            def response = profileService.getVocab(params.vocabId)
+            def response = profileService.getVocab(params.opusId, params.vocabId)
 
             handle response
         }
@@ -20,10 +20,10 @@ class VocabController extends BaseController {
     @Secured(role = Role.ROLE_PROFILE_ADMIN)
     def update() {
         def json = request.getJSON();
-        if (!params.vocabId || !json) {
+        if (!params.opusId || !params.vocabId || !json) {
             badRequest()
         } else {
-            def response = profileService.updateVocabulary(params.vocabId, json)
+            def response = profileService.updateVocabulary(params.opusId, params.vocabId, json)
 
             handle response
         }
@@ -31,10 +31,10 @@ class VocabController extends BaseController {
 
     @Secured(role = Role.ROLE_PROFILE_ADMIN)
     def findUsagesOfTerm() {
-        if (!params.vocabId || !params.termName) {
+        if (!params.opusId || !params.vocabId || !params.termName) {
             badRequest()
         } else {
-            def response = profileService.findUsagesOfVocabTerm(params.vocabId, params.termName)
+            def response = profileService.findUsagesOfVocabTerm(params.opusId, params.vocabId, params.termName)
 
             handle response
         }
@@ -43,10 +43,10 @@ class VocabController extends BaseController {
     @Secured(role = Role.ROLE_PROFILE_ADMIN)
     def replaceUsagesOfTerm() {
         def json = request.getJSON();
-        if (!json) {
+        if (!params.opusId || !json) {
             badRequest()
         } else {
-            def response = profileService.replaceUsagesOfVocabTerm(json)
+            def response = profileService.replaceUsagesOfVocabTerm(params.opusId, json)
 
             handle response
         }

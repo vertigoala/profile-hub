@@ -32,10 +32,10 @@ class ProfileServiceSpec extends Specification {
 
     def "getClassification() should construct the correct Profile Service URL"() {
         setup:
-        String expectedUrl = "http://profile.service/classification?guid=guid&opusId=opus"
+        String expectedUrl = "http://profile.service/profile/profileid/classification?guid=guid&opusId=opusid"
 
         when:
-        service.getClassification("guid", "opus")
+        service.getClassification("opusid", "profileid", "guid")
 
         then:
         1 * webService.get(expectedUrl)
@@ -43,7 +43,7 @@ class ProfileServiceSpec extends Specification {
 
     def "updateLinks() should construct the correct Profile Service URL"() {
         setup:
-        String expectedUrl = "http://profile.service/profile/links/profileId"
+        String expectedUrl = "http://profile.service/profile/profileId/links"
 
         when:
         service.updateLinks("profileId", "linkdata")

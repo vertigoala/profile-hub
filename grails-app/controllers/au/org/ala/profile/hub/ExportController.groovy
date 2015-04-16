@@ -14,7 +14,7 @@ class ExportController extends BaseController {
                 notFound()
             } else {
                 model.speciesProfile = profileService.getSpeciesProfile(model.profile.guid)?.resp
-                model.classifications = profileService.getClassification(model.profile.guid, model.opus.uuid)?.resp
+                model.classifications = profileService.getClassification(model.opus.uuid, params.profileId, model.profile.guid)?.resp
 
                 String occurrenceQuery = createOccurrenceQuery(model.profile, model.opus)
                 model.mapImageUrl = createMapImageUrl(model.opus, occurrenceQuery)

@@ -495,10 +495,11 @@ class ProfileControllerSpec extends Specification {
 
     def "retrieveClassifications should return the resp element of the response from the service call on success"() {
         setup:
-        profileService.getClassification(_, _) >> [resp: [resp: "classification"], statusCode: 200]
+        profileService.getClassification(_,_, _) >> [resp: [resp: "classification"], statusCode: 200]
         profileService.getSpeciesProfile(_) >> [resp: [resp: "speciesProfile"], statusCode: 200]
 
         when:
+        params.profileId = "profile1"
         params.guid = "guid1"
         params.opusId = "opus1"
         controller.retrieveClassifications()
@@ -510,9 +511,10 @@ class ProfileControllerSpec extends Specification {
 
     def "retrieveClassifications should return the error code from the service on failure of the service call"() {
         setup:
-        profileService.getClassification(_, _) >> [error: "something died!", statusCode: 666]
+        profileService.getClassification(_,_, _) >> [error: "something died!", statusCode: 666]
 
         when:
+        params.profileId = "profile1"
         params.guid = "guid1"
         params.opusId = "opus1"
         controller.retrieveClassifications()

@@ -168,10 +168,10 @@ class ProfileController extends BaseController {
     }
 
     def retrieveClassifications() {
-        if (!params.guid || !params.opusId) {
-            badRequest "GUID and opusId are required parameters"
+        if (!params.profileId || !params.guid || !params.opusId) {
+            badRequest "profileId, guid and opusId are required parameters"
         } else {
-            def response = profileService.getClassification(params.guid, params.opusId)
+            def response = profileService.getClassification(params.opusId, params.profileId, params.guid)
 
             handle response
         }
@@ -237,10 +237,10 @@ class ProfileController extends BaseController {
 
     @Secured(role = Role.ROLE_PROFILE_ADMIN)
     def deletePublication() {
-        if (!params.publicationId) {
-            badRequest "publicationId is a required parameter"
+        if (!params.profileId || !params.publicationId) {
+            badRequest "profileId and publicationId are a required parameters"
         } else {
-            def response = profileService.deletePublication(params.publicationId as String)
+            def response = profileService.deletePublication(params.profileId as String, params.publicationId as String)
 
             handle response
         }

@@ -31,8 +31,8 @@ class ProfileService {
         webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${opusId}")
     }
 
-    def getVocab(String vocabId = "") {
-        webService.get("${grailsApplication.config.profile.service.url}/vocab/${vocabId}")
+    def getVocab(String opusId, String vocabId = "") {
+        webService.get("${grailsApplication.config.profile.service.url}/opus/${opusId}/vocab/${vocabId}")
     }
 
     def createProfile(json) {
@@ -97,31 +97,25 @@ class ProfileService {
     def getPublications(String profileId) {
         log.debug("Retrieving publications for ${profileId}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/profile/publication/${profileId}")
-    }
-
-    def getPublicationFile(String publicationId) {
-        log.debug("Retrieving file for publication for ${publicationId}")
-
-        webService.get("${grailsApplication.config.profile.service.url}/profile/publication/${publicationId}/file")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/${profileId}/publication")
     }
 
     def savePublication(String profileId, publication, file) {
         log.debug("Saving publication for profile ${profileId}")
 
-        webService.postMultipart("${grailsApplication.config.profile.service.url}/profile/publication/${profileId}", publication, [file])
+        webService.postMultipart("${grailsApplication.config.profile.service.url}/profile/${profileId}/publication", publication, [file])
     }
 
-    def deletePublication(String publicationId) {
+    def deletePublication(String profileId, String publicationId) {
         log.debug("Deleting publication ${publicationId}")
 
-        webService.doDelete("${grailsApplication.config.profile.service.url}/profile/publication/${publicationId}/delete")
+        webService.doDelete("${grailsApplication.config.profile.service.url}/profile/${profileId}/publication/${publicationId}/delete")
     }
 
-    def getClassification(String guid, String opusId) {
+    def getClassification(String opusId, String profileId, String guid) {
         log.debug("Retrieving classification for ${guid} in opus ${opusId}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/classification?guid=${guid}&opusId=${opusId}")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/${profileId}/classification?guid=${guid}&opusId=${opusId}")
     }
 
     def getSpeciesProfile(String guid) {
@@ -140,7 +134,7 @@ class ProfileService {
     def updateBHLLinks(String profileId, def links) {
         log.debug("Updating BHL links ${links} for profile ${profileId}")
 
-        webService.doPost("${grailsApplication.config.profile.service.url}/profile/bhl/${profileId}", [
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/${profileId}/bhl", [
                 profileId      : profileId,
                 links          : links,
                 userId         : authService.getUserId(),
@@ -151,7 +145,7 @@ class ProfileService {
     def updateLinks(String profileId, def links) {
         log.debug("Updating links ${links} for profile ${profileId}")
 
-        webService.doPost("${grailsApplication.config.profile.service.url}/profile/links/${profileId}", [
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/${profileId}/links", [
                 profileId      : profileId,
                 links          : links,
                 userId         : authService.getUserId(),
@@ -166,13 +160,13 @@ class ProfileService {
         attribute.userId = authService.getUserId()
         attribute.userDisplayName = authService.userDetails().userDisplayName
 
-        webService.doPost("${grailsApplication.config.profile.service.url}/attribute/${attribute.uuid ?: ''}", attribute)
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/${profileId}/attribute/${attribute.uuid ?: ''}", attribute)
     }
 
     def deleteAttribute(String attributeId, String profileId) {
         log.debug("Deleting attribute ${attributeId} of profile ${profileId}")
 
-        webService.doDelete("${grailsApplication.config.profile.service.url}/attribute/${attributeId}?profileId=${profileId}")
+        webService.doDelete("${grailsApplication.config.profile.service.url}/profile/${profileId}/attribute/${attributeId}?profileId=${profileId}")
     }
 
     def getAuditHistory(String objectId, String userId) {
@@ -181,51 +175,51 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${objectId ?: userId}")
     }
 
-    def updateVocabulary(String vocabId, vocab) {
+    def updateVocabulary(String opusId, String vocabId, vocab) {
         log.debug("Updating vocabulary ${vocabId} with data ${vocab}")
 
-        webService.doPost("${grailsApplication.config.profile.service.url}/vocab/${vocabId}", vocab)
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}/vocab/${vocabId}", vocab)
     }
 
-    def findUsagesOfVocabTerm(String vocabId, String termName) {
+    def findUsagesOfVocabTerm(String opusId, String vocabId, String termName) {
         log.debug("Finding usages of term ${termName} from vocab ${vocabId}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/vocab/usages/find?vocabId=${vocabId}&term=${termName}")
+        webService.get("${grailsApplication.config.profile.service.url}/opus/${opusId}/vocab/usages/find?vocabId=${vocabId}&term=${URLEncoder.encode(termName, "UTF-8")}")
     }
 
-    def replaceUsagesOfVocabTerm(Map json) {
+    def replaceUsagesOfVocabTerm(String opusId, Map json) {
         log.debug("Replacing usages of vocab term(s): ${json}")
 
-        webService.doPost("${grailsApplication.config.profile.service.url}/vocab/usages/replace", json)
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}/vocab/usages/replace", json)
     }
 
     def getGlossary(String opusId) {
         log.debug("Fetching glossary for opus ${opusId}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/glossary/${opusId}")
+        webService.get("${grailsApplication.config.profile.service.url}/opus/${opusId}/glossary/${opusId}")
     }
 
     def uploadGlossary(String opusId, String glossaryId, List items) {
         log.debug("Uploading glossary items for opus ${opusId}")
 
-        webService.doPost("${grailsApplication.config.profile.service.url}/glossary", [opusId: opusId, glossaryId: glossaryId, items: items])
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}/glossary", [opusId: opusId, glossaryId: glossaryId, items: items])
     }
 
     def updateGlossaryItem(String opusId, String glossaryItemId, Map data) {
         log.debug("Updating glossary item ${glossaryItemId}")
 
-        webService.doPost("${grailsApplication.config.profile.service.url}/glossary/${opusId}/item/${glossaryItemId}", data)
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}/glossary/item/${glossaryItemId}", data)
     }
 
     def createGlossaryItem(String opusId, Map data) {
         log.debug("Creating glossary item for opus ${opusId}")
 
-        webService.doPut("${grailsApplication.config.profile.service.url}/glossary/${opusId}/item", data)
+        webService.doPut("${grailsApplication.config.profile.service.url}/opus/${opusId}/glossary/item", data)
     }
 
     def deleteGlossaryItem(String opusId, String glossaryItemId) {
         log.debug("Deleting glossary item ${glossaryItemId}")
 
-        webService.doDelete("${grailsApplication.config.profile.service.url}/glossary/${opusId}/item/${glossaryItemId}")
+        webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${opusId}/glossary/item/${glossaryItemId}")
     }
 }

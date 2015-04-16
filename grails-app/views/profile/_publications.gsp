@@ -61,7 +61,7 @@
             </div>
             <div class="row-fluid">
                 <div class="pull-right">
-                    <a ng-href="${grailsApplication.config.profile.service.url}/profile/publication/{{publication.uuid}}/file" target="_blank" class="btn btn-link fa fa-download">&nbsp;&nbsp;Download</a>
+                    <a ng-href="${grailsApplication.config.profile.service.url}/profile/{{pubCtrl.profileId}}/publication/{{publication.uuid}}/file" target="_blank" class="btn btn-link fa fa-download">&nbsp;&nbsp;Download</a>
                     <g:if test="${params.isOpusAdmin}">
                         <button ng-click="pubCtrl.deletePublication($index)" class="btn btn-danger" ng-show="!pubCtrl.readonly()">Delete</button>
                     </g:if>
