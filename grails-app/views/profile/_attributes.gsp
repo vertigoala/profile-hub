@@ -64,13 +64,19 @@
     </span>
 </blockquote>
 
-<div class="row-fluid" ng-show="attribute.source || (attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes && $last)">
+<div class="row-fluid" ng-show="attribute.source || (attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.original">
     <span class="span12">
         <span class="pull-right">
             <span class="small pull-right" ng-show="attribute.source">
                 Source: <a
                     href="${request.contextPath}/opus/{{attrCtrl.opusId}}/profile/{{attribute.source.profileId}}"
                     target="_self">{{attribute.source.opusTitle}}</a>
+            </span>
+            <span class="small" ng-if="attribute.original">
+                Originally copied from: <a
+                    href="${request.contextPath}/opus/{{attrCtrl.opusId}}/profile/{{attribute.original.profile.uuid}}"
+                    target="_self">{{attribute.original.profile.opus.title}}</a>
+                <br/>
             </span>
             <span class="small"
                   ng-show="attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes && $last">
@@ -89,7 +95,6 @@
         </span>
     </span>
 </div>
-
 </script>
 
 <!-- Template for the editable view of a single attribute -->
@@ -168,7 +173,7 @@
         </div>
     </div>
 
-    <div class="row-fluid vertical-pad" ng-show="!attrCtrl.readonly && attribute.original">
+    <div class="row-fluid vertical-pad" ng-show="attribute.original">
         <span class="span12">
             <span class="pull-right">
                 <span class="blockquote small">
