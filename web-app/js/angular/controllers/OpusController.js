@@ -17,6 +17,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.newSupportingOpuses = [];
     self.newApprovedLists = [];
     self.valid = false;
+    self.editors = [];
 
     loadResources();
     loadOpusList();
@@ -35,6 +36,12 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         promise.then(function (data) {
                 console.log("Retrieved " + data.title);
                 self.opus = data;
+
+                angular.forEach(self.opus.authorities, function(auth) {
+                    if (auth.role == "ROLE_PROFILE_EDITOR") {
+                        self.editors.push({userId: auth.userId, name: auth.name})
+                    }
+                });
 
                 toggleMapPointerColourHash(true);
 

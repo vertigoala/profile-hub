@@ -217,9 +217,9 @@ describe("ProfileService tests", function () {
     });
 
     it("should invoke the update user operation on the context root when updateUser is called ", function() {
-        service.updateUsers("opus1", "admins", "editors");
+        service.updateUsers("opus1", "authorities");
 
-        http.expectPOST("/someContext/opus/opus1/users/update", {opusId: "opus1", admins: "admins", editors: "editors"}).respond("bla");
+        http.expectPOST("/someContext/opus/opus1/users/update", "authorities").respond("bla");
     });
 
     it("should invoke the upload glossary operation on the context root when uploadGlossary is called", function() {

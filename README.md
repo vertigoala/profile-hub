@@ -259,7 +259,7 @@ Whenever a request is made to the server, the filter:
   * If the action requires the ROLE\_PROFILE\_EDITOR role, the user must be in the Editors list for the ops
 
 #### Roles
-There are 4 roles: ALA\_ADMIN, ADMIN, EDITOR, USER. The level of access is as follows: ALA\_ADMIN > ADMIN > EDITOR > USER. I.e. an ALA\_ADMIN can do everything an ADMIN can do, and an ADMIN can do everything that and EDITOR can do, etc.
+There are 5 roles: ALA\_ADMIN, ADMIN, EDITOR, REVIEWER, USER. The level of access is as follows: ALA\_ADMIN > ADMIN > EDITOR > REVIEWER > USER. I.e. an ALA\_ADMIN can do everything an ADMIN can do, and an ADMIN can do everything that and EDITOR can do, etc.
 
 |Action|Required Role|Notes|
 |------|-------------|-----|
@@ -273,8 +273,9 @@ There are 4 roles: ALA\_ADMIN, ADMIN, EDITOR, USER. The level of access is as fo
 |Delete Profile|EDITOR| |
 |Export to PDF/JSON|USER| |
 |Create new Publication|ADMIN| |
+|Add comments to profile|REVIEWER| |
 
-Admins and Editors are defined per-opus and only have permissions for that particular opus.
+Roles are currently defined per-opus and only have permissions for that particular opus.
 
 
 

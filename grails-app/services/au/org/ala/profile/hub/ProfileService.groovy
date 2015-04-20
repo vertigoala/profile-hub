@@ -19,7 +19,7 @@ class ProfileService {
     }
 
     def updateOpusUsers(String opusId, json) {
-        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}/updateUsers", json)
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${opusId}/updateUsers", [authorities: json])
     }
 
     def createOpus(json) {

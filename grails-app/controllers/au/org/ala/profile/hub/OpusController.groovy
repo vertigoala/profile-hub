@@ -91,7 +91,7 @@ class OpusController extends BaseController {
     def updateUsers() {
         def jsonRequest = request.getJSON();
 
-        if (!params.opusId || !jsonRequest) {
+        if (!params.opusId) {
             badRequest()
         } else {
             def response = profileService.updateOpusUsers(params.opusId, jsonRequest)

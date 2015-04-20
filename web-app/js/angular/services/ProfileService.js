@@ -356,16 +356,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        updateUsers: function(opusId, admins, editors) {
+        updateUsers: function(opusId, users) {
             console.log("Updating users for opus " + opusId);
-
-            var data = {
-                opusId: opusId,
-                admins: admins,
-                editors: editors
-            };
-
-            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/users/update", data);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/users/update", users);
             future.then(function (response) {
                 console.log("Update Users completed with response code " + response.status);
 

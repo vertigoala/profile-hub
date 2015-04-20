@@ -44,15 +44,19 @@ class AccessControlFilters {
                                 if (params.opusId && !params.opusId.contains(",") && request.userPrincipal) {
                                     opus = profileService.getOpus(params.opusId)
 
-                                    params.isOpusAdmin = opus.admins.find {
-                                        it.userId == request.userPrincipal.attributes.userid
+                                    params.isOpusAdmin = opus.authorities.find {
+                                        it.userId == request.userPrincipal.attributes.userid && it.role == Role.ROLE_PROFILE_ADMIN.toString()
                                     } != null
 
-                                    params.isOpusEditor = opus.editors.find {
-                                        it.userId == request.userPrincipal.attributes.userid
+                                    params.isOpusEditor = opus.authorities.find {
+                                        it.userId == request.userPrincipal.attributes.userid && it.role == Role.ROLE_PROFILE_EDITOR.toString()
                                     } != null || params.isOpusAdmin
+
+                                    params.isOpusReviewer = opus.authorities.find {
+                                        it.userId == request.userPrincipal.attributes.userid && it.role == Role.ROLE_PROFILE_REVIEWER.toString()
+                                    } != null || params.isOpusAdmin || params.isOpusEditor
                                 }
-                                log.debug("Opus editor? ${params.isOpusEditor}; Opus Admin? ${params.isOpusAdmin}")
+                                log.debug("Opus Admin? ${params.isOpusAdmin}; Opus editor? ${params.isOpusEditor}; Opus reviewer? ${params.isOpusReviewer};")
 
                                 if (controllerAction.isAnnotationPresent(Secured)) {
                                     def annotation = controllerAction.getAnnotation(Secured)
@@ -66,6 +70,9 @@ class AccessControlFilters {
                                                 log.trace "Action ${actionFullName} requires ROLE_PROFILE_ADMIN. User has it? ${authorised}"
                                             } else if (requiredRole == Role.ROLE_PROFILE_EDITOR.toString()) {
                                                 authorised = params.isOpusAdmin || params.isOpusEditor
+                                                log.trace "Action ${actionFullName} requires ${requiredRole}. User has it? ${authorised}"
+                                            } else if (requiredRole == Role.ROLE_PROFILE_REVIEWER.toString()) {
+                                                authorised = params.isOpusAdmin || params.isOpusEditor || params.isOpusReviewer
                                                 log.trace "Action ${actionFullName} requires ${requiredRole}. User has it? ${authorised}"
                                             }
                                         } else {
@@ -81,6 +88,7 @@ class AccessControlFilters {
                                 params.isALAAdmin = true
                                 params.isOpusAdmin = true
                                 params.isOpusEditor = true
+                                params.isOpusReviewer = true
                                 log.trace "ALA Admin user"
                                 authorised = true
                             }
@@ -99,6 +107,7 @@ class AccessControlFilters {
                     params.isALAAdmin = true
                     params.isOpusAdmin = true
                     params.isOpusEditor = true
+                    params.isOpusReviewer = true
                 }
             }
             after = { Map model ->

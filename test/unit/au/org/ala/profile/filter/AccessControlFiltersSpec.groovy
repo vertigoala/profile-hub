@@ -47,13 +47,15 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == true
         params.isOpusAdmin == true
         params.isOpusEditor == true
+        params.isOpusReviewer == true
 
         where:
-        action                           | responseCode
-        "publicAction"                   | 200
-        "alaAdminAction"                 | 200
-        "profileAdminAction"             | 200
-        "profileEditorAction"            | 200
+        action                  | responseCode
+        "publicAction"          | 200
+        "alaAdminAction"        | 200
+        "profileAdminAction"    | 200
+        "profileEditorAction"   | 200
+        "profileReviewerAction" | 200
     }
 
     void "public users are only allowed to access unsecured actions"() {
@@ -81,13 +83,15 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == false
         params.isOpusAdmin == false
         params.isOpusEditor == false
+        params.isOpusReviewer == false
 
         where:
-        action                           | responseCode
-        "publicAction"                   | 200
-        "alaAdminAction"                 | 403
-        "profileAdminAction"             | 403
-        "profileEditorAction"            | 403
+        action                  | responseCode
+        "publicAction"          | 200
+        "alaAdminAction"        | 403
+        "profileAdminAction"    | 403
+        "profileEditorAction"   | 403
+        "profileReviewerAction" | 403
     }
 
     void "profile admins can access public and opus-specific admin and edit actions"() {
@@ -115,13 +119,15 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == false
         params.isOpusAdmin == true
         params.isOpusEditor == true
+        params.isOpusReviewer == true
 
         where:
-        action                           | responseCode
-        "publicAction"                   | 200
-        "alaAdminAction"                 | 403
-        "profileAdminAction"             | 200
-        "profileEditorAction"            | 200
+        action                  | responseCode
+        "publicAction"          | 200
+        "alaAdminAction"        | 403
+        "profileAdminAction"    | 200
+        "profileEditorAction"   | 200
+        "profileReviewerAction" | 200
 
     }
 
@@ -150,13 +156,51 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == false
         params.isOpusAdmin == false
         params.isOpusEditor == true
+        params.isOpusReviewer == true
 
         where:
-        action                           | responseCode
-        "publicAction"                   | 200
-        "alaAdminAction"                 | 403
-        "profileAdminAction"             | 403
-        "profileEditorAction"            | 200
+        action                  | responseCode
+        "publicAction"          | 200
+        "alaAdminAction"        | 403
+        "profileAdminAction"    | 403
+        "profileEditorAction"   | 200
+        "profileReviewerAction" | 200
+    }
+
+    void "profile reviewers can access public and opus-specific review actions"() {
+        setup:
+        // need to do this because grailsApplication.controllerClasses is empty in the filter when run from the unit test
+        // unless we manually add the dummy controller class used in this test
+        grailsApplication.addArtefact("Controller", SecuredController)
+
+        defineBeans {
+            authService(MockAuthService)
+            profileService(MockProfileService)
+        }
+
+        when:
+        params.opusId = "reviewer1"
+        request.userPrincipal = new User([authority: "", userid: "PROFILE_REVIEWER_USER"])
+
+        withFilters(controller: "secured", action: action) {
+
+            controller."${action}"()
+        }
+
+        then:
+        response.status == responseCode
+        params.isALAAdmin == false
+        params.isOpusAdmin == false
+        params.isOpusEditor == false
+        params.isOpusReviewer == true
+
+        where:
+        action                  | responseCode
+        "publicAction"          | 200
+        "alaAdminAction"        | 403
+        "profileAdminAction"    | 403
+        "profileEditorAction"   | 403
+        "profileReviewerAction" | 200
     }
 }
 
@@ -197,6 +241,11 @@ class SecuredController {
     def profileEditorAction() {
 
     }
+
+    @Secured(role = Role.ROLE_PROFILE_REVIEWER)
+    def profileReviewerAction() {
+
+    }
 }
 
 class MockAuthService extends AuthService {
@@ -216,11 +265,25 @@ class MockProfileService extends ProfileService {
     def getOpus(String opusId) {
         def opus
         if (opusId == "admin1") {
-            opus = [uuid: opusId, admins: [[userId: "PROFILE_ADMIN_USER"], [userId: 2]], editors: [[userId: 3], [userId: 4]]]
+            opus = [uuid: opusId, authorities: [[userId: "PROFILE_ADMIN_USER", role: Role.ROLE_PROFILE_ADMIN.toString()],
+                                                [userId: 2, role: Role.ROLE_PROFILE_ADMIN.toString()],
+                                                [userId: 3, role: Role.ROLE_PROFILE_EDITOR.toString()],
+                                                [userId: 4, role: Role.ROLE_PROFILE_EDITOR.toString()]]]
         } else if (opusId == "editor1") {
-            opus = [uuid: opusId, admins: [[userId: 1], [userId: 2]], editors: [[userId: 3], [userId: "PROFILE_EDITOR_USER"]]]
+            opus = [uuid: opusId, authorities: [[userId: 1, role: Role.ROLE_PROFILE_ADMIN.toString()],
+                                                [userId: 2, role: Role.ROLE_PROFILE_ADMIN.toString()],
+                                                [userId: 3, role: Role.ROLE_PROFILE_EDITOR.toString()],
+                                                [userId: "PROFILE_EDITOR_USER", role: Role.ROLE_PROFILE_EDITOR.toString()]]]
+        } else if (opusId == "reviewer1") {
+            opus = [uuid: opusId, authorities: [[userId: 1, role: Role.ROLE_PROFILE_ADMIN.toString()],
+                                                [userId: 2, role: Role.ROLE_PROFILE_ADMIN.toString()],
+                                                [userId: 3, role: Role.ROLE_PROFILE_EDITOR.toString()],
+                                                [userId: "PROFILE_REVIEWER_USER", role: Role.ROLE_PROFILE_REVIEWER.toString()]]]
         } else {
-            opus = [uuid: opusId, admins: [[userId: 1], [userId: 2]], editors: [[userId: 3], [userId: 4]]]
+            opus = [uuid: opusId, authorities: [[userId: 1],
+                                                [userId: 2],
+                                                [userId: 3],
+                                                [userId: 4]]]
         }
         return opus
     }

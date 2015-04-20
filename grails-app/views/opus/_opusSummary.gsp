@@ -20,7 +20,7 @@
                 Editors
             </div>
             <div class="span3">
-                {{opusCtrl.opus.editors.length}}
+                {{opusCtrl.editors.length}}
             </div>
                 </div>
         </div>
