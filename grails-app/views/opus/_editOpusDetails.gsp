@@ -30,4 +30,9 @@
         <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="OpusForm.$dirty">*</span> Save</span>
         <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
     </button>
+
+
+    <g:if test="${params.isOpusAdmin}">
+        <a href="${grailsApplication.config.collectory.base.url}dataResource/show/{{opusCtrl.opus.dataResourceUid}}" target="_blank">Edit details</a>
+    </g:if>
 </div>
