@@ -14,9 +14,9 @@
         <table class="table table-striped" ng-show="userCtrl.users.length > 0">
             <tr>
                 <th width="20%">Name</th>
-                <th width="20%">User ID</th>
-                <th width="20%">Role</th>
-                <th width="25%">Notes</th>
+                <th width="20%">Email</th>
+                <th width="10%">Role</th>
+                <th width="35%">Notes</th>
                 <th width="15%"></th>
             </tr>
 
@@ -25,7 +25,7 @@
                     {{ user.name }}
                 </td>
                 <td>
-                    {{ user.userId }}
+                    {{ user.email }}
                 </td>
                 <td>
                     {{ (userCtrl.roles | filter:user.role)[0].name }}
@@ -40,7 +40,7 @@
             </tr>
         </table>
 
-        <button class="btn btn-info" ng-click="userCtrl.addUser(UserForm)">Add user</button>
+        <button class="btn btn-info" ng-click="userCtrl.addUser(UserForm)"><i class="icon icon-plus icon-white"></i>  Add user</button>
 
         <div class="row-fluid">
             <hr/>
@@ -79,7 +79,7 @@
                 <div class="info" ng-show="addUserCtrl.user.userId">
                     <span>{{ addUserCtrl.user.name }}</span>
                     -
-                    <span>{{ addUserCtrl.user.userId }}</span>
+                    <span>{{ addUserCtrl.user.email }}</span>
                     <hr/>
                 </div>
 

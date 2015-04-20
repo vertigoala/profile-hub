@@ -183,6 +183,7 @@ describe("AddEditUserController tests", function () {
 
     var user1 = {userId: "user1", firstName: "fred", lastName: "smith", email: "fred@smith.com"};
     var user2 = {userId: "user2", firstName: "jane", lastName: "doe", email: "jane@doe.com"};
+    var user3 = {userId: "3", firstName: "fred", lastName: "bloggs", email: "fred@bloggs.com"};
 
     var modalInstance = {
         dismiss: function(d) {},
@@ -238,26 +239,26 @@ describe("AddEditUserController tests", function () {
     });
 
     it("should set the user attribute on the current scope when the call to searchUser finds a match", function () {
-        searchDefer.resolve(user1);
+        searchDefer.resolve(user3);
         scope.searchTerm = "test";
         scope.ctrl.userSearch();
         scope.$apply();
 
-        expect(scope.ctrl.user.userId).toBe(user1.email);
+        expect(scope.ctrl.user.userId).toBe(user3.userId);
     });
 
     it("should set the user.name attribute on the current scope when the call to searchUser finds a match", function () {
-        searchDefer.resolve(user2);
+        searchDefer.resolve(user3);
         scope.searchTerm = "test";
         scope.ctrl.userSearch();
         scope.$apply();
 
         expect(scope.ctrl.user.name).toBeDefined();
-        expect(scope.ctrl.user.name).toBe(user2.firstName + ' ' + user2.lastName);
+        expect(scope.ctrl.user.name).toBe(user3.firstName + ' ' + user3.lastName);
     });
 
     it("should set the error attribute when the search returns a user who has already been authorised", function() {
-        scope.ctrl.users = [{userId: "fred@smith.com"}];
+        scope.ctrl.users = [{userId: "user1"}];
 
         searchDefer.resolve(user1);
         scope.ctrl.userSearch("test");

@@ -108,6 +108,10 @@ profileEditor.controller('UserAccessController', function (messageService, util,
                 console.log("Retrieved " + data.title);
                 self.users = data.authorities;
 
+                angular.forEach(self.users, function(user) {
+                    popupateUserDetails(user);
+                });
+
                 if (form) {
                     form.$setPristine();
                 }
@@ -116,7 +120,22 @@ profileEditor.controller('UserAccessController', function (messageService, util,
                 messageService.alert("An error occurred while retrieving the opus.");
             }
         );
-    };
+    }
+
+    function popupateUserDetails(user) {
+        var promise = profileService.userSearch(user.userId);
+        promise.then(function (data) {
+                user.email = data.email;
+                user.userName = data.userName;
+                user.firstName = data.firstName;
+                user.lastName = data.lastName;
+                user.name = data.firstName + ' ' + data.lastName;
+            },
+            function () {
+                messageService.alert("An error has occurred while searching for the user.");
+            }
+        );
+    }
 
 });
 
@@ -138,14 +157,16 @@ profileEditor.controller('AddEditUserController', function ($modalInstance, prof
 
         var promise = profileService.userSearch(self.searchTerm);
         promise.then(function (data) {
-                if (containsUser(data.email)) {
+                console.log(JSON.stringify(data))
+                if (containsUser(data.userId)) {
                     self.error = "This user has already been assigned a role.";
                 } else {
                     self.error = null;
 
                     self.user = {
-                        userId: data.email,
+                        userId: data.userId,
                         name: data.firstName + ' ' + data.lastName,
+                        email: data.email,
                         notes: "",
                         role: null
                     };
