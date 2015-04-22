@@ -254,4 +254,29 @@ describe("ProfileService tests", function () {
 
         http.expectPOST("/someContext/opus/opus1/glossary/item/item1/update", data).respond("bla");
     });
+
+    it("should invoke the add comment operation on the context root when addComment is invoked", function() {
+        service.addComment("opusId", "profileId");
+
+        http.expectPUT("/someContext/opus/opusId/profile/profileId/comment/create").respond("bla");
+    });
+
+    it("should invoke the update comment operation on the context root when updateComment is invoked", function() {
+        var data = {text: "something"};
+        service.updateComment("opusId", "profileId", "commentId", data);
+
+        http.expectPOST("/someContext/opus/opusId/profile/profileId/comment/commentId/update", data).respond("bla");
+    });
+
+    it("should invoke the delete comment operation on the context root when deleteComment is invoked", function() {
+        service.deleteComment("opusId", "profileId", "commentId");
+
+        http.expectDELETE("/someContext/opus/opusId/profile/profileId/comment/commentId/delete").respond("bla");
+    });
+
+    it("should invoke the get comments operation on the context root when getComments is invoked", function() {
+        service.getComments("opusId", "profileId");
+
+        http.expectGET("/someContext/opus/opusId/profile/profileId/comment").respond("bla");
+    });
 });

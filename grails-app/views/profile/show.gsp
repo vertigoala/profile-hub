@@ -91,6 +91,9 @@
             <g:include controller="profile" action="taxonPanel" params="[opusId: params.opusId]"/>
             <g:include controller="profile" action="bibliographyPanel" params="[opusId: params.opusId]"/>
             <g:include controller="profile" action="imagesPanel" params="[opusId: params.opusId]"/>
+            <g:if test="${params.isOpusReviewer}">
+                <g:include controller="profile" action="commentsPanel" params="[opusId: params.opusId]"/>
+            </g:if>
         </div>
 
         <div class="span4">

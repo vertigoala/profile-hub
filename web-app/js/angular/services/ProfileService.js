@@ -422,6 +422,54 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
 
             return util.toStandardPromise(future);
+        },
+
+        addComment: function(opusId, profileId, data) {
+            console.log("Creating comment for profile " + profileId);
+
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/comment/create", data);
+            future.then(function(response) {
+                console.log("Comment created with response code " + response.status);
+
+                clearCache();
+            });
+            return util.toStandardPromise(future)
+        },
+
+        updateComment: function(opusId, profileId, commentId, data) {
+            console.log("Updating comment for profile " + profileId);
+
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/comment/" + commentId + "/update", data);
+            future.then(function(response) {
+                console.log("Comment updated with response code " + response.status);
+
+                clearCache();
+            });
+            return util.toStandardPromise(future)
+        },
+
+        getComments: function(opusId, profileId) {
+            console.log("Fetching comments for profile " + profileId);
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/comment");
+            future.then(function(response) {
+                console.log("Comments fetched with response code " + response.status);
+
+                clearCache();
+            });
+            return util.toStandardPromise(future)
+        },
+
+        deleteComment: function(opusId, profileId, commentId) {
+            console.log("Deleting comment " + commentId);
+
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/comment/" + commentId + "/delete");
+            future.then(function(response) {
+                console.log("Comment deleted with response code " + response.status);
+
+                clearCache();
+            });
+            return util.toStandardPromise(future)
         }
     }
 });

@@ -29,6 +29,7 @@ modules = {
         resource url:"js/angular/controllers/VocabController.js"
         resource url:"js/angular/controllers/PublicationController.js"
         resource url:"js/angular/controllers/GlossaryController.js"
+        resource url:"js/angular/controllers/CommentController.js"
     }
 
     angular {
@@ -69,5 +70,4 @@ modules = {
         resource url:"thirdparty/textAngular/textAngular-sanitize-1.3.11.min.js"
         dependsOn "fontawesome"
     }
-
 }

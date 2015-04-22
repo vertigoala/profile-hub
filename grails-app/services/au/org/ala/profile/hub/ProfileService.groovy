@@ -222,4 +222,35 @@ class ProfileService {
 
         webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${opusId}/glossary/item/${glossaryItemId}")
     }
+
+    def getComments(String profileId) {
+        log.debug("Fetching comments for profile ${profileId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/profile/${profileId}/comment/")
+    }
+
+    def getComment(String profileId, String commentId) {
+        log.debug("Fetching comment ${commentId} for profile ${profileId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/profile/${profileId}/comment/${commentId}")
+    }
+
+    def addComment(String profileId, Map json) {
+        log.debug("Adding comment to profile ${profileId}")
+
+        webService.doPut("${grailsApplication.config.profile.service.url}/profile/${profileId}/comment/", json)
+    }
+
+    def updateComment(String profileId, String commentId, Map json) {
+        log.debug("Updateing comment ${commentId} for profile ${profileId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/${profileId}/comment/${commentId}", json)
+    }
+
+    def deleteComment(String profileId, String commentId) {
+        log.debug("Deleting comment ${commentId}")
+
+        webService.doDelete("${grailsApplication.config.profile.service.url}/profile/${profileId}/comment/${commentId}")
+    }
+
 }

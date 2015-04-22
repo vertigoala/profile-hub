@@ -289,4 +289,8 @@ class ProfileController extends BaseController {
     def specimenPanel = {
         render template: "specimens"
     }
+
+    def commentsPanel = {
+        render template: "comments"
+    }
 }

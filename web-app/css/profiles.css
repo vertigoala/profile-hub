@@ -120,6 +120,10 @@ input[type="text"] {
     color: red;
 }
 
+.comment-panel {
+    border-left: 1px solid lightblue !important;
+}
+
 .white, *.white {
     color: white !important;
 }

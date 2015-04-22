@@ -16,6 +16,10 @@ class BaseController {
         sendError(SC_BAD_REQUEST, message ?: "")
     }
 
+    def notAuthorised = {String message = null ->
+        sendError(SC_UNAUTHORIZED, message ?: "You do not have permission to perform the requested action.")
+    }
+
     def success = { resp ->
         response.status = SC_OK
         response.setContentType(CONTEXT_TYPE_JSON)

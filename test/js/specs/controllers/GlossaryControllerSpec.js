@@ -19,7 +19,7 @@ describe("GlossaryController tests", function () {
     };
 
     beforeAll(function () {
-        console.log("****** Publication Controller Tests ******");
+        console.log("****** Glossary Controller Tests ******");
     });
     afterAll(function () {
         console.log("----------------------------");
