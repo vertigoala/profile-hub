@@ -18,7 +18,7 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
 
     self.addVocabTerm = function (form) {
         if (self.newVocabTerm) {
-            self.vocabulary.terms.push({termId: "", name: capitalize(self.newVocabTerm)});
+            self.vocabulary.terms.push({termId: "", name: capitalize(self.newVocabTerm), order: self.vocabulary.terms.length});
             self.newVocabTerm = "";
             sortVocabTerms();
             form.$setDirty();
@@ -29,7 +29,14 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
         var promise = profileService.findUsagesOfVocabTerm(self.opusId, self.opus.attributeVocabUuid, self.vocabulary.terms[index].name);
         promise.then(function (data) {
             if (data.usageCount == 0) {
+                var deletedItemOrder = self.vocabulary.terms[index].order;
                 self.vocabulary.terms.splice(index, 1);
+
+                angular.forEach(self.vocabulary.terms, function(term) {
+                    if (term.order > deletedItemOrder) {
+                        term.order = term.order - 1;
+                    }
+                });
 
                 sortVocabTerms();
 
@@ -58,7 +65,19 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
                 },
                 terms: function() {
                     var terms = angular.copy(self.vocabulary.terms);
+                    var deletedItemOrder = terms[existingTermIndex].order;
                     terms.splice(existingTermIndex, 1);
+
+                    angular.forEach(terms, function(term) {
+                        if (term.order > deletedItemOrder) {
+                            term.order = term.order - 1;
+                        }
+                    });
+                    angular.forEach(self.vocabulary.terms, function(term) {
+                        if (term.order > deletedItemOrder) {
+                            term.order = term.order - 1;
+                        }
+                    });
                     return terms;
                 },
                 form: function() {
