@@ -26,13 +26,23 @@
             <hr/>
 
             <div class="row-fluid">
-                <span ng-repeat="term in vocabCtrl.vocabulary.terms | orderBy:'name'" class="column-item" ng-if="!vocabCtrl.termIsInReplacementList(term)">
+                <span ng-repeat="term in vocabCtrl.vocabulary.terms" class="column-item" ng-if="!vocabCtrl.termIsInReplacementList(term)">
                     <span ng-class="term.termId ? '' : 'newItem'">{{ term.name }}</span>
                     <button class="btn-link fa fa-edit" title="Edit the {{ term.name }} term"
                             ng-click="vocabCtrl.editVocabTerm($index, VocabForm)"></button>
                     <button class="btn-link fa fa-trash" title="Delete the {{ term.name }} term"
                             ng-click="vocabCtrl.removeVocabTerm($index, VocabForm)"></button>
+                    <button class="btn btn-link fa fa-arrow-down"
+                            ng-if="!$last"
+                            ng-click="vocabCtrl.moveTermDown($index, VocabForm)"
+                            title="Move this term down"></button>
+                    <button class="btn btn-link fa fa-arrow-up" ng-if="!$first"
+                            ng-click="vocabCtrl.moveTermUp($index, VocabForm)"
+                            title="Move this term up"></button>
                 </span>
+            </div>
+            <div class="row-fluid">
+                <button class="btn btn-link pull-right" ng-click="vocabCtrl.sortAlphabetically(VocabForm)">Sort alphabetically</button>
             </div>
         </div>
         <button class="btn btn-primary" ng-click="vocabCtrl.saveVocabulary(VocabForm)">

@@ -147,6 +147,28 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
         );
     };
 
+    self.moveTermUp = function(index, form) {
+        if (index > 0) {
+            self.vocabulary.terms[index].order = self.vocabulary.terms[index].order - 1;
+            self.vocabulary.terms[index - 1].order = self.vocabulary.terms[index - 1].order + 1;
+
+            sortVocabTerms();
+
+            form.$setDirty();
+        }
+    };
+
+    self.moveTermDown = function(index, form) {
+        if (index < self.vocabulary.terms.length) {
+            self.vocabulary.terms[index].order = self.vocabulary.terms[index].order + 1;
+            self.vocabulary.terms[index + 1].order = self.vocabulary.terms[index + 1].order - 1;
+
+            sortVocabTerms();
+
+            form.$setDirty();
+        }
+    };
+
     function loadOpus() {
         if (!self.opusId || !util.isUuid(self.opusId)) {
             return;
@@ -169,7 +191,16 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
     }
 
     function sortVocabTerms() {
+        self.vocabulary.terms = orderBy(self.vocabulary.terms, "order");
+    }
+
+    self.sortAlphabetically = function(form) {
         self.vocabulary.terms = orderBy(self.vocabulary.terms, "name");
+        angular.forEach(self.vocabulary.terms, function(term, index) {
+            term.order = index;
+        });
+
+        form.$setDirty();
     }
 
 });

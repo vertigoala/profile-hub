@@ -13,7 +13,6 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.showSupportingData = true;
 
     var capitalize = $filter("capitalize");
-    var sort = $filter("orderBy");
 
     self.init = function (edit) {
         self.readonly = edit != 'true';
@@ -46,18 +45,18 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         return !self.vocabularyStrict || (self.vocabularyStrict && self.allowedVocabulary.indexOf(attributeTitle) > -1)
     };
 
-    self.showAttribute = function(attribute) {
+    self.showAttribute = function (attribute) {
         return (self.readonly &&
-                    (!attribute.source ||
-                        (attribute.source && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
-                || (!self.readonly &&
-                        attribute.source && self.opus.allowCopyFromLinkedOpus && self.showSupportingData)
+            (!attribute.source ||
+            (attribute.source && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
+            || (!self.readonly &&
+            attribute.source && self.opus.allowCopyFromLinkedOpus && self.showSupportingData)
     };
 
-    self.showTitleGroup = function(title) {
+    self.showTitleGroup = function (title) {
         var show = false;
 
-        angular.forEach(self.attributes, function(attribute) {
+        angular.forEach(self.attributes, function (attribute) {
             show = show || (attribute.title == title && self.showAttribute(attribute));
         });
 
@@ -71,17 +70,29 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 self.attributeTitles = [];
                 self.allowedVocabulary = [];
                 angular.forEach(data.terms, function (term) {
-                    if (self.attributeTitles.indexOf(term.name) == -1) {
-                        self.attributeTitles.push(term.name);
+                    if (self.attributeTitles.indexOf(term) == -1) {
+                        self.attributeTitles.push(term);
                     }
                     if (self.allowedVocabulary.indexOf(term.name) == -1) {
                         self.allowedVocabulary.push(term.name);
                     }
                 });
 
+                self.attributeTitles.sort(compareTitles);
+
                 self.vocabularyStrict = data.strict;
             });
         }
+    }
+
+    function compareTitles(left, right) {
+        var compare = -1;
+        if (left.order == right.order) {
+            compare = left.name.toLowerCase() < right.name.toLowerCase() ? -1 : left.name.toLowerCase() > right.name.toLowerCase();
+        } else {
+            compare = left.order < right.order ? -1 : 1;
+        }
+        return compare;
     }
 
     self.revertAttribute = function (attributeIdx, auditIdx, form) {
@@ -226,9 +237,6 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                                     text: attribute.text
                                 });
                             });
-
-                            self.attributes = sort(self.attributes, "title");
-                            self.attributeTitles = sort(self.attributeTitles);
                         });
                     });
                 }
@@ -245,7 +253,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             controllerAs: "attrModalCtrl",
             size: "lg",
             resolve: {
-                supporting: function() {
+                supporting: function () {
                     return supporting;
                 }
             }
@@ -262,7 +270,7 @@ profileEditor.controller('AttributePopupController', function ($modalInstance, s
 
     self.supporting = supporting;
 
-    self.close = function() {
+    self.close = function () {
         $modalInstance.dismiss();
     };
 });

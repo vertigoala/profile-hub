@@ -30,8 +30,8 @@
 
     <!-- view screen -->
     <div ng-repeat="title in attrCtrl.attributeTitles" ng-show="attrCtrl.readonly" ng-cloak>
-        <div class="bs-docs-example" data-content="{{ title }}" ng-if="attrCtrl.showTitleGroup(title)">
-            <div ng-repeat="attribute in attrCtrl.attributes | groupAttributes:title">
+        <div class="bs-docs-example" data-content="{{ title.name }}" ng-if="attrCtrl.showTitleGroup(title.name)">
+            <div ng-repeat="attribute in attrCtrl.attributes | groupAttributes:title.name">
                 <div ng-if="attrCtrl.showAttribute(attribute)">
                     <ng-include src="'showReadOnlyAttribute.html'"></ng-include>
                 </div>
