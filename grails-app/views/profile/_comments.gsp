@@ -36,7 +36,7 @@
         </div>
 
         <g:if test="${params.isOpusReviewer}">
-            <div class="span2" ng-if="${params.isOpusEditor} || comment.author.userId == '${request.userPrincipal.attributes.userid}'">
+            <div class="span2" ng-if="${params.isOpusEditor} || comment.author.userId == '${request.userPrincipal?.attributes?.userid}'">
                 <button class="btn btn-link fa fa-trash-o" ng-click="commentCtrl.deleteComment(path)"
                         title="Delete comment"></button>
                 <button class="btn btn-link fa fa-edit" ng-click="commentCtrl.editComment(path)"

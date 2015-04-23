@@ -71,7 +71,7 @@
                                        target="_self" ng-hide="!profileCtrl.readonly()"><span class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
                                 </li>
                                 <li role="presentation" style="margin-left: 20px" ng-if="!profileCtrl.readonly()">
-                                    Private Mode
+                                    Draft Mode
                                     <div class="btn-group">
                                         <label class="btn btn-mini" ng-class="profileCtrl.profile.privateMode ? 'btn-warning' : ''"
                                                ng-model="profileCtrl.profile.privateMode" btn-radio="true"
