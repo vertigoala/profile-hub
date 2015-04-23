@@ -246,6 +246,19 @@ class ProfileController extends BaseController {
         }
     }
 
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def updateAuthorship() {
+        def json = request.getJSON()
+
+        if (!params.profileId || !json) {
+            badRequest "profileId and a json body are required parameters"
+        } else {
+            def response = profileService.updateAuthorship(params.profileId as String, json)
+
+            handle response
+        }
+    }
+
     private getGlossaryUrl(opus) {
         opus?.glossaryUuid ? "${request.contextPath}/opus/${opus.uuid}/glossary" : ""
     }
@@ -292,5 +305,9 @@ class ProfileController extends BaseController {
 
     def commentsPanel = {
         render template: "comments"
+    }
+
+    def authorPanel = {
+        render template: "authorship"
     }
 }

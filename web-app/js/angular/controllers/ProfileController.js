@@ -126,6 +126,30 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             messageService.alert("An error has occurred while updating the profile.");
         });
     };
+
+    self.addAuthorship = function(form) {
+        if (!self.profile.authorship || self.profile.authorship.length == 0) {
+            self.profile.authorship = [{category: "Author", text: ""}];
+        } else {
+            self.profile.authorship.push({category: "", text: ""});
+        }
+
+        form.$setDirty();
+    };
+
+    self.saveAuthorship = function(form) {
+        var future = profileService.saveAuthorship(self.opusId, self.profileId, {authorship: self.profile.authorship});
+
+        future.then(function(data) {
+            self.profile.authorship = data;
+
+            form.$setPristine();
+
+            messageService.success("Authorship and acknowledgements successfully updated.");
+        }, function() {
+            messageService.alert("An error occurred while updating authorship and acknowledgements.");
+        })
+    }
 });
 
 

@@ -128,8 +128,6 @@ input[type="text"] {
     color: white !important;
 }
 
-
-
 .column-item {
     display: inline-block;
     width: 25%;
@@ -348,6 +346,9 @@ input[type=file] {
     width: 700px;
 }
 
+.input-fullwidth {
+    width: 100%;
+}
 
 /* Species status icons */
 .status {

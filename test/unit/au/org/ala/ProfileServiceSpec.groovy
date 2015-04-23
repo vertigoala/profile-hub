@@ -52,4 +52,15 @@ class ProfileServiceSpec extends Specification {
         1 * webService.doPost(expectedUrl, [profileId: "profileId", links: "linkdata", userId: "user1", userDisplayName: "fred smith"])
     }
 
+    def "updateAuthorship() should construct the correct Profile Service URL"() {
+        setup:
+        String expectedUrl = "http://profile.service/profile/profileId/authorship"
+
+        when:
+        service.updateAuthorship("profileId", [category: "author", text: "fred"])
+
+        then:
+        1 * webService.doPost(expectedUrl, [category: "author", text: "fred"])
+    }
+
 }

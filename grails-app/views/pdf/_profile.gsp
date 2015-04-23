@@ -14,6 +14,10 @@
         <h1>${profile.scientificName}</h1>
     </div>
 
+    <div>
+        <i>${profile.authorship?.find {it.category == 'Author' }?.text}</i>
+    </div>
+
     <g:each in="${profile.attributes}" var="attribute">
         <div>
             <h2>${attribute.title}</h2>
@@ -78,6 +82,13 @@
             </ul>
         </div>
     </g:if>
+
+    <g:each in="${profile.authorship?.findAll {it.category != 'Author'}}" var="authorship">
+        <div>
+            <h3>${authorship.category}</h3>
+            <p>${authorship.text}</p>
+        </div>
+    </g:each>
 </div>
 </body>
 

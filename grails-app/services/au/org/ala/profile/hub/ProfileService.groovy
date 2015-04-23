@@ -253,4 +253,9 @@ class ProfileService {
         webService.doDelete("${grailsApplication.config.profile.service.url}/profile/${profileId}/comment/${commentId}")
     }
 
+    def updateAuthorship(String profileId, Map json) {
+        log.debug("Updating authorship for profile ${profileId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/profile/${profileId}/authorship", json)
+    }
 }

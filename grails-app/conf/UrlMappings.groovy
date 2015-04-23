@@ -35,6 +35,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/comment/create" controller: "comment", action: [PUT: "addComment"]
         "/opus/$opusId/profile/$profileId/comment/$commentId/update" controller: "comment", action: [POST: "updateComment"]
         "/opus/$opusId/profile/$profileId/comment/$commentId/delete" controller: "comment", action: [DELETE: "deleteComment"]
+        "/opus/$opusId/profile/$profileId/authorship/update" controller: "profile", action: [POST: "updateAuthorship"]
 
         "/opus/$opusId/vocab/$vocabId/update" controller: "vocab", action: [POST: "update"]
         "/opus/$opusId/vocab/$vocabId/findUsages" controller: "vocab", action: [GET: "findUsagesOfTerm"]

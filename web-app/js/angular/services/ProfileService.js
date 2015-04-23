@@ -42,7 +42,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         updateProfile: function(opusId, profileId, data) {
-            console.log("Updating profile " + profileId)
+            console.log("Updating profile " + profileId);
             var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/update", data);
             future.then(function(response) {
                 console.log("Profile updated with response code " + response.status);
@@ -470,6 +470,18 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 clearCache();
             });
             return util.toStandardPromise(future)
+        },
+
+        saveAuthorship: function(opusId, profileId, authorship) {
+            console.log("Saving authorship for profile " + profileId);
+
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/authorship/update", authorship);
+            future.then(function(response) {
+                console.log("Authorship updated with response code " + response.status);
+
+                clearCache();
+            });
+            return util.toStandardPromise(future);
         }
     }
 });

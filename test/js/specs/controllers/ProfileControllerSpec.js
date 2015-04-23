@@ -7,7 +7,7 @@ describe("ProfileController tests", function () {
     var profileService;
     var util;
     var window;
-    var profileDefer, deleteDefer, confirmDefer, modalDefer;
+    var profileDefer, deleteDefer, confirmDefer, modalDefer, updateDefer, authorDefer;
 
     var modal = {
         open: function() {}
@@ -34,6 +34,8 @@ describe("ProfileController tests", function () {
         deleteDefer = $q.defer();
         confirmDefer = $q.defer();
         modalDefer = $q.defer();
+        updateDefer = $q.defer();
+        authorDefer = $q.defer();
 
         var popup = {
             result: modalDefer.promise
@@ -41,6 +43,8 @@ describe("ProfileController tests", function () {
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "deleteProfile").and.returnValue(deleteDefer.promise);
+        spyOn(profileService, "updateProfile").and.returnValue(updateDefer.promise);
+        spyOn(profileService, "saveAuthorship").and.returnValue(authorDefer.promise);
 
         spyOn(modal, "open").and.returnValue(popup);
 
@@ -222,6 +226,101 @@ describe("ProfileController tests", function () {
         expect(scope.profileCtrl.profile.bibliography[1].uuid).toBe("id2");
         expect(scope.profileCtrl.profile.bibliography[2].uuid).toBe("id4");
         expect(scope.profileCtrl.profile.bibliography[3].uuid).toBe("id3");
+    });
+
+    it("should invoke the updateProfile operation of the profile service when saveProfile is invoked", function() {
+        scope.profileCtrl.opusId = "opusId";
+        scope.profileCtrl.profileId = "profileId";
+        scope.profileCtrl.profile = {uuid: "profileId"};
+
+        scope.profileCtrl.saveProfile(form);
+
+        expect(profileService.updateProfile).toHaveBeenCalledWith("opusId", "profileId", scope.profileCtrl.profile);
+    });
+
+    it("should replace the current profile and raise a success message when the updateProfile succeeds", function() {
+        scope.profileCtrl.opusId = "opusId";
+        scope.profileCtrl.profileId = "profileId";
+        scope.profileCtrl.profile = {uuid: "profileId", scientificName: "sciName"};
+
+        updateDefer.resolve({uuid: "profileId", scientificName: "new name"});
+        scope.profileCtrl.saveProfile(form);
+        scope.$apply();
+
+        expect(messageService.success).toHaveBeenCalled();
+        expect(scope.profileCtrl.profile.scientificName).toBe("new name");
+        expect(form.$setPristine).toHaveBeenCalled();
+    });
+
+    it("should raise an alert message when the updateProfile fails", function() {
+        scope.profileCtrl.opusId = "opusId";
+        scope.profileCtrl.profileId = "profileId";
+        scope.profileCtrl.profile = {uuid: "profileId", scientificName: "sciName"};
+
+        updateDefer.reject();
+        scope.profileCtrl.saveProfile(form);
+        scope.$apply();
+
+        expect(messageService.alert).toHaveBeenCalled();
+    });
+
+    it("should call the saveAuthorship service operation with a MAP of authorships when saveAuthorship is invoked", function() {
+        scope.profileCtrl.opusId = "opusId";
+        scope.profileCtrl.profileId = "profileId";
+        scope.profileCtrl.profile = {uuid: "profileId", scientificName: "sciName", authorship: [{category: "Author", text: "Fred"}]};
+
+        scope.profileCtrl.saveAuthorship(form);
+
+        expect(profileService.saveAuthorship).toHaveBeenCalledWith("opusId", "profileId", {authorship: [{category: "Author", text: "Fred"}]});
+    });
+
+    it("should replace the current authorship and raise a success message when the saveAuthorship succeeds", function() {
+        scope.profileCtrl.opusId = "opusId";
+        scope.profileCtrl.profileId = "profileId";
+        scope.profileCtrl.profile = {uuid: "profileId", scientificName: "sciName", authorship: [{category: "Author", text: "Fred"}]};
+
+        authorDefer.resolve([{category: "Author", text: "Fred, Bob"}]);
+        scope.profileCtrl.saveAuthorship(form);
+        scope.$apply();
+
+        expect(messageService.success).toHaveBeenCalled();
+        expect(scope.profileCtrl.profile.authorship).toEqual([{category: "Author", text: "Fred, Bob"}]);
+        expect(form.$setPristine).toHaveBeenCalled();
+    });
+
+    it("should raise an alert message when the saveAuthorship fails", function() {
+        scope.profileCtrl.opusId = "opusId";
+        scope.profileCtrl.profileId = "profileId";
+        scope.profileCtrl.profile = {uuid: "profileId", scientificName: "sciName", authorship: [{category: "Author", text: "Fred, Bob"}]};
+
+        authorDefer.reject();
+        scope.profileCtrl.saveAuthorship(form);
+        scope.$apply();
+
+        expect(messageService.alert).toHaveBeenCalled();
+    });
+
+    it("should create a new authorship list prepopulated with an 'Author' entry if the profile has no authorship when addAuthorship is invoked", function() {
+        scope.profileCtrl.opusId = "opusId";
+        scope.profileCtrl.profileId = "profileId";
+        scope.profileCtrl.profile = {uuid: "profileId", scientificName: "sciName"};
+
+        scope.profileCtrl.addAuthorship(form);
+
+        expect(scope.profileCtrl.profile.authorship).toBeDefined();
+        expect(scope.profileCtrl.profile.authorship).toEqual([{category: "Author", text: ""}]);
+    });
+
+    it("should add a new, empty authorship entry if the profile has authorships when addAuthorship is invoked", function() {
+        scope.profileCtrl.opusId = "opusId";
+        scope.profileCtrl.profileId = "profileId";
+        scope.profileCtrl.profile = {uuid: "profileId", scientificName: "sciName", authorship: [{category: "Author", text: "Fred"}]};
+
+        scope.profileCtrl.addAuthorship(form);
+
+        expect(scope.profileCtrl.profile.authorship.length).toBe(2);
+        expect(scope.profileCtrl.profile.authorship[0]).toEqual({category: "Author", text: "Fred"});
+        expect(scope.profileCtrl.profile.authorship[1]).toEqual({category: "", text: ""});
     });
 });
 

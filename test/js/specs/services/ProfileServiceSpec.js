@@ -279,4 +279,11 @@ describe("ProfileService tests", function () {
 
         http.expectGET("/someContext/opus/opusId/profile/profileId/comment").respond("bla");
     });
+
+    it("should invoke the save authorship operation on the context root when saveAuthorship is invoked", function() {
+        var data = {category: "Author", text: "Fred, Jill"};
+        service.saveAuthorship("opusId", "profileId", data);
+
+        http.expectPOST("/someContext/opus/opusId/profile/profileId/authorship/update", data).respond("bla");
+    });
 });
