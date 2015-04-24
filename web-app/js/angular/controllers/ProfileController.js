@@ -152,6 +152,12 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             messageService.alert("An error occurred while updating authorship and acknowledgements.");
         })
     };
+
+    self.deleteAuthorship = function(index, form) {
+        self.profile.authorship.splice(index, 1);
+
+        form.$setDirty();
+    };
 });
 
 

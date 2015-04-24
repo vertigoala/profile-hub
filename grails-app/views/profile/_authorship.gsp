@@ -5,10 +5,11 @@
             {{authorship.text}}
         </div>
 
-
         <div class="row-fluid" ng-repeat="authorship in profileCtrl.profile.authorship" ng-if="!profileCtrl.readonly()">
             <label for="category">Type of contribution:</label>
             <input id="category" type="text" ng-model="authorship.category" ng-disabled="authorship.category == 'Author'"/>
+
+            <button class="btn btn-danger pull-right" ng-click="profileCtrl.deleteAuthorship($index, AuthorForm)" ng-if="authorship.category != 'Author'" style="margin-bottom: 10px">Delete</button>
 
             <label for="text">Name:</label>
             <textarea id="text" ng-model="authorship.text" rows="3" class="input-fullwidth"></textarea>
