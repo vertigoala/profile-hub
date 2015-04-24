@@ -28,7 +28,7 @@
     <div class="row-fluid" ng-cloak>
         <div class="span8">
             <h1>{{profileCtrl.profile.scientificName | default:"Loading..."}}</h1>
-            <g:if test="${!profile.privateMode || params.isOpusReviewer}">
+            <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
                 <div ng-repeat="author in profileCtrl.profile.authorship | filter:{category: 'Author'}">
                     <i>By {{author.text}}</i>
                 </div>
@@ -40,7 +40,7 @@
             </g:if>
         </div>
 
-        <g:if test="${!profile.privateMode || params.isOpusReviewer}">
+        <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
             <div class="span4" ng-cloak>
                 <div class="pull-right vertical-pad">
                     <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}"
@@ -97,7 +97,7 @@
     </div>
 
 
-    <g:if test="${!profile.privateMode || params.isOpusReviewer}">
+    <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
         <div class="row-fluid">
             <div class="span8">
                 <div ng-show="messages.length" ng-cloak>
