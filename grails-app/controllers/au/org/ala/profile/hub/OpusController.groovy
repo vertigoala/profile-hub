@@ -141,6 +141,10 @@ class OpusController extends BaseController {
         render template: "search"
     }
 
+    def browsePanel = {
+        render template: "browse"
+    }
+
     def opusSummaryPanel = {
         render template: "opusSummary"
     }

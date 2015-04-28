@@ -26,7 +26,15 @@
                 </p>
             </div>
 
-            <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
+
+            <tabset>
+                <tab heading="Quick Search">
+                    <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
+                </tab>
+                <tab heading="Browse">
+                    <g:include controller="opus" action="browsePanel" params="[opusId: params.opusId]"/>
+                </tab>
+            </tabset>
         </div>
 
         <div class="span4">

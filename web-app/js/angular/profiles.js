@@ -7,11 +7,11 @@ profileEditor.config(function ($locationProvider) {
     $locationProvider.html5Mode({enabled: true, requireBase: false});
 });
 
-profileEditor.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+profileEditor.config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeSpinner = false;
 }]);
 
-profileEditor.run(function($rootScope, config) {
+profileEditor.run(function ($rootScope, config) {
     $rootScope.config = config;
 
     $rootScope.richTextToolbarFull = "[['h1','h2','h3','p'],['bold','italics','underline'],['ul','ol'],['undo']]";
@@ -21,8 +21,8 @@ profileEditor.run(function($rootScope, config) {
 profileEditor.directive('ngEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
+            if (event.which === 13) {
+                scope.$apply(function () {
                     scope.$eval(attrs.ngEnter);
                 });
 

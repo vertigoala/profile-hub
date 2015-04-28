@@ -124,11 +124,32 @@ class ProfileService {
         bieService.getSpeciesProfile(guid)
     }
 
-    def search(String opusId, String scientificName, boolean useWildcard) {
+    def findByScientificName(String opusId, String scientificName, boolean useWildcard) {
         log.debug("Searching for '${scientificName}' in opus ${opusId}")
 
         String searchTermEncoded = URLEncoder.encode(scientificName, "UTF-8")
         webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${opusId}&scientificName=${searchTermEncoded}&useWildcard=${useWildcard}")
+    }
+
+    def findByNameAndTaxonLevel(String opusId, String taxon, String scientificName, String max, String offset, boolean wildcard) {
+        log.debug("Searching for '${scientificName}' in taxon ${taxon}")
+
+        String scientificNameEncoded = URLEncoder.encode(scientificName, "UTF-8")
+        String taxonNameEncoded = URLEncoder.encode(taxon, "UTF-8")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/name?opusId=${opusId}&scientificName=${scientificNameEncoded}&taxon=${taxonNameEncoded}&useWildcard=${wildcard}&max=${max}&offset=${offset}")
+    }
+
+    def groupByTaxonLevel(String opusId, String taxon, String max, String offset) {
+        log.debug("Searching for '${taxon}' level")
+
+        String taxonNameEncoded = URLEncoder.encode(taxon, "UTF-8")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/level?opusId=${opusId}&taxon=${taxonNameEncoded}&max=${max}&offset=${offset}")
+    }
+
+    def getTaxonLevels(String opusId) {
+        log.debug("Getting taxon levels for opus ${opusId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/levels?opusId=${opusId}")
     }
 
     def updateBHLLinks(String profileId, def links) {

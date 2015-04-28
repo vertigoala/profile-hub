@@ -9,7 +9,11 @@ profileEditor.filter("capitalize", function () {
     return function (input) {
         var result = input;
         if (input) {
-            result = input[0].toUpperCase() + input.slice(1);
+            var words = [];
+            angular.forEach(input.split(" "), function(word) {
+                words.push(word[0].toUpperCase() + word.slice(1).toLocaleLowerCase());
+            });
+            result = words.join(" ");
         }
         return result
     }

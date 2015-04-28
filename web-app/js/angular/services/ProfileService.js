@@ -323,6 +323,30 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        profileSearchByTaxonLevel: function(opusId, taxon, max, offset) {
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/level?opusId=" + opusId + "&taxon=" + taxon + "&max=" + max + "&offset=" + offset);
+            future.then(function(response) {
+                console.log("Facet search returned with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
+        profileSearchByTaxonLevelAndName: function(opusId, taxon, scientificName, max, offset) {
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset);
+            future.then(function(response) {
+                console.log("Facet search returned with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
+        getTaxonLevels: function(opusId) {
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/levels?opusId=" + opusId);
+            future.then(function(response) {
+                console.log("Get taxon levels returned with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
         listResources: function () {
             console.log("Fetching all resources");
 

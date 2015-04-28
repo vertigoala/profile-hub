@@ -210,6 +210,24 @@ describe("ProfileService tests", function () {
         http.expectGET("/someContext/profile/search?opusId=opusId&scientificName=scientificName&useWildcard=false").respond("bla");
     });
 
+    it("should invoke the taxon level search service on the context root when profileSearchByTaxonLevel is invoked", function() {
+        service.profileSearchByTaxonLevel("opusId", "taxonName", 10, 5);
+
+        http.expectGET("/someContext/profile/search/taxon/level?opusId=opusId&taxon=taxonName&max=10&offset=5").respond("bla");
+    });
+
+    it("should invoke the taxon level and name search service on the context root when profileSearchByTaxonLevelAndName is invoked", function() {
+        service.profileSearchByTaxonLevelAndName("opusId", "taxonName", "sciName", 10, 5);
+
+        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5").respond("bla");
+    });
+
+    it("should invoke the taxon levels search service on the context root when getTaxonLevels is invoked", function() {
+        service.getTaxonLevels("opusId");
+
+        http.expectGET("/someContext/profile/search/taxon/levels?opusId=opusId").respond("bla");
+    });
+
     it("should invoke the user search operation on the context root when userSearch is called ", function() {
         service.userSearch("fred");
 

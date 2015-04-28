@@ -191,7 +191,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
-        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attr Title", "text": "attrText"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -201,7 +201,7 @@ describe("AttributesController tests", function () {
         expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
-            "title": "AttrTitle", // titles are capitalized on save
+            "title": "Attr Title", // titles are capitalized on save
             "text": "attrText",
             "significantEdit": false
         });
@@ -223,7 +223,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
-        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", original: {uuid: "uuid2"}}];
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attr Title", "text": "attrText", original: {uuid: "uuid2"}}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -233,7 +233,7 @@ describe("AttributesController tests", function () {
         expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
-            "title": "AttrTitle", // titles are capitalized on save
+            "title": "Attr Title", // titles are capitalized on save
             "text": "attrText",
             "original": {uuid: "uuid2"},
             "significantEdit": false
@@ -244,7 +244,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
-        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", "creators": "creatorList"}];
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attr Title", "text": "attrText", "creators": "creatorList"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -254,7 +254,7 @@ describe("AttributesController tests", function () {
         expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
-            "title": "AttrTitle", // titles are capitalized on save
+            "title": "Attr Title", // titles are capitalized on save
             "text": "attrText",
             "creators": "creatorList",
             "significantEdit": false
@@ -265,7 +265,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
-        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", "editors": "editorList"}];
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attr Title", "text": "attrText", "editors": "editorList"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -275,7 +275,7 @@ describe("AttributesController tests", function () {
         expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
-            "title": "AttrTitle", // titles are capitalized on save
+            "title": "Attr Title", // titles are capitalized on save
             "text": "attrText",
             "editors": "editorList",
             "significantEdit": false

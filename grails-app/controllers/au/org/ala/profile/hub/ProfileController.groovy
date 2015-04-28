@@ -187,17 +187,6 @@ class ProfileController extends BaseController {
         }
     }
 
-    def search() {
-        if (!params.scientificName) {
-            badRequest "scientificName is a required parameter. opusId and useWildcard are optional."
-        } else {
-            boolean wildcard = params.useWildcard ? params.useWildcard.toBoolean() : true
-            def response = profileService.search(params.opusId, params.scientificName, wildcard);
-
-            handle response
-        }
-    }
-
     def retrievePublication() {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
