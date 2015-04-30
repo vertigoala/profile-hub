@@ -9,7 +9,7 @@ class SearchController extends BaseController {
             badRequest "scientificName is a required parameter. opusId and useWildcard are optional."
         } else {
             boolean wildcard = params.useWildcard ? params.useWildcard.toBoolean() : true
-            def response = profileService.findByScientificName(params.opusId, params.scientificName, wildcard);
+            def response = profileService.findByScientificName(params.opusId, params.scientificName, params.max, wildcard);
 
             handle response
         }

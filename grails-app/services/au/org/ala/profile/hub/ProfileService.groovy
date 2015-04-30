@@ -124,11 +124,11 @@ class ProfileService {
         bieService.getSpeciesProfile(guid)
     }
 
-    def findByScientificName(String opusId, String scientificName, boolean useWildcard) {
+    def findByScientificName(String opusId, String scientificName, String max, boolean useWildcard) {
         log.debug("Searching for '${scientificName}' in opus ${opusId}")
 
         String searchTermEncoded = URLEncoder.encode(scientificName, "UTF-8")
-        webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${opusId}&scientificName=${searchTermEncoded}&useWildcard=${useWildcard}")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${opusId}&scientificName=${searchTermEncoded}&max=${max ?: ""}&useWildcard=${useWildcard}")
     }
 
     def findByNameAndTaxonLevel(String opusId, String taxon, String scientificName, String max, String offset, boolean wildcard) {

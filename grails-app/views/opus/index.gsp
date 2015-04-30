@@ -17,15 +17,25 @@
             <g:render template="../layouts/login"/>
         </div>
 
-        <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-lg-2 col-md-3 col-sm-3">
-            <a href="${request.contextPath}/opus/{{opus.uuid}}" target="_self">
-                <img src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
-                     alt="{{opus.title}} logo" title="{{opus.title}}"
-                     class="img-thumbnail img-responsive img-circle collection-thumbnail">
-            </a>
+        <div class="span12">
+            <tabset>
+                <tab heading="Collections">
+                    <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-lg-2 col-md-3 col-sm-3">
+                        <a href="${request.contextPath}/opus/{{opus.uuid}}" target="_self">
+                            <img src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
+                                 alt="{{opus.title}} logo" title="{{opus.title}}"
+                                 class="img-thumbnail img-responsive img-circle collection-thumbnail">
+                        </a>
 
-            <h4 class="text-center">{{opus.title}}</h4>
+                        <h4 class="text-center">{{opus.title}}</h4>
+                    </div>
+                </tab>
+                <tab heading="Quick Search">
+                    <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
+                </tab>
+            </tabset>
         </div>
+
     </div>
 
     <g:if test="${params.isALAAdmin}">
