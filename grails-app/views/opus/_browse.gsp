@@ -9,9 +9,9 @@
                 </accordion-heading>
 
                 <div ng-repeat="(name, count) in searchCtrl.taxonResults[taxon.key]">
-                    <a ng-href="#"
+                    <a ng-href=""
                        ng-click="searchCtrl.searchByTaxon(taxon.key, name, count)">{{name | capitalize}} ({{count}})</a>
-                    <a ng-href="#"
+                    <a ng-href=""
                        ng-if="$index >= searchCtrl.MAX_FACET_ITEMS - 1 && $last && $index < searchCtrl.taxonLevels[taxon.key] - 1"
                        ng-click="searchCtrl.searchByTaxonLevel(taxon.key, $index)"><br/>...</a>
                 </div>

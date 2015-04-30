@@ -87,10 +87,9 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
 
         if (!path) {
             var url = $location.absUrl();
-
             var offset = $location.protocol().length + 3; // ignore the length of the protocol plus ://
             var startIndex = path.indexOf("/", offset);
-            var endIndex = path.indexOf("?") == -1 ? path.length : path.indexOf("?");
+            var endIndex = path.indexOf("?") == -1 ? url.length : path.indexOf("?");
 
             path = url.substring(startIndex, endIndex)
         }
@@ -168,7 +167,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
             console.log(msg);
             defer.reject(msg);
             if (status == 403) {
-                console.log("not authorised")
+                console.log("not authorised");
                 redirect(contextRoot() + "/notAuthorised");
             }
         });
