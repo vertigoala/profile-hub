@@ -383,3 +383,13 @@ input[type=file] {
     border-color:#e30202;
     color:#fff;
 }
+
+ins, .diff_insert {
+    background-color: lightgreen !important;
+    font-style: italic;
+}
+
+del, .diff_delete {
+    background-color: orange !important;
+    text-decoration: line-through;
+}

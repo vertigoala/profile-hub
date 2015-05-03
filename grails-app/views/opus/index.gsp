@@ -17,7 +17,7 @@
             <g:render template="../layouts/login"/>
         </div>
 
-        <div class="span12">
+        <div class="span12" ng-cloak>
             <tabset>
                 <tab heading="Collections">
                     <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-lg-2 col-md-3 col-sm-3">

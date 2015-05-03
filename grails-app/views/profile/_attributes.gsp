@@ -160,7 +160,8 @@
                     <td>
                         <b>{{ auditItem.object.title }}</b>
                         <br/>
-                        {{ auditItem.object.text }}
+                        <div data-ng-bind-html="auditItem.diff" ng-if="auditItem.diff"></div>
+                        <div data-ng-bind-html="auditItem.object.text" ng-if="!auditItem.diff"></div>
                     </td>
                     <td>{{ auditItem.userDisplayName }}</td>
                     <td>{{ auditItem.date }}</td>

@@ -18,7 +18,7 @@
         <g:render template="../layouts/login"/>
     </div>
 
-    <div class="row-fluid" ng-if="opusCtrl.readonly">
+    <div class="row-fluid" ng-if="opusCtrl.readonly" ng-cloak>
         <div class="span8">
             <div id="opusInfo" ng-cloak style="margin-top:20px;">
                 <p class="lead">

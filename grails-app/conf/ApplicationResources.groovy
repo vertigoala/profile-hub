@@ -9,6 +9,7 @@ modules = {
         dependsOn "angular_loading_bar"
         dependsOn "fontawesome"
         dependsOn "richText"
+        dependsOn "google_diff"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -69,5 +70,9 @@ modules = {
         resource url:"thirdparty/textAngular/textAngular-rangy-1.3.11.min.js"
         resource url:"thirdparty/textAngular/textAngular-sanitize-1.3.11.min.js"
         dependsOn "fontawesome"
+    }
+
+    google_diff {
+        resource url:"thirdparty/google-diff-match-patch/diff_match_patch.js"
     }
 }

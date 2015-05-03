@@ -409,7 +409,7 @@ describe("AttributesController tests", function () {
         expect(form.$setDirty).toHaveBeenCalled();
     });
 
-    it("should populate the audit and auditShowing properties of the selected attribute when showAudit is invoked", function () {
+    it("should populate the audit, auditShowing and diff properties of the selected attribute when showAudit is invoked", function () {
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
@@ -422,7 +422,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes[0].audit).not.toBeDefined();
         expect(scope.attrCtrl.attributes[1].audit).toEqual([{
             userId: "1",
-            object: {text: "auditText1", title: "auditTitle1"}
+            object: {text: "auditText1", title: "auditTitle1"}, diff: 'auditText<span class="diff_delete">2</span><span class="diff_insert">1</span>'
         }, {userId: "2", object: {text: "auditText2", title: "auditTitle2"}}]);
     });
 
