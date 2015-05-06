@@ -21,7 +21,7 @@
             <tabset>
                 <tab heading="Collections">
                     <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-lg-2 col-md-3 col-sm-3">
-                        <a href="${request.contextPath}/opus/{{opus.uuid}}" target="_self">
+                        <a href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}" target="_self">
                             <img src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
                                  alt="{{opus.title}} logo" title="{{opus.title}}"
                                  class="img-thumbnail img-responsive img-circle collection-thumbnail">

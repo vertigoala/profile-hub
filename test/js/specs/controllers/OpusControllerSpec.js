@@ -484,16 +484,6 @@ describe("OpusController tests", function () {
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
-
-
-
-
-
-
-
-
-
-
     it("should raise an alert message if the call to saveOpus fails", function() {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         saveOpusDefer.reject();
@@ -513,5 +503,45 @@ describe("OpusController tests", function () {
 
         expect(messageService.success).toHaveBeenCalledWith("Successfully updated OpusName.");
         expect(form.$setPristine).toHaveBeenCalled();
+    });
+
+    it("should check for duplicate short names when saving the opus", function() {
+        scope.opusCtrl.initialShortName = "oldShortName";
+        scope.opusCtrl.opus = {shortName: "newShortName"};
+
+        scope.opusCtrl.saveOpus(form);
+
+        expect(profileService.getOpus).toHaveBeenCalledWith("newShortName");
+    });
+
+    it("should only check for duplicate short names when saving the opus if the short name has changed", function() {
+        scope.opusCtrl.initialShortName = "oldShortName";
+        scope.opusCtrl.opus = {shortName: "oldShortName"};
+
+        scope.opusCtrl.saveOpus(form);
+
+        expect(profileService.getOpus).not.toHaveBeenCalledWith();
+    });
+
+    it("should raise an alert message if there is another opus with the same shortName when saving the opus", function() {
+        scope.opusCtrl.initialShortName = "oldShortName";
+        scope.opusCtrl.opus = {shortName: "newShortName"};
+
+        opusDefer.resolve({shortName: "newShortName"});
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        expect(messageService.alert).toHaveBeenCalledWith("The specified short name is already in use. Short Names must be unique across all collections.");
+    });
+
+    it("should save the opus if there are no other opuses with the same shortName when saving the opus", function() {
+        scope.opusCtrl.initialShortName = "oldShortName";
+        scope.opusCtrl.opus = {shortName: "newShortName"};
+
+        opusDefer.reject({status: 404});
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        expect(profileService.saveOpus).toHaveBeenCalled();
     });
 });

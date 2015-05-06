@@ -54,11 +54,6 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         getOpus: function (opusId) {
-            // make sure we have a UUID, not just the last element of some other URL (e.g. create)
-            if (!util.isUuid(opusId)) {
-                return;
-            }
-
             console.log("Fetching opus " + opusId);
 
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/json", {cache: true});

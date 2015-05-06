@@ -156,13 +156,13 @@ describe("ProfileController tests", function () {
     });
 
     it("should open the modal dialog, and redirect to the edit profile page when it is closed, when createProfile is invoked", function() {
-        modalDefer.resolve({uuid: "newProfileId"});
+        modalDefer.resolve({uuid: "newProfileId", scientificName: "sciName"});
         scope.profileCtrl.opusId = "opusId1";
 
         scope.profileCtrl.createProfile("opusId");
         scope.$apply();
 
-        expect(util.redirect).toHaveBeenCalledWith("/context/opus/opusId1/profile/newProfileId/update");
+        expect(util.redirect).toHaveBeenCalledWith("/context/opus/opusId1/profile/sciName/update");
     });
 
     it("should create a new list when addBibliography is invoked if one doesn't exist", function() {

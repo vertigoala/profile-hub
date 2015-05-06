@@ -65,7 +65,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
         popup.result.then(function (profile) {
             messageService.success("Profile for " + profile.scientificName + " has been successfully created.");
-            util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.uuid + "/update");
+            util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.scientificName + "/update");
         });
     };
 

@@ -88,8 +88,8 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         if (!path) {
             var url = $location.absUrl();
             var offset = $location.protocol().length + 3; // ignore the length of the protocol plus ://
-            var startIndex = path.indexOf("/", offset);
-            var endIndex = path.indexOf("?") == -1 ? url.length : path.indexOf("?");
+            var startIndex = url.indexOf("/", offset);
+            var endIndex = url.indexOf("?") == -1 ? url.length : url.indexOf("?");
 
             path = url.substring(startIndex, endIndex)
         }
@@ -115,19 +115,32 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     /**
      * Get the specified entity id from the URL.
      *
-     * Assumes all urls are in the form http://.../entity1/entity1Id/entity2/entity2Id/...
+     * Assumes all urls where the opus and/or profile id are required have the form http://.../opusShortName/profileScientificName/...
      */
     function getEntityId(entity) {
         var entityId = null;
 
-        var path = getPath().split("/");
-        if (path) {
-            var entityIndex = path.indexOf(entity);
-            entityId = path[entityIndex + 1];
+        var path = getPath();
 
-            // make sure we have a UUID, not just the last element of some other URL (e.g. create)
-            if (!isUuid(entityId)) {
-                entityId = null;
+        if (path.indexOf(config.contextPath) == 0) {
+            path = path.substring(config.contextPath.length);
+        }
+
+        if (path.indexOf("/") == 0) {
+            path = path.substring(1)
+        }
+
+        if (path.charAt(path.length - 1) == "/") {
+            path = path.substring(0, path.length - 1)
+        }
+
+        path = path.split("/");
+
+        if (path) {
+            if (entity == "opus") {
+                entityId = path[1];
+            } else if (entity == "profile" && path.length > 1) {
+                entityId = path[3];
             }
         }
 

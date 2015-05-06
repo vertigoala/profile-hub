@@ -16,7 +16,7 @@ class CommentController extends BaseController {
         if (!params.profileId || !json) {
             badRequest()
         } else {
-            def response = profileService.addComment(params.profileId, json)
+            def response = profileService.addComment(params.opusId, params.profileId, json)
 
             handle response
         }
@@ -29,7 +29,7 @@ class CommentController extends BaseController {
         if (!params.profileId || !params.commentId || !json) {
             badRequest()
         } else if (checkCommentPermissions(params.profileId, params.commentId)) {
-            def response = profileService.updateComment(params.profileId, params.commentId, json)
+            def response = profileService.updateComment(params.opusId, params.profileId, params.commentId, json)
 
             handle response
         } else {
@@ -42,7 +42,7 @@ class CommentController extends BaseController {
         if (!params.profileId) {
             badRequest()
         } else {
-            def response = profileService.getComments(params.profileId)
+            def response = profileService.getComments(params.opusId, params.profileId)
 
             handle response
         }
@@ -53,7 +53,7 @@ class CommentController extends BaseController {
         if (!params.commentId) {
             badRequest()
         } else if (checkCommentPermissions(params.profileId, params.commentId)) {
-            def response = profileService.deleteComment(params.profileId, params.commentId)
+            def response = profileService.deleteComment(params.opusId, params.profileId, params.commentId)
 
             handle response
         } else {
@@ -62,12 +62,12 @@ class CommentController extends BaseController {
     }
 
     boolean checkCommentPermissions(String profileId, String commentId) {
-        def comment = profileService.getComment(profileId, commentId)
+        def comment = profileService.getComment(params.opusId, profileId, commentId)?.resp
         // editors and above can do anything.
         // reviewers can only edit/delete their own comments
 
         boolean allowed = false
-        if (params.isOpusAdmin || params.isOpusEditor || (params.isOpusReviewer && comment.resp.author.userId == authService.getUserId())) {
+        if (params.isOpusAdmin || params.isOpusEditor || (params.isOpusReviewer && comment.author.userId == authService.getUserId())) {
             allowed = true
         }
 

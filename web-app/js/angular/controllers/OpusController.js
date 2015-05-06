@@ -18,6 +18,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.newApprovedLists = [];
     self.valid = false;
     self.editors = [];
+    self.initialShortName = null;
 
     loadResources();
     loadOpusList();
@@ -43,6 +44,8 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                     }
                 });
 
+                initialShortName = data.shortName;
+
                 toggleMapPointerColourHash(true);
 
                 loadDataResource(self.opus.dataResourceUid);
@@ -63,6 +66,21 @@ profileEditor.controller('OpusController', function (profileService, util, messa
 
         toggleMapPointerColourHash(false);
 
+        if (self.opus.shortName !== initialShortName && self.opus.shortName) {
+            var f = profileService.getOpus(self.opus.shortName);
+            f.then(function() {
+                messageService.alert("The specified short name is already in use. Short Names must be unique across all collections.");
+            }, function() {
+                console.log("Short name is unique");
+
+                save(form);
+            })
+        } else {
+            save(form)
+        }
+    };
+
+    function save(form) {
         var promise = profileService.saveOpus(self.opusId, self.opus);
         promise.then(function (data) {
                 toggleMapPointerColourHash(true);
@@ -85,7 +103,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 self.saving = false;
             }
         );
-    };
+    }
 
     self.addImageSource = function () {
         self.newImageSources.push({});
@@ -321,7 +339,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         var promise = profileService.listOpus();
         promise.then(function (data) {
             angular.forEach(data, function (opus) {
-                self.opusList.push({uuid: opus.uuid, title: opus.title, thumbnailUrl: opus.thumbnailUrl, pubDescription: opus.pubDescription})
+                self.opusList.push({uuid: opus.uuid, title: opus.title, thumbnailUrl: opus.thumbnailUrl, shortName: opus.shortName, pubDescription: opus.pubDescription})
             });
         })
     }

@@ -19,10 +19,10 @@ class ProfileController extends BaseController {
 
     @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def edit() {
-        if (!params.profileId) {
-            badRequest "profileId is a required parameter"
+        if (!params.opusId || !params.profileId) {
+            badRequest "opusId and profileId are required parameters"
         } else {
-            def profile = profileService.getProfile(params.profileId as String)
+            def profile = profileService.getProfile(params.opusId as String, params.profileId as String)
 
             if (!profile) {
                 notFound()
@@ -38,7 +38,7 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
         } else {
-            def profile = profileService.getProfile(params.profileId as String)
+            def profile = profileService.getProfile(params.opusId as String, params.profileId as String)
 
             if (!profile) {
                 notFound()
@@ -57,7 +57,7 @@ class ProfileController extends BaseController {
         if (!jsonRequest) {
             badRequest()
         } else {
-            def response = profileService.createProfile(jsonRequest)
+            def response = profileService.createProfile(params.opusId as String, jsonRequest)
 
             handle response
         }
@@ -70,7 +70,7 @@ class ProfileController extends BaseController {
         if (!json || !params.profileId) {
             badRequest()
         } else {
-            def response = profileService.updateProfile(params.profileId as String, json)
+            def response = profileService.updateProfile(params.opusId as String, params.profileId as String, json)
 
             handle response
         }
@@ -81,7 +81,7 @@ class ProfileController extends BaseController {
             badRequest "profileId is a required parameter"
         } else {
             response.setContentType(CONTEXT_TYPE_JSON)
-            def profile = profileService.getProfile(params.profileId as String)
+            def profile = profileService.getProfile(params.opusId as String, params.profileId as String)
 
             if (!profile) {
                 notFound()
@@ -96,7 +96,7 @@ class ProfileController extends BaseController {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
         } else {
-            def response = profileService.deleteProfile(params.profileId as String)
+            def response = profileService.deleteProfile(params.opusId as String, params.profileId as String)
 
             handle response
         }
@@ -110,7 +110,7 @@ class ProfileController extends BaseController {
             badRequest()
         } else {
             log.debug "Updating bhl links....."
-            def response = profileService.updateBHLLinks(params.profileId as String, jsonRequest.links)
+            def response = profileService.updateBHLLinks(params.opusId as String, params.profileId as String, jsonRequest.links)
 
             handle response
         }
@@ -125,7 +125,7 @@ class ProfileController extends BaseController {
         } else {
             log.debug "Updating links....."
 
-            def response = profileService.updateLinks(params.profileId as String, jsonRequest.links)
+            def response = profileService.updateLinks(params.opusId as String, params.profileId as String, jsonRequest.links)
 
             handle response
         }
@@ -140,7 +140,7 @@ class ProfileController extends BaseController {
         if (!jsonRequest || !jsonRequest.has("uuid") || !params.profileId) {
             badRequest()
         } else {
-            def response = profileService.updateAttribute(params.profileId, jsonRequest)
+            def response = profileService.updateAttribute(params.opusId as String, params.profileId, jsonRequest)
 
             handle response
         }
@@ -151,7 +151,7 @@ class ProfileController extends BaseController {
         if (!params.attributeId || !params.profileId) {
             badRequest "attributeId and profileId are required parameters"
         } else {
-            def response = profileService.deleteAttribute(params.attributeId, params.profileId)
+            def response = profileService.deleteAttribute(params.opusId as String, params.attributeId, params.profileId)
 
             handle response
         }
@@ -191,7 +191,7 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
         } else {
-            def response = profileService.getPublications(params.profileId as String)
+            def response = profileService.getPublications(params.opusId as String, params.profileId as String)
 
             handle response
         }
@@ -218,7 +218,7 @@ class ProfileController extends BaseController {
         if (!file || !publication || !params.profileId) {
             badRequest()
         } else {
-            def response = profileService.savePublication(params.profileId, publication, file)
+            def response = profileService.savePublication(params.opusId as String, params.profileId, publication, file)
 
             handle response
         }
@@ -229,7 +229,7 @@ class ProfileController extends BaseController {
         if (!params.profileId || !params.publicationId) {
             badRequest "profileId and publicationId are a required parameters"
         } else {
-            def response = profileService.deletePublication(params.profileId as String, params.publicationId as String)
+            def response = profileService.deletePublication(params.opusId as String, params.profileId as String, params.publicationId as String)
 
             handle response
         }
@@ -242,7 +242,7 @@ class ProfileController extends BaseController {
         if (!params.profileId || !json) {
             badRequest "profileId and a json body are required parameters"
         } else {
-            def response = profileService.updateAuthorship(params.profileId as String, json)
+            def response = profileService.updateAuthorship(params.opusId as String, params.profileId as String, json)
 
             handle response
         }

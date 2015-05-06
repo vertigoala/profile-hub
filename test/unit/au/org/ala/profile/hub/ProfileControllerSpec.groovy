@@ -28,9 +28,10 @@ class ProfileControllerSpec extends Specification {
 
     def "edit should return a 404 if the profile is not found"() {
         setup:
-        profileService.getProfile(_) >> null
+        profileService.getProfile(_, _) >> null
 
         when:
+        params.opusId = "opus"
         params.profileId = "bla"
         controller.edit()
 
@@ -48,9 +49,10 @@ class ProfileControllerSpec extends Specification {
 
     def "edit should return the profile, with edit and current user properties added to the model"() {
         setup:
-        profileService.getProfile(_) >> [profile: "bla"]
+        profileService.getProfile(_, _) >> [profile: "bla"]
 
         when:
+        params.opusId = "opus"
         params.profileId = "bla"
         controller.edit()
 
@@ -63,7 +65,7 @@ class ProfileControllerSpec extends Specification {
 
     def "show should return a 404 if the profile is not found"() {
         setup:
-        profileService.getProfile(_) >> null
+        profileService.getProfile(_, _) >> null
 
         when:
         params.profileId = "bla"
@@ -83,7 +85,7 @@ class ProfileControllerSpec extends Specification {
 
     def "show should return the profile, with edit = false added to the model"() {
         setup:
-        profileService.getProfile(_) >> [profile: "bla"]
+        profileService.getProfile(_, _) >> [profile: "bla"]
 
         when:
         params.profileId = "bla"
@@ -97,7 +99,7 @@ class ProfileControllerSpec extends Specification {
 
     def "getJson should return a 404 if the profile is not found"() {
         setup:
-        profileService.getProfile(_) >> null
+        profileService.getProfile(_, _) >> null
 
         when:
         params.profileId = "bla"
@@ -117,7 +119,7 @@ class ProfileControllerSpec extends Specification {
 
     def "getJson should return the profile added to the model"() {
         setup:
-        profileService.getProfile(_) >> [profile: "bla"]
+        profileService.getProfile(_, _) >> [profile: "bla"]
 
         when:
         params.profileId = "bla"
@@ -138,7 +140,7 @@ class ProfileControllerSpec extends Specification {
 
     def "createProfile should return the new profile"() {
         setup:
-        profileService.createProfile(_) >> [resp: [profile: "bla"], statusCode: 200]
+        profileService.createProfile(_, _) >> [resp: [profile: "bla"], statusCode: 200]
 
         when:
         request.JSON = """{"opusId": "1234", "scientificName":"name"}"""
@@ -169,7 +171,7 @@ class ProfileControllerSpec extends Specification {
 
     def "deleteProfile should return the error code from the service on failure of the service call"() {
         setup:
-        profileService.deleteProfile(_) >> [error: "something died!", statusCode: 666]
+        profileService.deleteProfile(_, _) >> [error: "something died!", statusCode: 666]
 
         when:
         params.profileId = "profile1"
@@ -182,7 +184,7 @@ class ProfileControllerSpec extends Specification {
 
     def "deleteProfile should return the success indicator on success"() {
         setup:
-        profileService.deleteProfile(_) >> [resp: [success: true], statusCode: 200]
+        profileService.deleteProfile(_, _) >> [resp: [success: true], statusCode: 200]
 
         when:
         params.profileId = "profile1"
@@ -222,7 +224,7 @@ class ProfileControllerSpec extends Specification {
 
     def "updateBHLLinks should return the updated links as JSON on success"() {
         setup:
-        profileService.updateBHLLinks(_, _) >> [resp: ["link1", "link2"], statusCode: 200]
+        profileService.updateBHLLinks(_, _, _) >> [resp: ["link1", "link2"], statusCode: 200]
 
         when:
         params.profileId = "1"
@@ -236,7 +238,7 @@ class ProfileControllerSpec extends Specification {
 
     def "updateBHLLinks should return the error code from the service on failure of the service call"() {
         setup:
-        profileService.updateBHLLinks(_, _) >> [error: "something died!", statusCode: 666]
+        profileService.updateBHLLinks(_, _, _) >> [error: "something died!", statusCode: 666]
 
         when:
         params.profileId = "1"
@@ -275,7 +277,7 @@ class ProfileControllerSpec extends Specification {
 
     def "updateLinks should return the updated links as JSON on success"() {
         setup:
-        profileService.updateLinks(_, _) >> [resp: ["link1", "link2"], statusCode: 200]
+        profileService.updateLinks(_, _, _) >> [resp: ["link1", "link2"], statusCode: 200]
 
         when:
         params.profileId = "1"
@@ -289,7 +291,7 @@ class ProfileControllerSpec extends Specification {
 
     def "updateLinks should return the error code from the service on failure of the service call"() {
         setup:
-        profileService.updateLinks(_, _) >> [error: "something died!", statusCode: 666]
+        profileService.updateLinks(_, _, _) >> [error: "something died!", statusCode: 666]
 
         when:
         params.profileId = "1"
@@ -338,7 +340,7 @@ class ProfileControllerSpec extends Specification {
 
     def "updateAttribute should accept a blank attribute id to create a new Attribute"() {
         setup:
-        profileService.updateAttribute(_, _) >> [resp: [attributeId: "id1", success: true], statusCode: 200]
+        profileService.updateAttribute(_, _, _) >> [resp: [attributeId: "id1", success: true], statusCode: 200]
 
         when:
         params.profileId = "profile1"
@@ -352,7 +354,7 @@ class ProfileControllerSpec extends Specification {
 
     def "updateAttribute should return the updated attribute id and a success indicator as JSON on success"() {
         setup:
-        profileService.updateAttribute(_, _) >> [resp: [attributeId: "id1", success: true], statusCode: 200]
+        profileService.updateAttribute(_, _, _) >> [resp: [attributeId: "id1", success: true], statusCode: 200]
 
         when:
         params.profileId = "profile1"
@@ -366,7 +368,7 @@ class ProfileControllerSpec extends Specification {
 
     def "updateAttribute should return the error code from the service on failure of the service call"() {
         setup:
-        profileService.updateAttribute(_, _) >> [error: "something died!", statusCode: 666]
+        profileService.updateAttribute(_, _, _) >> [error: "something died!", statusCode: 666]
 
         when:
         params.profileId = "profile1"
@@ -405,7 +407,7 @@ class ProfileControllerSpec extends Specification {
 
     def "deleteAttribute should return a success indicator as JSON"() {
         setup:
-        profileService.deleteAttribute(_, _) >> [resp: [success: true], statusCode: 200]
+        profileService.deleteAttribute(_, _, _) >> [resp: [success: true], statusCode: 200]
 
         when:
         params.profileId = "profile1"
@@ -419,7 +421,7 @@ class ProfileControllerSpec extends Specification {
 
     def "deleteAttribute should return the error code from the service on failure of the service call"() {
         setup:
-        profileService.deleteAttribute(_, _) >> [error: "something died!", statusCode: 666]
+        profileService.deleteAttribute(_, _, _) >> [error: "something died!", statusCode: 666]
 
         when:
         params.profileId = "profile1"

@@ -26,7 +26,7 @@
                 <th>Taxon</th>
             </tr>
             <tr ng-repeat="profile in searchCtrl.profiles">
-                <td><a href="${request.contextPath}/opus/{{ searchCtrl.opusId }}/profile/{{ profile.profileId }}"
+                <td><a href="${request.contextPath}/opus/{{ searchCtrl.opusId }}/profile/{{ profile.scientificName }}"
                        target="_self">{{profile.scientificName}}</a>
                 </td>
             </tr>

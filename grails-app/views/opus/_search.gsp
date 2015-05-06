@@ -19,7 +19,7 @@
             <th ng-if="!searchCtrl.opusId">Collection</th>
         </tr>
         <tr ng-repeat="profile in searchCtrl.profiles">
-            <td><a href="${request.contextPath}/opus/{{ profile.opus.uuid }}/profile/{{ profile.profileId }}" target="_self">{{profile.scientificName}}</a></td>
+            <td><a href="${request.contextPath}/opus/{{ profile.opus.shortName ? profile.opus.shortName : profile.opus.uuid }}/profile/{{ profile.scientificName }}" target="_self">{{profile.scientificName}}</a></td>
             <td ng-if="!searchCtrl.opusId">{{profile.opus.title}}</td>
         </tr>
     </table>

@@ -15,7 +15,7 @@
         <div class="span6">
             <ol class="breadcrumb" role="navigation">
                 <li><i class="fa fa-arrow-left"></i><span class="divider"/><a
-                        href="${request.contextPath}/opus/{{profileCtrl.opus.uuid}}"
+                        href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}"
                         target="_self">Return to {{profileCtrl.opus.title}}</a>
             </ol>
         </div>
@@ -43,7 +43,7 @@
         <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
             <div class="span4" ng-cloak>
                 <div class="pull-right vertical-pad">
-                    <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}"
+                    <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}"
                        target="_self" class="btn btn-success" ng-show="!profileCtrl.readonly()"><i
                             class="icon-eye-open icon-white"></i> Public View</a>
 
@@ -67,7 +67,7 @@
                             <g:if test="${params.isOpusEditor}">
                                 <li class="divider"></li>
                                 <li role="presentation">
-                                    <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/update"
+                                    <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}/update"
                                        target="_self" ng-hide="!profileCtrl.readonly()"><span class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
                                 </li>
                                 <li role="presentation" style="margin-left: 20px" ng-if="!profileCtrl.readonly()">
