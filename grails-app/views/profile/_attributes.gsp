@@ -80,8 +80,8 @@
             </span>
             <span class="small"
                   ng-show="attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes && $last">
-                <a href="#"
-                   ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</a>
+                <button class="btn btn-link"
+                   ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</button>
             </span>
         </span>
     </span>
@@ -161,7 +161,7 @@
                         <b>{{ auditItem.object.title }}</b>
                         <br/>
                         <div data-ng-bind-html="auditItem.diff" ng-if="auditItem.diff"></div>
-                        <div data-ng-bind-html="auditItem.object.text" ng-if="!auditItem.diff"></div>
+                        <div data-ng-bind-html="auditItem.object.plainText" ng-if="!auditItem.diff"></div>
                     </td>
                     <td>{{ auditItem.userDisplayName }}</td>
                     <td>{{ auditItem.date }}</td>

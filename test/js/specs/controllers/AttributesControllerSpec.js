@@ -422,7 +422,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes[0].audit).not.toBeDefined();
         expect(scope.attrCtrl.attributes[1].audit).toEqual([{
             userId: "1",
-            object: {text: "auditText1", title: "auditTitle1"}, diff: 'auditText<span class="diff_delete">2</span><span class="diff_insert">1</span>'
+            object: {text: "auditText1", title: "auditTitle1"},
         }, {userId: "2", object: {text: "auditText2", title: "auditTitle2"}}]);
     });
 

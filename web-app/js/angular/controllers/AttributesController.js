@@ -107,8 +107,10 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 var d = new diff_match_patch();
 
                 for (var i = 0; i < audit.length - 1; i++) {
-                    var diff = d.diff_main(audit[i + 1].object.text, audit[i].object.text);
-                    audit[i].diff = formatDiff(diff);
+                    if (audit[i + 1].object.plainText && audit[i].object.plainText) {
+                        var diff = d.diff_main(audit[i + 1].object.plainText, audit[i].object.plainText);
+                        audit[i].diff = d.diff_prettyHtml(diff);
+                    }
                 }
 
                 self.attributes[idx].audit = audit;
@@ -119,56 +121,6 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             }
         );
     };
-
-    function formatDiff(diffs) {
-        var html = [];
-        for (var x = 0; x < diffs.length; x++) {
-            var op = diffs[x][0];    // Operation (insert, delete, equal)
-            var text = diffs[x][1];  // Text of change.
-
-            switch (op) {
-                case DIFF_INSERT:
-                    html[x] = addHighlighting(text, "diff_insert");
-                    break;
-                case DIFF_DELETE:
-                    html[x] = addHighlighting(text, "diff_delete");
-                    break;
-                case DIFF_EQUAL:
-                    html[x] = text;
-                    break;
-            }
-        }
-        return html.join('');
-    }
-
-    function addHighlighting(text, style) {
-        var htmlRegex = /<\/?\w+((\s+\w+(\s*=\s*(?:\".*?"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>/gi;
-        var startHtmlTag = /^<[a-zA-Z]+>$/g;
-        var closeHtmlTag = /^<\/[a-zA-Z]+?>$/g;
-
-        var openSpan = '<span class="' + style + '">';
-        var closeSpan = '</span>';
-
-        if (text.match(startHtmlTag)) {
-            text = text + openSpan;
-        } else if (text.match(closeHtmlTag)) {
-            text = closeSpan + text;
-        } else {
-            var noHtml = text.split(htmlRegex);
-
-            for (var i = 0; i < noHtml.length; i++) {
-                if (noHtml[i] && noHtml.length > 0) {
-                    var startIndex = text.indexOf(noHtml[i]);
-                    var endIndex = startIndex + noHtml[i].length;
-
-                    text = text.slice(0, startIndex) + openSpan + text.slice(startIndex, endIndex) + closeSpan + text.slice(endIndex)
-                }
-
-            }
-        }
-
-        return text
-    }
 
     self.hideAudit = function (idx) {
         self.attributes[idx].auditShowing = false;
