@@ -228,11 +228,13 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                                     attribute.source = {
                                         opusId: supporting.opus.uuid,
                                         opusTitle: supporting.opus.title,
+                                        opusShortName: supporting.opus.shortName,
                                         profileId: supporting.profile.uuid
                                     };
                                     self.attributes.push(attribute);
-                                    if (self.attributeTitles.indexOf(attribute.title) == -1) {
-                                        self.attributeTitles.push(attribute.title);
+                                    var title = {name: attribute.title};
+                                    if (self.attributeTitles.indexOf(title) == -1) {
+                                        self.attributeTitles.push(title);
                                     }
                                 }
 

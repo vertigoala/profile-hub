@@ -189,7 +189,7 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
     };
 
     function loadOpus() {
-        if (!self.opusId || !util.isUuid(self.opusId)) {
+        if (!self.opusId) {
             return;
         }
 

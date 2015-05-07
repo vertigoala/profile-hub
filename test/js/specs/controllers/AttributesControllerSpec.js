@@ -556,7 +556,7 @@ describe("AttributesController tests", function () {
 
     it("should add the title of all supporting attributes to the attributeTitle list, but not the approvedVocabulary list, when loadAttributesFromSupportingCollections is called", function() {
         scope.attrCtrl.approvedVocabulary = ["title1", "title2"];
-        scope.attrCtrl.attributeTitles = ["title1", "title2"];
+        scope.attrCtrl.attributeTitles = [{name: "title1"}, {name: "title2"}];
 
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
@@ -579,7 +579,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.loadAttributesFromSupportingCollections();
         scope.$apply();
 
-        expect(scope.attrCtrl.attributeTitles).toEqual(["title1", "title2", "title3"]);
+        expect(scope.attrCtrl.attributeTitles).toEqual([{name: "title1"}, {name: "title2"}, {name: "title3"}]);
         expect(scope.attrCtrl.approvedVocabulary).toEqual(["title1", "title2"]);
     });
 });

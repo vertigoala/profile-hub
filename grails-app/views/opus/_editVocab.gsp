@@ -19,7 +19,7 @@
         <div class="subpanel">
             <div class="input-append">
                 <label for="newTerm" class="inline-label">New Term:</label>
-                <input id="newTerm" type="text" ng-model="vocabCtrl.newVocabTerm" class="input-xlarge"/>
+                <input id="newTerm" type="text" ng-model="vocabCtrl.newVocabTerm" class="input-xlarge" ng-enter="vocabCtrl.addVocabTerm(VocabForm)"/>
                 <button class="btn" ng-click="vocabCtrl.addVocabTerm(VocabForm)"><i
                         class="icon icon-plus"></i>  Add term</button>
             </div>

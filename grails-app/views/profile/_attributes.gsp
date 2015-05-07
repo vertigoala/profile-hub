@@ -69,12 +69,12 @@
         <span class="pull-right">
             <span class="small pull-right" ng-show="attribute.source">
                 Source: <a
-                    href="${request.contextPath}/opus/{{attrCtrl.opusId}}/profile/{{attribute.source.profileId}}"
+                    href="${request.contextPath}/opus/{{attribute.source.opusShortName ? attribute.source.opusShortName : attribute.source.opusId}}/profile/{{attribute.source.profileId}}"
                     target="_self">{{attribute.source.opusTitle}}</a>
             </span>
             <span class="small" ng-if="attribute.original">
                 Originally copied from: <a
-                    href="${request.contextPath}/opus/{{attrCtrl.opusId}}/profile/{{attribute.original.profile.uuid}}"
+                    href="${request.contextPath}/opus/{{attribute.original.profile.opus.shortName ? attribute.original.profile.opus.shortName : attribute.original.profile.opus.uuid}}/profile/{{attribute.original.profile.uuid}}"
                     target="_self">{{attribute.original.profile.opus.title}}</a>
                 <br/>
             </span>
