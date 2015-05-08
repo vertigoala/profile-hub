@@ -48,20 +48,22 @@
     <p class="display-text">
         <div ta-bind ng-model="attribute.text"></div>
     </p>
-    <small>
-        Contributed by
-        <cite title="Contributors to this text">
-            {{ attribute.creators.join(', ') }}
-        </cite>
-    </small>
-    <span ng-show="attribute.editors.length > 0">
+    <div ng-if="attrCtrl.opus.allowFineGrainedAttribution">
         <small>
-            Edited by
-            <cite title="Editors to this text">
-                {{ attribute.editors.join(', ') }}
+            Contributed by
+            <cite title="Contributors to this text">
+                {{ attribute.creators.join(', ') }}
             </cite>
         </small>
-    </span>
+        <span ng-show="attribute.editors.length > 0">
+            <small>
+                Edited by
+                <cite title="Editors to this text">
+                    {{ attribute.editors.join(', ') }}
+                </cite>
+            </small>
+        </span>
+    </div>
 </blockquote>
 
 <div class="row-fluid" ng-show="attribute.source || (attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.original">
@@ -112,7 +114,7 @@
 
     <div text-angular text-angular-name="attribute" ng-model="attribute.text" ta-toolbar="{{richTextToolbarFull}}"></div>
 
-    <label for="significantEdit" class="inline-label" ng-show="attribute.uuid">
+    <label for="significantEdit" class="inline-label" ng-show="attribute.uuid && attrCtrl.opus.allowFineGrainedAttribution">
         <input id="significantEdit" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit"
                ng-false-value="false">
         This is a significant edit
