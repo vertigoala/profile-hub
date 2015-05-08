@@ -66,7 +66,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
 
         toggleMapPointerColourHash(false);
 
-        if (self.opus.shortName !== initialShortName && self.opus.shortName) {
+        if (self.opus.shortName !== self.initialShortName && self.opus.shortName) {
             var f = profileService.getOpus(self.opus.shortName);
             f.then(function() {
                 messageService.alert("The specified short name is already in use. Short Names must be unique across all collections.");

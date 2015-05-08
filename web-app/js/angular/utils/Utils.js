@@ -3,6 +3,7 @@
  */
 profileEditor.factory('util', function ($location, $q, config, $modal, $window) {
 
+    var KEYWORDS = ["create", "update", "delete"];
     var UUID_REGEX_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     var LAST = "last";
     var FIRST = "first";
@@ -144,6 +145,9 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
             }
         }
 
+        if (KEYWORDS.indexOf(entityId) > -1) {
+            entityId = null;
+        }
         return entityId;
     }
 
