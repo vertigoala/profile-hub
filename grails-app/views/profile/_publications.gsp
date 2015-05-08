@@ -3,7 +3,7 @@
      ng-show="pubCtrl.publications.length > 0 || !pubCtrl.readonly()"
      ng-form="PubForm">
 
-    <g:if test="${params.isOpusAdmin}">
+    <g:if test="${params.isOpusEditor}">
         <button ng-show="!pubCtrl.readonly() && !pubCtrl.newPublication" ng-click="pubCtrl.addPublication(PubForm)"
                 class="btn btn-info"><i
                 class="icon icon-plus icon-white"></i>Add Publication
@@ -62,7 +62,7 @@
             <div class="row-fluid">
                 <div class="pull-right">
                     <a ng-href="${grailsApplication.config.profile.service.url}/profile/{{pubCtrl.profileId}}/publication/{{publication.uuid}}/file" target="_blank" class="btn btn-link fa fa-download">&nbsp;&nbsp;Download</a>
-                    <g:if test="${params.isOpusAdmin}">
+                    <g:if test="${params.isOpusEditor}">
                         <button ng-click="pubCtrl.deletePublication($index)" class="btn btn-danger" ng-show="!pubCtrl.readonly()">Delete</button>
                     </g:if>
                 </div>

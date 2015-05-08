@@ -13,7 +13,6 @@ class ProfileController extends BaseController {
     AuthService authService
     ProfileService profileService
     BiocacheService biocacheService
-    SpeciesListService speciesListService
 
     def index() {}
 
@@ -197,7 +196,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_ADMIN)
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def savePublication() {
         ServletFileUpload upload = new ServletFileUpload();
         FileItemIterator iterator = upload.getItemIterator(request);
@@ -224,7 +223,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_ADMIN)
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def deletePublication() {
         if (!params.profileId || !params.publicationId) {
             badRequest "profileId and publicationId are a required parameters"
