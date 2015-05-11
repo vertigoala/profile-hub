@@ -44,7 +44,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                     }
                 });
 
-                initialShortName = data.shortName;
+                self.initialShortName = data.shortName;
 
                 toggleMapPointerColourHash(true);
 
