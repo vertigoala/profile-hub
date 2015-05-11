@@ -23,8 +23,10 @@
     </div>
 
     <div class="row-fluid" ng-cloak>
-        <alert type="warning" ng-if="profileCtrl.profile.privateMode">This profile is not available for public users.</alert>
+        <alert type="warning"
+               ng-if="profileCtrl.profile.privateMode">This profile is not available for public users.</alert>
     </div>
+
     <div class="row-fluid" ng-cloak>
         <div class="span8">
             <h1>{{profileCtrl.profile.scientificName | default:"Loading..."}}</h1>
@@ -68,15 +70,18 @@
                                 <li class="divider"></li>
                                 <li role="presentation">
                                     <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}/update"
-                                       target="_self" ng-hide="!profileCtrl.readonly()"><span class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
+                                       target="_self" ng-hide="!profileCtrl.readonly()"><span
+                                            class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
                                 </li>
                                 <li role="presentation" style="margin-left: 20px" ng-if="!profileCtrl.readonly()">
                                     Draft Mode
                                     <div class="btn-group">
-                                        <label class="btn btn-mini" ng-class="profileCtrl.profile.privateMode ? 'btn-warning' : ''"
+                                        <label class="btn btn-mini"
+                                               ng-class="profileCtrl.profile.privateMode ? 'btn-warning' : ''"
                                                ng-model="profileCtrl.profile.privateMode" btn-radio="true"
                                                ng-change="profileCtrl.saveProfile()">On</label>
-                                        <label class="btn btn-mini" ng-class="profileCtrl.profile.privateMode ? '' : 'btn-success'"
+                                        <label class="btn btn-mini"
+                                               ng-class="profileCtrl.profile.privateMode ? '' : 'btn-success'"
                                                ng-model="profileCtrl.profile.privateMode" btn-radio="false"
                                                ng-change="profileCtrl.saveProfile()">Off</label>
                                     </div>
@@ -86,7 +91,8 @@
                                 <li class="divider" ng-hide="profileCtrl.readonly()"></li>
                                 <li role="presentation">
                                     <a href="" ng-click="profileCtrl.deleteProfile()" target="_self"
-                                       ng-hide="profileCtrl.readonly() || !profileCtrl.profileId"><span class="fa fa-trash-o"></span>&nbsp;&nbsp;Delete this profile</a>
+                                       ng-hide="profileCtrl.readonly() || !profileCtrl.profileId"><span
+                                            class="fa fa-trash-o"></span>&nbsp;&nbsp;Delete this profile</a>
                                 </li>
                             </g:if>
                         </ul>
@@ -100,21 +106,30 @@
     <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
         <div class="row-fluid">
             <div class="span8">
-                <div ng-show="messages.length" ng-cloak>
-                    <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
-                </div>
-
-                <g:include controller="profile" action="attributesPanel" params="[opusId: params.opusId]"/>
-                <g:include controller="profile" action="linksPanel" params="[opusId: params.opusId]"/>
-                <g:include controller="profile" action="bhlLinksPanel" params="[opusId: params.opusId]"/>
-                <g:include controller="profile" action="specimenPanel" params="[opusId: params.opusId]"/>
-                <g:include controller="profile" action="classificationPanel" params="[opusId: params.opusId]"/>
-                <g:include controller="profile" action="taxonPanel" params="[opusId: params.opusId]"/>
-                <g:include controller="profile" action="bibliographyPanel" params="[opusId: params.opusId]"/>
-                <g:include controller="profile" action="imagesPanel" params="[opusId: params.opusId]"/>
-                <g:if test="${params.isOpusReviewer}">
-                    <g:include controller="profile" action="commentsPanel" params="[opusId: params.opusId]"/>
-                </g:if>
+                <tabset>
+                    <tab heading="Details">
+                        <div ng-show="messages.length" ng-cloak>
+                            <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
+                        </div>
+                        <g:include controller="profile" action="attributesPanel" params="[opusId: params.opusId]"/>
+                        <g:include controller="profile" action="linksPanel" params="[opusId: params.opusId]"/>
+                        <g:include controller="profile" action="bhlLinksPanel" params="[opusId: params.opusId]"/>
+                        <g:include controller="profile" action="specimenPanel" params="[opusId: params.opusId]"/>
+                        <g:include controller="profile" action="classificationPanel" params="[opusId: params.opusId]"/>
+                        <g:include controller="profile" action="taxonPanel" params="[opusId: params.opusId]"/>
+                        <g:include controller="profile" action="bibliographyPanel" params="[opusId: params.opusId]"/>
+                        <g:include controller="profile" action="imagesPanel" params="[opusId: params.opusId]"/>
+                        <g:if test="${params.isOpusReviewer}">
+                            <g:include controller="profile" action="commentsPanel" params="[opusId: params.opusId]"/>
+                        </g:if>
+                    </tab>
+                    <tab heading="Key">
+                        <div key-player key-id="profileCtrl.profile.keybaseKey"
+                             ng-show="profileCtrl.profile.keybaseKey"
+                             keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                             profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile">></div>
+                        <alert type="warning" ng-show="!profileCtrl.profile.keybaseKey">There is no key available for {{profileCtrl.profile.scientificName}}.</alert>
+                    </tab>
             </div>
 
             <div class="span4">
@@ -126,6 +141,7 @@
                 <g:include controller="profile" action="authorPanel" params="[opusId: params.opusId]"/>
             </div>
         </div>
+        </tabset>
     </g:if>
 </div>
 </body>

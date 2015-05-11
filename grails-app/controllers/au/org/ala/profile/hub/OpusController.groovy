@@ -208,4 +208,8 @@ class OpusController extends BaseController {
     def editAuthorshipPanel = {
         render template: "editAuthorship"
     }
+
+    def editKeyConfigPanel = {
+        render template: "editKeyConfig"
+    }
 }

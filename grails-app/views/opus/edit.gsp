@@ -62,6 +62,8 @@
 
     <g:include controller="opus" action="phyloUploadPanel" params="[opusId: params.opusId]"/>
 
+    <g:include controller="opus" action="editKeyConfigPanel" params="[opusId: params.opusId]"/>
+
     <g:include controller="opus" action="keyUploadPanel" params="[opusId: params.opusId]"/>
 
     <g:include controller="opus" action="editImageSourcesPanel" params="[opusId: params.opusId]"/>

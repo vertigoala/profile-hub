@@ -10,9 +10,11 @@ modules = {
         dependsOn "fontawesome"
         dependsOn "richText"
         dependsOn "google_diff"
+        dependsOn "jspath"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
+        resource url:"js/angular/directives/keyplayer.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/controllers/OpusController.js"
@@ -74,5 +76,9 @@ modules = {
 
     google_diff {
         resource url:"thirdparty/google-diff-match-patch/diff_match_patch.js"
+    }
+
+    jspath {
+        resource url:"thirdparty/jspath/jspath.min.js"
     }
 }

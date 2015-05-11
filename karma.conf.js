@@ -28,6 +28,7 @@ module.exports = function (config) {
             'web-app/thirdparty/google-diff-match-patch/diff_match_patch.js',
             'web-app/js/angular/profiles.js',
             'web-app/js/angular/utils/*.js',
+            'web-app/js/angular/directives/*.js',
             'web-app/js/angular/services/*.js',
             'web-app/js/angular/controllers/*.js',
             'test/js/specs/MockConfigModule.js',
