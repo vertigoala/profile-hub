@@ -1,7 +1,7 @@
 /**
  * Opus controller
  */
-profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter) {
+profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter, $q, $http, config) {
     var self = this;
 
     self.opus = null;
@@ -19,9 +19,12 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.valid = false;
     self.editors = [];
     self.initialShortName = null;
+    self.keybaseProjects = [];
+    self.selectedKeybaseProject = null;
 
     loadResources();
     loadOpusList();
+    loadKeybaseProjects();
 
     var orderBy = $filter("orderBy");
 
@@ -49,6 +52,10 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 toggleMapPointerColourHash(true);
 
                 loadDataResource(self.opus.dataResourceUid);
+
+                if (self.keybaseProjects && self.opus.keybaseProjectId) {
+                    setSelectedKeybaseProject();
+                }
 
                 $window.document.title = self.opus.title + " | Profile Collections";
 
@@ -81,6 +88,15 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     };
 
     function save(form) {
+        if (self.selectedKeybaseProject) {
+            self.opus.keybaseProjectId = self.selectedKeybaseProject.project_id;
+            self.opus.keybaseKeyId = self.selectedKeybaseProject.first_key.id;
+        } else {
+            self.opus.keybaseProjectId = "";
+            self.opus.keybaseKeyId = "";
+        }
+        console.log(self.opus.keybaseProjectId)
+
         var promise = profileService.saveOpus(self.opusId, self.opus);
         promise.then(function (data) {
                 toggleMapPointerColourHash(true);
@@ -285,6 +301,27 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         });
     };
 
+    function loadKeybaseProjects() {
+        console.log("loading keybase projects...");
+
+        profileService.retrieveKeybaseProjects().then(function (data) {
+            self.keybaseProjects = data;
+
+            if (self.opus && self.opus.keybaseProjectId) {
+                setSelectedKeybaseProject();
+            }
+            console.log("Keybase projects loaded");
+        });
+    }
+
+    function setSelectedKeybaseProject() {
+        angular.forEach(self.keybaseProjects, function(project) {
+            if (project.project_id == self.opus.keybaseProjectId) {
+                self.selectedKeybaseProject = project;
+            }
+        });
+    }
+
     function toggleMapPointerColourHash(shouldExist) {
         if (self.opus.mapPointColour) {
             if (!shouldExist && self.opus.mapPointColour.indexOf("#") > -1) {
@@ -318,7 +355,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 self.allSpeciesLists.push({dataResourceUid: list.dataResourceUid, listName: list.listName.trim()});
             });
             self.allSpeciesLists = orderBy(self.allSpeciesLists, "listName");
-            console.log(JSON.stringify(self.allSpeciesLists['dr1266']))
         });
     }
 

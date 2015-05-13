@@ -13,6 +13,7 @@ class OpusController extends BaseController {
     CollectoryService collectoryService
     UserService userService
     ProfileService profileService
+    KeybaseService keybaseService
 
     def index() {
         render view: 'index', model: [
@@ -135,6 +136,12 @@ class OpusController extends BaseController {
 
             handle response
         }
+    }
+
+    def retrieveKeybaseProjects() {
+        def response = keybaseService.retrieveAllProjects()
+
+        handle response
     }
 
     def searchPanel = {

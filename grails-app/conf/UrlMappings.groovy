@@ -64,6 +64,8 @@ class UrlMappings {
         "/dataResource/$dataResourceUid" controller: "collectory", action: [GET: "getResource"]
         "/dataResource/" controller: "collectory", action: [GET: "list"]
 
+        "/keybase/projects" controller: "opus", action: [GET: "retrieveKeybaseProjects"]
+
         "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
 
         "/specimen/$specimenId"(controller: "biocache", action: "lookupSpecimen")

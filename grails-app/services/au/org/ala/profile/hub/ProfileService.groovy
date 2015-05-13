@@ -9,6 +9,7 @@ class ProfileService {
     BieService bieService
     WebService webService
     AuthService authService
+    KeybaseService keybaseService
 
     def getOpus(String opusId = "") {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}")?.resp
@@ -68,7 +69,7 @@ class ProfileService {
                     pageTitle: opus.title ?: HubConstants.DEFAULT_OPUS_TITLE
             ]
 
-            profile.keybaseKey = findKey(profile.classification, opus.keybaseProjectId)
+            profile.keybaseKey = keybaseService.findKeyForTaxon(profile.classification, opus.keybaseProjectId)
 
         } catch (FileNotFoundException e) {
             log.error("Profile ${profileId} not found")
@@ -79,39 +80,6 @@ class ProfileService {
         }
 
         result
-    }
-
-    def findKey(classification, projectId) {
-        if (!classification) {
-            return null
-        }
-        String taxon
-        if (classification.genus) {
-            taxon = classification.genus;
-        } else if (classification.family) {
-            taxon = classification.family;
-        } else if (classification.order) {
-            taxon = classification.order;
-        } else if (classification.subClass) {
-            taxon = classification.subClass;
-        } else if (classification.subClazz) {
-            taxon = classification.subClazz;
-        } else if (classification.class) {
-            taxon = classification.class;
-        } else if (classification.clazz) {
-            taxon = classification.clazz;
-        }
-
-        String key = null
-
-        def json = webService.get("${grailsApplication.config.keybase.taxon.lookup}${taxon}").resp
-        json.Items.each {
-            if (it.ProjectsID == projectId) {
-                key = it.KeysID
-            }
-        }
-
-        key
     }
 
     def deleteProfile(String opusId, String profileId) {

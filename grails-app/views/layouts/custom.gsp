@@ -84,7 +84,8 @@
         contextPath: '${request.contextPath}',
         readonly: ${!edit},
         currentUser: '${params.currentUser}',
-        profileServiceUrl: '${grailsApplication.config.profile.service.url}'
+        profileServiceUrl: '${grailsApplication.config.profile.service.url}',
+        keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}'
      });
 </r:script>
 

@@ -501,6 +501,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 clearCache();
             });
             return util.toStandardPromise(future);
+        },
+
+        retrieveKeybaseProjects: function() {
+            console.log("Retrieving keybase projects");
+
+            var future = $http.get(util.contextRoot() + "/keybase/projects", {cache: true});
+            future.then(function(response) {
+                console.log("Keybase projects retreived with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
         }
     }
 });
