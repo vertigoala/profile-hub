@@ -31,7 +31,7 @@
         <div class="span8">
             <h1>{{profileCtrl.profile.scientificName | default:"Loading..."}}</h1>
             <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
-                <div ng-repeat="author in profileCtrl.profile.authorship | filter:{category: 'Author'}">
+                <div ng-repeat="author in profileCtrl.profile.authorship | filter:{category: 'Author'}:true">
                     <i>By {{author.text}}</i>
                 </div>
                 <g:if test="${grailsApplication.config.feature.publication == 'true'}">
