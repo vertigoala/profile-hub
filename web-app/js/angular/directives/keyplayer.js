@@ -1,4 +1,4 @@
-profileEditor.directive('keyPlayer', function () {
+profileEditor.directive('keyPlayer', function ($browser) {
     return {
         restrict: 'A',
         require: ['?keyId', '?profileUrl', '?keybaseUrl'],
@@ -7,7 +7,7 @@ profileEditor.directive('keyPlayer', function () {
             profileUrl: '@',
             keybaseUrl: '@'
         },
-        templateUrl: 'static/templates/keyplayer.html',
+        templateUrl: $browser.baseHref() + 'static/templates/keyplayer.html',
         controller: ['$scope', '$http', '$window', function ($scope, $http, $window) {
             angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";.keyplayer-panel{overflow: auto; max-height: 300px; min-height: 300px}</style>');
 
