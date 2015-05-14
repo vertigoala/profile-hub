@@ -9,21 +9,4 @@
             </li>
         </ul>
     </div>
-
-    <div class="bs-docs-example ng-cloak" id="browse_names" data-content="Nomenclature" ng-cloak
-         ng-show="taxonCtrl.speciesProfile && taxonCtrl.speciesProfile.taxonName">
-        <ul style="list-style: none; margin-left:0px;">
-            <li>
-                <blockquote style="border-left:none;">
-                    <p>{{taxonCtrl.speciesProfile.taxonName.nameComplete}} {{taxonCtrl.speciesProfile.taxonName.authorship}}</p>
-                </blockquote>
-            </li>
-            <li ng-repeat="synonym in taxonCtrl.speciesProfile.synonyms">
-                <blockquote class="small no-border">
-                    <p>{{synonym.nameString}}</p>
-                    <cite ng-if="synonym.referencedIn">- {{synonym.referencedIn | default:"Reference not available"}}</cite>
-                </blockquote>
-            </li>
-        </ul>
-    </div>
 </div>

@@ -1,5 +1,6 @@
 modules = {
     profiles {
+        resource url:"css/nsl.css"
         resource url:"css/profiles.css"
         dependsOn "jquery"
         dependsOn "bootstrap_fileupload"

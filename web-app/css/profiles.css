@@ -267,7 +267,7 @@ input[type=checkbox] + label, input[type=radio] + label {
 
 .collection-thumbnail {
     width: 350px;
-    height:100px
+    height: 100px
 }
 
 .center {
@@ -296,7 +296,7 @@ input[type=checkbox] + label, input[type=radio] + label {
     list-style: none;
 }
 
-.btn+.dropdown-menu {
+.btn + .dropdown-menu {
     left: auto !important;
     z-index: 9999 !important;
     margin-top: 15px !important;
@@ -330,7 +330,7 @@ input[type=file] {
     overflow: scroll;
     font-family: inherit;
     font-size: 100%;
-    margin:20px 0;
+    margin: 20px 0;
 }
 
 .single-line-editor > .ta-editor {
@@ -352,37 +352,41 @@ input[type=file] {
 
 /* Species status icons */
 .status {
-    height:40px;
-    width:40px;
-    margin:0 6px 12px 0;
-    display:inline-block;
-    font-weight:bold;
-    line-height:40px;
-    color:#333a3f;
-    text-align:center;
+    height: 40px;
+    width: 40px;
+    margin: 0 6px 12px 0;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 40px;
+    color: #333a3f;
+    text-align: center;
     -moz-border-radius: 2em;
     -webkit-border-radius: 2em;
     border-radius: 2em; /* Opera 10.5, IE 9 */
-    font-variant:small-caps;
-    border:1px solid #3d464c;
-    background-color:#fff;
+    font-variant: small-caps;
+    border: 1px solid #3d464c;
+    background-color: #fff;
 }
 
 .status.green {
-    background-color:#43c205;
-    border-color:#43c205;
-    color:#fff;
+    background-color: #43c205;
+    border-color: #43c205;
+    color: #fff;
 }
+
 .status.yellow {
-    background-color:#ffbb00;
-    border-color:#ffbb00;
+    background-color: #ffbb00;
+    border-color: #ffbb00;
 }
 
 .status.red {
-    background-color:#e30202;
-    border-color:#e30202;
-    color:#fff;
+    background-color: #e30202;
+    border-color: #e30202;
+    color: #fff;
 }
+/* ---- */
+
+/* audit history diff */
 
 ins, .diff_insert {
     background-color: lightgreen !important;
@@ -393,3 +397,15 @@ del, .diff_delete {
     background-color: orange !important;
     text-decoration: line-through;
 }
+
+/* ---- */
+
+/* NSL CSS overrides */
+editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
+    display: none;
+}
+
+.well.instances {
+    background: white;
+}
+/* ---- */

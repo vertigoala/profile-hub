@@ -1,7 +1,7 @@
 /**
  * Profile controller
  */
-profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal, $window, $filter) {
+profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal, $window, $filter, $sce) {
     var self = this;
 
     self.profile = null;
@@ -27,6 +27,8 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                     self.profile = data.profile;
                     self.profileId = data.profile.uuid;
                     self.opus = data.opus;
+
+                    self.nslUrl = $sce.trustAsResourceUrl(config.nslNameUrl + self.profile.nslNameIdentifier + ".html");
 
                     $window.document.title = self.profile.scientificName + " | " + self.opus.title;
                 },

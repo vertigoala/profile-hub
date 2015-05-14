@@ -85,7 +85,8 @@
         readonly: ${!edit},
         currentUser: '${params.currentUser}',
         profileServiceUrl: '${grailsApplication.config.profile.service.url}',
-        keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}'
+        keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}',
+        nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}'
      });
 </r:script>
 

@@ -3,7 +3,7 @@
  */
 profileEditor.controller('TaxonController', function (profileService, util, messageService) {
     var self = this;
-    
+
     self.speciesProfile = null;
     self.classifications = [];
 
@@ -54,6 +54,7 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
                     console.log("Fetched species profile");
 
                     self.speciesProfile = data;
+
                     messageService.pop();
                 },
                 function () {
@@ -62,35 +63,4 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
             );
         }
     }
-
-    //self.taxaUpload = function(){
-    //    console.log("Taxa upload....");
-    //    var file = document.getElementById('taxaUploadFile').files[0];
-    //    var formData = new FormData();
-    //    formData.append("taxaUploadFile", file);
-    //    formData.append("opusId", "${opus.uuid}");
-    //
-    //    //send you binary data via $http or $resource or do anything else with it
-    //    $.ajax({
-    //        url: '${grailsApplication.config.profile.service.url}/opus/taxaUpload',
-    //        type: 'POST',
-    //        data: formData,
-    //        cache: false,
-    //        dataType: 'json',
-    //        processData: false, // Don't process the files
-    //        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-    //        success: function(data, textStatus, jqXHR){
-    //            alert("Successful upload - Loaded:" + data.taxaCreated + ", lines skipped: " + data.linesSkipped + ", already exists: " + data.alreadyExists);
-    //        },
-    //        error: function(jqXHR, textStatus, errorThrown){
-    //            // Handle errors here
-    //            alert("error upload - " + textStatus);
-    //            console.log('ERRORS: ' + textStatus);
-    //            console.log(errorThrown)
-    //            // STOP LOADING SPINNER
-    //        }
-    //    });
-    //};
-
-    //$(":file").filestyle();
 });

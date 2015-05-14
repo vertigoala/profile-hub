@@ -105,7 +105,7 @@
 
     <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
         <div class="row-fluid">
-            <div class="span8">
+            <div class="span8" ng-cloak>
                 <tabset>
                     <tab heading="Details">
                         <div ng-show="messages.length" ng-cloak>
@@ -123,7 +123,11 @@
                             <g:include controller="profile" action="commentsPanel" params="[opusId: params.opusId]"/>
                         </g:if>
                     </tab>
-                    <tab heading="Key">
+                    <tab heading="Nomenclature">
+                        <ng-include src="profileCtrl.nslUrl" ng-if="profileCtrl.profile.nslNameIdentifier">Loading...</ng-include>
+                        <alert type="warning" ng-if="!profileCtrl.profile.nslNameIdentifier">No matching name was found at <a href="https://biodiversity.org.au/nsl/services/">https://biodiversity.org.au/nsl/services/</a> for this profile</alert>
+                    </tab>
+                    <tab heading="Key" ng-show="profileCtrl.opus.keybaseProjectId">
                         <div key-player key-id="profileCtrl.profile.keybaseKey"
                              ng-show="profileCtrl.profile.keybaseKey"
                              keybase-url="${grailsApplication.config.keybase.key.lookup}"

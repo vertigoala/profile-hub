@@ -4,7 +4,6 @@ import grails.converters.JSON
 import groovyx.net.http.HTTPBuilder
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.ByteArrayBody
-import org.apache.http.entity.mime.content.ContentBody
 import org.apache.http.entity.mime.content.StringBody
 
 import static groovyx.net.http.Method.*
