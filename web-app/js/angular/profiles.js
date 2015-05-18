@@ -1,6 +1,6 @@
 var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'textAngular']);
 
-profileEditor.config(function ($locationProvider) {
+profileEditor.config(function () {
 
 });
 

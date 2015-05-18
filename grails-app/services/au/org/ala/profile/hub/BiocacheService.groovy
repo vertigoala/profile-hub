@@ -24,4 +24,8 @@ class BiocacheService {
 
         webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json")
     }
+
+    def lookupSpecimen(String specimenId) {
+        webService.get("${grailsApplication.config.biocache.base.url}/ws/occurrences/${specimenId}")
+    }
 }

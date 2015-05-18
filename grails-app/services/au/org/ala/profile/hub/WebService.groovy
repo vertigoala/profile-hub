@@ -21,13 +21,19 @@ class WebService {
     def grailsApplication
     UserService userService
 
-    def get(String url, boolean includeUserId) {
+    def get(String url, boolean includeUserId, boolean json = true) {
         log.debug("Fetching data from ${url}")
         def conn = null
         try {
             conn = configureConnection(url, includeUserId)
             String resp = responseText(conn)
-            return [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+
+            Map result
+            if (json) {
+                result = [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+            } else {
+                result = [resp: resp, statusCode: HttpStatus.SC_OK]
+            }
         } catch (SocketTimeoutException e) {
             def error = [error: "Timed out calling web service. URL= ${url}.", statusCode: HttpStatus.SC_GATEWAY_TIMEOUT]
             log.error error
@@ -62,8 +68,8 @@ class WebService {
         conn
     }
 
-    def get(String url) {
-        return get(url, true)
+    def get(String url, json = true) {
+        return get(url, true, json)
     }
 
 

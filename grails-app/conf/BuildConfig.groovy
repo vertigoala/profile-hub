@@ -45,6 +45,7 @@ grails.project.dependency.resolution = {
         compile ":modernizr:2.7.1.1"
         compile ":rendering:1.0.0"
         compile ":csv:0.3.1"
+        compile ":wkhtmltopdf:0.1.8"
         runtime ":resources:1.2.14"
         runtime ":ala-bootstrap2:1.4"
         runtime ":ala-auth:1.2"

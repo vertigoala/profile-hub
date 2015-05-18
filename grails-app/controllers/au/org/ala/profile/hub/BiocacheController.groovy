@@ -2,7 +2,7 @@ package au.org.ala.profile.hub
 
 class BiocacheController extends BaseController {
 
-    WebService webService
+    BiocacheService biocacheService
 
     def index() {}
 
@@ -10,7 +10,7 @@ class BiocacheController extends BaseController {
         if (!params.specimenId) {
             badRequest()
         } else {
-            def response = webService.get("${grailsApplication.config.biocache.base.url}/ws/occurrences/${params.specimenId}")
+            def response = biocacheService.lookupSpecimen(params.specimenId)
 
             handle response
         }

@@ -59,7 +59,7 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
                     specimen.saved = saved;
                 },
                 function () {
-                    messageService.alert("Failed to lookup speciment information.");
+                    messageService.alert("Failed to lookup specimen information.");
                 }
             );
         } else {
@@ -69,7 +69,7 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
 
     self.isValid = function() {
         // if the specimen list is empty but the profile has ids, then the user probably deleted everything - treat this as valid
-        var valid = self.specimens.length > 0 || (self.specimens.length == 0 && self.profile && self.profile.specimentIds &&  self.profile.specimenIds.length > 0);
+        var valid = self.specimens.length > 0 || (self.specimens.length == 0 && self.profile && self.profile.specimenIds &&  self.profile.specimenIds.length > 0);
         angular.forEach(self.specimens, function(spec) {
             valid = valid && util.isUuid(spec.id);
         });
@@ -90,7 +90,7 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
     self.deleteSpecimen = function (idx, form) {
         self.specimens.splice(idx, 1);
 
-        if (self.specimens.length > 0 || (self.specimens.length == 0 && self.profile.specimentIds && self.profile.specimenIds.length > 0)) {
+        if (self.specimens.length > 0 || (self.specimens.length == 0 && self.profile.specimenIds && self.profile.specimenIds.length > 0)) {
             form.$setDirty();
         } else {
             form.$setPristine();

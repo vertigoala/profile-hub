@@ -5,6 +5,7 @@
     <title>Profile</title>
 
     <r:require module="profiles"/>
+
 </head>
 
 <body>
@@ -62,8 +63,8 @@
                                 <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/json"
                                    target="_blank"><span class="fa fa-file-text-o"></span>&nbsp;&nbsp;Export as JSON</a>
                             </li>
-                            <li role="presentation">
-                                <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/pdf"
+                            <li role="presentation" ng-controller="ExportController as exportCtrl">
+                                <a href="" ng-click="exportCtrl.exportPdf()"
                                    target="_blank"><span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;Export as PDF</a>
                             </li>
                             <g:if test="${params.isOpusEditor}">
@@ -146,8 +147,36 @@
             </div>
         </div>
         </tabset>
+
     </g:if>
+
+<!-- template for the popup displayed when Export as PDF is selected -->
+<script type="text/ng-template" id="exportPdf.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Export as PDF</h3>
+    </div>
+
+    <div class="modal-body">
+        <p>
+            Select the items you wish to include in the PDF.
+        </p>
+
+        <div ng-repeat="o in pdfCtrl.options | orderBy:'name'">
+            <label for="{{o.id}}" class="inline-label">
+                <input id="{{o.id}}" type="checkbox" name="o.name" ng-model="o.selected" ng-false-value="false">
+                {{o.name}}
+            </label>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="pdfCtrl.ok()" >OK</button>
+        <button class="btn btn-warning" ng-click="pdfCtrl.cancel()">Cancel</button>
+    </div>
+    </script>
 </div>
 </body>
 
 </html>
+
+

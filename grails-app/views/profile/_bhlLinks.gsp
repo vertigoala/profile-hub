@@ -10,6 +10,7 @@
                     <span ng-show="link.description != ''">
                         Description: {{link.description}}
                     </span>
+                    <br/>
                     <cite ng-show="link.thumbnailUrl">
                         <span>
                             BHL title: {{link.fullTitle}}
