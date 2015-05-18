@@ -1,7 +1,7 @@
 /**
  * Taxon controller
  */
-profileEditor.controller('TaxonController', function (profileService, util, messageService) {
+profileEditor.controller('TaxonController', function (profileService, util, messageService, $modal) {
     var self = this;
 
     self.speciesProfile = null;
@@ -25,6 +25,24 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
                 messageService.alert("An error occurred while retrieving the profile.");
             }
         );
+    };
+
+    self.showChildren = function(level, scientificName) {
+        var result = profileService.profileSearchByTaxonLevel(self.opusId, level, 1000, 0);
+
+        result.then(function(data) {
+            $modal.open({
+                templateUrl: "showTaxonChildren.html",
+                controller: "TaxonChildrenController",
+                controllerAs: "taxonChildrenCtrl",
+                size: "lg",
+                resolve: {
+                    taxon: function() {
+                        return {level: level, scientificName: scientificName, count: data[scientificName]};
+                    }
+                }
+            });
+        })
     };
 
     function loadClassifications() {
@@ -62,5 +80,42 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
                 }
             );
         }
+    }
+});
+
+
+
+
+/**
+ * Controller for the popup modal dialog showing the list of child taxa
+ */
+profileEditor.controller('TaxonChildrenController', function (profileService, util, $modalInstance, taxon) {
+    var self = this;
+
+    self.pageSize = 10;
+    self.taxon = taxon;
+    self.opusId = util.getEntityId("opus");
+
+    self.loadChildren = function(offset) {
+        if (offset === undefined) {
+            offset = 0;
+        }
+
+        var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon.level, taxon.scientificName, self.pageSize, offset);
+        results.then(function (data) {
+                console.log("Found " + data.length + " results");
+                self.profiles = data;
+                self.taxon.count
+            },
+            function () {
+                messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
+            }
+        );
+    };
+
+    self.loadChildren(0);
+
+    self.cancel = function() {
+        $modalInstance.dismiss("cancel");
     }
 });
