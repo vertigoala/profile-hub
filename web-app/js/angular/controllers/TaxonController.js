@@ -28,6 +28,11 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
     };
 
     self.showChildren = function(level, scientificName) {
+        if (level == "class") {
+            level = "clazz";
+        } else if (level == "subclass") {
+            level = "subclazz";
+        }
         var result = profileService.profileSearchByTaxonLevel(self.opusId, level, 1000, 0);
 
         result.then(function(data) {

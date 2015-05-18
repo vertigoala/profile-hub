@@ -6,9 +6,9 @@
                 <span ng-if="classification.profileUuid">
                     <a href="${request.contextPath}/opus/{{taxonCtrl.opusId}}/profile/{{classification.profileUuid}}"
                        ng-if="classification.profileUuid" target="_self">{{classification.rank | capitalize}}: {{classification.scientificName}}</a>
-                    &nbsp;&nbsp;<a href="" class="fa fa-list-ul" title="Show members of {{classification.rank}} {{classification.scientificName}}" ng-click="taxonCtrl.showChildren(classification.rank, classification.scientificName)"></a>
                 </span>
                 <span ng-if="!classification.profileUuid">{{classification.rank | capitalize}}: {{classification.scientificName}}</span>
+                &nbsp;&nbsp;<a href="" class="fa fa-list-ul" title="Show members of {{classification.rank}} {{classification.scientificName}}" ng-click="taxonCtrl.showChildren(classification.rank, classification.scientificName)"></a>
             </li>
         </ul>
     </div>
