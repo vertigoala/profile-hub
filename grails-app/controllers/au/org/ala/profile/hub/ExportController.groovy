@@ -35,7 +35,7 @@ class ExportController extends BaseController {
                 if (params.taxonomy || params.conservation) {
                     model.speciesProfile = profileService.getSpeciesProfile(model.profile.guid)?.resp
 
-                    model.speciesProfile.conservationStatuses?.each {
+                    model.speciesProfile?.conservationStatuses?.each {
                         it.colour = getColourForStatus(it.status)
                         it.regionAbbrev = statusRegions[it.region]
                     }
