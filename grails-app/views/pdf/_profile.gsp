@@ -54,7 +54,7 @@
         <img src="${mapImageUrl}"/>
     </g:if>
 
-    <g:if test="${options.conservation && speciesProfile.conservationStatuses}">
+    <g:if test="${options.conservation && speciesProfile?.conservationStatuses}">
         <h2>Conservation Status</h2>
         <ul>
             <g:each in="${speciesProfile.conservationStatuses.sort({it.region})}" var="status">

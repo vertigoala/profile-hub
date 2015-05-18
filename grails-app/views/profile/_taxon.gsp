@@ -4,7 +4,7 @@
         <ul>
             <li ng-repeat="classification in taxonCtrl.classifications">
                 <span ng-if="classification.profileUuid">
-                    <a href="${request.contextPath}/opus/{{taxonCtrl.opusId}}/profile/{{classification.profileUuid}}"
+                    <a href="${request.contextPath}/opus/{{taxonCtrl.opusId}}/profile/{{classification.scientificName}}"
                        ng-if="classification.profileUuid" target="_self">{{classification.rank | capitalize}}: {{classification.scientificName}}</a>
                 </span>
                 <span ng-if="!classification.profileUuid">{{classification.rank | capitalize}}: {{classification.scientificName}}</span>
