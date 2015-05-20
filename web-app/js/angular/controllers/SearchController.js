@@ -12,8 +12,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
     self.orderedTaxonLevels = [{key: "kingdom", name: "Kingdom", order: 0},
         {key: "phylum", name: "Phylum", order: 1},
-        {key: "clazz", name: "Class", order: 2},
-        {key: "subclazz", name: "Subclass", order: 3},
+        {key: "class", name: "Class", order: 2},
+        {key: "subclass", name: "Subclass", order: 3},
         {key: "order", name: "Order", order: 4},
         {key: "family", name: "Family", order: 5},
         {key: "genus", name: "Genus", order: 6}];
