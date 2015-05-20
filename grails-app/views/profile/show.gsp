@@ -30,7 +30,7 @@
 
     <div class="row-fluid" ng-cloak>
         <div class="span8">
-            <h1>{{profileCtrl.profile.scientificName | default:"Loading..."}}</h1>
+            <h1>{{profileCtrl.profile.scientificName | default:"Loading..."}} <span class="inline-sub-heading">{{profileCtrl.profile.nameAuthor}}</span></h1>
             <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
                 <div ng-repeat="author in profileCtrl.profile.authorship | filter:{category: 'Author'}:true">
                     <i>By {{author.text}}</i>

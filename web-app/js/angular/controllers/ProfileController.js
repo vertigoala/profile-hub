@@ -171,6 +171,7 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
 
     self.opusId = opusId;
     self.scientificName = "";
+    self.nameAuthor = "";
     self.error = "";
 
     self.ok = function () {
@@ -179,7 +180,7 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
             if (matches.length > 0) {
                 self.error = "A profile already exists for this scientific name.";
             } else {
-                var future = profileService.createProfile(self.opusId, self.scientificName);
+                var future = profileService.createProfile(self.opusId, self.scientificName, self.nameAuthor);
                 future.then(function (profile) {
                         if (profile) {
                             $modalInstance.close(profile);

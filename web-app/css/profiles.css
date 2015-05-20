@@ -1,3 +1,14 @@
+.inline-heading {
+    display: inline;
+}
+
+.inline-sub-heading {
+    display: inline;
+    font-weight: lighter;
+}
+
+
+
 .ng-dirty {
     background-color: #fffafa;
     border-color: #ffc40d;
