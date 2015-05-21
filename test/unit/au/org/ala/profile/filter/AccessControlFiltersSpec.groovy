@@ -22,6 +22,10 @@ class AccessControlFiltersSpec extends Specification {
 
     def controller = new SecuredController()
 
+    def setup() {
+        grailsApplication.config.security.authorisation.disable = false
+    }
+
     void "ALA Administrators are allowed to do everything"() {
         setup:
         // need to do this because grailsApplication.controllerClasses is empty in the filter when run from the unit test
