@@ -28,3 +28,27 @@ profileEditor.directive('ngEnter', function () {
         });
     };
 });
+
+
+
+/**
+ *  ALA Admin controller
+ */
+profileEditor.controller('ALAAdminController', function ($http, util) {
+    var self = this;
+
+    self.message = null;
+    self.timestamp = null;
+
+    var future = $http.get(util.contextRoot() + "/admin/message");
+    future.then(function (response) {
+
+        self.message = response.data.message;
+        self.timestamp = response.data.timestamp;
+    });
+
+    self.postMessage = function () {
+        console.log("dsfkljghdfkgjh")
+        $http.post(util.contextRoot() + "/admin/message", {message: self.message})
+    };
+});

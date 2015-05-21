@@ -18,6 +18,13 @@
                                tabindex="-1"
                                href="${grailsApplication.config.casServerName}/userdetails/myprofile">My Profile</a>
                         </li>
+                        <g:if test="${params.isALAAdmin}">
+                            <li role="presentation">
+                                <a role="menuitem"
+                                   tabindex="-1"
+                                   href="${request.contextPath}/admin">Admin</a>
+                            </li>
+                        </g:if>
                         <li role="presentation">
                             <a role="menuitem"
                                tabindex="-1"

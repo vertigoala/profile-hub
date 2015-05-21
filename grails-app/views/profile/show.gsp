@@ -31,6 +31,7 @@
     <div class="row-fluid" ng-cloak>
         <div class="span8">
             <h1>{{profileCtrl.profile.scientificName | default:"Loading..."}} <span class="inline-sub-heading">{{profileCtrl.profile.nameAuthor}}</span></h1>
+            <alert type="warning" ng-show="!profileCtrl.profile.guid && !profileCtrl.readonly()" ng-cloak>Unable to find a match for {{profileCtrl.profile.scientificName}} in the name index.</alert>
             <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
                 <div ng-repeat="author in profileCtrl.profile.authorship | filter:{category: 'Author'}:true">
                     <i>By {{author.text}}</i>

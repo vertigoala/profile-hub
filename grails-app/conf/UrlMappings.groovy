@@ -81,6 +81,9 @@ class UrlMappings {
 
         "/logout/logout" controller: "logout", action: "logout"
 
+        "/admin/message" controller: "admin", action: [GET: "getMessage", POST: "postMessage"]
+        "/admin" controller: "admin", action: [GET: "index"]
+
         "500"(view: "/error")
         "404"(view: "/notFound")
         "403"(view: "/notAuthorised")

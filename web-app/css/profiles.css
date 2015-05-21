@@ -7,7 +7,15 @@
     font-weight: lighter;
 }
 
+.admin-message {
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+}
 
+.admin-message-text {
+    font-size: 24px;
+}
 
 .ng-dirty {
     background-color: #fffafa;

@@ -55,6 +55,12 @@
 </div>
 
 
+<g:if test="${application.getAttribute("alaAdminMessage")}">
+    <div class="row-fluid alert-danger admin-message">
+        <span class="admin-message-text">${application.getAttribute("alaAdminMessage")}</span> (${application.getAttribute("alaAdminMessageTimestamp")})
+    </div>
+</g:if>
+
 
 <div class="vertical-pad"/>
 <div class="${fluidLayout ? 'container-fluid' : 'container'}" id="main-content">
