@@ -41,17 +41,58 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render(view: 'edit', model: [
-                    logoUrl    : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
-                    bannerUrl  : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    pageTitle  : opus.title ?: DEFAULT_OPUS_TITLE,
-                    glossaryUrl: getGlossaryUrl(opus),
-                    currentUser: authService.getDisplayName()
+                    logoUrl     : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                    bannerUrl   : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                    pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
+                    glossaryUrl : getGlossaryUrl(opus),
+                    aboutPageUrl: getAboutUrl(opus),
+                    currentUser : authService.getDisplayName()
             ])
+        }
+    }
+
+    def about() {
+        if (!params.opusId) {
+            badRequest()
+        } else {
+            def opus = profileService.getOpus(params.opusId as String)
+
+            if (!opus) {
+                notFound()
+            } else {
+                render(view: 'about', model: [
+                        logoUrl: opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                        bannerUrl: opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                        pageTitle: "About ${opus.title}" ?: DEFAULT_OPUS_TITLE
+                ])
+            }
+        }
+    }
+
+    def getAboutHtml() {
+        def response = profileService.getOpusAboutPage(params.opusId as String)
+
+        handle response
+    }
+
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def updateAboutHtml() {
+        def json = request.getJSON()
+        if (!params.opusId || !json || !json.containsKey("aboutHtml")) {
+            badRequest()
+        } else {
+            def response = profileService.updateOpusAboutPage(params.opusId as String, json.aboutHtml)
+
+            handle response
         }
     }
 
     private getGlossaryUrl(opus) {
         opus.glossaryUuid ? "${request.contextPath}/opus/${opus.uuid}/glossary" : ""
+    }
+
+    private getAboutUrl(opus) {
+        opus.hasAboutPage ? "${request.contextPath}/opus/${opus.uuid}/about" : ""
     }
 
     def show() {
@@ -61,10 +102,11 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render view: 'show', model: [
-                    logoUrl    : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
-                    bannerUrl  : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    pageTitle  : opus.title ?: DEFAULT_OPUS_TITLE,
-                    glossaryUrl: getGlossaryUrl(opus)
+                    logoUrl     : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                    bannerUrl   : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                    pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
+                    glossaryUrl : getGlossaryUrl(opus),
+                    aboutPageUrl: getAboutUrl(opus)
             ]
         }
     }
@@ -218,5 +260,9 @@ class OpusController extends BaseController {
 
     def editKeyConfigPanel = {
         render template: "editKeyConfig"
+    }
+
+    def editAboutPanel = {
+        render template: "editAboutPage"
     }
 }

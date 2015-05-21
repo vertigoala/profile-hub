@@ -32,6 +32,14 @@ class ProfileService {
         webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}")
     }
 
+    def getOpusAboutPage(String opusId) {
+        webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/about")
+    }
+
+    def updateOpusAboutPage(String opusId, String html) {
+        webService.doPut("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/about", [opusId: opusId, aboutHtml: html])
+    }
+
     def getVocab(String opusId, String vocabId = "") {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/vocab/${enc(vocabId)}")
     }

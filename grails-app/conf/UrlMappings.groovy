@@ -45,6 +45,10 @@ class UrlMappings {
         "/opus/$opusId/vocab/$vocabId/replaceUsages" controller: "vocab", action: [POST: "replaceUsagesOfTerm"]
         "/opus/$opusId/vocab/$vocabId" controller: "vocab", action: [GET: "show"]
 
+        "/opus/$opusId/about/json" controller: "opus", action: [GET: "getAboutHtml"]
+        "/opus/$opusId/about/update" controller: "opus", action: [PUT: "updateAboutHtml"]
+        "/opus/$opusId/about" controller: "opus", action: [GET: "about"]
+
         "/opus/$opusId/glossary/json" controller: "glossary", action: [GET: "getGlossary"]
         "/opus/$opusId/glossary/upload" controller: "glossary", action: [POST: "upload"]
         "/opus/$opusId/glossary/item/create" controller: "glossary", action: [PUT: "saveItem"]

@@ -64,6 +64,28 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        getOpusAbout: function (opusId) {
+            console.log("Fetching about page for opus " + opusId);
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/about/json", {cache: true});
+            future.then(function (response) {
+                console.log("Opus fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        updateOpusAbout: function (opusId, html) {
+            console.log("Updating about page for opus " + opusId);
+
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/about/update", {opusId: opusId, aboutHtml: html});
+            future.then(function (response) {
+                console.log("Opus fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         listOpus: function() {
             console.log("Fetching all opuses");
             var future = $http.get(util.contextRoot() + "/opus/list", {cache: true});

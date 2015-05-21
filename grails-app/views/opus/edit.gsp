@@ -79,6 +79,8 @@
     <g:include controller="opus" action="editAuthorshipPanel" params="[opusId: params.opusId]"/>
 
     <g:include controller="opus" action="editGlossaryPanel" params="[opusId: params.opusId]"/>
+
+    <g:include controller="opus" action="editAboutPanel" params="[opusId: params.opusId]"/>
 </div>
 
 </body>

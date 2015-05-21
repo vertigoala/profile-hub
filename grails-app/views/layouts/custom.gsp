@@ -45,6 +45,9 @@
                 <g:if test="${glossaryUrl}">
                     <a href="${glossaryUrl}" class="pull-right white" target="_blank">Glossary</a>
                 </g:if>
+                <g:if test="${aboutPageUrl}">
+                    <a href="${aboutPageUrl}" class="pull-right white" target="_blank">About&nbsp;&nbsp;</a>
+                </g:if>
             </div>
 
         </div>
