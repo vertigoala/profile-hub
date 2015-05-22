@@ -145,6 +145,10 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
             }
         }
 
+        if (entityId && entityId.indexOf(";") > -1) {
+            entityId = entityId.substring(0, entityId.indexOf(";"))
+        }
+
         if (KEYWORDS.indexOf(entityId) > -1) {
             entityId = null;
         }

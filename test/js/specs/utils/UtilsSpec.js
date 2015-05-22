@@ -73,6 +73,10 @@ describe("Util tests", function () {
         location.path("/opus/opusId3/profile/profileId3/");
 
         expect(service.getEntityId("profile")).toBe("profileId3");
+
+        location.path("/opus/opusId3/profile/profileId3;jsessionid=349845g4g4");
+
+        expect(service.getEntityId("profile")).toBe("profileId3");
     });
 
 });
