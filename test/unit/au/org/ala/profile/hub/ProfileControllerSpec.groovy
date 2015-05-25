@@ -49,7 +49,7 @@ class ProfileControllerSpec extends Specification {
 
     def "edit should return the profile, with edit and current user properties added to the model"() {
         setup:
-        profileService.getProfile(_, _) >> [profile: "bla"]
+        profileService.getProfile(_, _) >> [profile: "bla", opus: [title: "opus"]]
 
         when:
         params.opusId = "opus"
@@ -85,7 +85,7 @@ class ProfileControllerSpec extends Specification {
 
     def "show should return the profile, with edit = false added to the model"() {
         setup:
-        profileService.getProfile(_, _) >> [profile: "bla"]
+        profileService.getProfile(_, _) >> [profile: "bla", opus: [title: "opus"]]
 
         when:
         params.profileId = "bla"

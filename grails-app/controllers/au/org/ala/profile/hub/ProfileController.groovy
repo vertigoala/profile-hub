@@ -27,7 +27,7 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: true, currentUser: authService.getDisplayName(), glossaryUrl: getGlossaryUrl(profile.opus)]
+                model << [edit: true, currentUser: authService.getDisplayName(), glossaryUrl: getGlossaryUrl(profile.opus), aboutPageUrl: getAboutUrl(profile.opus)]
                 render view: "show", model: model
             }
         }
@@ -43,7 +43,7 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: false, glossaryUrl: getGlossaryUrl(profile.opus),]
+                model << [edit: false, glossaryUrl: getGlossaryUrl(profile.opus), aboutPageUrl: getAboutUrl(profile.opus)]
                 render view: "show", model: model
             }
         }
@@ -249,6 +249,10 @@ class ProfileController extends BaseController {
 
     private getGlossaryUrl(opus) {
         opus?.glossaryUuid ? "${request.contextPath}/opus/${opus.uuid}/glossary" : ""
+    }
+
+    private getAboutUrl(opus) {
+        opus.hasAboutPage ? "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/about" : ""
     }
 
     def attributesPanel = {
