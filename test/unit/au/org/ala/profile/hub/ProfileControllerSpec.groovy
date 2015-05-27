@@ -28,7 +28,7 @@ class ProfileControllerSpec extends Specification {
 
     def "edit should return a 404 if the profile is not found"() {
         setup:
-        profileService.getProfile(_, _) >> null
+        profileService.getProfile(_, _, _) >> null
 
         when:
         params.opusId = "opus"
@@ -49,7 +49,7 @@ class ProfileControllerSpec extends Specification {
 
     def "edit should return the profile, with edit and current user properties added to the model"() {
         setup:
-        profileService.getProfile(_, _) >> [profile: "bla", opus: [title: "opus"]]
+        profileService.getProfile(_, _, _) >> [profile: "bla", opus: [title: "opus"]]
 
         when:
         params.opusId = "opus"
@@ -65,7 +65,7 @@ class ProfileControllerSpec extends Specification {
 
     def "show should return a 404 if the profile is not found"() {
         setup:
-        profileService.getProfile(_, _) >> null
+        profileService.getProfile(_, _, _) >> null
 
         when:
         params.profileId = "bla"
@@ -85,7 +85,7 @@ class ProfileControllerSpec extends Specification {
 
     def "show should return the profile, with edit = false added to the model"() {
         setup:
-        profileService.getProfile(_, _) >> [profile: "bla", opus: [title: "opus"]]
+        profileService.getProfile(_, _, _) >> [profile: "bla", opus: [title: "opus"]]
 
         when:
         params.profileId = "bla"
@@ -99,7 +99,7 @@ class ProfileControllerSpec extends Specification {
 
     def "getJson should return a 404 if the profile is not found"() {
         setup:
-        profileService.getProfile(_, _) >> null
+        profileService.getProfile(_, _, _) >> null
 
         when:
         params.profileId = "bla"
@@ -119,7 +119,7 @@ class ProfileControllerSpec extends Specification {
 
     def "getJson should return the profile added to the model"() {
         setup:
-        profileService.getProfile(_, _) >> [profile: "bla"]
+        profileService.getProfile(_, _, _) >> [profile: "bla"]
 
         when:
         params.profileId = "bla"

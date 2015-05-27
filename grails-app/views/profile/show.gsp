@@ -25,7 +25,7 @@
 
     <div class="row-fluid" ng-cloak>
         <alert type="warning"
-               ng-if="profileCtrl.profile.privateMode">This profile is not available for public users.</alert>
+               ng-if="profileCtrl.profile.privateMode"><span class="fa fa-lock"></span>&nbsp;&nbsp;You are viewing a profile that is currently in draft. These changes will not be visible to public users until the profile is completed and the draft is released.</alert>
     </div>
 
     <div class="row-fluid" ng-cloak>
@@ -75,18 +75,14 @@
                                        target="_self" ng-hide="!profileCtrl.readonly()"><span
                                             class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
                                 </li>
-                                <li role="presentation" style="margin-left: 20px" ng-if="!profileCtrl.readonly()">
-                                    Draft Mode
-                                    <div class="btn-group">
-                                        <label class="btn btn-mini"
-                                               ng-class="profileCtrl.profile.privateMode ? 'btn-warning' : ''"
-                                               ng-model="profileCtrl.profile.privateMode" btn-radio="true"
-                                               ng-change="profileCtrl.saveProfile()">On</label>
-                                        <label class="btn btn-mini"
-                                               ng-class="profileCtrl.profile.privateMode ? '' : 'btn-success'"
-                                               ng-model="profileCtrl.profile.privateMode" btn-radio="false"
-                                               ng-change="profileCtrl.saveProfile()">Off</label>
-                                    </div>
+                                <li role="presentation" ng-if="!profileCtrl.readonly() && !profileCtrl.profile.privateMode">
+                                    <a href="" ng-click="profileCtrl.toggleDraftMode()"><span class="fa fa-lock"></span>&nbsp;&nbsp;Lock for major revision</a>
+                                </li>
+                                <li role="presentation" ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
+                                    <a href="" ng-click="profileCtrl.toggleDraftMode()"><span class="fa fa-unlock"></span>&nbsp;&nbsp;Publish draft changes</a>
+                                </li>
+                                <li role="presentation" ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
+                                    <a href="" ng-click="profileCtrl.discardDraftChanges()"><span class="fa fa-times-circle"></span>&nbsp;&nbsp;Discard draft changes</a>
                                 </li>
                             </g:if>
                             <g:if test="${params.isOpusAdmin}">

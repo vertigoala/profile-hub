@@ -274,7 +274,7 @@ describe("ProfileController tests", function () {
         expect(profileService.saveAuthorship).toHaveBeenCalledWith("opusId", "profileId", {authorship: [{category: "Author", text: "Fred"}]});
     });
 
-    it("should replace the current authorship and raise a success message when the saveAuthorship succeeds", function() {
+    it("should raise a success message when the saveAuthorship succeeds", function() {
         scope.profileCtrl.opusId = "opusId";
         scope.profileCtrl.profileId = "profileId";
         scope.profileCtrl.profile = {uuid: "profileId", scientificName: "sciName", authorship: [{category: "Author", text: "Fred"}]};
@@ -284,7 +284,6 @@ describe("ProfileController tests", function () {
         scope.$apply();
 
         expect(messageService.success).toHaveBeenCalled();
-        expect(scope.profileCtrl.profile.authorship).toEqual([{category: "Author", text: "Fred, Bob"}]);
         expect(form.$setPristine).toHaveBeenCalled();
     });
 

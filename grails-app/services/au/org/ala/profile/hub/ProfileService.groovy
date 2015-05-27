@@ -48,18 +48,26 @@ class ProfileService {
         webService.doPut("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/", json)
     }
 
-    def updateProfile(String opusId, String profileId, json) {
-        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}", json)
+    def updateProfile(String opusId, String profileId, json, boolean latest = false) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}?latest=${latest}", json)
     }
 
-    def getProfile(String opusId, String profileId) {
+    def toggleDraftMode(String opusId, String profileId) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/toggleDraftMode", null)
+    }
+
+     def discardDraftChanges(String opusId, String profileId) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/discardDraftChanges", null)
+    }
+
+    def getProfile(String opusId, String profileId, boolean latest = false) {
         log.debug("Loading profile " + profileId)
 
         Map result
 
         try {
             String encodedProfileId = URLEncoder.encode(profileId, "UTF-8")
-            def profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${encodedProfileId}")?.resp
+            def profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${encodedProfileId}?latest=${latest}")?.resp
 
             if (!profile) {
                 return null

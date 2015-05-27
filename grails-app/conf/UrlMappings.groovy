@@ -18,6 +18,8 @@ class UrlMappings {
         "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
         "/opus/$opusId/profile/$profileId/update" controller: "profile", action: [GET: "edit", POST: "updateProfile"]
+        "/opus/$opusId/profile/$profileId/toggleDraftMode" controller: "profile", action: [POST: "toggleDraftMode"]
+        "/opus/$opusId/profile/$profileId/discardDraftChanges" controller: "profile", action: [POST: "discardDraftChanges"]
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
         "/opus/$opusId/profile/$profileId/pdf" controller: "export", action: [GET: "getPdf"]
         "/opus/$opusId/profile/$profileId/images" controller: "profile", action: [GET: "retrieveImages"]

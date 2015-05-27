@@ -53,6 +53,30 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        toggleDraftMode: function(opusId, profileId) {
+            console.log("Updating profile " + profileId);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/toggleDraftMode");
+            future.then(function(response) {
+                console.log("Profile updated with response code " + response.status);
+
+                clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        discardDraftChanges: function(opusId, profileId) {
+            console.log("Updating profile " + profileId);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/discardDraftChanges");
+            future.then(function(response) {
+                console.log("Profile updated with response code " + response.status);
+
+                clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         getOpus: function (opusId) {
             console.log("Fetching opus " + opusId);
 

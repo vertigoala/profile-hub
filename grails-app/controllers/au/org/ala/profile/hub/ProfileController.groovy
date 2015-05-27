@@ -21,7 +21,8 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
         } else {
-            def profile = profileService.getProfile(params.opusId as String, params.profileId as String)
+            boolean latest = params.isOpusReviewed || params.isOpusEditor || params.isOpusAdmin
+            def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profile) {
                 notFound()
@@ -37,7 +38,8 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
         } else {
-            def profile = profileService.getProfile(params.opusId as String, params.profileId as String)
+            boolean latest = params.isOpusReviewed || params.isOpusEditor || params.isOpusAdmin
+            def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profile) {
                 notFound()
@@ -69,7 +71,30 @@ class ProfileController extends BaseController {
         if (!json || !params.profileId) {
             badRequest()
         } else {
-            def response = profileService.updateProfile(params.opusId as String, params.profileId as String, json)
+            boolean latest = params.isOpusReviewed || params.isOpusEditor || params.isOpusAdmin
+            def response = profileService.updateProfile(params.opusId as String, params.profileId as String, json, latest)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def toggleDraftMode() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def discardDraftChanges() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            def response = profileService.discardDraftChanges(params.opusId as String, params.profileId as String)
 
             handle response
         }
@@ -80,7 +105,8 @@ class ProfileController extends BaseController {
             badRequest "profileId is a required parameter"
         } else {
             response.setContentType(CONTEXT_TYPE_JSON)
-            def profile = profileService.getProfile(params.opusId as String, params.profileId as String)
+            boolean latest = params.isOpusReviewed || params.isOpusEditor || params.isOpusAdmin
+            def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profile) {
                 notFound()

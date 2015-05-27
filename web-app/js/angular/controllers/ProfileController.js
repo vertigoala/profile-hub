@@ -1,7 +1,7 @@
 /**
  * Profile controller
  */
-profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal, $window, $filter, $sce) {
+profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal, $window, $filter, $sce, $location) {
     var self = this;
 
     self.profile = null;
@@ -115,6 +115,33 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         }
     };
 
+    self.toggleDraftMode = function() {
+        var future = profileService.toggleDraftMode(self.opusId, self.profileId);
+
+        future.then(function() {
+            messageService.success("The profile has been successfully updated.");
+
+            self.loadProfile();
+        }, function() {
+            messageService.alert("An error has occurred while updating the profile.");
+        });
+    };
+
+    self.discardDraftChanges = function() {
+        var confirm = util.confirm("Are you sure you wish to discard all draft changes? This operation cannot be undone.");
+        confirm.then(function() {
+            var future = profileService.discardDraftChanges(self.opusId, self.profileId);
+
+            future.then(function () {
+                messageService.success("The profile has been successfully restored.");
+
+                util.redirect($location.absUrl());
+            }, function () {
+                messageService.alert("An error has occurred while restoring the profile.");
+            });
+        })
+    };
+
     self.saveProfile = function(form) {
         var future = profileService.updateProfile(self.opusId, self.profileId, self.profile);
 
@@ -144,9 +171,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.saveAuthorship = function(form) {
         var future = profileService.saveAuthorship(self.opusId, self.profileId, {authorship: self.profile.authorship});
 
-        future.then(function(data) {
-            self.profile.authorship = data;
-
+        future.then(function() {
             form.$setPristine();
 
             messageService.success("Authorship and acknowledgements successfully updated.");
