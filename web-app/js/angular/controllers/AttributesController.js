@@ -10,7 +10,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.historyShowing = {};
     self.vocabularyStrict = false;
     self.supportingAttributes = {};
-    self.showSupportingData = true;
+    self.showSupportingData = false;
     self.currentUser = util.currentUser();
 
     var capitalize = $filter("capitalize");
