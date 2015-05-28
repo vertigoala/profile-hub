@@ -325,6 +325,14 @@ input[type=checkbox] + label, input[type=radio] + label {
     border-bottom: none !important;
 }
 
+.btn-link {
+    font-size: 85% !important;
+}
+
+.attribute-source {
+    padding-right: 15px;
+}
+
 .display-text {
     white-space: pre-wrap;
 }

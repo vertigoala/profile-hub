@@ -47,10 +47,10 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
     self.showAttribute = function (attribute) {
         return (self.readonly &&
-            (!attribute.source ||
-            (attribute.source && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
+            (!attribute.fromCollection ||
+            (attribute.fromCollection && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
             || (!self.readonly &&
-            attribute.source && self.opus.allowCopyFromLinkedOpus && self.showSupportingData)
+            attribute.fromCollection && self.opus.allowCopyFromLinkedOpus && self.showSupportingData)
     };
 
     self.showTitleGroup = function (title) {
@@ -157,8 +157,9 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
     self.copyAttribute = function (index, form) {
         var copy = angular.copy(self.attributes[index]);
-        copy.source = null;
+        copy.fromCollection = null;
         copy.original = self.attributes[index];
+        copy.source = copy.original.fromCollection.opusTitle;
         copy.uuid = "";
         self.attributes[index] = copy;
     };
@@ -167,6 +168,8 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         var attribute = self.attributes[idx];
         self.attributes[idx].saving = true;
 
+        var source = attribute.source;
+
         var data = {
             profileId: self.profile.uuid,
             uuid: attribute.uuid,
@@ -174,6 +177,9 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             text: attribute.text
         };
 
+        if (source) {
+            data.source = attribute.source;
+        }
         if (attribute.original) {
             data.original = attribute.original;
         }
@@ -225,7 +231,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
                             angular.forEach(supporting.profile.attributes, function (attribute) {
                                 if (profileAttributeMap.indexOf(attribute.title) == -1) {
-                                    attribute.source = {
+                                    attribute.fromCollection = {
                                         opusId: supporting.opus.uuid,
                                         opusTitle: supporting.opus.title,
                                         opusShortName: supporting.opus.shortName,

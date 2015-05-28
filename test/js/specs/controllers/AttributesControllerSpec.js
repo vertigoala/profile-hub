@@ -488,7 +488,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
         var attribute1 = {uuid: "uuid1", title: "title1"};
-        var attribute2 = {uuid: "uuid2", title: "title2"};
+        var attribute2 = {uuid: "uuid2", title: "title2", fromCollection: {opusTitle: "opusTitle"}};
         var attribute3 = {uuid: "uuid3", title: "title3"};
         scope.attrCtrl.attributes = [attribute1, attribute2, attribute3];
 
@@ -497,6 +497,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes.length).toBe(3);
         expect(scope.attrCtrl.attributes[1].uuid).toBe("");
         expect(scope.attrCtrl.attributes[1].original).toBe(attribute2);
+        expect(scope.attrCtrl.attributes[1].source).toBe("opusTitle");
     });
 
     it("should not include the current opus in the search when loadAttributesFromSupportingCollections is called", function() {

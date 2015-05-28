@@ -22,7 +22,7 @@
 
     <!-- edit screen -->
     <div ng-repeat="attribute in attrCtrl.attributes" ng-form="AttributeForm" ng-show="!attrCtrl.readonly" ng-cloak>
-        <ng-include src="'showEditableAttribute.html'" ng-if="!attribute.source"></ng-include>
+        <ng-include src="'showEditableAttribute.html'" ng-if="!attribute.fromCollection"></ng-include>
         <div class="bs-docs-example" data-content="{{ attribute.title }}" ng-if="attrCtrl.showAttribute(attribute)">
             <ng-include src="'showReadOnlyAttribute.html'"></ng-include>
         </div>
@@ -66,27 +66,29 @@
     </div>
 </blockquote>
 
-<div class="row-fluid" ng-show="attribute.source || (attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.original">
-    <span class="span12">
+<div class="row-fluid" ng-show="attribute.fromCollection || attribute.source">
+    <div class="span12">
         <span class="pull-right">
-            <span class="small pull-right" ng-show="attribute.source">
-                Source: <a
-                    href="${request.contextPath}/opus/{{attribute.source.opusShortName ? attribute.source.opusShortName : attribute.source.opusId}}/profile/{{attribute.source.profileId}}"
-                    target="_self">{{attribute.source.opusTitle}}</a>
+            <span class="small pull-right" ng-show="attribute.fromCollection">
+                From Collection: <a
+                    href="${request.contextPath}/opus/{{attribute.fromCollection.opusShortName ? attribute.fromCollection.opusShortName : attribute.fromCollection.opusId}}/profile/{{attribute.fromCollection.profileId}}"
+                    target="_self">{{attribute.fromCollection.opusTitle}}</a>
             </span>
-            <span class="small" ng-if="attribute.original">
-                Originally copied from: <a
-                    href="${request.contextPath}/opus/{{attribute.original.profile.opus.shortName ? attribute.original.profile.opus.shortName : attribute.original.profile.opus.uuid}}/profile/{{attribute.original.profile.uuid}}"
-                    target="_self">{{attribute.original.profile.opus.title}}</a>
-                <br/>
-            </span>
-            <span class="small"
-                  ng-show="attrCtrl.readonly && !attribute.source && attrCtrl.opus.showLinkedOpusAttributes && $last">
-                <button class="btn btn-link"
-                   ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</button>
+            <span class="small attribute-source" ng-if="attribute.source">
+                Source: {{attribute.source}}
             </span>
         </span>
+    </div>
+</div>
+<div class="row-fluid" ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
+    <span class="span12">
+        <span class="pull-right"
+              ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
+            <button class="btn btn-link small"
+                    ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</button>
+        </span>
     </span>
+</span>
 </div>
 
 <div class="row-fluid" ng-show="attrCtrl.opus.allowCopyFromLinkedOpus && !attrCtrl.readonly">
@@ -118,8 +120,16 @@
         <input id="significantEdit" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit"
                ng-false-value="false">
         This is a significant edit
-    </input>
+        </input>
     </label>
+
+    <div class="row-fluid">
+        <label for="source" class="inline-label">Source:</label>
+        <input id="source" type="text"
+               autocomplete="off"
+               class="input-xxlarge" ng-model="attribute.source" name="source"
+               value="source" placeholder="Source..."/>
+    </div>
 
     <div class="row-fluid">
         <span class="span4">
@@ -176,13 +186,11 @@
         </div>
     </div>
 
-    <div class="row-fluid vertical-pad" ng-show="attribute.original">
+    <div class="row-fluid vertical-pad" ng-show="attribute.source">
         <span class="span12">
             <span class="pull-right">
                 <span class="blockquote small">
-                    Originally copied from: <a
-                        href="${request.contextPath}/opus/{{attrCtrl.opusId}}/profile/{{attribute.original.profile.uuid}}"
-                        target="_self">{{attribute.original.profile.opus.title}}</a>
+                    Source: {{attribute.source}}
                 </span>
             </span>
         </span>
