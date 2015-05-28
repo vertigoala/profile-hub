@@ -169,6 +169,14 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Retrieve the current user's name
+     * @returns {*}
+     */
+    function currentUser() {
+        return config.currentUser;
+    }
+
+    /**
      * The $http service returns an extended promise object which has success and error functions.
      * This introduces inconsistency with other code that deals with promises, and complicates the unit tests.
      * Therefore, we will create a new standard promise (which just uses then()) and return it instead.
@@ -258,6 +266,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         redirect: redirect,
         getEntityId: getEntityId,
         getQueryParameter: getQueryParameter,
+        currentUser: currentUser,
 
         LAST: LAST,
         FIRST: FIRST,

@@ -12,6 +12,9 @@ describe("AttributesController tests", function () {
                 return "profileId1"
             }
         },
+        currentUser: function() {
+            return "bob"
+        },
         confirm: function() {},
         LAST: "last"
     };

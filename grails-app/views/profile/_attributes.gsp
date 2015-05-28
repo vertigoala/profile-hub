@@ -116,12 +116,23 @@
 
     <div text-angular text-angular-name="attribute" ng-model="attribute.text" ta-toolbar="{{richTextToolbarFull}}"></div>
 
-    <label for="significantEdit" class="inline-label" ng-show="attribute.uuid && attrCtrl.opus.allowFineGrainedAttribution">
-        <input id="significantEdit" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit"
-               ng-false-value="false">
-        This is a significant edit
-        </input>
-    </label>
+    <div class="row-fluid" ng-if="attrCtrl.opus.allowFineGrainedAttribution">
+        <div class="span4" ng-if="attribute.uuid">
+            <label for="significantEdit" class="inline-label">
+                <input id="significantEdit" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit"
+                       ng-false-value="false">
+                This is a significant edit
+                </input>
+            </label>
+        </div>
+        <div class="span8" ng-if="attribute.significantEdit || !attribute.uuid">
+            <label for="attributeTo" class="inline-label">Attribute To:</label>
+            <input id="attributeTo" type="text"
+                   autocomplete="off"
+                   class="input-xlarge" ng-model="attribute.attributeTo" name="attributeTo"
+                   value="attributeTo" placeholder="{{attrCtrl.currentUser}}"/>
+        </div>
+    </div>
 
     <div class="row-fluid">
         <label for="source" class="inline-label">Source:</label>

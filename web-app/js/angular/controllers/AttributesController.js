@@ -11,6 +11,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.vocabularyStrict = false;
     self.supportingAttributes = {};
     self.showSupportingData = true;
+    self.currentUser = util.currentUser();
 
     var capitalize = $filter("capitalize");
 
@@ -168,8 +169,6 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         var attribute = self.attributes[idx];
         self.attributes[idx].saving = true;
 
-        var source = attribute.source;
-
         var data = {
             profileId: self.profile.uuid,
             uuid: attribute.uuid,
@@ -177,8 +176,11 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             text: attribute.text
         };
 
-        if (source) {
+        if (attribute.source) {
             data.source = attribute.source;
+        }
+        if (attribute.attributeTo) {
+            data.attributeTo = attribute.attributeTo;
         }
         if (attribute.original) {
             data.original = attribute.original;
@@ -277,6 +279,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             }
         });
     };
+
 });
 
 
