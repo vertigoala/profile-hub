@@ -66,7 +66,7 @@
     </div>
 </blockquote>
 
-<div class="row-fluid" ng-show="attribute.fromCollection || attribute.source">
+<div class="row-fluid" ng-show="attribute.fromCollection || attribute.source || attribute.original">
     <div class="span12">
         <span class="pull-right">
             <span class="small pull-right" ng-show="attribute.fromCollection">
@@ -76,6 +76,9 @@
             </span>
             <span class="small attribute-source" ng-if="attribute.source">
                 Source: {{attribute.source}}
+            </span>
+            <span class="small attribute-source" ng-if="attribute.original">
+                Source: {{attribute.original.profile.opus.title}}
             </span>
         </span>
     </div>
