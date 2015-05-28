@@ -11,6 +11,16 @@
                 &nbsp;&nbsp;<a href="" class="fa fa-list-ul" title="Show members of {{classification.rank}} {{classification.scientificName}}" ng-click="taxonCtrl.showChildren(classification.rank, classification.scientificName)"></a>
             </li>
         </ul>
+
+        <div  ng-if="taxonCtrl.infraspecificTaxa.length > 0">
+            <h4>Subspecies</h4>
+            <ul>
+                <li ng-repeat="taxa in taxonCtrl.infraspecificTaxa">
+                    <a href="${request.contextPath}/opus/{{taxonCtrl.opusId}}/profile/{{taxa.scientificName}}"
+                       ng-if="taxa.profileId" target="_self">{{taxa.scientificName}}</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 

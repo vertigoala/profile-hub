@@ -6,6 +6,7 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
 
     self.speciesProfile = null;
     self.classifications = [];
+    self.infraspecificTaxa = [];
 
     self.init = function (edit) {
         self.readonly = edit != 'true';
@@ -20,6 +21,10 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
 
                 loadSpeciesProfile();
                 loadClassifications();
+
+                if (self.profile.rank == util.RANK.SPECIES) {
+                    loadInfraspecificTaxa();
+                }
             },
             function () {
                 messageService.alert("An error occurred while retrieving the profile.");
@@ -80,6 +85,23 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
                 }
             );
         }
+    }
+
+    function loadInfraspecificTaxa() {
+        var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, util.RANK.SPECIES, self.profile.scientificName, 25, 0);
+        results.then(function (data) {
+
+                angular.forEach(data, function(subSpecies) {
+                    console.log("subspecies: " + JSON.stringify(subSpecies))
+                    if (subSpecies.scientificName != self.profile.scientificName && subSpecies.rank == util.RANK.SUBSPECIES) {
+                        self.infraspecificTaxa.push(subSpecies);
+                    }
+                });
+            },
+            function () {
+                console.log("Failed to retrieve infraspecific taxa");
+            }
+        );
     }
 });
 

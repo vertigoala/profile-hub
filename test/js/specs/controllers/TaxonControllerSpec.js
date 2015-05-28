@@ -12,6 +12,7 @@ describe("TaxonController tests", function () {
                 return "profileId1"
             }
         },
+        RANK: {SPECIES: "species", SUBSPECIES: "subspecies"},
         LAST: "last"
     };
     var messageService;
