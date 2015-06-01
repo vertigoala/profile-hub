@@ -95,7 +95,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
             self.opus.keybaseProjectId = "";
             self.opus.keybaseKeyId = "";
         }
-        console.log(self.opus.keybaseProjectId)
 
         var promise = profileService.saveOpus(self.opusId, self.opus);
         promise.then(function (data) {

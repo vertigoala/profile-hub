@@ -144,10 +144,11 @@
                 <g:include controller="profile" action="authorPanel" params="[opusId: params.opusId]"/>
             </div>
         </div>
-        </tabset>
-
     </g:if>
 
+    <div class="row-fluid" ng-if="profileCtrl.opus.copyrightText">
+        <div ta-bind ng-model="profileCtrl.opus.copyrightText" class="small center"></div>
+    </div>
 <!-- template for the popup displayed when Export as PDF is selected -->
 <script type="text/ng-template" id="exportPdf.html">
     <div class="modal-header">

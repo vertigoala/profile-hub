@@ -357,7 +357,11 @@ input[type=file] {
     overflow: scroll;
     font-family: inherit;
     font-size: 100%;
-    margin: 20px 0;
+    /*margin: 20px 0;*/
+}
+
+.btn-toolbar {
+    margin-bottom: 0 !important;
 }
 
 .single-line-editor > .ta-editor {
