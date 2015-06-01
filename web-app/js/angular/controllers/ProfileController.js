@@ -116,7 +116,27 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     };
 
     self.toggleDraftMode = function() {
-        var future = profileService.toggleDraftMode(self.opusId, self.profileId);
+        if (self.profile.privateMode) {
+            var confirm = util.confirm("Would you like to take a snapshot of the current public version before releasing your changes?", "Yes", "No");
+
+            confirm.then(function() {
+                toggleDraftMode(true);
+            }, function() {
+                toggleDraftMode(false);
+            });
+        } else {
+            toggleDraftMode(false);
+        }
+    };
+
+    function toggleDraftMode(snapshot) {
+        if (self.profile.privateMode && snapshot) {
+            messageService.info("Creating snapshot and applying changes. Please wait...");
+        } else if (self.profile.privateMode && !snapshot) {
+            messageService.info("Applying changes. Please wait...");
+        }
+
+        var future = profileService.toggleDraftMode(self.opusId, self.profileId, snapshot);
 
         future.then(function() {
             messageService.success("The profile has been successfully updated.");
@@ -125,7 +145,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         }, function() {
             messageService.alert("An error has occurred while updating the profile.");
         });
-    };
+    }
 
     self.discardDraftChanges = function() {
         var confirm = util.confirm("Are you sure you wish to discard all draft changes? This operation cannot be undone.");

@@ -53,9 +53,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        toggleDraftMode: function(opusId, profileId) {
-            console.log("Updating profile " + profileId);
-            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/toggleDraftMode");
+        toggleDraftMode: function(opusId, profileId, snapshot) {
+            console.log("Toggling draft mode for profile " + profileId);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/toggleDraftMode?snapshot=" + snapshot);
             future.then(function(response) {
                 console.log("Profile updated with response code " + response.status);
 
@@ -66,7 +66,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         discardDraftChanges: function(opusId, profileId) {
-            console.log("Updating profile " + profileId);
+            console.log("Discarding draft changes for profile " + profileId);
             var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/discardDraftChanges");
             future.then(function(response) {
                 console.log("Profile updated with response code " + response.status);
@@ -280,18 +280,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        savePublication: function (opusId, profileId, publicationId, data) {
-            console.log("Saving publication " + publicationId);
-            var future = null;
-
-            if (publicationId) {
-                future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication/" + publicationId + "/update", data);
-            } else {
-                future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication/create", data, {
-                    transformRequest: angular.identity,
-                    headers: {'Content-Type': undefined}
-                });
-            }
+        createPublication: function (opusId, profileId) {
+            console.log("Creating publication...");
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication/create");
 
             future.then(function (response) {
                 console.log("Publication saved with response code " + response.status);

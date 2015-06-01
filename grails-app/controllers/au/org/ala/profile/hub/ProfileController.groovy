@@ -4,15 +4,13 @@ import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
-import org.apache.commons.fileupload.FileItemIterator
-import org.apache.commons.fileupload.FileItemStream
-import org.apache.commons.fileupload.servlet.ServletFileUpload
 
 class ProfileController extends BaseController {
 
     AuthService authService
     ProfileService profileService
     BiocacheService biocacheService
+    ExportService exportService
 
     def index() {}
 
@@ -83,6 +81,10 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest()
         } else {
+            if (params.snapshot == 'true') {
+                savePublication()
+            }
+
             def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String)
 
             handle response
@@ -224,37 +226,27 @@ class ProfileController extends BaseController {
 
     @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def savePublication() {
-        ServletFileUpload upload = new ServletFileUpload();
-        FileItemIterator iterator = upload.getItemIterator(request);
-
-        byte[] file = null
-        def publication = null
-
-        while(iterator.hasNext()) {
-            FileItemStream item = iterator.next();
-            if (item.fieldName == "file") {
-                file = item.openStream().bytes
-            } else {
-                publication = JSON.parse(item.openStream().text)
-            }
-        }
-
-        // the publicationId may be blank (e.g. when creating a new publication), but the request should still have it
-        if (!file || !publication || !params.profileId) {
-            badRequest()
+        if (!params.profileId || !params.opusId) {
+            badRequest "profileId and opudId are required parameters"
         } else {
-            def response = profileService.savePublication(params.opusId as String, params.profileId, publication, file)
+            Map pdfOptions = [
+                    profileId   : params.profileId,
+                    opusId      : params.opusId,
+                    attributes  : true,
+                    map         : true,
+                    nomenclature: true,
+                    taxonomy    : true,
+                    bibliography: true,
+                    links       : true,
+                    bhllinks    : true,
+                    specimens   : true,
+                    conservation: true,
+                    images      : true
+            ]
 
-            handle response
-        }
-    }
+            byte[] pdf = exportService.createPdf(pdfOptions)
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
-    def deletePublication() {
-        if (!params.profileId || !params.publicationId) {
-            badRequest "profileId and publicationId are a required parameters"
-        } else {
-            def response = profileService.deletePublication(params.opusId as String, params.profileId as String, params.publicationId as String)
+            def response = profileService.savePublication(params.opusId as String, params.profileId as String, pdf)
 
             handle response
         }

@@ -225,7 +225,14 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @param message The message text to display
      * @returns {Promise}
      */
-    function confirm(message) {
+    function confirm(message, ok, cancel) {
+        if (ok === undefined) {
+            ok = "OK"
+        }
+        if (cancel === undefined) {
+            cancel = "Cancel"
+        }
+
         var html = '<div class="modal-header confirm">' +
             '<h3 class="modal-title">Confirmation</h3>' +
             '</div>' +
@@ -234,8 +241,8 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
             '</div>' +
 
             '<div class="modal-footer">' +
-            '<button class="btn btn-primary" ng-click="confirmCtrl.ok()">OK</button>' +
-            '<button class="btn btn-warning" ng-click="confirmCtrl.cancel()">Cancel</button>' +
+            '<button class="btn btn-primary" ng-click="confirmCtrl.ok()">' + ok + '</button>' +
+            '<button class="btn btn-warning" ng-click="confirmCtrl.cancel()">' + cancel + '</button>' +
             '</div>';
 
         var popup = $modal.open({

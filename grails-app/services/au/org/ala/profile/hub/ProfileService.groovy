@@ -120,10 +120,10 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/publication")
     }
 
-    def savePublication(String opusId, String profileId, publication, file) {
+    def savePublication(String opusId, String profileId, file) {
         log.debug("Saving publication for profile ${profileId}")
 
-        webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/publication", publication, [file])
+        webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/publication", [:], [file])
     }
 
     def deletePublication(String opusId, String profileId, String publicationId) {
