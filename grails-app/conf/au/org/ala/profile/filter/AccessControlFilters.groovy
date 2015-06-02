@@ -101,10 +101,11 @@ class AccessControlFilters {
                         response.sendError(HttpStatus.SC_FORBIDDEN)
                     }
                 } else {
+                    boolean authenticated = authService.getDisplayName() != null
+                    params.isOpusAdmin = authenticated
+                    params.isOpusEditor = authenticated
+                    params.isOpusReviewer = authenticated
                     log.warn "**** Authorisation has been disabled! ****"
-                    params.isOpusAdmin = true
-                    params.isOpusEditor = true
-                    params.isOpusReviewer = true
                 }
             }
             after = { Map model ->
