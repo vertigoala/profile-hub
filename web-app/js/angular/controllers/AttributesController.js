@@ -163,6 +163,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         copy.source = copy.original.fromCollection.opusTitle;
         copy.uuid = "";
         self.attributes[index] = copy;
+        self.saveAttribute(index, form)
     };
 
     self.saveAttribute = function (idx, attributeForm) {

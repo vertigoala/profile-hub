@@ -77,7 +77,7 @@
             <span class="small attribute-source" ng-if="attribute.source">
                 Source: {{attribute.source}}
             </span>
-            <span class="small attribute-source" ng-if="attribute.original">
+            <span class="small attribute-source" ng-if="attribute.original && !attribute.source">
                 Source: {{attribute.original.profile.opus.title}}
             </span>
         </span>
@@ -121,8 +121,8 @@
 
     <div class="row-fluid" ng-if="attrCtrl.opus.allowFineGrainedAttribution">
         <div class="span4" ng-if="attribute.uuid">
-            <label for="significantEdit" class="inline-label">
-                <input id="significantEdit" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit"
+            <label for="significantEdit{{attribute.uuid}}" class="inline-label">
+                <input id="significantEdit{{attribute.uuid}}" type="checkbox" name="significantEdit" ng-model="attribute.significantEdit"
                        ng-false-value="false">
                 This is a significant edit
                 </input>
