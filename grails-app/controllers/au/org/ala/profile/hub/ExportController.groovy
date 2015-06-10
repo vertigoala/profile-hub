@@ -40,7 +40,8 @@ class ExportController extends BaseController {
                 bhllinks    : params.bhllinks,
                 specimens   : params.specimens,
                 conservation: params.conservation,
-                images      : params.images
+                images      : params.images,
+                children    : params.children
         ]
     }
 

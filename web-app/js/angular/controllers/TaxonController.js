@@ -92,7 +92,6 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
         results.then(function (data) {
 
                 angular.forEach(data, function(subSpecies) {
-                    console.log("subspecies: " + JSON.stringify(subSpecies))
                     if (subSpecies.scientificName != self.profile.scientificName && subSpecies.rank == util.RANK.SUBSPECIES) {
                         self.infraspecificTaxa.push(subSpecies);
                     }
