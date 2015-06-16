@@ -17,14 +17,18 @@ profileEditor.controller('PublicationController', function (profileService, navS
     };
 
     self.savePublication = function () {
-        var promise = profileService.createPublication(self.opusId, self.profileId);
-        messageService.info("Creating snapshot. Please wait...");
-        promise.then(function () {
-            messageService.pop();
+        var confirm = util.confirm("This will create a snapshot of the current public view of the profile. This snapshot cannot be removed. Do you wish to continue?");
 
-            loadPublications();
-        }, function () {
-            messageService.alert("An error occurred while creating the snapshot.");
+        confirm.then(function() {
+            var promise = profileService.createPublication(self.opusId, self.profileId);
+            messageService.info("Creating snapshot. Please wait...");
+            promise.then(function () {
+                messageService.pop();
+
+                loadPublications();
+            }, function () {
+                messageService.alert("An error occurred while creating the snapshot.");
+            });
         });
     };
 

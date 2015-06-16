@@ -94,11 +94,36 @@ describe("PublicationController tests", function () {
         expect(pub.publicationDate).toBe("2015-04-06T14:00:00Z");
     });
 
-    it("should invoke the createPublication method of the profile service when savePublication is invoked", function () {
+    it("should display a confirmation when save publication is invoked", function() {
         scope.pubCtrl.profileId = "profileId1";
         scope.pubCtrl.opusId = "opusId1";
         scope.pubCtrl.newPublication = {publicationId: "uuid1", title: "title"};
 
+        scope.pubCtrl.savePublication(form);
+
+        expect(mockUtil.confirm).toHaveBeenCalled();
+    });
+
+    it("should do nothing then when the savePublication confirmation is not accepted", function() {
+        scope.pubCtrl.profileId = "profileId1";
+        scope.pubCtrl.opusId = "opusId1";
+        scope.pubCtrl.newPublication = {publicationId: "uuid1", title: "title"};
+
+        confirmDefer.reject();
+        saveDefer.resolve({});
+
+        scope.pubCtrl.savePublication(form);
+        scope.$apply();
+
+        expect(profileService.createPublication).not.toHaveBeenCalledWith("opusId1", "profileId1");
+    });
+
+    it("should invoke the createPublication method of the profile service when the savePublication confirmation is accepted", function () {
+        scope.pubCtrl.profileId = "profileId1";
+        scope.pubCtrl.opusId = "opusId1";
+        scope.pubCtrl.newPublication = {publicationId: "uuid1", title: "title"};
+
+        confirmDefer.resolve({});
         saveDefer.resolve({});
 
         scope.pubCtrl.savePublication(form);
