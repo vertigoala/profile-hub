@@ -16,6 +16,7 @@ describe("AttributesController tests", function () {
             return "bob"
         },
         confirm: function() {},
+        toKey: function(v) {return v},
         LAST: "last"
     };
     var form = {

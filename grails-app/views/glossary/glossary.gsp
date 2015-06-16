@@ -8,88 +8,96 @@
 
 <body>
 
-<div ng-app="profileEditor" ng-controller="GlossaryController as glossaryCtrl" ng-init="glossaryCtrl.loadGlossary()">
-    <div class="row-fluid" ng-cloak>
-        <div class="span6">
-
-        </div>
-        <g:render template="../layouts/login"/>
-    </div>
-
-    <div class="row-fluid">
-        <div class="span12">
-            <div class="btn-group center" style="display: flex">
-                <label ng-repeat="prefix in ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']"
-                       class="btn btn-info" ng-model="glossaryCtrl.page" btn-radio="prefix"
-                       ng-click="glossaryCtrl.loadGlossary(prefix)">{{ prefix }}</label>
-            </div>
-        </div>
-    </div>
-    <g:if test="${params.isOpusAdmin}">
-        <div class="row-fluid">
-            <div class="pull-right">
-                <button class="btn btn-success" ng-click="glossaryCtrl.addGlossaryItem($index)"><i
-                        class="icon icon-plus icon-white"></i> Add item</button>
-            </div>
-        </div>
-    </g:if>
-
-    <p/>
-
-    <div class="row-fluid {{$even ? 'even' : 'odd'}}" ng-repeat="item in glossaryCtrl.glossary.items" ng-cloak>
-        <g:if test="${params.isOpusAdmin}">
-            <div class="span1">
-                <button class="btn-link fa fa-edit" ng-click="glossaryCtrl.editGlossaryItem($index)"
-                        title="Edit glossary item"></button>
-                <button class="btn-link fa fa-trash-o" ng-click="glossaryCtrl.deleteGlossaryItem($index)"
-                        title="Delete glossary item"></button>
-            </div>
-        </g:if>
-        <div class="span2">
-            <a id="{{item.term}}"></a>
-            {{ item.term }}
+<div ng-controller="GlossaryController as glossaryCtrl" ng-init="glossaryCtrl.loadGlossary()">
+    <div class="margin-bottom-2"></div>
+    <div class="row padding-bottom-2">
+        <div class="col-md-10">
+            <h2 class="heading-large inline">Glossary</h2>
         </div>
 
-        <div class="span9">
-            <span ng-bind-html="item.description | sanitizeHtml"/>
+        <div class="col-md-2">
+            <button class="btn btn-default pull-right margin-top-1" ng-click="glossaryCtrl.addGlossaryItem($index)"><i
+                    class="fa fa-plus"></i> Add item</button>
         </div>
     </div>
 
+
+    <div class="row" ng-cloak>
+
+        <div class="col-md-2 margin-bottom-1">
+            <ul class="nav nav-stacked" id="sidebar">
+                <h4 class="font-xxsmall heading-underlined"><strong>Glossary index</strong></h4>
+
+                <li ng-repeat="prefix in ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']">
+                    <a href="" class="font-xxsmall" ng-model="glossaryCtrl.page" btn-radio="prefix"
+                       ng-click="glossaryCtrl.loadGlossary(prefix)">{{ prefix }}</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-10">
+            <h4 class="font-xxsmall">Glossary Entry: {{glossaryCtrl.page | capitalize}}</h4>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Details</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in glossaryCtrl.glossary.items">
+                        <td>{{item.term}}</td>
+                        <td><span ng-bind-html="item.description | sanitizeHtml"></span></td>
+                        <td class="edits">
+                            <button class="btn-link fa fa-edit" ng-click="glossaryCtrl.editGlossaryItem($index)"
+                                    title="Edit glossary item"></button>
+                            <button class="btn-link fa fa-trash-o color--red" ng-click="glossaryCtrl.deleteGlossaryItem($index)"
+                                    title="Delete glossary item"></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <script type="text/ng-template" id="editItemPopup.html">
     <div class="modal-header">
-        <h3 class="modal-title">Glossary Item</h3>
+        <h4 class="modal-title">Glossary Item</h4>
     </div>
 
     <div class="modal-body">
         <alert class="alert-danger" ng-show="glossaryModalCtrl.error">{{ glossaryModalCtrl.error }}</alert>
 
-        <div class="row-fluid">
-            <div class="span3">
-                <label for="term" class="inline-label">Term:</label>
-            </div>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="term" class="col-sm-3 control-label">Term</label>
 
-            <div class="span9">
-                <input id="term" type="text" ng-model="glossaryModalCtrl.item.term" class="input-xlarge"
-                       ng-enter="glossaryModalCtrl.ok()" ng-disabled="glossaryModalCtrl.item.uuid"/>
+                <div class="col-sm-8">
+                    <input id="term" type="text" ng-model="glossaryModalCtrl.item.term" class="form-control"
+                           ng-enter="glossaryModalCtrl.ok()" ng-disabled="glossaryModalCtrl.item.uuid"/>
+                </div>
             </div>
         </div>
 
-        <div class="row-fluid">
-            <div class="span3">
-                <label for="description" class="inline-label">Description:</label>
-            </div>
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="description" class="col-sm-3 control-label">Description</label>
 
-            <div class="span9">
-                <textarea id="description" type="text" ng-model="glossaryModalCtrl.item.description" class="input-xlarge"
-                       ng-enter="glossaryModalCtrl.ok()" rows="6"></textarea>
+                <div class="col-sm-8">
+                    <textarea id="description" type="text" ng-model="glossaryModalCtrl.item.description"
+                              class="form-control"
+                              ng-enter="glossaryModalCtrl.ok()" rows="6"></textarea>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="modal-footer">
         <button class="btn btn-primary" ng-click="glossaryModalCtrl.ok()">OK</button>
-        <button class="btn btn-warning" ng-click="glossaryModalCtrl.cancel()">Cancel</button>
+        <button class="btn btn-default" ng-click="glossaryModalCtrl.cancel()">Cancel</button>
     </div>
     </script>
 </div>

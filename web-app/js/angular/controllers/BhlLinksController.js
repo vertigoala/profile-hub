@@ -1,7 +1,7 @@
 /**
  * BHL Links controller
  */
-profileEditor.controller('BHLLinksEditor', function (profileService, util, messageService) {
+profileEditor.controller('BHLLinksEditor', function (profileService, navService, util, messageService) {
     var self = this;
     
     self.bhl = [];
@@ -18,6 +18,10 @@ profileEditor.controller('BHLLinksEditor', function (profileService, util, messa
             self.profile = data.profile;
             self.opus = data.opus;
             self.bhl = data.profile.bhl;
+
+            if ((self.bhl && self.bhl.length > 0) || !self.readonly) {
+                navService.add("Biodiversity Heritage Library references", "bhllinks");
+            }
             console.log("Fetched " + self.bhl.length + " BHL links");
         },
         function () {
@@ -46,27 +50,36 @@ profileEditor.controller('BHLLinksEditor', function (profileService, util, messa
         }
     };
 
-    self.addLink = function () {
-        self.bhl.unshift(
+    self.addLink = function (form) {
+        self.bhl.push(
             {
                 url: "",
                 description: "",
                 title: "",
                 thumbnailUrl: ""
             });
+        if (form) {
+            form.$setDirty();
+        }
     };
 
-    self.deleteLink = function (idx) {
+    self.deleteLink = function (idx, form) {
         self.bhl.splice(idx, 1);
+        if (form) {
+            form.$setDirty();
+        }
     };
 
-    self.saveLinks = function () {
+    self.saveLinks = function (form) {
         var promise = profileService.updateBhlLinks(self.opusId, self.profile.uuid, JSON.stringify({
             profileId: self.profile.uuid,
             links: self.bhl
         }));
         promise.then(function () {
                 messageService.success("Links successfully updated.");
+                if (form) {
+                    form.$setPristine();
+                }
             },
             function () {
                 messageService.alert("An error occurred while updating the links.");

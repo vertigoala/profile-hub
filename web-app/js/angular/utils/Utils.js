@@ -234,7 +234,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         }
 
         var html = '<div class="modal-header confirm">' +
-            '<h3 class="modal-title">Confirmation</h3>' +
+            '<h4 class="modal-title">Confirmation</h4>' +
             '</div>' +
             '<div class="modal-body">' +
             '{{ confirmCtrl.message | default:"Are you sure you wish to continue with this operation?"}}' +
@@ -242,7 +242,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
 
             '<div class="modal-footer">' +
             '<button class="btn btn-primary" ng-click="confirmCtrl.ok()">' + ok + '</button>' +
-            '<button class="btn btn-warning" ng-click="confirmCtrl.cancel()">' + cancel + '</button>' +
+            '<button class="btn btn-default" ng-click="confirmCtrl.cancel()">' + cancel + '</button>' +
             '</div>';
 
         var popup = $modal.open({
@@ -265,6 +265,17 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Converts the human-readable label to a value suitable for use as a key by removing all spaces and punctuation, and converting to lowercase.
+     *
+     * @param label the label to convert
+     */
+    function toKey(label) {
+        if (label) {
+            return label.replace(/\W/g, '_').toLowerCase();
+        }
+    }
+
+    /**
      * Public API
      */
     return {
@@ -278,6 +289,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         getEntityId: getEntityId,
         getQueryParameter: getQueryParameter,
         currentUser: currentUser,
+        toKey: toKey,
 
         LAST: LAST,
         FIRST: FIRST,

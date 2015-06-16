@@ -1,7 +1,7 @@
 /**
  *  Links controller
  */
-profileEditor.controller('LinksEditor', function (profileService, util, messageService) {
+profileEditor.controller('LinksEditor', function (profileService, navService, util, messageService) {
     var self = this;
     
     self.links = [];
@@ -21,6 +21,10 @@ profileEditor.controller('LinksEditor', function (profileService, util, messageS
                 self.profile = data.profile;
                 self.opus = data.opus;
                 self.links = data.profile.links;
+
+                if (self.links || !self.readonly) {
+                    navService.add("Links", "links");
+                }
             },
             function () {
                 messageService.alert("An error occurred while retrieving the links.");
@@ -28,19 +32,28 @@ profileEditor.controller('LinksEditor', function (profileService, util, messageS
         );
     }
 
-    self.addLink = function () {
+    self.addLink = function (form) {
         self.links.unshift({uuid: null, url: "http://", description: "", title: ""});
+        if (form) {
+            form.$setDirty();
+        }
     };
 
-    self.deleteLink = function (idx) {
+    self.deleteLink = function (idx, form) {
         self.links.splice(idx, 1);
+        if (form) {
+            form.$setDirty();
+        }
     };
 
-    self.saveLinks = function () {
+    self.saveLinks = function (form) {
         var promise = profileService.updateLinks(self.opusId, self.profile.uuid, JSON.stringify({profileId: self.profile.uuid, links: self.links}));
         promise.then(function () {
                 messageService.success("Links successfully updated.");
                 loadLinks();
+                if (form) {
+                    form.$setPristine();
+                }
             },
             function () {
                 messageService.alert("An error occurred while updating the links.");

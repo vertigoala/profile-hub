@@ -8,53 +8,98 @@
 
 <body>
 
-<div ng-app="profileEditor" ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
-    <div class="row-fluid" ng-cloak>
-        <div class="span6">
-            <ol class="breadcrumb" role="navigation">
-                <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/"
-                                                                              target="_self">View all profile collections</a>
-                </li>
-            </ol>
-        </div>
-        <g:render template="../layouts/login"/>
-    </div>
+<div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
+    <!-- Breadcrumb -->
+    <ol class="breadcrumb" ng-cloak>
+        <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
+        <li class="font-xxsmall active">{{opusCtrl.opus.title}}</li>
+    </ol><!-- End Breadcrumb -->
 
-    <div class="row-fluid" ng-if="opusCtrl.readonly" ng-cloak>
-        <div class="span8">
-            <div id="opusInfo" ng-cloak style="margin-top:20px;">
-                <p class="lead">
-                    {{opusCtrl.dataResource.pubDescription}}
+    <h1 class="hidden">Welcome to the eFlora website</h1><!-- Show the H1 on each page -->
+
+    <div class="row">
+        <div class="col-md-12" ng-cloak>
+            <p class="lead">
+                {{opusCtrl.dataResource.pubDescription}}
+            </p>
+            <g:if test="${aboutPageUrl}">
+                <p class="margin-bottom-2">
+                    To find more information about the {{opusCtrl.opus.title}}, visit <a href="${aboutPageUrl}"
+                                                                                         target="_blank">our About page</a>.
                 </p>
+            </g:if>
+        </div>
+    </div>
+
+    <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
+
+    <div class="btn-group padding-bottom-1 pull-right">
+        <div class="row">
+            <g:if test="${params.isOpusEditor}">
+                <button ng-controller="ProfileController as profileCtrl" class="btn btn-default"
+                        ng-click="profileCtrl.createProfile(opusCtrl.opusId)"><i class="fa fa-plus"></i> Add new profile</button>
+            </g:if>
+            <g:if test="${params.isOpusAdmin}">
+                <a href="${request.contextPath}/opus/{{opusCtrl.opusId}}/update" target="_self"
+                   class="btn btn-default" ng-hide="!config.readonly"><i class="fa fa-edit"></i> Edit configuration</a>
+            </g:if>
+        </div>
+    </div>
+
+    <tabset>
+        <tab heading="Browse" class="font-xxsmall">
+            <g:include controller="opus" action="browsePanel" params="[opusId: params.opusId]"/>
+        </tab>
+        <tab heading="Browse by key" class="font-xxsmall" ng-show="opusCtrl.opus.keybaseKeyId">
+            <alert type="warning"
+                   ng-show="!opusCtrl.opus.keybaseKeyId">No key has been configured for this collection.</alert>
+
+            <div key-player key-id="opusCtrl.opus.keybaseKeyId"
+                 ng-show="opusCtrl.opus.keybaseKeyId"
+                 keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                 profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></div>
+        </tab>
+    </tabset>
+
+    <script type="text/ng-template" id="createProfile.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Create a new profile</h4>
+    </div>
+
+    <div class="modal-body">
+        <alert type="danger" class="error" ng-show="createProfileCtrl.error">{{createProfileCtrl.error}}</alert>
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="scientificName" class="col-sm-3 control-label">Scientific Name</label>
+
+                <div class="col-sm-8">
+                    <input id="scientificName" type="text" ng-model="createProfileCtrl.scientificName" class="form-control"
+                           required ng-enter="createProfileCtrl.ok()" placeholder="e.g Acacia abbatiana"/>
+                </div>
             </div>
-
-            <tabset>
-                <tab heading="Quick Search">
-                    <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
-                </tab>
-                <tab heading="Browse">
-                    <g:include controller="opus" action="browsePanel" params="[opusId: params.opusId]"/>
-                </tab>
-                <tab heading="Search by key" ng-show="opusCtrl.opus.keybaseKeyId">
-                    <alert type="warning" ng-show="!opusCtrl.opus.keybaseKeyId">No key has been configured for this collection.</alert>
-                    <div key-player key-id="opusCtrl.opus.keybaseKeyId"
-                         ng-show="opusCtrl.opus.keybaseKeyId"
-                         keybase-url="${grailsApplication.config.keybase.key.lookup}"
-                         profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></div>
-                </tab>
-            </tabset>
         </div>
 
-        <div class="span4">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="nameAuthor" class="col-sm-3 control-label">Author</label>
 
-            <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
+                <div class="col-sm-8">
+                    <input id="nameAuthor" type="text" ng-model="createProfileCtrl.nameAuthor" class="form-control"
+                           ng-enter="createProfileCtrl.ok()" placeholder="e.g. Pedley"/>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row-fluid" ng-if="!opusCtrl.readonly">
-        <button class="btn pull-right" ng-click="opusCtrl.toggleViewEdit()">Public View</button>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="createProfileCtrl.ok()"
+                ng-disabled="!createProfileCtrl.scientificName">OK</button>
+        <button class="btn btn-default" ng-click="createProfileCtrl.cancel()">Cancel</button>
     </div>
+    </script>
 </div>
+
 </body>
 
 </html>

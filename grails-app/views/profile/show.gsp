@@ -10,63 +10,60 @@
 
 <body>
 
-<div id="container" ng-app="profileEditor" ng-controller="ProfileController as profileCtrl"
+<div id="container" ng-controller="ProfileController as profileCtrl"
      ng-init="profileCtrl.loadProfile()">
-    <div class="row-fluid" ng-cloak>
-        <div class="span6">
-            <ol class="breadcrumb" role="navigation">
-                <li><i class="fa fa-arrow-left"></i><span class="divider"/><a
-                        href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}"
-                        target="_self">Return to {{profileCtrl.opus.title}}</a>
-            </ol>
-        </div>
-        <g:render template="../layouts/login"/>
-    </div>
+    <a name="top"></a>
 
-    <div class="row-fluid" ng-cloak>
+    <ol class="breadcrumb" ng-cloak>
+        <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
+        <li><a class="font-xxsmall"
+               href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}">{{profileCtrl.opus.title}}</a>
+        </li>
+        <li class="font-xxsmall active">{{profileCtrl.profile.scientificName}}</li>
+    </ol>
+
+    <div class="row" ng-cloak>
         <alert type="warning"
-               ng-if="profileCtrl.profile.privateMode"><span class="fa fa-lock"></span>&nbsp;&nbsp;You are viewing a profile that is currently in draft. These changes will not be visible to public users until the profile is completed and the draft is released.</alert>
+               ng-if="profileCtrl.profile.privateMode"><span
+                class="fa fa-lock"></span>&nbsp;&nbsp;You are viewing a profile that is currently in draft. These changes will not be visible to public users until the profile is completed and the draft is released.
+        </alert>
     </div>
 
-    <div class="row-fluid" ng-cloak>
-        <div class="span8">
-            <h1><span class="scientific-name">{{profileCtrl.profile.scientificName | default:"Loading..."}}</span> <span class="inline-sub-heading">{{profileCtrl.profile.nameAuthor}}</span></h1>
-            <alert type="warning" ng-show="!profileCtrl.profile.guid && !profileCtrl.readonly()" ng-cloak>Unable to find a match for {{profileCtrl.profile.scientificName}} in the name index.</alert>
-            <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
-                <div ng-repeat="author in profileCtrl.profile.authorship | filter:{category: 'Author'}:true">
-                    <i>By {{author.text}}</i>
-                </div>
-                <g:if test="${grailsApplication.config.feature.publication == 'true'}">
-                    <div ng-controller="PublicationController as pubCtrl" ng-show="pubCtrl.mostRecentPublication()">
-                        Based on <i>{{pubCtrl.mostRecentPublication().title}}</i> by {{pubCtrl.mostRecentPublication().authors}} ({{pubCtrl.mostRecentPublication().publicationDate | date:"dd/MM/yyyy"}})
-                    </div>
-                </g:if>
-            </g:if>
+    <div class="row margin-bottom-1">
+        <div class="col-md-9" ng-cloak>
+            <h2 class="heading-large inline"><span
+                    class="scientific-name">{{profileCtrl.profile.scientificName | default:"Loading..."}}</span> <span
+                    class="inline-sub-heading">{{profileCtrl.profile.nameAuthor}}</span></h2>
         </div>
 
-        <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
-            <div class="span4" ng-cloak>
-                <div class="pull-right vertical-pad">
+        <div class="col-md-3" ng-cloak>
+            <div class="btn-group pull-right">
+                <div class="col-md-6">
                     <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}"
-                       target="_self" class="btn btn-success" ng-show="!profileCtrl.readonly()"><i
-                            class="icon-eye-open icon-white"></i> Public View</a>
+                       target="_self" class="btn btn-default" ng-show="!profileCtrl.readonly()"><i
+                            class="fa fa-eye"></i> Public View</a>
+                </div>
 
-                    <span class="dropdown">
-                        <a class="dropdown-toggle btn btn-info"
-                           id="optionsDropdown"
-                           role="button"
-                           data-toggle="dropdown"
-                           href="#"><span class="fa fa-angle-double-down"></span> Options</a>
+                <div class="btn-group col-md-6">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                data-toggle="dropdown" aria-expanded="true">
+                            Options
+                            <span class="fa fa-angle-double-down"></span>
+                        </button>
+
                         <ul class="dropdown-menu dropdown-menu-right"
                             role="menu"
                             aria-labelledby="optionsDropdown">
                             <li role="presentation">
                                 <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/json"
-                                   target="_blank"><span class="fa fa-file-text-o"></span>&nbsp;&nbsp;Export as JSON</a>
+                                   target="_blank"><span class="fa fa-file-text-o"></span>&nbsp;&nbsp;Export as JSON
+                                </a>
                             </li>
                             <li role="presentation" ng-controller="ExportController as exportCtrl">
                                 <a href="" ng-click="exportCtrl.exportPdf()"
-                                   target="_blank"><span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;Export as PDF</a>
+                                   target="_blank"><span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;Export as PDF
+                                </a>
                             </li>
                             <g:if test="${params.isOpusEditor}">
                                 <li class="divider"></li>
@@ -75,14 +72,20 @@
                                        target="_self" ng-hide="!profileCtrl.readonly()"><span
                                             class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
                                 </li>
-                                <li role="presentation" ng-if="!profileCtrl.readonly() && !profileCtrl.profile.privateMode">
-                                    <a href="" ng-click="profileCtrl.toggleDraftMode()"><span class="fa fa-lock"></span>&nbsp;&nbsp;Lock for major revision</a>
+                                <li role="presentation"
+                                    ng-if="!profileCtrl.readonly() && !profileCtrl.profile.privateMode">
+                                    <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
+                                            class="fa fa-lock"></span>&nbsp;&nbsp;Lock for major revision</a>
                                 </li>
-                                <li role="presentation" ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
-                                    <a href="" ng-click="profileCtrl.toggleDraftMode()"><span class="fa fa-unlock"></span>&nbsp;&nbsp;Publish draft changes</a>
+                                <li role="presentation"
+                                    ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
+                                    <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
+                                            class="fa fa-unlock"></span>&nbsp;&nbsp;Publish draft changes</a>
                                 </li>
-                                <li role="presentation" ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
-                                    <a href="" ng-click="profileCtrl.discardDraftChanges()"><span class="fa fa-times-circle"></span>&nbsp;&nbsp;Discard draft changes</a>
+                                <li role="presentation"
+                                    ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
+                                    <a href="" ng-click="profileCtrl.discardDraftChanges()"><span
+                                            class="fa fa-times-circle"></span>&nbsp;&nbsp;Discard draft changes</a>
                                 </li>
                             </g:if>
                             <g:if test="${params.isOpusAdmin}">
@@ -94,65 +97,117 @@
                                 </li>
                             </g:if>
                         </ul>
-                    </span>
+                    </div>
                 </div>
             </div>
-        </g:if>
+        </div>
     </div>
 
+    <div class="row margin-bottom-2" ng-cloak>
+        <g:include controller="profile" action="mapPanel" params="[opusId: params.opusId]"/>
+
+        <div class="col-md-5">
+            <h4 class="heading-underlined">At a glance information</h4>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Details</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Name:</td>
+                        <td><span
+                                class="scientific-name">{{profileCtrl.profile.scientificName | default:"Loading..."}}</span> <span
+                                class="inline-sub-heading">{{profileCtrl.profile.nameAuthor}}</span></td>
+                    </tr>
+                    <tr ng-repeat="author in profileCtrl.profile.authorship">
+                        <td>{{author.category | capitalize}}:</td>
+                        <td>{{author.text}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
-        <div class="row-fluid">
-            <div class="span8" ng-cloak>
+        <div class="row">
+            <div class="col-md-12" ng-cloak>
                 <tabset>
                     <tab heading="Details">
                         <div ng-show="messages.length" ng-cloak>
                             <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
                         </div>
-                        <g:include controller="profile" action="attributesPanel" params="[opusId: params.opusId]"/>
-                        <g:include controller="profile" action="linksPanel" params="[opusId: params.opusId]"/>
-                        <g:include controller="profile" action="bhlLinksPanel" params="[opusId: params.opusId]"/>
-                        <g:include controller="profile" action="specimenPanel" params="[opusId: params.opusId]"/>
-                        <g:include controller="profile" action="classificationPanel" params="[opusId: params.opusId]"/>
-                        <g:include controller="profile" action="taxonPanel" params="[opusId: params.opusId]"/>
-                        <g:include controller="profile" action="bibliographyPanel" params="[opusId: params.opusId]"/>
-                        <g:include controller="profile" action="imagesPanel" params="[opusId: params.opusId]"/>
-                        <g:if test="${params.isOpusReviewer}">
-                            <g:include controller="profile" action="commentsPanel" params="[opusId: params.opusId]"/>
-                        </g:if>
+
+                        <div class="col-md-2 margin-bottom-1">
+                            <ul class="nav nav-stacked" id="sidebar" ng-cloak>
+                                <h4 class="font-xxsmall heading-underlined"><strong>Page index</strong></h4>
+                                <li ng-repeat="item in nav | orderBy:'label'">
+                                    <a du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}{{item.key}}"
+                                       target="_self" class="font-xxsmall">{{item.label}}</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-10">
+                            <g:include controller="profile" action="attributesPanel" params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="linksPanel" params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="bhlLinksPanel" params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="specimenPanel" params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="classificationPanel"
+                                       params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="bibliographyPanel"
+                                       params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="listsPanel" params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="taxonPanel" params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="imagesPanel" params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="publicationsPanel"
+                                       params="[opusId: params.opusId]"/>
+                            <g:include controller="profile" action="authorPanel" params="[opusId: params.opusId]"/>
+                            <g:if test="${params.isOpusReviewer}">
+                                <g:include controller="profile" action="commentsPanel"
+                                           params="[opusId: params.opusId]"/>
+                            </g:if>
+                        </div>
+
                     </tab>
                     <tab heading="Nomenclature">
-                        <ng-include src="profileCtrl.nslUrl" ng-if="profileCtrl.profile.nslNameIdentifier">Loading...</ng-include>
-                        <alert type="warning" ng-if="!profileCtrl.profile.nslNameIdentifier">No matching name was found at <a href="https://biodiversity.org.au/nsl/services/">https://biodiversity.org.au/nsl/services/</a> for this profile</alert>
+                        <ng-include src="profileCtrl.nslUrl"
+                        ng-if="profileCtrl.profile.nslNameIdentifier">Loading...</ng-include>
+                        <alert type="warning"
+                               ng-if="!profileCtrl.profile.nslNameIdentifier">No matching name was found at <a
+                                href="https://biodiversity.org.au/nsl/services/">https://biodiversity.org.au/nsl/services/</a> for this profile
+                        </alert>
                     </tab>
                     <tab heading="Key" ng-show="profileCtrl.opus.keybaseProjectId">
                         <div key-player key-id="profileCtrl.profile.keybaseKey"
                              ng-show="profileCtrl.profile.keybaseKey"
                              keybase-url="${grailsApplication.config.keybase.key.lookup}"
                              profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile">></div>
-                        <alert type="warning" ng-show="!profileCtrl.profile.keybaseKey">There is no key available for {{profileCtrl.profile.scientificName}}.</alert>
+                        <alert type="warning"
+                               ng-show="!profileCtrl.profile.keybaseKey">There is no key available for {{profileCtrl.profile.scientificName}}.</alert>
                     </tab>
                 </tabset>
-            </div>
-
-            <div class="span4">
-                <g:include controller="profile" action="mapPanel" params="[opusId: params.opusId]"/>
-                <g:if test="${grailsApplication.config.feature.publication == 'true'}">
-                    <g:include controller="profile" action="publicationsPanel" params="[opusId: params.opusId]"/>
-                </g:if>
-                <g:include controller="profile" action="listsPanel" params="[opusId: params.opusId]"/>
-                <g:include controller="profile" action="authorPanel" params="[opusId: params.opusId]"/>
             </div>
         </div>
     </g:if>
 
-    <div class="row-fluid" ng-if="profileCtrl.opus.copyrightText">
-        <div ta-bind ng-model="profileCtrl.opus.copyrightText" class="small center"></div>
+    <div class="row" ng-if="profileCtrl.opus.copyrightText">
+        <div class="col-md-12">
+            <div ta-bind ng-model="profileCtrl.opus.copyrightText" class="small text-center"></div>
+        </div>
     </div>
-<!-- template for the popup displayed when Export as PDF is selected -->
-<script type="text/ng-template" id="exportPdf.html">
+
+    <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
+
+    <!-- template for the popup displayed when Export as PDF is selected -->
+    <script type="text/ng-template" id="exportPdf.html">
     <div class="modal-header">
-        <h3 class="modal-title">Export as PDF</h3>
+        <h4 class="modal-title">Export as PDF</h4>
     </div>
 
     <div class="modal-body">
@@ -161,6 +216,7 @@
         </p>
 
         <div ng-repeat="o in pdfCtrl.options | orderBy:'name'">
+            <div class="radio"></div>
             <label for="{{o.id}}" class="inline-label">
                 <input id="{{o.id}}" type="checkbox" name="o.name" ng-model="o.selected" ng-false-value="false">
                 {{o.name}}
@@ -169,8 +225,8 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="pdfCtrl.ok()" >OK</button>
-        <button class="btn btn-warning" ng-click="pdfCtrl.cancel()">Cancel</button>
+        <button class="btn btn-primary" ng-click="pdfCtrl.ok()">OK</button>
+        <button class="btn btn-default" ng-click="pdfCtrl.cancel()">Cancel</button>
     </div>
     </script>
 </div>

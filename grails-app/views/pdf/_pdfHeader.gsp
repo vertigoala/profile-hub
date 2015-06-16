@@ -4,22 +4,26 @@
 <head>
     <title>${profile.scientificName}</title>
 
-    <link rel="stylesheet" href="${resource(dir: '/thirdparty/bootstrap/css/bootstrap-3.1.1.min.css', absolute: true,)}"
+    <link rel="stylesheet" href="${resource(dir: '/thirdparty/bootstrap/css/bootstrap3.3.4.min.css', absolute: true)}"
           type="text/css"/>
     <link rel="stylesheet" href="${resource(dir: '/css/nsl.css', absolute: true)}" type="text/css"/>
+    <link rel="stylesheet" href="${resource(dir: '/css/theme.css', absolute: true)}" type="text/css"/>
     <link rel="stylesheet" href="${resource(dir: '/css/profiles.css', absolute: true)}" type="text/css"/>
     <link rel="stylesheet" href="${resource(dir: '/css/pdf.css', absolute: true)}" type="text/css"/>
 </head>
 
 <body>
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span12">
-            <div class="pull-left small">${opus.title}</div>
-            <div class="pull-right small">This document was produced on ${new Date().format("dd/MM/yyyy")}.</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="pull-left"><span class="small-text">${opus.title}</span></div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="pull-right"><span class="small-text">This document was produced on ${new Date().format("dd/MM/yyyy")}</span></div>
         </div>
     </div>
 </div>
-<hr/>
+
 </body>
 </html>

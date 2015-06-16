@@ -1,7 +1,7 @@
 /**
  * Profile controller
  */
-profileEditor.controller('ProfileController', function (profileService, util, messageService, config, $modal, $window, $filter, $sce, $location) {
+profileEditor.controller('ProfileController', function (profileService, util, messageService, navService, config, $modal, $window, $filter, $sce, $location) {
     var self = this;
 
     self.profile = null;
@@ -9,7 +9,15 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.opus = null;
     self.readonly = true;
 
+    self.showMap = true;
+
     self.opusId = util.getEntityId("opus");
+
+    self.index = [
+        {name: "Links", link: "links"},
+        {name: "Biodiversity Heritage Library references", link: "bhllinks"},
+        {name: "Specimens", link: "specimens"},
+    ];
 
     var orderBy = $filter("orderBy");
 
@@ -31,6 +39,18 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                     self.nslUrl = $sce.trustAsResourceUrl(config.nslNameUrl + self.profile.nslNameIdentifier + ".html");
 
                     $window.document.title = self.profile.scientificName + " | " + self.opus.title;
+
+                    if (self.profile.specimenIds && self.profile.specimenIds.length > 0 || !self.readonly()) {
+                        navService.add("Specimens", "specimens");
+                    }
+
+                    if (self.profile.bibliography && self.profile.bibliography.length > 0 || !self.readonly()) {
+                        navService.add("Bibliography", "bibliography");
+                    }
+
+                    if (!self.readonly()) {
+                        navService.add("Authors & Acknowledgements", "authorship");
+                    }
                 },
                 function () {
                     messageService.alert("An error occurred while loading the profile.");
@@ -57,7 +77,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             templateUrl: "createProfile.html",
             controller: "CreateProfileController",
             controllerAs: "createProfileCtrl",
-            size: "sm",
+            size: "md",
             resolve: {
                 opusId: function() {
                     return opusId;

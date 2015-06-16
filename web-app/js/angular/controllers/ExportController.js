@@ -12,7 +12,7 @@ profileEditor.controller('ExportController', function (util, $window, $modal) {
             templateUrl: "exportPdf.html",
             controller: "ExportPDFController",
             controllerAs: "pdfCtrl",
-            size: "sm",
+            size: "md",
             resolve: {
 
             }

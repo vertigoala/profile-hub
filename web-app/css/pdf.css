@@ -1,6 +1,10 @@
 /* PDF specific CSS styles */
-.small {
-    font-size: 10px;
+body {
+    background-color: white;
+}
+
+.small-text {
+    font-size: 10px !important;
 }
 
 .center {

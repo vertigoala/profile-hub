@@ -2,7 +2,7 @@
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-    <link rel="stylesheet" href="${resource(dir: '/thirdparty/bootstrap/css/bootstrap-3.1.1.min.css', absolute: true,)}"
+    <link rel="stylesheet" href="${resource(dir: '/thirdparty/bootstrap/css/bootstrap3.3.4.min.css', absolute: true,)}"
           type="text/css"/>
     <link rel="stylesheet" href="${resource(dir: '/css/nsl.css', absolute: true)}" type="text/css"/>
     <link rel="stylesheet" href="${resource(dir: '/css/profiles.css', absolute: true)}" type="text/css"/>
@@ -15,10 +15,10 @@
 </head>
 
 <body>
-<div class="container-fluid">
+<div class="container">
     <div class="customizable-banner">
-        <div class="row-fluid span12">
-            <div class="span6">
+        <div class="row">
+            <div class="col-md-6">
                 <div class="customizable-logo pull-left">
                     <img class="customizable-logo-img"
                          src="${opus.logoUrl ?: grailsApplication.config.ala.base.url + '/wp-content/themes/ala2011/images/logo.png'}"/>
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <div class="row-fluid">
+    <div class="row">
         <h1><span class="scientific-name">${profile.scientificName}</span> <span
                 class="inline-sub-heading">${profile.nameAuthor}</span></h1>
     </div>

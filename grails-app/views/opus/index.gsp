@@ -10,39 +10,45 @@
 
 <body>
 
-<div class="container-fluid" ng-app="profileEditor" ng-controller="OpusController as opusCtrl">
-    <div class="row-fluid flexbox">
-        <div class="span12">
-            <div class="span6"></div>
-            <g:render template="../layouts/login"/>
-        </div>
+<div ng-controller="OpusController as opusCtrl" class="margin-bottom-3">
+    <div class="row">
+        <div class="col-md-12">
 
-        <div class="span12" ng-cloak>
+            <h2 class="heading-large">Profile Collections</h2>
+
+            <g:if test="${params.isALAAdmin}">
+                <div class="pull-right">
+                    <a class="btn btn-default" href="${request.contextPath}/opus/create"
+                       target="_self">Create a new collection</a>
+                </div>
+            </g:if>
+
             <tabset>
-                <tab heading="Collections">
-                    <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-lg-2 col-md-3 col-sm-3">
-                        <a href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}" target="_self">
-                            <img src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
-                                 alt="{{opus.title}} logo" title="{{opus.title}}"
-                                 class="img-thumbnail img-responsive img-circle collection-thumbnail">
-                        </a>
+                <tab heading="Collections" class="font-xxsmall">
+                    <div ng-cloak>
+                        <div class="col-md-12">
+                            <h3 class="heading-medium">Browse by individual collection</h3>
+                        </div>
 
-                        <h4 class="text-center">{{opus.title}}</h4>
+                        <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-xs-12 col-sm-2 text-center">
+                            <a href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
+                               target="_self">
+                                <img class="img-responsive collection-thumbnail thumbnail"
+                                     src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
+                                     alt="{{opus.title}} logo" title="{{opus.title}}"></a>
+                            <h4 class="font-xxsmall"><a
+                                    href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
+                                    target="_self"><strong>{{opus.title}}</strong></a></h4>
+                        </div>
                     </div>
                 </tab>
-                <tab heading="Quick Search">
+                <tab heading="Quick Search" class="font-xxsmall">
                     <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
                 </tab>
             </tabset>
-        </div>
 
+        </div>
     </div>
-
-    <g:if test="${params.isALAAdmin}">
-        <div class="pull-right">
-            <a class="btn btn-info" href="${request.contextPath}/opus/create" target="_self">Create a new collection</a>
-        </div>
-    </g:if>
 </div>
 </body>
 

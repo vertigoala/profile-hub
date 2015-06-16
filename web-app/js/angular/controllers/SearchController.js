@@ -28,6 +28,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
             wildcard = true
         }
 
+        self.selectedTaxon = {};
+
         var searchResult = profileService.profileSearch(self.opusId, self.searchTerm, wildcard);
         searchResult.then(function (data) {
                 console.log("Found " + data.length + " results");
@@ -53,6 +55,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         if (offset === undefined) {
             offset = 0;
         }
+
         var result = profileService.profileSearchByTaxonLevel(self.opusId, level, self.MAX_FACET_ITEMS, offset);
         result.then(function(data) {
             if (!self.taxonResults[level]) {
@@ -70,6 +73,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         if (offset === undefined) {
             offset = 0;
         }
+
+        self.searchTerm = null;
 
         var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon, scientificName, self.pageSize, offset);
         results.then(function (data) {

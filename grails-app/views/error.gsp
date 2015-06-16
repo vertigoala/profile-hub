@@ -8,17 +8,11 @@
 
 <body>
 
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="span6">
-            <ol class="breadcrumb" role="navigation">
-                <li><i class="fa fa-arrow-left"></i><span class="divider"/><a href="${request.contextPath}/" target="_self">Home</a></li>
-            </ol>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger">An unexpected error has occurred while processing your request.</div>
         </div>
-    </div>
-
-    <div class="row-fluid">
-        <div class="alert alert-danger">An unexpected error has occurred while processing your request.</div>
     </div>
 </div>
 </body>

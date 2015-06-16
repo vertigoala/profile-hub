@@ -26,6 +26,7 @@ module.exports = function (config) {
             'web-app/thirdparty/textAngular/textAngular-rangy-1.3.11.min.js',
             'web-app/thirdparty/textAngular/textAngular-sanitize-1.3.11.min.js',
             'web-app/thirdparty/google-diff-match-patch/diff_match_patch.js',
+            'web-app/thirdparty/angular-scroll/angular-scroll.min.js',
             'web-app/js/angular/profiles.js',
             'web-app/js/angular/utils/*.js',
             'web-app/js/angular/directives/*.js',

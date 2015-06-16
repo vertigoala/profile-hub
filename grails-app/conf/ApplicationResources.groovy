@@ -1,8 +1,10 @@
 modules = {
     profiles {
         resource url:"css/nsl.css"
+        resource url:"css/theme.css"
         resource url:"css/profiles.css"
         dependsOn "jquery"
+        dependsOn "bootstrap3"
         dependsOn "bootstrap_fileupload"
         dependsOn "angular"
         dependsOn "leaflet"
@@ -12,12 +14,14 @@ modules = {
         dependsOn "richText"
         dependsOn "google_diff"
         dependsOn "jspath"
+        dependsOn "angular_scroll"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
         resource url:"js/angular/directives/keyplayer.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
+        resource url:"js/angular/services/NavService.js"
         resource url:"js/angular/controllers/OpusController.js"
         resource url:"js/angular/controllers/ProfileController.js"
         resource url:"js/angular/controllers/UserAccessController.js"
@@ -41,7 +45,12 @@ modules = {
     angular {
         resource url:"thirdparty/angular/angular-1.3.13.min.js"
         resource url:"thirdparty/angular/ui-bootstrap-tpls-0.12.0.js"
-        resource url:"thirdparty/bootstrap/css/bootstrap-3.1.1.min.css"
+        dependsOn 'bootstrap3'
+    }
+
+    bootstrap3 {
+        resource url:"thirdparty/bootstrap/css/bootstrap3.3.4.min.css"
+        resource url:"thirdparty/bootstrap/js/bootstrap.min.js"
     }
 
     leaflet {
@@ -83,5 +92,9 @@ modules = {
 
     jspath {
         resource url:"thirdparty/jspath/jspath.min.js"
+    }
+
+    angular_scroll {
+        resource url:"thirdparty/angular-scroll/angular-scroll.min.js"
     }
 }

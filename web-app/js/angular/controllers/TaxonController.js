@@ -1,7 +1,7 @@
 /**
  * Taxon controller
  */
-profileEditor.controller('TaxonController', function (profileService, util, messageService, $modal) {
+profileEditor.controller('TaxonController', function (profileService, navService, util, messageService, $modal) {
     var self = this;
 
     self.speciesProfile = null;
@@ -77,6 +77,10 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
                     console.log("Fetched species profile");
 
                     self.speciesProfile = data;
+
+                    if (self.speciesProfile && self.speciesProfile.taxonConcept) {
+                        navService.add("Taxonomy from " + self.speciesProfile.taxonConcept.infoSourceName, "taxon");
+                    }
 
                     messageService.pop();
                 },
