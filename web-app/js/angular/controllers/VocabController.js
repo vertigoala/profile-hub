@@ -55,7 +55,7 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
             templateUrl: "removeTermPopup.html",
             controller: "RemoveTermController",
             controllerAs: "removeTermCtrl",
-            size: "sm",
+            size: "md",
             resolve: {
                 usageData: function() {
                     return data
@@ -108,7 +108,7 @@ profileEditor.controller('VocabController', function ($rootScope, profileService
             templateUrl: "editTermPopup.html",
             controller: "VocabModalController",
             controllerAs: "vocabModalCtrl",
-            size: "sm",
+            size: "md",
             resolve: {
                 term: function() {
                     return angular.copy(self.vocabulary.terms[index]);

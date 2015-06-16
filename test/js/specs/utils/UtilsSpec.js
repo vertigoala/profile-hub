@@ -79,5 +79,9 @@ describe("Util tests", function () {
         expect(service.getEntityId("profile")).toBe("profileId3");
     });
 
+    it("should replace all punctuation and whitespace with underscores, and convert to lowercase, when toKey is called", function() {
+        expect(service.toKey("Hello World")).toBe("hello_world");
+        expect(service.toKey("Hello: World!")).toBe("hello__world_");
+    })
 });
 

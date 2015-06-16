@@ -99,7 +99,7 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
             templateUrl: "editItemPopup.html",
             controller: "GlossaryModalController",
             controllerAs: "glossaryModalCtrl",
-            size: "sm",
+            size: "md",
             resolve: {
                 item: function () {
                     return angular.copy(self.glossary.items[index]);
@@ -117,7 +117,7 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
             templateUrl: "editItemPopup.html",
             controller: "GlossaryModalController",
             controllerAs: "glossaryModalCtrl",
-            size: "sm",
+            size: "md",
             resolve: {
                 item: function () {
                     return {term: null, description: null, uuid: null};

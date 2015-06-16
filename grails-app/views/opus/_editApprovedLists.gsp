@@ -1,33 +1,58 @@
-<div class="well control-group" ng-form="ListForm" ng-cloak>
-    <h3>Approved Lists</h3>
+<div class="panel panel-default" ng-form="ListForm" ng-cloak>
+    <div class="panel-heading">
+        <a name="approvedLists">
+            <h4>Approved Lists</h4>
+        </a>
+    </div>
 
-    <p>Configure the species lists to be included in your profile pages. If you do not approve any specific lists, then all lists will be considered.</p>
+    <div class="panel-body">
+        <div class="col-sm-12">
+            <p>Configure the species lists to be included in your profile pages. If you do not approve any specific lists, then all lists will be considered.</p>
 
-    <ul>
-        <li ng-repeat="approvedList in opusCtrl.opus.approvedLists">
-            <a href="${grailsApplication.config.lists.base.url}/speciesListItem/list/{{approvedList}}">{{(opusCtrl.allSpeciesLists | filter: approvedList)[0].listName | default:'Loading...'}}</a>
-            <a class="btn btn-mini btn-danger" title="Remove this resource"
-                    ng-click="opusCtrl.removeApprovedList($index, 'existing', ListForm)">
-                <i class="icon-minus icon-white"></i>
-            </a>
-        </li>
+            <div class="col-sm-12">
+                <ul>
+                    <li ng-repeat="approvedList in opusCtrl.opus.approvedLists">
+                        <a href="${grailsApplication.config.lists.base.url}/speciesListItem/list/{{approvedList}}">{{(opusCtrl.allSpeciesLists | filter: approvedList)[0].listName | default:'Loading...'}}</a>
+                        <a class="btn btn-mini btn-link" title="Remove this resource"
+                           ng-click="opusCtrl.removeApprovedList($index, 'existing', ListForm)">
+                            <i class="fa fa-trash-o color--red"></i>
+                        </a>
+                    </li>
 
-        <li ng-repeat="approvedList in opusCtrl.newApprovedLists">
-            <input placeholder="List name..."
-                   ng-model="approvedList.list"
-                   autocomplete="off"
-                   class="input-xlarge"
-                   typeahead="list as list.listName for list in opusCtrl.allSpeciesLists | filter:$viewValue | limitTo:10"/>
-            <span class="fa fa-ban red" ng-if="approvedList.list && !approvedList.list.dataResourceUid"></span>
-            <button class="btn btn-mini btn-danger" title="Remove this resource"
-                    ng-click="opusCtrl.removeApprovedList($index, 'new', ListForm)">
-                <i class="icon-minus icon-white"></i>
-            </button>
-        </li>
-    </ul>
-    <button class="btn btn-primary" ng-click="opusCtrl.saveApprovedLists(ListForm)">
-        <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="ListForm.$dirty">*</span> Save</span>
-        <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
-    </button>
-    <button class="btn btn-info" ng-click="opusCtrl.addApprovedList()"><i class="icon icon-plus icon-white"></i>  Add list</button>
+                    <li ng-repeat="approvedList in opusCtrl.newApprovedLists">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <input placeholder="List name..."
+                                       ng-model="approvedList.list"
+                                       autocomplete="off" size="70"
+                                       class="form-control"
+                                       typeahead="list as list.listName for list in opusCtrl.allSpeciesLists | filter:$viewValue | limitTo:10"/>
+                                <span class="fa fa-ban color--red"
+                                      ng-if="approvedList.list && !approvedList.list.dataResourceUid"></span>
+                                <button class="btn btn-mini btn-link" title="Remove this resource"
+                                        ng-click="opusCtrl.removeApprovedList($index, 'new', ListForm)">
+                                    <i class="fa fa-trash-o color--red"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group">
+                    <button class="btn btn-default" ng-click="opusCtrl.addApprovedList()"><i
+                            class="fa fa-plus"></i>  Add list</button>
+                </div>
+                <button class="btn btn-primary pull-right" ng-click="opusCtrl.saveApprovedLists(ListForm)">
+                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="ListForm.$dirty">*</span> Save</span>
+                    <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

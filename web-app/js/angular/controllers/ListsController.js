@@ -1,7 +1,7 @@
 /**
  * Species Lists controller
  */
-profileEditor.controller('ListsEditor', function (profileService, util, messageService, $filter) {
+profileEditor.controller('ListsEditor', function (profileService, navService, util, messageService, $filter) {
     var self = this;
 
     self.lists = [];
@@ -32,6 +32,10 @@ profileEditor.controller('ListsEditor', function (profileService, util, messageS
         var promise = profileService.getSpeciesProfile(self.opusId, self.profileId, self.profile.guid);
         promise.then(function (data) {
             self.conservationStatuses = orderBy(data.conservationStatuses, "region");
+
+            if (self.conservationStatuses.length > 0) {
+                navService.add("Conservation Status", "conservationStatus");
+            }
         });
     };
 
@@ -81,6 +85,10 @@ profileEditor.controller('ListsEditor', function (profileService, util, messageS
                     });
 
                     self.lists = orderBy(self.lists, 'listName');
+
+                    if (self.lists.length > 0) {
+                        navService.add("Conservation & Sensitivity Lists", "lists");
+                    }
 
                     self.loadConservationStatus();
 

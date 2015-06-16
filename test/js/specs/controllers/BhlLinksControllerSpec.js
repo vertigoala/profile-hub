@@ -109,16 +109,16 @@ describe("BHLLinksController tests", function () {
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the Biodiversity Heritage References.");
     });
 
-    it("should create a new empty link object at the start of the list when addLink is invoked", function () {
+    it("should create a new empty link object at the end of the list when addLink is invoked", function () {
         scope.bhlCtrl.bhl = [{"url": "blabla", "title": "linkTitle", "description": "desc"}];
         scope.bhlCtrl.addLink();
 
         expect(scope.bhlCtrl.bhl.length).toBe(2);
-        expect(scope.bhlCtrl.bhl[0].uuid).not.toBeDefined();
-        expect(scope.bhlCtrl.bhl[0].title).toBe("");
-        expect(scope.bhlCtrl.bhl[0].url).toBe("");
-        expect(scope.bhlCtrl.bhl[0].description.length).toBe(0);
-        expect(scope.bhlCtrl.bhl[0].thumbnailUrl.length).toBe(0);
+        expect(scope.bhlCtrl.bhl[1].uuid).not.toBeDefined();
+        expect(scope.bhlCtrl.bhl[1].title).toBe("");
+        expect(scope.bhlCtrl.bhl[1].url).toBe("");
+        expect(scope.bhlCtrl.bhl[1].description.length).toBe(0);
+        expect(scope.bhlCtrl.bhl[1].thumbnailUrl.length).toBe(0);
     });
 
     it("it should remove the specified link from the list when deleteLink is invoked", function () {

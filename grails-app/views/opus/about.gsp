@@ -8,8 +8,13 @@
 
 <body>
 
-<div ng-app="profileEditor" ng-controller="AboutController as aboutCtrl">
-    <div ta-bind ng-model="aboutCtrl.aboutHtml"></div>
+<div ng-controller="AboutController as aboutCtrl" class="container">
+    <div class="margin-bottom-2"></div>
+    <div class="row">
+        <div class="col-md-12 col-xs-12 col-lg-12">
+            <div ta-bind ng-model="aboutCtrl.aboutHtml"></div>
+        </div>
+    </div>
 </div>
 
 </body>

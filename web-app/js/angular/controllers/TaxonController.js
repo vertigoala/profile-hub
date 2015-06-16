@@ -1,7 +1,7 @@
 /**
  * Taxon controller
  */
-profileEditor.controller('TaxonController', function (profileService, util, messageService, $modal) {
+profileEditor.controller('TaxonController', function (profileService, navService, util, messageService, $modal) {
     var self = this;
 
     self.speciesProfile = null;
@@ -78,6 +78,10 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
 
                     self.speciesProfile = data;
 
+                    if (self.speciesProfile && self.speciesProfile.taxonConcept) {
+                        navService.add("Taxonomy from " + self.speciesProfile.taxonConcept.infoSourceName, "taxon");
+                    }
+
                     messageService.pop();
                 },
                 function () {
@@ -92,7 +96,6 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
         results.then(function (data) {
 
                 angular.forEach(data, function(subSpecies) {
-                    console.log("subspecies: " + JSON.stringify(subSpecies))
                     if (subSpecies.scientificName != self.profile.scientificName && subSpecies.rank == util.RANK.SUBSPECIES) {
                         self.infraspecificTaxa.push(subSpecies);
                     }

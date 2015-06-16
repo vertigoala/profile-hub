@@ -1,7 +1,7 @@
 /**
  * Attributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, util, messageService, $window, $filter, $modal) {
+profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $scope) {
     var self = this;
 
     self.attributes = [];
@@ -12,6 +12,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.supportingAttributes = {};
     self.showSupportingData = false;
     self.currentUser = util.currentUser();
+    self.supportingAttributeTitles = [];
 
     var capitalize = $filter("capitalize");
 
@@ -28,6 +29,11 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 self.profile = data.profile;
                 self.opus = data.opus;
                 self.attributes = data.profile.attributes;
+
+                angular.forEach(self.attributes, function(attribute) {
+                    navService.add(attribute.title, util.toKey(attribute.title));
+                    attribute.key = util.toKey(attribute.title);
+                });
 
                 if (self.opus.supportingOpuses && self.opus.supportingOpuses.length > 0) {
                     self.loadAttributesFromSupportingCollections();
@@ -240,8 +246,14 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                                         opusShortName: supporting.opus.shortName,
                                         profileId: supporting.profile.uuid
                                     };
+
+                                    attribute.key = util.toKey(attribute.title);
+
                                     self.attributes.push(attribute);
                                     var title = {name: attribute.title};
+
+                                    self.supportingAttributeTitles.push(attribute.title);
+
                                     if (self.attributeTitles.indexOf(title) == -1) {
                                         self.attributeTitles.push(title);
                                     }
@@ -277,6 +289,16 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 supporting: function () {
                     return supporting;
                 }
+            }
+        });
+    };
+
+    self.toggleShowSupportingData = function() {
+        angular.forEach(self.supportingAttributeTitles, function(title) {
+            if (self.showSupportingData) {
+                navService.add(title, util.toKey(title));
+            } else {
+                navService.remove(util.toKey(title));
             }
         });
     };

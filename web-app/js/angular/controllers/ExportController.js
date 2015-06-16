@@ -12,7 +12,7 @@ profileEditor.controller('ExportController', function (util, $window, $modal) {
             templateUrl: "exportPdf.html",
             controller: "ExportPDFController",
             controllerAs: "pdfCtrl",
-            size: "sm",
+            size: "md",
             resolve: {
 
             }
@@ -42,7 +42,7 @@ profileEditor.controller('ExportPDFController', function ($modalInstance) {
 
     self.options = [
         {id: "attributes", name: "Attributes", selected: true},
-        {id: "map", name: "Map", selected: true},
+        {id: "map", name: "Map", selected: false},
         {id: "taxonomy", name: "Taxonomy", selected: true},
         {id: "nomenclature", name: "Nomenclature", selected: true},
         {id: "links", name: "Links", selected: false},
@@ -50,7 +50,8 @@ profileEditor.controller('ExportPDFController', function ($modalInstance) {
         {id: "specimens", name: "Specimens", selected: false},
         {id: "bibliography", name: "Bibliography", selected: false},
         {id: "images", name: "Images", selected: false},
-        {id: "conservation", name: "Conservation Status", selected: false}
+        {id: "conservation", name: "Conservation Status", selected: false},
+        //{id: "children", name: "Children", selected: false}
     ];
 
     self.ok = function() {

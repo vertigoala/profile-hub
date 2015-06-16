@@ -26,23 +26,24 @@ class ExportService {
     byte[] createPdf(Map params) {
         def model = profileService.getProfile(params.opusId as String, params.profileId as String)
         model.options = params
+        model.grailsApplication = grailsApplication
 
         if (!model) {
             null
         } else {
             if (params.taxonomy || params.conservation) {
-                model.speciesProfile = profileService.getSpeciesProfile(model.profile.guid)?.resp
+                model.profile.speciesProfile = profileService.getSpeciesProfile(model.profile.guid)?.resp
 
-                model.speciesProfile?.conservationStatuses?.each {
+                model.profile.speciesProfile?.conservationStatuses?.each {
                     it.colour = getColourForStatus(it.status)
                     it.regionAbbrev = statusRegions[it.region]
                 }
 
-                model.classifications = profileService.getClassification(model.opus.uuid, params.profileId, model.profile.guid)?.resp
+                model.profile.classifications = profileService.getClassification(model.opus.uuid, params.profileId, model.profile.guid)?.resp
             }
 
             if (params.specimens) {
-                model.specimens = model.profile.specimenIds?.collect {
+                model.profile.specimens = model.profile.specimenIds?.collect {
                     def spec = biocacheService.lookupSpecimen(it)?.resp
                     [
                             institutionName: spec.processed.attribution.institutionName,
@@ -56,7 +57,7 @@ class ExportService {
                 String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
                 def images = biocacheService.retrieveImages(searchIdentifier, model.opus.imageSources.join(","))?.resp
 
-                model.images = images?.occurrences?.collect {
+                model.profile.images = images?.occurrences?.collect {
                     [
                             excluded        : model.profile.excludedImages.contains(it.image),
                             largeImageUrl   : it.largeImageUrl,
@@ -66,14 +67,21 @@ class ExportService {
             }
 
             if (params.nomenclature && model.profile.nslNameIdentifier) {
-                model.nomenclatureHtml = webService.get("${grailsApplication.config.nsl.name.url.prefix}${model.profile.nslNameIdentifier}", false)?.resp?.replaceAll("&", "&amp;")
+                model.profile.nomenclatureHtml = webService.get("${grailsApplication.config.nsl.name.url.prefix}${model.profile.nslNameIdentifier}", false)?.resp?.replaceAll("&", "&amp;")
             }
 
             String occurrenceQuery = createOccurrenceQuery(model.profile, model.opus)
-            model.mapImageUrl = createMapImageUrl(model.opus, occurrenceQuery)
+            model.profile.mapImageUrl = createMapImageUrl(model.opus, occurrenceQuery)
+
+            if (params.children) {
+                def children = profileService.findByNameAndTaxonLevel(model.opus.uuid, model.profile.rank, model.profile.scientificName, "99999", "0", false)?.resp
+                model.profile.children = children
+            }
 
             wkhtmltoxService.makePdf(
                     view: "/pdf/_profile",
+                    footer: "/pdf/_pdfFooter",
+                    header: "/pdf/_pdfHeader",
                     model: model,
                     marginLeft: 15,
                     marginTop: 20,

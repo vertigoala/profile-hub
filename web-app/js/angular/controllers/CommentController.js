@@ -1,7 +1,7 @@
 /**
  * Profile comments controller
  */
-profileEditor.controller('CommentController', function (profileService, util, config, messageService, $filter, $location, $anchorScroll, $modal) {
+profileEditor.controller('CommentController', function (profileService, navService, util, config, messageService, $filter) {
     var self = this;
 
     self.comments = [];
@@ -11,10 +11,18 @@ profileEditor.controller('CommentController', function (profileService, util, co
 
     var orderBy = $filter("orderBy");
 
+    self.readonly = function () {
+        return config.readonly;
+    };
+
     self.loadComments = function() {
         var promise = profileService.getComments(self.opusId, self.profileId);
         promise.then(function(data) {
             self.comments = orderBy(data, 'dateCreated');
+
+            if (config.isOpusReviewer) {
+                navService.add("Comments", "comments");
+            }
         })
     };
 
@@ -88,7 +96,7 @@ profileEditor.controller('CommentController', function (profileService, util, co
         angular.forEach(path, function(index) {
             comment = array[index];
             if (comment.children) {
-                array = comment.children
+                array = orderBy(comment.children, 'dateCreated');
             }
         });
         return comment;

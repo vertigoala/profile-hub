@@ -1,7 +1,7 @@
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function (profileService, util, messageService) {
+profileEditor.controller('ImagesController', function (profileService, navService, util, messageService) {
     var self = this;
     
     self.images = [];
@@ -87,6 +87,10 @@ profileEditor.controller('ImagesController', function (profileService, util, mes
                         primary: occurrence.image == self.profile.primaryImage
                     };
                     self.images.push(image);
+
+                    if (self.images.length > 0 || !self.readonly) {
+                        navService.add("Images", "images");
+                    }
 
                     if (occurrence.image == self.profile.primaryImage) {
                         self.primaryImage = image;
