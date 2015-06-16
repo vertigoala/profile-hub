@@ -115,12 +115,18 @@
 
 <div class="panel panel-default" id="browse_attributes_edit">
     <div class="panel-body">
+        <select ng-show="attrCtrl.vocabularyStrict"
+                ng-model="attribute.title" class="form-control attribute-header-input margin-bottom-1">
+            <option value="">--- Select one ---</option>
+            <option ng-repeat="(key, value) in attrCtrl.allowedVocabulary" value="{{value}}" ng-selected="attribute.title == value">{{value}}</option>
+        </select>
         <input type="text"
                autocomplete="off"
                required
                typeahead="attributeTitle for attributeTitle in attrCtrl.allowedVocabulary | filter: $viewValue"
                class="form-control attribute-header-input margin-bottom-1" ng-model="attribute.title" name="title"
-               value="title" placeholder="Title..."/>
+               value="title" placeholder="Title..."
+               ng-show="!attrCtrl.vocabularyStrict"/>
         <alert ng-show="attribute.title && !attrCtrl.isValid(attribute.title)"
                type="danger">You must select a value from the list of approved titles.</alert>
 
@@ -223,7 +229,7 @@
         </div>
     </div>
 
-    <div class="panel-footer" ng-show="attrCtrl.opus.allowCopyFromLinkedOpus && !attrCtrl.readonly">
+    <div class="panel-footer" ng-show="!attrCtrl.readonly">
         <div class="row">
             <span class="col-md-12">
                 <button class="btn btn-default" ng-click="attrCtrl.deleteAttribute($index)">Delete attribute</button>

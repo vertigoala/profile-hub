@@ -303,6 +303,9 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
         });
     };
 
+    self.parseInt = function(number) {
+        return parseInt(number, 10);
+    }
 });
 
 
