@@ -45,15 +45,15 @@
                     <span ng-repeat="term in vocabCtrl.vocabulary.terms" class="column-item"
                           ng-if="!vocabCtrl.termIsInReplacementList(term)">
                         <span ng-class="term.termId ? '' : 'newItem'">{{term.order + 1}}. {{ term.name }}</span>
-                        <button class="btn-link fa fa-edit" title="Edit the {{ term.name }} term"
+                        <button class="btn btn-link btn-xs fa fa-edit" title="Edit the {{ term.name }} term"
                                 ng-click="vocabCtrl.editVocabTerm($index, VocabForm)"></button>
-                        <button class="btn-link fa fa-trash-o" title="Delete the {{ term.name }} term"
+                        <button class="btn btn-link btn-xs fa fa-trash-o" title="Delete the {{ term.name }} term"
                                 ng-click="vocabCtrl.removeVocabTerm($index, VocabForm)"></button>
-                        <button class="btn btn-link fa fa-arrow-down"
+                        <button class="btn btn-link btn-xs fa fa-arrow-down"
                                 ng-if="!$last"
                                 ng-click="vocabCtrl.moveTermDown($index, VocabForm)"
                                 title="Move this term down"></button>
-                        <button class="btn btn-link fa fa-arrow-up" ng-if="!$first"
+                        <button class="btn btn-link btn-xs fa fa-arrow-up" ng-if="!$first"
                                 ng-click="vocabCtrl.moveTermUp($index, VocabForm)"
                                 title="Move this term up"></button>
                     </span>
