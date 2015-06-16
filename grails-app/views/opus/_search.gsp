@@ -1,6 +1,6 @@
 <div ng-controller="SearchController as searchCtrl" ng-cloak>
     <!-- Row search -->
-    <div class="col-xs-12 col-sm-10">
+    <div class="col-xs-12 col-sm-12 col-md-12">
         <h3 class="heading-medium">Search for a profile</h3>
 
         <div class="input-group">
@@ -18,6 +18,7 @@
         </div>
     </div>
 
+    <div class="col-xs-12 col-sm-12 col-md-12">
     <div class="table-responsive">
         <table class="table table-striped" ng-show="searchCtrl.profiles.length > 0">
             <tr>
@@ -33,6 +34,7 @@
                 <td ng-if="!searchCtrl.opusId">{{profile.opus.title}}</td>
             </tr>
         </table>
+    </div>
     </div>
 
     <div ng-show="searchCtrl.profiles.length == 0 && searchCtrl.searchTerm">
