@@ -11,7 +11,7 @@
                     <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6" ng-if="!image.excluded">
                         <div class="imgCon">
                             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                               target="_self" ng-if="image.largeImageUrl">
+                               target="_blank" ng-if="image.largeImageUrl">
                                 <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl" class="thumbnail"/>
                             </a>
 
@@ -50,7 +50,7 @@
                     <div class="col-sm-6">
                         <div class="imgCon">
                             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                               target="_self" ng-if="image.largeImageUrl">
+                               target="_blank" ng-if="image.largeImageUrl">
                                 <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl"/>
                             </a>
 

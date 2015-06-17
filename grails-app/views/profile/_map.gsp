@@ -1,33 +1,39 @@
-<div class="col-md-6" ng-controller="ImagesController as imageCtrl"
-     ng-init="imageCtrl.init('${edit}')" ng-show="imageCtrl.primaryImage" ng-cloak>
-    <div id="primaryImage" class="col-md-12">
-        <div class="primary-image">
-            <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{imageCtrl.primaryImage.occurrenceId}}"
-               target="_self" ng-if="imageCtrl.primaryImage.largeImageUrl">
-                <img ng-src="{{imageCtrl.primaryImage.largeImageUrl}}" ng-if="imageCtrl.primaryImage.largeImageUrl"/>
-            </a>
+<div class="row">
+    <div class="col-lg-5 col-md-6 col-sm-12">
+        <div ng-controller="MapController as mapCtrl"
+             ng-init="mapCtrl.init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')"
+             class="col-md-12" ng-cloak>
 
-            <p class="font-xxsmall"><strong>{{ imageCtrl.primaryImage.dataResourceName }}</strong></p>
+            <leaflet style="height: 300px; width: 450px;" center="mapCtrl.center"
+                     layers="mapCtrl.layers"
+                     event-broadcast="mapCtrl.events"></leaflet>
+        </div>
+
+        <div class="col-md-12">
+            <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?q={{mapCtrl.constructQuery()}}">View in {{profileCtrl.opus.biocacheName}}</a>
         </div>
     </div>
-    <div class="col-md-12" ng-show="imageCtrl.primaryImage">
-        <a target="_self" href=""
-           du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}images">View other images</a>
-    </div>
-</div>
 
-<div class="col-md-6">
-    <div ng-controller="MapController as mapCtrl"
-         ng-init="mapCtrl.init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')"
-         class="col-md-12" ng-cloak>
+    <div class="col-lg-7 col-md-6 col-sm-12" ng-controller="ImagesController as imageCtrl"
+         ng-init="imageCtrl.init('${edit}')" ng-show="imageCtrl.primaryImage" ng-cloak>
+        <div id="primaryImage" class="col-md-12">
+            <div class="primary-image col-md-12">
+                <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{imageCtrl.primaryImage.occurrenceId}}"
+                   target="_blank" ng-if="imageCtrl.primaryImage.largeImageUrl">
+                    <img ng-src="{{imageCtrl.primaryImage.largeImageUrl}}"
+                         ng-if="imageCtrl.primaryImage.largeImageUrl"/>
+                </a>
 
-        <leaflet style="height: 300px; width: 450px; float: right; margin-top:10px;" center="mapCtrl.center"
-                 layers="mapCtrl.layers"
-                 event-broadcast="mapCtrl.events"></leaflet>
-    </div>
+            </div>
 
-    <div class="col-md-12">
-        <a class="pull-right padding-top-1"
-           href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?q={{mapCtrl.constructQuery()}}">View in {{profileCtrl.opus.biocacheName}}</a>
+            <div class="col-md-12">
+                <strong class="font-xxsmall">{{ imageCtrl.primaryImage.dataResourceName }}</strong>
+            </div>
+
+            <div class="col-md-12" ng-show="imageCtrl.primaryImage">
+                <a target="_self" href=""
+                   du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}images">View other images</a>
+            </div>
+        </div>
     </div>
 </div>
