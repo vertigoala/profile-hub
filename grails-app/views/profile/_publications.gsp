@@ -3,36 +3,39 @@
      ng-show="pubCtrl.publications.length > 0 || !pubCtrl.readonly()"
      ng-form="PubForm">
     <a name="{{pubCtrl.readonly() ? 'view_' : 'edit_'}}publications"></a>
+
     <div class="panel-body">
-        <div class="col-sm-2"><strong>Versions</strong></div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Versions</strong></div>
 
-        <div class="col-sm-10">
-            <div ng-repeat="publication in pubCtrl.publications">
-                <div class="row">
-                    <div class="col-md-10">
-                        <strong ng-show="publication.title != ''">
-                            Title: {{publication.title}}
-                        </strong>
+            <div class="col-sm-10">
+                <div ng-repeat="publication in pubCtrl.publications">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <strong ng-show="publication.title != ''">
+                                Title: {{publication.title}}
+                            </strong>
 
-                        <div ng-show="publication.publicationDate != ''">
-                            <strong>Publication Date:&nbsp;</strong>{{publication.publicationDate | date:"dd/MM/yyyy HH:mm"}}
+                            <div ng-show="publication.publicationDate != ''">
+                                <strong>Publication Date:&nbsp;</strong>{{publication.publicationDate | date:"dd/MM/yyyy HH:mm"}}
+                            </div>
+
+                            <div ng-show="publication.authors != ''">
+                                <strong>Authors:&nbsp;</strong>{{publication.authors}}
+                            </div>
+
+                            <div ng-show="publication.doi">
+                                <strong>Unique ID:&nbsp;</strong>{{publication.uuid}}
+                            </div>
                         </div>
 
-                        <div ng-show="publication.authors != ''">
-                            <strong>Authors:&nbsp;</strong>{{publication.authors}}
-                        </div>
-
-                        <div ng-show="publication.doi">
-                            <strong>Unique ID:&nbsp;</strong>{{publication.uuid}}
+                        <div class="col-md-2">
+                            <a ng-href="${grailsApplication.config.profile.service.url}/opus/{{pubCtrl.opusId}}/profile/{{pubCtrl.profileId}}/publication/{{publication.uuid}}/file"
+                               target="_blank"><span class="fa fa-download color--green">&nbsp;Download</span></a>
                         </div>
                     </div>
-
-                    <div class="col-md-2">
-                        <a ng-href="${grailsApplication.config.profile.service.url}/opus/{{pubCtrl.opusId}}/profile/{{pubCtrl.profileId}}/publication/{{publication.uuid}}/file"
-                           target="_blank"><span class="fa fa-download color--green">&nbsp;Download</span></a>
-                    </div>
+                    <hr ng-if="!$last"/>
                 </div>
-                <hr ng-if="!$last"/>
             </div>
         </div>
     </div>

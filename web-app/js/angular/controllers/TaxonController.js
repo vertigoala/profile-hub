@@ -79,7 +79,7 @@ profileEditor.controller('TaxonController', function (profileService, navService
                     self.speciesProfile = data;
 
                     if (self.speciesProfile && self.speciesProfile.taxonConcept) {
-                        navService.add("Taxonomy from " + self.speciesProfile.taxonConcept.infoSourceName, "taxon");
+                        navService.add("Taxonomy", "taxon");
                     }
 
                     messageService.pop();

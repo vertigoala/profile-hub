@@ -22,6 +22,10 @@
         <li class="font-xxsmall active">{{profileCtrl.profile.scientificName}}</li>
     </ol>
 
+    <div ng-show="messages.length" ng-cloak>
+        <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
+    </div>
+
     <div class="row" ng-cloak>
         <alert type="warning"
                ng-if="profileCtrl.profile.privateMode"><span
@@ -103,35 +107,20 @@
         </div>
     </div>
 
-    <div class="row margin-bottom-2" ng-cloak>
-        <g:include controller="profile" action="mapPanel" params="[opusId: params.opusId]"/>
-
-        <div class="col-md-5">
-            <h4 class="heading-underlined">At a glance information</h4>
-
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Details</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Name:</td>
-                        <td><span
-                                class="scientific-name">{{profileCtrl.profile.scientificName | default:"Loading..."}}</span> <span
-                                class="inline-sub-heading">{{profileCtrl.profile.nameAuthor}}</span></td>
-                    </tr>
-                    <tr ng-repeat="author in profileCtrl.profile.authorship">
-                        <td>{{author.category | capitalize}}:</td>
-                        <td>{{author.text}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div class="row margin-bottom-1" ng-if="profileCtrl.commonNames.length > 0" ng-cloak>
+        <div class="col-md-12">
+            Commonly known as {{profileCtrl.commonNames.join(', ')}}
         </div>
+    </div>
+
+    <div class="row margin-bottom-1" ng-repeat="author in profileCtrl.profile.authorship | filter:{category: 'Author'}:true" ng-cloak>
+        <div class="col-md-12">
+            {{author.text}}
+        </div>
+    </div>
+
+    <div class="row margin-bottom-1" ng-cloak>
+        <g:include controller="profile" action="mapPanel" params="[opusId: params.opusId]"/>
     </div>
 
     <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
@@ -139,10 +128,6 @@
             <div class="col-md-12" ng-cloak>
                 <tabset>
                     <tab heading="Details">
-                        <div ng-show="messages.length" ng-cloak>
-                            <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
-                        </div>
-
                         <div class="col-md-2 margin-bottom-1">
                             <ul class="nav nav-stacked" id="sidebar" ng-cloak>
                                 <h4 class="font-xxsmall heading-underlined"><strong>Page index</strong></h4>
@@ -196,7 +181,7 @@
         </div>
     </g:if>
 
-    <div class="row" ng-if="profileCtrl.opus.copyrightText">
+    <div class="row margin-top-1" ng-if="profileCtrl.opus.copyrightText">
         <div class="col-md-12">
             <div ta-bind ng-model="profileCtrl.opus.copyrightText" class="small text-center"></div>
         </div>

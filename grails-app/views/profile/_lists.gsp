@@ -1,21 +1,25 @@
 <div ng-controller="ListsEditor as listCtrl" ng-init="listCtrl.init('${edit}')">
     <a name="{{listCtrl.readonly ? 'view_' : 'edit_'}}lists"></a>
+
     <div class="panel panel-default" ng-show="listCtrl.lists.length > 0">
         <div class="panel-body">
-            <div class="col-sm-2"><strong>Conservation & sensitivity lists</strong></div>
+            <div class="row">
+                <div class="col-sm-2"><strong>Conservation & sensitivity lists</strong></div>
 
-            <div class="col-sm-10">
-                <ul>
-                    <li ng-repeat="list in listCtrl.lists">
-                        <a href="${grailsApplication.config.lists.base.url}/speciesListItem/list/{{ list.dataResourceUid }}">{{ list.list.listName }}</a>
-                    </li>
-                </ul>
+                <div class="col-sm-10">
+                    <ul>
+                        <li ng-repeat="list in listCtrl.lists">
+                            <a href="${grailsApplication.config.lists.base.url}/speciesListItem/list/{{ list.dataResourceUid }}">{{ list.list.listName }}</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="panel panel-default" ng-show="listCtrl.conservationStatuses.length > 0">
         <a name="{{listCtrl.readonly ? 'view_' : 'edit_'}}conservationStatus"></a>
+
         <div class="panel-body">
             <div class="col-sm-2"><strong>Conservation status</strong></div>
 

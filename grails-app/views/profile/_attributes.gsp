@@ -10,9 +10,11 @@
                 Show information from supporting collections:
                 <div class="btn-group">
                     <label class="btn btn-xs" ng-class="attrCtrl.showSupportingData ? 'btn-success' : 'btn-default'"
-                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData()" btn-radio="true">On</label>
+                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData()"
+                           btn-radio="true">On</label>
                     <label class="btn btn-xs" ng-class="attrCtrl.showSupportingData ? 'btn-default' : 'btn-danger'"
-                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData()" btn-radio="false">Off</label>
+                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData()"
+                           btn-radio="false">Off</label>
                 </div>
             </div>
         </div>
@@ -32,7 +34,6 @@
         </div>
     </div>
 
-
 </div>
 
 <!-- template for the read-only view of a single attribute -->
@@ -40,70 +41,67 @@
 <div ng-repeat="title in attrCtrl.attributeTitles" ng-cloak>
     <div class="panel panel-default" ng-if="attrCtrl.showTitleGroup(title.name)">
         <div class="panel-body">
-            <div class="col-sm-2"><strong>{{title.name}}</strong></div>
+            <div class="row">
+                <div class="col-sm-2"><strong>{{title.name}}</strong></div>
 
-            <span ng-if="attrCtrl.showTitleGroup(title.name)">
-                <span ng-repeat="attribute in attrCtrl.attributes | groupAttributes:title.name">
-                    <a name="view_{{attribute.key}}"></a>
-                    <span ng-if="attrCtrl.showAttribute(attribute)">
-                        <div class="col-sm-2" ng-if="!$first"></div>
+                <div class="col-sm-10" ng-if="attrCtrl.showTitleGroup(title.name)">
+                    <span ng-repeat="attribute in attrCtrl.attributes | groupAttributes:title.name">
+                        <a name="view_{{attribute.key}}"></a>
+                        <span ng-if="attrCtrl.showAttribute(attribute)">
+                            <div class="col-sm-12" ng-class="!$first ? 'padding-top-1' : ''">
+                                <div ta-bind ng-model="attribute.text" class="display-text"></div>
 
-                        <div class="col-sm-10" ng-class="!$first ? 'padding-top-1' : ''">
-                            <div ta-bind ng-model="attribute.text" class="display-text"></div>
+                                <div ng-if="attrCtrl.opus.allowFineGrainedAttribution">
+                                    <div class="citation" ng-show="attribute.creators.length > 0">
+                                        Contributed by {{ attribute.creators.join(', ') }}
+                                    </div>
 
-                            <div ng-if="attrCtrl.opus.allowFineGrainedAttribution">
-                                <div class="citation" ng-show="attribute.creators.length > 0">
-                                    Contributed by {{ attribute.creators.join(', ') }}
-                                </div>
-
-                                <div class="citation" ng-show="attribute.editors.length > 0">
-                                    Edited by {{ attribute.editors.join(', ') }}
+                                    <div class="citation" ng-show="attribute.editors.length > 0">
+                                        Edited by {{ attribute.editors.join(', ') }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row" ng-show="attribute.fromCollection || attribute.source || attribute.original">
-                            <div class="col-md-12">
-                                <span class="pull-right">
-                                    <span class="small pull-right" ng-show="attribute.fromCollection">
-                                        From Collection: <a
-                                            href="${request.contextPath}/opus/{{attribute.fromCollection.opusShortName ? attribute.fromCollection.opusShortName : attribute.fromCollection.opusId}}/profile/{{attribute.fromCollection.profileId}}"
-                                            target="_self">{{attribute.fromCollection.opusTitle}}</a>
-                                    </span>
-                                    <span class="small attribute-source" ng-if="attribute.source">
+                            <div class="annotation" ng-show="(attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.fromCollection || attribute.source || attribute.original">
+                                <div class="col-md-6" ng-if="attribute.source || (attribute.original && !attribute.source)">
+                                    <span ng-if="attribute.source">
                                         Source: {{attribute.source}}
                                     </span>
-                                    <span class="small attribute-source"
-                                          ng-if="attribute.original && !attribute.source">
+                                    <span ng-if="attribute.original && !attribute.source">
                                         Source: {{attribute.original.profile.opus.title}}
+                                    </span>
+                                </div>
+
+                                <div class="col-md-6" ng-show="attribute.fromCollection">
+                                    <span class="pull-right">
+                                        <span class="pull-right">
+                                            From Collection: <a
+                                                href="${request.contextPath}/opus/{{attribute.fromCollection.opusShortName ? attribute.fromCollection.opusShortName : attribute.fromCollection.opusId}}/profile/{{attribute.fromCollection.profileId}}"
+                                                target="_self">{{attribute.fromCollection.opusTitle}}</a>
+                                        </span>
+                                    </span>
+                                </div>
+                                <span class="col-md-6 pull-right" ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
+                                    <span class="pull-right">
+                                        <a href=""
+                                           ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</a>
                                     </span>
                                 </span>
                             </div>
-                        </div>
-
-                        <div class="row"
-                             ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
-                            <span class="col-md-12">
-                                <span class="pull-right"
-                                      ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
-                                    <a href="" class="small"
-                                            ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</a>
-                                </span>
-                            </span>
-                        </div>
+                        </span>
                     </span>
-                </span>
-            </span>
-        </div>
+                </div>
+            </div>
 
-        <div class="panel-footer" ng-show="attrCtrl.opus.allowCopyFromLinkedOpus && !attrCtrl.readonly">
-            <div class="row">
-                <span class="col-md-12">
-                    <span class="pull-right">
-                        <button class="btn btn-default"
-                                ng-click="attrCtrl.copyAttribute($index, AttributeForm)">Copy to this profile</button>
+            <div class="panel-footer" ng-show="attrCtrl.opus.allowCopyFromLinkedOpus && !attrCtrl.readonly">
+                <div class="row">
+                    <span class="col-md-12">
+                        <span class="pull-right">
+                            <button class="btn btn-default"
+                                    ng-click="attrCtrl.copyAttribute($index, AttributeForm)">Copy to this profile</button>
+                        </span>
                     </span>
-                </span>
+                </div>
             </div>
         </div>
     </div>
@@ -118,7 +116,8 @@
         <select ng-show="attrCtrl.vocabularyStrict"
                 ng-model="attribute.title" class="form-control attribute-header-input margin-bottom-1">
             <option value="">--- Select one ---</option>
-            <option ng-repeat="(key, value) in attrCtrl.allowedVocabulary" value="{{value}}" ng-selected="attribute.title == value">{{value}}</option>
+            <option ng-repeat="(key, value) in attrCtrl.allowedVocabulary | orderBy:'toString()'" value="{{value}}"
+                    ng-selected="attribute.title == value">{{value}}</option>
         </select>
         <input type="text"
                autocomplete="off"
@@ -260,6 +259,7 @@
          data-content="{{ attribute.opusTitle }}" ng-show="attrModalCtrl.supporting.length > 0">
         <div class="panel-body">
             <div class="col-sm-2"><strong>{{attribute.opusTitle}}</strong></div>
+
             <div class="col-sm-10">
                 <div ta-bind ng-model="attribute.text" class="display-text"></div>
             </div>

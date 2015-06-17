@@ -48,9 +48,9 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                         navService.add("Bibliography", "bibliography");
                     }
 
-                    if (!self.readonly()) {
-                        navService.add("Authors & Acknowledgements", "authorship");
-                    }
+                    navService.add("Authors & Acknowledgements", "authorship");
+
+                    findCommonName();
                 },
                 function () {
                     messageService.alert("An error occurred while loading the profile.");
@@ -58,6 +58,17 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             );
         }
     };
+
+    function findCommonName() {
+        self.commonNames = [];
+
+        angular.forEach(self.profile.attributes, function(attribute) {
+            var title = attribute.title.toLowerCase();
+            if (title === "common name" || title === "commonname" || title === "common-name") {
+                self.commonNames.push(attribute.plainText);
+            }
+        });
+    }
 
     self.deleteProfile = function() {
         var deleteConf = util.confirm("Are you sure you wish to delete this profile? This operation cannot be undone.");

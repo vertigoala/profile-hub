@@ -1,6 +1,6 @@
-<div class="col-md-7">
-    <div id="primaryImage" class="col-md-12 padding-bottom-2" ng-show="imageCtrl.primaryImage && !profileCtrl.showMap" ng-controller="ImagesController as imageCtrl"
-         ng-init="imageCtrl.init('${edit}')" ng-cloak>
+<div class="col-md-6" ng-controller="ImagesController as imageCtrl"
+     ng-init="imageCtrl.init('${edit}')" ng-show="imageCtrl.primaryImage" ng-cloak>
+    <div id="primaryImage" class="col-md-12">
         <div class="primary-image">
             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{imageCtrl.primaryImage.occurrenceId}}"
                target="_self" ng-if="imageCtrl.primaryImage.largeImageUrl">
@@ -10,26 +10,24 @@
             <p class="font-xxsmall"><strong>{{ imageCtrl.primaryImage.dataResourceName }}</strong></p>
         </div>
     </div>
+    <div class="col-md-12" ng-show="imageCtrl.primaryImage">
+        <a target="_self" href=""
+           du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}images">View other images</a>
+    </div>
+</div>
 
+<div class="col-md-6">
     <div ng-controller="MapController as mapCtrl"
          ng-init="mapCtrl.init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')"
-         class="col-md-12 padding-bottom-1" ng-cloak ng-show="profileCtrl.showMap">
+         class="col-md-12" ng-cloak>
 
-        <leaflet style="height: 400px; margin-top:10px;" center="mapCtrl.center" layers="mapCtrl.layers"
+        <leaflet style="height: 300px; width: 450px; float: right; margin-top:10px;" center="mapCtrl.center"
+                 layers="mapCtrl.layers"
                  event-broadcast="mapCtrl.events"></leaflet>
+    </div>
 
-        <a class="btn btn-default pull-right"
+    <div class="col-md-12">
+        <a class="pull-right padding-top-1"
            href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?q={{mapCtrl.constructQuery()}}">View in {{profileCtrl.opus.biocacheName}}</a>
-
     </div>
-
-    <div class="btn-group">
-        <label class="btn btn-default" ng-class="profileCtrl.showMap ? '' : 'disabled'"
-               ng-model="profileCtrl.showMap" btn-radio="false"><i class="fa fa-picture-o"></i> <span
-                class="hidden-sm hidden-xs">Show image</span></label>
-        <label class="btn btn-default" ng-class="profileCtrl.showMap ? 'disabled' : ''"
-               ng-model="profileCtrl.showMap" btn-radio="true"><i class="fa fa-map-marker"></i> <span
-                class="hidden-sm hidden-xs">Show map</span></label>
-    </div>
-
 </div>

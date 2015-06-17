@@ -17,20 +17,6 @@
 
     <h1 class="hidden">Welcome to the eFlora website</h1><!-- Show the H1 on each page -->
 
-    <div class="row">
-        <div class="col-md-12" ng-cloak>
-            <p class="lead">
-                {{opusCtrl.dataResource.pubDescription}}
-            </p>
-            <g:if test="${aboutPageUrl}">
-                <p class="margin-bottom-2">
-                    To find more information about the {{opusCtrl.opus.title}}, visit <a href="${aboutPageUrl}"
-                                                                                         target="_blank">our About page</a>.
-                </p>
-            </g:if>
-        </div>
-    </div>
-
     <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
 
     <div class="btn-group padding-bottom-1 pull-right">
@@ -50,7 +36,7 @@
         <tab heading="Browse" class="font-xxsmall">
             <g:include controller="opus" action="browsePanel" params="[opusId: params.opusId]"/>
         </tab>
-        <tab heading="Browse by key" class="font-xxsmall" ng-show="opusCtrl.opus.keybaseKeyId">
+        <tab heading="Identify" class="font-xxsmall" ng-show="opusCtrl.opus.keybaseKeyId">
             <alert type="warning"
                    ng-show="!opusCtrl.opus.keybaseKeyId">No key has been configured for this collection.</alert>
 

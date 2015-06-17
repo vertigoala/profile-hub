@@ -88,14 +88,14 @@ profileEditor.controller('ImagesController', function (profileService, navServic
                     };
                     self.images.push(image);
 
-                    if (self.images.length > 0 || !self.readonly) {
-                        navService.add("Images", "images");
-                    }
-
                     if (occurrence.image == self.profile.primaryImage) {
                         self.primaryImage = image;
                     }
                 });
+
+                if (self.images.length > 0 || !self.readonly) {
+                    navService.add("Images", "images");
+                }
 
                 messageService.pop();
             },
@@ -103,7 +103,7 @@ profileEditor.controller('ImagesController', function (profileService, navServic
                 messageService.alert("An error occurred while retrieving the images.");
             }
         );
-    }
+    };
 
     self.changeImageDisplay = function(form) {
         form.$setDirty();

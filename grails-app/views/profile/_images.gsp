@@ -1,19 +1,22 @@
 <div class="panel panel-default" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')"
      ng-show="imageCtrl.images.length > 0 && imageCtrl.readonly" ng-cloak>
     <a name="view_images"></a>
+
     <div class="panel-body">
-        <div class="col-sm-2"><strong>Images</strong></div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Images</strong></div>
 
-        <div class="col-sm-10">
-            <div class="row">
-                <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6" ng-if="!image.excluded">
-                    <div class="imgCon">
-                        <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                           target="_self" ng-if="image.largeImageUrl">
-                            <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl" class="thumbnail"/>
-                        </a>
+            <div class="col-sm-10">
+                <div class="row">
+                    <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6" ng-if="!image.excluded">
+                        <div class="imgCon">
+                            <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
+                               target="_self" ng-if="image.largeImageUrl">
+                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl" class="thumbnail"/>
+                            </a>
 
-                        <p class="font-xxsmall"><strong>{{ image.dataResourceName }}</strong></p>
+                            <p class="font-xxsmall"><strong>{{ image.dataResourceName }}</strong></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -25,6 +28,7 @@
 <div class="panel panel-default" ng-form="ImageForm" ng-controller="ImagesController as imageCtrl"
      ng-init="imageCtrl.init('${edit}')" ng-show="!imageCtrl.readonly" ng-cloak>
     <a name="edit_images"></a>
+
     <div class="panel-body">
         <div class="col-sm-2"><strong>Images</strong></div>
 

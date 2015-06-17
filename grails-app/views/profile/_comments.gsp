@@ -1,25 +1,28 @@
 <div ng-controller="CommentController as commentCtrl">
     <a name="{{commentCtrl.readonly() ? 'view_' : 'edit_'}}comments"></a>
+
     <div class="panel panel-default" ng-cloak>
         <div class="panel-body">
-            <div class="col-sm-2"><strong>Comments</strong></div>
+            <div class="row">
+                <div class="col-sm-2"><strong>Comments</strong></div>
 
-            <div class="col-sm-10" ng-if="!specCtrl.readonly()">
-                <div ng-repeat="comment in commentCtrl.comments | orderBy:'dateCreated'"
-                     ng-init="path = [$index]" class="comment">
-                    <hr ng-if="!$first" class="comment-divider"/>
-                    <ng-include src="'commentContent.html'"/>
-                </div>
+                <div class="col-sm-10" ng-if="!specCtrl.readonly()">
+                    <div ng-repeat="comment in commentCtrl.comments | orderBy:'dateCreated'"
+                         ng-init="path = [$index]" class="comment">
+                        <hr ng-if="!$first" class="comment-divider"/>
+                        <ng-include src="'commentContent.html'"/>
+                    </div>
 
-                <div ng-if="commentCtrl.currentComment && !commentCtrl.currentComment.uuid && !commentCtrl.currentComment.parentCommentId">
-                    <div text-angular text-angular-name="comment" ng-model="commentCtrl.currentComment.text"
-                         ta-toolbar="{{richTextToolbarSimple}}"></div>
+                    <div ng-if="commentCtrl.currentComment && !commentCtrl.currentComment.uuid && !commentCtrl.currentComment.parentCommentId">
+                        <div text-angular text-angular-name="comment" ng-model="commentCtrl.currentComment.text"
+                             ta-toolbar="{{richTextToolbarSimple}}"></div>
 
-                    <div class="row pull-right">
-                        <div class="col-sm-12">
-                            <button class="btn btn-primary"
-                                    ng-click="commentCtrl.saveComment(path)">Save comment</button>
-                            <button class="btn btn-warning" ng-click="commentCtrl.cancel()">Cancel</button>
+                        <div class="row pull-right">
+                            <div class="col-sm-12">
+                                <button class="btn btn-primary"
+                                        ng-click="commentCtrl.saveComment(path)">Save comment</button>
+                                <button class="btn btn-warning" ng-click="commentCtrl.cancel()">Cancel</button>
+                            </div>
                         </div>
                     </div>
                 </div>

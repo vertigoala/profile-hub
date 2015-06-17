@@ -1,5 +1,5 @@
 <div class="panel panel-default" ng-controller="ProfileController as profileCtrl" ng-init="profileCtrl.loadProfile()"
-     ng-form="AuthorForm" ng-cloak ng-if="!profileCtrl.readonly()">
+     ng-form="AuthorForm" ng-cloak>
     <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}authorship"></a>
     <div class="panel-body">
         <div class="col-sm-2"><strong>Authors and Acknowledgements</strong></div>
