@@ -65,7 +65,7 @@ class OpusControllerSpec extends Specification {
         controller.edit()
 
         then:
-        assert model.size() == 7
+        assert model.size() == 8
         assert model.containsKey("logoUrl")
         assert model.containsKey("bannerUrl")
         assert model.containsKey("pageTitle")
@@ -73,6 +73,7 @@ class OpusControllerSpec extends Specification {
         assert model.containsKey("glossaryUrl")
         assert model.containsKey("aboutPageUrl")
         assert model.containsKey("footerText")
+        assert model.containsKey("opusContact")
     }
 
     def "show should render the show view"() {
@@ -94,13 +95,14 @@ class OpusControllerSpec extends Specification {
         controller.show()
 
         then:
-        assert model.size() == 6
+        assert model.size() == 7
         assert model.containsKey("logoUrl")
         assert model.containsKey("bannerUrl")
         assert model.containsKey("pageTitle")
         assert model.containsKey("glossaryUrl")
         assert model.containsKey("aboutPageUrl")
         assert model.containsKey("footerText")
+        assert model.containsKey("opusContact")
     }
 
     def "getJson should return a 400 (BAD REQUEST) if the opusId parameter is not set"() {

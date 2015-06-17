@@ -135,12 +135,18 @@
 
                     <div class="col-xs-12 col-sm-7 col-md-6">
                         <ul class="social list-inline">
-                            <li><a class="soc-facebook" href="https://www.facebook.com/atlasoflivingaustralia"
-                                   title="Facebook" target="_blank"><i class="fa fa-facebook"></i></a></li>
-                            <li><a class="soc-twitter" href="https://twitter.com/atlaslivingaust" title="Twitter"
-                                   target="_blank"><i class="fa fa-twitter"></i></a></li>
-                            <li><a class="soc-envelope" href="http://www.ala.org.au/about-the-atlas/contact-us/"
-                                   title="Email" target="_blank"><i class="fa fa-envelope"></i></a></li>
+                            <g:if test="${opusContact.facebook}">
+                                <li><a class="soc-facebook" href="${opusContact.facebook}"
+                                       title="Facebook" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                            </g:if>
+                            <g:if test="${opusContact.twitter}">
+                                <li><a class="soc-twitter" href="${opusContact.twitter}" title="Twitter"
+                                       target="_blank"><i class="fa fa-twitter"></i></a></li>
+                            </g:if>
+                            <g:if test="${opusContact.email}">
+                                <li><a class="soc-envelope" href="mailto:${opusContact.email}"
+                                       title="Email" target="_blank"><i class="fa fa-envelope"></i></a></li>
+                            </g:if>
                         </ul>
                     </div>
                 </div>

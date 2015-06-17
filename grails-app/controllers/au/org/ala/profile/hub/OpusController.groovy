@@ -44,7 +44,8 @@ class OpusController extends BaseController {
                     logoUrl     : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
                     bannerUrl   : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
-                    footerText   : opus.footerText,
+                    footerText  : opus.footerText,
+                    opusContact : opus.contact,
                     glossaryUrl : getGlossaryUrl(opus),
                     aboutPageUrl: getAboutUrl(opus),
                     currentUser : authService.getDisplayName()
@@ -62,10 +63,11 @@ class OpusController extends BaseController {
                 notFound()
             } else {
                 render(view: 'about', model: [
-                        logoUrl: opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
-                        bannerUrl: opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                        footerText: opus.footerText,
-                        pageTitle: "About ${opus.title}" ?: DEFAULT_OPUS_TITLE
+                        logoUrl    : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                        bannerUrl  : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                        footerText : opus.footerText,
+                        opusContact: opus.contact,
+                        pageTitle  : "About ${opus.title}" ?: DEFAULT_OPUS_TITLE
                 ])
             }
         }
@@ -107,7 +109,8 @@ class OpusController extends BaseController {
                     logoUrl     : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
                     bannerUrl   : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
-                    footerText   : opus.footerText,
+                    footerText  : opus.footerText,
+                    opusContact : opus.contact,
                     glossaryUrl : getGlossaryUrl(opus),
                     aboutPageUrl: getAboutUrl(opus)
             ]

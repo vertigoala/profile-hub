@@ -29,12 +29,30 @@
             </div>
 
             <div class="form-group">
+                <label>Email contact</label>
+                <input type="text" class="form-control" name="email" ng-model="opusCtrl.opus.contact.email"/> <br/>
+                <span class="small">Setting the email contact will add a 'contact by email' icon to the page footer</span>
+            </div>
+
+            <div class="form-group">
+                <label for="facebook">Facebook</label>
+                <input id="facebook" type="text" class="form-control" name="facebook" ng-model="opusCtrl.opus.contact.facebook"/> <br/>
+                <span class="small">Setting the facebook URL will add a 'contact by facebook' icon to the page footer</span>
+            </div>
+
+            <div class="form-group">
+                <label for="twitter">Twitter</label>
+                <input id="twitter" type="text" class="form-control" name="twitter" ng-model="opusCtrl.opus.contact.twitter"/> <br/>
+                <span class="small">Setting the twitter URL will add a 'contact by twitter' icon to the page footer</span>
+            </div>
+
+            <div class="form-group">
                 <label>Copyright statement</label>
 
                 <textarea id="copyright" ng-model="opusCtrl.opus.copyrightText" rows="4"
                           class="form-control" ng-maxlength="300" maxlength="300"></textarea>
 
-                <span class="small">(To be displayed at the bottom of each profile page)</span>
+                <span class="small">To be displayed at the bottom of each profile page</span>
             </div>
 
             <div class="form-group">
@@ -42,6 +60,7 @@
 
                 <textarea id="footerText" ng-model="opusCtrl.opus.footerText" rows="4"
                           class="form-control" ng-maxlength="300" maxlength="300"></textarea>
+                <span class="small">To be displayed in the page footer</span>
             </div>
         </div>
     </div>
