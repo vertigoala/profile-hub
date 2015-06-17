@@ -17,6 +17,7 @@
 <body>
 
 <div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
+    <a name="top"></a>
     <ol class="breadcrumb" ng-cloak>
         <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
         <li><a class="font-xxsmall" href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}">{{opusCtrl.opus.title}}</a></li>
@@ -59,11 +60,11 @@
                 <li><a href="#recordSources" du-smooth-scroll class="font-xxsmall">Approved specimen/observation sources</a></li>
                 <li><a href="#attributeVocab" du-smooth-scroll class="font-xxsmall">Attribute vocabulary</a></li>
                 <li><a href="#authorship" du-smooth-scroll class="font-xxsmall">Authorship &amp; attribution</a></li>
+                <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
                 <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>
                 <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
                 <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
                 <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
-                <li><a href="#style" du-smooth-scroll class="font-xxsmall">Styling</a></li>
                 <li><a href="#supportingCollections" du-smooth-scroll class="font-xxsmall">Supporting collections</a></li>
             </ul>
         </div>
@@ -105,6 +106,7 @@
         </div>
     </div>
 
+    <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
 </div>
 
 </body>

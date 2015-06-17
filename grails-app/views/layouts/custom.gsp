@@ -97,7 +97,12 @@
 
                     <div class="col-md-12 col-lg-6">
                         <p class="lead">
-                            ALA Profiles provides a central location to gather collections of species profiles.
+                            <g:if test="${footerText}">
+                                ${raw(footerText)}
+                            </g:if>
+                            <g:else>
+                                ALA Profiles provides a central location to gather collections of species profiles.
+                            </g:else>
                         </p>
 
                         <p class="lead">

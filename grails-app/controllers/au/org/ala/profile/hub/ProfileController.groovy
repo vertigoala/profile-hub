@@ -26,7 +26,11 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: true, currentUser: authService.getDisplayName(), glossaryUrl: getGlossaryUrl(profile.opus), aboutPageUrl: getAboutUrl(profile.opus)]
+                model << [edit: true,
+                          currentUser: authService.getDisplayName(),
+                          glossaryUrl: getGlossaryUrl(profile.opus),
+                          aboutPageUrl: getAboutUrl(profile.opus),
+                          footerText: profile.opus.footerText]
                 render view: "show", model: model
             }
         }
@@ -43,7 +47,10 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: false, glossaryUrl: getGlossaryUrl(profile.opus), aboutPageUrl: getAboutUrl(profile.opus)]
+                model << [edit: false,
+                          glossaryUrl: getGlossaryUrl(profile.opus),
+                          aboutPageUrl: getAboutUrl(profile.opus),
+                          footerText: profile.opus.footerText]
                 render view: "show", model: model
             }
         }
