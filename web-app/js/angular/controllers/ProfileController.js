@@ -48,7 +48,9 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                         navService.add("Bibliography", "bibliography");
                     }
 
-                    navService.add("Authors & Acknowledgements", "authorship");
+                    if (!self.readonly() || self.profile.authorship.length > 1) {
+                        navService.add("Authors & Acknowledgements", "authorship");
+                    }
 
                     findCommonName();
                 },

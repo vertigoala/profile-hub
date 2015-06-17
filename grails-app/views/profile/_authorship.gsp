@@ -1,12 +1,12 @@
 <div class="panel panel-default" ng-controller="ProfileController as profileCtrl" ng-init="profileCtrl.loadProfile()"
-     ng-form="AuthorForm" ng-cloak>
+     ng-form="AuthorForm" ng-cloak ng-if="!profileCtrl.readonly() || profileCtrl.profile.authorship.length > 1">
     <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}authorship"></a>
     <div class="panel-body">
         <div class="col-sm-2"><strong>Authors and Acknowledgements</strong></div>
 
         <div class="col-sm-10">
 
-            <div class="row-fluid" ng-repeat="authorship in profileCtrl.profile.authorship"
+            <div class="row-fluid" ng-repeat="authorship in profileCtrl.profile.authorship | filter:{category: '!Author'}:true"
                  ng-if="profileCtrl.readonly()">
                 <h5>{{authorship.category}}</h5>
                 {{authorship.text}}
