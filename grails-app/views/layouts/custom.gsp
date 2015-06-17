@@ -118,16 +118,12 @@
                     </div>
 
                     <div class="col-sm-6 col-md-6 col-lg-3">
-                        <ul class="link-list">
-                            <li class="heading">Site information</li>
-                            <g:if test="${aboutPageUrl}">
-                                <li><a href="${aboutPageUrl}" target="_blank">About Us</a></li>
-                            </g:if>
-                            <g:else>
-                                <li><a href="http://www.ala.org.au/about-the-atlas/contact-us/"
-                                       target="_blank">Get in touch</a></li>
-                            </g:else>
-                        </ul>
+                        <g:if test="${aboutPageUrl}">
+                            <ul class="link-list">
+                                <li class="heading">Site information</li>
+                                    <li><a href="${aboutPageUrl}" target="_blank">About Us</a></li>
+                            </ul>
+                        </g:if>
                     </div>
 
                     <div class="col-xs-12 col-sm-7 col-md-6">
