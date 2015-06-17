@@ -1,16 +1,14 @@
 <div class="row">
-    <div class="col-lg-5 col-md-6 col-sm-12">
-        <div ng-controller="MapController as mapCtrl"
-             ng-init="mapCtrl.init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')"
-             class="col-md-12" ng-cloak>
-
+    <div class="col-lg-5 col-md-6 col-sm-12" ng-controller="MapController as mapCtrl"
+         ng-init="mapCtrl.init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')">
+        <div class="col-md-12" ng-cloak>
             <leaflet style="height: 300px; width: 450px;" center="mapCtrl.center"
                      layers="mapCtrl.layers"
                      event-broadcast="mapCtrl.events"></leaflet>
         </div>
 
         <div class="col-md-12">
-            <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?q={{mapCtrl.constructQuery()}}">View in {{profileCtrl.opus.biocacheName}}</a>
+            <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?q={{mapCtrl.constructQuery()}}" target="_blank">View in {{profileCtrl.opus.biocacheName}}</a>
         </div>
     </div>
 
