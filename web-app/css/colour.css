@@ -1,4 +1,5 @@
 /*.blues {
+    very-light: #beeaff
     light:     #005082;
     dark:      #122071;
     very-dark: #191d53;
@@ -123,4 +124,12 @@ footer p.lead {
 
 a {
     color: #191d53;
+}
+
+.well, .panel {
+    border-color: #beeaff;
+}
+
+.panel-footer {
+    border-top-color: #beeaff;
 }
