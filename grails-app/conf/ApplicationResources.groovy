@@ -3,6 +3,7 @@ modules = {
         resource url:"css/nsl.css"
         resource url:"css/theme.css"
         resource url:"css/profiles.css"
+        resource url:"css/colour.css"
         dependsOn "jquery"
         dependsOn "bootstrap3"
         dependsOn "bootstrap_fileupload"

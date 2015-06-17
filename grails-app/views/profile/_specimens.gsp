@@ -16,6 +16,7 @@
             <div class="col-sm-2" ng-if="!specCtrl.readonly()"></div>
 
             <div ng-repeat="specimen in specCtrl.specimens">
+                <div class="col-sm-2" ng-if="!$first"></div>
                 <div class="col-sm-10">
                     <div ng-if="!specCtrl.readonly() && !specimen.saved">
                         <div class="form-group">

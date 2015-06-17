@@ -226,7 +226,6 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 #banner-image {
     min-height: 100px;
-    background-size: 100%;
 }
 
 .side-menu .navbar-header {
@@ -295,10 +294,6 @@ p, li {
     padding: 5px;
     border: 1px solid rgba(233, 0, 74, 0.2);
 }
-
-/*a {*/
-    /*color: #337ab7;*/
-/*}*/
 
 /**
  * Angular uses ng-cloak to hide dynamic content until the data is available. This causes screen flicker that shows the {{}} tags.
