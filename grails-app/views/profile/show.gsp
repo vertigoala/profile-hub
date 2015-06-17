@@ -109,7 +109,7 @@
 
     <div class="row margin-bottom-1" ng-if="profileCtrl.commonNames.length > 0" ng-cloak>
         <div class="col-md-12">
-            Commonly known as {{profileCtrl.commonNames.join(', ')}}
+            <h4 class="zero-margin">{{profileCtrl.commonNames.join(', ')}}</h4>
         </div>
     </div>
 
