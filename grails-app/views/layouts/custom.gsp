@@ -100,9 +100,6 @@
                             <g:if test="${footerText}">
                                 ${raw(footerText)}
                             </g:if>
-                            <g:else>
-                                ALA Profiles provides a central location to gather collections of species profiles.
-                            </g:else>
                         </p>
 
                         <p class="lead">
@@ -134,18 +131,18 @@
                     </div>
 
                     <div class="col-xs-12 col-sm-7 col-md-6">
-                        <g:if test="${opusContact}">
+                        <g:if test="${contact}">
                             <ul class="social list-inline">
-                                <g:if test="${opusContact.facebook}">
-                                    <li><a class="soc-facebook" href="${opusContact.facebook}"
+                                <g:if test="${contact.facebook}">
+                                    <li><a class="soc-facebook" href="${contact.facebook}"
                                            title="Facebook" target="_blank"><i class="fa fa-facebook"></i></a></li>
                                 </g:if>
-                                <g:if test="${opusContact.twitter}">
-                                    <li><a class="soc-twitter" href="${opusContact.twitter}" title="Twitter"
+                                <g:if test="${contact.twitter}">
+                                    <li><a class="soc-twitter" href="${contact.twitter}" title="Twitter"
                                            target="_blank"><i class="fa fa-twitter"></i></a></li>
                                 </g:if>
-                                <g:if test="${opusContact.email}">
-                                    <li><a class="soc-envelope" href="mailto:${opusContact.email}"
+                                <g:if test="${contact.email}">
+                                    <li><a class="soc-envelope" href="${contact.email.contains('@') ? 'mailto:' + contact.email : contact.email}"
                                            title="Email" target="_blank"><i class="fa fa-envelope"></i></a></li>
                                 </g:if>
                             </ul>

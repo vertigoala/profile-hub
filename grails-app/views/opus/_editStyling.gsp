@@ -35,13 +35,13 @@
             </div>
 
             <div class="form-group">
-                <label for="facebook">Facebook</label>
+                <label for="facebook">Facebook URL</label>
                 <input id="facebook" type="text" class="form-control" name="facebook" ng-model="opusCtrl.opus.contact.facebook"/> <br/>
                 <span class="small">Setting the facebook URL will add a 'contact by facebook' icon to the page footer</span>
             </div>
 
             <div class="form-group">
-                <label for="twitter">Twitter</label>
+                <label for="twitter">Twitter URL</label>
                 <input id="twitter" type="text" class="form-control" name="twitter" ng-model="opusCtrl.opus.contact.twitter"/> <br/>
                 <span class="small">Setting the twitter URL will add a 'contact by twitter' icon to the page footer</span>
             </div>

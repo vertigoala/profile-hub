@@ -30,7 +30,8 @@ class ProfileController extends BaseController {
                           currentUser: authService.getDisplayName(),
                           glossaryUrl: getGlossaryUrl(profile.opus),
                           aboutPageUrl: getAboutUrl(profile.opus),
-                          footerText: profile.opus.footerText]
+                          footerText: profile.opus.footerText,
+                          contact: profile.opus.contact]
                 render view: "show", model: model
             }
         }
@@ -50,7 +51,8 @@ class ProfileController extends BaseController {
                 model << [edit: false,
                           glossaryUrl: getGlossaryUrl(profile.opus),
                           aboutPageUrl: getAboutUrl(profile.opus),
-                          footerText: profile.opus.footerText]
+                          footerText: profile.opus.footerText,
+                          contact: profile.opus.contact]
                 render view: "show", model: model
             }
         }
