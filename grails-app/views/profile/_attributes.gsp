@@ -72,7 +72,7 @@
                                     </span>
                                 </div>
 
-                                <div class="col-md-6" ng-show="attribute.fromCollection">
+                                <div class="col-md-6 pull-right" ng-show="attribute.fromCollection">
                                     <span class="pull-right">
                                         <span class="pull-right">
                                             From Collection: <a
