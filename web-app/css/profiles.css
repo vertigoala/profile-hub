@@ -230,7 +230,9 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 /* Theme overrides */
 
 #banner-image {
+    background-size: 100%;
     min-height: 100px;
+    background-position: center center;
 }
 
 .side-menu .navbar-header {
@@ -264,12 +266,6 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 .dropdown-menu {
     z-index: 9999;
-}
-
-p, li {
-    font-weight: normal;
-    line-height: 1.4em;
-    font-size: 14px;
 }
 
 .panel {

@@ -1,8 +1,7 @@
-/* Magenta Theme
+/* Blue Theme
 ================================= */
-/* #E9004A (magenta) is the primary theme colour. Change this colour to change the theme look. */
-/* #BA003B (magenta hover) */
-
+/* #0087BE (Blue) is the primary theme colour. Change this colour to change the theme look. */
+/* #005082 (blue hover) */
 /* Font import
 ================================= */
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&lang=en);
@@ -11,7 +10,7 @@
 ================================= */
 body {
     background-color: #F8F8F8;
-    color: #6a6c6f;
+    color: #2E4453;
     font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
     height: 100%;
@@ -62,10 +61,10 @@ body {
 ================================= */
 
 p, li, ul {
-    color: #637073;
-    font-size: 16px;
+    color: #2E4453;
+    font-size: 15px;
     font-weight: 200;
-    line-height: 1.6em;
+    line-height: 1.5em;
 }
 
 a {
@@ -78,7 +77,7 @@ a > i {
 }
 
 a:hover, a:focus {
-    color: #E9004A;
+    color: #005082;
 }
 
 ul.pull-right {
@@ -90,12 +89,12 @@ li.divider {
 }
 
 h4 {
-    color: #E9004A;
+    color: #0087BE;
 }
 
 .font-xsmall {
-    font-size: 16px;
-    line-height: 1.25;
+    font-size: 13px;
+    line-height: 1.6;
     text-transform: none;
 }
 
@@ -111,13 +110,13 @@ h4 {
 }
 
 .heading-large {
-    font-size: 36px;
+    font-size: 34px;
     font-weight: 700;
-    line-height: 1.1111111111;
-    margin-bottom: .55556em;
-    margin-top: 1.25em;
+    line-height: 1;
+    margin-bottom: .3em;
+    margin-top: 1em;
     text-transform: none;
-    color: #E9004A;
+    color: #0087BE;
 }
 
 .heading-medium {
@@ -125,7 +124,7 @@ h4 {
     font-size: 24px;
     font-weight: 700;
     line-height: 1.25;
-    margin-bottom: .83333em;
+    margin-bottom: .2em;
     margin-top: 1.875em;
     text-transform: none;
 }
@@ -141,10 +140,10 @@ h4 {
 }
 
 .heading-xlarge {
-    font-size: 48px;
+    font-size: 44px;
     font-weight: 700;
     line-height: 1.0416666667;
-    margin-bottom: .6em;
+    margin-bottom: 0.4em;
     margin-top: .625em;
     text-transform: none;
 }
@@ -157,7 +156,7 @@ h4 {
 }
 
 .heading-underlined {
-    border: 0 solid #e9004a;
+    border: 0 solid #0087BE;
     border-bottom-width: 1px;
     padding-bottom: 10px;
 }
@@ -508,19 +507,19 @@ h4 {
 }
 
 .navbar-default .navbar-nav > li > a {
-    color: #e9004a;
+    color: #0087BE;
 }
 
 .navbar-default .navbar-nav > li > a:hover {
-    color: #BA003B;
+    color: #005082;
 }
 
 .navbar-default .navbar-brand {
-    color: #e9004a;
+    color: #0087BE;
 }
 
 .navbar-default .navbar-brand:hover {
-    color: #BA003B;
+    color: #005082;
 }
 
 /* Jumbotron
@@ -531,21 +530,29 @@ h4 {
     -o-background-size: cover;
     -webkit-background-size: cover;
     background-position: center center;
+    background-size: cover;
     min-height: 150px;
     text-align: center;
     width: 100%;
+    background: url(../img/blog-default-feature-img-01.jpg) no-repeat center top;
+    background-color: #000;
+}
 
-    height: 100%;
-    background-color: #000000;
-    color: #FFF;
-    overflow: hidden;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-image: url(http://images.ala.org.au/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original);
+#banner-image-profile {
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -webkit-background-size: cover;
+    background-position: center center;
+    background-size: cover;
+    min-height: 150px;
+    text-align: center;
+    width: 100%;
+    background: url(../img/blog-default-feature-img-02.jpg) no-repeat center top;
+    background-color: #000;
 }
 
 .jumbotron {
-    background-color: #e9004a;
+    background-color: #0087BE;
 }
 
 #banner-image > div > div > h2 {
@@ -555,7 +562,7 @@ h4 {
 /* Breadcrumb
 ================================= */
 .breadcrumb > .active {
-    color: #E9004A;
+    color: #0087BE;
 }
 
 /* Btn (Button)
@@ -567,24 +574,24 @@ h4 {
 
 .btn-default {
     background-color: #fff;
-    border-color: #E9004A;
-    color: #E9004A;
+    border-color: #0087BE;
+    color: #0087BE;
 }
 
 .btn-primary {
-    background-color: #e9004a;
-    border-color: #e9004a;
+    background-color: #0087BE;
+    border-color: #0087BE;
     color: #FFFFFF;
 }
 
 .btn-default:hover {
-    border-color: #BA003B;
-    color: #BA003B;
+    border-color: #005082;
+    color: #005082;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-    background-color: #BA003B;
-    border-color: #BA003B;
+    background-color: #005082;
+    border-color: #005082;
 }
 
 .button-toolbar {
@@ -604,12 +611,12 @@ h4 {
 }
 
 .well, .panel {
-    border-color: rgba(233, 0, 74, 0.2); /*box-shadow:0 1px 0 #cfcfcf;*/
+    border-color: rgba(0, 135, 190, 0.2); /*box-shadow:0 1px 0 #cfcfcf;*/
 }
 
 .panel-footer {
     background-color: transparent;
-    border-top: 1px solid rgba(233, 0, 74, 0.2);
+    border-top: 1px solid rgba(0, 135, 190, 0.2);
 }
 
 .panel-swatch {
@@ -642,7 +649,7 @@ h4 {
 .main-stats__stat {
     padding: 25px;
     background: #fff;
-    border: 1px solid rgba(233, 0, 74, 0.2);
+    border: 1px solid rgba(0, 135, 190, 0.2);
 }
 
 .main-stats .main-stats__stat {
@@ -650,7 +657,7 @@ h4 {
 }
 
 .main-stats > div:last-child {
-    border-right: 1px solid rgba(233, 0, 74, 0.2);
+    border-right: 1px solid rgba(0, 135, 190, 0.2);
 }
 
 .stat__details {
@@ -725,13 +732,13 @@ h4 {
 }
 
 .nav-tabs > li.active > a {
-    color: #E9004A;
-    border: 1px solid #E9004A;
+    color: #0087BE;
+    border: 1px solid #0087BE;
     border-bottom-color: transparent;
 }
 
 .nav-tabs {
-    border-bottom: 1px solid #e9004a;
+    border-bottom: 1px solid #0087BE;
 }
 
 /* Side menu (with search)
@@ -1036,36 +1043,36 @@ h4 {
 ================================= */
 
 .pagination > li > a, .pagination > li > span {
-    color: #E9004A;
+    color: #0087BE;
     background-color: #fff;
-    border: 1px solid #E9004A;
+    border: 1px solid #0087BE;
 }
 
 .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
     color: #fff;
-    background-color: #E9004A;
-    border-color: #E9004A;
+    background-color: #0087BE;
+    border-color: #0087BE;
 }
 
 .pagination > .disabled > span, .pagination > .disabled > span:hover, .pagination > .disabled > span:focus, .pagination > .disabled > a, .pagination > .disabled > a:hover, .pagination > .disabled > a:focus {
     color: #777;
     cursor: not-allowed;
     background-color: #fff;
-    border-color: #E9004A;
+    border-color: #0087BE;
 }
 
 .pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
-    color: #BA003B;
+    color: #005082;
     background-color: #eee;
-    border-color: #BA003B;
+    border-color: #005082;
 }
 
 /* Footer
 ================================= */
 
 footer p.lead {
-    color: #E9004A;
-    font-size: 24px;
+    color: #0087BE;
+    font-size: 23px;
 }
 
 p.lead {
@@ -1094,7 +1101,7 @@ ul.footer-nav.list-inline {
 }
 
 .main-footer a {
-    color: #637073;
+    color: #2E4453;
 }
 
 .main-footer li, .main-footer p {
@@ -1102,7 +1109,7 @@ ul.footer-nav.list-inline {
 }
 
 .main-footer-border {
-    border-top: 1px solid #E9004A;
+    border-top: 1px solid #0087BE;
     height: 0;
     margin-bottom: 4em;
     width: 100%;
