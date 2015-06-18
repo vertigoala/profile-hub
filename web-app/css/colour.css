@@ -1,8 +1,8 @@
 /*.blues {
-    very-light: #beeaff
-    light:     #005082;
-    dark:      #122071;
-    very-dark: #191d53;
+    very-light: #dde2ff
+    light:      #005082;
+    dark:       #122071;
+    very-dark:  #191d53;
 }*/
 
 .show-grid [class*="col-"] {
@@ -68,15 +68,15 @@ h4 {
 }
 
 .main-stats__stat {
-    border-color: #9b9b9b;
+    border-color: #dde2ff;
 }
 
 .main-stats > div:last-child {
-    border-color: #9b9b9b;
+    border-color: #dde2ff;
 }
 
 .main-stats .main-stats__stat {
-    border-color: #9b9b9b;
+    border-color: #dde2ff;
 }
 
 .nav-tabs > li.active > a {
@@ -127,9 +127,9 @@ a {
 }
 
 .well, .panel {
-    border-color: #beeaff;
+    border-color: #dde2ff;
 }
 
 .panel-footer {
-    border-top-color: #beeaff;
+    border-top-color: #dde2ff;
 }
