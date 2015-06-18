@@ -9,13 +9,13 @@
             <div class="col-sm-10">
                 <div class="row">
                     <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6" ng-if="!image.excluded">
-                        <div class="imgCon">
+                        <div class="imgCon ">
                             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
                                target="_blank" ng-if="image.largeImageUrl">
                                 <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl" class="thumbnail"/>
                             </a>
 
-                            <p class="font-xxsmall"><strong>{{ image.dataResourceName }}</strong></p>
+                            <p class="caption">{{ image.dataResourceName }}</p>
                         </div>
                     </div>
                 </div>

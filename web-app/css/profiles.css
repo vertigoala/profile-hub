@@ -181,8 +181,8 @@ hr.comment-divider {
 }
 
 .imgCon img {
-    height: 200px;
-    min-width: 180px;
+    height: 200px !important;
+    min-width: 180px !important;
 }
 
 .primary-image {
@@ -199,6 +199,16 @@ hr.comment-divider {
 .primary-image p {
     height: 290px;
     min-width: 250px;
+}
+
+.thumbnail {
+    margin-bottom: 0;
+}
+
+.caption {
+    font-size: smaller;
+    text-transform: none;
+
 }
 
 /* ---- */
