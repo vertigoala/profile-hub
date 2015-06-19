@@ -48,7 +48,10 @@ profileEditor.controller('ALAAdminController', function ($http, util) {
     });
 
     self.postMessage = function () {
-        console.log("dsfkljghdfkgjh")
         $http.post(util.contextRoot() + "/admin/message", {message: self.message})
+    };
+
+    self.reloadConfig = function () {
+        $http.post(util.contextRoot() + "/admin/reloadConfig")
     };
 });

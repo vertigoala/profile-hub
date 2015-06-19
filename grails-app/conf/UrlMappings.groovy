@@ -68,6 +68,7 @@ class UrlMappings {
 
         "/dataResource/$dataResourceUid" controller: "collectory", action: [GET: "getResource"]
         "/dataResource/" controller: "collectory", action: [GET: "list"]
+        "/licences/" controller: "collectory", action: [GET: "licences"]
 
         "/keybase/projects" controller: "opus", action: [GET: "retrieveKeybaseProjects"]
 
@@ -83,6 +84,7 @@ class UrlMappings {
         "/logout/logout" controller: "logout", action: "logout"
 
         "/admin/message" controller: "admin", action: [GET: "getMessage", POST: "postMessage"]
+        "/admin/reloadConfig" controller: "admin", action: [POST: "reloadConfig"]
         "/admin" controller: "admin", action: [GET: "index"]
 
         "500"(view: "/error")
