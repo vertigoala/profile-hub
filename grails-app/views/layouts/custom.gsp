@@ -174,6 +174,7 @@
         currentUser: '${params.currentUser}',
         profileServiceUrl: '${grailsApplication.config.profile.service.url}',
         keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}',
+        imageServiceUrl: '${grailsApplication.config.images.service.url}',
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
         isOpusReviewer: '${params.isOpusReviewer}'
      });

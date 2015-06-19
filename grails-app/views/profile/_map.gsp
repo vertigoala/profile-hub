@@ -2,7 +2,7 @@
     <div class="col-lg-5 col-md-6 col-sm-12" ng-controller="MapController as mapCtrl"
          ng-init="mapCtrl.init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')">
         <div class="col-md-12" ng-cloak>
-            <leaflet style="height: 300px; width: 450px;" center="mapCtrl.center"
+            <leaflet style="height: 300px; width: 450px;" center="mapCtrl.center" class="thumbnail"
                      layers="mapCtrl.layers"
                      event-broadcast="mapCtrl.events"></leaflet>
         </div>
@@ -18,7 +18,7 @@
             <div class="primary-image col-md-12">
                 <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{imageCtrl.primaryImage.occurrenceId}}"
                    target="_blank" ng-if="imageCtrl.primaryImage.largeImageUrl">
-                    <img ng-src="{{imageCtrl.primaryImage.largeImageUrl}}"
+                    <img ng-src="{{imageCtrl.primaryImage.largeImageUrl}}" class="thumbnail"
                          ng-if="imageCtrl.primaryImage.largeImageUrl"/>
                 </a>
 
@@ -30,7 +30,7 @@
 
             <div class="col-md-12" ng-show="imageCtrl.primaryImage">
                 <a target="_self" href=""
-                   du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}images">View other images</a>
+                   du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}images">View all images</a>
             </div>
         </div>
     </div>

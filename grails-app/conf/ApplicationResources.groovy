@@ -6,7 +6,6 @@ modules = {
         resource url:"css/colour.css"
         dependsOn "jquery"
         dependsOn "bootstrap3"
-        dependsOn "bootstrap_fileupload"
         dependsOn "angular"
         dependsOn "leaflet"
         dependsOn "angular_bootstrap_colourpicker"
@@ -16,6 +15,7 @@ modules = {
         dependsOn "google_diff"
         dependsOn "jspath"
         dependsOn "angular_scroll"
+        dependsOn "ng_file_upload"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -97,5 +97,10 @@ modules = {
 
     angular_scroll {
         resource url:"thirdparty/angular-scroll/angular-scroll.min.js"
+    }
+
+    ng_file_upload {
+        resource url:"thirdparty/ng-file-upload/ng-file-upload-shim-5.0.7.min.js"
+        resource url:"thirdparty/ng-file-upload/ng-file-upload-5.0.7.min.js"
     }
 }

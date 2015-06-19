@@ -4,6 +4,9 @@ import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
+import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.commons.CommonsMultipartFile
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
 class ProfileController extends BaseController {
 
@@ -26,12 +29,12 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: true,
-                          currentUser: authService.getDisplayName(),
-                          glossaryUrl: getGlossaryUrl(profile.opus),
+                model << [edit        : true,
+                          currentUser : authService.getDisplayName(),
+                          glossaryUrl : getGlossaryUrl(profile.opus),
                           aboutPageUrl: getAboutUrl(profile.opus),
-                          footerText: profile.opus.footerText,
-                          contact: profile.opus.contact]
+                          footerText  : profile.opus.footerText,
+                          contact     : profile.opus.contact]
                 render view: "show", model: model
             }
         }
@@ -48,11 +51,11 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: false,
-                          glossaryUrl: getGlossaryUrl(profile.opus),
+                model << [edit        : false,
+                          glossaryUrl : getGlossaryUrl(profile.opus),
                           aboutPageUrl: getAboutUrl(profile.opus),
-                          footerText: profile.opus.footerText,
-                          contact: profile.opus.contact]
+                          footerText  : profile.opus.footerText,
+                          contact     : profile.opus.contact]
                 render view: "show", model: model
             }
         }
@@ -200,6 +203,52 @@ class ProfileController extends BaseController {
             def response = biocacheService.retrieveImages(params.searchIdentifier, params.imageSources)
 
             handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def uploadImage() {
+        if (!params.opusId || !params.profileId || !params.dataResourceId || !params.title) {
+            badRequest "opusId, dataResourceId, title and profileId are mandatory fields"
+        }
+
+        if (request instanceof DefaultMultipartHttpServletRequest) {
+            MultipartFile file = ((DefaultMultipartHttpServletRequest) request).getFile("file")
+
+            def profile = profileService.getProfile(params.opusId, params.profileId)
+
+            Map metadata = [scientificName: profile.profile.scientificName,
+                            multimedia    : [[
+                                                     creator     : params.creator ?: "",
+                                                     rights      : params.rights ?: "",
+                                                     rightsHolder: params.rightsHolder ?: "",
+                                                     licence     : params.licence ?: "",
+                                                     title       : params.title ?: "",
+                                                     description : params.description ?: "",
+                                                     dateTaken   : params.dateTaken ?: ""
+                                             ]]]
+
+            def response = biocacheService.uploadImage(params.opusId, params.profileId, request.getParameter("dataResourceId"), file, metadata)
+
+            handle response
+        } else {
+            badRequest()
+        }
+    }
+
+    def downloadTempImage() {
+        if (!params.imageId) {
+            badRequest "imageId is a required parameter"
+        } else {
+            File file = new File("${grailsApplication.config.temp.file.location}/${params.imageId}")
+
+            if (!file) {
+                notFound "The requested file could not be found"
+            } else {
+                response.setContentType("image/*")
+                response.setHeader("Content-disposition", "attachment;filename=${params.imageId}")
+                response.outputStream << file.newInputStream()
+            }
         }
     }
 

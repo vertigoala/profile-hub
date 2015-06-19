@@ -185,6 +185,12 @@ hr.comment-divider {
     min-width: 180px !important;
 }
 
+.imgCon.thumbnail {
+    min-width: 180px;
+    max-width: 400px;
+    /*max-height: 300px;*/
+}
+
 .primary-image {
     display: inline-block;
     margin: 2px 4px 2px 0;
@@ -201,14 +207,19 @@ hr.comment-divider {
     min-width: 250px;
 }
 
+.upload-image-preview, .upload-image-preview img {
+    height: 100px;
+}
+
 .thumbnail {
     margin-bottom: 0;
 }
 
 .caption {
-    font-size: smaller;
+    font-size: 12px;
     text-transform: none;
-
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* ---- */

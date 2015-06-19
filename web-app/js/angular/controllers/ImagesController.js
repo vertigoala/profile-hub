@@ -1,9 +1,9 @@
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function (profileService, navService, util, messageService) {
+profileEditor.controller('ImagesController', function (profileService, navService, util, messageService, $modal) {
     var self = this;
-    
+
     self.images = [];
     self.primaryImage = null;
 
@@ -28,10 +28,10 @@ profileEditor.controller('ImagesController', function (profileService, navServic
         );
     };
 
-    self.saveProfile = function(form) {
+    self.saveProfile = function (form) {
         self.profile.excludedImages = [];
 
-        angular.forEach(self.images, function(image) {
+        angular.forEach(self.images, function (image) {
             if (image.excluded) {
                 self.profile.excludedImages.push(image.imageId);
             }
@@ -56,7 +56,7 @@ profileEditor.controller('ImagesController', function (profileService, navServic
         );
     };
 
-    self.loadImages = function() {
+    self.loadImages = function () {
         if (self.opus.imageSources.length == 0) {
             return;
         }
@@ -64,14 +64,18 @@ profileEditor.controller('ImagesController', function (profileService, navServic
         messageService.info("Loading images...");
 
         var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : self.profile.scientificName;
-        var imagesPromise = profileService.retrieveImages(self.opusId, self.profileId, searchIdentifier, self.opus.imageSources.join());
+
+        var sources = angular.copy(self.opus.imageSources);
+        sources.unshift(self.opus.dataResourceUid);
+
+        var imagesPromise = profileService.retrieveImages(self.opusId, self.profileId, searchIdentifier, sources.join());
 
         imagesPromise.then(function (data) {
                 self.images = [];
 
                 self.primaryImage = data.occurrences[0];
 
-                angular.forEach(data.occurrences, function(occurrence) {
+                angular.forEach(data.occurrences, function (occurrence) {
                     var excluded = false;
 
                     if (self.profile.excludedImages && self.profile.excludedImages.indexOf(occurrence.image) > -1) {
@@ -82,11 +86,16 @@ profileEditor.controller('ImagesController', function (profileService, navServic
                         imageId: occurrence.image,
                         occurrenceId: occurrence.uuid,
                         largeImageUrl: occurrence.largeImageUrl,
+                        thumbnailUrl: occurrence.thumbnailUrl,
                         dataResourceName: occurrence.dataResourceName,
                         excluded: excluded,
                         primary: occurrence.image == self.profile.primaryImage
                     };
                     self.images.push(image);
+
+                    profileService.getImageMetadata(image.imageId).then(function (data) {
+                        image.metadata = data;
+                    });
 
                     if (occurrence.image == self.profile.primaryImage) {
                         self.primaryImage = image;
@@ -105,19 +114,75 @@ profileEditor.controller('ImagesController', function (profileService, navServic
         );
     };
 
-    self.changeImageDisplay = function(form) {
+    self.changeImageDisplay = function (form) {
         form.$setDirty();
     };
 
-    self.changePrimaryImage = function(imageId, form) {
-        angular.forEach(self.images, function(image) {
+    self.changePrimaryImage = function (imageId, form) {
+        angular.forEach(self.images, function (image) {
             image.primary = image.imageId == imageId;
         });
 
         form.$setDirty();
     };
 
-    self.addImage = function () {
-        alert("Not implemented yet. Would upload to biocache & store image in image service");
+    self.uploadImage = function () {
+        var popup = $modal.open({
+            templateUrl: "imageUpload.html",
+            controller: "ImageUploadController",
+            controllerAs: "imageUploadCtrl",
+            size: "md",
+            resolve: {
+                opus: function () {
+                    return self.opus;
+                }
+            }
+        });
+
+        popup.result.then(function () {
+            self.loadImages();
+        });
     };
+});
+
+/**
+ * Upload image modal dialog controller
+ */
+profileEditor.controller("ImageUploadController", function (profileService, util, config, $modalInstance, Upload, opus, $filter) {
+    var self = this;
+
+    self.metadata = {rightsHolder: opus.title, rights: "All rights reserved"};
+    self.files = null;
+    self.error = null;
+    self.opus = opus;
+
+    self.licences = null;
+
+    var orderBy = $filter("orderBy");
+
+    profileService.getLicences().then(function (data) {
+        self.licences = orderBy(data, "name");
+        self.metadata.licence = self.licences[0];
+    });
+
+    self.ok = function () {
+        self.metadata.dataResourceId = self.opus.dataResourceUid;
+        self.metadata.licence = self.metadata.licence.name;
+
+        Upload.upload({
+            url: util.contextRoot() + "/opus/" + util.getEntityId("opus") + "/profile/" + util.getEntityId("profile") + "/image/upload",
+            fields: self.metadata,
+            file: self.files[0]
+        }).success(function () {
+            self.image = {};
+            self.file = null;
+            $modalInstance.close();
+        }).error(function () {
+            self.error = "An error occurred while uploading your image."
+        });
+    };
+
+    self.cancel = function () {
+        $modalInstance.dismiss("cancel");
+    }
 });

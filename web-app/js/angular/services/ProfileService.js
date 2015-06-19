@@ -233,6 +233,11 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        getImageMetadata: function(imageId) {
+            var future = $http.get(config.imageServiceUrl + "/ws/image/" + imageId, {cache: true});
+            return util.toStandardPromise(future);
+        },
+
         retrieveLists: function (opusId, profileId, guid) {
             console.log("Retrieving lists for " + guid);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/lists?guid=" + guid, {cache: true});
@@ -548,6 +553,11 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 console.log("Keybase projects retreived with response code " + response.status);
             });
 
+            return util.toStandardPromise(future);
+        },
+
+        getLicences: function() {
+            var future = $http.get(util.contextRoot() + "/licences", {cache: true});
             return util.toStandardPromise(future);
         }
     }

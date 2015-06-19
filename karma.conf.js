@@ -19,6 +19,8 @@ module.exports = function (config) {
             'test/js/thirdparty/angular-mocks-1.3.13.js',
             'web-app/thirdparty/angular/ui-bootstrap-tpls-0.12.0.js',
             'web-app/thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js',
+            'web-app/thirdparty/ng-file-upload/ng-file-upload-shim-5.0.7.min.js',
+            'web-app/thirdparty/ng-file-upload/ng-file-upload-5.0.7.min.js',
             'web-app/thirdparty/leaflet/leaflet-0.7.3.js',
             'web-app/thirdparty/angular-leaflet/angular-leaflet-directive.min.js',
             'web-app/thirdparty/angular-loading-bar/loading-bar-0.7.1.min.js',
