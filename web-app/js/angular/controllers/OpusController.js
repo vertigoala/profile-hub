@@ -1,7 +1,7 @@
 /**
  * Opus controller
  */
-profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter) {
+profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter, $q, $http, config) {
     var self = this;
 
     self.opus = null;
@@ -18,9 +18,13 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.newApprovedLists = [];
     self.valid = false;
     self.editors = [];
+    self.initialShortName = null;
+    self.keybaseProjects = [];
+    self.selectedKeybaseProject = null;
 
     loadResources();
     loadOpusList();
+    loadKeybaseProjects();
 
     var orderBy = $filter("orderBy");
 
@@ -43,9 +47,15 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                     }
                 });
 
+                self.initialShortName = data.shortName;
+
                 toggleMapPointerColourHash(true);
 
                 loadDataResource(self.opus.dataResourceUid);
+
+                if (self.keybaseProjects && self.opus.keybaseProjectId) {
+                    setSelectedKeybaseProject();
+                }
 
                 $window.document.title = self.opus.title + " | Profile Collections";
 
@@ -62,6 +72,29 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         self.saving = true;
 
         toggleMapPointerColourHash(false);
+
+        if (self.opus.shortName !== self.initialShortName && self.opus.shortName) {
+            var f = profileService.getOpus(self.opus.shortName);
+            f.then(function() {
+                messageService.alert("The specified short name is already in use. Short Names must be unique across all collections.");
+            }, function() {
+                console.log("Short name is unique");
+
+                save(form);
+            })
+        } else {
+            save(form)
+        }
+    };
+
+    function save(form) {
+        if (self.selectedKeybaseProject) {
+            self.opus.keybaseProjectId = self.selectedKeybaseProject.project_id;
+            self.opus.keybaseKeyId = self.selectedKeybaseProject.first_key.id;
+        } else {
+            self.opus.keybaseProjectId = "";
+            self.opus.keybaseKeyId = "";
+        }
 
         var promise = profileService.saveOpus(self.opusId, self.opus);
         promise.then(function (data) {
@@ -85,7 +118,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 self.saving = false;
             }
         );
-    };
+    }
 
     self.addImageSource = function () {
         self.newImageSources.push({});
@@ -267,6 +300,27 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         });
     };
 
+    function loadKeybaseProjects() {
+        console.log("loading keybase projects...");
+
+        profileService.retrieveKeybaseProjects().then(function (data) {
+            self.keybaseProjects = data;
+
+            if (self.opus && self.opus.keybaseProjectId) {
+                setSelectedKeybaseProject();
+            }
+            console.log("Keybase projects loaded");
+        });
+    }
+
+    function setSelectedKeybaseProject() {
+        angular.forEach(self.keybaseProjects, function(project) {
+            if (project.project_id == self.opus.keybaseProjectId) {
+                self.selectedKeybaseProject = project;
+            }
+        });
+    }
+
     function toggleMapPointerColourHash(shouldExist) {
         if (self.opus.mapPointColour) {
             if (!shouldExist && self.opus.mapPointColour.indexOf("#") > -1) {
@@ -300,7 +354,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 self.allSpeciesLists.push({dataResourceUid: list.dataResourceUid, listName: list.listName.trim()});
             });
             self.allSpeciesLists = orderBy(self.allSpeciesLists, "listName");
-            console.log(JSON.stringify(self.allSpeciesLists['dr1266']))
         });
     }
 
@@ -321,7 +374,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         var promise = profileService.listOpus();
         promise.then(function (data) {
             angular.forEach(data, function (opus) {
-                self.opusList.push({uuid: opus.uuid, title: opus.title, thumbnailUrl: opus.thumbnailUrl, pubDescription: opus.pubDescription})
+                self.opusList.push({uuid: opus.uuid, title: opus.title, thumbnailUrl: opus.thumbnailUrl, shortName: opus.shortName, pubDescription: opus.pubDescription})
             });
         })
     }

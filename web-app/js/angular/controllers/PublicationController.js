@@ -1,13 +1,12 @@
 /**
  * Profile Publication controller
  */
-profileEditor.controller('PublicationController', function (profileService, util, config, messageService, $filter) {
+profileEditor.controller('PublicationController', function (profileService, navService, util, config, messageService, $filter) {
     var self = this;
 
     self.publications = [];
     self.opusId = util.getEntityId("opus");
     self.profileId = util.getEntityId("profile");
-    self.newPublication = null;
 
     var orderBy = $filter("orderBy");
 
@@ -17,58 +16,24 @@ profileEditor.controller('PublicationController', function (profileService, util
         return config.readonly;
     };
 
-    self.addPublication = function (form) {
-        self.newPublication = {publicationId: ""};
-        form.$setDirty();
-    };
+    self.savePublication = function () {
+        var confirm = util.confirm("This will create a snapshot of the current public view of the profile. This snapshot cannot be removed. Do you wish to continue?");
 
-    self.savePublication = function (form) {
-        var formData = new FormData();
-        formData.append("file", self.newFile);
-        formData.append("publication", JSON.stringify(self.newPublication));
-
-        var promise = profileService.savePublication(self.opusId, self.profileId, null, formData);
-        messageService.info("Saving publication...");
-        promise.then(function () {
-            messageService.pop();
-            form.$setPristine();
-            self.newPublication = null;
-            self.newFile = null;
-            loadPublications();
-        }, function () {
-            messageService.alert("An error occurred while saving the publication.");
-        });
-    };
-
-    self.cancelNewPublication = function(form) {
-        self.newPublication = null;
-        self.newFile = null;
-        form.$setPristine();
-    };
-
-    self.deletePublication = function(index) {
-        var confirmed = util.confirm("Are you sure you wish to delete this publication?");
-
-        confirmed.then(function () {
-            var publication = self.publications[index];
-            var promise = profileService.deletePublication(self.opusId, self.profileId, publication.uuid);
+        confirm.then(function() {
+            var promise = profileService.createPublication(self.opusId, self.profileId);
+            messageService.info("Creating snapshot. Please wait...");
             promise.then(function () {
-                    self.publications.splice(index, 1);
-                    messageService.success("Publication successfully deleted.")
-                },
-                function () {
-                    messageService.alert("An error occurred while deleting the publication.");
-                }
-            );
-        })
+                messageService.pop();
+
+                loadPublications();
+            }, function () {
+                messageService.alert("An error occurred while creating the snapshot.");
+            });
+        });
     };
 
     self.mostRecentPublication = function() {
         return self.publications[0];
-    };
-
-    self.uploadFile = function(element) {
-        self.newFile = element.files[0]
     };
 
     function loadPublications() {
@@ -82,6 +47,10 @@ profileEditor.controller('PublicationController', function (profileService, util
                 self.publications = data;
 
                 self.publications = orderBy(self.publications, "publicationDate", true);
+
+                if (self.publications.length > 0 || !self.readonly()) {
+                    navService.add("Versions", "publications");
+                }
             },
             function () {
                 messageService.alert("An error occurred while retrieving publications.")

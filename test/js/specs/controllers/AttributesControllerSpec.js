@@ -12,7 +12,11 @@ describe("AttributesController tests", function () {
                 return "profileId1"
             }
         },
+        currentUser: function() {
+            return "bob"
+        },
         confirm: function() {},
+        toKey: function(v) {return v},
         LAST: "last"
     };
     var form = {
@@ -191,7 +195,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
-        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText"}];
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attr Title", "text": "attrText"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -201,7 +205,7 @@ describe("AttributesController tests", function () {
         expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
-            "title": "AttrTitle", // titles are capitalized on save
+            "title": "Attr Title", // titles are capitalized on save
             "text": "attrText",
             "significantEdit": false
         });
@@ -223,7 +227,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
-        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", original: {uuid: "uuid2"}}];
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attr Title", "text": "attrText", original: {uuid: "uuid2"}}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -233,7 +237,7 @@ describe("AttributesController tests", function () {
         expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
-            "title": "AttrTitle", // titles are capitalized on save
+            "title": "Attr Title", // titles are capitalized on save
             "text": "attrText",
             "original": {uuid: "uuid2"},
             "significantEdit": false
@@ -244,7 +248,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
-        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", "creators": "creatorList"}];
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attr Title", "text": "attrText", "creators": "creatorList"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -254,7 +258,7 @@ describe("AttributesController tests", function () {
         expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
-            "title": "AttrTitle", // titles are capitalized on save
+            "title": "Attr Title", // titles are capitalized on save
             "text": "attrText",
             "creators": "creatorList",
             "significantEdit": false
@@ -265,7 +269,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profile = {"uuid": "profileId1"};
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
-        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attrTitle", "text": "attrText", "editors": "editorList"}];
+        scope.attrCtrl.attributes = [{"saving": "false", "uuid": "uuid1", "title": "attr Title", "text": "attrText", "editors": "editorList"}];
 
         saveAttrDefer.resolve(JSON.parse(saveAttributeResponse));
 
@@ -275,7 +279,7 @@ describe("AttributesController tests", function () {
         expect(profileService.saveAttribute).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1", {
             "profileId": "profileId1",
             "uuid": "uuid1",
-            "title": "AttrTitle", // titles are capitalized on save
+            "title": "Attr Title", // titles are capitalized on save
             "text": "attrText",
             "editors": "editorList",
             "significantEdit": false
@@ -409,7 +413,7 @@ describe("AttributesController tests", function () {
         expect(form.$setDirty).toHaveBeenCalled();
     });
 
-    it("should populate the audit and auditShowing properties of the selected attribute when showAudit is invoked", function () {
+    it("should populate the audit, auditShowing and diff properties of the selected attribute when showAudit is invoked", function () {
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
         scope.attrCtrl.attributes = [{title: "originalTitle1", text: "originalText1"},
@@ -422,7 +426,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes[0].audit).not.toBeDefined();
         expect(scope.attrCtrl.attributes[1].audit).toEqual([{
             userId: "1",
-            object: {text: "auditText1", title: "auditTitle1"}
+            object: {text: "auditText1", title: "auditTitle1"},
         }, {userId: "2", object: {text: "auditText2", title: "auditTitle2"}}]);
     });
 
@@ -488,7 +492,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
         var attribute1 = {uuid: "uuid1", title: "title1"};
-        var attribute2 = {uuid: "uuid2", title: "title2"};
+        var attribute2 = {uuid: "uuid2", title: "title2", fromCollection: {opusTitle: "opusTitle"}};
         var attribute3 = {uuid: "uuid3", title: "title3"};
         scope.attrCtrl.attributes = [attribute1, attribute2, attribute3];
 
@@ -497,6 +501,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes.length).toBe(3);
         expect(scope.attrCtrl.attributes[1].uuid).toBe("");
         expect(scope.attrCtrl.attributes[1].original).toBe(attribute2);
+        expect(scope.attrCtrl.attributes[1].source).toBe("opusTitle");
     });
 
     it("should not include the current opus in the search when loadAttributesFromSupportingCollections is called", function() {
@@ -556,7 +561,7 @@ describe("AttributesController tests", function () {
 
     it("should add the title of all supporting attributes to the attributeTitle list, but not the approvedVocabulary list, when loadAttributesFromSupportingCollections is called", function() {
         scope.attrCtrl.approvedVocabulary = ["title1", "title2"];
-        scope.attrCtrl.attributeTitles = ["title1", "title2"];
+        scope.attrCtrl.attributeTitles = [{name: "title1"}, {name: "title2"}];
 
         scope.attrCtrl.profileId = "profileId1";
         scope.attrCtrl.opusId = "opusId1";
@@ -579,7 +584,7 @@ describe("AttributesController tests", function () {
         scope.attrCtrl.loadAttributesFromSupportingCollections();
         scope.$apply();
 
-        expect(scope.attrCtrl.attributeTitles).toEqual(["title1", "title2", "title3"]);
+        expect(scope.attrCtrl.attributeTitles).toEqual([{name: "title1"}, {name: "title2"}, {name: "title3"}]);
         expect(scope.attrCtrl.approvedVocabulary).toEqual(["title1", "title2"]);
     });
 });

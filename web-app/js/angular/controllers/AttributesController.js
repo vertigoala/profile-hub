@@ -1,7 +1,7 @@
 /**
  * Attributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, util, messageService, $window, $filter, $modal) {
+profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $scope) {
     var self = this;
 
     self.attributes = [];
@@ -10,7 +10,9 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.historyShowing = {};
     self.vocabularyStrict = false;
     self.supportingAttributes = {};
-    self.showSupportingData = true;
+    self.showSupportingData = false;
+    self.currentUser = util.currentUser();
+    self.supportingAttributeTitles = [];
 
     var capitalize = $filter("capitalize");
 
@@ -27,6 +29,11 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
                 self.profile = data.profile;
                 self.opus = data.opus;
                 self.attributes = data.profile.attributes;
+
+                angular.forEach(self.attributes, function(attribute) {
+                    navService.add(attribute.title, util.toKey(attribute.title));
+                    attribute.key = util.toKey(attribute.title);
+                });
 
                 if (self.opus.supportingOpuses && self.opus.supportingOpuses.length > 0) {
                     self.loadAttributesFromSupportingCollections();
@@ -47,10 +54,10 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
     self.showAttribute = function (attribute) {
         return (self.readonly &&
-            (!attribute.source ||
-            (attribute.source && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
+            (!attribute.fromCollection ||
+            (attribute.fromCollection && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
             || (!self.readonly &&
-            attribute.source && self.opus.allowCopyFromLinkedOpus && self.showSupportingData)
+            attribute.fromCollection && self.opus.allowCopyFromLinkedOpus && self.showSupportingData)
     };
 
     self.showTitleGroup = function (title) {
@@ -104,6 +111,15 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
     self.showAudit = function (idx) {
         var future = profileService.getAuditForAttribute(self.attributes[idx].uuid);
         future.then(function (audit) {
+                var d = new diff_match_patch();
+
+                for (var i = 0; i < audit.length - 1; i++) {
+                    if (audit[i + 1].object.plainText && audit[i].object.plainText) {
+                        var diff = d.diff_main(audit[i + 1].object.plainText, audit[i].object.plainText);
+                        audit[i].diff = d.diff_prettyHtml(diff);
+                    }
+                }
+
                 self.attributes[idx].audit = audit;
                 self.attributes[idx].auditShowing = true;
             },
@@ -148,10 +164,14 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
     self.copyAttribute = function (index, form) {
         var copy = angular.copy(self.attributes[index]);
-        copy.source = null;
+        copy.fromCollection = null;
         copy.original = self.attributes[index];
+        copy.source = copy.original.fromCollection.opusTitle;
         copy.uuid = "";
         self.attributes[index] = copy;
+        if (self.isValid(copy.title)) {
+            self.saveAttribute(index, form);
+        }
     };
 
     self.saveAttribute = function (idx, attributeForm) {
@@ -165,6 +185,12 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             text: attribute.text
         };
 
+        if (attribute.source) {
+            data.source = attribute.source;
+        }
+        if (attribute.attributeTo) {
+            data.attributeTo = attribute.attributeTo;
+        }
         if (attribute.original) {
             data.original = attribute.original;
         }
@@ -174,9 +200,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
         if (attribute.editors) {
             data.editors = attribute.editors;
         }
-        if (attribute.uuid) {
-            data.significantEdit = attribute.significantEdit ? attribute.significantEdit : false;
-        }
+        data.significantEdit = attribute.significantEdit ? attribute.significantEdit : false;
 
         var future = profileService.saveAttribute(self.opusId, self.profileId, attribute.uuid, data);
 
@@ -186,6 +210,7 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
                 self.attributes[idx].uuid = attribute.attributeId;
                 self.attributes[idx].auditShowing = false;
+                self.attributes[idx].audit = null;
                 attributeForm.$setPristine();
             },
             function () {
@@ -215,14 +240,22 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
 
                             angular.forEach(supporting.profile.attributes, function (attribute) {
                                 if (profileAttributeMap.indexOf(attribute.title) == -1) {
-                                    attribute.source = {
+                                    attribute.fromCollection = {
                                         opusId: supporting.opus.uuid,
                                         opusTitle: supporting.opus.title,
+                                        opusShortName: supporting.opus.shortName,
                                         profileId: supporting.profile.uuid
                                     };
+
+                                    attribute.key = util.toKey(attribute.title);
+
                                     self.attributes.push(attribute);
-                                    if (self.attributeTitles.indexOf(attribute.title) == -1) {
-                                        self.attributeTitles.push(attribute.title);
+                                    var title = {name: attribute.title};
+
+                                    self.supportingAttributeTitles.push(attribute.title);
+
+                                    if (self.attributeTitles.indexOf(title) == -1) {
+                                        self.attributeTitles.push(title);
                                     }
                                 }
 
@@ -259,6 +292,20 @@ profileEditor.controller('AttributeEditor', function (profileService, util, mess
             }
         });
     };
+
+    self.toggleShowSupportingData = function() {
+        angular.forEach(self.supportingAttributeTitles, function(title) {
+            if (self.showSupportingData) {
+                navService.add(title, util.toKey(title));
+            } else {
+                navService.remove(util.toKey(title));
+            }
+        });
+    };
+
+    self.parseInt = function(number) {
+        return parseInt(number, 10);
+    }
 });
 
 

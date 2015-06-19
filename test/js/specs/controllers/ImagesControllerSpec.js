@@ -20,7 +20,7 @@ describe("ImagesController tests", function () {
     };
     var messageService;
     var profileService;
-    var profileDefer, imageDefer, saveDefer;
+    var profileDefer, imageDefer, saveDefer, metadataDefer;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "excludedImages": ["imageId2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
     var retrieveImagesResponse = '{"occurrences": [{"image": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"image": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}]}';
@@ -41,10 +41,12 @@ describe("ImagesController tests", function () {
         profileDefer = $q.defer();
         imageDefer = $q.defer();
         saveDefer = $q.defer();
+        metadataDefer = $q.defer();
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "retrieveImages").and.returnValue(imageDefer.promise);
         spyOn(profileService, "updateProfile").and.returnValue(saveDefer.promise);
+        spyOn(profileService, "getImageMetadata").and.returnValue(metadataDefer.promise);
 
         spyOn(form, "$setPristine");
         spyOn(form, "$setDirty");
@@ -181,7 +183,7 @@ describe("ImagesController tests", function () {
     it("should use the scientificName to retrieve images if the profile.guid attribute is not present", function () {
         scope.imageCtrl.opusId = "opusId1";
         scope.imageCtrl.profileId = "profileId1";
-        var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"dataResourceUid": "drId", "imageSources": ["source1", "source2"]}}';
 
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
@@ -189,13 +191,13 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "profileName", "source1,source2");
+        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "profileName", "drId,source1,source2");
     });
 
     it("should use the profile.guid attribute prefixed with 'lsid:' to retrieve images if it is present", function () {
         scope.imageCtrl.opusId = "opusId1";
         scope.imageCtrl.profileId = "profileId1";
-        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"dataResourceUid": "drId", "imageSources": ["source1", "source2"]}}';
 
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
@@ -203,7 +205,7 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "lsid:guid1", "source1,source2");
+        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "lsid:guid1", "drId,source1,source2");
     });
 
     it("should ensure only 1 image is primary when changePrimaryImage is invoked", function() {

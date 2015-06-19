@@ -1,0 +1,80 @@
+<div class="col-md-12">
+    <div class="row" ng-show="error">
+        <alert type="warning">{{error}}</alert>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>{{projectName}}: {{json.key_name}}</h4>
+            <a href="" ng-click="loadPreviousKey()" ng-if="visitedKeys.length > 1">&laquo; Back to {{visitedKeys[visitedKeys.length - 2].name}}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h4 style="display: inline-block">Current node</h4>&nbsp;&nbsp;
+            <span class="">
+                <a href="" ng-click="loadItem(firstId)">&laquo; first &raquo;</a>&nbsp;
+                <a href="" ng-click="loadParent(previousId)">&laquo; prev &raquo;</a>
+                <a href="" ng-click="loadKey(keyId)">&laquo; restart &raquo;</a>
+            </span>
+
+            <div class="keyplayer-panel">
+                <ul>
+                    <li ng-repeat="item in currentHtml">
+                        <a href="" ng-click="loadItem(item.id)">{{item.text}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h4>Remaining items ({{remainingItems.length}})</h4>
+
+            <div class="keyplayer-panel">
+                <ul>
+                    <li ng-repeat="item in remainingItems">
+                        <a href="" ng-click="viewItem(item.item_name)">{{item.item_name}}</a>
+                        <a href="" ng-click="loadKey(item.to_key)" ng-if="item.to_key" class="fa fa-key"
+                           title="Load key for {{item.item_name}}"></a>
+
+                        <span ng-if="item.link_to_item_name">:
+                            <a href="" ng-click="viewItem(item.link_to_item_name)">{{item.link_to_item_name}}</a>
+                            <a href="" ng-click="loadKey(item.link_to_key)" ng-if="item.link_to_key" class="fa fa-key"
+                               title="Load key for {{item.link_to_item_name}}"></a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Path</h4>
+
+            <div class="keyplayer-panel">
+                <ul>
+                    <li ng-repeat="item in path">
+                        <a href="" ng-click="loadParent(item.id)">{{item.text}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h4>Discarded items ({{discardedItems.length}})</h4>
+
+            <div class="keyplayer-panel">
+                <ul>
+                    <li ng-repeat="item in discardedItems">
+                        <a href="" ng-click="viewItem(item.item_name)">{{item.item_name}}</a>
+                        <a href="" ng-click="loadKey(item.to_key)" ng-if="item.to_key" class="fa fa-key"
+                           title="Load key for {{item.item_name}}"></a>
+
+                        <span ng-if="item.link_to_item_name">:
+                            <a href="" ng-click="viewItem(item.link_to_item_name)">{{item.link_to_item_name}}</a>
+                            <a href="" ng-click="loadKey(item.link_to_key)" ng-if="item.link_to_key" class="fa fa-key"
+                               title="Load key for {{item.link_to_item_name}}"></a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

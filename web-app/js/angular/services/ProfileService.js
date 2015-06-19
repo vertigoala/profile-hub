@@ -31,9 +31,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        createProfile: function(opusId, scientificName) {
+        createProfile: function(opusId, scientificName, nameAuthor) {
             console.log("Creating profile for " + scientificName + " in opus " + opusId);
-            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/create", {opusId: opusId, scientificName: scientificName});
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/create", {opusId: opusId, scientificName: scientificName, nameAuthor: nameAuthor});
             future.then(function(response) {
                 console.log("Profile created with response code " + response.status);
             });
@@ -53,15 +53,56 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        getOpus: function (opusId) {
-            // make sure we have a UUID, not just the last element of some other URL (e.g. create)
-            if (!util.isUuid(opusId)) {
-                return;
-            }
+        toggleDraftMode: function(opusId, profileId, snapshot) {
+            console.log("Toggling draft mode for profile " + profileId);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/toggleDraftMode?snapshot=" + snapshot);
+            future.then(function(response) {
+                console.log("Profile updated with response code " + response.status);
 
+                clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        discardDraftChanges: function(opusId, profileId) {
+            console.log("Discarding draft changes for profile " + profileId);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/discardDraftChanges");
+            future.then(function(response) {
+                console.log("Profile updated with response code " + response.status);
+
+                clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        getOpus: function (opusId) {
             console.log("Fetching opus " + opusId);
 
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/json", {cache: true});
+            future.then(function (response) {
+                console.log("Opus fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        getOpusAbout: function (opusId) {
+            console.log("Fetching about page for opus " + opusId);
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/about/json", {cache: true});
+            future.then(function (response) {
+                console.log("Opus fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        updateOpusAbout: function (opusId, html) {
+            console.log("Updating about page for opus " + opusId);
+
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/about/update", {opusId: opusId, aboutHtml: html});
             future.then(function (response) {
                 console.log("Opus fetched with response code " + response.status);
             });
@@ -192,6 +233,11 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        getImageMetadata: function(imageId) {
+            var future = $http.get(config.imageServiceUrl + "/ws/image/" + imageId, {cache: true});
+            return util.toStandardPromise(future);
+        },
+
         retrieveLists: function (opusId, profileId, guid) {
             console.log("Retrieving lists for " + guid);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/lists?guid=" + guid, {cache: true});
@@ -239,18 +285,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        savePublication: function (opusId, profileId, publicationId, data) {
-            console.log("Saving publication " + publicationId);
-            var future = null;
-
-            if (publicationId) {
-                future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication/" + publicationId + "/update", data);
-            } else {
-                future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication/create", data, {
-                    transformRequest: angular.identity,
-                    headers: {'Content-Type': undefined}
-                });
-            }
+        createPublication: function (opusId, profileId) {
+            console.log("Creating publication...");
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/publication/create");
 
             future.then(function (response) {
                 console.log("Publication saved with response code " + response.status);
@@ -319,6 +356,30 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard);
             future.then(function (response) {
                 console.log("Profile search returned with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
+        profileSearchByTaxonLevel: function(opusId, taxon, max, offset) {
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/level?opusId=" + opusId + "&taxon=" + taxon + "&max=" + max + "&offset=" + offset);
+            future.then(function(response) {
+                console.log("Facet search returned with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
+        profileSearchByTaxonLevelAndName: function(opusId, taxon, scientificName, max, offset) {
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset);
+            future.then(function(response) {
+                console.log("Facet search returned with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
+        getTaxonLevels: function(opusId) {
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/levels?opusId=" + opusId);
+            future.then(function(response) {
+                console.log("Get taxon levels returned with response code " + response.status);
             });
             return util.toStandardPromise(future);
         },
@@ -481,6 +542,22 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
                 clearCache();
             });
+            return util.toStandardPromise(future);
+        },
+
+        retrieveKeybaseProjects: function() {
+            console.log("Retrieving keybase projects");
+
+            var future = $http.get(util.contextRoot() + "/keybase/projects", {cache: true});
+            future.then(function(response) {
+                console.log("Keybase projects retreived with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        getLicences: function() {
+            var future = $http.get(util.contextRoot() + "/licences", {cache: true});
             return util.toStandardPromise(future);
         }
     }

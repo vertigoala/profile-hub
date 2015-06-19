@@ -1,0 +1,26 @@
+/* PDF specific CSS styles */
+body {
+    background-color: white;
+}
+
+.small-text {
+    font-size: 10px !important;
+}
+
+.center {
+    text-align: center;
+}
+
+.customizable-banner {
+    height: 100px !important;
+}
+
+.profile-image {
+    padding-bottom: 10px;
+    max-width: 100%;
+    height: 250px;
+    min-width: 200px;
+    vertical-align: middle;
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+}

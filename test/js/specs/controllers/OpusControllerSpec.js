@@ -21,7 +21,7 @@ describe("OpusController tests", function () {
     var form;
     var messageService;
     var profileService;
-    var opusDefer, getResourceDefer, listResourcesDefer, saveOpusDefer, listOpusDefer, getListsDefer;
+    var opusDefer, getResourceDefer, listResourcesDefer, saveOpusDefer, listOpusDefer, getListsDefer, keysDefer;
 
     var getOpusResponse = '{"title": "OpusName", "dataResourceUid":"dataUid1", "imageSources": ["source1", "source2", "source3"], "recordSources": ["source1", "source2", "source3"], "mapPointColour": "12345", "supportingOpuses": []}';
     var getResourceResponse = '{"pubDescription":"resource description"}';
@@ -48,6 +48,7 @@ describe("OpusController tests", function () {
         saveOpusDefer = $q.defer();
         listOpusDefer = $q.defer();
         getListsDefer = $q.defer();
+        keysDefer = $q.defer();
 
         spyOn(profileService, "getOpus").and.returnValue(opusDefer.promise);
         spyOn(profileService, "getResource").and.returnValue(getResourceDefer.promise);
@@ -55,6 +56,8 @@ describe("OpusController tests", function () {
         spyOn(profileService, "saveOpus").and.returnValue(saveOpusDefer.promise);
         spyOn(profileService, "listOpus").and.returnValue(listOpusDefer.promise);
         spyOn(profileService, "getAllLists").and.returnValue(getListsDefer.promise);
+        spyOn(profileService, "retrieveKeybaseProjects").and.returnValue(keysDefer.promise);
+
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -288,7 +291,9 @@ describe("OpusController tests", function () {
             imageSources: ["source1", "source2", "source3", "newId1"], // new id added here
             recordSources: ["source1", "source2", "source3"],
             mapPointColour: "12345",
-            supportingOpuses: []
+            supportingOpuses: [],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -321,7 +326,9 @@ describe("OpusController tests", function () {
             mapPointColour: "12345",
             imageSources: ["source1", "source3"], // existing source (index 1) removed
             recordSources: ["source1", "source2", "source3"],
-            supportingOpuses: []
+            supportingOpuses: [],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -342,7 +349,9 @@ describe("OpusController tests", function () {
             imageSources: ["source1", "source2", "source3"],
             recordSources: ["source1", "source2", "source3", "newId1"], // new id added here
             mapPointColour: "12345",
-            supportingOpuses: []
+            supportingOpuses: [],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -375,7 +384,9 @@ describe("OpusController tests", function () {
             mapPointColour: "12345",
             imageSources: ["source1", "source2", "source3"],
             recordSources: ["source1", "source3"], // existing source (index 1) removed
-            supportingOpuses: []
+            supportingOpuses: [],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -397,7 +408,9 @@ describe("OpusController tests", function () {
             imageSources: ["source1", "source2", "source3"],
             recordSources: ["source1", "source2", "source3"],
             mapPointColour: "12345",
-            supportingOpuses: [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus2", title: "Opus 2"}]
+            supportingOpuses: [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus2", title: "Opus 2"}],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -431,7 +444,9 @@ describe("OpusController tests", function () {
             mapPointColour: "12345",
             imageSources: ["source1", "source2", "source3"],
             recordSources: ["source1", "source2", "source3"],
-            supportingOpuses: [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus3", title: "Opus 3"}]
+            supportingOpuses: [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus3", title: "Opus 3"}],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -452,7 +467,9 @@ describe("OpusController tests", function () {
 
         var expectedOpus = {
             title: "OpusName",
-            approvedLists: ["list1", "list2", "list3", "list4", "list5", "list6"]
+            approvedLists: ["list1", "list2", "list3", "list4", "list5", "list6"],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -478,21 +495,13 @@ describe("OpusController tests", function () {
 
         var expectedOpus = {
             title: "OpusName",
-            approvedLists: ["list1", "list3"]
+            approvedLists: ["list1", "list3"],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
-
-
-
-
-
-
-
-
-
-
 
     it("should raise an alert message if the call to saveOpus fails", function() {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
@@ -513,5 +522,45 @@ describe("OpusController tests", function () {
 
         expect(messageService.success).toHaveBeenCalledWith("Successfully updated OpusName.");
         expect(form.$setPristine).toHaveBeenCalled();
+    });
+
+    it("should check for duplicate short names when saving the opus", function() {
+        scope.opusCtrl.initialShortName = "oldShortName";
+        scope.opusCtrl.opus = {shortName: "newShortName"};
+
+        scope.opusCtrl.saveOpus(form);
+
+        expect(profileService.getOpus).toHaveBeenCalledWith("newShortName");
+    });
+
+    it("should only check for duplicate short names when saving the opus if the short name has changed", function() {
+        scope.opusCtrl.initialShortName = "oldShortName";
+        scope.opusCtrl.opus = {shortName: "oldShortName"};
+
+        scope.opusCtrl.saveOpus(form);
+
+        expect(profileService.getOpus).not.toHaveBeenCalledWith();
+    });
+
+    it("should raise an alert message if there is another opus with the same shortName when saving the opus", function() {
+        scope.opusCtrl.initialShortName = "oldShortName";
+        scope.opusCtrl.opus = {shortName: "newShortName"};
+
+        opusDefer.resolve({shortName: "newShortName"});
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        expect(messageService.alert).toHaveBeenCalledWith("The specified short name is already in use. Short Names must be unique across all collections.");
+    });
+
+    it("should save the opus if there are no other opuses with the same shortName when saving the opus", function() {
+        scope.opusCtrl.initialShortName = "oldShortName";
+        scope.opusCtrl.opus = {shortName: "newShortName"};
+
+        opusDefer.reject({status: 404});
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        expect(profileService.saveOpus).toHaveBeenCalled();
     });
 });

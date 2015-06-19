@@ -36,7 +36,8 @@ grails.mime.types = [ // the first one is the default format
     rss:           'application/rss+xml',
     text:          'text/plain',
     hal:           ['application/hal+json','application/hal+xml'],
-    xml:           ['text/xml', 'application/xml']
+    xml:           ['text/xml', 'application/xml'],
+    pdf:           ['application/x-pdf', 'application/pdf']
 ]
 
 // URL Mapping Cache Max Size, defaults to 5000
@@ -45,8 +46,8 @@ grails.mime.types = [ // the first one is the default format
 // Legacy setting for codec used to encode data with ${}
 grails.views.default.codec = "html"
 
-grails.resources.adhoc.patterns = ['/js/*', '/images/*', '/css/*', '/plugins/*', '/thirdparty/*']
-grails.resources.adhoc.includes = ['/js/**', '/images/**', '/css/**','/plugins/**', '/thirdparty/**']
+grails.resources.adhoc.patterns = ['/js/*', '/images/*', '/css/*', '/plugins/*', '/thirdparty/*', '/templates/*']
+grails.resources.adhoc.includes = ['/js/**', '/images/**', '/css/**','/plugins/**', '/thirdparty/**', '/templates/**']
 
 // The default scope for controllers. May be prototype, session or singleton.
 // If unspecified, controllers are prototype scoped.
@@ -122,7 +123,7 @@ log4j = {
         environments {
             production {
                 println "Log4j logs will be written to : ${loggingDir}"
-                rollingFile name: "tomcatLog", maxFileSize: '1MB', file: "${loggingDir}/${appName}.log", threshold: Level.ERROR, layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n")
+                rollingFile name: "tomcatLog", maxFileSize: '1MB', file: "${loggingDir}/${appName}.log", threshold: Level.INFO, layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n")
             }
             development {
                 console name: "stdout", layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n"), threshold: Level.DEBUG

@@ -16,31 +16,32 @@
 
 <body>
 
-<div ng-app="profileEditor" ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
-    <div class="row-fluid" ng-cloak>
-        <div class="span6">
-            <ol class="breadcrumb" role="navigation">
-                <li><i class="fa fa-arrow-left"></i></span><span class="divider"><a href="${request.contextPath}/" target="_self">View all profile collections</a></li>
-            </ol>
-        </div>
-        <g:render template="../layouts/login"/>
-    </div>
+<div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
+    <a name="top"></a>
+    <ol class="breadcrumb" ng-cloak>
+        <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
+        <li><a class="font-xxsmall" href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}">{{opusCtrl.opus.title}}</a></li>
+    </ol>
 
-    <div class="row-fluid" ng-cloak>
-        <div class="span8">
-            <div style="margin-top:20px;">
-                <p class="lead">
-                    Configure your profile collection, uploading existing datasets to be incorporated in your profile.
-                </p>
-            </div>
+    <div class="row" ng-cloak>
+        <div class="col-md-6">
+            <p class="lead">
+                Configure your profile collection
+            </p>
         </div>
-        <div class="span4" ng-cloak>
-            <div class="pull-right">
-                <a href="${request.contextPath}/opus/{{opusCtrl.opus.uuid}}" class="btn btn-success" target="_self" ng-show="opusCtrl.opus.uuid"><i class="icon-eye-open icon-white"></i> Public View</a>
+        <div class="col-md-6">
+        <div class="btn-group padding-bottom-1 pull-right">
+            <div class="row">
+                <a href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}"
+                   class="btn btn-default" target="_self" ng-show="opusCtrl.opus.uuid"><i
+                        class="icon-eye-open icon-white"></i> Public View</a>
                 <g:if test="${params.isOpusAdmin}">
-                    <button ng-click="opusCtrl.deleteOpus()" class="btn btn-danger" target="_self" ng-show="opusCtrl.opus.uuid"><i class="icon-remove icon-white"></i> Delete this collection</button>
+                    <button ng-click="opusCtrl.deleteOpus()" class="btn btn-danger" target="_self"
+                            ng-show="opusCtrl.opus.uuid"><i class="icon-remove icon-white"></i> Delete this collection
+                    </button>
                 </g:if>
             </div>
+        </div>
         </div>
     </div>
 
@@ -48,33 +49,64 @@
         <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
     </div>
 
-    <g:include controller="opus" action="editOpusDetailsPanel" params="[opusId: params.opusId]"/>
+    <div class="row" ng-cloak>
+        <div class="col-md-3 margin-bottom-1 stay-on-screen">
+            <ul class="nav nav-stacked" id="sidebar">
+                <h4 class="font-xxsmall heading-underlined"><strong>Page index</strong></h4>
+                <li><a href="#about" du-smooth-scroll class="font-xxsmall">About page</a></li>
+                <li><a href="#accessControl" du-smooth-scroll class="font-xxsmall">Access control</a></li>
+                <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Approved image sources</a></li>
+                <li><a href="#lists" du-smooth-scroll class="font-xxsmall">Approved lists</a></li>
+                <li><a href="#recordSources" du-smooth-scroll class="font-xxsmall">Approved specimen/observation sources</a></li>
+                <li><a href="#attributeVocab" du-smooth-scroll class="font-xxsmall">Attribute vocabulary</a></li>
+                <li><a href="#authorship" du-smooth-scroll class="font-xxsmall">Authorship &amp; attribution</a></li>
+                <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
+                <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>
+                <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
+                <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
+                <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
+                <li><a href="#supportingCollections" du-smooth-scroll class="font-xxsmall">Supporting collections</a></li>
+            </ul>
+        </div>
 
-    <g:include controller="opus" action="editAccessControlPanel" params="[opusId: params.opusId]"/>
+        <div class="col-lg-9 col-md-8 col-xs-12">
+            <g:include controller="opus" action="editOpusDetailsPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editStylingPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="editAccessControlPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editMapConfigPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="editStylingPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="taxaUploadPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="editMapConfigPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="occurrenceUploadPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="taxaUploadPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="phyloUploadPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="occurrenceUploadPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="keyUploadPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="phyloUploadPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editImageSourcesPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="editKeyConfigPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editRecordSourcesPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="keyUploadPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editApprovedListsPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="editImageSourcesPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editSupportingOpusPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="editRecordSourcesPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editVocabPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="editApprovedListsPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="editGlossaryPanel" params="[opusId: params.opusId]"/>
+            <g:include controller="opus" action="editSupportingOpusPanel" params="[opusId: params.opusId]"/>
+
+            <g:include controller="opus" action="editVocabPanel" params="[opusId: params.opusId]"/>
+
+            <g:include controller="opus" action="editAuthorshipPanel" params="[opusId: params.opusId]"/>
+
+            <g:include controller="opus" action="editGlossaryPanel" params="[opusId: params.opusId]"/>
+
+            <g:include controller="opus" action="editAboutPanel" params="[opusId: params.opusId]"/>
+        </div>
+    </div>
+
+    <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
 </div>
 
 </body>

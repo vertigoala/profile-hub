@@ -58,9 +58,8 @@ The response will be a JSON document mapping Scientific Name to a status. For ex
 ## Creating a new collection
 This section lists the steps required to create a completely new collection and import data. You will need to be an ALA Administrator to create a new collection.
 
-1. Create 2 Data Resources in the ALA Collections admin UI (one for the organisation, one for its images)
-1. Create a new collection in Profiles Hub, selecting the data resource of the organisation
-1. Edit the opus and add the data resource for the images as an approved image source
+1. Create a Data Resource in the ALA Collections admin UI for the organisation
+1. Create a new collection in Profiles Hub, selecting the data resource you just created
 1. Create a script that parses your existing data set and produces the JSON document to be sent to the import profile web service
 1. Generate a CSV file containing a mapping between Scientific Name and URL for each image in your dataset
 1. Execute the script against the profile service's web service

@@ -3,9 +3,14 @@
  */
 profileEditor.factory('util', function ($location, $q, config, $modal, $window) {
 
+    var KEYWORDS = ["create", "update", "delete"];
     var UUID_REGEX_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     var LAST = "last";
     var FIRST = "first";
+    var RANK = {
+        SPECIES: "species",
+        SUBSPECIES: "subspecies"
+    };
 
     /**
      * Retrieves a specific item from the path of the current URL. Items are defined as anything between two slashes.
@@ -87,10 +92,9 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
 
         if (!path) {
             var url = $location.absUrl();
-
             var offset = $location.protocol().length + 3; // ignore the length of the protocol plus ://
-            var startIndex = path.indexOf("/", offset);
-            var endIndex = path.indexOf("?") == -1 ? path.length : path.indexOf("?");
+            var startIndex = url.indexOf("/", offset);
+            var endIndex = url.indexOf("?") == -1 ? url.length : url.indexOf("?");
 
             path = url.substring(startIndex, endIndex)
         }
@@ -116,22 +120,42 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     /**
      * Get the specified entity id from the URL.
      *
-     * Assumes all urls are in the form http://.../entity1/entity1Id/entity2/entity2Id/...
+     * Assumes all urls where the opus and/or profile id are required have the form http://.../opusShortName/profileScientificName/...
      */
     function getEntityId(entity) {
         var entityId = null;
 
-        var path = getPath().split("/");
-        if (path) {
-            var entityIndex = path.indexOf(entity);
-            entityId = path[entityIndex + 1];
+        var path = getPath();
 
-            // make sure we have a UUID, not just the last element of some other URL (e.g. create)
-            if (!isUuid(entityId)) {
-                entityId = null;
+        if (path.indexOf(config.contextPath) == 0) {
+            path = path.substring(config.contextPath.length);
+        }
+
+        if (path.indexOf("/") == 0) {
+            path = path.substring(1)
+        }
+
+        if (path.charAt(path.length - 1) == "/") {
+            path = path.substring(0, path.length - 1)
+        }
+
+        path = path.split("/");
+
+        if (path) {
+            if (entity == "opus") {
+                entityId = path[1];
+            } else if (entity == "profile" && path.length > 1) {
+                entityId = path[3];
             }
         }
 
+        if (entityId && entityId.indexOf(";") > -1) {
+            entityId = entityId.substring(0, entityId.indexOf(";"))
+        }
+
+        if (KEYWORDS.indexOf(entityId) > -1) {
+            entityId = null;
+        }
         return entityId;
     }
 
@@ -146,6 +170,14 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      */
     function contextRoot() {
         return config.contextPath;
+    }
+
+    /**
+     * Retrieve the current user's name
+     * @returns {*}
+     */
+    function currentUser() {
+        return config.currentUser;
     }
 
     /**
@@ -168,7 +200,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
             console.log(msg);
             defer.reject(msg);
             if (status == 403) {
-                console.log("not authorised")
+                console.log("not authorised");
                 redirect(contextRoot() + "/notAuthorised");
             }
         });
@@ -193,17 +225,24 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @param message The message text to display
      * @returns {Promise}
      */
-    function confirm(message) {
+    function confirm(message, ok, cancel) {
+        if (ok === undefined) {
+            ok = "OK"
+        }
+        if (cancel === undefined) {
+            cancel = "Cancel"
+        }
+
         var html = '<div class="modal-header confirm">' +
-            '<h3 class="modal-title">Confirmation</h3>' +
+            '<h4 class="modal-title">Confirmation</h4>' +
             '</div>' +
             '<div class="modal-body">' +
             '{{ confirmCtrl.message | default:"Are you sure you wish to continue with this operation?"}}' +
             '</div>' +
 
             '<div class="modal-footer">' +
-            '<button class="btn btn-primary" ng-click="confirmCtrl.ok()">OK</button>' +
-            '<button class="btn btn-warning" ng-click="confirmCtrl.cancel()">Cancel</button>' +
+            '<button class="btn btn-primary" ng-click="confirmCtrl.ok()">' + ok + '</button>' +
+            '<button class="btn btn-default" ng-click="confirmCtrl.cancel()">' + cancel + '</button>' +
             '</div>';
 
         var popup = $modal.open({
@@ -226,6 +265,17 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Converts the human-readable label to a value suitable for use as a key by removing all spaces and punctuation, and converting to lowercase.
+     *
+     * @param label the label to convert
+     */
+    function toKey(label) {
+        if (label) {
+            return label.replace(/\W/g, '_').toLowerCase();
+        }
+    }
+
+    /**
      * Public API
      */
     return {
@@ -238,9 +288,12 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         redirect: redirect,
         getEntityId: getEntityId,
         getQueryParameter: getQueryParameter,
+        currentUser: currentUser,
+        toKey: toKey,
 
         LAST: LAST,
         FIRST: FIRST,
+        RANK: RANK,
         UUID_REGEX_PATTERN: UUID_REGEX_PATTERN
     };
 

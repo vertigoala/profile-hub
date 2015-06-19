@@ -15,6 +15,8 @@ class AccessControlFilters {
         all(controller: '*', action: '*') {
             before = {
                 params.currentUser = authService.getDisplayName()
+                List<String> usersRoles = request.userPrincipal ? request.userPrincipal.attributes.authority.split(",") : []
+                params.isALAAdmin = usersRoles.contains(Role.ROLE_ADMIN.toString())
 
                 if (grailsApplication.config.security.authorisation.disable != "true") {
                     boolean authorised = false
@@ -32,8 +34,6 @@ class AccessControlFilters {
                             def controllerAction = controllerClass.getClazz().declaredMethods.find {
                                 it.toString().indexOf(actionName) > -1
                             }
-
-                            List<String> usersRoles = request.userPrincipal ? request.userPrincipal.attributes.authority.split(",") : []
 
                             if (!usersRoles.contains(Role.ROLE_ADMIN.toString())) {
                                 // If we have a request for a single opus, check if the user is an opus admin or editor
@@ -83,9 +83,7 @@ class AccessControlFilters {
                                     log.trace "Action ${actionFullName} is not secured"
                                     authorised = true
                                 }
-                                params.isALAAdmin = false
                             } else {
-                                params.isALAAdmin = true
                                 params.isOpusAdmin = true
                                 params.isOpusEditor = true
                                 params.isOpusReviewer = true
@@ -103,11 +101,11 @@ class AccessControlFilters {
                         response.sendError(HttpStatus.SC_FORBIDDEN)
                     }
                 } else {
+                    boolean authenticated = authService.getDisplayName() != null
+                    params.isOpusAdmin = authenticated
+                    params.isOpusEditor = authenticated
+                    params.isOpusReviewer = authenticated
                     log.warn "**** Authorisation has been disabled! ****"
-                    params.isALAAdmin = true
-                    params.isOpusAdmin = true
-                    params.isOpusEditor = true
-                    params.isOpusReviewer = true
                 }
             }
             after = { Map model ->

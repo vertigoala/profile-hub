@@ -13,7 +13,7 @@ describe("ProfileController tests", function () {
         open: function() {}
     };
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":[{"title": "attr1"}, {"title": "attr2"}]}, "opus": {"imageSources": ["source1", "source2"]}}';
 
     beforeAll(function () {
         console.log("****** Profile Controller Tests ******");
@@ -156,13 +156,13 @@ describe("ProfileController tests", function () {
     });
 
     it("should open the modal dialog, and redirect to the edit profile page when it is closed, when createProfile is invoked", function() {
-        modalDefer.resolve({uuid: "newProfileId"});
+        modalDefer.resolve({uuid: "newProfileId", scientificName: "sciName"});
         scope.profileCtrl.opusId = "opusId1";
 
         scope.profileCtrl.createProfile("opusId");
         scope.$apply();
 
-        expect(util.redirect).toHaveBeenCalledWith("/context/opus/opusId1/profile/newProfileId/update");
+        expect(util.redirect).toHaveBeenCalledWith("/context/opus/opusId1/profile/sciName/update");
     });
 
     it("should create a new list when addBibliography is invoked if one doesn't exist", function() {
@@ -274,7 +274,7 @@ describe("ProfileController tests", function () {
         expect(profileService.saveAuthorship).toHaveBeenCalledWith("opusId", "profileId", {authorship: [{category: "Author", text: "Fred"}]});
     });
 
-    it("should replace the current authorship and raise a success message when the saveAuthorship succeeds", function() {
+    it("should raise a success message when the saveAuthorship succeeds", function() {
         scope.profileCtrl.opusId = "opusId";
         scope.profileCtrl.profileId = "profileId";
         scope.profileCtrl.profile = {uuid: "profileId", scientificName: "sciName", authorship: [{category: "Author", text: "Fred"}]};
@@ -284,7 +284,6 @@ describe("ProfileController tests", function () {
         scope.$apply();
 
         expect(messageService.success).toHaveBeenCalled();
-        expect(scope.profileCtrl.profile.authorship).toEqual([{category: "Author", text: "Fred, Bob"}]);
         expect(form.$setPristine).toHaveBeenCalled();
     });
 

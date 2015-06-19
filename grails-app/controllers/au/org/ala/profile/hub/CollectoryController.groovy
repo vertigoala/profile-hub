@@ -21,4 +21,8 @@ class CollectoryController extends BaseController {
         def resp = collectoryService.getDataResources()
         render resp as JSON
     }
+
+    def licences() {
+        handle collectoryService.getLicences()
+    }
 }

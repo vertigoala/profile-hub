@@ -10,20 +10,26 @@ class UrlMappings {
 
         "/opus/list" controller: "opus", action: [GET: "list"]
 
-        "/profile/search" controller: "profile", action: [GET: "search"]
+        "/profile/search" controller: "search", action: [GET: "findByScientificName"]
+        "/profile/search/taxon/name" controller: "search", action: "findByNameAndTaxonLevel"
+        "/profile/search/taxon/level" controller: "search", action: "groupByTaxonLevel"
+        "/profile/search/taxon/levels" controller: "search", action: "getTaxonLevels"
 
         "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
         "/opus/$opusId/profile/$profileId/update" controller: "profile", action: [GET: "edit", POST: "updateProfile"]
+        "/opus/$opusId/profile/$profileId/toggleDraftMode" controller: "profile", action: [POST: "toggleDraftMode"]
+        "/opus/$opusId/profile/$profileId/discardDraftChanges" controller: "profile", action: [POST: "discardDraftChanges"]
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
         "/opus/$opusId/profile/$profileId/pdf" controller: "export", action: [GET: "getPdf"]
         "/opus/$opusId/profile/$profileId/images" controller: "profile", action: [GET: "retrieveImages"]
+        "/opus/$opusId/profile/$profileId/image/$imageId" controller: "profile", action: [GET: "downloadTempImage"]
+        "/opus/$opusId/profile/$profileId/image/upload" controller: "profile", action: [POST: "uploadImage"]
         "/opus/$opusId/profile/$profileId/lists" controller: "speciesList", action: [GET: "retrieveLists"]
         "/opus/$opusId/profile/$profileId/classifications" controller: "profile", action: [GET: "retrieveClassifications"]
         "/opus/$opusId/profile/$profileId/publication" controller: "profile", action: [GET: "retrievePublication"]
         "/opus/$opusId/profile/$profileId/publication/create" controller: "profile", action: [PUT: "savePublication"]
         "/opus/$opusId/profile/$profileId/publication/$publicationId/update" controller: "profile", action: [POST: "savePublication"]
-        "/opus/$opusId/profile/$profileId/publication/$publicationId/delete" controller: "profile", action: [DELETE: "deletePublication"]
         "/opus/$opusId/profile/$profileId/speciesProfile" controller: "profile", action: [GET: "retrieveSpeciesProfile"]
         "/opus/$opusId/profile/$profileId/attribute/$attributeId/update" controller: "profile", action: [POST: "updateAttribute"]
         "/opus/$opusId/profile/$profileId/attribute/create" controller: "profile", action: [PUT: "updateAttribute"]
@@ -41,6 +47,10 @@ class UrlMappings {
         "/opus/$opusId/vocab/$vocabId/findUsages" controller: "vocab", action: [GET: "findUsagesOfTerm"]
         "/opus/$opusId/vocab/$vocabId/replaceUsages" controller: "vocab", action: [POST: "replaceUsagesOfTerm"]
         "/opus/$opusId/vocab/$vocabId" controller: "vocab", action: [GET: "show"]
+
+        "/opus/$opusId/about/json" controller: "opus", action: [GET: "getAboutHtml"]
+        "/opus/$opusId/about/update" controller: "opus", action: [PUT: "updateAboutHtml"]
+        "/opus/$opusId/about" controller: "opus", action: [GET: "about"]
 
         "/opus/$opusId/glossary/json" controller: "glossary", action: [GET: "getGlossary"]
         "/opus/$opusId/glossary/upload" controller: "glossary", action: [POST: "upload"]
@@ -60,6 +70,9 @@ class UrlMappings {
 
         "/dataResource/$dataResourceUid" controller: "collectory", action: [GET: "getResource"]
         "/dataResource/" controller: "collectory", action: [GET: "list"]
+        "/licences/" controller: "collectory", action: [GET: "licences"]
+
+        "/keybase/projects" controller: "opus", action: [GET: "retrieveKeybaseProjects"]
 
         "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
 
@@ -71,6 +84,10 @@ class UrlMappings {
         "/" controller: "opus", action: [GET: "index"]
 
         "/logout/logout" controller: "logout", action: "logout"
+
+        "/admin/message" controller: "admin", action: [GET: "getMessage", POST: "postMessage"]
+        "/admin/reloadConfig" controller: "admin", action: [POST: "reloadConfig"]
+        "/admin" controller: "admin", action: [GET: "index"]
 
         "500"(view: "/error")
         "404"(view: "/notFound")

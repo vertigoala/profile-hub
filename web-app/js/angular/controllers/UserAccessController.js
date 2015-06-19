@@ -75,7 +75,7 @@ profileEditor.controller('UserAccessController', function (messageService, util,
             templateUrl: "addEditUserPopup.html",
             controller: "AddEditUserController",
             controllerAs: "addUserCtrl",
-            size: "sm",
+            size: "md",
             resolve: {
                 users: function() {
                     return self.users;

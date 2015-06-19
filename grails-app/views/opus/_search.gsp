@@ -1,29 +1,43 @@
-<h2>Quick search</h2>
-
 <div ng-controller="SearchController as searchCtrl" ng-cloak>
-    <div class="input-append">
-        <input id="searchTerm"
-               ng-change="searchCtrl.search()"
-               ng-model="searchCtrl.searchTerm"
-               name="searchTerm"
-               class="input-xxlarge form-control"
-               autocomplete="off"
-               type="text"
-               ng-model="searchCtrl.scientificName"/>
-        <button class="btn" type="button">Search</button>
+    <!-- Row search -->
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <h3 class="heading-medium">Search for a profile</h3>
+
+        <div class="input-group">
+            <input id="searchTerm"
+                   ng-change="searchCtrl.search()"
+                   ng-model="searchCtrl.searchTerm"
+                   name="searchTerm"
+                   class="input-lg form-control"
+                   autocomplete="off"
+                   placeholder="e.g. Acacia abbatiana"
+                   type="text">
+            <span class="input-group-btn">
+                <button class="btn btn-primary btn-lg" type="button">Search</button>
+            </span>
+        </div>
     </div>
 
-    <table class="table table-striped" ng-show="searchCtrl.profiles.length > 0">
-        <tr>
-            <th>Taxon</th>
-        </tr>
-        <tr ng-repeat="profile in searchCtrl.profiles">
-            <td><a href="${request.contextPath}/opus/{{ searchCtrl.opusId }}/profile/{{ profile.profileId }}" target="_self">{{profile.scientificName}}</a>
-            </td>
-        </tr>
-    </table>
+    <div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="table-responsive">
+        <table class="table table-striped" ng-show="searchCtrl.profiles.length > 0">
+            <tr>
+                <th>Rank</th>
+                <th>Taxon</th>
+                <th ng-if="!searchCtrl.opusId">Collection</th>
+            </tr>
+            <tr ng-repeat="profile in searchCtrl.profiles">
+                <td><a href="${request.contextPath}/opus/{{ profile.opus.shortName ? profile.opus.shortName : profile.opus.uuid }}/profile/{{ profile.scientificName }}"
+                       target="_self">{{profile.rank | capitalize}}:</a></td>
+                <td><a href="${request.contextPath}/opus/{{ profile.opus.shortName ? profile.opus.shortName : profile.opus.uuid }}/profile/{{ profile.scientificName }}"
+                       target="_self" class="scientific-name">{{profile.scientificName}}</a></td>
+                <td ng-if="!searchCtrl.opusId">{{profile.opus.title}}</td>
+            </tr>
+        </table>
+    </div>
+    </div>
 
-    <div ng-show="searchCtrl.profiles.length == 0">
+    <div ng-show="searchCtrl.profiles.length == 0 && searchCtrl.searchTerm">
         <p>No matching results</p>
     </div>
 </div>

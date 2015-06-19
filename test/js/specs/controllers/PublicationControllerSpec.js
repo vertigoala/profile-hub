@@ -41,8 +41,7 @@ describe("PublicationController tests", function () {
         confirmDefer = $q.defer();
 
         spyOn(profileService, "getPublications").and.returnValue(getPubDefer.promise);
-        spyOn(profileService, "savePublication").and.returnValue(saveDefer.promise);
-        spyOn(profileService, "deletePublication").and.returnValue(deleteDefer.promise);
+        spyOn(profileService, "createPublication").and.returnValue(saveDefer.promise);
 
         spyOn(mockUtil, "confirm").and.returnValue(confirmDefer.promise);
 
@@ -95,103 +94,42 @@ describe("PublicationController tests", function () {
         expect(pub.publicationDate).toBe("2015-04-06T14:00:00Z");
     });
 
-    it("should clear the newPublication and newFile attributes when cancelNewPublication is called", function () {
-        scope.pubCtrl.newPublication = {title: "bla"};
-        scope.pubCtrl.newFile = {};
-
-        scope.pubCtrl.cancelNewPublication(form);
-
-        expect(scope.pubCtrl.newPublication).toBe(null);
-        expect(scope.pubCtrl.newFile).toBe(null);
-        expect(form.$setPristine).toHaveBeenCalled();
-    });
-
-    it("should display a confirmation dialog when deletePublication is invoked", function () {
-        scope.pubCtrl.deletePublication(0);
-        scope.pubCtrl.profileId = "profileId1";
-        scope.pubCtrl.opusId = "opusId1";
-        scope.$apply();
-
-        expect(mockUtil.confirm).toHaveBeenCalled();
-    });
-
-    it("should display a confirmation dialog when deletePublication is invoked", function () {
-        scope.pubCtrl.deletePublication(0);
-        scope.pubCtrl.profileId = "profileId1";
-        scope.pubCtrl.opusId = "opusId1";
-        scope.$apply();
-
-        expect(mockUtil.confirm).toHaveBeenCalled();
-    });
-
-    it("should not delete the publication if the confirmation is cancelled", function () {
-        scope.pubCtrl.profileId = "profileId1";
-        scope.pubCtrl.opusId = "opusId1";
-        scope.pubCtrl.publications = [{uuid: "uuid1", title: "title1"}];
-
-        confirmDefer.reject();
-        scope.pubCtrl.deletePublication(0);
-        scope.$apply();
-
-        expect(mockUtil.confirm).toHaveBeenCalled();
-        expect(scope.pubCtrl.publications.length).toBe(1);
-    });
-
-    it("should invoke profileService if the confirmation has been confirmed", function () {
-        scope.pubCtrl.profileId = "profileId1";
-        scope.pubCtrl.opusId = "opusId1";
-        scope.pubCtrl.publications = [{uuid: "uuid1", title: "title1"}];
-
-        confirmDefer.resolve({});
-        deleteDefer.resolve({});
-        scope.pubCtrl.deletePublication(0);
-        scope.$apply();
-
-        expect(profileService.deletePublication).toHaveBeenCalledWith("opusId1", "profileId1", "uuid1");
-        expect(scope.pubCtrl.publications.length).toBe(0);
-    });
-
-    it("should raise an alert message if the delete fails", function () {
-        scope.pubCtrl.profileId = "profileId1";
-        scope.pubCtrl.opusId = "opusId1";
-        scope.pubCtrl.publications = [{uuid: "uuid1", title: "title1"}];
-
-        confirmDefer.resolve({});
-        deleteDefer.reject();
-        scope.pubCtrl.deletePublication(0);
-        scope.$apply();
-
-        expect(messageService.alert).toHaveBeenCalled();
-        expect(scope.pubCtrl.publications.length).toBe(1);
-    });
-
-    it("should invoke the savePublication method of the profile service when savePublication is invoked", function () {
+    it("should display a confirmation when save publication is invoked", function() {
         scope.pubCtrl.profileId = "profileId1";
         scope.pubCtrl.opusId = "opusId1";
         scope.pubCtrl.newPublication = {publicationId: "uuid1", title: "title"};
-        scope.pubCtrl.newFile = "a file";
 
+        scope.pubCtrl.savePublication(form);
+
+        expect(mockUtil.confirm).toHaveBeenCalled();
+    });
+
+    it("should do nothing then when the savePublication confirmation is not accepted", function() {
+        scope.pubCtrl.profileId = "profileId1";
+        scope.pubCtrl.opusId = "opusId1";
+        scope.pubCtrl.newPublication = {publicationId: "uuid1", title: "title"};
+
+        confirmDefer.reject();
         saveDefer.resolve({});
 
         scope.pubCtrl.savePublication(form);
         scope.$apply();
 
-        // we cannot actually inspect the content of the FormData object, unfortunately.
-        expect(profileService.savePublication).toHaveBeenCalledWith("opusId1", "profileId1", null, jasmine.any(FormData));
-
-        expect(scope.pubCtrl.newPublication).toBe(null);
-        expect(scope.pubCtrl.newFile).toBe(null);
+        expect(profileService.createPublication).not.toHaveBeenCalledWith("opusId1", "profileId1");
     });
 
-    it("should set the form to pristine after the publication is successfully saved", function () {
-        scope.pubCtrl.newPublication = {"uuid": "uuid1", "title": "title"};
+    it("should invoke the createPublication method of the profile service when the savePublication confirmation is accepted", function () {
+        scope.pubCtrl.profileId = "profileId1";
+        scope.pubCtrl.opusId = "opusId1";
+        scope.pubCtrl.newPublication = {publicationId: "uuid1", title: "title"};
 
-        saveDefer.resolve({});
+        confirmDefer.resolve({});
         saveDefer.resolve({});
 
         scope.pubCtrl.savePublication(form);
         scope.$apply();
 
-        expect(form.$setPristine).toHaveBeenCalled();
+        expect(profileService.createPublication).toHaveBeenCalledWith("opusId1", "profileId1");
     });
+
 });

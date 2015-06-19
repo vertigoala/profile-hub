@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="profileEditor">
 <head>
+    <base href="${request.contextPath}/">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="app.version" content="${g.meta(name: 'app.version')}"/>
     <meta name="app.build" content="${g.meta(name: 'app.build')}"/>
@@ -10,56 +12,144 @@
     <link href="http://www.ala.org.au/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon"
           type="image/x-icon"/>
     <title><g:layoutTitle/></title>
-    <r:require modules="profiles, bootstrap"/>
+    <r:require modules="profiles"/>
     <r:layoutResources/>
     <g:layoutHead/>
     <style type="text/css">
-        .customizable-banner {
-            background-image: url(${bannerUrl ?: grailsApplication.config.images.service.url + '/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original'});
-        }
+    #banner-image {
+        background-image: url(${bannerUrl ?: grailsApplication.config.images.service.url + '/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original'});
+    }
     </style>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 
 <body id="${pageProperty(name: 'body.id')}" onload="${pageProperty(name: 'body.onload')}">
-<g:set var="fluidLayout"
-       value="${pageProperty(name: 'meta.fluidLayout') ?: grailsApplication.config.skin?.fluidLayout}"/>
 
-<div class="customizable-banner">
-    <div class="row-fluid span12">
-        <div class="span6">
-            <div class="customizable-logo pull-left">
-                <img class="customizable-logo-img" src="${logoUrl ?: grailsApplication.config.ala.base.url + '/wp-content/themes/ala2011/images/logo.png'}" alt="${logoAlt ?: 'logo'}"/>
-            </div>
+<g:if test="${application.getAttribute("alaAdminMessage")}">
+    <div class="padding-top-1" ng-cloak>
+        <alert type="danger admin-message">
+            <span class="admin-message-text">${application.getAttribute("alaAdminMessage")}</span> &nbsp;&nbsp;(${application.getAttribute("alaAdminMessageTimestamp")})
+        </alert>
+    </div>
+</g:if>
+
+<!-- Navbar -->
+<nav class="navbar navbar-default" id="primary-nav">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="navbar-brand">${pageTitle}</span>
+
         </div>
 
-    </div>
-
-    <div class="row-fluid">
-        <div class="span12 customizable-subbanner">
-            <div class="span6 pull-left customizable-subbanner-title">
-                ${pageTitle}
-            </div>
-            <div class="span6">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
                 <g:if test="${glossaryUrl}">
-                    <a href="${glossaryUrl}" class="pull-right white" target="_blank">Glossary</a>
+                    <li><a href="${glossaryUrl}" target="_blank">Glossary</a></li>
                 </g:if>
-            </div>
+                <g:if test="${aboutPageUrl}">
+                    <li><a href="${aboutPageUrl}" target="_blank">About&nbsp;&nbsp;</a></li>
+                </g:if>
+            </ul>
 
+            <small>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="${request.contextPath}/">Profile collections</a></li>
+                    <g:render template="../layouts/login"/>
+                </ul>
+            </small>
         </div>
     </div>
-</div>
+</nav>
 
+<div class="jumbotron" id="banner-image"></div>
 
+<div class="container" id="main-content">
+    <h1 class="hidden">Welcome to the eFlora website</h1>
 
-<div class="vertical-pad"/>
-<div class="${fluidLayout ? 'container-fluid' : 'container'}" id="main-content">
     <g:layoutBody/>
-</div><!--/.container-->
 
-<div class="${fluidLayout ? 'container-fluid' : 'container'} hidden-desktop">
-    <%-- Borrowed from http://marcusasplund.com/optout/ --%>
-    <a class="btn btn-small toggleResponsive"><i class="icon-resize-full"></i> <span>Desktop</span> version</a>
+    <div class="row"></div>
+    <footer class="main-footer">
+        <div class="container margin-bottom-2">
+            <div class="main-footer-border"></div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-lg-3 margin-bottom-2 site-logo" id="site-logo">
+                    <img class="img-responsive customizable-logo-img"
+                         src="${logoUrl ?: 'http://root.ala.org.au/bdrs-core/files/download.htm?className=au.com.gaiaresources.bdrs.model.theme.Theme&id=217&fileName=processed/images/bdrs/atlasoflivingaust.png'}"
+                         alt="${logoAlt ?: 'logo'}"/>
+                </div>
+
+                <div class="col-xs-12 col-sm-8 col-lg-9">
+
+                    <div class="col-md-12 col-lg-6">
+                        <p class="lead">
+                            <g:if test="${footerText}">
+                                ${raw(footerText)}
+                            </g:if>
+                        </p>
+
+                        <p class="lead">
+                            ALA: sharing biodiversity knowledge to shape our future.
+                        </p>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-3">
+                        <ul class="link-list">
+                            <li class="heading">Site navigation</li>
+                            <li><a href="${request.contextPath}/">Collections</a></li>
+                            <g:if test="${glossaryUrl}">
+                                <li><a href="${glossaryUrl}" target="_blank">Glossary</a></li>
+                            </g:if>
+                        </ul>
+                    </div>
+
+                    <div class="col-sm-6 col-md-6 col-lg-3">
+                        <g:if test="${aboutPageUrl}">
+                            <ul class="link-list">
+                                <li class="heading">Site information</li>
+                                    <li><a href="${aboutPageUrl}" target="_blank">About Us</a></li>
+                            </ul>
+                        </g:if>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-7 col-md-6">
+                        <g:if test="${contact}">
+                            <ul class="social list-inline">
+                                <g:if test="${contact.facebook}">
+                                    <li><a class="soc-facebook" href="${contact.facebook}"
+                                           title="Facebook" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                                </g:if>
+                                <g:if test="${contact.twitter}">
+                                    <li><a class="soc-twitter" href="${contact.twitter}" title="Twitter"
+                                           target="_blank"><i class="fa fa-twitter"></i></a></li>
+                                </g:if>
+                                <g:if test="${contact.email}">
+                                    <li><a class="soc-envelope" href="${contact.email.contains('@') ? 'mailto:' + contact.email : contact.email}"
+                                           title="Email" target="_blank"><i class="fa fa-envelope"></i></a></li>
+                                </g:if>
+                            </ul>
+                        </g:if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>
+
 
 <script type="text/javascript">
     var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -82,7 +172,11 @@
         contextPath: '${request.contextPath}',
         readonly: ${!edit},
         currentUser: '${params.currentUser}',
-        profileServiceUrl: '${grailsApplication.config.profile.service.url}'
+        profileServiceUrl: '${grailsApplication.config.profile.service.url}',
+        keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}',
+        imageServiceUrl: '${grailsApplication.config.images.service.url}',
+        nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
+        isOpusReviewer: '${params.isOpusReviewer}'
      });
 </r:script>
 

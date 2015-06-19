@@ -24,4 +24,8 @@ class CollectoryService {
     def getDataResource(dataResourceUid) {
         webService.get("${grailsApplication.config.collectory.base.url}ws/dataResource/${dataResourceUid}")
     }
+
+    def getLicences() {
+        webService.get("${grailsApplication.config.collectory.base.url}ws/licence")
+    }
 }

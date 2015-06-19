@@ -32,7 +32,7 @@ class ProfileServiceSpec extends Specification {
 
     def "getClassification() should construct the correct Profile Service URL"() {
         setup:
-        String expectedUrl = "http://profile.service/profile/profileid/classification?guid=guid&opusId=opusid"
+        String expectedUrl = "http://profile.service/opus/opusid/profile/profileid/classification?guid=guid&opusId=opusid"
 
         when:
         service.getClassification("opusid", "profileid", "guid")
@@ -43,10 +43,10 @@ class ProfileServiceSpec extends Specification {
 
     def "updateLinks() should construct the correct Profile Service URL"() {
         setup:
-        String expectedUrl = "http://profile.service/profile/profileId/links"
+        String expectedUrl = "http://profile.service/opus/opusid/profile/profileId/links"
 
         when:
-        service.updateLinks("profileId", "linkdata")
+        service.updateLinks("opusid", "profileId", "linkdata")
 
         then:
         1 * webService.doPost(expectedUrl, [profileId: "profileId", links: "linkdata", userId: "user1", userDisplayName: "fred smith"])
@@ -54,10 +54,10 @@ class ProfileServiceSpec extends Specification {
 
     def "updateAuthorship() should construct the correct Profile Service URL"() {
         setup:
-        String expectedUrl = "http://profile.service/profile/profileId/authorship"
+        String expectedUrl = "http://profile.service/opus/opusid/profile/profileId/authorship"
 
         when:
-        service.updateAuthorship("profileId", [category: "author", text: "fred"])
+        service.updateAuthorship("opusid", "profileId", [category: "author", text: "fred"])
 
         then:
         1 * webService.doPost(expectedUrl, [category: "author", text: "fred"])

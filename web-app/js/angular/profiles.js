@@ -1,17 +1,14 @@
-var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'textAngular']);
+var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'textAngular', 'duScroll', 'ngFileUpload']);
 
-profileEditor.config(function ($locationProvider) {
-    // This disables 'hashbang' mode and removes the need to specify <base href="/my-base"> in the views.
-    // This makes AngularJS take control of all links on the page: if you do not want Angular to control a particular
-    // link, add target="_self".
-    $locationProvider.html5Mode({enabled: true, requireBase: false});
+profileEditor.config(function () {
+
 });
 
-profileEditor.config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+profileEditor.config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
     cfpLoadingBarProvider.includeSpinner = false;
 }]);
 
-profileEditor.run(function($rootScope, config) {
+profileEditor.run(function ($rootScope, config) {
     $rootScope.config = config;
 
     $rootScope.richTextToolbarFull = "[['h1','h2','h3','p'],['bold','italics','underline'],['ul','ol'],['undo']]";
@@ -21,13 +18,40 @@ profileEditor.run(function($rootScope, config) {
 profileEditor.directive('ngEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
+            if (event.which === 13) {
+                scope.$apply(function () {
                     scope.$eval(attrs.ngEnter);
                 });
 
                 event.preventDefault();
             }
         });
+    };
+});
+
+
+
+/**
+ *  ALA Admin controller
+ */
+profileEditor.controller('ALAAdminController', function ($http, util) {
+    var self = this;
+
+    self.message = null;
+    self.timestamp = null;
+
+    var future = $http.get(util.contextRoot() + "/admin/message");
+    future.then(function (response) {
+
+        self.message = response.data.message;
+        self.timestamp = response.data.timestamp;
+    });
+
+    self.postMessage = function () {
+        $http.post(util.contextRoot() + "/admin/message", {message: self.message})
+    };
+
+    self.reloadConfig = function () {
+        $http.post(util.contextRoot() + "/admin/reloadConfig")
     };
 });

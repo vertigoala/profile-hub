@@ -37,6 +37,7 @@ class BaseController {
 
     def handle (resp) {
         if (resp.statusCode != SC_OK) {
+            log.debug "Response status ${resp.statusCode} returned from operation"
             response.status = resp.statusCode
             sendError(resp.statusCode, resp.error ?: "")
         } else {

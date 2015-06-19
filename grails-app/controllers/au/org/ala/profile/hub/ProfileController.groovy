@@ -4,31 +4,37 @@ import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
-import org.apache.commons.fileupload.FileItemIterator
-import org.apache.commons.fileupload.FileItemStream
-import org.apache.commons.fileupload.servlet.ServletFileUpload
+import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.commons.CommonsMultipartFile
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
 class ProfileController extends BaseController {
 
     AuthService authService
     ProfileService profileService
     BiocacheService biocacheService
-    SpeciesListService speciesListService
+    ExportService exportService
 
     def index() {}
 
     @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def edit() {
-        if (!params.profileId) {
-            badRequest "profileId is a required parameter"
+        if (!params.opusId || !params.profileId) {
+            badRequest "opusId and profileId are required parameters"
         } else {
-            def profile = profileService.getProfile(params.profileId as String)
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profile) {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: true, currentUser: authService.getDisplayName(), glossaryUrl: getGlossaryUrl(profile.opus)]
+                model << [edit        : true,
+                          currentUser : authService.getDisplayName(),
+                          glossaryUrl : getGlossaryUrl(profile.opus),
+                          aboutPageUrl: getAboutUrl(profile.opus),
+                          footerText  : profile.opus.footerText,
+                          contact     : profile.opus.contact]
                 render view: "show", model: model
             }
         }
@@ -38,13 +44,18 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
         } else {
-            def profile = profileService.getProfile(params.profileId as String)
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profile) {
                 notFound()
             } else {
                 Map model = profile
-                model << [edit: false, glossaryUrl: getGlossaryUrl(profile.opus),]
+                model << [edit        : false,
+                          glossaryUrl : getGlossaryUrl(profile.opus),
+                          aboutPageUrl: getAboutUrl(profile.opus),
+                          footerText  : profile.opus.footerText,
+                          contact     : profile.opus.contact]
                 render view: "show", model: model
             }
         }
@@ -57,7 +68,7 @@ class ProfileController extends BaseController {
         if (!jsonRequest) {
             badRequest()
         } else {
-            def response = profileService.createProfile(jsonRequest)
+            def response = profileService.createProfile(params.opusId as String, jsonRequest)
 
             handle response
         }
@@ -70,7 +81,34 @@ class ProfileController extends BaseController {
         if (!json || !params.profileId) {
             badRequest()
         } else {
-            def response = profileService.updateProfile(params.profileId as String, json)
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            def response = profileService.updateProfile(params.opusId as String, params.profileId as String, json, latest)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def toggleDraftMode() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            if (params.snapshot == 'true') {
+                savePublication()
+            }
+
+            def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def discardDraftChanges() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            def response = profileService.discardDraftChanges(params.opusId as String, params.profileId as String)
 
             handle response
         }
@@ -81,7 +119,8 @@ class ProfileController extends BaseController {
             badRequest "profileId is a required parameter"
         } else {
             response.setContentType(CONTEXT_TYPE_JSON)
-            def profile = profileService.getProfile(params.profileId as String)
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profile) {
                 notFound()
@@ -96,7 +135,7 @@ class ProfileController extends BaseController {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
         } else {
-            def response = profileService.deleteProfile(params.profileId as String)
+            def response = profileService.deleteProfile(params.opusId as String, params.profileId as String)
 
             handle response
         }
@@ -110,7 +149,7 @@ class ProfileController extends BaseController {
             badRequest()
         } else {
             log.debug "Updating bhl links....."
-            def response = profileService.updateBHLLinks(params.profileId as String, jsonRequest.links)
+            def response = profileService.updateBHLLinks(params.opusId as String, params.profileId as String, jsonRequest.links)
 
             handle response
         }
@@ -125,7 +164,7 @@ class ProfileController extends BaseController {
         } else {
             log.debug "Updating links....."
 
-            def response = profileService.updateLinks(params.profileId as String, jsonRequest.links)
+            def response = profileService.updateLinks(params.opusId as String, params.profileId as String, jsonRequest.links)
 
             handle response
         }
@@ -140,7 +179,7 @@ class ProfileController extends BaseController {
         if (!jsonRequest || !jsonRequest.has("uuid") || !params.profileId) {
             badRequest()
         } else {
-            def response = profileService.updateAttribute(params.profileId, jsonRequest)
+            def response = profileService.updateAttribute(params.opusId as String, params.profileId, jsonRequest)
 
             handle response
         }
@@ -151,7 +190,7 @@ class ProfileController extends BaseController {
         if (!params.attributeId || !params.profileId) {
             badRequest "attributeId and profileId are required parameters"
         } else {
-            def response = profileService.deleteAttribute(params.attributeId, params.profileId)
+            def response = profileService.deleteAttribute(params.opusId as String, params.attributeId, params.profileId)
 
             handle response
         }
@@ -164,6 +203,52 @@ class ProfileController extends BaseController {
             def response = biocacheService.retrieveImages(params.searchIdentifier, params.imageSources)
 
             handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def uploadImage() {
+        if (!params.opusId || !params.profileId || !params.dataResourceId || !params.title) {
+            badRequest "opusId, dataResourceId, title and profileId are mandatory fields"
+        }
+
+        if (request instanceof DefaultMultipartHttpServletRequest) {
+            MultipartFile file = ((DefaultMultipartHttpServletRequest) request).getFile("file")
+
+            def profile = profileService.getProfile(params.opusId, params.profileId)
+
+            Map metadata = [scientificName: profile.profile.scientificName,
+                            multimedia    : [[
+                                                     creator     : params.creator ?: "",
+                                                     rights      : params.rights ?: "",
+                                                     rightsHolder: params.rightsHolder ?: "",
+                                                     licence     : params.licence ?: "",
+                                                     title       : params.title ?: "",
+                                                     description : params.description ?: "",
+                                                     dateTaken   : params.dateTaken ?: ""
+                                             ]]]
+
+            def response = biocacheService.uploadImage(params.opusId, params.profileId, request.getParameter("dataResourceId"), file, metadata)
+
+            handle response
+        } else {
+            badRequest()
+        }
+    }
+
+    def downloadTempImage() {
+        if (!params.imageId) {
+            badRequest "imageId is a required parameter"
+        } else {
+            File file = new File("${grailsApplication.config.temp.file.location}/${params.imageId}")
+
+            if (!file) {
+                notFound "The requested file could not be found"
+            } else {
+                response.setContentType("image/*")
+                response.setHeader("Content-disposition", "attachment;filename=${params.imageId}")
+                response.outputStream << file.newInputStream()
+            }
         }
     }
 
@@ -187,60 +272,39 @@ class ProfileController extends BaseController {
         }
     }
 
-    def search() {
-        if (!params.scientificName) {
-            badRequest "scientificName is a required parameter. opusId and useWildcard are optional."
-        } else {
-            boolean wildcard = params.useWildcard ? params.useWildcard.toBoolean() : true
-            def response = profileService.search(params.opusId, params.scientificName, wildcard);
-
-            handle response
-        }
-    }
-
     def retrievePublication() {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
         } else {
-            def response = profileService.getPublications(params.profileId as String)
+            def response = profileService.getPublications(params.opusId as String, params.profileId as String)
 
             handle response
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_ADMIN)
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def savePublication() {
-        ServletFileUpload upload = new ServletFileUpload();
-        FileItemIterator iterator = upload.getItemIterator(request);
-
-        byte[] file = null
-        def publication = null
-
-        while(iterator.hasNext()) {
-            FileItemStream item = iterator.next();
-            if (item.fieldName == "file") {
-                file = item.openStream().bytes
-            } else {
-                publication = JSON.parse(item.openStream().text)
-            }
-        }
-
-        // the publicationId may be blank (e.g. when creating a new publication), but the request should still have it
-        if (!file || !publication || !params.profileId) {
-            badRequest()
+        if (!params.profileId || !params.opusId) {
+            badRequest "profileId and opudId are required parameters"
         } else {
-            def response = profileService.savePublication(params.profileId, publication, file)
+            Map pdfOptions = [
+                    profileId   : params.profileId,
+                    opusId      : params.opusId,
+                    attributes  : true,
+                    map         : true,
+                    nomenclature: true,
+                    taxonomy    : true,
+                    bibliography: true,
+                    links       : true,
+                    bhllinks    : true,
+                    specimens   : true,
+                    conservation: true,
+                    images      : true
+            ]
 
-            handle response
-        }
-    }
+            byte[] pdf = exportService.createPdf(pdfOptions)
 
-    @Secured(role = Role.ROLE_PROFILE_ADMIN)
-    def deletePublication() {
-        if (!params.profileId || !params.publicationId) {
-            badRequest "profileId and publicationId are a required parameters"
-        } else {
-            def response = profileService.deletePublication(params.profileId as String, params.publicationId as String)
+            def response = profileService.savePublication(params.opusId as String, params.profileId as String, pdf)
 
             handle response
         }
@@ -253,7 +317,7 @@ class ProfileController extends BaseController {
         if (!params.profileId || !json) {
             badRequest "profileId and a json body are required parameters"
         } else {
-            def response = profileService.updateAuthorship(params.profileId as String, json)
+            def response = profileService.updateAuthorship(params.opusId as String, params.profileId as String, json)
 
             handle response
         }
@@ -261,6 +325,10 @@ class ProfileController extends BaseController {
 
     private getGlossaryUrl(opus) {
         opus?.glossaryUuid ? "${request.contextPath}/opus/${opus.uuid}/glossary" : ""
+    }
+
+    private getAboutUrl(opus) {
+        opus.hasAboutPage ? "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/about" : ""
     }
 
     def attributesPanel = {

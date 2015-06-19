@@ -127,16 +127,16 @@ describe("VocabController tests", function () {
 
         expect(scope.vocabCtrl.vocabulary.terms.length).toBe(1);
         expect(scope.vocabCtrl.vocabulary.terms[0].termId).toBe("");
-        expect(scope.vocabCtrl.vocabulary.terms[0].name).toBe("NEW");
+        expect(scope.vocabCtrl.vocabulary.terms[0].name).toBe("New");
     });
 
-    it("should capitalise the first word of the new term record on the vocabulary when addVocabTerm is invoked", function () {
+    it("should capitalise the first letter of each word of the new term record on the vocabulary when addVocabTerm is invoked", function () {
         scope.vocabCtrl.opus = {attributeVocabUuid: "vocabId"};
         scope.vocabCtrl.vocabulary = {terms: []};
         scope.vocabCtrl.newVocabTerm = "should be capitalised";
         scope.vocabCtrl.addVocabTerm(form);
 
-        expect(scope.vocabCtrl.vocabulary.terms[0].name).toBe("Should be capitalised");
+        expect(scope.vocabCtrl.vocabulary.terms[0].name).toBe("Should Be Capitalised");
     });
 
     it("should set the form to dirty when addVocabTerm is invoked", function () {

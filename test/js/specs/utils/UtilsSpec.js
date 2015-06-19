@@ -39,5 +39,49 @@ describe("Util tests", function () {
         expect(service.getPathItem(service.LAST)).toBe("part3");
     });
 
+    it("should extract the opus identifier from the URL when getEntityId is invoked with 'opus'", function() {
+        location.path("/opus/opusId1");
+
+        expect(service.getEntityId("opus")).toBe("opusId1");
+
+        location.path("/opus/opusId2/");
+
+        expect(service.getEntityId("opus")).toBe("opusId2");
+
+        location.path("/opus/opusId3/profile/profileId1");
+
+        expect(service.getEntityId("opus")).toBe("opusId3");
+    });
+
+    it("should extract the profile identifier from the URL when getEntityId is invoked with 'profile'", function() {
+        location.path("/opus/opusId1");
+
+        expect(service.getEntityId("profile")).not.toBeDefined();
+
+        location.path("/opus/opusId2/profile/");
+
+        expect(service.getEntityId("profile")).not.toBeDefined();
+
+        location.path("/opus/opusId3/profile/profileId1");
+
+        expect(service.getEntityId("profile")).toBe("profileId1");
+
+        location.path("/opus/opusId3/profile/profileId2/update");
+
+        expect(service.getEntityId("profile")).toBe("profileId2");
+
+        location.path("/opus/opusId3/profile/profileId3/");
+
+        expect(service.getEntityId("profile")).toBe("profileId3");
+
+        location.path("/opus/opusId3/profile/profileId3;jsessionid=349845g4g4");
+
+        expect(service.getEntityId("profile")).toBe("profileId3");
+    });
+
+    it("should replace all punctuation and whitespace with underscores, and convert to lowercase, when toKey is called", function() {
+        expect(service.toKey("Hello World")).toBe("hello_world");
+        expect(service.toKey("Hello: World!")).toBe("hello__world_");
+    })
 });
 

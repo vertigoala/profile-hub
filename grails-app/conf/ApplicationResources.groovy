@@ -1,19 +1,28 @@
 modules = {
     profiles {
+        resource url:"css/nsl.css"
+        resource url:"css/theme.css"
         resource url:"css/profiles.css"
+        resource url:"css/colour.css"
         dependsOn "jquery"
-        dependsOn "bootstrap_fileupload"
+        dependsOn "bootstrap3"
         dependsOn "angular"
         dependsOn "leaflet"
         dependsOn "angular_bootstrap_colourpicker"
         dependsOn "angular_loading_bar"
         dependsOn "fontawesome"
         dependsOn "richText"
+        dependsOn "google_diff"
+        dependsOn "jspath"
+        dependsOn "angular_scroll"
+        dependsOn "ng_file_upload"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
+        resource url:"js/angular/directives/keyplayer.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
+        resource url:"js/angular/services/NavService.js"
         resource url:"js/angular/controllers/OpusController.js"
         resource url:"js/angular/controllers/ProfileController.js"
         resource url:"js/angular/controllers/UserAccessController.js"
@@ -30,12 +39,19 @@ modules = {
         resource url:"js/angular/controllers/PublicationController.js"
         resource url:"js/angular/controllers/GlossaryController.js"
         resource url:"js/angular/controllers/CommentController.js"
+        resource url:"js/angular/controllers/ExportController.js"
+        resource url:"js/angular/controllers/AboutController.js"
     }
 
     angular {
         resource url:"thirdparty/angular/angular-1.3.13.min.js"
         resource url:"thirdparty/angular/ui-bootstrap-tpls-0.12.0.js"
-        resource url:"thirdparty/bootstrap/css/bootstrap-3.1.1.min.css"
+        dependsOn 'bootstrap3'
+    }
+
+    bootstrap3 {
+        resource url:"thirdparty/bootstrap/css/bootstrap3.3.4.min.css"
+        resource url:"thirdparty/bootstrap/js/bootstrap.min.js"
     }
 
     leaflet {
@@ -69,5 +85,22 @@ modules = {
         resource url:"thirdparty/textAngular/textAngular-rangy-1.3.11.min.js"
         resource url:"thirdparty/textAngular/textAngular-sanitize-1.3.11.min.js"
         dependsOn "fontawesome"
+    }
+
+    google_diff {
+        resource url:"thirdparty/google-diff-match-patch/diff_match_patch.js"
+    }
+
+    jspath {
+        resource url:"thirdparty/jspath/jspath.min.js"
+    }
+
+    angular_scroll {
+        resource url:"thirdparty/angular-scroll/angular-scroll.min.js"
+    }
+
+    ng_file_upload {
+        resource url:"thirdparty/ng-file-upload/ng-file-upload-shim-5.0.7.min.js"
+        resource url:"thirdparty/ng-file-upload/ng-file-upload-5.0.7.min.js"
     }
 }

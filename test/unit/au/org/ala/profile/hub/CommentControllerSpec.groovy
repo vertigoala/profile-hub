@@ -39,7 +39,7 @@ class CommentControllerSpec extends Specification {
 
     def "checkCommentPermissions should return true if the user is an reviewer and authored the comment"() {
         when:
-        profileService.getComment(_, _) >> [resp: [author: [userId: "1234"]]]
+        profileService.getComment(_, _, _) >> [resp: [author: [userId: "1234"]]]
         params.isOpusReviewer = true
 
         then:
@@ -48,7 +48,7 @@ class CommentControllerSpec extends Specification {
 
     def "checkCommentPermissions should return false if the user is an admin review but did not author the comment"() {
         when:
-        profileService.getComment(_, _) >> [resp: [author: [userId: "9876"]]]
+        profileService.getComment(_, _, _) >> [resp: [author: [userId: "9876"]]]
         params.isOpusReviewer = true
 
         then:
@@ -65,7 +65,7 @@ class CommentControllerSpec extends Specification {
 
     def "deleteComment should return a 401 NOT AUTHORISED if the user is not allowed to delete the comment"() {
         given:
-        profileService.getComment(_, _) >> [resp: [author: [userId: "9876"]]]
+        profileService.getComment(_, _, _) >> [resp: [author: [userId: "9876"]]]
 
         when:
         params.profileId = "profileId"
@@ -78,7 +78,7 @@ class CommentControllerSpec extends Specification {
 
     def "updateComment should return a 401 NOT AUTHORISED if the user is not allowed to delete the comment"() {
         given:
-        profileService.getComment(_, _) >> [resp: [author: [userId: "9876"]]]
+        profileService.getComment(_, _, _) >> [resp: [author: [userId: "9876"]]]
 
         when:
         params.profileId = "profileId"

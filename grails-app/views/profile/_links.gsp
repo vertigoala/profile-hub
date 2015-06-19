@@ -1,32 +1,56 @@
-<div ng-controller="LinksEditor as linkCtrl" ng-init="linkCtrl.init('${edit}')" ng-cloak>
-    <div class="bs-docs-example" id="browse_links" data-content="Links" ng-show="!linkCtrl.readonly || linkCtrl.links.length > 0">
-        <ul>
-            <li ng-repeat="link in linkCtrl.links" ng-if="link.uuid"><a href="{{link.url}}">{{ link.title }}</a>
-                <span ng-if="link.description">&nbsp-&nbsp</span>{{ link.description }}
-                <a class="btn btn-mini btn-danger" ng-click="linkCtrl.deleteLink($index)" ng-show="!linkCtrl.readonly" title="Delete">
-                    <i class="icon-minus icon-white"></i>
-                </a>
-            </li>
-        </ul>
+<div class="panel panel-default" ng-controller="LinksEditor as linkCtrl" ng-init="linkCtrl.init('${edit}')" ng-cloak
+     ng-show="!linkCtrl.readonly || linkCtrl.links.length > 0" ng-form="LinkForm">
+    <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}links"></a>
 
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-2"><strong>Links</strong></div>
 
-        <div style="margin-bottom: 10px;" ng-show="!linkCtrl.readonly">
-            <button class="btn btn-primary" ng-click="linkCtrl.saveLinks()">Save changes</button>
-            <button class="btn btn-info" ng-click="linkCtrl.addLink()"><i class="icon icon-plus icon-white"></i> Add new link
-            </button>
+            <div class="col-sm-10">
+                <ul>
+                    <li ng-repeat="link in linkCtrl.links" ng-if="link.uuid"><a href="{{link.url}}">{{ link.title }}</a>
+                        <span ng-if="link.description">&nbsp;-&nbsp;</span>{{ link.description }}
+                        <a class="btn btn-link" ng-click="linkCtrl.deleteLink($index, LinkForm)"
+                           ng-show="!linkCtrl.readonly" title="Delete">
+                            <i class="fa fa-trash-o color--red"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <div ng-show="!linkCtrl.readonly">
+                    <div class="row" ng-repeat="link in linkCtrl.links" ng-if="!link.uuid">
+                        <div class="form-group">
+                            <label>URL</label>
+                            <input type="text" class="form-control" ng-model="link.url"/><br/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" class="form-control" ng-model="link.title"/><br/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea rows="3" class="form-control" ng-model="link.description"></textarea>
+                        </div>
+                        <button class="btn btn-danger pull-right"
+                                ng-click="linkCtrl.deleteLink($index, LinkForm)">Delete</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <table class="table table-striped" ng-show="!linkCtrl.readonly">
-            <tr ng-repeat="link in linkCtrl.links" ng-if="!link.uuid">
-                <td>
-                    <label>URL</label>
-                    <input type="text" class="input-xxlarge" ng-model="link.url"/><br/>
-                    <label>Title</label>
-                    <input type="text" class="input-xxlarge" ng-model="link.title"/><br/>
-                    <label>Description</label>
-                    <textarea rows="3" class="input-xxlarge" ng-model="link.description"></textarea>
-                </td>
-                <td><button class="btn btn-danger" ng-click="linkCtrl.deleteLink($index)">Delete</button></td>
-            </tr>
-        </table>
+    </div>
+
+    <div class="panel-footer" ng-show="!linkCtrl.readonly">
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-default" ng-click="linkCtrl.addLink(LinkForm)"><i
+                        class="fa fa-plus"></i> Add new link
+                </button>
+                <button class="btn btn-primary pull-right" ng-click="linkCtrl.saveLinks(LinkForm)">
+                    <span id="saved"><span ng-show="LinkForm.$dirty">*</span> Save</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>

@@ -1,11 +1,12 @@
 /**
  * Taxon controller
  */
-profileEditor.controller('TaxonController', function (profileService, util, messageService) {
+profileEditor.controller('TaxonController', function (profileService, navService, util, messageService, $modal) {
     var self = this;
-    
+
     self.speciesProfile = null;
     self.classifications = [];
+    self.infraspecificTaxa = [];
 
     self.init = function (edit) {
         self.readonly = edit != 'true';
@@ -20,11 +21,33 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
 
                 loadSpeciesProfile();
                 loadClassifications();
+
+                if (self.profile.rank == util.RANK.SPECIES) {
+                    loadInfraspecificTaxa();
+                }
             },
             function () {
                 messageService.alert("An error occurred while retrieving the profile.");
             }
         );
+    };
+
+    self.showChildren = function(level, scientificName) {
+        var result = profileService.profileSearchByTaxonLevel(self.opusId, level, 1000, 0);
+
+        result.then(function(data) {
+            $modal.open({
+                templateUrl: "showTaxonChildren.html",
+                controller: "TaxonChildrenController",
+                controllerAs: "taxonChildrenCtrl",
+                size: "lg",
+                resolve: {
+                    taxon: function() {
+                        return {level: level, scientificName: scientificName, count: data[scientificName]};
+                    }
+                }
+            });
+        })
     };
 
     function loadClassifications() {
@@ -54,6 +77,11 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
                     console.log("Fetched species profile");
 
                     self.speciesProfile = data;
+
+                    if (self.speciesProfile && self.speciesProfile.taxonConcept) {
+                        navService.add("Taxonomy", "taxon");
+                    }
+
                     messageService.pop();
                 },
                 function () {
@@ -63,34 +91,56 @@ profileEditor.controller('TaxonController', function (profileService, util, mess
         }
     }
 
-    //self.taxaUpload = function(){
-    //    console.log("Taxa upload....");
-    //    var file = document.getElementById('taxaUploadFile').files[0];
-    //    var formData = new FormData();
-    //    formData.append("taxaUploadFile", file);
-    //    formData.append("opusId", "${opus.uuid}");
-    //
-    //    //send you binary data via $http or $resource or do anything else with it
-    //    $.ajax({
-    //        url: '${grailsApplication.config.profile.service.url}/opus/taxaUpload',
-    //        type: 'POST',
-    //        data: formData,
-    //        cache: false,
-    //        dataType: 'json',
-    //        processData: false, // Don't process the files
-    //        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-    //        success: function(data, textStatus, jqXHR){
-    //            alert("Successful upload - Loaded:" + data.taxaCreated + ", lines skipped: " + data.linesSkipped + ", already exists: " + data.alreadyExists);
-    //        },
-    //        error: function(jqXHR, textStatus, errorThrown){
-    //            // Handle errors here
-    //            alert("error upload - " + textStatus);
-    //            console.log('ERRORS: ' + textStatus);
-    //            console.log(errorThrown)
-    //            // STOP LOADING SPINNER
-    //        }
-    //    });
-    //};
+    function loadInfraspecificTaxa() {
+        var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, util.RANK.SPECIES, self.profile.scientificName, 25, 0);
+        results.then(function (data) {
 
-    //$(":file").filestyle();
+                angular.forEach(data, function(subSpecies) {
+                    if (subSpecies.scientificName != self.profile.scientificName && subSpecies.rank == util.RANK.SUBSPECIES) {
+                        self.infraspecificTaxa.push(subSpecies);
+                    }
+                });
+            },
+            function () {
+                console.log("Failed to retrieve infraspecific taxa");
+            }
+        );
+    }
+});
+
+
+
+
+/**
+ * Controller for the popup modal dialog showing the list of child taxa
+ */
+profileEditor.controller('TaxonChildrenController', function (profileService, util, $modalInstance, taxon) {
+    var self = this;
+
+    self.pageSize = 10;
+    self.taxon = taxon;
+    self.opusId = util.getEntityId("opus");
+
+    self.loadChildren = function(offset) {
+        if (offset === undefined) {
+            offset = 0;
+        }
+
+        var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon.level, taxon.scientificName, self.pageSize, offset);
+        results.then(function (data) {
+                console.log("Found " + data.length + " results");
+                self.profiles = data;
+                self.taxon.count
+            },
+            function () {
+                messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
+            }
+        );
+    };
+
+    self.loadChildren(0);
+
+    self.cancel = function() {
+        $modalInstance.dismiss("cancel");
+    }
 });

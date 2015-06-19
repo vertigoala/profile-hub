@@ -14,8 +14,8 @@ describe("'capitalize' filter tests", function () {
         filter = $filter("capitalize");
     }));
 
-    it("should convert the first letter of the first word to upper case", function () {
-        expect(filter("hello world")).toBe("Hello world")
+    it("should convert the first letter of the each word to upper case", function () {
+        expect(filter("hello world")).toBe("Hello World")
     });
 
 });
