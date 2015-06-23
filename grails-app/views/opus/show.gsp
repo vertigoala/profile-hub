@@ -65,17 +65,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="form-horizontal">
-            <div class="form-group">
-                <label for="nameAuthor" class="col-sm-3 control-label">Author</label>
-
-                <div class="col-sm-8">
-                    <input id="nameAuthor" type="text" ng-model="createProfileCtrl.nameAuthor" class="form-control"
-                           ng-enter="createProfileCtrl.ok()" placeholder="e.g. Pedley"/>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="modal-footer">

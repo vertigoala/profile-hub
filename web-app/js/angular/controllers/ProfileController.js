@@ -238,6 +238,30 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
         form.$setDirty();
     };
+
+    self.formatName = function() {
+        var keywords = ["subsp.", "var.", self.profile.nameAuthor];
+
+        var nameParts = [];
+        if (self.profile.fullName) {
+            nameParts = self.profile.fullName.split(" ");
+        } else {
+            var name = self.profile.scientificName + " " + self.profile.nameAuthor;
+            nameParts = name.split(" ");
+        }
+
+        var formattedParts = [];
+
+        angular.forEach(nameParts, function(part) {
+            if (keywords.indexOf(part) > -1) {
+                formattedParts.push("<span class='normal-text'>" + part + "</span>");
+            } else {
+                formattedParts.push(part);
+            }
+        });
+
+        return formattedParts.join(" ");
+    }
 });
 
 
@@ -249,7 +273,6 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
 
     self.opusId = opusId;
     self.scientificName = "";
-    self.nameAuthor = "";
     self.error = "";
 
     self.ok = function () {
@@ -258,7 +281,7 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
             if (matches.length > 0) {
                 self.error = "A profile already exists for this scientific name.";
             } else {
-                var future = profileService.createProfile(self.opusId, self.scientificName, self.nameAuthor);
+                var future = profileService.createProfile(self.opusId, self.scientificName);
                 future.then(function (profile) {
                         if (profile) {
                             $modalInstance.close(profile);

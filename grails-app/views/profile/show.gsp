@@ -35,9 +35,7 @@
 
     <div class="row margin-bottom-1">
         <div class="col-md-9" ng-cloak>
-            <h2 class="heading-large inline"><span
-                    class="scientific-name">{{profileCtrl.profile.scientificName | default:"Loading..."}}</span> <span
-                    class="inline-sub-heading">{{profileCtrl.profile.nameAuthor}}</span></h2>
+            <h2 class="heading-large inline"><span class="scientific-name" data-ng-bind-html="profileCtrl.formatName()"></span></h2>
         </div>
 
         <div class="col-md-3" ng-cloak>

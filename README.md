@@ -238,7 +238,7 @@ Authentication is controlled via CAS URL pattern matching (see below for the pat
 
 #### Secured URL Patterns
 ```
-/.*/update.*, /.*/create.*, /.*/delete.*, /user/.*, /audit/.*
+/.*/update.*, /.*/create.*, /.*/delete.*, /user/.*, /audit/.*, /admin/*
 ```
 
 ### Authorisation
