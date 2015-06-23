@@ -240,27 +240,29 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     };
 
     self.formatName = function() {
+        if (!self.profile) {
+            return null;
+        }
         var keywords = ["subsp.", "var.", self.profile.nameAuthor];
 
-        var nameParts = [];
+        var name = null;
         if (self.profile.fullName) {
-            nameParts = self.profile.fullName.split(" ");
+            name = self.profile.fullName;
         } else {
-            var name = self.profile.scientificName + " " + self.profile.nameAuthor;
-            nameParts = name.split(" ");
+            name = self.profile.scientificName + " " + self.profile.nameAuthor;
         }
 
-        var formattedParts = [];
-
-        angular.forEach(nameParts, function(part) {
-            if (keywords.indexOf(part) > -1) {
-                formattedParts.push("<span class='normal-text'>" + part + "</span>");
-            } else {
-                formattedParts.push(part);
+        angular.forEach(keywords, function(keyword) {
+            var index = name.indexOf(keyword);
+            if (index > -1) {
+                var part1 = name.substring(0, index);
+                var part2 = "<span class='normal-text'>" + keyword + "</span>";
+                var part3 = name.substring(index + keyword.length, name.length);
+                name = part1 + part2 + part3;
             }
         });
 
-        return formattedParts.join(" ");
+        return name;
     }
 });
 
