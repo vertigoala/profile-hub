@@ -33,8 +33,9 @@ class ExportService {
     ]
 
 
-    private Map loadProfileData(String profileId, Map params) {
-        def model = profileService.getProfile(params.opusId as String, profileId)
+    private Map loadProfileData(String profileId, opus, Map params) {
+        Map model = [:]
+        model.profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${opus.uuid}/profile/${URLEncoder.encode(profileId, "UTF-8")}?latest=${false}")?.resp
 
         if (params.taxonomy || params.conservation) {
             model.profile.speciesProfile = profileService.getSpeciesProfile(model.profile.guid)?.resp
@@ -44,7 +45,7 @@ class ExportService {
                 it.regionAbbrev = statusRegions[it.region]
             }
 
-            model.profile.classifications = profileService.getClassification(model.opus.uuid, params.profileId, model.profile.guid)?.resp
+            model.profile.classifications = profileService.getClassification(opus.uuid, params.profileId, model.profile.guid)?.resp
         }
 
         if (params.specimens) {
@@ -60,7 +61,7 @@ class ExportService {
 
         if (params.images) {
             String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-            def images = biocacheService.retrieveImages(searchIdentifier, model.opus.imageSources.join(","))?.resp
+            def images = biocacheService.retrieveImages(searchIdentifier, opus.imageSources.join(","))?.resp
 
             model.profile.images = images?.occurrences?.collect {
                 [
@@ -75,8 +76,8 @@ class ExportService {
             model.profile.nomenclatureHtml = webService.get("${grailsApplication.config.nsl.name.url.prefix}${model.profile.nslNameIdentifier}", false)?.resp?.replaceAll("&", "&amp;")
         }
 
-        String occurrenceQuery = createOccurrenceQuery(model.profile, model.opus)
-        model.profile.mapImageUrl = createMapImageUrl(model.opus, occurrenceQuery)
+        String occurrenceQuery = createOccurrenceQuery(model.profile, opus)
+        model.profile.mapImageUrl = createMapImageUrl(opus, occurrenceQuery)
 
         model
     }
@@ -109,8 +110,8 @@ class ExportService {
                 profiles         : [] as ConcurrentLinkedQueue
         ]
 
-        model.profiles << loadProfileData(params.profileId as String, params)
-        model.opus = model.profiles[0].opus
+        model.opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
+        model.profiles << loadProfileData(params.profileId as String, model.opus, params)
 
         if (params.children) {
             def children = profileService.findByNameAndTaxonLevel(params.opusId, model.profiles[0].profile.rank, model.profiles[0].profile.scientificName, "99999", "0", false)?.resp
@@ -124,7 +125,7 @@ class ExportService {
             withPool(THREAD_COUNT) {
                 children.eachParallel {
                     if (it.profileId != params.profileId && it.scientificName != params.profileId) {
-                        model.profiles << loadProfileData(it.profileId, params)
+                        model.profiles << loadProfileData(it.profileId, model.opus, params)
                     }
                 }
             }
