@@ -3,16 +3,16 @@ import org.apache.log4j.Level
 def appName = 'profile-hub'
 def ENV_NAME = "${appName.toUpperCase()}_CONFIG"
 default_config = "/data/${appName}/config/${appName}-config.properties"
-if(!grails.config.locations || !(grails.config.locations instanceof List)) {
+if (!grails.config.locations || !(grails.config.locations instanceof List)) {
     grails.config.locations = []
 }
-if(System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
+if (System.getenv(ENV_NAME) && new File(System.getenv(ENV_NAME)).exists()) {
     println "[${appName}] Including configuration file specified in environment: " + System.getenv(ENV_NAME);
     grails.config.locations.add "file:" + System.getenv(ENV_NAME)
-} else if(System.getProperty(ENV_NAME) && new File(System.getProperty(ENV_NAME)).exists()) {
+} else if (System.getProperty(ENV_NAME) && new File(System.getProperty(ENV_NAME)).exists()) {
     println "[${appName}] Including configuration file specified on command line: " + System.getProperty(ENV_NAME);
     grails.config.locations.add "file:" + System.getProperty(ENV_NAME)
-} else if(new File(default_config).exists()) {
+} else if (new File(default_config).exists()) {
     println "[${appName}] Including default configuration file: " + default_config;
     grails.config.locations.add "file:" + default_config
 } else {
@@ -24,20 +24,20 @@ grails.project.groupId = 'au.org.ala' // change this to alter the default packag
 // The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
 grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
 grails.mime.types = [ // the first one is the default format
-    all:           '*/*', // 'all' maps to '*' or the first available format in withFormat
-    atom:          'application/atom+xml',
-    css:           'text/css',
-    csv:           'text/csv',
-    form:          'application/x-www-form-urlencoded',
-    html:          ['text/html','application/xhtml+xml'],
-    js:            'text/javascript',
-    json:          ['application/json', 'text/json'],
-    multipartForm: 'multipart/form-data',
-    rss:           'application/rss+xml',
-    text:          'text/plain',
-    hal:           ['application/hal+json','application/hal+xml'],
-    xml:           ['text/xml', 'application/xml'],
-    pdf:           ['application/x-pdf', 'application/pdf']
+                      all          : '*/*', // 'all' maps to '*' or the first available format in withFormat
+                      atom         : 'application/atom+xml',
+                      css          : 'text/css',
+                      csv          : 'text/csv',
+                      form         : 'application/x-www-form-urlencoded',
+                      html         : ['text/html', 'application/xhtml+xml'],
+                      js           : 'text/javascript',
+                      json         : ['application/json', 'text/json'],
+                      multipartForm: 'multipart/form-data',
+                      rss          : 'application/rss+xml',
+                      text         : 'text/plain',
+                      hal          : ['application/hal+json', 'application/hal+xml'],
+                      xml          : ['text/xml', 'application/xml'],
+                      pdf          : ['application/x-pdf', 'application/pdf']
 ]
 
 // URL Mapping Cache Max Size, defaults to 5000
@@ -47,7 +47,7 @@ grails.mime.types = [ // the first one is the default format
 grails.views.default.codec = "html"
 
 grails.resources.adhoc.patterns = ['/js/*', '/images/*', '/css/*', '/plugins/*', '/thirdparty/*', '/templates/*']
-grails.resources.adhoc.includes = ['/js/**', '/images/**', '/css/**','/plugins/**', '/thirdparty/**', '/templates/**']
+grails.resources.adhoc.includes = ['/js/**', '/images/**', '/css/**', '/plugins/**', '/thirdparty/**', '/templates/**']
 
 // The default scope for controllers. May be prototype, session or singleton.
 // If unspecified, controllers are prototype scoped.
@@ -82,7 +82,7 @@ grails.enable.native2ascii = true
 // packages to include in Spring bean scanning
 grails.spring.bean.packages = []
 // whether to disable processing of multi part requests
-grails.web.disable.multipart=false
+grails.web.disable.multipart = false
 
 // request parameters to mask when logging exceptions
 grails.exceptionresolver.params.exclude = ['password']
@@ -103,15 +103,30 @@ app.http.header.userId = "X-ALA-userId"
 environments {
     development {
         grails.logging.jul.usebridge = true
+        grails {
+            // use something like FakeSMTP locally to test without actually sending emails.
+            mail {
+                host = "localhost"
+                port = 1025
+                props = ["mail.debug": "true"]
+            }
+        }
     }
     production {
         grails.logging.jul.usebridge = false
+        grails {
+            mail {
+                host = "localhost"
+                port = 25
+                props = ["mail.debug": "false"]
+            }
+        }
     }
 }
 
 grails.cache.config = {
     provider {
-        name "ehcache-profile-hub-"+(new Date().format("yyyyMMddHHmmss"))
+        name "ehcache-profile-hub-" + (new Date().format("yyyyMMddHHmmss"))
     }
 }
 
@@ -123,10 +138,10 @@ log4j = {
         environments {
             production {
                 println "Log4j logs will be written to : ${loggingDir}"
-                rollingFile name: "tomcatLog", maxFileSize: '1MB', file: "${loggingDir}/${appName}.log", threshold: Level.INFO, layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n")
+                rollingFile name: "tomcatLog", maxFileSize: '1MB', file: "${loggingDir}/${appName}.log", threshold: Level.DEBUG, layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n")
             }
             development {
-                console name: "stdout", layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n"), threshold: Level.DEBUG
+                console name: "stdout", layout: pattern(conversionPattern: "%d %-5p [%c{1}] %m%n"), threshold: Level.TRACE
             }
             test {
                 println "Log4j logs will be written to : ${loggingDir}"
@@ -142,15 +157,19 @@ log4j = {
         additivity = true
     }
 
-    error   'au.org.ala.cas.client',
+    error 'au.org.ala.cas.client',
             "au.org.ala",
             'grails.spring.BeanBuilder',
             'grails.plugin.webxml',
+            "grails.plugin.mail",
             'grails.plugin.cache.web.filter',
             'grails.app.services.org.grails.plugin.resource',
             'grails.app.taglib.org.grails.plugin.resource',
             'grails.app.resourceMappers.org.grails.plugin.resource'
 
-    debug   "grails.app",
+    debug "grails.app",
+            "grails.plugin.mail",
             "au.org.ala"
+
+    trace "grails.plugin.mail"
 }

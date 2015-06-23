@@ -1,33 +1,54 @@
 /**
  *  Export controller
  */
-profileEditor.controller('ExportController', function (util, $window, $modal) {
+profileEditor.controller('ExportController', function (util, $window, $modal, $http) {
     var self = this;
 
     self.profileId = util.getEntityId("profile");
     self.opusId = util.getEntityId("opus");
 
-    self.exportPdf = function() {
+    self.exportPdf = function(rank, scientificName) {
         var popup = $modal.open({
             templateUrl: "exportPdf.html",
             controller: "ExportPDFController",
             controllerAs: "pdfCtrl",
             size: "md",
             resolve: {
-
+                opusId: function() {
+                    return self.opusId;
+                },
+                rank: function() {
+                    return rank;
+                },
+                scientificName: function() {
+                    return scientificName;
+                }
             }
         });
 
-        popup.result.then(function(options) {
+        popup.result.then(function(result) {
             var queryString = [];
 
-            angular.forEach(options, function(option) {
+            var childrenSelected = false;
+            angular.forEach(result.options, function(option) {
                 if (option.selected) {
                     queryString.push(option.id + "=true");
+                    if (option.id === "children") {
+                        childrenSelected = true;
+                    }
                 }
             });
 
-            $window.open(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + self.profileId + "/pdf?" + queryString.join("&"))
+            if (result.email) {
+                queryString.push("&email=" + result.email);
+            }
+
+            var url = util.contextRoot() + "/opus/" + self.opusId + "/profile/" + self.profileId + "/pdf?" + queryString.join("&");
+            if (!childrenSelected) {
+                $window.open(url);
+            } else {
+                $http.get(url);
+            }
         });
     }
 });
@@ -37,8 +58,15 @@ profileEditor.controller('ExportController', function (util, $window, $modal) {
 /**
  * Export pdf modal dialog controller
  */
-profileEditor.controller('ExportPDFController', function ($modalInstance) {
+profileEditor.controller('ExportPDFController', function (opusId, rank, scientificName, $modalInstance, $scope, profileService) {
     var self = this;
+
+    self.ASYNC_THRESHOLD = 10;
+
+    self.loading = false;
+    self.children = {id: "children", name: "Lower level taxa", selected: false};
+
+    self.childCount = -1;
 
     self.options = [
         {id: "attributes", name: "Attributes", selected: true},
@@ -51,14 +79,27 @@ profileEditor.controller('ExportPDFController', function ($modalInstance) {
         {id: "bibliography", name: "Bibliography", selected: false},
         {id: "images", name: "Images", selected: false},
         {id: "conservation", name: "Conservation Status", selected: false},
-        //{id: "children", name: "Children", selected: false}
+        self.children
     ];
 
+    self.email = null;
+
     self.ok = function() {
-        $modalInstance.close(self.options);
+        $modalInstance.close({options: self.options, email: self.email});
     };
 
     self.cancel = function() {
         $modalInstance.dismiss("cancel");
-    }
+    };
+
+    $scope.$watch(function() {return self.children.selected}, function() {
+        if (self.childCount == -1 && self.children.selected) {
+            self.loading = true;
+            profileService.profileSearchByTaxonLevelAndName(opusId, rank, scientificName, 9999, 0).then(function(data) {
+                self.childCount = data.length;
+                self.loading = false;
+            });
+        }
+    })
+
 });
