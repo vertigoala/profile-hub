@@ -20,24 +20,48 @@
         </div>
     </div>
 
-
     <!-- view screen -->
-    <ng-include src="'showReadOnlyAttribute.html'"></ng-include>
+    <ng-include src="'showReadOnlyAttributeList.html'" ng-show="attrCtrl.readonly"></ng-include>
 
     <!-- edit screen -->
-    <div ng-repeat="attribute in attrCtrl.attributes" ng-form="AttributeForm" ng-show="!attrCtrl.readonly" ng-cloak>
-        <a name="edit_{{attribute.key}}"></a>
-        <ng-include src="'showEditableAttribute.html'" ng-if="!attribute.fromCollection"></ng-include>
-
-        <div ng-if="attrCtrl.showAttribute(attribute)">
-            <ng-include src="'showReadOnlyAttribute.html'"></ng-include>
-        </div>
-    </div>
-
+    <ng-include src="'showEditableAttributeList.html'" ng-show="!attrCtrl.readonly"></ng-include>
 </div>
 
-<!-- template for the read-only view of a single attribute -->
-<script type="text/ng-template" id="showReadOnlyAttribute.html">
+<!-- template for the editable view of an attribute list -->
+<script type="text/ng-template" id="showEditableAttributeList.html">
+<div ng-repeat="attribute in attrCtrl.attributes" ng-form="AttributeForm" ng-show="!attrCtrl.readonly" ng-cloak>
+    <a name="edit_{{attribute.key}}"></a>
+    <ng-include src="'showEditableAttribute.html'" ng-if="!attribute.fromCollection"></ng-include>
+
+    <div ng-if="attrCtrl.showAttribute(attribute)">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-2"><strong>{{attribute.title}}</strong></div>
+
+                    <div class="col-sm-10">
+                        <ng-include src="'readOnlyAttributeBody.html'"></ng-include>
+                    </div>
+                </div>
+
+                <div class="panel-footer" ng-show="attrCtrl.opus.allowCopyFromLinkedOpus && !attrCtrl.readonly">
+                    <div class="row">
+                        <span class="col-md-12">
+                            <span class="pull-right">
+                                <button class="btn btn-default"
+                                        ng-click="attrCtrl.copyAttribute($index, AttributeForm)">Copy to this profile</button>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- template for the read-only view of an attribute list -->
+<script type="text/ng-template" id="showReadOnlyAttributeList.html">
 <div ng-repeat="title in attrCtrl.attributeTitles" ng-cloak>
     <div class="panel panel-default" ng-if="attrCtrl.showTitleGroup(title.name)">
         <div class="panel-body">
@@ -46,66 +70,60 @@
 
                 <div class="col-sm-10" ng-if="attrCtrl.showTitleGroup(title.name)">
                     <span ng-repeat="attribute in attrCtrl.attributes | groupAttributes:title.name">
-                        <a name="view_{{attribute.key}}"></a>
-                        <span ng-if="attrCtrl.showAttribute(attribute)">
-                            <div class="col-sm-12" ng-class="!$first ? 'padding-top-1' : ''">
-                                <div ta-bind ng-model="attribute.text" class="display-text"></div>
-
-                                <div ng-if="attrCtrl.opus.allowFineGrainedAttribution">
-                                    <div class="citation" ng-show="attribute.creators.length > 0">
-                                        Contributed by {{ attribute.creators.join(', ') }}
-                                    </div>
-
-                                    <div class="citation" ng-show="attribute.editors.length > 0">
-                                        Edited by {{ attribute.editors.join(', ') }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="annotation" ng-show="(attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.fromCollection || attribute.source || attribute.original">
-                                <div class="col-md-6" ng-if="attribute.source || (attribute.original && !attribute.source)">
-                                    <span ng-if="attribute.source">
-                                        Source: {{attribute.source}}
-                                    </span>
-                                    <span ng-if="attribute.original && !attribute.source">
-                                        Source: {{attribute.original.profile.opus.title}}
-                                    </span>
-                                </div>
-
-                                <div class="col-md-6 pull-right" ng-show="attribute.fromCollection">
-                                    <span class="pull-right">
-                                        <span class="pull-right">
-                                            From Collection: <a
-                                                href="${request.contextPath}/opus/{{attribute.fromCollection.opusShortName ? attribute.fromCollection.opusShortName : attribute.fromCollection.opusId}}/profile/{{attribute.fromCollection.profileId}}"
-                                                target="_self">{{attribute.fromCollection.opusTitle}}</a>
-                                        </span>
-                                    </span>
-                                </div>
-                                <span class="col-md-6 pull-right" ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
-                                    <span class="pull-right">
-                                        <a href=""
-                                           ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</a>
-                                    </span>
-                                </span>
-                            </div>
-                        </span>
-                    </span>
-                </div>
-            </div>
-
-            <div class="panel-footer" ng-show="attrCtrl.opus.allowCopyFromLinkedOpus && !attrCtrl.readonly">
-                <div class="row">
-                    <span class="col-md-12">
-                        <span class="pull-right">
-                            <button class="btn btn-default"
-                                    ng-click="attrCtrl.copyAttribute($index, AttributeForm)">Copy to this profile</button>
-                        </span>
+                        <ng-include src="'readOnlyAttributeBody.html'"></ng-include>
                     </span>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</script>
+
+<!-- template for the content of a single read-only attribute, to be displayed either on the view or the edit page -->
+<script type="text/ng-template" id="readOnlyAttributeBody.html">
+<a name="view_{{attribute.key}}"></a>
+<span ng-if="attrCtrl.showAttribute(attribute)">
+    <div class="col-sm-12" ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
+        <div ta-bind ng-model="attribute.text" class="display-text"></div>
+
+        <div ng-if="attrCtrl.opus.allowFineGrainedAttribution">
+            <div class="citation" ng-show="attribute.creators.length > 0">
+                Contributed by {{ attribute.creators.join(', ') }}
+            </div>
+
+            <div class="citation" ng-show="attribute.editors.length > 0">
+                Edited by {{ attribute.editors.join(', ') }}
+            </div>
+        </div>
+    </div>
+
+    <div class="annotation" ng-show="(attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.fromCollection || attribute.source || attribute.original">
+        <div class="col-md-6" ng-if="attribute.source || (attribute.original && !attribute.source)">
+            <span ng-if="attribute.source">
+                Source: {{attribute.source}}
+            </span>
+            <span ng-if="attribute.original && !attribute.source">
+                Source: {{attribute.original.profile.opus.title}}
+            </span>
+        </div>
+
+        <div class="col-md-6 pull-right" ng-show="attribute.fromCollection">
+            <span class="pull-right">
+                <span class="pull-right">
+                    From Collection: <a
+                        href="${request.contextPath}/opus/{{attribute.fromCollection.opusShortName ? attribute.fromCollection.opusShortName : attribute.fromCollection.opusId}}/profile/{{attribute.fromCollection.profileId}}"
+                        target="_self">{{attribute.fromCollection.opusTitle}}</a>
+                </span>
+            </span>
+        </div>
+        <span class="col-md-6 pull-right" ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
+            <span class="pull-right">
+                <a href=""
+                   ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</a>
+            </span>
+        </span>
+    </div>
+</span>
 </script>
 
 <!-- Template for the editable view of a single attribute -->
