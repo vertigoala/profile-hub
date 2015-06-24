@@ -243,7 +243,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         if (!self.profile) {
             return null;
         }
-        var keywords = ["subsp.", "var.", self.profile.nameAuthor];
+        var keywords = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect.", self.profile.nameAuthor];
 
         var name = null;
         if (self.profile.fullName) {
