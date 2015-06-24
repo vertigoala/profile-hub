@@ -282,7 +282,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     };
 
     self.opusResourceChanged = function ($item, $model, $label) {
-        self.opus.title = $label;
         self.opus.dataResourceUid = $item.id;
 
         loadDataResource(self.opus.dataResourceUid);
