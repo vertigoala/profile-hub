@@ -24,7 +24,7 @@ class BiocacheService {
 
         log.debug("Image query = ${imagesQuery}")
 
-        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true")
+        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json")
     }
 
     def uploadImage(String opusId, String profileId, String dataResourceId, MultipartFile file, Map metadata) {
