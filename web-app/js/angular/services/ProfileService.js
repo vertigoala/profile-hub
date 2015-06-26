@@ -53,6 +53,28 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        checkName: function(opusId, scientificName) {
+            console.log("Checking name " + scientificName);
+
+            var future = $http.get(util.contextRoot() + "/checkName?opusId=" + opusId + "&scientificName=" + encodeURIComponent(scientificName));
+            future.then(function(response)  {
+                console.log("Name checked with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        renameProfile: function(opusId, profileId, data) {
+            console.log("Renaming profile " + profileId);
+
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/rename", data);
+            future.then(function(response) {
+                console.log("Profile renamed with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         toggleDraftMode: function(opusId, profileId, snapshot) {
             console.log("Toggling draft mode for profile " + profileId);
             var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/toggleDraftMode?snapshot=" + snapshot);

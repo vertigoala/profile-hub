@@ -89,6 +89,18 @@ class ProfileController extends BaseController {
     }
 
     @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def renameProfile() {
+        def json = request.getJSON()
+        if (!params.opusId || !params.profileId || !json) {
+            badRequest()
+        } else {
+            def response = profileService.renameProfile(params.opusId as String, params.profileId as String, json)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def toggleDraftMode() {
         if (!params.profileId) {
             badRequest()
@@ -322,6 +334,16 @@ class ProfileController extends BaseController {
         }
     }
 
+    def checkName() {
+        if (!params.opusId || !params.scientificName) {
+            badRequest "opusId and scientificName are required parameters"
+        } else {
+            def response = profileService.checkName(params.opusId as String, params.scientificName as String)
+
+            handle response
+        }
+    }
+
     private getGlossaryUrl(opus) {
         opus?.glossaryUuid ? "${request.contextPath}/opus/${opus.uuid}/glossary" : ""
     }
@@ -376,5 +398,9 @@ class ProfileController extends BaseController {
 
     def authorPanel = {
         render template: "authorship"
+    }
+
+    def editNamePanel = {
+        render template: "editNamePanel"
     }
 }

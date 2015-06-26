@@ -1,0 +1,43 @@
+<div class="form-group">
+    <label for="scientificName" class="control-label">Profile Name</label>
+
+    <div class="input-group">
+        <input id="scientificName" type="text" ng-model="name"
+               class="form-control" ng-change="resetNameCheck()" required
+               ng-enter="checkName()"
+               placeholder="e.g Acacia abbatiana"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary input-append"
+                                ng-click="checkName()" ng-disabled="!name">Check name
+                        </button>
+                    </span>
+    </div>
+
+    <div class="small"
+         ng-if="nameCheck.matchedName">Matched name: <span
+            data-ng-bind-html="nameCheck.matchedName.formattedName | default:'None'"></span></div>
+</div>
+
+<alert type="danger" class="error" ng-if="nameCheck.providedNameDuplicate">
+    A profile already exists for '{{ nameCheck.providedName }}'
+</alert>
+<alert type="warning" class="warning" ng-if="nameCheck.noMatch">
+    No match was found for '{{ nameCheck.providedName }}'. Please check the name before continuing.
+</alert>
+<alert type="danger" ng-if="nameCheck.providedNameDuplicate && nameCheck.mismatch && nameCheck.matchedNameDuplicate">
+    The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName"></span>', and a
+    profile already exists for this name.
+</alert>
+<alert type="warning" class="warning"
+       ng-if="!nameCheck.providedNameDuplicate && nameCheck.mismatch && nameCheck.matchedNameDuplicate">
+    The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName"></span>', and a
+    profile already exists for this name. Are you sure you wish to {{currentProfileId ? "change the profile name to" : "create a new profile for"}} '{{name}}'?
+</alert>
+<alert type="warning" class="warning"
+       ng-if="nameCheck.mismatch && nameCheck.matchedName.scientificName && !nameCheck.matchedNameDuplicate">
+    The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName"></span>'. Would
+    you like to use that instead? <br/>
+    <button class="btn btn-link" ng-click="useMatchedName()"><i
+            class="fa fa-check">&nbsp;</i>Yes, use the matched name
+    </button>
+</alert>

@@ -98,6 +98,12 @@ class ProfileService {
         result
     }
 
+    def renameProfile(String opusId, String profileId, Map json) {
+        log.debug("Renaming profile ${profileId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/rename", json)
+    }
+
     def deleteProfile(String opusId, String profileId) {
         log.debug("Deleting profile ${profileId}")
         webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}")
@@ -294,6 +300,12 @@ class ProfileService {
         log.debug("Updating authorship for profile ${profileId}")
 
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/authorship", json)
+    }
+
+    def checkName(String opusId, String scientificName) {
+        log.debug("Checking name ${scientificName}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/checkName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}")
     }
 
     def enc(String value) {

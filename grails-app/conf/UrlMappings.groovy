@@ -18,6 +18,7 @@ class UrlMappings {
         "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
         "/opus/$opusId/profile/$profileId/update" controller: "profile", action: [GET: "edit", POST: "updateProfile"]
+        "/opus/$opusId/profile/$profileId/rename" controller: "profile", action: [POST: "renameProfile"]
         "/opus/$opusId/profile/$profileId/toggleDraftMode" controller: "profile", action: [POST: "toggleDraftMode"]
         "/opus/$opusId/profile/$profileId/discardDraftChanges" controller: "profile", action: [POST: "discardDraftChanges"]
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
@@ -73,6 +74,8 @@ class UrlMappings {
         "/licences/" controller: "collectory", action: [GET: "licences"]
 
         "/keybase/projects" controller: "opus", action: [GET: "retrieveKeybaseProjects"]
+
+        "/checkName" controller: "profile", action: [GET: "checkName"]
 
         "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
 

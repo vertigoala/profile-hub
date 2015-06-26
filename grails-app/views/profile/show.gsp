@@ -35,7 +35,8 @@
 
     <div class="row margin-bottom-1">
         <div class="col-md-9" ng-cloak>
-            <h2 class="heading-large inline"><span class="scientific-name" data-ng-bind-html="profileCtrl.formatName()"></span></h2>
+            <h2 class="heading-large inline"><span data-ng-bind-html="profileCtrl.formatName() | default:'Loading...'"></span></h2>
+            <button class="btn btn-link fa fa-edit" ng-click="profileCtrl.editName()" ng-show="!profileCtrl.readonly()">&nbsp;Edit name</button>
         </div>
 
         <div class="col-md-3" ng-cloak>
@@ -104,6 +105,8 @@
             </div>
         </div>
     </div>
+
+    <g:include controller="profile" action="editNamePanel" params="[opusId: params.opusId]"/>
 
     <div class="row margin-bottom-1" ng-if="profileCtrl.commonNames.length > 0" ng-cloak>
         <div class="col-md-12">

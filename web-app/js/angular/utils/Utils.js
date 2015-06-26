@@ -276,6 +276,46 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Formats a profile name: italicises the scientific name, leaves connecting terms and author names as normal text.
+     *
+     * @param scientificName The name without any author information. Only used if 'fullName' is not provided.
+     * @param nameAuthor The author information without the scientific name.
+     * @param fullName The combined scientific name and author information.
+     * @returns {*} The formatted name
+     */
+    function formatScientificName(scientificName, nameAuthor, fullName) {
+        if (!scientificName && !nameAuthor && !fullName) {
+            return null;
+        }
+        var connectingTerms = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect."];
+
+        if (nameAuthor) {
+            connectingTerms.push(nameAuthor);
+        }
+
+        var name = null;
+        if (fullName) {
+            name = fullName;
+        } else if (scientificName && nameAuthor) {
+            name = scientificName + " " + nameAuthor;
+        } else {
+            name = scientificName;
+        }
+
+        angular.forEach(connectingTerms, function(connectingTerm) {
+            var index = name.indexOf(connectingTerm);
+            if (index > -1) {
+                var part1 = name.substring(0, index);
+                var part2 = "<span class='normal-text'>" + connectingTerm + "</span>";
+                var part3 = name.substring(index + connectingTerm.length, name.length);
+                name = part1 + part2 + part3;
+            }
+        });
+
+        return "<span class='scientific-name'>" + name + "</span>";
+    }
+
+    /**
      * Public API
      */
     return {
@@ -290,6 +330,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         getQueryParameter: getQueryParameter,
         currentUser: currentUser,
         toKey: toKey,
+        formatScientificName: formatScientificName,
 
         LAST: LAST,
         FIRST: FIRST,

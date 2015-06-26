@@ -13,11 +13,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
     self.opusId = util.getEntityId("opus");
 
-    self.index = [
-        {name: "Links", link: "links"},
-        {name: "Biodiversity Heritage Library references", link: "bhllinks"},
-        {name: "Specimens", link: "specimens"},
-    ];
+    self.showNameEditControls = false;
 
     var orderBy = $filter("orderBy");
 
@@ -27,7 +23,6 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
     self.loadProfile = function() {
         self.profileId = util.getEntityId("profile");
-
 
         if (self.profileId) {
             var promise = profileService.getProfile(self.opusId, self.profileId);
@@ -53,6 +48,10 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                     }
 
                     findCommonName();
+
+                    if (self.profile.matchedName) {
+                        self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.nameAuthor, self.profile.fullName);
+                    }
                 },
                 function () {
                     messageService.alert("An error occurred while loading the profile.");
@@ -243,66 +242,53 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         if (!self.profile) {
             return null;
         }
-        var keywords = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect.", self.profile.nameAuthor];
 
-        var name = null;
-        if (self.profile.fullName) {
-            name = self.profile.fullName;
+        if (self.profile.matchedName && self.profile.scientificName == self.profile.matchedName.scientificName) {
+            return util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName);
         } else {
-            name = self.profile.scientificName + " " + self.profile.nameAuthor;
+            return util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, null);
         }
+    };
 
-        angular.forEach(keywords, function(keyword) {
-            var index = name.indexOf(keyword);
-            if (index > -1) {
-                var part1 = name.substring(0, index);
-                var part2 = "<span class='normal-text'>" + keyword + "</span>";
-                var part3 = name.substring(index + keyword.length, name.length);
-                name = part1 + part2 + part3;
-            }
+    self.editName = function() {
+        self.showNameEditControls = !self.showNameEditControls;
+        self.newName = self.profile.scientificName;
+    };
+
+    self.saveNameChange = function() {
+        var confirm = util.confirm("Are you sure you wish to rename this profile?");
+
+        confirm.then(function() {
+            var future = profileService.renameProfile(self.opusId, self.profileId, {newName: self.newName, clearMatch: false});
+
+            future.then(function(profile) {
+                self.profile = profile;
+
+                messageService.success("The profile name has been successfully updated.");
+
+                util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.scientificName + "/update");
+            }, function() {
+                messageService.error("An error occurred while updating the profile name.");
+            });
         });
+    };
 
-        return name;
+    self.clearNameMatch = function() {
+        var confirm = util.confirm("Are you sure you wish to remove the matched name from this profile? This will mean that information from Atlas of Living Australia resources will not be available.");
+
+        confirm.then(function() {
+            var future = profileService.renameProfile(self.opusId, self.profileId, {newName: null, clearMatch: true});
+
+            future.then(function(profile) {
+                self.profile = profile;
+
+                messageService.success("The profile name has been successfully updated.");
+
+                util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.scientificName + "/update");
+            }, function() {
+                messageService.error("An error occurred while updating the profile name.");
+            });
+        });
     }
 });
 
-
-/**
- * Create profile popup controller
- */
-profileEditor.controller('CreateProfileController', function (profileService, $modalInstance, opusId) {
-    var self = this;
-
-    self.opusId = opusId;
-    self.scientificName = "";
-    self.error = "";
-
-    self.ok = function () {
-        var promise = profileService.profileSearch(self.opusId, self.scientificName, false);
-        promise.then(function (matches) {
-            if (matches.length > 0) {
-                self.error = "A profile already exists for this scientific name.";
-            } else {
-                var future = profileService.createProfile(self.opusId, self.scientificName);
-                future.then(function (profile) {
-                        if (profile) {
-                            $modalInstance.close(profile);
-                        } else {
-                            self.error = "An error occurred while creating the profile.";
-                        }
-                    },
-                    function () {
-                        self.error = "An error occurred while creating the profile.";
-                    }
-                );
-            }
-        },
-        function() {
-            self.error = "An error occurred while searching for existing profiles.";
-        })
-    };
-
-    self.cancel = function () {
-        $modalInstance.dismiss("Cancelled");
-    };
-});

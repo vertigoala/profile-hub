@@ -1,7 +1,7 @@
 /**
  * Opus controller
  */
-profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter, $q, $http, config) {
+profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter) {
     var self = this;
 
     self.opus = null;

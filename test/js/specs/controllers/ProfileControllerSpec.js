@@ -324,29 +324,29 @@ describe("ProfileController tests", function () {
 
     it("should correctly format scientific names and authors when format name is called", function() {
         // binomial name with single word author
-        scope.profileCtrl.profile = {nameAuthor: "Link", fullName: "Acacia dealbata Link"};
-        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>Link</span>");
+        scope.profileCtrl.profile = {scientificName: "Acacia dealbata", nameAuthor: "Link", fullName: "Acacia dealbata Link"};
+        expect(scope.profileCtrl.formatName()).toBe("<span class='scientific-name'>Acacia dealbata <span class='normal-text'>Link</span></span>");
 
         // binomial name with multiple authors
-        scope.profileCtrl.profile = {nameAuthor: "Maiden & Blakely", fullName: "Acacia abrupta Maiden & Blakely"};
-        expect(scope.profileCtrl.formatName()).toBe("Acacia abrupta <span class='normal-text'>Maiden & Blakely</span>");
+        scope.profileCtrl.profile = {scientificName: "Acacia abrupta", nameAuthor: "Maiden & Blakely", fullName: "Acacia abrupta Maiden & Blakely"};
+        expect(scope.profileCtrl.formatName()).toBe("<span class='scientific-name'>Acacia abrupta <span class='normal-text'>Maiden & Blakely</span></span>");
 
         // autonym
-        scope.profileCtrl.profile = {nameAuthor: "Link", fullName: "Acacia dealbata Link subsp. dealbata"};
-        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>Link</span> <span class='normal-text'>subsp.</span> dealbata");
+        scope.profileCtrl.profile = {scientificName: "Acacia dealbata Link subsp. dealbata", nameAuthor: "Link", fullName: "Acacia dealbata Link subsp. dealbata", matchedName: {scientificName: "Acacia dealbata Link subsp. dealbata"}};
+        expect(scope.profileCtrl.formatName()).toBe("<span class='scientific-name'>Acacia dealbata <span class='normal-text'>Link</span> <span class='normal-text'>subsp.</span> dealbata</span>");
 
         // subspecies
-        scope.profileCtrl.profile = {nameAuthor: "Tindale & Kodela", fullName: "Acacia dealbata subsp. subalpina Tindale & Kodela"};
-        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>subsp.</span> subalpina <span class='normal-text'>Tindale & Kodela</span>");
+        scope.profileCtrl.profile = {scientificName: "Acacia dealbata subsp. subalpina", nameAuthor: "Tindale & Kodela", fullName: "Acacia dealbata subsp. subalpina Tindale & Kodela"};
+        expect(scope.profileCtrl.formatName()).toBe("<span class='scientific-name'>Acacia dealbata <span class='normal-text'>subsp.</span> subalpina <span class='normal-text'>Tindale & Kodela</span></span>");
 
         // variant
-        scope.profileCtrl.profile = {nameAuthor: "Seem.", fullName: "Acacia dealbata var. mackayana Seem."};
-        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>var.</span> mackayana <span class='normal-text'>Seem.</span>");
+        scope.profileCtrl.profile = {scientificName: "Acacia dealbata var. mackayana", nameAuthor: "Seem.", fullName: "Acacia dealbata var. mackayana Seem."};
+        expect(scope.profileCtrl.formatName()).toBe("<span class='scientific-name'>Acacia dealbata <span class='normal-text'>var.</span> mackayana <span class='normal-text'>Seem.</span></span>");
 
 
         // if the full name is not set, use the scientific name and name author
         scope.profileCtrl.profile = {nameAuthor: "Tindale & Kodela", scientificName: "Acacia dealbata subsp. subalpina"};
-        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>subsp.</span> subalpina <span class='normal-text'>Tindale & Kodela</span>");
+        expect(scope.profileCtrl.formatName()).toBe("<span class='scientific-name'>Acacia dealbata <span class='normal-text'>subsp.</span> subalpina <span class='normal-text'>Tindale & Kodela</span></span>");
     })
 });
 
