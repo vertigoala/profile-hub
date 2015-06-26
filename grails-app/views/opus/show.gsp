@@ -19,8 +19,7 @@
 
     <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
 
-    <div class="btn-group padding-bottom-1 pull-right">
-        <div class="row">
+    <div class="pull-right">
             <g:if test="${params.isOpusEditor}">
                 <button ng-controller="ProfileController as profileCtrl" class="btn btn-default"
                         ng-click="profileCtrl.createProfile(opusCtrl.opusId)"><i class="fa fa-plus"></i> Add new profile</button>
@@ -29,7 +28,6 @@
                 <a href="${request.contextPath}/opus/{{opusCtrl.opusId}}/update" target="_self"
                    class="btn btn-default" ng-hide="!config.readonly"><i class="fa fa-edit"></i> Edit configuration</a>
             </g:if>
-        </div>
     </div>
 
     <tabset>
@@ -62,17 +60,6 @@
                 <div class="col-sm-8">
                     <input id="scientificName" type="text" ng-model="createProfileCtrl.scientificName" class="form-control"
                            required ng-enter="createProfileCtrl.ok()" placeholder="e.g Acacia abbatiana"/>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-horizontal">
-            <div class="form-group">
-                <label for="nameAuthor" class="col-sm-3 control-label">Author</label>
-
-                <div class="col-sm-8">
-                    <input id="nameAuthor" type="text" ng-model="createProfileCtrl.nameAuthor" class="form-control"
-                           ng-enter="createProfileCtrl.ok()" placeholder="e.g. Pedley"/>
                 </div>
             </div>
         </div>

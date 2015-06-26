@@ -17,7 +17,8 @@
 
                             <p class="caption">{{ image.dataResourceName }}</p>
                             <p class="caption" ng-if="image.title">{{ image.title }}</p>
-                            <p class="caption" ng-if="image.creator">{{ image.creator }}<span ng-if="image.dateTaken"> ({{ image.dateTaken }})</span></p>
+                            <p class="caption" ng-if="image.rightsHolder">Copyright: {{ image.rightsHolder }}</p>
+                            <p class="caption" ng-if="image.creator">Photographer: {{ image.creator }}<span ng-if="image.dateTaken"> ({{ image.dateTaken }})</span></p>
                             <a class="caption" href="${grailsApplication.config.images.service.url}/image/details?imageId={{image.imageId}}" target="_blank">View image details</a>
                         </div>
                     </div>

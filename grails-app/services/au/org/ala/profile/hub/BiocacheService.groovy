@@ -32,7 +32,7 @@ class BiocacheService {
         String extension = file.originalFilename.substring(file.originalFilename.lastIndexOf("."))
         file.transferTo(new File("${grailsApplication.config.temp.file.location}/${imageId}${extension}"))
 
-        metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${opusId}/profile/${profileId}/image/${imageId}${extension}"
+        metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${opusId}/profile/${profileId}/file/${imageId}${extension}"
 
         webService.doPost("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
     }

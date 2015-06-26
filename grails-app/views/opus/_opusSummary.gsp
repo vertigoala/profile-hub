@@ -25,17 +25,17 @@
                 <div class="stat__number">{{opusCtrl.editors.length}}</div>
             </div>
 
-            <div class="main-stats__stat col-lg-6 col-md-6 col-sm-3 col-xs-3">
-                <h4 class="stat__title heading-underlined">Another statistic</h4>
+            %{--<div class="main-stats__stat col-lg-6 col-md-6 col-sm-3 col-xs-3">--}%
+                %{--<h4 class="stat__title heading-underlined">Another statistic</h4>--}%
 
-                <div class="stat__number">?</div>
-            </div>
+                %{--<div class="stat__number">?</div>--}%
+            %{--</div>--}%
 
-            <div class="main-stats__stat col-lg-6 col-md-6 col-sm-3 col-xs-3">
-                <h4 class="stat__title heading-underlined">Another statistic</h4>
+            %{--<div class="main-stats__stat col-lg-6 col-md-6 col-sm-3 col-xs-3">--}%
+                %{--<h4 class="stat__title heading-underlined">Another statistic</h4>--}%
 
-                <div class="stat__number">?</div>
-            </div>
+                %{--<div class="stat__number">?</div>--}%
+            %{--</div>--}%
         </div>
     </div>
 </div>

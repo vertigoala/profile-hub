@@ -37,6 +37,7 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
+        compile ":mail:1.0.7"
         build ":release:3.0.1"
         build ":tomcat:7.0.55"
         compile ":cache:1.1.6"

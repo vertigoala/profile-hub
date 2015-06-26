@@ -236,17 +236,16 @@ class ProfileController extends BaseController {
         }
     }
 
-    def downloadTempImage() {
-        if (!params.imageId) {
-            badRequest "imageId is a required parameter"
+    def downloadTempFile() {
+        if (!params.fileId) {
+            badRequest "fileId is a required parameter"
         } else {
-            File file = new File("${grailsApplication.config.temp.file.location}/${params.imageId}")
+            File file = new File("${grailsApplication.config.temp.file.location}/${params.fileId}")
 
             if (!file) {
                 notFound "The requested file could not be found"
             } else {
-                response.setContentType("image/*")
-                response.setHeader("Content-disposition", "attachment;filename=${params.imageId}")
+                response.setHeader("Content-disposition", "attachment;filename=${params.fileId}")
                 response.outputStream << file.newInputStream()
             }
         }

@@ -28,144 +28,142 @@
         </div>
     </div>
 
-    <div class="row">
-        <h1><span class="scientific-name">${profile.scientificName}</span> <span
-                class="inline-sub-heading">${profile.nameAuthor}</span></h1>
-    </div>
+    <g:each in="${profiles}" var="record" status="index">
+        <g:if test="${index != 0}">
+            <div class="page-break" style="page-break-before: always"></div>
+        </g:if>
+        <div class="row">
+            <h1><span class="scientific-name">${record.profile.scientificName}</span> <g:if test="${record.profile.nameAuthor}"><span
+                    class="inline-sub-heading">${record.profile.nameAuthor}</span></g:if></h1>
+        </div>
 
-    <div>
-        <i>${profile.authorship?.find { it.category == 'Author' }?.text ?: ""}</i>
-    </div>
+        <div>
+            <i>${record.profile.authorship?.find { it.category == 'Author' }?.text ?: ""}</i>
+        </div>
 
-    <g:if test="${options.attributes}">
-        <g:each in="${profile.attributes.sort { it.order }}" var="attribute">
-            <div>
-                <h4>${attribute.title}</h4>
-                <blockquote>
-                    <p class="display-text">${raw(attribute.text)}</p>
-                    <g:if test="${opus.allowFineGrainedAttribution}">
-                        <span class="small">
-                            Contributed by
-                            <cite title="Contributors to this text">
-                                ${attribute.creators.join(', ')}
-                            </cite>
-                        </span>
-                        <g:if test="${attribute.editors}">
+        <g:if test="${options.attributes}">
+            <g:each in="${record.profile.attributes.sort { it.order }}" var="attribute">
+                <div>
+                    <h4>${attribute.title}</h4>
+                    <blockquote>
+                        <p class="display-text">${raw(attribute.text)}</p>
+                        <g:if test="${opus.allowFineGrainedAttribution}">
                             <span class="small">
-                                Edited by
-                                <cite title="Editors to this text">
-                                    ${attribute.editors.join(', ')}
+                                Contributed by
+                                <cite title="Contributors to this text">
+                                    ${attribute.creators.join(', ')}
                                 </cite>
                             </span>
+                            <g:if test="${attribute.editors}">
+                                <span class="small">
+                                    Edited by
+                                    <cite title="Editors to this text">
+                                        ${attribute.editors.join(', ')}
+                                    </cite>
+                                </span>
+                            </g:if>
                         </g:if>
-                    </g:if>
-                </blockquote>
-            </div>
-        </g:each>
-    </g:if>
-
-    <g:if test="${options.map}">
-        <h4>Occurrences</h4>
-        <img src="${profile.mapImageUrl}"/>
-    </g:if>
-
-    <g:if test="${options.conservation && profile.speciesProfile?.conservationStatuses}">
-        <h4>Conservation Status</h4>
-        <ul>
-            <g:each in="${profile.speciesProfile.conservationStatuses.sort({ it.region })}" var="status">
-                <li><span class="status ${status.colour}">${status.regionAbbrev ?: 'IUCN'}</span> ${status.rawStatus}
-                </li>
+                    </blockquote>
+                </div>
             </g:each>
-        </ul>
-    </g:if>
+        </g:if>
 
-    <g:if test="${options.taxonomy && profile.classifications}">
-        <div>
-            <h4>Taxonomy from ${profile.speciesProfile?.taxonConcept?.infoSourceName}</h4>
+        <g:if test="${options.map}">
+            <h4>Occurrences</h4>
+            <img src="${record.profile.mapImageUrl}"/>
+        </g:if>
+
+        <g:if test="${options.conservation && record.profile.speciesProfile?.conservationStatuses}">
+            <h4>Conservation Status</h4>
             <ul>
-                <g:each in="${profile.classifications}" var="classification">
-                    <li>${classification.rank.capitalize()}: ${classification.scientificName}</li>
+                <g:each in="${record.profile.speciesProfile.conservationStatuses.sort({ it.region })}" var="status">
+                    <li><span class="status ${status.colour}">${status.regionAbbrev ?: 'IUCN'}</span> ${status.rawStatus}
+                    </li>
                 </g:each>
             </ul>
-        </div>
-    </g:if>
+        </g:if>
 
-    <g:if test="${options.nomenclature && profile.nslNameIdentifier && profile.nomenclatureHtml}">
-        <h4>Nomenclature</h4>
-        ${raw(profile.nomenclatureHtml)}
-    </g:if>
+        <g:if test="${options.taxonomy && record.profile.classifications}">
+            <div>
+                <h4>Taxonomy</h4>
+                <ul>
+                    <g:each in="${record.profile.classifications}" var="classification">
+                        <li>${classification.rank.capitalize()}: ${classification.scientificName}</li>
+                    </g:each>
+                </ul>
+            </div>
+        </g:if>
 
-    <g:if test="${options.links && profile.links}">
-        <h4>Links</h4>
-        <ul>
-            <g:each in="${profile.links}" var="link">
-                <li><a href="${link.url}">${link.title}</a><span>&nbsp;-&nbsp;</span>${link.description}</li>
+        <g:if test="${options.nomenclature && record.profile.nslNameIdentifier && record.profile.nomenclatureHtml}">
+            <h4>Nomenclature</h4>
+            ${raw(record.profile.nomenclatureHtml)}
+        </g:if>
+
+        <g:if test="${options.links && record.profile.links}">
+            <h4>Links</h4>
+            <ul>
+                <g:each in="${record.profile.links}" var="link">
+                    <li><a href="${link.url}">${link.title}</a><span>&nbsp;-&nbsp;</span>${link.description}</li>
+                </g:each>
+            </ul>
+        </g:if>
+
+        <g:if test="${options.bhllinks && record.profile.bhl}">
+            <h4>Biodiversity Heritage Library References</h4>
+            <g:each in="${record.profile.bhl}" var="link">
+                <p>
+                    <b>Title:</b> ${link.title}<br/>
+                    <b>Description:</b> ${link.description}<br/>
+                    <b>BHL Title:</b> ${link.fullTitle}<br/>
+                    <b>Edition:</b> ${link.edition}<br/>
+                    <b>Publisher:</b> ${link.publisher}<br/>
+                    <b>DOI:</b> ${link.doi}<br/>
+                </p>
             </g:each>
-        </ul>
-    </g:if>
+        </g:if>
 
-    <g:if test="${options.bhllinks && profile.bhl}">
-        <h4>Biodiversity Heritage Library References</h4>
-        <g:each in="${profile.bhl}" var="link">
-            <p>
-                <b>Title:</b> ${link.title}<br/>
-                <b>Description:</b> ${link.description}<br/>
-                <b>BHL Title:</b> ${link.fullTitle}<br/>
-                <b>Edition:</b> ${link.edition}<br/>
-                <b>Publisher:</b> ${link.publisher}<br/>
-                <b>DOI:</b> ${link.doi}<br/>
-            </p>
+        <g:if test="${options.specimens && record.profile.specimens}">
+            <h4>Specimens</h4>
+            <g:each in="${record.profile.specimens}" var="spec">
+                <p>
+                    <b>Institution Name:</b> ${spec.institutionName}<br/>
+                    <b>Collection:</b> ${spec.collectionName}<br/>
+                    <b>Catalog Number:</b> ${spec.catalogNumber}<br/>
+                </p>
+            </g:each>
+        </g:if>
+
+        <g:if test="${options.images && record.profile.images}">
+            <h4>Images</h4>
+            <div class="row">
+                <g:each in="${record.profile.images}" var="image">
+                    <g:if test="${!image.excluded}">
+                        <span class="col-lg-3">
+                            <img class="profile-image" src="${image.largeImageUrl}"/>
+                        </span>
+                    </g:if>
+                </g:each>
+            </div>
+        </g:if>
+
+        <g:if test="${options.bibliography && record.profile.bibliography}">
+            <h4>Bibliography</h4>
+            <ul>
+                <g:each in="${record.profile.bibliography}" var="bib">
+                    <li>${raw(bib.text)}</li>
+                </g:each>
+            </ul>
+        </g:if>
+
+        <g:each in="${record.profile.authorship?.findAll { it.category != 'Author' }}" var="authorship">
+            <div>
+                <h3>${authorship.category}</h3>
+
+                <p>${authorship.text}</p>
+            </div>
         </g:each>
-    </g:if>
-
-    <g:if test="${options.specimens && profile.specimens}">
-        <h4>Specimens</h4>
-        <g:each in="${profile.specimens}" var="spec">
-            <p>
-                <b>Institution Name:</b> ${spec.institutionName}<br/>
-                <b>Collection:</b> ${spec.collectionName}<br/>
-                <b>Catalog Number:</b> ${spec.catalogNumber}<br/>
-            </p>
-        </g:each>
-    </g:if>
-
-    <g:if test="${options.images && profile.images}">
-        <h4>Images</h4>
-        <div class="row">
-            <g:each in="${profile.images}" var="image">
-                <g:if test="${!image.excluded}">
-                    <span class="col-lg-3">
-                        <img class="profile-image" src="${image.largeImageUrl}"/>
-                    </span>
-                </g:if>
-            </g:each>
-        </div>
-    </g:if>
-
-    <g:if test="${options.bibliography && profile.bibliography}">
-        <h4>Bibliography</h4>
-        <ul>
-            <g:each in="${profile.bibliography}" var="bib">
-                <li>${raw(bib.text)}</li>
-            </g:each>
-        </ul>
-    </g:if>
-
-    <g:each in="${profile.authorship?.findAll { it.category != 'Author' }}" var="authorship">
-        <div>
-            <h3>${authorship.category}</h3>
-
-            <p>${authorship.text}</p>
-        </div>
     </g:each>
 
-    <g:if test="${options.children}">
-        <ul>
-            <g:each in="${profile.children}" var="child">
-                <li>${child.scientificName}</li>
-            </g:each>
-        </ul>
-    </g:if>
 </div>
 
 <r:layoutResources/>

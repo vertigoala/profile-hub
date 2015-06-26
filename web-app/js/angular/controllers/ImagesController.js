@@ -89,13 +89,10 @@ profileEditor.controller('ImagesController', function (profileService, navServic
                         thumbnailUrl: occurrence.thumbnailUrl,
                         dataResourceName: occurrence.dataResourceName,
                         excluded: excluded,
-                        primary: occurrence.image == self.profile.primaryImage
+                        primary: occurrence.image == self.profile.primaryImage,
+                        metadata: occurrence.imageMetadata
                     };
                     self.images.push(image);
-
-                    profileService.getImageMetadata(image.imageId).then(function (data) {
-                        image.metadata = data;
-                    });
 
                     if (occurrence.image == self.profile.primaryImage) {
                         self.primaryImage = image;

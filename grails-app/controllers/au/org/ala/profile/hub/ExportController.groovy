@@ -1,27 +1,43 @@
 package au.org.ala.profile.hub
 
+import grails.converters.JSON
+import org.springframework.web.context.request.RequestContextHolder
+
 class ExportController extends BaseController {
 
     ProfileService profileService
     ExportService exportService
 
     def getPdf() {
-        if (!params.profileId) {
-            badRequest "profileId is a required parameter"
+        if (!params.profileId || !params.opusId) {
+            badRequest "profileId and opusId are required parameters"
         } else {
             def model = profileService.getProfile(params.opusId as String, params.profileId as String)
             if (!model) {
                 notFound()
             } else {
-                byte[] pdfData = exportService.createPdf(extractOptionsFromParams())
+                if (params.children) {
+                    // By default, the RequestAttributes thread local used by Grails/Spring is not inheritable, so new threads
+                    // will not have access to the request context when calling web services. This line works around this issue
+                    // by resetting the request attributes with the inheritable flag set to true, meaning spawned threads will
+                    // inherit the state.
+                    RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true)
+                    Map config = extractOptionsFromParams()
+                    config.opusTitle = model.opus.title
+                    exportService.createPdfAsych(config)
 
-                if (!pdfData) {
-                    notFound()
+                    render [:] as JSON
                 } else {
-                    response.contentType = 'application/x-pdf'
-                    response.setHeader 'Content-disposition', "attachment; filename=\"${model.profile.scientificName.replaceAll(/\\W/, '')}.pdf\""
-                    response.outputStream << pdfData
-                    response.outputStream.flush()
+                    byte[] pdfData = exportService.createPdf(extractOptionsFromParams())
+
+                    if (!pdfData) {
+                        notFound()
+                    } else {
+                        response.contentType = 'application/x-pdf'
+                        response.setHeader 'Content-disposition', "attachment; filename=\"${model.profile.scientificName.replaceAll(/\\W/, '')}.pdf\""
+                        response.outputStream << pdfData
+                        response.outputStream.flush()
+                    }
                 }
             }
         }
@@ -41,7 +57,8 @@ class ExportController extends BaseController {
                 specimens   : params.specimens,
                 conservation: params.conservation,
                 images      : params.images,
-                children    : params.children
+                children    : params.children,
+                email       : params.email
         ]
     }
 

@@ -238,6 +238,32 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
         form.$setDirty();
     };
+
+    self.formatName = function() {
+        if (!self.profile) {
+            return null;
+        }
+        var keywords = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect.", self.profile.nameAuthor];
+
+        var name = null;
+        if (self.profile.fullName) {
+            name = self.profile.fullName;
+        } else {
+            name = self.profile.scientificName + " " + self.profile.nameAuthor;
+        }
+
+        angular.forEach(keywords, function(keyword) {
+            var index = name.indexOf(keyword);
+            if (index > -1) {
+                var part1 = name.substring(0, index);
+                var part2 = "<span class='normal-text'>" + keyword + "</span>";
+                var part3 = name.substring(index + keyword.length, name.length);
+                name = part1 + part2 + part3;
+            }
+        });
+
+        return name;
+    }
 });
 
 
@@ -249,7 +275,6 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
 
     self.opusId = opusId;
     self.scientificName = "";
-    self.nameAuthor = "";
     self.error = "";
 
     self.ok = function () {
@@ -258,7 +283,7 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
             if (matches.length > 0) {
                 self.error = "A profile already exists for this scientific name.";
             } else {
-                var future = profileService.createProfile(self.opusId, self.scientificName, self.nameAuthor);
+                var future = profileService.createProfile(self.opusId, self.scientificName);
                 future.then(function (profile) {
                         if (profile) {
                             $modalInstance.close(profile);

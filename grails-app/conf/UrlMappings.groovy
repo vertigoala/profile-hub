@@ -23,7 +23,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
         "/opus/$opusId/profile/$profileId/pdf" controller: "export", action: [GET: "getPdf"]
         "/opus/$opusId/profile/$profileId/images" controller: "profile", action: [GET: "retrieveImages"]
-        "/opus/$opusId/profile/$profileId/image/$imageId" controller: "profile", action: [GET: "downloadTempImage"]
+        "/opus/$opusId/profile/$profileId/file/$fileId" controller: "profile", action: [GET: "downloadTempFile"]
         "/opus/$opusId/profile/$profileId/image/upload" controller: "profile", action: [POST: "uploadImage"]
         "/opus/$opusId/profile/$profileId/lists" controller: "speciesList", action: [GET: "retrieveLists"]
         "/opus/$opusId/profile/$profileId/classifications" controller: "profile", action: [GET: "retrieveClassifications"]

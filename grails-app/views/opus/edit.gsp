@@ -53,56 +53,63 @@
         <div class="col-md-3 margin-bottom-1 stay-on-screen">
             <ul class="nav nav-stacked" id="sidebar">
                 <h4 class="font-xxsmall heading-underlined"><strong>Page index</strong></h4>
-                <li><a href="#about" du-smooth-scroll class="font-xxsmall">About page</a></li>
-                <li><a href="#accessControl" du-smooth-scroll class="font-xxsmall">Access control</a></li>
-                <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Approved image sources</a></li>
-                <li><a href="#lists" du-smooth-scroll class="font-xxsmall">Approved lists</a></li>
-                <li><a href="#recordSources" du-smooth-scroll class="font-xxsmall">Approved specimen/observation sources</a></li>
-                <li><a href="#attributeVocab" du-smooth-scroll class="font-xxsmall">Attribute vocabulary</a></li>
-                <li><a href="#authorship" du-smooth-scroll class="font-xxsmall">Authorship &amp; attribution</a></li>
-                <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
-                <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>
-                <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
-                <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
-                <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
-                <li><a href="#supportingCollections" du-smooth-scroll class="font-xxsmall">Supporting collections</a></li>
+                <g:if test="${!params.opusId}">
+                    <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
+                </g:if>
+                <g:else>
+                    <li><a href="#about" du-smooth-scroll class="font-xxsmall">About page</a></li>
+                    <li><a href="#accessControl" du-smooth-scroll class="font-xxsmall">Access control</a></li>
+                    <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Approved image sources</a></li>
+                    <li><a href="#lists" du-smooth-scroll class="font-xxsmall">Approved lists</a></li>
+                    <li><a href="#recordSources" du-smooth-scroll class="font-xxsmall">Approved specimen/observation sources</a></li>
+                    <li><a href="#attributeVocab" du-smooth-scroll class="font-xxsmall">Attribute vocabulary</a></li>
+                    <li><a href="#authorship" du-smooth-scroll class="font-xxsmall">Authorship &amp; attribution</a></li>
+                    <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
+                    <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>
+                    <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
+                    <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
+                    <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
+                    <li><a href="#supportingCollections" du-smooth-scroll class="font-xxsmall">Supporting collections</a></li>
+                </g:else>
             </ul>
         </div>
 
         <div class="col-lg-9 col-md-8 col-xs-12">
             <g:include controller="opus" action="editOpusDetailsPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editAccessControlPanel" params="[opusId: params.opusId]"/>
+            <g:if test="${params.opusId}">
+                <g:include controller="opus" action="editAccessControlPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editStylingPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editStylingPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editMapConfigPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editMapConfigPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="taxaUploadPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="taxaUploadPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="occurrenceUploadPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="occurrenceUploadPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="phyloUploadPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="phyloUploadPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editKeyConfigPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editKeyConfigPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="keyUploadPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="keyUploadPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editImageSourcesPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editImageSourcesPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editRecordSourcesPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editRecordSourcesPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editApprovedListsPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editApprovedListsPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editSupportingOpusPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editSupportingOpusPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editVocabPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editVocabPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editAuthorshipPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editAuthorshipPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editGlossaryPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editGlossaryPanel" params="[opusId: params.opusId]"/>
 
-            <g:include controller="opus" action="editAboutPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editAboutPanel" params="[opusId: params.opusId]"/>
+            </g:if>
         </div>
     </div>
 

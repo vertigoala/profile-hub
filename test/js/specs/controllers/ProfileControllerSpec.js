@@ -321,5 +321,32 @@ describe("ProfileController tests", function () {
         expect(scope.profileCtrl.profile.authorship[0]).toEqual({category: "Author", text: "Fred"});
         expect(scope.profileCtrl.profile.authorship[1]).toEqual({category: "", text: ""});
     });
+
+    it("should correctly format scientific names and authors when format name is called", function() {
+        // binomial name with single word author
+        scope.profileCtrl.profile = {nameAuthor: "Link", fullName: "Acacia dealbata Link"};
+        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>Link</span>");
+
+        // binomial name with multiple authors
+        scope.profileCtrl.profile = {nameAuthor: "Maiden & Blakely", fullName: "Acacia abrupta Maiden & Blakely"};
+        expect(scope.profileCtrl.formatName()).toBe("Acacia abrupta <span class='normal-text'>Maiden & Blakely</span>");
+
+        // autonym
+        scope.profileCtrl.profile = {nameAuthor: "Link", fullName: "Acacia dealbata Link subsp. dealbata"};
+        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>Link</span> <span class='normal-text'>subsp.</span> dealbata");
+
+        // subspecies
+        scope.profileCtrl.profile = {nameAuthor: "Tindale & Kodela", fullName: "Acacia dealbata subsp. subalpina Tindale & Kodela"};
+        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>subsp.</span> subalpina <span class='normal-text'>Tindale & Kodela</span>");
+
+        // variant
+        scope.profileCtrl.profile = {nameAuthor: "Seem.", fullName: "Acacia dealbata var. mackayana Seem."};
+        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>var.</span> mackayana <span class='normal-text'>Seem.</span>");
+
+
+        // if the full name is not set, use the scientific name and name author
+        scope.profileCtrl.profile = {nameAuthor: "Tindale & Kodela", scientificName: "Acacia dealbata subsp. subalpina"};
+        expect(scope.profileCtrl.formatName()).toBe("Acacia dealbata <span class='normal-text'>subsp.</span> subalpina <span class='normal-text'>Tindale & Kodela</span>");
+    })
 });
 

@@ -16,7 +16,11 @@ describe("OpusController tests", function () {
         isUuid: function() {
             return true;
         },
-        LAST: "last"
+        LAST: "last",
+        contextRoot: function() {
+            return "/contextRoot";
+        },
+        redirect: function(location) {}
     };
     var form;
     var messageService;
@@ -58,6 +62,7 @@ describe("OpusController tests", function () {
         spyOn(profileService, "getAllLists").and.returnValue(getListsDefer.promise);
         spyOn(profileService, "retrieveKeybaseProjects").and.returnValue(keysDefer.promise);
 
+        spyOn(mockUtil, "redirect").and.returnValue(null);
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -452,12 +457,6 @@ describe("OpusController tests", function () {
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
-
-
-
-
-
-
     it("should merge newApprovedLists with the existing approvedLists when saveApprovedLists is called", function () {
         scope.opusCtrl.opus = {title: "OpusName", approvedLists: ["list1", "list2", "list3"]};
         scope.opusCtrl.newApprovedLists = [{list: {dataResourceUid: "list4"}}, {list: {dataResourceUid: "list5"}}, {list: {dataResourceUid: "list6"}}];
@@ -563,4 +562,27 @@ describe("OpusController tests", function () {
 
         expect(profileService.saveOpus).toHaveBeenCalled();
     });
+
+    it("should redirect to the update opus page after creating a new opus", function() {
+        scope.opusCtrl.opus = {};
+
+        var newUuid = "123456";
+        saveOpusDefer.resolve({uuid: newUuid});
+
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        expect(mockUtil.redirect).toHaveBeenCalledWith("/contextRoot/opus/" + newUuid + "/update");
+    });
+
+    it("should stay on the same page after updating an exiting new opus", function() {
+        scope.opusCtrl.opus = {uuid: "123456"};
+
+        saveOpusDefer.resolve({uuid: "123456"});
+
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        expect(mockUtil.redirect).not.toHaveBeenCalled();
+    })
 });
