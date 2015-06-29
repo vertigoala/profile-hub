@@ -63,6 +63,7 @@
                     <li><a href="#lists" du-smooth-scroll class="font-xxsmall">Approved lists</a></li>
                     <li><a href="#recordSources" du-smooth-scroll class="font-xxsmall">Approved specimen/observation sources</a></li>
                     <li><a href="#attributeVocab" du-smooth-scroll class="font-xxsmall">Attribute vocabulary</a></li>
+                    <li><a href="#authorshipVocab" du-smooth-scroll class="font-xxsmall">Authors &amp; acknowledgements vocabulary</a></li>
                     <li><a href="#authorship" du-smooth-scroll class="font-xxsmall">Authorship &amp; attribution</a></li>
                     <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
                     <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>

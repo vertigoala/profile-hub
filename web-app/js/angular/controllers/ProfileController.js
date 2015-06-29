@@ -47,6 +47,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                     }
 
                     findCommonName();
+                    loadVocabulary();
 
                     if (self.profile.matchedName) {
                         self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.matchedName.nameAuthor, self.profile.matchedName.fullName);
@@ -58,6 +59,17 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             );
         }
     };
+
+    function loadVocabulary() {
+        if (self.opus.attributeVocabUuid != null) {
+            var vocabPromise = profileService.getOpusVocabulary(self.opusId, self.opus.authorshipVocabUuid);
+            vocabPromise.then(function (data) {
+                self.authorVocab = data.terms;
+
+                self.authorVocabStrict = data.strict;
+            });
+        }
+    }
 
     function findCommonName() {
         self.commonNames = [];
