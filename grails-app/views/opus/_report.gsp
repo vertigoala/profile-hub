@@ -64,7 +64,7 @@
     <div class="table-responsive">
         <table class="table table-striped" ng-show="reportCtrl.reportData.records.length > 0">
             <thead>
-            <tr><th>Profile</th><th>Date draft created</th></tr>
+            <tr><th>Profile</th><th>Date draft created</th><th>Editor</th></tr>
             </thead>
             <tbody>
             <tr ng-repeat="profile in reportCtrl.reportData.records">
@@ -74,6 +74,9 @@
                 </td>
                 <td>
                     {{ profile.draftDate | date:'dd/MM/yyyy h:mm a' }}
+                </td>
+                <td>
+                    {{ profile.createdBy }}
                 </td>
             </tr>
             </tbody>
