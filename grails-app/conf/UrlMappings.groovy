@@ -63,6 +63,8 @@ class UrlMappings {
 
         "/opus/$opusId/users/update" controller: "opus", action: [POST: "updateUsers"]
 
+        "/opus/$opusId/report/$reportId" controller: "report", action: [GET: "loadReport"]
+
         "/opus/$opusId/update" controller: "opus", action: [GET: "edit", POST: "updateOpus"]
         "/opus/$opusId/json" controller: "opus", action: [GET: "getJson"]
         "/opus/$opusId/delete" controller: "opus", action: [DELETE: "deleteOpus"]

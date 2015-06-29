@@ -44,6 +44,11 @@
                  keybase-url="${grailsApplication.config.keybase.key.lookup}"
                  profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></div>
         </tab>
+        <g:if test="${params.isOpusEditor}">
+            <tab heading="Reports" class="font-xxsmall">
+                <g:include controller="opus" action="reportPanel" params="[opusId: params.opusId]"/>
+            </tab>
+        </g:if>
     </tabset>
 
     <script type="text/ng-template" id="createProfile.html">

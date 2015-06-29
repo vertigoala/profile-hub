@@ -5,7 +5,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     var self = this;
 
     self.profile = null;
-    self.profileId = null;
+    self.profileId = util.getEntityId("profile");
     self.opus = null;
     self.readonly = true;
 
@@ -22,8 +22,6 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     };
 
     self.loadProfile = function() {
-        self.profileId = util.getEntityId("profile");
-
         if (self.profileId) {
             var promise = profileService.getProfile(self.opusId, self.profileId);
             promise.then(function (data) {
@@ -50,7 +48,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                     findCommonName();
 
                     if (self.profile.matchedName) {
-                        self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.nameAuthor, self.profile.fullName);
+                        self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.matchedName.nameAuthor, self.profile.matchedName.fullName);
                     }
                 },
                 function () {
@@ -172,6 +170,9 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
         future.then(function() {
             messageService.success("The profile has been successfully updated.");
+
+            // the name may have been changed in the draft, so the url parameter may no longer be correct. Update the profileId to ensure we load the correct name.
+            self.profileId = self.profile.scientificName;
 
             self.loadProfile();
         }, function() {

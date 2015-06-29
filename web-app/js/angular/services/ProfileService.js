@@ -581,6 +581,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         getLicences: function() {
             var future = $http.get(util.contextRoot() + "/licences", {cache: true});
             return util.toStandardPromise(future);
+        },
+
+        loadReport: function(opusId, reportId, pageSize, offset) {
+            console.log("Loading report " + reportId);
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/report/" + reportId + "?pageSize=" + pageSize + "&offset=" + offset);
+            future.then(function(response) {
+                console.log("Report loaded with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
         }
     }
 });

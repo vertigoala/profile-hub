@@ -1,6 +1,7 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.profile.hub.util.HubConstants
+import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
 
 class ProfileService {
@@ -306,6 +307,22 @@ class ProfileService {
         log.debug("Checking name ${scientificName}")
 
         webService.get("${grailsApplication.config.profile.service.url}/checkName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}")
+    }
+
+    def loadReport(String opusId, String reportId, String pageSize, String offset) {
+        ReportType report = ReportType.byId(reportId)
+
+        def resp
+        switch (report) {
+            case ReportType.MISMATCHED_NAME:
+                resp = webService.get("${grailsApplication.config.profile.service.url}/report/mismatchedNames?opusId=${enc(opusId)}&offset=${offset}&max=${pageSize}")
+                break;
+            case ReportType.DRAFT_PROFILE:
+                resp = webService.get("${grailsApplication.config.profile.service.url}/report/draftProfiles?opusId=${enc(opusId)}")
+                break;
+        }
+
+        resp
     }
 
     def enc(String value) {

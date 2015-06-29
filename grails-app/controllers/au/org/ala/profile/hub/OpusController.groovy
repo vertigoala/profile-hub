@@ -275,4 +275,8 @@ class OpusController extends BaseController {
     def editAboutPanel = {
         render template: "editAboutPage"
     }
+
+    def reportPanel = {
+        render template: "report"
+    }
 }

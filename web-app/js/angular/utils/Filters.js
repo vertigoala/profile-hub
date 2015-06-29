@@ -50,3 +50,9 @@ profileEditor.filter("sanitizeHtml", function($sce) {
         return $sce.trustAsHtml(htmlCode);
     }
 });
+
+profileEditor.filter("formatProfileName", function(util) {
+    return function(name) {
+        return util.formatScientificName(name.scientificName, name.nameAuthor, name.fullName);
+    }
+});

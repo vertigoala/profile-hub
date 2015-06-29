@@ -43,6 +43,7 @@ modules = {
         resource url:"js/angular/controllers/CommentController.js"
         resource url:"js/angular/controllers/ExportController.js"
         resource url:"js/angular/controllers/AboutController.js"
+        resource url:"js/angular/controllers/ReportController.js"
     }
 
     angular {
