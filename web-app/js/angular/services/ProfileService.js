@@ -31,9 +31,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        createProfile: function(opusId, scientificName) {
+        createProfile: function(opusId, scientificName, manuallyMatchedGuid) {
             console.log("Creating profile for " + scientificName + " in opus " + opusId);
-            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/create", {opusId: opusId, scientificName: scientificName});
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/create", {opusId: opusId, scientificName: scientificName, manuallyMatchedGuid: manuallyMatchedGuid});
             future.then(function(response) {
                 console.log("Profile created with response code " + response.status);
             });

@@ -14,6 +14,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.opusId = util.getEntityId("opus");
 
     self.showNameEditControls = false;
+    self.manuallyMatchedGuid = "";
 
     var orderBy = $filter("orderBy");
 
@@ -260,7 +261,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         var confirm = util.confirm("Are you sure you wish to rename this profile?");
 
         confirm.then(function() {
-            var future = profileService.renameProfile(self.opusId, self.profileId, {newName: self.newName, clearMatch: false});
+            var future = profileService.renameProfile(self.opusId, self.profileId, {newName: self.newName, manuallyMatchedGuid: self.manuallyMatchedGuid, clearMatch: false});
 
             future.then(function(profile) {
                 self.profile = profile;

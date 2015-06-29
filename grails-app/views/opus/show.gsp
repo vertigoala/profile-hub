@@ -59,7 +59,7 @@
     <div class="modal-body">
         <alert type="danger" class="error" ng-repeat="error in createProfileCtrl.errors">{{error}}</alert>
 
-        <profile-name name="createProfileCtrl.scientificName" valid="createProfileCtrl.validName" mode="create"></profile-name>
+        <profile-name name="createProfileCtrl.scientificName" valid="createProfileCtrl.validName" manually-matched-guid="createProfileCtrl.manuallyMatchedGuid" mode="create"></profile-name>
 
         <div class="modal-footer">
 
@@ -67,6 +67,7 @@
                     ng-disabled="!createProfileCtrl.validName">Create profile</button>
             <button class="btn btn-default" ng-click="createProfileCtrl.cancel()">Cancel</button>
         </div>
+    </div>
     </script>
 </div>
 

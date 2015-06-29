@@ -5,12 +5,15 @@ profileEditor.directive('profileName', function ($browser) {
         scope: {
             name: '=',
             valid: '=',
-            currentProfileId: '='
+            currentProfileId: '=',
+            manuallyMatchedGuid: '='
         },
         templateUrl: $browser.baseHref() + 'static/templates/profileNameCheck.html',
-        controller: ['$scope', 'profileService', 'util', function ($scope, profileService, util) {
+        controller: ['$scope', 'profileService', 'util', 'config', '$http', '$filter', function ($scope, profileService, util, config, $http, $filter) {
             $scope.nameCheck = null;
             $scope.opusId = util.getEntityId("opus");
+
+            var orderBy = $filter("orderBy");
 
             $scope.resetNameCheck = function () {
                 $scope.nameCheck = null;
@@ -55,6 +58,19 @@ profileEditor.directive('profileName', function ($browser) {
                 $scope.checkName();
             };
 
+            $scope.manualMatch = function() {
+                $scope.showManualMatch = !$scope.showManualMatch;
+            };
+
+            $scope.autocompleteName = function(prefix) {
+                return $http.jsonp(config.bieServiceUrl + "/ws/search/auto.json?idxType=TAXON&callback=JSON_CALLBACK&q=" + prefix).then(function (response) {
+                    return orderBy(response.data.autoCompleteList, "name");
+                })
+            };
+
+            $scope.onSelect = function(selectedName) {
+                $scope.manuallyMatchedGuid = selectedName.guid;
+            }
         }],
         link: function (scope, element, attrs, ctrl) {
 

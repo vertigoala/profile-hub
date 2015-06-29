@@ -10,7 +10,10 @@
 
         <div class="row">
             <div class="col-md-12">
-                <profile-name name="profileCtrl.newName" valid="profileCtrl.nameIsValid" current-profile-id="profileCtrl.profile.uuid"></profile-name>
+                <profile-name name="profileCtrl.newName"
+                              valid="profileCtrl.nameIsValid"
+                              current-profile-id="profileCtrl.profile.uuid"
+                              manually-matched-guid="profileCtrl.manuallyMatchedGuid"></profile-name>
             </div>
         </div>
     </div>

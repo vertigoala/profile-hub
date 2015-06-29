@@ -7,13 +7,14 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
     self.opusId = opusId;
     self.scientificName = "";
     self.error = null;
+    self.manuallyMatchedGuid = "";
 
     self.cancel = function () {
         $modalInstance.dismiss("Cancelled");
     };
 
     self.ok = function() {
-        var future = profileService.createProfile(self.opusId, self.scientificName);
+        var future = profileService.createProfile(self.opusId, self.scientificName, self.manuallyMatchedGuid);
         future.then(function (profile) {
                 if (profile) {
                     $modalInstance.close(profile);
