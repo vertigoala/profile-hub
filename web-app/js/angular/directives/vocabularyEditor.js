@@ -149,11 +149,13 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             };
 
             $scope.loadVocabulary = function(form) {
+                console.log("loadVocabulary 1")
                 messageService.info("Loading vocabulary...");
                 $scope.replacements = [];
 
                 var promise = profileService.getOpusVocabulary($scope.opusId, $scope.vocabId);
                 promise.then(function (data) {
+                        console.log("loadVocabulary 2")
                         messageService.pop();
 
                         $scope.vocabulary = data;
@@ -165,6 +167,7 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
                         }
                     },
                     function () {
+                        console.log("loadVocabulary 3")
                         messageService.alert("An error occurred while loading the vocabulary.");
                     }
                 );
@@ -214,6 +217,7 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
         }],
         link: function (scope, element, attrs, ctrl) {
             scope.$watch("vocabId", function(newValue) {
+                console.log("Watch vocabId " + newValue)
                 if (newValue !== undefined) {
                     scope.loadVocabulary();
                 }
