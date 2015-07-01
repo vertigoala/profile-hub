@@ -44,7 +44,7 @@ profileEditor.controller('ExportController', function (util, $window, $modal, $h
             }
 
             var url = util.contextRoot() + "/opus/" + self.opusId + "/profile/" + self.profileId + "/pdf?" + queryString.join("&");
-            if (!childrenSelected) {
+            if (!childrenSelected || !result.email) {
                 $window.open(url);
             } else {
                 $http.get(url);

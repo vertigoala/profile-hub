@@ -16,7 +16,7 @@ class ExportController extends BaseController {
             if (!model) {
                 notFound()
             } else {
-                if (params.children) {
+                if (params.children && params.email) {
                     // By default, the RequestAttributes thread local used by Grails/Spring is not inheritable, so new threads
                     // will not have access to the request context when calling web services. This line works around this issue
                     // by resetting the request attributes with the inheritable flag set to true, meaning spawned threads will
