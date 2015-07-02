@@ -77,8 +77,9 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.attributeTitles = [];
                 self.allowedVocabulary = [];
                 angular.forEach(data.terms, function (term) {
-                    if (self.attributeTitles.indexOf(term) == -1) {
-                        self.attributeTitles.push(term);
+                    var title = {name: term.name};
+                    if (self.attributeTitles.map(function(t) { return t.name; }).indexOf(title.name) == -1) {
+                        self.attributeTitles.push(title);
                     }
                     if (self.allowedVocabulary.indexOf(term.name) == -1) {
                         self.allowedVocabulary.push(term.name);
@@ -178,7 +179,6 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 );
             } else {
                 self.attributes.splice(idx, 1);
-                console.log("Local delete only deleting attributes: " + self.attributes.length);
             }
         });
     };
@@ -284,7 +284,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
 
                                     self.supportingAttributeTitles.push(attribute.title);
 
-                                    if (self.attributeTitles.indexOf(title) == -1) {
+                                    if (self.attributeTitles.map(function(t) { return t.name; }).indexOf(title.name) == -1) {
                                         self.attributeTitles.push(title);
                                     }
                                 }

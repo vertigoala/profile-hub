@@ -661,4 +661,35 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes[1].title).toBe("mandatory2");
         expect(scope.attrCtrl.attributes[2].title).toBe("mandatory2");
     });
+
+    it("should not add the title of a supporting attribute to the attributeTitle list if it already exists in the list", function() {
+        var vocab = {terms: [{name: "title1"}, {name: "title2"}, {name: "title3"}]};
+
+        var profile1 = {profile: {attributes: [{title: "title1"}]}, opus: {attributeVocabUuid: "1234", supportingOpuses: [{uuid: "support2"}]}};
+        var profile2 = {profile: {uuid: "profileId2", attributes: [{title: "title2", fromCollection: {opusId: "abc"}}]}, opus: {uuid: "title3", title: "supporting opus 1"}};
+
+        var profile2Defer = $q.defer();
+        getProfileSpy.and.callFake(function(opusId, profileId) {
+            if (profileId === "profileId1") {
+                return profileDefer.promise;
+            } else {
+                return profile2Defer.promise;
+            }
+        });
+
+        var searchResult = [{profileId: "profileId2", opus: {uuid: "support1", title: "supporting opus 1"}}];
+
+        searchDefer.resolve(searchResult);
+
+        profileDefer.resolve(profile1);
+        profile2Defer.resolve(profile2);
+        vocabDefer.resolve(vocab);
+
+        scope.attrCtrl.init("true");
+
+        scope.$apply();
+
+        // should add a 3rd attribute because even though mandatory2 exists in the attributes list, it is from a supporting collection
+        expect(scope.attrCtrl.attributeTitles.length).toBe(3);
+    });
 });
