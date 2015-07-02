@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.hub.util.DateRangeType
 import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
@@ -309,9 +310,9 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/checkName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}")
     }
 
-    def loadReport(String opusId, String reportId, String pageSize, String offset) {
+    def loadReport(String opusId, String reportId, String pageSize, String offset, Map dates) {
         ReportType report = ReportType.byId(reportId)
-
+        Map range
         def resp
         switch (report) {
             case ReportType.MISMATCHED_NAME:
@@ -320,9 +321,45 @@ class ProfileService {
             case ReportType.DRAFT_PROFILE:
                 resp = webService.get("${grailsApplication.config.profile.service.url}/report/draftProfiles?opusId=${enc(opusId)}")
                 break;
+            case ReportType.MOST_RECENT_CHANGE:
+                range = getDateRange(dates.period, dates.from, dates.to);
+                range['to'] = range['to'].toString();
+                range['from'] = range['from'].toString();
+                resp = webService.get("${grailsApplication.config.profile.service.url}/report/mostRecentChange?opusId=${enc(opusId)}&to=${enc(range['to'])}&from=${enc(range['from'])}")
+                break;
         }
 
         resp
+    }
+
+    def getDateRange(String period, String from, String to){
+        Map result = [:];
+        Date today = today();
+        DateRangeType dr = DateRangeType.byId(period);
+        switch (dr){
+            case DateRangeType.TODAY:
+                result['to'] = today + 1;
+                result['from'] = today
+                break;
+            case DateRangeType.LAST_7DAYS:
+                result['to'] = today ;
+                result['from'] = today - 7
+                break;
+            case DateRangeType.LAST_30DAYS:
+                result['to'] = today ;
+                result['from'] = today - 30
+                break;
+            case DateRangeType.CUSTOM:
+                result['to'] = new Date(to) ;
+                result['from'] = new Date(from);
+                break;
+        }
+        result;
+    }
+
+    Date today(){
+        Date now = new Date();
+        Date today = new Date(now.getYear(), now.getMonth(), now.getDate());
     }
 
     def enc(String value) {

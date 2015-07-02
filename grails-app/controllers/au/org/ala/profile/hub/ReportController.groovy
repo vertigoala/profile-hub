@@ -12,9 +12,11 @@ class ReportController extends BaseController {
         if (!params.opusId || !params.reportId) {
             badRequest()
         } else {
-            def response = profileService.loadReport(params.opusId, params.reportId, params.pageSize, params.offset)
+            Map dates = ['period': params.period, 'from':params.from, 'to': params.to]
+            def response = profileService.loadReport(params.opusId, params.reportId, params.pageSize, params.offset, dates)
 
             handle response
         }
     }
+
 }
