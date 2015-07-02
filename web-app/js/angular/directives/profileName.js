@@ -20,6 +20,9 @@ profileEditor.directive('profileName', function ($browser) {
                 $scope.errors = [];
                 $scope.warnings = [];
                 $scope.valid = false;
+                $scope.manuallyMatchedGuid = null;
+                $scope.manuallyMatchedName = null;
+                $scope.showManualMatch = false;
             };
 
             $scope.formatName = function (scientificName, nameAuthor, fullName) {
@@ -70,6 +73,7 @@ profileEditor.directive('profileName', function ($browser) {
 
             $scope.onSelect = function(selectedName) {
                 $scope.manuallyMatchedGuid = selectedName.guid;
+                $scope.manuallyMatchedName = selectedName.name;
             }
         }],
         link: function (scope, element, attrs, ctrl) {
