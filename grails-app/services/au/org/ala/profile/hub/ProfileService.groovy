@@ -332,6 +332,13 @@ class ProfileService {
         resp
     }
 
+    /**
+     * get the to and from date for a specific period.
+     * @param period
+     * @param from
+     * @param to
+     * @return
+     */
     def getDateRange(String period, String from, String to){
         Map result = [:];
         Date today = today();
