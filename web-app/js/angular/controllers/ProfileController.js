@@ -67,6 +67,19 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                 self.authorVocab = data.terms;
 
                 self.authorVocabStrict = data.strict;
+
+                var authorCategories = [];
+                angular.forEach(self.profile.authorship, function(author) {
+                    if (authorCategories.indexOf(author.category) == -1) {
+                        authorCategories.push(author.category);
+                    }
+                });
+
+                angular.forEach(self.authorVocab, function(term) {
+                    if (authorCategories.indexOf(term.name) == -1) {
+                        self.profile.authorship.push({category: term.name, text: null});
+                    }
+                });
             });
         }
     }
@@ -235,6 +248,12 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     };
 
     self.saveAuthorship = function(form) {
+        for (var i = self.profile.authorship.length - 1; i >= 0; i--) {
+            if (!self.profile.authorship[i].text) {
+                self.profile.authorship.splice(i, 1);
+            }
+        }
+
         var future = profileService.saveAuthorship(self.opusId, self.profileId, {authorship: self.profile.authorship});
 
         future.then(function() {

@@ -31,6 +31,7 @@ describe("AttributesController tests", function () {
     var profileDefer, vocabDefer, saveAttrDefer, deleteAttrDefer, showAuditDefer, searchDefer, confirmDefer;
     var getProfileSpy;
     var window;
+    var $q;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
     var vocabResponse = '{"terms": [{"name": "term1"}, {"name": "term2"}]}';
@@ -47,7 +48,8 @@ describe("AttributesController tests", function () {
 
     beforeEach(module("profileEditor"));
 
-    beforeEach(inject(function ($controller, $rootScope, _profileService_, $q, _messageService_, _$window_, _$filter_) {
+    beforeEach(inject(function ($controller, $rootScope, _profileService_, _$q_, _messageService_, _$window_, _$filter_) {
+        $q = _$q_;
         scope = $rootScope.$new();
         profileService = _profileService_;
         window = _$window_;
@@ -426,7 +428,7 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes[0].audit).not.toBeDefined();
         expect(scope.attrCtrl.attributes[1].audit).toEqual([{
             userId: "1",
-            object: {text: "auditText1", title: "auditTitle1"},
+            object: {text: "auditText1", title: "auditTitle1"}
         }, {userId: "2", object: {text: "auditText2", title: "auditTitle2"}}]);
     });
 
@@ -586,5 +588,77 @@ describe("AttributesController tests", function () {
 
         expect(scope.attrCtrl.attributeTitles).toEqual([{name: "title1"}, {name: "title2"}, {name: "title3"}]);
         expect(scope.attrCtrl.approvedVocabulary).toEqual(["title1", "title2"]);
+    });
+
+    it("should not pre-populate the attributes list with required attributes from the vocabulary on initialisation in readonly mode", function() {
+        var vocab = {terms: [{name: "mandatory1", required: true}, {name: "optional1", required: false}, {name: "mandatory2", required: true}]};
+
+        profileDefer.resolve({profile: {attributes: []}, opus: {attributeVocabUuid: "1234", supportingOpuses: []}});
+        vocabDefer.resolve(vocab);
+        scope.attrCtrl.init("false");
+        scope.$apply();
+
+        expect(scope.attrCtrl.attributes.length).toBe(0);
+    });
+
+    it("should pre-populate the attributes list with any required attributes from the vocabulary on initialisation in edit mode", function() {
+        var vocab = {terms: [{name: "mandatory1", required: true}, {name: "optional1", required: false}, {name: "mandatory2", required: true}]};
+
+        profileDefer.resolve({profile: {attributes: []}, opus: {attributeVocabUuid: "1234", supportingOpuses: []}});
+        vocabDefer.resolve(vocab);
+        scope.attrCtrl.init("true");
+        scope.$apply();
+
+        expect(scope.attrCtrl.attributes.length).toBe(2);
+        expect(scope.attrCtrl.attributes[0].title).toBe("mandatory1");
+        expect(scope.attrCtrl.attributes[1].title).toBe("mandatory2");
+    });
+
+    it("should not add a template attribute if an attribute with that term already exists", function() {
+        var vocab = {terms: [{name: "mandatory1", required: true}, {name: "optional1", required: false}, {name: "mandatory2", required: true}]};
+
+        profileDefer.resolve({profile: {attributes: [{title: "mandatory1"}]}, opus: {attributeVocabUuid: "1234", supportingOpuses: []}});
+        vocabDefer.resolve(vocab);
+        scope.attrCtrl.init("true");
+        scope.$apply();
+
+        // should not add a 3rd attribute since mandatory1 already exists
+        expect(scope.attrCtrl.attributes.length).toBe(2);
+        expect(scope.attrCtrl.attributes[0].title).toBe("mandatory1");
+        expect(scope.attrCtrl.attributes[1].title).toBe("mandatory2");
+    });
+
+    it("should add a template attribute even if an attribute from a supporting collection already exists with that term", function() {
+        var vocab = {terms: [{name: "mandatory1", required: true}, {name: "optional1", required: false}, {name: "mandatory2", required: true}]};
+
+        var profile1 = {profile: {attributes: []}, opus: {attributeVocabUuid: "1234", supportingOpuses: [{uuid: "support2"}]}};
+        var profile2 = {profile: {uuid: "profileId2", attributes: [{title: "mandatory2", fromCollection: {opusId: "abc"}}]}, opus: {uuid: "support1", title: "supporting opus 1"}};
+
+        var profile2Defer = $q.defer();
+        getProfileSpy.and.callFake(function(opusId, profileId) {
+            if (profileId === "profileId1") {
+                return profileDefer.promise;
+            } else {
+                return profile2Defer.promise;
+            }
+        });
+
+        var searchResult = [{profileId: "profileId2", opus: {uuid: "support1", title: "supporting opus 1"}}];
+
+        searchDefer.resolve(searchResult);
+
+        profileDefer.resolve(profile1);
+        profile2Defer.resolve(profile2);
+        vocabDefer.resolve(vocab);
+
+        scope.attrCtrl.init("true");
+
+        scope.$apply();
+
+        // should add a 3rd attribute because even though mandatory2 exists in the attributes list, it is from a supporting collection
+        expect(scope.attrCtrl.attributes.length).toBe(3);
+        expect(scope.attrCtrl.attributes[0].title).toBe("mandatory1");
+        expect(scope.attrCtrl.attributes[1].title).toBe("mandatory2");
+        expect(scope.attrCtrl.attributes[2].title).toBe("mandatory2");
     });
 });

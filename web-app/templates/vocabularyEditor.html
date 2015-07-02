@@ -42,22 +42,28 @@
             <div class="col-md-12">
 
                 <div class="row">
-                    <span ng-repeat="term in vocabulary.terms" class="column-item"
+                    <div ng-repeat="term in vocabulary.terms" class="column-item"
                           ng-if="!termIsInReplacementList(term)">
-                        <span ng-class="term.termId ? '' : 'newItem'"><span
-                                ng-if="allowReordering">{{term.order + 1}}. </span>{{ term.name }}</span>
-                        <button class="btn btn-link btn-xs fa fa-edit" title="Edit the {{ term.name }} term"
-                                ng-click="editVocabTerm($index, VocabForm)"></button>
-                        <button class="btn btn-link btn-xs fa fa-trash-o" title="Delete the {{ term.name }} term"
-                                ng-click="removeVocabTerm($index, VocabForm)"></button>
-                        <button class="btn btn-link btn-xs fa fa-arrow-down"
-                                ng-if="!$last && allowReordering"
-                                ng-click="moveTermDown($index, VocabForm)"
-                                title="Move this term down"></button>
-                        <button class="btn btn-link btn-xs fa fa-arrow-up" ng-if="!$first && allowReordering"
-                                ng-click="moveTermUp($index, VocabForm)"
-                                title="Move this term up"></button>
-                    </span>
+                        <div ng-class="term.termId ? '' : 'newItem'" class="inline-block"><span
+                                ng-if="allowReordering">{{term.order + 1}}. </span>{{ term.name }}</div>
+                        <div class="inline-block">
+                            <button class="btn btn-link btn-xs fa fa-edit" title="Edit the {{ term.name }} term"
+                                    ng-click="editVocabTerm($index, VocabForm)"></button>
+                            <button class="btn btn-link btn-xs fa fa-trash-o color--red" title="Delete the {{ term.name }} term"
+                                    ng-click="removeVocabTerm($index, VocabForm)"></button>
+                            <button class="btn btn-link btn-xs fa fa-arrow-down"
+                                    ng-if="!$last && allowReordering"
+                                    ng-click="moveTermDown($index, VocabForm)"
+                                    title="Move this term down"></button>
+                            <button class="btn btn-link btn-xs fa fa-arrow-up" ng-if="!$first && allowReordering"
+                                    ng-click="moveTermUp($index, VocabForm)"
+                                    title="Move this term up"></button>
+                            <button class="btn btn-link btn-xs fa" ng-class="term.required ? 'color--anzac fa-toggle-on' : 'fa-toggle-off'"
+                                    ng-click="toggleRequired($index, VocabForm)"
+                                    ng-show="allowMandatory"
+                                    title="{{ term.required ? 'This term is mandatory. Click to make it optional.' : 'This term is optional. Click to make it mandatory.' }}"></button>
+                        </div>
+                    </div>
 
                     <div class="row" ng-if="allowReordering">
                         <div class="col-md-12">

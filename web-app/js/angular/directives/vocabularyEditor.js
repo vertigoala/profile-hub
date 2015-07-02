@@ -5,7 +5,9 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
         scope: {
             vocabId: '=',
             vocabName: '@',
-            allowReordering: '@'
+            allowReordering: '@',
+            allowMandatory: '@',
+            allMandatory: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/vocabularyEditor.html',
         controller: ['$scope', 'profileService', 'util', 'messageService', '$modal', '$filter', function ($scope, profileService, util, messageService, $modal, $filter) {
@@ -15,14 +17,20 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             $scope.newVocabTerm = null;
             $scope.vocabulary = null;
             $scope.replacements = [];
-            $scope.allowReordering = false;
+            $scope.allowReordering = true;
+            $scope.allowMandatory = true; // allow the user to choose whether a term is mandatory or optional
+            $scope.allMandatory = false; // force all terms to be mandatory
 
             var capitalize = $filter("capitalize");
             var orderBy = $filter("orderBy");
 
             $scope.addVocabTerm = function (form) {
                 if ($scope.newVocabTerm) {
-                    $scope.vocabulary.terms.push({termId: "", name: capitalize($scope.newVocabTerm), order: $scope.vocabulary.terms.length});
+                    $scope.vocabulary.terms.push({termId: "",
+                        name: capitalize($scope.newVocabTerm),
+                        order: $scope.vocabulary.terms.length,
+                        required: $scope.allMandatory ? true : false
+                    });
                     $scope.newVocabTerm = "";
                     sortVocabTerms();
                     form.$setDirty();
@@ -149,13 +157,11 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             };
 
             $scope.loadVocabulary = function(form) {
-                console.log("loadVocabulary 1")
                 messageService.info("Loading vocabulary...");
                 $scope.replacements = [];
 
                 var promise = profileService.getOpusVocabulary($scope.opusId, $scope.vocabId);
                 promise.then(function (data) {
-                        console.log("loadVocabulary 2")
                         messageService.pop();
 
                         $scope.vocabulary = data;
@@ -167,7 +173,6 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
                         }
                     },
                     function () {
-                        console.log("loadVocabulary 3")
                         messageService.alert("An error occurred while loading the vocabulary.");
                     }
                 );
@@ -195,6 +200,11 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
                 }
             };
 
+            $scope.toggleRequired = function(index, form) {
+                $scope.vocabulary.terms[index].required = !$scope.vocabulary.terms[index].required;
+                form.$setDirty();
+            };
+
             function sortVocabTerms() {
                 if ($scope.allowReordering) {
                     $scope.vocabulary.terms = orderBy($scope.vocabulary.terms, "order");
@@ -217,11 +227,20 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
         }],
         link: function (scope, element, attrs, ctrl) {
             scope.$watch("vocabId", function(newValue) {
-                console.log("Watch vocabId " + newValue)
                 if (newValue !== undefined) {
                     scope.loadVocabulary();
                 }
             });
+            scope.$watch("allowMandatory", function(newValue) {
+                scope.allowMandatory = isTruthy(newValue);
+            });
+            scope.$watch("allowReordering", function(newValue) {
+                scope.allowReordering = isTruthy(newValue);
+            });
+
+            function isTruthy(str) {
+                return str == true || str === "true"
+            }
         }
     }
 });

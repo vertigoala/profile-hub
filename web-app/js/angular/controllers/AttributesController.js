@@ -88,8 +88,38 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.attributeTitles.sort(compareTitles);
 
                 self.vocabularyStrict = data.strict;
+
+                loadMandatoryAttributes(data.terms);
             });
         }
+    }
+
+    function loadMandatoryAttributes(vocabularyTerms) {
+        if (!self.readonly) {
+            var templateAttributes = [];
+            angular.forEach(vocabularyTerms, function (term) {
+                if (term.required === "true" || term.required == true) {
+                    var attribute = findAttributeByTitle(term.name);
+                    if (!attribute || attribute.fromCollection) {
+                        templateAttributes.push({uuid: "", title: term.name, text: ""});
+                    }
+                }
+            });
+
+            self.attributes = self.attributes.concat(templateAttributes);
+        }
+    }
+
+    function findAttributeByTitle(title) {
+        var attribute = null;
+
+        angular.forEach(self.attributes, function(attr) {
+            if (attr.title === title) {
+                attribute = attr;
+            }
+        });
+
+        return attribute;
     }
 
     function compareTitles(left, right) {
