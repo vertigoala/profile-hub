@@ -11,7 +11,9 @@ module.exports = function (config) {
             'karma-chrome-launcher',
             'karma-jasmine',
             'karma-ng-html2js-preprocessor',
-            'karma-coverage'
+            'karma-coverage',
+            'karma-firefox-launcher',
+            'karma-phantomjs-launcher'
         ],
 
 
@@ -59,7 +61,6 @@ module.exports = function (config) {
             'web-app/js/angular/services/*.js',
             'web-app/js/angular/controllers/*.js',
             'web-app/templates/*.html',
-            'static/templates/*.html',
             'web-app/js/angular/directives/*.js',
             'test/js/specs/MockConfigModule.js',
             'test/js/specs/**/*.js'
@@ -95,7 +96,7 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome'],
+        browsers: ['Chrome','Firefox','PhantomJS'],
 
 
         // Continuous Integration mode
