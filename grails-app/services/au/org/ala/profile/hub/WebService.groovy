@@ -21,6 +21,17 @@ class WebService {
     def grailsApplication
     UserService userService
 
+    def getApiKey(String url) {
+        String apiKey = null
+
+        // all requests to the profile service should have the api key
+        if (url.startsWith("${grailsApplication.config.profile.service.url}")) {
+            apiKey = grailsApplication.config.profile.service.apiKey
+        }
+
+        apiKey
+    }
+
     def get(String url, boolean includeUserId, boolean json = true) {
         log.debug("Fetching data from ${url}")
         def conn = null
@@ -65,6 +76,12 @@ class WebService {
         if (includeUserId && user) {
             conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
         }
+
+        String apiKey = getApiKey(url)
+        if (apiKey) {
+            conn.setRequestProperty("apiKey", apiKey)
+        }
+
         conn
     }
 
@@ -114,6 +131,11 @@ class WebService {
                 headers.Cookie = "ALA-Auth=${URLEncoder.encode(user.userName, CHAR_ENCODING)}"
             }
 
+            String apiKey = getApiKey(url)
+            if (apiKey) {
+                headers.apiKey = apiKey
+            }
+
             def result = null
             response.success = { resp, rData ->
                 result = [resp: rData as JSON, statusCode: HttpStatus.SC_OK]
@@ -132,12 +154,16 @@ class WebService {
             conn.setDoOutput(true)
             conn.setRequestMethod(method)
             conn.setRequestProperty("Content-Type", "application/json;charset=${CHAR_ENCODING}");
-            conn.setRequestProperty("Authorization", grailsApplication.config.api_key as String);
 
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId as String, user.userId as String)
                 conn.setRequestProperty("Cookie", "ALA-Auth=${URLEncoder.encode(user.userName, CHAR_ENCODING)}")
+            }
+
+            String apiKey = getApiKey(url)
+            if (apiKey) {
+                conn.setRequestProperty("apiKey", apiKey)
             }
 
             writer = new OutputStreamWriter(conn.getOutputStream(), CHAR_ENCODING)
@@ -171,17 +197,21 @@ class WebService {
     }
 
     def doDelete(String url) {
-        url += (url.contains('?') ? '&' : '?') + "api_key=${grailsApplication.config.api_key}"
         Map response
         URLConnection conn = null
         try {
             conn = new URL(url).openConnection()
             conn.setRequestMethod("DELETE")
-            conn.setRequestProperty("Authorization", grailsApplication.config.api_key);
+
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
             }
+            String apiKey = getApiKey(url)
+            if (apiKey) {
+                conn.setRequestProperty("apiKey", apiKey)
+            }
+
             int responseCode = conn.getResponseCode()
             if (responseCode == HttpStatus.SC_OK || responseCode == HttpStatus.SC_NO_CONTENT) {
                 response = [resp: [success: true], statusCode: responseCode]
