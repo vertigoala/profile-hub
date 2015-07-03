@@ -101,13 +101,14 @@ describe("MapController tests", function () {
     it("should specify the overlay layer for the profile when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.mapCtrl.init("http://biocacheWmsUrl/bla?q=", "biocacheInfoUrl");
+        scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
         scope.$apply();
 
         expect(scope.mapCtrl.layers.overlays.wms).toBeDefined();
         expect(scope.mapCtrl.layers.overlays.wms.name).toBe("profileName");
         expect(scope.mapCtrl.layers.overlays.wms.visible).toBe(true);
-        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?q=lsid%3Aguid1");
+        // maps should always exclude cultivars
+        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?fq=-rank:cultivar&q=lsid%3Aguid1");
         expect(scope.mapCtrl.layers.overlays.wms.layerOptions.attribution).toBe("mapAttr1");
     });
 

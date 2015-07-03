@@ -8,7 +8,7 @@
         </div>
 
         <div class="col-md-12">
-            <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?q={{mapCtrl.constructQuery()}}" target="_blank">View in {{profileCtrl.opus.biocacheName}}</a>
+            <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?{{mapCtrl.constructQuery()}}" ng-if="profileCtrl.opus.biocacheUrl" target="_blank">View in {{profileCtrl.opus.biocacheName}}</a>
         </div>
     </div>
 
