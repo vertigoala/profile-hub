@@ -5,6 +5,8 @@ import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
 
+import java.text.SimpleDateFormat
+
 class ProfileService {
 
     def grailsApplication
@@ -322,10 +324,9 @@ class ProfileService {
                 resp = webService.get("${grailsApplication.config.profile.service.url}/report/draftProfiles?opusId=${enc(opusId)}")
                 break;
             case ReportType.MOST_RECENT_CHANGE:
+                dates.period = dates.period?:'last30Days';
                 range = getDateRange(dates.period, dates.from, dates.to);
-                range['to'] = range['to'].toString();
-                range['from'] = range['from'].toString();
-                resp = webService.get("${grailsApplication.config.profile.service.url}/report/mostRecentChange?opusId=${enc(opusId)}&to=${enc(range['to'])}&from=${enc(range['from'])}")
+                resp = webService.get("${grailsApplication.config.profile.service.url}/report/mostRecentChange?opusId=${enc(opusId)}&to=${enc(range['to'])}&from=${enc(range['from'])}&offset=${offset}&max=${pageSize}")
                 break;
         }
 
@@ -343,24 +344,27 @@ class ProfileService {
         Map result = [:];
         Date today = today();
         DateRangeType dr = DateRangeType.byId(period);
+        SimpleDateFormat sdf = new SimpleDateFormat('MMMMM dd, YYYY');
         switch (dr){
             case DateRangeType.TODAY:
                 result['to'] = today + 1;
                 result['from'] = today
                 break;
             case DateRangeType.LAST_7DAYS:
-                result['to'] = today ;
-                result['from'] = today - 7
+                result['to'] = today + 1;
+                result['from'] = today - 6
                 break;
             case DateRangeType.LAST_30DAYS:
-                result['to'] = today ;
-                result['from'] = today - 30
+                result['to'] = today + 1;
+                result['from'] = today - 29
                 break;
             case DateRangeType.CUSTOM:
                 result['to'] = new Date(to) ;
                 result['from'] = new Date(from);
                 break;
         }
+        result['to'] = sdf.format(result['to']);
+        result['from'] = sdf.format(result['from']);
         result;
     }
 

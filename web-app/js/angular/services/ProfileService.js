@@ -583,10 +583,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        loadReport: function(opusId, reportId, pageSize, offset) {
+        loadReport: function(opusId, reportId, pageSize, offset, period, from, to) {
             console.log("Loading report " + reportId);
 
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/report/" + reportId + "?pageSize=" + pageSize + "&offset=" + offset);
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/report/" + reportId + "?pageSize=" + pageSize + "&offset=" + offset +"&period=" + period + "&from=" + from + "&to=" + to);
             future.then(function(response) {
                 console.log("Report loaded with response code " + response.status);
             });

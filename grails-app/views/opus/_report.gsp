@@ -27,6 +27,8 @@
                         ng-if="reportCtrl.selectedReport.id == 'mismatchedNames'"></ng-include>
             <ng-include src="'draftProfilesReport.html'"
                         ng-if="reportCtrl.selectedReport.id == 'draftProfiles'"></ng-include>
+            <ng-include src="'mostRecentChange.html'"
+                        ng-if="reportCtrl.selectedReport.id == 'mostRecentChange'"></ng-include>
         </div>
     </div>
 
@@ -81,6 +83,45 @@
             </tr>
             </tbody>
         </table>
+    </div>
+
+    </script>
+
+    <script type="text/ng-template" id="mostRecentChange.html">
+    <div class="">
+        <label class="control-label">Show edited profiles from:</label>
+        <div class="btn-group" role="group" aria-label="List most recent changes with the following options.">
+            <button type="button" class="btn btn-default" ng-repeat="period in reportCtrl.periods"
+                    ng-click="reportCtrl.setPeriod(period)"
+                    ng-class="{active: reportCtrl.selectedPeriod.id == period.id}">{{ period.name }}</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped" ng-show="reportCtrl.reportData.records.length > 0">
+            <thead>
+            <tr><th>Profile</th><th>Date modified</th><th>Editor</th></tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="profile in reportCtrl.reportData.records">
+                <td>
+                    <a href="${request.contextPath}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.scientificName }}"
+                       target="_blank" class="scientific-name">{{profile.scientificName}}</a>
+                </td>
+                <td>
+                    {{ profile.lastUpdated | date:'dd/MM/yyyy h:mm a' }}
+                </td>
+                <td>
+                    {{ profile.editor || 'Unknown' }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <pagination total-items="reportCtrl.reportData.recordCount"
+                    ng-change="reportCtrl.loadReport(reportCtrl.selectedReport.id, (reportCtrl.page - 1) * reportCtrl.pageSize)"
+                    ng-model="reportCtrl.page" max-size="10" class="pagination-sm"
+                    items-per-page="reportCtrl.pageSize"
+                    previous-text="Prev" boundary-links="true"
+                    ng-show="reportCtrl.reportData.recordCount > reportCtrl.pageSize"></pagination>
     </div>
 
     </script>
