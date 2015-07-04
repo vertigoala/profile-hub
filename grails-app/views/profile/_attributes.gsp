@@ -225,7 +225,7 @@
                             <div data-ng-bind-html="auditItem.object.plainText" ng-if="!auditItem.diff"></div>
                         </td>
                         <td>{{ auditItem.userDisplayName }}</td>
-                        <td>{{ auditItem.date }}</td>
+                        <td>{{ auditItem.date | date:'yyyy/MM/dd h:mm a' }}</td>
                         <td><button class="btn btn-default" title="Revert to this version"
                                     ng-click="attrCtrl.revertAttribute($parent.$index, $index, AttributeForm)">Revert</button>
                         </td>
