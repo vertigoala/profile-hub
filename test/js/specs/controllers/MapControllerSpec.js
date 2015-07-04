@@ -107,9 +107,24 @@ describe("MapController tests", function () {
         expect(scope.mapCtrl.layers.overlays.wms).toBeDefined();
         expect(scope.mapCtrl.layers.overlays.wms.name).toBe("profileName");
         expect(scope.mapCtrl.layers.overlays.wms.visible).toBe(true);
-        // maps should always exclude cultivars
-        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?fq=-rank:cultivar&q=lsid%3Aguid1");
+        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?q=lsid%3Aguid1");
         expect(scope.mapCtrl.layers.overlays.wms.layerOptions.attribution).toBe("mapAttr1");
+    });
+
+    it("should add the rank exclusion clause to the wms url when there is one excluded rank", function() {
+        profileDefer.resolve({profile: {guid: "guid1"}, opus: {excludeRanksFromMap: ["cultivar"]}});
+        scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
+        scope.$apply();
+
+        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar)&q=lsid%3Aguid1");
+    });
+
+    it("should add the rank exclusion clause to the wms url when there are multiple excluded ranks", function() {
+        profileDefer.resolve({profile: {guid: "guid1"}, opus: {excludeRanksFromMap: ["cultivar","species"]}});
+        scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
+        scope.$apply();
+
+        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar OR rank:species)&q=lsid%3Aguid1");
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {

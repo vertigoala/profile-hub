@@ -8,8 +8,17 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     var LAST = "last";
     var FIRST = "first";
     var RANK = {
+        KINGDOM: "kingdom",
+        PHYLUM: "phylum",
+        CLASS: "class",
+        SUBCLASS: "subclass",
+        ORDER: "order",
+        FAMILY: "family",
+        GENUS: "genus",
         SPECIES: "species",
-        SUBSPECIES: "subspecies"
+        SUBSPECIES: "subspecies",
+        CULTIVAR: "cultivar",
+        VARIETY: "variety"
     };
 
     /**

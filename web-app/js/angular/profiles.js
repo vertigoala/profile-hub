@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'textAngular', 'duScroll', 'ngFileUpload']);
+var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'textAngular', 'duScroll', 'ngFileUpload', 'checklist-model']);
 
 profileEditor.config(function () {
 

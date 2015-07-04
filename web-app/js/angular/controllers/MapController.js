@@ -109,8 +109,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
     self.constructQuery = function () {
         var result = "";
         if (self.profile && self.opus) {
-            // always exclude cultivars from the map
-            var query = "fq=-rank:cultivar&q=";
+            var query = constructExcludedRankList() + "q=";
             if (self.profile.guid && self.profile.guid != "null") {
                 query = query + encodeURIComponent("lsid:" + self.profile.guid);
             } else {
@@ -128,5 +127,24 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
         return result;
     };
+
+    function constructExcludedRankList() {
+        var exclusionList = "";
+
+        if (self.opus.excludeRanksFromMap && self.opus.excludeRanksFromMap.length > 0) {
+            exclusionList = "fq=-(";
+
+            angular.forEach(self.opus.excludeRanksFromMap, function(rank, index) {
+                if (index > 0) {
+                    exclusionList += " OR ";
+                }
+                exclusionList += "rank:" + rank;
+            });
+
+            exclusionList += ")&"
+        }
+
+        return exclusionList;
+    }
 
 });

@@ -16,6 +16,7 @@ modules = {
         dependsOn "jspath"
         dependsOn "angular_scroll"
         dependsOn "ng_file_upload"
+        dependsOn "checklist_model"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -105,5 +106,9 @@ modules = {
     ng_file_upload {
         resource url:"thirdparty/ng-file-upload/ng-file-upload-shim-5.0.7.min.js"
         resource url:"thirdparty/ng-file-upload/ng-file-upload-5.0.7.min.js"
+    }
+
+    checklist_model {
+        resource url:"thirdparty/checklist-model/checklist-model-0.2.4.js"
     }
 }
