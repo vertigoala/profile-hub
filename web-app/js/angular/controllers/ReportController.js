@@ -1,7 +1,7 @@
 /**
  * Controller for handling reports
  */
-profileEditor.controller('ReportController', function (profileService, util, config, messageService) {
+profileEditor.controller('ReportController', function (profileService, util, config, messageService, $modal) {
     var self = this;
 
     self.opusId = util.getEntityId("opus");
@@ -21,10 +21,19 @@ profileEditor.controller('ReportController', function (profileService, util, con
         {id:'today', name: 'Today'},
         {id:'last7Days', name: 'Last 7 Days'},
         {id:'last30Days', name: 'Last 30 days'},
-        {id:'custom', name: 'Custom', from: null, to: null}
+        {id:'custom', name: 'Custom'}
     ]
 
     self.selectedPeriod = self.periods[0];
+
+    self.dates={
+        to: undefined,
+        from: undefined
+    };
+
+    // controls date picker dialog box to popup
+    self.isToOpen ;
+    self.isFromOpen ;
 
     self.contextPath = function() {
         return config.contextPath;
@@ -43,7 +52,10 @@ profileEditor.controller('ReportController', function (profileService, util, con
             offset = 0;
         }
 
-        var future = profileService.loadReport(self.opusId, self.selectedReport.id, self.pageSize, offset, self.selectedPeriod.id, self.selectedPeriod.from, self.selectedPeriod.to);
+        var start = self.dates.from? self.dates.from.getTime():'',
+            end = self.dates.to? self.dates.to.getTime():'';
+
+        var future = profileService.loadReport(self.opusId, self.selectedReport.id, self.pageSize, offset, self.selectedPeriod.id, start, end);
 
         future.then(function(data) {
             self.reportData = data;
@@ -52,10 +64,17 @@ profileEditor.controller('ReportController', function (profileService, util, con
         })
     };
 
+    /**
+     * load report all options except custom. Custom requires start and from date. If it is filled, then the report is
+     * loaded.
+     * @param p
+     */
     self.setPeriod = function(p){
         self.selectedPeriod = p;
         switch (p.id){
             case 'custom':
+                self.reportData = []
+                self.checkFormValid() && self.loadReport(self.selectedReport.id, 0);
                 break;
             case 'last30Days':
             case 'last7Days':
@@ -65,4 +84,29 @@ profileEditor.controller('ReportController', function (profileService, util, con
         }
     }
 
+    self.loadCustomDateReport = function(){
+        self.loadReport(self.selectedReport.id, 0);
+    }
+
+    self.open = function(popup, $event){
+        $event.stopPropagation();
+        $event.preventDefault();
+
+        switch (popup){
+            case 'to':
+                self.isToOpen = true;
+                break;
+            case 'from':
+                self.isFromOpen = true;
+                break;
+        }
+    }
+
+    /**
+     * checks if start and end dates are entered and if end is greater than equal to start date
+     * @returns {boolean}
+     */
+    self.checkFormValid = function(){
+        return (self.dates.to instanceof Date && self.dates.from instanceof Date) && (self.dates.to >= self.dates.from);
+    }
 });

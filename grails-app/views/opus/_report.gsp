@@ -20,7 +20,8 @@
                 </p>
             </div>
             <h4 class="heading-underlined"
-                ng-show="reportCtrl.selectedReport && reportCtrl.reportData">{{reportCtrl.selectedReport.name}} <span class="small">({{reportCtrl.reportData.recordCount}} row(s))</span>
+                ng-show="reportCtrl.selectedReport && reportCtrl.reportData">{{reportCtrl.selectedReport.name}} <span
+                    class="small">({{reportCtrl.reportData.recordCount}} row(s))</span>
             </h4>
 
             <ng-include src="'mismatchedNamesReport.html'"
@@ -90,12 +91,53 @@
     <script type="text/ng-template" id="mostRecentChange.html">
     <div class="">
         <label class="control-label">Show edited profiles from:</label>
+
         <div class="btn-group" role="group" aria-label="List most recent changes with the following options.">
             <button type="button" class="btn btn-default" ng-repeat="period in reportCtrl.periods"
                     ng-click="reportCtrl.setPeriod(period)"
                     ng-class="{active: reportCtrl.selectedPeriod.id == period.id}">{{ period.name }}</button>
         </div>
     </div>
+
+    <div class="well top-buffer" ng-show="reportCtrl.selectedPeriod.id == 'custom'">
+        <h4>Choose start and end dates</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="control-label col-sm-2" for="inputFromDate">Start date:</label>
+                <div>
+                    <p class="input-group">
+                        <input type="text" id="inputFromDate" class="form-control" ng-required="true"
+                               is-open="reportCtrl.isFromOpen" datepicker-popup="dd-MMMM-yyyy" ng-model="reportCtrl.dates.from"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="reportCtrl.open('from',$event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="control-label col-sm-2" for="inputToDate">End date:</label>
+                <div>
+                    <p class="input-group">
+                        <input type="text" id="inputToDate" class="form-control" ng-required="true"
+                               ng-model="reportCtrl.dates.to" is-open="reportCtrl.isToOpen" datepicker-popup="dd-MMMM-yyyy"/>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="reportCtrl.open('to', $event)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-primary pull-right" ng-disabled="!reportCtrl.checkFormValid()" ng-click="reportCtrl.loadCustomDateReport()">Look up</button>
+            </div>
+        </div>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-striped" ng-show="reportCtrl.reportData.records.length > 0">
             <thead>
@@ -123,6 +165,6 @@
                     previous-text="Prev" boundary-links="true"
                     ng-show="reportCtrl.reportData.recordCount > reportCtrl.pageSize"></pagination>
     </div>
-
     </script>
+
 </div>

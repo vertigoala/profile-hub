@@ -1,5 +1,4 @@
 package au.org.ala.profile.hub
-
 import au.org.ala.profile.hub.util.DateRangeType
 import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.profile.hub.util.ReportType
@@ -359,10 +358,11 @@ class ProfileService {
                 result['from'] = today - 29
                 break;
             case DateRangeType.CUSTOM:
-                result['to'] = new Date(to) ;
-                result['from'] = new Date(from);
+                result['to'] = new Date(Long.parseLong(to)) ;
+                result['from'] = new Date(Long.parseLong(from));
                 break;
         }
+
         result['to'] = sdf.format(result['to']);
         result['from'] = sdf.format(result['from']);
         result;

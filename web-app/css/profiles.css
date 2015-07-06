@@ -341,3 +341,7 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     display: none !important;
 }
 
+/**
+ * added to add a buffer on top of element
+ */
+.top-buffer { margin-top:20px; }
