@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import grails.converters.JSON
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.context.request.RequestContextHolder
 
@@ -106,7 +107,7 @@ class ExportService {
     byte[] createPdf(Map params) {
         def model = [
                 options          : params,
-                grailsApplication: grailsApplication,
+//                grailsApplication: grailsApplication,
                 profiles         : [] as ConcurrentLinkedQueue
         ]
 
@@ -132,6 +133,8 @@ class ExportService {
 
             model.profiles = model.profiles.sort { it.profile.scientificName }
         }
+
+        (model as JSON).toString(true)
 
         wkhtmltoxService.makePdf(
                 view: "/pdf/_profile",

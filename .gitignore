@@ -35,6 +35,7 @@ grailsw.bat
 /.idea
 
 *.iml
+*.jasper
 
 grails-app/assets/images/apple-touch-icon-retina.png
 
