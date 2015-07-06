@@ -38,13 +38,13 @@
 </div>
 
 <div class="modal-body">
-    <profile-comparison left="auditCtrl.left.object"
-                        left-title="{{auditCtrl.left.date | date:'dd/MM/yyyy h:mm a'}}"
-                        right="auditCtrl.right.object"
-                        right-title="{{auditCtrl.right.date | date:'dd/MM/yyyy h:mm a'}}"></profile-comparison>
+    <profile-comparison left="compareCtrl.left.object"
+                        left-title="{{compareCtrl.left.date | date:'dd/MM/yyyy h:mm a'}}"
+                        right="compareCtrl.right.object"
+                        right-title="{{compareCtrl.right.date | date:'dd/MM/yyyy h:mm a'}}"></profile-comparison>
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-default" ng-click="auditCtrl.close()">Close</button>
+    <button class="btn btn-default" ng-click="compareCtrl.close()">Close</button>
 </div>
 </script>

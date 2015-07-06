@@ -6,31 +6,44 @@ profileEditor.directive('profileComparison', function ($browser) {
             left: '=',
             right: '=',
             leftTitle: '@',
-            rightTitle: '@'
+            rightTitle: '@',
+            showEverything: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/profileComparison.html',
-        controller: ['$scope', '$filter', function ($scope, $filter) {
+        controller: ['$scope', '$filter', 'config', function ($scope, $filter, config) {
             $scope.diff = {};
+            $scope.showEverything = false;
 
             var orderBy = $filter("orderBy");
 
             $scope.compareProfiles = function() {
-                $scope.diff.fullName = compare($scope.left.fullName, $scope.right.fullName);
-                $scope.diff.matchedName = {
-                    fullName: compare($scope.left.matchedName ? $scope.left.matchedName.fullName : null,
-                        $scope.right.matchedName ? $scope.right.matchedName.fullName : null)
-                };
+                if ($scope.left && $scope.right) {
+                    $scope.diff.fullName = compare($scope.left.fullName, $scope.right.fullName);
+                    $scope.diff.matchedName = {
+                        fullName: compare($scope.left.matchedName ? $scope.left.matchedName.fullName : null,
+                            $scope.right.matchedName ? $scope.right.matchedName.fullName : null)
+                    };
 
-                $scope.diff.authorship = compareLists($scope.left.authorship, $scope.right.authorship, "category", ["text"]);
-                $scope.diff.bibliography = compareLists($scope.left.bibliography, $scope.right.bibliography, "plainText", ["plainText"]);
-                $scope.diff.links = compareLists($scope.left.links, $scope.right.links, "uuid", ["url", "title", "description"]);
-                $scope.diff.bhl = compareLists($scope.left.bhl, $scope.right.bhl, "uuid", ["url", "title", "description"]);
-                $scope.diff.primaryImage = compare($scope.left.primaryImage, $scope.right.primaryImage);
-                $scope.diff.lastAttributeChange = compare($scope.left.lastAttributeChange, $scope.right.lastAttributeChange);
-                $scope.diff.attributes = compareLists($scope.left.attributes, $scope.right.attributes, ["title", "plainText"]);
-                $scope.diff.specimenIds = compare(
-                    $scope.left.specimenIds ? $scope.left.specimenIds.join(", ") : "",
-                    $scope.right.specimenIds ? $scope.right.specimenIds.join(", ") : "");
+                    $scope.diff.authorship = compareLists($scope.left.authorship, $scope.right.authorship, "category", ["text"]);
+                    $scope.diff.bibliography = compareLists($scope.left.bibliography, $scope.right.bibliography, "plainText", ["plainText"]);
+                    $scope.diff.links = compareLists($scope.left.links, $scope.right.links, "uuid", ["url", "title", "description"]);
+                    $scope.diff.bhl = compareLists($scope.left.bhl, $scope.right.bhl, "uuid", ["url", "title", "description"]);
+                    $scope.diff.primaryImage = compare($scope.left.primaryImage, $scope.right.primaryImage);
+                    if ((!$scope.left.attributes && !$scope.right.attributes) || ($scope.left.attributes.length == 0 && $scope.right.attributes.length == 0)) {
+                        $scope.diff.lastAttributeChange = compare($scope.left.lastAttributeChange, $scope.right.lastAttributeChange);
+                    }
+                    $scope.diff.attributes = compareLists($scope.left.attributes, $scope.right.attributes, "title", ["plainText"]);
+                    $scope.diff.specimenIds = compare(
+                        $scope.left.specimenIds ? $scope.left.specimenIds.join(", ") : "",
+                        $scope.right.specimenIds ? $scope.right.specimenIds.join(", ") : "");
+                    $scope.diff.excludedImages = compare(
+                        $scope.left.excludedImages ? $scope.left.excludedImages.join(", ") : "",
+                        $scope.right.excludedImages ? $scope.right.excludedImages.join(", ") : "");
+                }
+            };
+
+            $scope.getImageUrl = function(imageId) {
+                return config.imageServiceUrl + "/image/proxyImageThumbnailLarge?imageId=" + imageId;
             };
 
             $scope.compareProfiles();
@@ -48,8 +61,15 @@ profileEditor.directive('profileComparison', function ($browser) {
                     scope.compareProfiles();
                 }
             });
+            scope.$watch("showEverything", function(newValue) {
+                scope.showEverything = isTruthy(newValue);
+            });
         }
     };
+
+    function isTruthy(str) {
+        return str == true || str === "true"
+    }
 
     function compare(left, right) {
         var d = new diff_match_patch();

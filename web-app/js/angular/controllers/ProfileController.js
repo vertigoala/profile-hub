@@ -343,8 +343,8 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.showAuditComparison = function (index) {
         $modal.open({
             templateUrl: "auditComparisonPopup.html",
-            controller: "ProfileAuditPopupController",
-            controllerAs: "auditCtrl",
+            controller: "ComparisonPopupController",
+            controllerAs: "compareCtrl",
             size: "lg",
             resolve: {
                 left: function() {
@@ -356,19 +356,54 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             }
         });
     };
+
+    self.compareWithOtherProfile = function() {
+        $modal.open({
+            templateUrl: "profileComparisonPopup.html",
+            controller: "ComparisonPopupController",
+            controllerAs: "compareCtrl",
+            size: "lg",
+            resolve: {
+                left: function() {
+                    return self.profile;
+                },
+                right: function() {
+                    return null;
+                }
+            }
+        });
+    }
 });
 
 /**
- * Controller for handling creating a new profile (via a modal popup)
+ * Controller for comparing profiles (to other profiles or to revision history entries)
  */
-profileEditor.controller('ProfileAuditPopupController', function ($modalInstance, left, right) {
+profileEditor.controller('ComparisonPopupController', function ($modalInstance, util, left, right, profileService) {
     var self = this;
 
     self.left = left;
     self.right = right;
+    self.opusId = util.getEntityId("opus");
+
+    self.selectProfile = function(profile) {
+        self.right = null;
+        self.loading = true;
+        var future = profileService.getProfile(self.opusId, profile.profileId);
+        future.then(function(data) {
+            self.right = data.profile;
+            self.loading = false;
+        });
+    };
 
     self.close = function () {
         $modalInstance.dismiss("Cancelled");
+    };
+
+    self.search = function (searchTerm) {
+        return profileService.profileSearch(self.opusId, searchTerm, true).then(function (data) {
+                return data;
+            }
+        );
     };
 
 });

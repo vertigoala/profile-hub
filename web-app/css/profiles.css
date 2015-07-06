@@ -186,6 +186,17 @@ hr.comment-divider {
     padding-top: 5px;
 }
 
+.comparison-image {
+    display: inline-block;
+    margin: 2px 4px 2px 0;
+    width: 100%;
+}
+
+.comparison-image img {
+    height: 100px;
+    /*min-width: 50px;*/
+}
+
 .minor-heading {
     font-weight: bold;
 }
