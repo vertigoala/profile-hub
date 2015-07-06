@@ -15,7 +15,6 @@ profileEditor.directive('profileComparison', function ($browser) {
             var orderBy = $filter("orderBy");
 
             $scope.compareProfiles = function() {
-                console.log($scope.left)
                 $scope.diff.fullName = compare($scope.left.fullName, $scope.right.fullName);
                 $scope.diff.matchedName = {
                     fullName: compare($scope.left.matchedName ? $scope.left.matchedName.fullName : null,
@@ -61,7 +60,6 @@ profileEditor.directive('profileComparison', function ($browser) {
                 changed = true;
             }
         });
-        console.log(left + " / " + right + " - " + JSON.stringify(diff) + " - " + changed)
         return {changed: changed, comp: d.diff_prettyHtml(diff), left: left, right: right};
     }
 
@@ -69,11 +67,9 @@ profileEditor.directive('profileComparison', function ($browser) {
         var comparisons = [];
         var changed = false;
         angular.forEach(right, function(rightItem) {
-            console.log("1 " + rightItem.category)
             var oldInNew = false;
             var comparison = null;
             angular.forEach(left, function(leftItem) {
-                console.log("2 " + leftItem.category)
                 if (leftItem[keyField] === rightItem[keyField]) {
                     comparison = {};
                     comparison[keyField] = leftItem[keyField];
@@ -85,13 +81,10 @@ profileEditor.directive('profileComparison', function ($browser) {
                     });
                     comparisons.push(comparison);
                     oldInNew = true;
-                    console.log(rightItem.category + " old in new")
                 }
             });
 
             if (!oldInNew) {
-                console.log(rightItem.category + " old NOT in new")
-
                 comparison = {};
                 comparison[keyField] = null;
                 angular.forEach(compareFields, function(compareField) {
@@ -106,18 +99,13 @@ profileEditor.directive('profileComparison', function ($browser) {
 
         angular.forEach(left, function(leftItem) {
             var newInOld = false;
-            console.log("3 " + leftItem.category)
             angular.forEach(right, function(rightItem) {
-                console.log("4 " + rightItem.category);
                 if (leftItem[keyField] === rightItem[keyField]) {
-                    console.log(leftItem.category + " new in old")
                     newInOld = true;
                 }
             });
 
             if (!newInOld) {
-                console.log(leftItem.category + " new NOT in old")
-
                 var comparison = {};
                 comparison[keyField] = leftItem[keyField];
                 angular.forEach(compareFields, function(compareField) {
