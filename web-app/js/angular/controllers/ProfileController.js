@@ -322,6 +322,53 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                 messageService.error("An error occurred while updating the profile name.");
             });
         });
-    }
+    };
+
+    self.toggleAudit = function() {
+        self.showProfileAudit = !self.showProfileAudit;
+
+        if (self.showProfileAudit && !self.profileAudit) {
+            self.loading = true;
+            var future = profileService.getAuditHistory(self.profileId);
+
+            future.then(function(data) {
+                self.audit = data;
+                self.loading = false;
+            }, function() {
+                messageService.error("An error occurred while retrieving the audit history");
+            })
+        }
+    };
+
+    self.showAuditComparison = function (index) {
+        $modal.open({
+            templateUrl: "auditComparisonPopup.html",
+            controller: "ProfileAuditPopupController",
+            controllerAs: "auditCtrl",
+            size: "lg",
+            resolve: {
+                left: function() {
+                    return self.audit[index];
+                },
+                right: function() {
+                    return self.audit[index + 1];
+                }
+            }
+        });
+    };
 });
 
+/**
+ * Controller for handling creating a new profile (via a modal popup)
+ */
+profileEditor.controller('ProfileAuditPopupController', function ($modalInstance, left, right) {
+    var self = this;
+
+    self.left = left;
+    self.right = right;
+
+    self.close = function () {
+        $modalInstance.dismiss("Cancelled");
+    };
+
+});

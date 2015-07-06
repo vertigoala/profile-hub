@@ -208,9 +208,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        getAuditForAttribute: function (attributeId) {
-            console.log("Fetching audit for attribute " + attributeId);
-            var future = $http.get(util.contextRoot() + "/audit/object/" + attributeId, {cache: true});
+        getAuditHistory: function (objectId) {
+            console.log("Fetching audit for object " + objectId);
+            var future = $http.get(util.contextRoot() + "/audit/object/" + objectId, {cache: true});
             future.then(function (response) {
                 console.log("Audit fetched with response code " + response.status)
             });

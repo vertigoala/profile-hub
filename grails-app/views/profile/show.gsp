@@ -76,6 +76,11 @@
                                             class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
                                 </li>
                                 <li role="presentation"
+                                    ng-if="!profileCtrl.readonly()">
+                                    <a href="" ng-click="profileCtrl.toggleAudit()"><span
+                                            class="fa fa-history"></span>&nbsp;&nbsp;{{profileCtrl.showProfileAudit ? 'Hide ' : 'Show '}} revision history</a>
+                                </li>
+                                <li role="presentation"
                                     ng-if="!profileCtrl.readonly() && !profileCtrl.profile.privateMode">
                                     <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
                                             class="fa fa-lock"></span>&nbsp;&nbsp;Lock for major revision</a>
@@ -107,6 +112,8 @@
     </div>
 
     <g:include controller="profile" action="editNamePanel" params="[opusId: params.opusId]"/>
+
+    <g:include controller="profile" action="auditHistoryPanel" params="[opusId: params.opusId]"/>
 
     <div class="row margin-bottom-1" ng-if="profileCtrl.commonNames.length > 0" ng-cloak>
         <div class="col-md-12">

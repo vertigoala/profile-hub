@@ -140,7 +140,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     };
 
     self.showAudit = function (idx) {
-        var future = profileService.getAuditForAttribute(self.attributes[idx].uuid);
+        var future = profileService.getAuditHistory(self.attributes[idx].uuid);
         future.then(function (audit) {
                 var d = new diff_match_patch();
 

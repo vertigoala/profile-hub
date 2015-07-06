@@ -66,7 +66,7 @@ describe("AttributesController tests", function () {
         spyOn(profileService, "getOpusVocabulary").and.returnValue(vocabDefer.promise);
         spyOn(profileService, "saveAttribute").and.returnValue(saveAttrDefer.promise);
         spyOn(profileService, "deleteAttribute").and.returnValue(deleteAttrDefer.promise);
-        spyOn(profileService, "getAuditForAttribute").and.returnValue(showAuditDefer.promise);
+        spyOn(profileService, "getAuditHistory").and.returnValue(showAuditDefer.promise);
         spyOn(profileService, "profileSearch").and.returnValue(searchDefer.promise);
 
         spyOn(mockUtil, "confirm").and.returnValue(confirmDefer.promise);

@@ -176,6 +176,20 @@ hr.comment-divider {
     margin: 0 auto;
 }
 
+.comparison-row {
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.comparison-divider {
+    border-top: 1px solid #eeeeee;
+    padding-top: 5px;
+}
+
+.minor-heading {
+    font-weight: bold;
+}
+
 /* ---- */
 
 /* Gallery styling */

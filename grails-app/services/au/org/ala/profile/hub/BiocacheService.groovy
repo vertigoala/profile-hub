@@ -34,6 +34,8 @@ class BiocacheService {
 
         metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${opusId}/profile/${profileId}/file/${imageId}${extension}"
 
+        log.debug("Uploading image to ${grailsApplication.config.image.upload.url}${dataResourceId} with metadata ${metadata}")
+
         webService.doPost("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
     }
 
