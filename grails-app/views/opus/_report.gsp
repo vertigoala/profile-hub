@@ -90,7 +90,7 @@
 
     <script type="text/ng-template" id="mostRecentChange.html">
     <div class="">
-        <label class="control-label">Show edited profiles from:</label>
+        <label class="control-label">Show updates from:</label>
 
         <div class="btn-group" role="group" aria-label="List most recent changes with the following options.">
             <button type="button" class="btn btn-default" ng-repeat="period in reportCtrl.periods"
@@ -99,25 +99,23 @@
         </div>
     </div>
 
-    <div class="well top-buffer" ng-show="reportCtrl.selectedPeriod.id == 'custom'">
-        <h4>Choose start and end dates</h4>
+    <div class="well margin-top-1" ng-show="reportCtrl.selectedPeriod.id == 'custom'">
+        <h4>Choose dates</h4>
         <div class="row">
             <div class="col-md-6">
-                <label class="control-label col-sm-2" for="inputFromDate">Start date:</label>
-                <div>
-                    <p class="input-group">
-                        <input type="text" id="inputFromDate" class="form-control" ng-required="true"
-                               is-open="reportCtrl.isFromOpen" datepicker-popup="dd-MMMM-yyyy" ng-model="reportCtrl.dates.from"/>
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" ng-click="reportCtrl.open('from',$event)">
-                                <i class="glyphicon glyphicon-calendar"></i>
-                            </button>
-                        </span>
-                    </p>
+                <label class="control-label col-md-2" for="inputFromDate">Start:</label>
+                <div role="group" class="input-group">
+                    <input type="text" id="inputFromDate" class="form-control" ng-required="true"
+                           is-open="reportCtrl.isFromOpen" datepicker-popup="dd-MMMM-yyyy" ng-model="reportCtrl.dates.from"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="reportCtrl.open('from',$event)">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </span>
                 </div>
             </div>
             <div class="col-md-6">
-                <label class="control-label col-sm-2" for="inputToDate">End date:</label>
+                <label class="control-label col-md-2" for="inputToDate">End:</label>
                 <div>
                     <p class="input-group">
                         <input type="text" id="inputToDate" class="form-control" ng-required="true"
@@ -133,7 +131,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button type="button" class="btn btn-primary pull-right" ng-disabled="!reportCtrl.checkFormValid()" ng-click="reportCtrl.loadCustomDateReport()">Look up</button>
+                <button type="button" class="btn btn-default pull-right" ng-disabled="!reportCtrl.checkFormValid()" ng-click="reportCtrl.loadCustomDateReport()"><i class="glyphicon glyphicon-search"></i> Get updated profiles</button>
             </div>
         </div>
     </div>
@@ -153,7 +151,7 @@
                     {{ profile.lastUpdated | date:'dd/MM/yyyy h:mm a' }}
                 </td>
                 <td>
-                    {{ profile.editor || 'Unknown' }}
+                    {{ profile.editor | default:'Unknown' }}
                 </td>
             </tr>
             </tbody>

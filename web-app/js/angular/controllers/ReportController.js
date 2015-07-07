@@ -17,32 +17,32 @@ profileEditor.controller('ReportController', function (profileService, util, con
     self.selectedReport = null;
     self.reportData = null;
 
-    self.periods =[
-        {id:'today', name: 'Today'},
-        {id:'last7Days', name: 'Last 7 Days'},
-        {id:'last30Days', name: 'Last 30 days'},
-        {id:'custom', name: 'Custom'}
+    self.periods = [
+        {id: 'today', name: 'Today'},
+        {id: 'last7Days', name: 'Last 7 Days'},
+        {id: 'last30Days', name: 'Last 30 days'},
+        {id: 'custom', name: 'Custom'}
     ]
 
-    self.selectedPeriod = self.periods[0];
+    self.selectedPeriod = self.periods[2];
 
-    self.dates={
+    self.dates = {
         to: undefined,
         from: undefined
     };
 
     // controls date picker dialog box to popup
-    self.isToOpen ;
-    self.isFromOpen ;
+    self.isToOpen;
+    self.isFromOpen;
 
-    self.contextPath = function() {
+    self.contextPath = function () {
         return config.contextPath;
     };
 
-    self.loadReport = function(reportId, offset) {
+    self.loadReport = function (reportId, offset) {
         self.selectedReport = null;
 
-        angular.forEach(self.reports, function(report) {
+        angular.forEach(self.reports, function (report) {
             if (report.id === reportId) {
                 self.selectedReport = report;
             }
@@ -52,14 +52,14 @@ profileEditor.controller('ReportController', function (profileService, util, con
             offset = 0;
         }
 
-        var start = self.dates.from? self.dates.from.getTime():null,
-            end = self.dates.to? self.dates.to.getTime():null;
+        var start = self.dates.from ? self.dates.from.getTime() : null,
+            end = self.dates.to ? self.dates.to.getTime() : null;
 
         var future = profileService.loadReport(self.opusId, self.selectedReport.id, self.pageSize, offset, self.selectedPeriod.id, start, end);
 
-        future.then(function(data) {
+        future.then(function (data) {
             self.reportData = data;
-        }, function() {
+        }, function () {
             messageService.alert("An error occurred while producing the report.");
         })
     };
@@ -69,11 +69,11 @@ profileEditor.controller('ReportController', function (profileService, util, con
      * loaded.
      * @param p
      */
-    self.setPeriod = function(p){
+    self.setPeriod = function (p) {
         self.selectedPeriod = p;
         self.clearDates();
 
-        switch (p.id){
+        switch (p.id) {
             case 'custom':
                 self.reportData = {};
                 break;
@@ -85,15 +85,15 @@ profileEditor.controller('ReportController', function (profileService, util, con
         }
     }
 
-    self.loadCustomDateReport = function(){
+    self.loadCustomDateReport = function () {
         self.loadReport(self.selectedReport.id, 0);
     }
 
-    self.open = function(popup, $event){
+    self.open = function (popup, $event) {
         $event.stopPropagation();
         $event.preventDefault();
 
-        switch (popup){
+        switch (popup) {
             case 'to':
                 self.isToOpen = true;
                 break;
@@ -107,11 +107,11 @@ profileEditor.controller('ReportController', function (profileService, util, con
      * checks if start and end dates are entered and if end is greater than equal to start date
      * @returns {boolean}
      */
-    self.checkFormValid = function(){
+    self.checkFormValid = function () {
         return (self.dates.to instanceof Date && self.dates.from instanceof Date) && (self.dates.to >= self.dates.from);
     }
 
-    self.clearDates = function(){
+    self.clearDates = function () {
         self.dates.to = self.dates.from = undefined;
     }
 });
