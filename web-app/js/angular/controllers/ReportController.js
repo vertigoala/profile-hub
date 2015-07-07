@@ -1,7 +1,7 @@
 /**
  * Controller for handling reports
  */
-profileEditor.controller('ReportController', function (profileService, util, config, messageService, $modal) {
+profileEditor.controller('ReportController', function (profileService, util, config, messageService) {
     var self = this;
 
     self.opusId = util.getEntityId("opus");
@@ -11,7 +11,7 @@ profileEditor.controller('ReportController', function (profileService, util, con
     self.reports = [
         {id: "mismatchedNames", name: "Mismatched Names"},
         {id: "draftProfiles", name: "Draft Profiles"},
-        {id: "mostRecentChange", name: "Most Recent Changes"}
+        {id: "mostRecentChange", name: "Recent updates"}
     ];
 
     self.selectedReport = null;
@@ -52,8 +52,8 @@ profileEditor.controller('ReportController', function (profileService, util, con
             offset = 0;
         }
 
-        var start = self.dates.from? self.dates.from.getTime():'',
-            end = self.dates.to? self.dates.to.getTime():'';
+        var start = self.dates.from? self.dates.from.getTime():null,
+            end = self.dates.to? self.dates.to.getTime():null;
 
         var future = profileService.loadReport(self.opusId, self.selectedReport.id, self.pageSize, offset, self.selectedPeriod.id, start, end);
 
@@ -71,10 +71,11 @@ profileEditor.controller('ReportController', function (profileService, util, con
      */
     self.setPeriod = function(p){
         self.selectedPeriod = p;
+        self.clearDates();
+
         switch (p.id){
             case 'custom':
-                self.reportData = []
-                self.checkFormValid() && self.loadReport(self.selectedReport.id, 0);
+                self.reportData = {};
                 break;
             case 'last30Days':
             case 'last7Days':
@@ -108,5 +109,9 @@ profileEditor.controller('ReportController', function (profileService, util, con
      */
     self.checkFormValid = function(){
         return (self.dates.to instanceof Date && self.dates.from instanceof Date) && (self.dates.to >= self.dates.from);
+    }
+
+    self.clearDates = function(){
+        self.dates.to = self.dates.from = undefined;
     }
 });

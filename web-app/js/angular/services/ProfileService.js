@@ -586,7 +586,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         loadReport: function(opusId, reportId, pageSize, offset, period, from, to) {
             console.log("Loading report " + reportId);
 
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/report/" + reportId + "?pageSize=" + pageSize + "&offset=" + offset +"&period=" + period + "&from=" + from + "&to=" + to);
+            // these parameters are for recent updates. add them only if value is present.
+            var dateParms = '';
+            if(period){
+                dateParms = "&period=" + period;
+                if(from && to){
+                    dateParms += "&from=" + from + "&to=" + to;
+                }
+            }
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/report/" + reportId + "?pageSize=" + pageSize + "&offset=" + offset + dateParms);
             future.then(function(response) {
                 console.log("Report loaded with response code " + response.status);
             });
