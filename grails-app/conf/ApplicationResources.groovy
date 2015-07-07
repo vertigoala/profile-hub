@@ -16,12 +16,14 @@ modules = {
         dependsOn "jspath"
         dependsOn "angular_scroll"
         dependsOn "ng_file_upload"
+        dependsOn "checklist_model"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
         resource url:"js/angular/directives/keyplayer.js"
         resource url:"js/angular/directives/profileName.js"
         resource url:"js/angular/directives/vocabularyEditor.js"
+        resource url:"js/angular/directives/profileComparison.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"
@@ -38,7 +40,6 @@ modules = {
         resource url:"js/angular/controllers/ListsController.js"
         resource url:"js/angular/controllers/TaxonController.js"
         resource url:"js/angular/controllers/MapController.js"
-        resource url:"js/angular/controllers/VocabController.js"
         resource url:"js/angular/controllers/PublicationController.js"
         resource url:"js/angular/controllers/GlossaryController.js"
         resource url:"js/angular/controllers/CommentController.js"
@@ -106,5 +107,9 @@ modules = {
     ng_file_upload {
         resource url:"thirdparty/ng-file-upload/ng-file-upload-shim-5.0.7.min.js"
         resource url:"thirdparty/ng-file-upload/ng-file-upload-5.0.7.min.js"
+    }
+
+    checklist_model {
+        resource url:"thirdparty/checklist-model/checklist-model-0.2.4.js"
     }
 }

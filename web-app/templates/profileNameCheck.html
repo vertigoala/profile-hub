@@ -21,32 +21,7 @@
 <alert type="danger" class="error" ng-if="nameCheck.providedNameDuplicate">
     A profile already exists for '{{ nameCheck.providedName }}'
 </alert>
-<alert type="warning" class="warning" ng-if="nameCheck.noMatch">
-    No match was found for '{{ nameCheck.providedName }}'. Please check the name before continuing.
-    <br/>
-    <button class="btn btn-link" ng-click="manualMatch()"><i
-            class="fa fa-search">&nbsp;</i>Search for a match
-    </button>
 
-    <div class="col-md12" ng-show="showManualMatch">
-        <div class="form-group">
-            <label for="manualName" class="control-label">Search for the name you wish to match to</label>
-
-            <div class="form-group">
-                <input id="manualName" type="text"
-                       class="form-control"
-                       autocomplete="off" value="bla"
-                       ng-model="manuallyMatchedGuid" typeahead-editable="false"
-                       typeahead="match.name for match in autocompleteName($viewValue) | filter:$viewValue | limitTo:10"
-                       typeahead-on-select="onSelect($item)"/>
-            </div>
-
-            <div class="small">
-                Search the <a href="http://ala.org.au" target="_blank">Atlas of Living Australia</a> for more information on the species.
-            </div>
-        </div>
-    </div>
-</alert>
 <alert type="danger" ng-if="nameCheck.providedNameDuplicate && nameCheck.mismatch && nameCheck.matchedNameDuplicate">
     The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName"></span>', and a
     profile already exists for this name.
@@ -64,3 +39,29 @@
             class="fa fa-check">&nbsp;</i>Yes, use the matched name
     </button>
 </alert>
+<alert type="warning" class="warning" ng-if="nameCheck.noMatch">
+    No match was found for '{{ nameCheck.providedName }}'. Please check the name before continuing.
+</alert>
+
+<button class="btn btn-link" ng-click="manualMatch()" ng-if="nameCheck"><i
+        class="fa fa-search">&nbsp;</i>{{nameCheck.noMatch ? 'Search for a match' : 'Match to a different name'}}
+</button>
+
+<div class="col-md12 padding-left-1" ng-show="showManualMatch">
+    <div class="form-group">
+        <label for="manualName" class="control-label">Search for the name you wish to match to</label>
+
+        <div class="form-group">
+            <input id="manualName" type="text"
+                   class="form-control"
+                   autocomplete="off" value="bla"
+                   ng-model="manuallyMatchedName" typeahead-editable="false"
+                   typeahead="match.guid as match.name for match in autocompleteName($viewValue) | filter:$viewValue | limitTo:10"
+                   typeahead-on-select="onSelect($item)"/>
+        </div>
+
+        <div class="small">
+            Search the <a href="http://ala.org.au" target="_blank">Atlas of Living Australia</a> for more information on the species.
+        </div>
+    </div>
+</div>

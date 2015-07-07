@@ -123,8 +123,8 @@ describe("ProfileService tests", function () {
         http.expectPOST("/someContext/opus/opusId/vocab/vocabId/replaceUsages", replacements).respond("bla")
     });
 
-    it("should invoke the get object audit service on the context root when getAuditForAttribute is called", function () {
-        service.getAuditForAttribute("attrId1");
+    it("should invoke the get object audit service on the context root when getAuditHistory is called", function () {
+        service.getAuditHistory("attrId1");
 
         http.expectGET("/someContext/audit/object/attrId1").respond("bla");
     });

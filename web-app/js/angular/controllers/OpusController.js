@@ -21,6 +21,8 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.initialShortName = null;
     self.keybaseProjects = [];
     self.selectedKeybaseProject = null;
+    self.ranks = util.RANK;
+
 
     loadResources();
     loadOpusList();

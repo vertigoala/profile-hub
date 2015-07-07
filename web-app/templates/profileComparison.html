@@ -1,0 +1,186 @@
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <h4 class="font-xxsmall heading-underlined">{{ leftTitle }}</h4>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <h4 class="font-xxsmall heading-underlined">{{ rightTitle }}</h4>
+    </div>
+</div>
+
+<div class="row" ng-if="diff.fullName.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Profile Name</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="diff.fullName.comp"></span>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="right.fullName"></span>
+    </div>
+</div>
+
+<div class="row comparison-row" ng-if="diff.matchedName.fullName.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Matched Name</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="diff.matchedName.fullName.comp"></span>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="right.matchedName.fullName"></span>
+    </div>
+</div>
+
+<div class="row" ng-if="diff.lastAttributeChange.changed">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Attributes</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="diff.lastAttributeChange.left"></span><br/>
+        <small>Detailed revision history for each attribute can be seen under the 'Show history' link for individual attributes.</small>
+    </div>
+</div>
+
+<div class="row comparison-row" ng-if="diff.authorship.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Attributes</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="attribute in diff.attributes.comp | orderBy:'title'" ng-if="attribute.title">
+            <div class="minor-heading">{{attribute.title}}</div>
+            <div data-ng-bind-html="attribute.plainText.left"></div>
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="attribute in right.attributes | orderBy:'title'">
+            <div class="minor-heading">{{attribute.title}}</div>
+            <div data-ng-bind-html="attribute.plainText"></div>
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row comparison-row" ng-if="diff.authorship.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Authorship & Acknowledgements</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="author in diff.authorship.comp">
+            <div class="minor-heading">{{author.category}}</div>
+            <div data-ng-bind-html="author.text.comp"></div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="author in right.authorship">
+            <div class="minor-heading">{{author.category}}</div>
+            <div data-ng-bind-html="author.text"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row comparison-row" ng-if="diff.links.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Links</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="link in diff.links.comp">
+            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url.comp"></span><br/>
+            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title.comp"></span><br/>
+            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description.comp"></span><br/>
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="link in right.links">
+            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url"></span><br/>
+            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title"></span><br/>
+            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description"></span><br/>
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row comparison-row" ng-if="diff.bhl.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Biodiversity Heritage Library references</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="link in diff.bhl.comp">
+            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url.comp"></span><br/>
+            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title.comp"></span><br/>
+            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description.comp"></span><br/>
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="link in right.bhl">
+            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url"></span><br/>
+            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title"></span><br/>
+            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description"></span><br/>
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row comparison-row" ng-if="diff.bibliography.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Bibliography</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="bib in diff.bibliography.comp">
+            <span data-ng-bind-html="bib.plainText.comp"></span>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="bib in right.bibliography">
+            <span data-ng-bind-html="bib.plainText"></span>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-if="diff.specimenIds.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Specimens</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="diff.specimenIds.comp"></span>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="right.specimenIds"></span>
+    </div>
+</div>
+
+<div class="row" ng-if="diff.primaryImage.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Primary Image</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div class="comparison-image" ng-if="left.primaryImage">
+            <img ng-src="{{getImageUrl(left.primaryImage)}}" class="thumbnail">
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div class="comparison-image" ng-if="right.primaryImage">
+            <img ng-src="{{getImageUrl(right.primaryImage)}}" class="thumbnail">
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-if="diff.excludedImages.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Excluded Images</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div class="comparison-image" ng-repeat="image in left.excludedImages">
+            <img ng-src="{{getImageUrl(image)}}" class="thumbnail">
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div class="comparison-image" ng-repeat="image in right.excludedImages">
+            <img ng-src="{{getImageUrl(image)}}" class="thumbnail">
+        </div>
+    </div>
+</div>

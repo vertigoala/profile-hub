@@ -16,6 +16,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel-footer">
         <div class="row">
             <div class="col-md-12">
@@ -30,4 +31,5 @@
 </div>
 
 <a name="authorshipVocab"></a>
-<vocabulary-editor vocab-id="opusCtrl.opus.authorshipVocabUuid" vocab-name="Authors & acknowledgements vocabulary"></vocabulary-editor>
+<vocabulary-editor vocab-id="opusCtrl.opus.authorshipVocabUuid" vocab-name="Authors & acknowledgements vocabulary"
+                   all-mandatory="true" allow-mandatory="false" allow-reordering="false"></vocabulary-editor>

@@ -83,7 +83,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
     };
 
     $scope.$on('leafletDirectiveMap.click', function(event, args){
-        var url = self.biocacheInfoUrl + "?"
+        var url = self.biocacheInfoUrl
             + self.constructQuery()
             + "&zoom=6"
             + "&lat=" + args.leafletEvent.latlng.lat
@@ -109,23 +109,42 @@ profileEditor.controller('MapController', function ($scope, profileService, util
     self.constructQuery = function () {
         var result = "";
         if (self.profile && self.opus) {
-            var query;
+            var query = constructExcludedRankList() + "q=";
             if (self.profile.guid && self.profile.guid != "null") {
-                query = "lsid:" + self.profile.guid;
+                query = query + encodeURIComponent("lsid:" + self.profile.guid);
             } else {
-                query = self.profile.scientificName;
+                query = query + encodeURIComponent(self.profile.scientificName);
             }
 
             var occurrenceQuery = query;
 
             if (self.opus.recordSources) {
-                occurrenceQuery = query + " AND (data_resource_uid:" + self.opus.recordSources.join(" OR data_resource_uid:") + ")"
+                occurrenceQuery = query + encodeURIComponent(" AND (data_resource_uid:" + self.opus.recordSources.join(" OR data_resource_uid:") + ")")
             }
 
-            result = encodeURIComponent(occurrenceQuery);
+            result = occurrenceQuery;
         }
 
         return result;
     };
+
+    function constructExcludedRankList() {
+        var exclusionList = "";
+
+        if (self.opus.excludeRanksFromMap && self.opus.excludeRanksFromMap.length > 0) {
+            exclusionList = "fq=-(";
+
+            angular.forEach(self.opus.excludeRanksFromMap, function(rank, index) {
+                if (index > 0) {
+                    exclusionList += " OR ";
+                }
+                exclusionList += "rank:" + rank;
+            });
+
+            exclusionList += ")&"
+        }
+
+        return exclusionList;
+    }
 
 });

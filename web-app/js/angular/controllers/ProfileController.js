@@ -67,6 +67,19 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                 self.authorVocab = data.terms;
 
                 self.authorVocabStrict = data.strict;
+
+                var authorCategories = [];
+                angular.forEach(self.profile.authorship, function(author) {
+                    if (authorCategories.indexOf(author.category) == -1) {
+                        authorCategories.push(author.category);
+                    }
+                });
+
+                angular.forEach(self.authorVocab, function(term) {
+                    if (authorCategories.indexOf(term.name) == -1) {
+                        self.profile.authorship.push({category: term.name, text: null});
+                    }
+                });
             });
         }
     }
@@ -235,6 +248,12 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     };
 
     self.saveAuthorship = function(form) {
+        for (var i = self.profile.authorship.length - 1; i >= 0; i--) {
+            if (!self.profile.authorship[i].text) {
+                self.profile.authorship.splice(i, 1);
+            }
+        }
+
         var future = profileService.saveAuthorship(self.opusId, self.profileId, {authorship: self.profile.authorship});
 
         future.then(function() {
@@ -303,6 +322,88 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                 messageService.error("An error occurred while updating the profile name.");
             });
         });
+    };
+
+    self.toggleAudit = function() {
+        self.showProfileAudit = !self.showProfileAudit;
+
+        if (self.showProfileAudit && !self.profileAudit) {
+            self.loading = true;
+            var future = profileService.getAuditHistory(self.profileId);
+
+            future.then(function(data) {
+                self.audit = data;
+                self.loading = false;
+            }, function() {
+                messageService.error("An error occurred while retrieving the audit history");
+            })
+        }
+    };
+
+    self.showAuditComparison = function (index) {
+        $modal.open({
+            templateUrl: "auditComparisonPopup.html",
+            controller: "ComparisonPopupController",
+            controllerAs: "compareCtrl",
+            size: "lg",
+            resolve: {
+                left: function() {
+                    return self.audit[index];
+                },
+                right: function() {
+                    return self.audit[index + 1];
+                }
+            }
+        });
+    };
+
+    self.compareWithOtherProfile = function() {
+        $modal.open({
+            templateUrl: "profileComparisonPopup.html",
+            controller: "ComparisonPopupController",
+            controllerAs: "compareCtrl",
+            size: "lg",
+            resolve: {
+                left: function() {
+                    return self.profile;
+                },
+                right: function() {
+                    return null;
+                }
+            }
+        });
     }
 });
 
+/**
+ * Controller for comparing profiles (to other profiles or to revision history entries)
+ */
+profileEditor.controller('ComparisonPopupController', function ($modalInstance, util, left, right, profileService) {
+    var self = this;
+
+    self.left = left;
+    self.right = right;
+    self.opusId = util.getEntityId("opus");
+
+    self.selectProfile = function(profile) {
+        self.right = null;
+        self.loading = true;
+        var future = profileService.getProfile(self.opusId, profile.profileId);
+        future.then(function(data) {
+            self.right = data.profile;
+            self.loading = false;
+        });
+    };
+
+    self.close = function () {
+        $modalInstance.dismiss("Cancelled");
+    };
+
+    self.search = function (searchTerm) {
+        return profileService.profileSearch(self.opusId, searchTerm, true).then(function (data) {
+                return data;
+            }
+        );
+    };
+
+});
