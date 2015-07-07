@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-03T15:35:59 -->
+<!-- 2015-07-07T15:07:04 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="30" uuid="eb6cf9a1-0a5c-4453-8b43-458e6c8b58f3">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -32,15 +32,24 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField bookmarkLevel="1">
 				<reportElement x="0" y="10" width="554" height="21" uuid="6f637e5f-9279-48f0-9560-d5f20f56cf08"/>
 				<textElement>
-					<font fontName="Arial" size="16" isItalic="true"/>
+					<font fontName="Arial" size="16" isBold="true" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{profile.scientificName}]]></textFieldExpression>
 				<anchorNameExpression><![CDATA[$F{profile.scientificName}]]></anchorNameExpression>
 			</textField>
+			<subreport overflowType="Stretch">
+				<reportElement positionType="Float" x="0" y="40" width="515" height="10" uuid="be9f099c-949c-422e-9ce1-5976670c7b1b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.attributes")]]></dataSourceExpression>
+				<subreportExpression><![CDATA["profiles/PROFILES_detail_attributes.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<columnFooter>
