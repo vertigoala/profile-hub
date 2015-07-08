@@ -104,7 +104,7 @@
         <div class="row">
             <div class="col-sm-4">
                 <label class="control-label col-sm-3" for="inputFromDate">Start:</label>
-                <div role="group" class="input-group">
+                <div role="group" class="input-group customdatepicker">
                     <input type="text" id="inputFromDate" class="form-control input-sm" ng-required="true"
                            is-open="reportCtrl.isFromOpen" show-button-bar="false" datepicker-popup="dd-MMMM-yyyy" ng-model="reportCtrl.dates.from"/>
                     <span class="input-group-btn">
@@ -117,7 +117,7 @@
             <div class="col-sm-4">
                 <label class="control-label col-sm-3" for="inputToDate">End:</label>
                 <div>
-                    <p class="input-group">
+                    <p class="input-group customdatepicker">
                         <input type="text" id="inputToDate" class="form-control input-sm" ng-required="true"
                                ng-model="reportCtrl.dates.to" is-open="reportCtrl.isToOpen"
                                show-button-bar="false" datepicker-popup="dd-MMMM-yyyy"/>
