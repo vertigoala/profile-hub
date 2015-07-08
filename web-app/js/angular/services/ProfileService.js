@@ -601,6 +601,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
 
             return util.toStandardPromise(future);
+        },
+
+        getNomenclatureList: function(nslNameIdentifier) {
+            console.log("Fetching nomenclature list for " + nslNameIdentifier);
+
+            var future = $http.get(util.contextRoot() + "/nsl/listConcepts/" + nslNameIdentifier, {cache: true});
+            future.then(function (response) {
+                console.log("Nomenclature concepts fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
         }
     }
 });

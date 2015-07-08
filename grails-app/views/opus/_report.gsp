@@ -40,6 +40,7 @@
             <tr>
                 <th>Profile Name</th>
                 <th>Matched Name</th>
+                <th>In NSL?</th>
             </tr>
             </thead>
             <tbody>
@@ -50,6 +51,10 @@
                 </td>
                 <td>
                     <span data-ng-bind-html="profile.matchedName | formatProfileName | default:'Not matched'"></span>
+                </td>
+                <td>
+                    <a href="${grailsApplication.config.nsl.name.url.prefix}{{profile.nslNameId}}" ng-if="profile.nslNameId" title="Click to view the NSL name" target="_blank"><i class="fa fa-check color--green"></i></a>
+                    <i title="This name was not found in the NSL" class="fa fa-close color--red" ng-if="!profile.nslNameId"></i>
                 </td>
             </tr>
             </tbody>

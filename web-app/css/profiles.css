@@ -201,6 +201,33 @@ hr.comment-divider {
     font-weight: bold;
 }
 
+.nomenclature .concept {
+    font-weight: bold;
+    display: inline-block;
+}
+
+.nomenclature a, .nomenclature a:focus, .nomenclature a:hover {
+    margin-left: -10px;
+    text-decoration: none;
+}
+
+.nomenclature .concept-detail {
+    padding-left: 30px;
+}
+
+.nomenclature .nsl-link {
+    display: inline-block;
+    font-size: smaller;
+    padding-left: 10px;
+}
+
+.nomenclature .apc {
+    display: inline-block;
+    color: green;
+    padding-left: 10px;
+    padding-right: 20px;
+}
+
 /* ---- */
 
 /* Gallery styling */

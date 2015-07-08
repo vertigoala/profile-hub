@@ -46,6 +46,10 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                         navService.add("Authors & Acknowledgements", "authorship");
                     }
 
+                    if (!self.readonly()) {
+                        navService.add("Nomenclature", "nomenclature");
+                    }
+
                     findCommonName();
                     loadVocabulary();
 

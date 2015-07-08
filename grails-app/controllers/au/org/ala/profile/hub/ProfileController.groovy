@@ -407,4 +407,8 @@ class ProfileController extends BaseController {
     def auditHistoryPanel = {
         render template: "profileAuditHistory"
     }
+
+    def nomenclaturePanel = {
+        render template: "nomenclaturePanel"
+    }
 }

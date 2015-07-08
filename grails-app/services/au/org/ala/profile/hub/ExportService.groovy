@@ -15,6 +15,7 @@ class ExportService {
     BiocacheService biocacheService
     WebService webService
     EmailService emailService
+    NslService nslService
     def wkhtmltoxService
     def grailsApplication
 

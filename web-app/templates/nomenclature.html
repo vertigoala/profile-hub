@@ -1,0 +1,44 @@
+<div ng-cloak>
+    <div ng-show="!readonly && nslNameId">
+        <div class="col-sm-12">
+            <div ng-show="loading"><span class="fa fa-spin fa-spinner"></span>&nbsp;Loading...</div>
+        </div>
+        <div class="col-sm-12" ng-show="!loading">
+            <div class="form-group">
+                <label for="concept">Select the concept to use for this profile</label>
+                <select id="concept" ng-model="selectedReference" class="form-control"
+                        ng-options="reference as reference.name for reference in references" required="true"
+                        ng-required="true">
+                    <option value="">--- Select one ---</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-12 nomenclature" ng-show="selectedReference && !loading">
+            <div class="concept" data-ng-bind-html="selectedReference.formattedName"></div>
+            <div class="apc" ng-show="selectedReference.apcReference"
+                 title="This is the Australian Plant Census accepted name"><i class="fa fa-check">&nbsp;</i>APC
+            </div>
+            <div class="nsl-link"><a href="{{selectedReference.url}}" target="_blank">View in National Species List</a>
+            </div>
+            <div class="concept-detail" ng-repeat="citation in selectedReference.citations"
+                 data-ng-bind-html="citation"></div>
+        </div>
+    </div>
+
+    <!-- readonly view -->
+    <div class="col-md-12 nomenclature" ng-show="selectedReference && readonly">
+        <a href="" class="btn btn-link btn-sm fa" ng-click="toggleSynonomy()"
+           ng-class="showSynonomy ? 'fa-angle-double-up' : 'fa-angle-double-down'">&nbsp;
+            <div class="concept" data-ng-bind-html="selectedReference.formattedName"></div>
+        </a>
+
+        <div class="apc" ng-show="selectedReference.apcReference"
+             title="This is the Australian Plant Census accepted name"><i class="fa fa-check">&nbsp;</i>APC
+        </div>
+        <div class="nsl-link" ng-show="showSynonomy"><a href="{{selectedReference.url}}" target="_blank">View in National
+            Species List</a></div>
+        <div class="concept-detail" ng-repeat="citation in selectedReference.citations" ng-show="showSynonomy"
+             data-ng-bind-html="citation"></div>
+    </div>
+</div>
