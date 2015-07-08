@@ -22,7 +22,7 @@ profileEditor.controller('ReportController', function (profileService, util, con
         {id: 'last7Days', name: 'Last 7 Days'},
         {id: 'last30Days', name: 'Last 30 days'},
         {id: 'custom', name: 'Custom'}
-    ]
+    ];
 
     self.selectedPeriod = self.periods[2];
 
@@ -32,8 +32,8 @@ profileEditor.controller('ReportController', function (profileService, util, con
     };
 
     // controls date picker dialog box to popup
-    self.isToOpen;
-    self.isFromOpen;
+    self.isToOpen = false;
+    self.isFromOpen = false;
 
     self.contextPath = function () {
         return config.contextPath;
@@ -41,6 +41,8 @@ profileEditor.controller('ReportController', function (profileService, util, con
 
     self.loadReport = function (reportId, offset) {
         self.selectedReport = null;
+        self.loading = true;
+        self.reportData = null;
 
         angular.forEach(self.reports, function (report) {
             if (report.id === reportId) {
@@ -59,6 +61,7 @@ profileEditor.controller('ReportController', function (profileService, util, con
 
         future.then(function (data) {
             self.reportData = data;
+            self.loading = false;
         }, function () {
             messageService.alert("An error occurred while producing the report.");
         })
@@ -83,11 +86,11 @@ profileEditor.controller('ReportController', function (profileService, util, con
                 self.loadReport(self.selectedReport.id, 0);
                 break;
         }
-    }
+    };
 
     self.loadCustomDateReport = function () {
         self.loadReport(self.selectedReport.id, 0);
-    }
+    };
 
     self.open = function (popup, $event) {
         $event.stopPropagation();
@@ -96,12 +99,14 @@ profileEditor.controller('ReportController', function (profileService, util, con
         switch (popup) {
             case 'to':
                 self.isToOpen = true;
+                self.isFromOpen = false;
                 break;
             case 'from':
                 self.isFromOpen = true;
+                self.isToOpen = false;
                 break;
         }
-    }
+    };
 
     /**
      * checks if start and end dates are entered and if end is greater than equal to start date
@@ -109,9 +114,9 @@ profileEditor.controller('ReportController', function (profileService, util, con
      */
     self.checkFormValid = function () {
         return (self.dates.to instanceof Date && self.dates.from instanceof Date) && (self.dates.to >= self.dates.from);
-    }
+    };
 
     self.clearDates = function () {
         self.dates.to = self.dates.from = undefined;
-    }
+    };
 });
