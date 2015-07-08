@@ -11,6 +11,7 @@ class ProfileService {
     WebService webService
     AuthService authService
     KeybaseService keybaseService
+    UtilService utilService
 
     def getOpus(String opusId = "") {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}")?.resp
@@ -57,7 +58,7 @@ class ProfileService {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/toggleDraftMode", null)
     }
 
-     def discardDraftChanges(String opusId, String profileId) {
+    def discardDraftChanges(String opusId, String profileId) {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/discardDraftChanges", null)
     }
 
@@ -309,9 +310,9 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/checkName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}")
     }
 
-    def loadReport(String opusId, String reportId, String pageSize, String offset) {
+    def loadReport(String opusId, String reportId, String pageSize, String offset, Map dates) {
         ReportType report = ReportType.byId(reportId)
-
+        Map range
         def resp
         switch (report) {
             case ReportType.MISMATCHED_NAME:
@@ -319,6 +320,10 @@ class ProfileService {
                 break;
             case ReportType.DRAFT_PROFILE:
                 resp = webService.get("${grailsApplication.config.profile.service.url}/report/draftProfiles?opusId=${enc(opusId)}")
+                break;
+            case ReportType.MOST_RECENT_CHANGE:
+                range = utilService.getDateRange(dates.period, dates.from, dates.to);
+                resp = webService.get("${grailsApplication.config.profile.service.url}/report/mostRecentChange?opusId=${enc(opusId)}&to=${enc(range['to'])}&from=${enc(range['from'])}&offset=${offset}&max=${pageSize}")
                 break;
         }
 
