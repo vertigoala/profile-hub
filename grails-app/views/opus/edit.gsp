@@ -61,6 +61,7 @@
                     <li><a href="#accessControl" du-smooth-scroll class="font-xxsmall">Access control</a></li>
                     <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Approved image sources</a></li>
                     <li><a href="#lists" du-smooth-scroll class="font-xxsmall">Approved lists</a></li>
+                    <li><a href="#biostatus" du-smooth-scroll class="font-xxsmall">Bio Status lists</a></li>
                     <li><a href="#recordSources" du-smooth-scroll class="font-xxsmall">Approved specimen/observation sources</a></li>
                     <li><a href="#attributeVocab" du-smooth-scroll class="font-xxsmall">Attribute vocabulary</a></li>
                     <li><a href="#authorshipVocab" du-smooth-scroll class="font-xxsmall">Authors &amp; acknowledgements vocabulary</a></li>
@@ -100,6 +101,8 @@
                 <g:include controller="opus" action="editRecordSourcesPanel" params="[opusId: params.opusId]"/>
 
                 <g:include controller="opus" action="editApprovedListsPanel" params="[opusId: params.opusId]"/>
+
+                <g:include controller="opus" action="editBioStatusPanel" params="[opusId: params.opusId]"/>
 
                 <g:include controller="opus" action="editSupportingOpusPanel" params="[opusId: params.opusId]"/>
 

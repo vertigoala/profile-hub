@@ -151,6 +151,26 @@ describe("OpusController tests", function () {
         expect(scope.opusCtrl.newApprovedLists.length).toBe(1);
     });
 
+    it("should create a new empty bio status list record when addBioStatusList is invoked", function () {
+        scope.opusCtrl.addBioStatusList()
+
+        expect(scope.opusCtrl.newBioStatusLists.length).toBe(1);
+    });
+
+    it("should not add more than one bio status", function () {
+        scope.opusCtrl.opus = {bioStatusLists: ["list1"]};
+        scope.opusCtrl.addBioStatusList();
+
+        expect(scope.opusCtrl.newBioStatusLists.length).toBe(0);
+
+        scope.opusCtrl.opus = {bioStatusLists: []};
+        // adding twice
+        scope.opusCtrl.addBioStatusList();
+        scope.opusCtrl.addBioStatusList();
+
+        expect(scope.opusCtrl.newBioStatusLists.length).toBe(1);
+    });
+
     it("should remove an existing imageSource from the opus when removeImageSource is invoked with 'existing'", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
@@ -248,6 +268,29 @@ describe("OpusController tests", function () {
         expect(scope.opusCtrl.newApprovedLists.length).toBe(2);
         expect(scope.opusCtrl.newApprovedLists[0]).toBe("list4");
         expect(scope.opusCtrl.newApprovedLists[1]).toBe("list6");
+    });
+
+    it("should remove an existing bio status list from the opus when removeBioStatusList is invoked with 'existing'", function () {
+        scope.opusCtrl.opus = {bioStatusLists: ["list1", "list2", "list3"]};
+
+        scope.$apply();
+        scope.opusCtrl.removeBioStatusList(1, 'existing', form);
+
+        expect(scope.opusCtrl.opus.bioStatusLists.length).toBe(2);
+        expect(scope.opusCtrl.opus.bioStatusLists[0]).toBe("list1");
+        expect(scope.opusCtrl.opus.bioStatusLists[1]).toBe("list3");
+    });
+
+    it("should remove an bio status list from the list of new bio status lists when removeBioStatusList is invoked with 'new'", function () {
+        scope.opusCtrl.opus = {bioStatusLists: ["list1", "list2", "list3"]};
+
+        scope.opusCtrl.newBioStatusLists = ["list4", "list5", "list6"];
+        scope.opusCtrl.removeBioStatusList(1, 'new', form);
+
+        expect(scope.opusCtrl.opus.bioStatusLists.length).toBe(3);
+        expect(scope.opusCtrl.newBioStatusLists.length).toBe(2);
+        expect(scope.opusCtrl.newBioStatusLists[0]).toBe("list4");
+        expect(scope.opusCtrl.newBioStatusLists[1]).toBe("list6");
     });
 
     it("should set the form to Dirty removeImageSource is invoked", function () {
@@ -495,6 +538,52 @@ describe("OpusController tests", function () {
         var expectedOpus = {
             title: "OpusName",
             approvedLists: ["list1", "list3"],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
+    });
+
+    //
+    it("should merge newBioStatusLists with the existing bioStatusLists when saveBioStatusLists is called", function () {
+        scope.opusCtrl.opus = {title: "OpusName", bioStatusLists: []};
+        scope.opusCtrl.newBioStatusLists = [{list: {dataResourceUid: "list4"}}];
+        scope.opusCtrl.opusId = OPUS_ID;
+
+        scope.opusCtrl.saveBioStatusLists(form);
+
+        var expectedOpus = {
+            title: "OpusName",
+            bioStatusLists: ["list4"],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
+    });
+
+    it("should validate that bio status lists have an associated dataResourceUid", function() {
+        scope.opusCtrl.opusId = OPUS_ID;
+
+        scope.opusCtrl.newBioStatusLists = [{list: {listName: "list1"}}];
+
+        scope.opusCtrl.saveBioStatusLists(form);
+
+        expect(profileService.saveOpus).not.toHaveBeenCalledWith();
+        expect(messageService.alert).toHaveBeenCalledWith("1 list is not valid. You must select items from the list.");
+    });
+
+    it("should save the opus if no new bio status lists have been added but existing ones have been removed", function() {
+        scope.opusCtrl.opus = {title: "OpusName", bioStatusLists: ["list1"]};
+        scope.opusCtrl.opusId = OPUS_ID;
+
+        scope.opusCtrl.removeBioStatusList(0, 'existing', form);
+        scope.opusCtrl.saveBioStatusLists(form);
+
+        var expectedOpus = {
+            title: "OpusName",
+            bioStatusLists: [],
             keybaseProjectId: "",
             keybaseKeyId: ""
         };

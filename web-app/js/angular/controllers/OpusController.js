@@ -16,6 +16,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.newRecordSources = [];
     self.newSupportingOpuses = [];
     self.newApprovedLists = [];
+    self.newBioStatusLists = [];
     self.valid = false;
     self.editors = [];
     self.initialShortName = null;
@@ -282,6 +283,62 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         }
         form.$setDirty();
     };
+
+    self.addBioStatusList = function () {
+        if(self.canAddBioStatusList()){
+            self.newBioStatusLists.push({});
+        } else {
+            messageService.alert('Cannot add more than one bio status.');
+        }
+    };
+
+    self.saveBioStatusLists = function (form) {
+        var invalid = [];
+        var valid = [];
+
+        angular.forEach(self.newBioStatusLists, function (bioStatusLists) {
+            if (bioStatusLists.list) {
+                if (bioStatusLists.list.dataResourceUid) {
+                    valid.push(bioStatusLists.list.dataResourceUid);
+                } else {
+                    invalid.push(bioStatusLists);
+                }
+            }
+        });
+
+        if (invalid.length == 0) {
+            self.newBioStatusLists = [];
+            if (valid.length > 0) {
+                angular.forEach(valid, function (record) {
+                    self.opus.bioStatusLists.push(record);
+                });
+            }
+            self.saveOpus(form);
+        } else if (invalid.length > 0) {
+            messageService.alert(invalid.length + " list" + (invalid.length > 1 ? "s are" : " is") + " not valid. You must select items from the list.")
+        }
+    };
+
+    self.removeBioStatusList = function (index, list, form) {
+        if (list == 'existing') {
+            self.opus.bioStatusLists.splice(index, 1);
+        } else {
+            self.newBioStatusLists.splice(index, 1);
+        }
+        form.$setDirty();
+    };
+
+    self.canAddBioStatusList = function(){
+        var newLen = self.newBioStatusLists.length,
+            originalLen = self.opus?self.opus.bioStatusLists?self.opus.bioStatusLists.length:0:0;
+
+        // newly added list is stored as a different variable
+        if(newLen + originalLen < 1){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     self.opusResourceChanged = function ($item, $model, $label) {
         self.opus.dataResourceUid = $item.id;
