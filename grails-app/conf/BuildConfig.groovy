@@ -45,6 +45,7 @@ grails.project.dependency.resolution = {
                     'bcmail-jdk14','bcprov-jdk14','bctsp-jdk14','xmlbeans', 'olap4j'
         }
         compile 'net.sf.jasperreports:jasperreports-functions:6.1.0'
+        compile 'net.sf.jasperreports:jasperreports-fonts:6.1.0'
     }
 
     plugins {
