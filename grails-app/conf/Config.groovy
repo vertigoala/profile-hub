@@ -124,6 +124,8 @@ environments {
     }
 }
 
+jasper.dir.reports = 'classpath:'
+
 grails.cache.config = {
     provider {
         name "ehcache-profile-hub-" + (new Date().format("yyyyMMddHHmmss"))

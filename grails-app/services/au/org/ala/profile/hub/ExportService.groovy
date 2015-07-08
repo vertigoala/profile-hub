@@ -1,6 +1,14 @@
 package au.org.ala.profile.hub
 
 import grails.converters.JSON
+import grails.transaction.NotTransactional
+import grails.util.Holders
+import net.sf.jasperreports.engine.JRParameter
+import net.sf.jasperreports.engine.data.JsonDataSource
+import net.sf.jasperreports.engine.util.SimpleFileResolver
+import org.apache.commons.io.IOUtils
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.context.request.RequestContextHolder
 
@@ -11,12 +19,13 @@ import static groovyx.gpars.GParsPool.*
 class ExportService {
 
     private static final int THREAD_COUNT = 10
+    def transactional = false
 
     ProfileService profileService
     BiocacheService biocacheService
     WebService webService
     EmailService emailService
-    def wkhtmltoxService
+    JasperNonTransactionalService jasperNonTransactionalService
     def grailsApplication
 
     Map statusRegions = [
@@ -104,6 +113,7 @@ class ExportService {
         }
     }
 
+    @NotTransactional
     byte[] createPdf(Map params) {
         def model = [
                 options          : params,
@@ -134,19 +144,42 @@ class ExportService {
             model.profiles = model.profiles.sort { it.profile.scientificName }
         }
 
-        (model as JSON).toString(true)
+        // Create curated report model
+        Map curatedModel = curateModel(model)
 
-        wkhtmltoxService.makePdf(
-                view: "/pdf/_profile",
-//                footer: "/pdf/_pdfFooter",
-//                header: "/pdf/_pdfHeader",
-                model: model,
-                marginLeft: 15,
-                marginTop: 20,
-                marginBottom: 20,
-                marginRight: 15,
-                headerSpacing: 10,
+        // Transform curated model to JSON format input stream
+        InputStream inputStream = IOUtils.toInputStream((curatedModel as JSON).toString())
+
+        File reportsDir = new File(grailsApplication.mainContext.getResource('classpath:reports/profiles/PROFILES.jrxml').URL.file.replaceFirst("/[\\w_]+.jrxml\$", ""))
+
+        // Generate report and return byte array
+        JasperReportDef reportDef = new JasperReportDef(
+                name: 'reports/profiles/PROFILES.jrxml',
+                fileFormat: JasperExportFormat.PDF_FORMAT,
+                dataSource: new JsonDataSource(inputStream),
+                parameters: [
+                        'PROFILES_REPORT_OPTIONS': model.options,
+                        'REPORT_FILE_RESOLVER': new SimpleFileResolver(reportsDir)
+                ]
         )
+
+        ByteArrayOutputStream baos = jasperNonTransactionalService.generateReport(reportDef)
+
+        return baos.toByteArray()
+    }
+
+    private Map curateModel(Map model) {
+        Map curatedModel = [
+               cover: [
+                       title: model.opus.title,
+                       subtitle: model.profiles[0]?.profile?.scientificName
+               ],
+               profiles: model.profiles
+
+        ]
+
+        return curatedModel
+
     }
 
     def createOccurrenceQuery = { profile, opus ->
