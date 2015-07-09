@@ -39,10 +39,23 @@ profileEditor.controller('ReportController', function (profileService, util, con
         return config.contextPath;
     };
 
-    self.loadReport = function (reportId, offset) {
+    self.reset = function() {
+        self.selectedPeriod = self.periods[2];
+
+        self.dates = {
+            to: undefined,
+            from: undefined
+        };
+
         self.selectedReport = null;
         self.loading = true;
         self.reportData = null;
+    };
+
+    self.loadReport = function (reportId, offset) {
+        if (self.selectedReport && self.selectedReport.id != reportId) {
+            self.reset();
+        }
 
         angular.forEach(self.reports, function (report) {
             if (report.id === reportId) {
