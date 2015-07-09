@@ -328,6 +328,15 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        getBioStatus: function(opusId, profileId){
+            console.log("Retrieving bio status for " + profileId);
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/bioStatus");
+            future.then(function (response) {
+                console.log("Bio status retrieved with response code " + response.status)
+            });
+            return util.toStandardPromise(future);
+        },
+
         updateLinks: function(opusId, profileId, links) {
             console.log("Updating links for profile " + profileId);
             var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/links/update", links);

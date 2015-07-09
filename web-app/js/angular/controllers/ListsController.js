@@ -6,6 +6,7 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
 
     self.lists = [];
     self.conservationStatuses = [];
+    self.bioStatuses = [];
 
     var orderBy = $filter("orderBy");
 
@@ -38,6 +39,17 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
             }
         });
     };
+
+    self.loadBioStatus = function () {
+        var promise = profileService.getBioStatus(self.opusId, self.profileId);
+        promise.then(function (data) {
+            self.bioStatuses = orderBy(data, 'key');
+
+            if (self.bioStatuses.length > 0) {
+                navService.add("Bio Status", "bioStatus");
+            }
+        });
+    }
 
     self.getColourForStatus = function (status) {
         var colour;
@@ -90,14 +102,15 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
                         navService.add("Conservation & Sensitivity Lists", "lists");
                     }
 
-                    self.loadConservationStatus();
-
                     messageService.pop();
                 },
                 function () {
                     messageService.alert("An error occurred while retrieving the lists.");
                 }
             );
+
+            self.loadConservationStatus();
+            self.loadBioStatus();
         }
     }
 });

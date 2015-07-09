@@ -5,7 +5,6 @@ import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
 import org.springframework.web.multipart.MultipartFile
-import org.springframework.web.multipart.commons.CommonsMultipartFile
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
 class ProfileController extends BaseController {
@@ -331,6 +330,15 @@ class ProfileController extends BaseController {
             def response = profileService.updateAuthorship(params.opusId as String, params.profileId as String, json)
 
             handle response
+        }
+    }
+
+    def getBioStatus() {
+        if (!params.profileId || !params.opusId) {
+            badRequest "profile id and opus idmust be provided";
+        } else {
+            def response = profileService.getBioStatus(params.opusId, params.profileId);
+            render response as JSON
         }
     }
 
