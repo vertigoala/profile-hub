@@ -80,10 +80,6 @@ class ExportService {
             }
         }
 
-//        if (params.nomenclature && model.profile.nslNameIdentifier) {
-//            model.profile.nomenclatureHtml = webService.get("${grailsApplication.config.nsl.name.url.prefix}${model.profile.nslNameIdentifier}", false)?.resp?.replaceAll("&", "&amp;")
-//        }
-
         String occurrenceQuery = createOccurrenceQuery(model.profile, opus)
         model.profile.mapImageUrl = createMapImageUrl(opus, occurrenceQuery)
 
@@ -93,6 +89,13 @@ class ExportService {
             attribute.editors = attribute?.editors && opus.allowFineGrainedAttribution ? attribute.editors.toArray().join(', ') : ''
         }
 
+        // Format conservation status
+        if (params.conservation && model.profile.speciesProfile?.conservationStatuses) {
+            model.profile.hasConservationStatus = true
+            model.profile.speciesProfile.conservationStatuses = model.profile.speciesProfile?.conservationStatuses.sort {it.region}
+        } else {
+            model.profile.hasConservationStatus = false
+        }
 
         return model
     }

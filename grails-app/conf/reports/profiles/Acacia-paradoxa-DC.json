@@ -4,6 +4,7 @@
       "subtitle": "Acacia paradoxa"
    },
    "profiles": [{"profile": {
+      "hasConservationStatus": true,
       "lastAttributeChange": null,
       "classifications": [
          {
@@ -2298,7 +2299,32 @@
             "infoSourceName": "Interim Register of Marine and Non-marine Genera"
          }],
          "parentConcepts": [],
-         "conservationStatuses": [],
+         "conservationStatuses": [{
+            "region": "New South Wales",
+            "colour": "yellow",
+            "regionAbbrev": "NSW",
+            "rawStatus": "Endangered",
+            "system": "Threatened Species Conservation Act 1995",
+            "status": "Endangered",
+            "rawCode": "E1",
+            "infoSourceId": "506",
+            "infoSourceURL": "http://www.environment.nsw.gov.au",
+            "infoSourceName": "Office of Environment and Heritage",
+            "regionId": "aus_states/New South Wales"
+         },
+       {
+          "region": "New South Wales",
+          "colour": "yellow",
+          "regionAbbrev": "NSW",
+          "rawStatus": "Endangered",
+          "system": "Threatened Species Conservation Act 1995",
+          "status": "Endangered",
+          "rawCode": "E1",
+          "infoSourceId": "506",
+          "infoSourceURL": "http://www.environment.nsw.gov.au",
+          "infoSourceName": "Office of Environment and Heritage",
+          "regionId": "aus_states/New South Wales"
+       }],
          "isAustralian": true,
          "identifiers": [
             "urn:lsid:biodiversity.org.au:apni.taxon:246943",
