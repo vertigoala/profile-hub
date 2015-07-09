@@ -124,7 +124,7 @@ environments {
     }
 }
 
-jasper.dir.reports = 'classpath:'
+jasper.dir.reports = 'classpath:reports'
 
 grails.cache.config = {
     provider {

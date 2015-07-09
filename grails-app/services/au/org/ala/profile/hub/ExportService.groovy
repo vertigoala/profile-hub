@@ -2,8 +2,6 @@ package au.org.ala.profile.hub
 
 import grails.converters.JSON
 import grails.transaction.NotTransactional
-import grails.util.Holders
-import net.sf.jasperreports.engine.JRParameter
 import net.sf.jasperreports.engine.data.JsonDataSource
 import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
@@ -14,7 +12,7 @@ import org.springframework.web.context.request.RequestContextHolder
 
 import java.util.concurrent.ConcurrentLinkedQueue
 
-import static groovyx.gpars.GParsPool.*
+import static groovyx.gpars.GParsPool.withPool
 
 class ExportService {
 
@@ -82,14 +80,21 @@ class ExportService {
             }
         }
 
-        if (params.nomenclature && model.profile.nslNameIdentifier) {
-            model.profile.nomenclatureHtml = webService.get("${grailsApplication.config.nsl.name.url.prefix}${model.profile.nslNameIdentifier}", false)?.resp?.replaceAll("&", "&amp;")
-        }
+//        if (params.nomenclature && model.profile.nslNameIdentifier) {
+//            model.profile.nomenclatureHtml = webService.get("${grailsApplication.config.nsl.name.url.prefix}${model.profile.nslNameIdentifier}", false)?.resp?.replaceAll("&", "&amp;")
+//        }
 
         String occurrenceQuery = createOccurrenceQuery(model.profile, opus)
         model.profile.mapImageUrl = createMapImageUrl(opus, occurrenceQuery)
 
-        model
+        // Format creators and editors
+        model.profile.attributes.each {attribute ->
+            attribute.creators = attribute?.creators && opus.allowFineGrainedAttribution ? attribute.creators.toArray().join(', ') : ''
+            attribute.editors = attribute?.editors && opus.allowFineGrainedAttribution ? attribute.editors.toArray().join(', ') : ''
+        }
+
+
+        return model
     }
 
     @Async
@@ -154,7 +159,7 @@ class ExportService {
 
         // Generate report and return byte array
         JasperReportDef reportDef = new JasperReportDef(
-                name: 'reports/profiles/PROFILES.jrxml',
+                name: 'profiles/PROFILES.jrxml',
                 fileFormat: JasperExportFormat.PDF_FORMAT,
                 dataSource: new JsonDataSource(inputStream),
                 parameters: [
