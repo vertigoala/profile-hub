@@ -195,6 +195,7 @@
                         <div key-player key-id="profileCtrl.profile.keybaseKey"
                              ng-show="profileCtrl.profile.keybaseKey"
                              keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                             keybase-web-url="${grailsApplication.config.keybase.web.url}"
                              profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile">></div>
                         <alert type="warning"
                                ng-show="!profileCtrl.profile.keybaseKey">There is no key available for {{profileCtrl.profile.scientificName}}.</alert>

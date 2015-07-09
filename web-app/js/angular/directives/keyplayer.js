@@ -1,11 +1,12 @@
 profileEditor.directive('keyPlayer', function ($browser) {
     return {
         restrict: 'A',
-        require: ['?keyId', '?profileUrl', '?keybaseUrl'],
+        require: ['?keyId', '?profileUrl', '?keybaseUrl', '?keybaseWebUrl'],
         scope: {
             keyId: '=',
             profileUrl: '@',
-            keybaseUrl: '@'
+            keybaseUrl: '@',
+            keybaseWebUrl: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/keyplayer.html',
         controller: ['$scope', '$http', '$window', function ($scope, $http, $window) {
