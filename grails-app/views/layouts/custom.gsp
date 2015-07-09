@@ -67,7 +67,7 @@
             <small>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="${request.contextPath}/">Profile collections</a></li>
-                    <g:render template="../layouts/login"/>
+                    <g:render template="/layouts/login"/>
                 </ul>
             </small>
         </div>
