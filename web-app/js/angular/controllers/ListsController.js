@@ -2,9 +2,7 @@
  * Species Lists controller
  */
 profileEditor.controller('ListsEditor', function (profileService, navService, util, messageService, $filter) {
-    var self = this,
-    // flag to add status to page index
-        statusAdded = false;
+    var self = this;
 
     self.lists = [];
     self.conservationStatuses = [];
@@ -35,7 +33,10 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
         var promise = profileService.getSpeciesProfile(self.opusId, self.profileId, self.profile.guid);
         promise.then(function (data) {
             self.conservationStatuses = orderBy(data.conservationStatuses, "region");
-            navService.add("Status", "statuses");
+
+            if (self.conservationStatuses && self.conservationStatuses.length > 0) {
+                navService.add("Status", "statuses");
+            }
         });
     };
 
@@ -43,9 +44,11 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
         var promise = profileService.getBioStatus(self.opusId, self.profileId);
         promise.then(function (data) {
             self.bioStatuses = orderBy(data, 'key');
-            navService.add("Status", "statuses");
+            if (self.bioStatuses && self.bioStatuses.length > 0) {
+                navService.add("Status", "statuses");
+            }
         });
-    }
+    };
 
     self.getColourForStatus = function (status) {
         var colour;
