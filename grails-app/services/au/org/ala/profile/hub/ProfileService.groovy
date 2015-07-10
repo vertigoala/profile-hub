@@ -335,11 +335,13 @@ class ProfileService {
     }
 
     def getBioStatus(String opusId, String profileId) {
-        def opus = getOpus(opusId);
+        def model = getProfile(opusId, profileId);
+        def opus = model.opus;
+        def profile = model.profile;
         List result = []
         if (opus.bioStatusLists?.size()) {
             opus.bioStatusLists.each({
-                result.addAll(getProfileKVP(profileId, it));
+                result.addAll(getProfileKVP(profile.scientificName, it));
             })
         }
 

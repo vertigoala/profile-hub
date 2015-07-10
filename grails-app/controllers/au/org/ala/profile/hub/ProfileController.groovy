@@ -335,7 +335,7 @@ class ProfileController extends BaseController {
 
     def getBioStatus() {
         if (!params.profileId || !params.opusId) {
-            badRequest "profile id and opus idmust be provided";
+            badRequest "profile id and opus id must be provided";
         } else {
             def response = profileService.getBioStatus(params.opusId, params.profileId);
             render response as JSON

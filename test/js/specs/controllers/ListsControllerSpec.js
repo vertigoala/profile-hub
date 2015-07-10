@@ -87,7 +87,6 @@ describe("ListsController tests", function () {
     it("should set the readonly flag to false when init is called with edit=true", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.resolve(JSON.parse(listsResponse));
-        ;
 
         scope.listCtrl.init("true");
         scope.$apply();

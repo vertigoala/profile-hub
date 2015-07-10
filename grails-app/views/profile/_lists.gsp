@@ -17,15 +17,15 @@
         </div>
     </div>
 
-    <div class="panel panel-default" ng-show="listCtrl.conservationStatuses.length > 0">
-        <a name="{{listCtrl.readonly ? 'view_' : 'edit_'}}conservationStatus"></a>
+    <div class="panel panel-default" ng-show="(listCtrl.conservationStatuses.length + listCtrl.bioStatuses.length) > 0">
+        <a name="{{listCtrl.readonly ? 'view_' : 'edit_'}}statuses"></a>
 
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-2"><strong>Conservation status</strong></div>
+                <div class="col-sm-3"><strong>Conservation status</strong></div>
 
-                <div class="col-sm-10">
-                    <div class="col-sm-4" ng-repeat="status in listCtrl.conservationStatuses">
+                <div class="col-sm-9">
+                    <div class="" ng-repeat="status in listCtrl.conservationStatuses">
                         <a href="${grailsApplication.config.collectory.base.url}/public/showDataResource/{{listCtrl.statusRegions[status.region].id}}"
                            title="Threatened Species Codes - details" target="_blank">
                             <div class="status"
@@ -35,23 +35,12 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    %{--for bio status--}%
-    <div class="panel panel-default" ng-show="listCtrl.bioStatuses.length > 0">
-        <a name="{{listCtrl.readonly ? 'view_' : 'edit_'}}bioStatus"></a>
+            <div class="row" ng-repeat="status in listCtrl.bioStatuses">
+                <div class="col-sm-3"><strong>{{status.key | formatText | capitalize}}</strong></div>
 
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-2"><strong>Bio Status</strong></div>
-
-                <div class="col-sm-10">
-                    <ul>
-                        <li ng-repeat="status in listCtrl.bioStatuses">
-                            {{status.key}} : {{status.value}}
-                        </li>
-                    </ul>
+                <div class="col-sm-9">
+                    {{status.value}}
                 </div>
             </div>
         </div>

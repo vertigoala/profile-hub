@@ -20,7 +20,9 @@
     <a name="top"></a>
     <ol class="breadcrumb" ng-cloak>
         <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-        <li><a class="font-xxsmall" href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}">{{opusCtrl.opus.title}}</a></li>
+        <li><a class="font-xxsmall"
+               href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}">{{opusCtrl.opus.title}}</a>
+        </li>
     </ol>
 
     <div class="row" ng-cloak>
@@ -29,19 +31,21 @@
                 Configure your profile collection
             </p>
         </div>
+
         <div class="col-md-6">
-        <div class="btn-group padding-bottom-1 pull-right">
-            <div class="row">
-                <a href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}"
-                   class="btn btn-default" target="_self" ng-show="opusCtrl.opus.uuid"><i
-                        class="icon-eye-open icon-white"></i> Public View</a>
-                <g:if test="${params.isOpusAdmin}">
-                    <button ng-click="opusCtrl.deleteOpus()" class="btn btn-danger" target="_self"
-                            ng-show="opusCtrl.opus.uuid"><i class="icon-remove icon-white"></i> Delete this collection
-                    </button>
-                </g:if>
+            <div class="btn-group padding-bottom-1 pull-right">
+                <div class="row">
+                    <a href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}"
+                       class="btn btn-default" target="_self" ng-show="opusCtrl.opus.uuid"><i
+                            class="icon-eye-open icon-white"></i> Public View</a>
+                    <g:if test="${params.isOpusAdmin}">
+                        <button ng-click="opusCtrl.deleteOpus()" class="btn btn-danger" target="_self"
+                                ng-show="opusCtrl.opus.uuid"><i
+                                class="icon-remove icon-white"></i> Delete this collection
+                        </button>
+                    </g:if>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 
@@ -61,17 +65,21 @@
                     <li><a href="#accessControl" du-smooth-scroll class="font-xxsmall">Access control</a></li>
                     <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Approved image sources</a></li>
                     <li><a href="#lists" du-smooth-scroll class="font-xxsmall">Approved lists</a></li>
-                    <li><a href="#biostatus" du-smooth-scroll class="font-xxsmall">Bio Status lists</a></li>
-                    <li><a href="#recordSources" du-smooth-scroll class="font-xxsmall">Approved specimen/observation sources</a></li>
+                    <li><a href="#recordSources" du-smooth-scroll
+                           class="font-xxsmall">Approved specimen/observation sources</a></li>
                     <li><a href="#attributeVocab" du-smooth-scroll class="font-xxsmall">Attribute vocabulary</a></li>
-                    <li><a href="#authorshipVocab" du-smooth-scroll class="font-xxsmall">Authors &amp; acknowledgements vocabulary</a></li>
-                    <li><a href="#authorship" du-smooth-scroll class="font-xxsmall">Authorship &amp; attribution</a></li>
+                    <li><a href="#authorshipVocab" du-smooth-scroll
+                           class="font-xxsmall">Authors &amp; acknowledgements vocabulary</a></li>
+                    <li><a href="#authorship" du-smooth-scroll class="font-xxsmall">Authorship &amp; attribution</a>
+                    </li>
                     <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
                     <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>
                     <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
                     <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
                     <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
-                    <li><a href="#supportingCollections" du-smooth-scroll class="font-xxsmall">Supporting collections</a></li>
+                    <li><a href="#biostatus" du-smooth-scroll class="font-xxsmall">Status lists</a></li>
+                    <li><a href="#supportingCollections" du-smooth-scroll
+                           class="font-xxsmall">Supporting collections</a></li>
                 </g:else>
             </ul>
         </div>
@@ -117,7 +125,8 @@
         </div>
     </div>
 
-    <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
+    <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span
+            class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
 </div>
 
 </body>

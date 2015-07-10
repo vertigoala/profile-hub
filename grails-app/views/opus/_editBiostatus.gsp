@@ -7,7 +7,11 @@
 
     <div class="panel-body">
         <div class="col-sm-12">
-            <p>Configure the species lists to be included in your profile pages.</p>
+            <p>Configure the list(s) to be used for the status(es) of your profiles. These lists can include such statuses as biostatus, naturalised status, pest status, and so forth.</p>
+
+            <p>Using the <a href="${grailsApplication.config.lists.base.url}"
+                            target="_blank">Atlas of Living Australia Lists Tool</a>, upload a Species List as a .csv file, where the first column is "scientific_name" (this must match the name of your profile, excluding author information), plus a separate column for each status you wish to display.
+            </p>
 
             <div class="col-sm-12">
                 <ul>
@@ -45,11 +49,12 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="btn-group">
-                    <button class="btn btn-default" ng-click="opusCtrl.addBioStatusList()" ng-disabled="!opusCtrl.canAddBioStatusList()"><i
+                    <button class="btn btn-default" ng-click="opusCtrl.addBioStatusList()"><i
                             class="fa fa-plus"></i>  Add list</button>
                 </div>
                 <button class="btn btn-primary pull-right" ng-click="opusCtrl.saveBioStatusLists(BioStatusFrom)">
-                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="BioStatusFrom.$dirty">*</span> Save</span>
+                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="BioStatusFrom.$dirty">*</span> Save
+                    </span>
                     <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
                 </button>
             </div>
