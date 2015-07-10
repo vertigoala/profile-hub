@@ -21,6 +21,7 @@
                                                ng-change="searchCtrl.search()"
                                                name="searchTerm"
                                                autocomplete="off"
+                                               ng-enter="searchCtrl.selectSingleResult()"
                                                ng-model="searchCtrl.searchTerm"></div>
                                     <button type="submit" class="btn btn-default ">
                                         <span class="fa fa-search"></span>

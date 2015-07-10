@@ -177,7 +177,9 @@
         imageServiceUrl: '${grailsApplication.config.images.service.url}',
         bieServiceUrl: '${grailsApplication.config.bie.base.url}',
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
-        isOpusReviewer: '${params.isOpusReviewer}'
+        isOpusReviewer: '${params.isOpusReviewer}',
+        nslServiceUrlPrefix: '${grailsApplication.config.nsl.service.url.prefix}',
+        nslServiceApniConceptSuffix: '${grailsApplication.config.nsl.service.apni.concept.suffix}'
      });
 </r:script>
 

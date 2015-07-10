@@ -79,6 +79,8 @@ class UrlMappings {
 
         "/checkName" controller: "profile", action: [GET: "checkName"]
 
+        "/nsl/listConcepts/$nslNameIdentifier" controller: "NSL", action: [GET: "listConcepts"]
+
         "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
 
         "/specimen/$specimenId"(controller: "biocache", action: "lookupSpecimen")

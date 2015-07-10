@@ -33,7 +33,7 @@
         </alert>
     </div>
 
-    <div class="row margin-bottom-1">
+    <div class="row">
         <div class="col-md-9" ng-cloak>
             <h2 class="heading-large inline"><span
                     data-ng-bind-html="profileCtrl.formatName() | default:'Loading...'"></span></h2>
@@ -119,9 +119,11 @@
         </div>
     </div>
 
-    <g:include controller="profile" action="editNamePanel" params="[opusId: params.opusId]"/>
-
-    <g:include controller="profile" action="auditHistoryPanel" params="[opusId: params.opusId]"/>
+    <div class="row margin-bottom-1" ng-if="profileCtrl.profile.nslProtologue" ng-cloak>
+        <div class="col-md-12">
+            <div class="citation zero-margin" data-ng-bind-html="profileCtrl.profile.nslProtologue"></div>
+        </div>
+    </div>
 
     <div class="row margin-bottom-1" ng-if="profileCtrl.commonNames.length > 0" ng-cloak>
         <div class="col-md-12">
@@ -135,6 +137,15 @@
             {{author.text}}
         </div>
     </div>
+
+
+    <g:include controller="profile" action="editNamePanel" params="[opusId: params.opusId]"/>
+
+    <g:include controller="profile" action="auditHistoryPanel" params="[opusId: params.opusId]"/>
+
+    <g:if test="${!edit}">
+        <g:include controller="profile" action="nomenclaturePanel" params="[opusId: params.opusId]"/>
+    </g:if>
 
     <div class="row margin-bottom-1" ng-cloak>
         <g:include controller="profile" action="mapPanel" params="[opusId: params.opusId]"/>
@@ -157,6 +168,9 @@
 
                         <div class="col-md-10">
                             <g:include controller="profile" action="attributesPanel" params="[opusId: params.opusId]"/>
+                            <g:if test="${edit}">
+                                <g:include controller="profile" action="nomenclaturePanel" params="[opusId: params.opusId]"/>
+                            </g:if>
                             <g:include controller="profile" action="linksPanel" params="[opusId: params.opusId]"/>
                             <g:include controller="profile" action="bhlLinksPanel" params="[opusId: params.opusId]"/>
                             <g:include controller="profile" action="specimenPanel" params="[opusId: params.opusId]"/>
@@ -177,18 +191,11 @@
                         </div>
 
                     </tab>
-                    <tab heading="Nomenclature">
-                        <ng-include src="profileCtrl.nslUrl"
-                                    ng-if="profileCtrl.profile.nslNameIdentifier">Loading...</ng-include>
-                        <alert type="warning"
-                               ng-if="!profileCtrl.profile.nslNameIdentifier">No matching name was found at <a
-                                href="https://biodiversity.org.au/nsl/services/">https://biodiversity.org.au/nsl/services/</a> for this profile
-                        </alert>
-                    </tab>
                     <tab heading="Key" ng-show="profileCtrl.opus.keybaseProjectId">
                         <div key-player key-id="profileCtrl.profile.keybaseKey"
                              ng-show="profileCtrl.profile.keybaseKey"
                              keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                             keybase-web-url="${grailsApplication.config.keybase.web.url}"
                              profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile">></div>
                         <alert type="warning"
                                ng-show="!profileCtrl.profile.keybaseKey">There is no key available for {{profileCtrl.profile.scientificName}}.</alert>

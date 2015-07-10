@@ -23,6 +23,7 @@ class ExportService {
     BiocacheService biocacheService
     WebService webService
     EmailService emailService
+    NslService nslService
     JasperNonTransactionalService jasperNonTransactionalService
     def grailsApplication
 
@@ -80,6 +81,10 @@ class ExportService {
             }
         }
 
+        if (params.nomenclature && model.profile.nslNameIdentifier) {
+            model.profile.nomenclatureHtml = webService.get("${grailsApplication.config.nsl.name.url.prefix}${model.profile.nslNameIdentifier}", false)?.resp?.replaceAll("&", "&amp;")
+        }
+
         String occurrenceQuery = createOccurrenceQuery(model.profile, opus)
         model.profile.mapImageUrl = createMapImageUrl(opus, occurrenceQuery)
 
@@ -125,7 +130,6 @@ class ExportService {
     byte[] createPdf(Map params) {
         def model = [
                 options          : params,
-//                grailsApplication: grailsApplication,
                 profiles         : [] as ConcurrentLinkedQueue
         ]
 

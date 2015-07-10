@@ -42,6 +42,7 @@
             <div key-player key-id="opusCtrl.opus.keybaseKeyId"
                  ng-show="opusCtrl.opus.keybaseKeyId"
                  keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                 keybase-web-url="${grailsApplication.config.keybase.web.url}"
                  profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></div>
         </tab>
         <g:if test="${params.isOpusEditor}">
