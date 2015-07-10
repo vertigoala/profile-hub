@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-09T16:59:09 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail_attributes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="052ebf40-2ed2-4f4f-b9ab-676a9ef84df6">
+<!-- 2015-07-10T13:00:53 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail_attributes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="5" uuid="052ebf40-2ed2-4f4f-b9ab-676a9ef84df6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<queryString language="json">
 		<![CDATA[]]>
@@ -12,8 +12,18 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="515" height="17" isRemoveLineWhenBlank="true" uuid="483cae47-6eb0-4dc2-b87e-feb02b8a1075">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Conservation Status]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>
@@ -27,10 +37,10 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="24" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField>
-				<reportElement x="8" y="7" width="440" height="15" uuid="35826d20-582f-425f-8519-e2bfd340140d">
+				<reportElement x="8" y="6" width="440" height="15" uuid="35826d20-582f-425f-8519-e2bfd340140d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textFieldExpression><![CDATA["${$F{regionAbbrev} ?: 'IUCN'} - ${$F{rawStatus}}"]]></textFieldExpression>
