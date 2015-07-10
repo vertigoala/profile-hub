@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-10T13:03:57 -->
+<!-- 2015-07-10T16:21:25 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail_attributes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="5" uuid="052ebf40-2ed2-4f4f-b9ab-676a9ef84df6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="citationHtml" class="java.lang.String"/>
 	<queryString language="json">
 		<![CDATA[]]>
 	</queryString>
-	<field name="nomenclatureHtml" class="java.lang.String"/>
+	<field name="relationship" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="17" splitType="Stretch">
+		<band height="37" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="0" width="515" height="17" uuid="90d40018-95a7-46ee-93a5-bb7e408dd432">
@@ -23,6 +24,14 @@
 				</textElement>
 				<text><![CDATA[Nomenclature]]></text>
 			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="10" y="21" width="480" height="15" isRemoveLineWhenBlank="true" uuid="35826d20-582f-425f-8519-e2bfd340140d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA[$P{citationHtml}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -36,15 +45,15 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="8" y="6" width="480" height="15" isRemoveLineWhenBlank="true" uuid="35826d20-582f-425f-8519-e2bfd340140d">
+				<reportElement x="19" y="0" width="480" height="15" isRemoveLineWhenBlank="true" uuid="f586efdc-7981-44eb-ba92-90a9eca4f594">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement markup="html"/>
-				<textFieldExpression><![CDATA[$F{nomenclatureHtml}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{relationship}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

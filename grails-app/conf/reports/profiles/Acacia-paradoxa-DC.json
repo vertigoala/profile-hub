@@ -6,7 +6,1389 @@
    "profiles": [{"profile": {
       "hasConservationStatus": true,
       "lastAttributeChange": null,
-      "classifications": [
+      "nomenclature": {
+         "citation": "CHAH (2006), Australian Plant Census",
+         "citationHtml": "CHAH (2006), <i>Australian Plant Census<\/i>",
+         "APCReference": true,
+         "citations": [
+            {
+               "relationship": "nomenclatural synonym: <i>Mimosa<\/i> <i>paradoxa<\/i> (DC.) Poir.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. nov.",
+                     "citation": "Poiret, J.L.M. in Lamarck, J.B.A.P. de Monnet de & Poiret, J.L.M. (1817), Encyclopedie Methodique, Botanique Suppl. 5(1)",
+                     "protologue": true,
+                     "citationHtml": "Poiret, J.L.M. in Lamarck, J.B.A.P. de Monnet de & Poiret, J.L.M. (1817), <i>Encyclopedie Methodique, Botanique<\/i> Suppl. 5(1)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/606450",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Mimosa paradoxa",
+                  "simpleNameHtml": "<scientific><name id='200482'><scientific><name id='72513'><element><i>Mimosa<\/i><\/element><\/name><\/scientific> <element><i>paradoxa<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. illeg.",
+                  "fullNameHtml": "<scientific><name id='200482'><scientific><name id='72513'><element><i>Mimosa<\/i><\/element><\/name><\/scientific> <element><i>paradoxa<\/i><\/element> <authors>(<base id='6840' title='Candolle, A.P. de'>DC.<\/base>) <author id='7060' title='Poiret, J.L.M.'>Poir.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/200482",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Mimosa paradoxa (DC.) Poir.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "nomenclatural synonym: <i>Phyllodoce<\/i> <i>undulata<\/i> Link",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Link, J.H.F. (1829), Handbuch zur Erkennung der nutzbarsten und am häufigsten vorkommenden Gewachse 2",
+                     "protologue": true,
+                     "citationHtml": "Link, J.H.F. (1829), <i>Handbuch zur Erkennung der nutzbarsten und am häufigsten vorkommenden Gewachse<\/i> 2",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/519880",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Phyllodoce undulata",
+                  "simpleNameHtml": "<scientific><name id='95764'><scientific><name id='95612'><element><i>Phyllodoce<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='95764'><scientific><name id='95612'><element><i>Phyllodoce<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element> <authors><author id='6888' title='Link, J.H.F.'>Link<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/95764",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Phyllodoce undulata Link",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "nomenclatural synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>angustifolia<\/i> Benth.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Bentham, G. in Hooker, W.J. (1842), Notes on Mimoseae, with a synopsis of species. London Journal of Botany 1",
+                     "protologue": true,
+                     "citationHtml": "Bentham, G. in Hooker, W.J. (1842), Notes on Mimoseae, with a synopsis of species. <i>London Journal of Botany<\/i> 1",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462738",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. angustifolia",
+                  "simpleNameHtml": "<scientific><name id='58691'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>angustifolia<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58691'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>angustifolia<\/i><\/element> <authors><author id='1531' title='Bentham, G.'>Benth.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58691",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. angustifolia Benth.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "nomenclatural synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>paradoxa<\/i> (DC.) Ser.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "primary reference",
+                     "citation": "Seringe, N.C. (1849), Flore des Jardins et des Grandes Cultures 3",
+                     "protologue": false,
+                     "citationHtml": "Seringe, N.C. (1849), <i>Flore des Jardins et des Grandes Cultures<\/i> 3",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462827",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. paradoxa",
+                  "simpleNameHtml": "<scientific><name id='58758'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>paradoxa<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. illeg.",
+                  "fullNameHtml": "<scientific><name id='58758'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>paradoxa<\/i><\/element> <authors>(<base id='6840' title='Candolle, A.P. de'>DC.<\/base>) <author id='7141' title='Seringe, N.C.'>Ser.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58758",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. paradoxa (DC.) Ser.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "nomenclatural synonym: <i>Acacia<\/i> <i>armata<\/i> f. <i>undulata<\/i> Voss",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "nom. et stat. nov.",
+                     "citation": "Voss, A. (1894), Vilmorin's Blumengartnerei Edn. 3, 1(1)",
+                     "protologue": true,
+                     "citationHtml": "Voss, A. (1894), <i>Vilmorin's Blumengartnerei<\/i> Edn. 3, 1(1)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462896",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata f. undulata",
+                  "simpleNameHtml": "<scientific><name id='58810'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58810'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>undulata<\/i><\/element> <authors><author id='1660' title='Voss, A.'>Voss<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58810",
+                     "preferred": true
+                  }},
+                  "nameRank": "Forma",
+                  "fullName": "Acacia armata f. undulata Voss",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "nomenclatural synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>undulata<\/i> Domin",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Domin, K. (1926), Beitrage zur Flora und Pflanzengeographie Australiens. Bibliotheca Botanica 22(89)",
+                     "protologue": true,
+                     "citationHtml": "Domin, K. (1926), Beitrage zur Flora und Pflanzengeographie Australiens. <i>Bibliotheca Botanica<\/i> 22(89)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462890",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. undulata",
+                  "simpleNameHtml": "<scientific><name id='58806'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. illeg., nom. superfl.",
+                  "fullNameHtml": "<scientific><name id='58806'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>undulata<\/i><\/element> <authors><author id='6860' title='Domin, K.'>Domin<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58806",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. undulata Domin",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "nomenclatural synonym: <i>Racosperma<\/i> <i>paradoxum<\/i> (DC.) Pedley",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. nov.",
+                     "citation": "Pedley, L. (2003), A synopsis of Racosperma C.Mart. (Leguminosae: Mimosoideae). Austrobaileya 6(3)",
+                     "protologue": true,
+                     "citationHtml": "Pedley, L. (2003), A synopsis of Racosperma C.Mart. (Leguminosae: Mimosoideae). <i>Austrobaileya<\/i> 6(3)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/592939",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Racosperma paradoxum",
+                  "simpleNameHtml": "<scientific><name id='193651'><scientific><name id='103551'><element><i>Racosperma<\/i><\/element><\/name><\/scientific> <element><i>paradoxum<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='193651'><scientific><name id='103551'><element><i>Racosperma<\/i><\/element><\/name><\/scientific> <element><i>paradoxum<\/i><\/element> <authors>(<base id='6840' title='Candolle, A.P. de'>DC.<\/base>) <author id='1524' title='Pedley, L.'>Pedley<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/193651",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Racosperma paradoxum (DC.) Pedley",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> R.Br.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Brown, R. in Aiton, W.T. (1813), Hortus Kewensis Edn. 2, 5",
+                     "protologue": true,
+                     "citationHtml": "Brown, R. in Aiton, W.T. (1813), <i>Hortus Kewensis<\/i> Edn. 2, 5",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462722",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata",
+                  "simpleNameHtml": "<scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element> <authors><author id='1441' title='Brown, R.'>R.Br.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58681",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia armata R.Br.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>undulata<\/i> Willd.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "primary reference",
+                     "citation": "Willdenow, C.L. (1814), Enumeratio Plantarum Horti Regii Botanici Berolinensis Suppl",
+                     "protologue": false,
+                     "citationHtml": "Willdenow, C.L. (1814), <i>Enumeratio Plantarum Horti Regii Botanici Berolinensis<\/i> Suppl",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/606452",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia undulata",
+                  "simpleNameHtml": "<scientific><name id='200485'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. inval., nom. nud.",
+                  "fullNameHtml": "<scientific><name id='200485'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element> <authors><author id='1884' title='Willdenow, C.L. von'>Willd.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/200485",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia undulata Willd.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Mimosa<\/i> <i>paradoxa<\/i> Dum.Cours.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Dumont de Courset, G.L.M. (1814), Le Botaniste Cultivateur Edn. 2, 7",
+                     "protologue": true,
+                     "citationHtml": "Dumont de Courset, G.L.M. (1814), <i>Le Botaniste Cultivateur<\/i> Edn. 2, 7",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/486848",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Mimosa paradoxa",
+                  "simpleNameHtml": "<scientific><name id='74321'><scientific><name id='72513'><element><i>Mimosa<\/i><\/element><\/name><\/scientific> <element><i>paradoxa<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='74321'><scientific><name id='72513'><element><i>Mimosa<\/i><\/element><\/name><\/scientific> <element><i>paradoxa<\/i><\/element> <authors><author id='7336' title='Dumont de Courset, G.L.M.'>Dum.Cours.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/74321",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Mimosa paradoxa Dum.Cours.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Mimosa<\/i> <i>armata<\/i> (R.Br.) Poir.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. nov.",
+                     "citation": "Poiret, J.L.M. in Lamarck, J.B.A.P. de Monnet de & Poiret, J.L.M. (1817), Encyclopedie Methodique, Botanique Suppl. 5(1)",
+                     "protologue": true,
+                     "citationHtml": "Poiret, J.L.M. in Lamarck, J.B.A.P. de Monnet de & Poiret, J.L.M. (1817), <i>Encyclopedie Methodique, Botanique<\/i> Suppl. 5(1)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/485983",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Mimosa armata",
+                  "simpleNameHtml": "<scientific><name id='73727'><scientific><name id='72513'><element><i>Mimosa<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='73727'><scientific><name id='72513'><element><i>Mimosa<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element> <authors>(<base id='1441' title='Brown, R.'>R.Br.<\/base>) <author id='7060' title='Poiret, J.L.M.'>Poir.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/73727",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Mimosa armata (R.Br.) Poir.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>undulata<\/i> Spin",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Spin, Marquis de (1818), Le Jardin de St. Sebastien Edn. 2",
+                     "protologue": true,
+                     "citationHtml": "Spin, Marquis de (1818), <i>Le Jardin de St. Sebastien<\/i> Edn. 2",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/482718",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia undulata",
+                  "simpleNameHtml": "<scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. illeg.",
+                  "fullNameHtml": "<scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element> <authors><author id='7771' title='Spin, M.'>Spin<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/71512",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia undulata Spin",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>undulata<\/i> Willd. ex Spreng.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Willdenow, C.L. in Sprengel, C.P.J. (ed.) (1820), Neue Entdeckungen im ganzen Umfang der Pflanzenkunde",
+                     "protologue": true,
+                     "citationHtml": "Willdenow, C.L. in Sprengel, C.P.J. (ed.) (1820), <i>Neue Entdeckungen im ganzen Umfang der Pflanzenkunde<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/482726",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia undulata",
+                  "simpleNameHtml": "<scientific><name id='71519'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. illeg.",
+                  "fullNameHtml": "<scientific><name id='71519'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element> <authors><ex id='1884' title='Willdenow, C.L. von'>Willd.<\/ex> ex <author id='6882' title='Sprengel, C.P.J.'>Spreng.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/71519",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia undulata Willd. ex Spreng.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>undulata<\/i> Willd. ex H.L.Wendl.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Wendland, H.L. (1820), Commentatio de Acaciis aphyllis",
+                     "protologue": true,
+                     "citationHtml": "Wendland, H.L. (1820), <i>Commentatio de Acaciis aphyllis<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/482719",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia undulata",
+                  "simpleNameHtml": "<scientific><name id='71513'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. illeg.",
+                  "fullNameHtml": "<scientific><name id='71513'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element> <authors><ex id='1884' title='Willdenow, C.L. von'>Willd.<\/ex> ex <author id='7255' title='Wendland, H.L.'>H.L.Wendl.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/71513",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia undulata Willd. ex H.L.Wendl.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>ornithophora<\/i> Sweet",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Sweet, R. (1827), Flora Australasica",
+                     "protologue": true,
+                     "citationHtml": "Sweet, R. (1827), <i>Flora Australasica<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/476600",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia ornithophora",
+                  "simpleNameHtml": "<scientific><name id='67915'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>ornithophora<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='67915'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>ornithophora<\/i><\/element> <authors><author id='6965' title='Sweet, R.'>Sweet<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/67915",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia ornithophora Sweet",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>hybrida<\/i> <author id='5213' title='Loddiges, C., Loddiges, G. &amp; Loddiges, W.'>Lodd., G.Lodd. & W.Lodd.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Loddiges, C., Loddiges, G. & Loddiges, W. (1828), The Botanical Cabinet 14",
+                     "protologue": true,
+                     "citationHtml": "Loddiges, C., Loddiges, G. & Loddiges, W. (1828), <i>The Botanical Cabinet<\/i> 14",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/606454",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia hybrida",
+                  "simpleNameHtml": "<scientific><name id='200486'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>hybrida<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. inval.",
+                  "fullNameHtml": "<scientific><name id='200486'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>hybrida<\/i><\/element> <authors><author id='5213' title='Loddiges, C., Loddiges, G. &amp; Loddiges, W.'>Lodd., G.Lodd. & W.Lodd.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/200486",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia hybrida Lodd., G.Lodd. & W.Lodd.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Phyllodoce<\/i> <i>armata<\/i> (R.Br.) Link",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. nov.",
+                     "citation": "Link, J.H.F. (1829), Handbuch zur Erkennung der nutzbarsten und am häufigsten vorkommenden Gewachse 2",
+                     "protologue": true,
+                     "citationHtml": "Link, J.H.F. (1829), <i>Handbuch zur Erkennung der nutzbarsten und am häufigsten vorkommenden Gewachse<\/i> 2",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/519658",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Phyllodoce armata",
+                  "simpleNameHtml": "<scientific><name id='95625'><scientific><name id='95612'><element><i>Phyllodoce<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='95625'><scientific><name id='95612'><element><i>Phyllodoce<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element> <authors>(<base id='1441' title='Brown, R.'>R.Br.<\/base>) <author id='6888' title='Link, J.H.F.'>Link<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/95625",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Phyllodoce armata (R.Br.) Link",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>microcantha<\/i> A.Dietr.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Dietrich, A.G. in Otto, C.F. & Dietrich, A.H.G. (ed.) (1833), Allgemeine Gartenzeitung 1",
+                     "protologue": true,
+                     "citationHtml": "Dietrich, A.G. in Otto, C.F. & Dietrich, A.H.G. (ed.) (1833), <i>Allgemeine Gartenzeitung<\/i> 1",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/474815",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia microcantha",
+                  "simpleNameHtml": "<scientific><name id='66790'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>microcantha<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='66790'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>microcantha<\/i><\/element> <authors><author id='7670' title='Dietrich, A.G.'>A.Dietr.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/66790",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia microcantha A.Dietr.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Racosperma<\/i> <i>undulata<\/i> (<ex-base id='1884' title='Willdenow, C.L. von'>Willd.<\/ex-base> ex H.L.Wendl.) Mart.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. nov.",
+                     "citation": "Martius, C.F.P. von (1835), Hortus Regius Monacensis Seminifer",
+                     "protologue": true,
+                     "citationHtml": "Martius, C.F.P. von (1835), <i>Hortus Regius Monacensis Seminifer<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/609993",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Racosperma undulata",
+                  "simpleNameHtml": "<scientific><name id='202232'><scientific><name id='103551'><element><i>Racosperma<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. inval.",
+                  "fullNameHtml": "<scientific><name id='202232'><scientific><name id='103551'><element><i>Racosperma<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element> <authors>(<ex-base id='1884' title='Willdenow, C.L. von'>Willd.<\/ex-base> ex <base id='7255' title='Wendland, H.L.'>H.L.Wendl.<\/base>) <author id='7355' title='Martius, C.P. von'>Mart.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/202232",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Racosperma undulata (Willd. ex H.L.Wendl.) Mart.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Racosperma<\/i> <i>armata<\/i> (R.Br.) Mart.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. nov.",
+                     "citation": "Martius, C.F.P. von (1835), Hortus Regius Monacensis Seminifer",
+                     "protologue": true,
+                     "citationHtml": "Martius, C.F.P. von (1835), <i>Hortus Regius Monacensis Seminifer<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/609992",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Racosperma armata",
+                  "simpleNameHtml": "<scientific><name id='202231'><scientific><name id='103551'><element><i>Racosperma<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. inval.",
+                  "fullNameHtml": "<scientific><name id='202231'><scientific><name id='103551'><element><i>Racosperma<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element> <authors>(<base id='1441' title='Brown, R.'>R.Br.<\/base>) <author id='7355' title='Martius, C.P. von'>Mart.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/202231",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Racosperma armata (R.Br.) Mart.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>tristis<\/i> Graham",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Graham, R. in Hooker, W.J. (ed.) (1835), Botanical Magazine",
+                     "protologue": true,
+                     "citationHtml": "Graham, R. in Hooker, W.J. (ed.) (1835), <i>Botanical Magazine<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/482557",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia tristis",
+                  "simpleNameHtml": "<scientific><name id='71406'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>tristis<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='71406'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>tristis<\/i><\/element> <authors><author id='7270' title='Graham, R.C.'>Graham<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/71406",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia tristis Graham",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>bartheriana<\/i> <ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort. ex Jacques",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Jacques, H.A. (1837), Annales de Flore et de Pomone; ou journal des jardins et des champs",
+                     "protologue": true,
+                     "citationHtml": "Jacques, H.A. (1837), <i>Annales de Flore et de Pomone; ou journal des jardins et des champs<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/463403",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia bartheriana",
+                  "simpleNameHtml": "<scientific><name id='59159'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>bartheriana<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='59159'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>bartheriana<\/i><\/element> <authors><ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort.<\/ex> ex <author id='7124' title='Jacques, H.A.'>Jacques<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/59159",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia bartheriana Hort. ex Jacques",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>furcifera<\/i> Lindl.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Lindley, J. in Mitchell, T.L. (1838), Three Expeditions into the interior of Eastern Australia 2",
+                     "protologue": true,
+                     "citationHtml": "Lindley, J. in Mitchell, T.L. (1838), <i>Three Expeditions into the interior of Eastern Australia<\/i> 2",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/469279",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia furcifera",
+                  "simpleNameHtml": "<scientific><name id='63320'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>furcifera<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='63320'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>furcifera<\/i><\/element> <authors><author id='1554' title='Lindley, J.'>Lindl.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/63320",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia furcifera Lindl.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>undulata<\/i> Spin var. <i>undulata<\/i>",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [],
+                  "simpleName": "Acacia undulata var. undulata",
+                  "simpleNameHtml": "<scientific><name id='71527'><scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='71527'><scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element> <authors><author id='7771' title='Spin, M.'>Spin<\/author><\/authors><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/71527",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia undulata Spin var. undulata",
+                  "nameType": "autonym"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> R.Br. var. <i>armata<\/i>",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [],
+                  "simpleName": "Acacia armata var. armata",
+                  "simpleNameHtml": "<scientific><name id='58707'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>armata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58707'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element> <authors><author id='1441' title='Brown, R.'>R.Br.<\/author><\/authors><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>armata<\/i><\/element><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58707",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata R.Br. var. armata",
+                  "nameType": "autonym"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>hybrida<\/i> Lodd. ex Benth.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Bentham, G. in Hooker, W.J. (1842), Notes on Mimoseae, with a synopsis of species. London Journal of Botany 1",
+                     "protologue": true,
+                     "citationHtml": "Bentham, G. in Hooker, W.J. (1842), Notes on Mimoseae, with a synopsis of species. <i>London Journal of Botany<\/i> 1",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/471241",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia hybrida",
+                  "simpleNameHtml": "<scientific><name id='64609'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>hybrida<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. illeg.",
+                  "fullNameHtml": "<scientific><name id='64609'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>hybrida<\/i><\/element> <authors><ex id='7213' title='Loddiges, C.'>Lodd.<\/ex> ex <author id='1531' title='Bentham, G.'>Benth.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/64609",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia hybrida Lodd. ex Benth.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>microphylla<\/i> Benth.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Bentham, G. in Hooker, W.J. (1842), Notes on Mimoseae, with a synopsis of species. London Journal of Botany 1",
+                     "protologue": true,
+                     "citationHtml": "Bentham, G. in Hooker, W.J. (1842), Notes on Mimoseae, with a synopsis of species. <i>London Journal of Botany<\/i> 1",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462802",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. microphylla",
+                  "simpleNameHtml": "<scientific><name id='58737'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>microphylla<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58737'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>microphylla<\/i><\/element> <authors><author id='1531' title='Bentham, G.'>Benth.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58737",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. microphylla Benth.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>ornithophora<\/i> (Sweet) Benth.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. et stat. nov.",
+                     "citation": "Bentham, G. in Hooker, W.J. (1842), Notes on Mimoseae, with a synopsis of species. London Journal of Botany 1",
+                     "protologue": true,
+                     "citationHtml": "Bentham, G. in Hooker, W.J. (1842), Notes on Mimoseae, with a synopsis of species. <i>London Journal of Botany<\/i> 1",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462815",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. ornithophora",
+                  "simpleNameHtml": "<scientific><name id='58746'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>ornithophora<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58746'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>ornithophora<\/i><\/element> <authors>(<base id='6965' title='Sweet, R.'>Sweet<\/base>) <author id='1531' title='Bentham, G.'>Benth.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58746",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. ornithophora (Sweet) Benth.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armatoides<\/i> Walp.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Walpers, W.G. (1843), Repertorium Botanices Systematicae 1(5)",
+                     "protologue": true,
+                     "citationHtml": "Walpers, W.G. (1843), <i>Repertorium Botanices Systematicae<\/i> 1(5)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462901",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armatoides",
+                  "simpleNameHtml": "<scientific><name id='58814'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armatoides<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. inval.",
+                  "fullNameHtml": "<scientific><name id='58814'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armatoides<\/i><\/element> <authors><author id='6997' title='Walpers, W.G.'>Walp.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58814",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia armatoides Walp.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>pendula<\/i> Seem.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Seemann, B.C. (1846), Verhandlungen der Kaiserlich-Koniglichen Gartenbaugesellschaft in Wien im Jahre 1846",
+                     "protologue": true,
+                     "citationHtml": "Seemann, B.C. (1846), <i>Verhandlungen der Kaiserlich-Koniglichen Gartenbaugesellschaft in Wien im Jahre 1846<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462843",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. pendula",
+                  "simpleNameHtml": "<scientific><name id='58770'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>pendula<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58770'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>pendula<\/i><\/element> <authors><author id='7131' title='Seemann, B.C.'>Seem.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58770",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. pendula Seem.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>linearifolia<\/i> Ser.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Seringe, N.C. (1849), Flore des Jardins et des Grandes Cultures 3",
+                     "protologue": true,
+                     "citationHtml": "Seringe, N.C. (1849), <i>Flore des Jardins et des Grandes Cultures<\/i> 3",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462775",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. linearifolia",
+                  "simpleNameHtml": "<scientific><name id='58716'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>linearifolia<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58716'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>linearifolia<\/i><\/element> <authors><author id='7141' title='Seringe, N.C.'>Ser.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58716",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. linearifolia Ser.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>plana<\/i> Ser.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Seringe, N.C. (1849), Flore des Jardins et des Grandes Cultures 3",
+                     "protologue": true,
+                     "citationHtml": "Seringe, N.C. (1849), <i>Flore des Jardins et des Grandes Cultures<\/i> 3",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462857",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. plana",
+                  "simpleNameHtml": "<scientific><name id='58781'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>plana<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58781'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>plana<\/i><\/element> <authors><author id='7141' title='Seringe, N.C.'>Ser.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58781",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. plana Ser.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>longipedunculata<\/i> Regel",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Regel, E.A. von in Fischer, F.E.L. von & Meyer, C.A.A. von (ed.) (1859), Index Seminum, quae hortus botanicus Imperialis Petropolitanus pro mutua commutatione offert",
+                     "protologue": true,
+                     "citationHtml": "Regel, E.A. von in Fischer, F.E.L. von & Meyer, C.A.A. von (ed.) (1859), <i>Index Seminum, quae hortus botanicus Imperialis Petropolitanus pro mutua commutatione offert<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462789",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. longipedunculata",
+                  "simpleNameHtml": "<scientific><name id='58726'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>longipedunculata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58726'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>longipedunculata<\/i><\/element> <authors><author id='7202' title='Regel, E.A. von'>Regel<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58726",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. longipedunculata Regel",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>barteriana<\/i> <ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort. ex Jacques",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Jacques, H.A. (1863), Journal de la Societe Imperiale et Centrale d'Horticulture",
+                     "protologue": true,
+                     "citationHtml": "Jacques, H.A. (1863), <i>Journal de la Societe Imperiale et Centrale d'Horticulture<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/463387",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia barteriana",
+                  "simpleNameHtml": "<scientific><name id='59148'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>barteriana<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='59148'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>barteriana<\/i><\/element> <authors><ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort.<\/ex> ex <author id='7124' title='Jacques, H.A.'>Jacques<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/59148",
+                     "preferred": true
+                  }},
+                  "nameRank": "Species",
+                  "fullName": "Acacia barteriana Hort. ex Jacques",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> R.Br. f. <i>armata<\/i>",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [],
+                  "simpleName": "Acacia armata f. armata",
+                  "simpleNameHtml": "<scientific><name id='58710'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>armata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58710'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element> <authors><author id='1441' title='Brown, R.'>R.Br.<\/author><\/authors><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>armata<\/i><\/element><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58710",
+                     "preferred": true
+                  }},
+                  "nameRank": "Forma",
+                  "fullName": "Acacia armata R.Br. f. armata",
+                  "nameType": "autonym"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> f. <i>tristis<\/i> (Graham) Voss",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. et stat. nov.",
+                     "citation": "Voss, A. (1894), Vilmorin's Blumengartnerei Edn. 3, 1(1)",
+                     "protologue": true,
+                     "citationHtml": "Voss, A. (1894), <i>Vilmorin's Blumengartnerei<\/i> Edn. 3, 1(1)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462868",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata f. tristis",
+                  "simpleNameHtml": "<scientific><name id='58788'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>tristis<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58788'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>tristis<\/i><\/element> <authors>(<base id='7270' title='Graham, R.C.'>Graham<\/base>) <author id='1660' title='Voss, A.'>Voss<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58788",
+                     "preferred": true
+                  }},
+                  "nameRank": "Forma",
+                  "fullName": "Acacia armata f. tristis (Graham) Voss",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> f. <i>micrantha<\/i> Voss",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [],
+                  "simpleName": "Acacia armata f. micrantha",
+                  "simpleNameHtml": "<scientific><name id='200483'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>micrantha<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "orth. var.",
+                  "fullNameHtml": "<scientific><name id='200483'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>micrantha<\/i><\/element> <authors><author id='1660' title='Voss, A.'>Voss<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/200483",
+                     "preferred": true
+                  }},
+                  "nameRank": "Forma",
+                  "fullName": "Acacia armata f. micrantha Voss",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> f. <i>microcantha<\/i> (A.Dietr.) Voss",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. et stat. nov.",
+                     "citation": "Voss, A. (1894), Vilmorin's Blumengartnerei Edn. 3, 1(1)",
+                     "protologue": true,
+                     "citationHtml": "Voss, A. (1894), <i>Vilmorin's Blumengartnerei<\/i> Edn. 3, 1(1)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462795",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata f. microcantha",
+                  "simpleNameHtml": "<scientific><name id='58732'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>microcantha<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58732'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>microcantha<\/i><\/element> <authors>(<base id='7670' title='Dietrich, A.G.'>A.Dietr.<\/base>) <author id='1660' title='Voss, A.'>Voss<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58732",
+                     "preferred": true
+                  }},
+                  "nameRank": "Forma",
+                  "fullName": "Acacia armata f. microcantha (A.Dietr.) Voss",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> f. <i>hybrida<\/i> (Benth.) Voss",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. et stat. nov.",
+                     "citation": "Voss, A. (1894), Vilmorin's Blumengartnerei Edn. 3, 1(1)",
+                     "protologue": true,
+                     "citationHtml": "Voss, A. (1894), <i>Vilmorin's Blumengartnerei<\/i> Edn. 3, 1(1)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462774",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata f. hybrida",
+                  "simpleNameHtml": "<scientific><name id='58715'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>hybrida<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58715'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>hybrida<\/i><\/element> <authors>(<base id='1531' title='Bentham, G.'>Benth.<\/base>) <author id='1660' title='Voss, A.'>Voss<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58715",
+                     "preferred": true
+                  }},
+                  "nameRank": "Forma",
+                  "fullName": "Acacia armata f. hybrida (Benth.) Voss",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> f. <i>ornithophora<\/i> (Sweet) Voss",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "comb. et stat. nov.",
+                     "citation": "Voss, A. (1894), Vilmorin's Blumengartnerei Edn. 3, 1(1)",
+                     "protologue": true,
+                     "citationHtml": "Voss, A. (1894), <i>Vilmorin's Blumengartnerei<\/i> Edn. 3, 1(1)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462821",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata f. ornithophora",
+                  "simpleNameHtml": "<scientific><name id='58752'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>ornithophora<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='58752'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54414'>f.<\/rank> <element><i>ornithophora<\/i><\/element> <authors>(<base id='6965' title='Sweet, R.'>Sweet<\/base>) <author id='1660' title='Voss, A.'>Voss<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58752",
+                     "preferred": true
+                  }},
+                  "nameRank": "Forma",
+                  "fullName": "Acacia armata f. ornithophora (Sweet) Voss",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>typica<\/i> Domin",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "primary reference",
+                     "citation": "Domin, K. (1926), Beitrage zur Flora und Pflanzengeographie Australiens. Bibliotheca Botanica 22(89)",
+                     "protologue": false,
+                     "citationHtml": "Domin, K. (1926), Beitrage zur Flora und Pflanzengeographie Australiens. <i>Bibliotheca Botanica<\/i> 22(89)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/462870",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. typica",
+                  "simpleNameHtml": "<scientific><name id='58790'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>typica<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. inval.",
+                  "fullNameHtml": "<scientific><name id='58790'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>typica<\/i><\/element> <authors><author id='6860' title='Domin, K.'>Domin<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58790",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. typica Domin",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>bartheriana<\/i> <ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort. ex Chopinet",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Chopinet, R.G. (1951), Annales de l'institut national de la recherche agronomique.  Series B.  Annales de l'ameloration des plantes 1(4)",
+                     "protologue": true,
+                     "citationHtml": "Chopinet, R.G. (1951), <i>Annales de l'institut national de la recherche agronomique.  Series B.  Annales de l'ameloration des plantes<\/i> 1(4)",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/606455",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia armata var. bartheriana",
+                  "simpleNameHtml": "<scientific><name id='200487'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>bartheriana<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='200487'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>bartheriana<\/i><\/element> <authors><ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort.<\/ex> ex <author id='2156' title='Chopinet, R.G.'>Chopinet<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/200487",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. bartheriana Hort. ex Chopinet",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>angustifolia<\/i> Benth. ex A.D.Chapm.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [],
+                  "simpleName": "Acacia armata var. angustifolia",
+                  "simpleNameHtml": "<scientific><name id='58701'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>angustifolia<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. illeg., nom. superfl.",
+                  "fullNameHtml": "<scientific><name id='58701'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>angustifolia<\/i><\/element> <authors><ex id='1531' title='Bentham, G.'>Benth.<\/ex> ex <author id='2371' title='Chapman, A.D.'>A.D.Chapm.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58701",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. angustifolia Benth. ex A.D.Chapm.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "doubtful taxonomic synonym: <i>Acacia<\/i> <i>undulata<\/i> var. <i>longispina<\/i> <ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort. ex Vis.",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Visiani R. de (1842), L'Orto Botanico di Padova",
+                     "protologue": true,
+                     "citationHtml": "Visiani R. de (1842), <i>L'Orto Botanico di Padova<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/482731",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia undulata var. longispina",
+                  "simpleNameHtml": "<scientific><name id='71524'><scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>longispina<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='71524'><scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>longispina<\/i><\/element> <authors><ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort.<\/ex> ex <author id='7665' title='Visiani, R. de'>Vis.<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/71524",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia undulata var. longispina Hort. ex Vis.",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "doubtful taxonomic synonym: <i>Acacia<\/i> <i>undulata<\/i> var. <i>elegans<\/i> <ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort. ex Jacques",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [{
+                     "instanceType": "tax. nov.",
+                     "citation": "Jacques, H.A. (1844), Annales de Flore et de Pomone; ou journal des jardins et des champs",
+                     "protologue": true,
+                     "citationHtml": "Jacques, H.A. (1844), <i>Annales de Flore et de Pomone; ou journal des jardins et des champs<\/i>",
+                     "class": "au.org.biodiversity.nsl.Instance",
+                     "_links": {"permalink": {
+                        "resources": 1,
+                        "link": "https://biodiversity.org.au/boa/instance/apni/482729",
+                        "preferred": true
+                     }}
+                  }],
+                  "simpleName": "Acacia undulata var. elegans",
+                  "simpleNameHtml": "<scientific><name id='71522'><scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>elegans<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "legitimate",
+                  "fullNameHtml": "<scientific><name id='71522'><scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>undulata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>elegans<\/i><\/element> <authors><ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort.<\/ex> ex <author id='7124' title='Jacques, H.A.'>Jacques<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/71522",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia undulata var. elegans Hort. ex Jacques",
+                  "nameType": "scientific"
+               }
+            },
+            {
+               "relationship": "doubtful taxonomic synonym: <i>Acacia<\/i> <i>armata<\/i> var. <i>undulata<\/i> Riebe",
+               "page": "-",
+               "name": {
+                  "primaryInstance": [],
+                  "simpleName": "Acacia armata var. undulata",
+                  "simpleNameHtml": "<scientific><name id='58797'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>undulata<\/i><\/element><\/name><\/scientific>",
+                  "nameStatus": "nom. inval., nom. nud.",
+                  "fullNameHtml": "<scientific><name id='58797'><scientific><name id='58681'><scientific><name id='56859'><element><i>Acacia<\/i><\/element><\/name><\/scientific> <element><i>armata<\/i><\/element><\/name><\/scientific> <rank id='54412'>var.<\/rank> <element><i>undulata<\/i><\/element> <authors><author id='7300' title='Riebe, H.'>Riebe<\/author><\/authors><\/name><\/scientific>",
+                  "class": "au.org.biodiversity.nsl.Name",
+                  "_links": {"permalink": {
+                     "resources": 1,
+                     "link": "https://biodiversity.org.au/boa/name/apni/58797",
+                     "preferred": true
+                  }},
+                  "nameRank": "Varietas",
+                  "fullName": "Acacia armata var. undulata Riebe",
+                  "nameType": "scientific"
+               }
+            }
+         ],
+         "class": "au.org.biodiversity.nsl.Reference",
+         "_links": {"permalink": {
+            "resources": 1,
+            "link": "https://biodiversity.org.au/boa/reference/apni/42942",
+            "preferred": true
+         }},
+         "notes": [
+            {
+               "instanceNoteText": "A very polymorphic species.  Putative hybrids are recorded between A. paradoxa and A. ausfeldii, A. leprosa and A. stricta in Vic (Court in Willis, A Handbook to Plants in Victoria Edn. 2, 1973; Maslin, 2001).  Putative hybrids are recorded between A. paradoxa and A. dodonaeifolia, A. gracilifolia, A. montana and A. triquetra in SA (Whibley & Symon, Acacias of South Australia, 1992; Maslin, 2001).  The 'Acacia armata var. angustifolia Benth. (1855), nom. illeg.' of Chapman in Australian Plant Name Index 18 (1991) is merely a later use by Bentham of that name, coined by him in 1842 (he referred directly to the earlier publication).",
+               "instanceNoteKey": "APC Comment"
+            },
+            {
+               "instanceNoteText": "WA (naturalised), SA, Qld, NSW, ACT, Vic, Tas (naturalised)",
+               "instanceNoteKey": "APC Dist."
+            }
+         ]
+      },      "classifications": [
          {
             "guid": "urn:lsid:biodiversity.org.au:apni.taxon:661518",
             "rawRank": "Kingdom",

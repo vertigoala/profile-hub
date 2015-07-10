@@ -7,6 +7,7 @@ import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.context.request.RequestContextHolder
 
@@ -43,6 +44,8 @@ class ExportService {
 
 
     private Map loadProfileData(String profileId, opus, Map params) {
+        JSONObject.NULL.metaClass.asBoolean = {-> false}
+        JSONObject.NULL.metaClass.toString = {-> ''}
         Map model = [:]
         model.profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${opus.uuid}/profile/${URLEncoder.encode(profileId, "UTF-8")}?latest=${false}")?.resp
 
@@ -81,8 +84,14 @@ class ExportService {
             }
         }
 
-        if (params.nomenclature && model.profile.nslNameIdentifier) {
-            model.profile.nomenclatureHtml = webService.get("${grailsApplication.config.nsl.name.url.prefix}${model.profile.nslNameIdentifier}", false)?.resp?.replaceAll("&", "&amp;")
+        // Don't make them String if you want the groovy truth to work
+        def nslNameIdentifier = model.profile.nslNameIdentifier
+        def nslNomenclatureIdentifier = model.profile.nslNomenclatureIdentifier
+        if (params.nomenclature && nslNameIdentifier && nslNomenclatureIdentifier) {
+            model.profile.nomenclature = nslService.getConcept(nslNameIdentifier, nslNomenclatureIdentifier)
+            model.profile.nomenclature.citations.each {citation ->
+                citation.relationship = stripHtmlTextFromNonFormattingTags(citation.relationship)
+            }
         }
 
         String occurrenceQuery = createOccurrenceQuery(model.profile, opus)
@@ -246,4 +255,14 @@ class ExportService {
 
         return colour;
     };
+
+    /**
+     *
+     * @param html
+     * @return
+     */
+    static String stripHtmlTextFromNonFormattingTags(String html) {
+        def regex = ~/<\/?(?!i>)(?!b>)([A-Za-z0-9.'()+,=:\s])+>/
+        return html.replaceAll(regex, "")
+    }
 }
