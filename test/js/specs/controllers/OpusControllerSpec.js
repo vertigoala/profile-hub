@@ -13,14 +13,15 @@ describe("OpusController tests", function () {
                 return "profileId1"
             }
         },
-        isUuid: function() {
+        isUuid: function () {
             return true;
         },
         LAST: "last",
-        contextRoot: function() {
+        contextRoot: function () {
             return "/contextRoot";
         },
-        redirect: function(location) {}
+        redirect: function (location) {
+        }
     };
     var form;
     var messageService;
@@ -31,7 +32,7 @@ describe("OpusController tests", function () {
     var getResourceResponse = '{"pubDescription":"resource description"}';
     var listResourceResponse = '{"dr776":" Insect and spider wetland indicator species list","dr774":" Toothed whales found in Australian waters"}';
     var getAllListsResponse = '{lists: [{"dataResourceUid": "id4", "listName": "list4"}, {"dataResourceUid": "id2", "listName": "list2"}, {"dataResourceUid": "id3", "listName": "list3"}, {"dataResourceUid": "id1", "listName": "list1"}]}';
-    var listOpusResponse = '[{"uuid":"opus1", "title":"Opus 1"}, {"uuid":"opus2", "title":"Opus 2"}, {"uuid":"'+OPUS_ID+'", "title":"Opus 3"}]';
+    var listOpusResponse = '[{"uuid":"opus1", "title":"Opus 1"}, {"uuid":"opus2", "title":"Opus 2"}, {"uuid":"' + OPUS_ID + '", "title":"Opus 3"}]';
 
     beforeAll(function () {
         console.log("****** Opus Controller Tests ******");
@@ -151,6 +152,19 @@ describe("OpusController tests", function () {
         expect(scope.opusCtrl.newApprovedLists.length).toBe(1);
     });
 
+    it("should create a new empty bio status list record when addBioStatusList is invoked", function () {
+        scope.opusCtrl.addBioStatusList()
+
+        expect(scope.opusCtrl.newBioStatusLists.length).toBe(1);
+    });
+
+    it("should not add more than one bio status", function () {
+        scope.opusCtrl.opus = {bioStatusLists: ["list1"]};
+        scope.opusCtrl.addBioStatusList();
+
+        expect(scope.opusCtrl.newBioStatusLists.length).toBe(1);
+    });
+
     it("should remove an existing imageSource from the opus when removeImageSource is invoked with 'existing'", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
@@ -202,7 +216,10 @@ describe("OpusController tests", function () {
     it("should remove an existing supporting opus from the opus when removeSupportingOpus is invoked with 'existing'", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.$apply();
-        scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {opusId: "opus2", title: "Opus 2"}, {opusId: "opus3", title: "Opus 3"}];
+        scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {
+            opusId: "opus2",
+            title: "Opus 2"
+        }, {opusId: "opus3", title: "Opus 3"}];
 
         scope.$apply();
         scope.opusCtrl.removeSupportingOpus(1, 'existing', form);
@@ -215,10 +232,16 @@ describe("OpusController tests", function () {
     it("should remove a supportingOpus from the list of new supportingOpuses when removeSupportingOpus is invoked with 'new'", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.$apply();
-        scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {opusId: "opus2", title: "Opus 2"}, {opusId: "opus3", title: "Opus 3"}];
+        scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {
+            opusId: "opus2",
+            title: "Opus 2"
+        }, {opusId: "opus3", title: "Opus 3"}];
 
         scope.$apply();
-        scope.opusCtrl.newSupportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {opusId: "opus2", title: "Opus 2"}, {opusId: "opus3", title: "Opus 3"}];
+        scope.opusCtrl.newSupportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {
+            opusId: "opus2",
+            title: "Opus 2"
+        }, {opusId: "opus3", title: "Opus 3"}];
         scope.opusCtrl.removeSupportingOpus(1, 'new', form);
 
         expect(scope.opusCtrl.opus.supportingOpuses.length).toBe(3);
@@ -250,6 +273,29 @@ describe("OpusController tests", function () {
         expect(scope.opusCtrl.newApprovedLists[1]).toBe("list6");
     });
 
+    it("should remove an existing bio status list from the opus when removeBioStatusList is invoked with 'existing'", function () {
+        scope.opusCtrl.opus = {bioStatusLists: ["list1", "list2", "list3"]};
+
+        scope.$apply();
+        scope.opusCtrl.removeBioStatusList(1, 'existing', form);
+
+        expect(scope.opusCtrl.opus.bioStatusLists.length).toBe(2);
+        expect(scope.opusCtrl.opus.bioStatusLists[0]).toBe("list1");
+        expect(scope.opusCtrl.opus.bioStatusLists[1]).toBe("list3");
+    });
+
+    it("should remove an bio status list from the list of new bio status lists when removeBioStatusList is invoked with 'new'", function () {
+        scope.opusCtrl.opus = {bioStatusLists: ["list1", "list2", "list3"]};
+
+        scope.opusCtrl.newBioStatusLists = ["list4", "list5", "list6"];
+        scope.opusCtrl.removeBioStatusList(1, 'new', form);
+
+        expect(scope.opusCtrl.opus.bioStatusLists.length).toBe(3);
+        expect(scope.opusCtrl.newBioStatusLists.length).toBe(2);
+        expect(scope.opusCtrl.newBioStatusLists[0]).toBe("list4");
+        expect(scope.opusCtrl.newBioStatusLists[1]).toBe("list6");
+    });
+
     it("should set the form to Dirty removeImageSource is invoked", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
 
@@ -274,8 +320,14 @@ describe("OpusController tests", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.$apply();
 
-        scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {opusId: "opus2", title: "Opus 2"}, {opusId: "opus3", title: "Opus 3"}];
-        scope.opusCtrl.newSupportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {opusId: "opus2", title: "Opus 2"}, {opusId: "opus3", title: "Opus 3"}];
+        scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {
+            opusId: "opus2",
+            title: "Opus 2"
+        }, {opusId: "opus3", title: "Opus 3"}];
+        scope.opusCtrl.newSupportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {
+            opusId: "opus2",
+            title: "Opus 2"
+        }, {opusId: "opus3", title: "Opus 3"}];
         scope.opusCtrl.removeSupportingOpus(1, 'new', form);
 
         expect(form.$setDirty).toHaveBeenCalled();
@@ -304,7 +356,7 @@ describe("OpusController tests", function () {
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
-    it("should validate that image sources have an associated data resource object", function() {
+    it("should validate that image sources have an associated data resource object", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
@@ -317,7 +369,7 @@ describe("OpusController tests", function () {
         expect(messageService.alert).toHaveBeenCalledWith("1 image source is not valid. You must select items from the list.");
     });
 
-    it("should save the opus if no new image sources have been added but existing image sources have been removed", function() {
+    it("should save the opus if no new image sources have been added but existing image sources have been removed", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
@@ -362,7 +414,7 @@ describe("OpusController tests", function () {
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
-    it("should validate that record sources have an associated data resource object", function() {
+    it("should validate that record sources have an associated data resource object", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
@@ -375,7 +427,7 @@ describe("OpusController tests", function () {
         expect(messageService.alert).toHaveBeenCalledWith("1 record source is not valid. You must select items from the list.");
     });
 
-    it("should save the opus if no new record sources have been added but existing record sources have been removed", function() {
+    it("should save the opus if no new record sources have been added but existing record sources have been removed", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
@@ -421,7 +473,7 @@ describe("OpusController tests", function () {
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
-    it("should validate that supporting opuses have an associated opus object with and id", function() {
+    it("should validate that supporting opuses have an associated opus object with and id", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
@@ -434,11 +486,14 @@ describe("OpusController tests", function () {
         expect(messageService.alert).toHaveBeenCalledWith("1 supporting collection is not valid. You must select items from the list.");
     });
 
-    it("should save the opus if no new supporting opuses have been added but existing ones have been removed", function() {
+    it("should save the opus if no new supporting opuses have been added but existing ones have been removed", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
-        scope.opusCtrl.opus.supportingOpuses = [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus2", title: "Opus 2"}, {uuid: "opus3", title: "Opus 3"}];
+        scope.opusCtrl.opus.supportingOpuses = [{uuid: "opus1", title: "Opus 1"}, {
+            uuid: "opus2",
+            title: "Opus 2"
+        }, {uuid: "opus3", title: "Opus 3"}];
 
         scope.opusCtrl.removeSupportingOpus(1, 'existing', form);
         scope.opusCtrl.saveSupportingOpuses(form);
@@ -474,7 +529,7 @@ describe("OpusController tests", function () {
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
-    it("should validate that approved lists have an associated dataResourceUid", function() {
+    it("should validate that approved lists have an associated dataResourceUid", function () {
         scope.opusCtrl.opusId = OPUS_ID;
 
         scope.opusCtrl.newApprovedLists = [{list: {listName: "list1"}}];
@@ -485,7 +540,7 @@ describe("OpusController tests", function () {
         expect(messageService.alert).toHaveBeenCalledWith("1 list is not valid. You must select items from the list.");
     });
 
-    it("should save the opus if no new approved lists have been added but existing ones have been removed", function() {
+    it("should save the opus if no new approved lists have been added but existing ones have been removed", function () {
         scope.opusCtrl.opus = {title: "OpusName", approvedLists: ["list1", "list2", "list3"]};
         scope.opusCtrl.opusId = OPUS_ID;
 
@@ -502,7 +557,53 @@ describe("OpusController tests", function () {
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
-    it("should raise an alert message if the call to saveOpus fails", function() {
+    //
+    it("should merge newBioStatusLists with the existing bioStatusLists when saveBioStatusLists is called", function () {
+        scope.opusCtrl.opus = {title: "OpusName", bioStatusLists: []};
+        scope.opusCtrl.newBioStatusLists = [{list: {dataResourceUid: "list4"}}];
+        scope.opusCtrl.opusId = OPUS_ID;
+
+        scope.opusCtrl.saveBioStatusLists(form);
+
+        var expectedOpus = {
+            title: "OpusName",
+            bioStatusLists: ["list4"],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
+    });
+
+    it("should validate that bio status lists have an associated dataResourceUid", function () {
+        scope.opusCtrl.opusId = OPUS_ID;
+
+        scope.opusCtrl.newBioStatusLists = [{list: {listName: "list1"}}];
+
+        scope.opusCtrl.saveBioStatusLists(form);
+
+        expect(profileService.saveOpus).not.toHaveBeenCalledWith();
+        expect(messageService.alert).toHaveBeenCalledWith("1 list is not valid. You must select items from the list.");
+    });
+
+    it("should save the opus if no new bio status lists have been added but existing ones have been removed", function () {
+        scope.opusCtrl.opus = {title: "OpusName", bioStatusLists: ["list1"]};
+        scope.opusCtrl.opusId = OPUS_ID;
+
+        scope.opusCtrl.removeBioStatusList(0, 'existing', form);
+        scope.opusCtrl.saveBioStatusLists(form);
+
+        var expectedOpus = {
+            title: "OpusName",
+            bioStatusLists: [],
+            keybaseProjectId: "",
+            keybaseKeyId: ""
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
+    });
+
+    it("should raise an alert message if the call to saveOpus fails", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         saveOpusDefer.reject();
         scope.$apply();
@@ -512,7 +613,7 @@ describe("OpusController tests", function () {
         expect(messageService.alert).toHaveBeenCalledWith("Failed to update OpusName.");
     });
 
-    it("should raise a success message and set the form to pristine if the call to saveOpus succeeds", function() {
+    it("should raise a success message and set the form to pristine if the call to saveOpus succeeds", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         saveOpusDefer.resolve({});
         scope.$apply();
@@ -523,7 +624,7 @@ describe("OpusController tests", function () {
         expect(form.$setPristine).toHaveBeenCalled();
     });
 
-    it("should check for duplicate short names when saving the opus", function() {
+    it("should check for duplicate short names when saving the opus", function () {
         scope.opusCtrl.initialShortName = "oldShortName";
         scope.opusCtrl.opus = {shortName: "newShortName"};
 
@@ -532,7 +633,7 @@ describe("OpusController tests", function () {
         expect(profileService.getOpus).toHaveBeenCalledWith("newShortName");
     });
 
-    it("should only check for duplicate short names when saving the opus if the short name has changed", function() {
+    it("should only check for duplicate short names when saving the opus if the short name has changed", function () {
         scope.opusCtrl.initialShortName = "oldShortName";
         scope.opusCtrl.opus = {shortName: "oldShortName"};
 
@@ -541,7 +642,7 @@ describe("OpusController tests", function () {
         expect(profileService.getOpus).not.toHaveBeenCalledWith();
     });
 
-    it("should raise an alert message if there is another opus with the same shortName when saving the opus", function() {
+    it("should raise an alert message if there is another opus with the same shortName when saving the opus", function () {
         scope.opusCtrl.initialShortName = "oldShortName";
         scope.opusCtrl.opus = {shortName: "newShortName"};
 
@@ -552,7 +653,7 @@ describe("OpusController tests", function () {
         expect(messageService.alert).toHaveBeenCalledWith("The specified short name is already in use. Short Names must be unique across all collections.");
     });
 
-    it("should save the opus if there are no other opuses with the same shortName when saving the opus", function() {
+    it("should save the opus if there are no other opuses with the same shortName when saving the opus", function () {
         scope.opusCtrl.initialShortName = "oldShortName";
         scope.opusCtrl.opus = {shortName: "newShortName"};
 
@@ -563,7 +664,7 @@ describe("OpusController tests", function () {
         expect(profileService.saveOpus).toHaveBeenCalled();
     });
 
-    it("should redirect to the update opus page after creating a new opus", function() {
+    it("should redirect to the update opus page after creating a new opus", function () {
         scope.opusCtrl.opus = {};
 
         var newUuid = "123456";
@@ -575,7 +676,7 @@ describe("OpusController tests", function () {
         expect(mockUtil.redirect).toHaveBeenCalledWith("/contextRoot/opus/" + newUuid + "/update");
     });
 
-    it("should stay on the same page after updating an exiting new opus", function() {
+    it("should stay on the same page after updating an exiting new opus", function () {
         scope.opusCtrl.opus = {uuid: "123456"};
 
         saveOpusDefer.resolve({uuid: "123456"});

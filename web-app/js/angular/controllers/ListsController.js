@@ -2,10 +2,13 @@
  * Species Lists controller
  */
 profileEditor.controller('ListsEditor', function (profileService, navService, util, messageService, $filter) {
-    var self = this;
+    var self = this,
+    // flag to add status to page index
+        statusAdded = false;
 
     self.lists = [];
     self.conservationStatuses = [];
+    self.bioStatuses = [];
 
     var orderBy = $filter("orderBy");
 
@@ -32,12 +35,17 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
         var promise = profileService.getSpeciesProfile(self.opusId, self.profileId, self.profile.guid);
         promise.then(function (data) {
             self.conservationStatuses = orderBy(data.conservationStatuses, "region");
-
-            if (self.conservationStatuses.length > 0) {
-                navService.add("Conservation Status", "conservationStatus");
-            }
+            navService.add("Status", "statuses");
         });
     };
+
+    self.loadBioStatus = function () {
+        var promise = profileService.getBioStatus(self.opusId, self.profileId);
+        promise.then(function (data) {
+            self.bioStatuses = orderBy(data, 'key');
+            navService.add("Status", "statuses");
+        });
+    }
 
     self.getColourForStatus = function (status) {
         var colour;
@@ -90,14 +98,15 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
                         navService.add("Conservation & Sensitivity Lists", "lists");
                     }
 
-                    self.loadConservationStatus();
-
                     messageService.pop();
                 },
                 function () {
                     messageService.alert("An error occurred while retrieving the lists.");
                 }
             );
+
+            self.loadConservationStatus();
+            self.loadBioStatus();
         }
     }
 });
