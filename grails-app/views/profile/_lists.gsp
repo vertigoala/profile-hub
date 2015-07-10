@@ -22,10 +22,10 @@
 
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-3"><strong>Conservation status</strong></div>
+                <div class="col-sm-2"><strong>Conservation status</strong></div>
 
-                <div class="col-sm-9">
-                    <div class="" ng-repeat="status in listCtrl.conservationStatuses">
+                <div class="col-sm-10">
+                    <div class="col-sm-12" ng-repeat="status in listCtrl.conservationStatuses">
                         <a href="${grailsApplication.config.collectory.base.url}/public/showDataResource/{{listCtrl.statusRegions[status.region].id}}"
                            title="Threatened Species Codes - details" target="_blank">
                             <div class="status"
@@ -36,11 +36,13 @@
                 </div>
             </div>
 
-            <div class="row" ng-repeat="status in listCtrl.bioStatuses">
-                <div class="col-sm-3"><strong>{{status.key | formatText | capitalize}}</strong></div>
+            <div class="row padding-top-1" ng-repeat="status in listCtrl.bioStatuses">
+                <div class="col-sm-2"><strong>{{status.key | formatText | capitalize}}</strong></div>
 
-                <div class="col-sm-9">
-                    {{status.value}}
+                <div class="col-sm-10">
+                    <div class="col-sm-12">
+                        {{status.value  | formatText}}
+                    </div>
                 </div>
             </div>
         </div>

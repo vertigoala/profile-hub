@@ -35,7 +35,7 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
         var promise = profileService.getSpeciesProfile(self.opusId, self.profileId, self.profile.guid);
         promise.then(function (data) {
             self.conservationStatuses = orderBy(data.conservationStatuses, "region");
-            self.addStatusToIndex();
+            navService.add("Status", "statuses");
         });
     };
 
@@ -43,15 +43,8 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
         var promise = profileService.getBioStatus(self.opusId, self.profileId);
         promise.then(function (data) {
             self.bioStatuses = orderBy(data, 'key');
-            self.addStatusToIndex();
-        });
-    }
-
-    self.addStatusToIndex = function () {
-        if (!statusAdded && ((self.conservationStatuses.length + self.bioStatuses.length) > 0)) {
-            statusAdded = true;
             navService.add("Status", "statuses");
-        }
+        });
     }
 
     self.getColourForStatus = function (status) {
