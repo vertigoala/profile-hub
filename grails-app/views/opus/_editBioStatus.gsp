@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="BioStatusFrom" ng-cloak>
     <div class="panel-heading">
         <a name="biostatus">
-            <h4>Bio Status List</h4>
+            <h4>Status Lists</h4>
         </a>
     </div>
 
