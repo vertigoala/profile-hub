@@ -16,7 +16,7 @@ describe("ListsController tests", function () {
     };
     var messageService;
     var profileService;
-    var profileDefer, listsDefer, speciesProfileDefer;
+    var profileDefer, listsDefer, speciesProfileDefer, getBioStatusDefer;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
     var listsResponse = '[{},{}]';
@@ -37,10 +37,12 @@ describe("ListsController tests", function () {
         profileDefer = $q.defer();
         listsDefer = $q.defer();
         speciesProfileDefer = $q.defer();
+        getBioStatusDefer = $q.defer();
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "retrieveLists").and.returnValue(listsDefer.promise);
         spyOn(profileService, "getSpeciesProfile").and.returnValue(speciesProfileDefer.promise);
+        spyOn(profileService, "getBioStatus").and.returnValue(getBioStatusDefer.promise);
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -84,7 +86,7 @@ describe("ListsController tests", function () {
 
     it("should set the readonly flag to false when init is called with edit=true", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
-        listsDefer.resolve(JSON.parse(listsResponse));;
+        listsDefer.resolve(JSON.parse(listsResponse));
 
         scope.listCtrl.init("true");
         scope.$apply();
@@ -149,7 +151,7 @@ describe("ListsController tests", function () {
         expect(messageService.info).not.toHaveBeenCalled();
     });
 
-    it("should return the expected colour code for all conservation statuses when getColourForStatus is called", function() {
+    it("should return the expected colour code for all conservation statuses when getColourForStatus is called", function () {
         expect(scope.listCtrl.getColourForStatus("ENDAngered")).toBe("yellow");
         expect(scope.listCtrl.getColourForStatus("CriTICallY")).toBe("yellow");
         expect(scope.listCtrl.getColourForStatus("VulNERAble")).toBe("yellow");
@@ -161,7 +163,7 @@ describe("ListsController tests", function () {
         expect(scope.listCtrl.getColourForStatus(undefined)).toBe("green");
     });
 
-    it("should retrieve the species profile and extract the conservation statuses when loadConservationStatus is invoked", function() {
+    it("should retrieve the species profile and extract the conservation statuses when loadConservationStatus is invoked", function () {
         scope.listCtrl.opusId = "opusId";
         scope.listCtrl.profileId = "profileId";
         scope.listCtrl.profile = {guid: "guid"};
@@ -174,4 +176,16 @@ describe("ListsController tests", function () {
         expect(scope.listCtrl.conservationStatuses).toEqual([{region: "a"}, {region: "b"}, {region: "c"}])
     });
 
+    it("should retrieve bio status when loadBioStatus is invoked", function () {
+        scope.listCtrl.opusId = "opusId";
+        scope.listCtrl.profileId = "profileId";
+        scope.listCtrl.profile = {guid: "guid"};
+
+        getBioStatusDefer.resolve([{key: "a", value: "b"}, {key: "c", value: "d"}]);
+        scope.listCtrl.loadBioStatus();
+        scope.$apply();
+
+        expect(profileService.getBioStatus).toHaveBeenCalledWith("opusId", "profileId");
+        expect(scope.listCtrl.bioStatuses).toEqual([{key: "a", value: "b"}, {key: "c", value: "d"}])
+    });
 });

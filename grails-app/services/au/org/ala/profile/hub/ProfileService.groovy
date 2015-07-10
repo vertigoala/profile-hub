@@ -62,6 +62,10 @@ class ProfileService {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/discardDraftChanges", null)
     }
 
+    def getList(String drid) {
+        webService.get("${grailsApplication.config.lists.base.url}/ws/speciesListItems/${drid}?includeKVP=true")?.resp
+    }
+
     def getProfile(String opusId, String profileId, boolean latest = false) {
         log.debug("Loading profile " + profileId)
 
@@ -328,6 +332,34 @@ class ProfileService {
         }
 
         resp
+    }
+
+    def getBioStatus(String opusId, String profileId) {
+        def model = getProfile(opusId, profileId);
+        def opus = model.opus;
+        def profile = model.profile;
+        List result = []
+        if (opus.bioStatusLists?.size()) {
+            opus.bioStatusLists.each({
+                result.addAll(getProfileKVP(profile.scientificName, it));
+            })
+        }
+
+        result
+    }
+
+    def getProfileKVP(String profileId, String drid) {
+        List result = []
+        def list = getList(drid);
+        if (list) {
+            list.each({
+                if (it.name.toLowerCase() == profileId.toLowerCase()) {
+                    result.addAll(it.kvpValues);
+                }
+            })
+        }
+
+        result
     }
 
     def enc(String value) {
