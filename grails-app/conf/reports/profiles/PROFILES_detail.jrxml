@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-09T16:53:55 -->
+<!-- 2015-07-10T10:29:10 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail" language="groovy" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="30" uuid="eb6cf9a1-0a5c-4453-8b43-458e6c8b58f3">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -84,7 +84,7 @@
 				</image>
 			</frame>
 			<frame>
-				<reportElement positionType="Float" x="1" y="412" width="514" height="40" uuid="31a68274-3ccb-41b2-aa6f-a6562fdee3d4">
+				<reportElement positionType="Float" x="1" y="412" width="514" height="30" uuid="31a68274-3ccb-41b2-aa6f-a6562fdee3d4">
 					<printWhenExpression><![CDATA[$P{PROFILES_REPORT_OPTIONS}.conservation as Boolean && $F{profile.hasConservationStatus}]]></printWhenExpression>
 				</reportElement>
 				<staticText>
@@ -103,6 +103,50 @@
 					</reportElement>
 					<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.speciesProfile.conservationStatuses")]]></dataSourceExpression>
 					<subreportExpression><![CDATA["PROFILES_detail_conservation.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="0" y="457" width="514" height="30" uuid="7e139d80-aa4d-4069-a166-5070f3d515ad">
+					<printWhenExpression><![CDATA[$P{PROFILES_REPORT_OPTIONS}.taxonomy as Boolean]]></printWhenExpression>
+				</reportElement>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="0" width="514" height="17" uuid="02d8cb45-da7e-41a3-8c64-07b29bacca7e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Taxonomy]]></text>
+				</staticText>
+				<subreport overflowType="Stretch">
+					<reportElement positionType="Float" x="0" y="20" width="514" height="10" uuid="0fe15f5a-98a6-4325-b345-fd6deeee2b29">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.classifications")]]></dataSourceExpression>
+					<subreportExpression><![CDATA["PROFILES_detail_taxonomy.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
+			<frame>
+				<reportElement positionType="Float" x="2" y="503" width="514" height="30" uuid="54d78cec-589f-4b07-80a5-f26af6d9d326">
+					<printWhenExpression><![CDATA[$P{PROFILES_REPORT_OPTIONS}.nomenclature as Boolean]]></printWhenExpression>
+				</reportElement>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="0" width="514" height="17" uuid="96e09167-e3fc-47dd-87b7-70d39f106d48">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nomenclature]]></text>
+				</staticText>
+				<subreport overflowType="Stretch">
+					<reportElement positionType="Float" x="0" y="20" width="514" height="10" uuid="552404e2-ac45-41a2-9591-e9b3d8496227">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile")]]></dataSourceExpression>
+					<subreportExpression><![CDATA["PROFILES_detail_nomenclature.jasper"]]></subreportExpression>
 				</subreport>
 			</frame>
 		</band>
