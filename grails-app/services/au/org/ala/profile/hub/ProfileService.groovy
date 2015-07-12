@@ -126,6 +126,10 @@ class ProfileService {
         profile
     }
 
+    def recordStagedImage(String opusId, String profileId, Map metadata) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/recordStagedImage", metadata)
+    }
+
     def getPublications(String opusId, String profileId) {
         log.debug("Retrieving publications for ${profileId}")
 

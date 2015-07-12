@@ -1,5 +1,5 @@
 <div class="panel panel-default" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')"
-     ng-show="imageCtrl.images.length > 0 && imageCtrl.readonly" ng-cloak>
+     ng-if="imageCtrl.images.length > 0 && imageCtrl.readonly" ng-cloak>
     <a name="view_images"></a>
 
     <div class="panel-body">
@@ -8,18 +8,30 @@
 
             <div class="col-sm-10">
                 <div class="row">
-                    <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 padding-bottom-1" ng-if="!image.excluded">
+                    <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 padding-bottom-1"
+                         ng-show="!image.excluded">
                         <div class="imgCon ">
                             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
                                target="_blank" ng-if="image.thumbnailUrl" title="View occurrence record">
-                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.thumbnailUrl" class="thumbnail"/>
+                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.thumbnailUrl && !image.staged"
+                                     class="thumbnail"/>
+                                <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
+                                     ng-if="image.thumbnailUrl && image.staged" class="thumbnail"/>
                             </a>
 
                             <p class="caption">{{ image.dataResourceName }}</p>
-                            <p class="caption" ng-if="image.title">{{ image.title }}</p>
-                            <p class="caption" ng-if="image.rightsHolder">Copyright: {{ image.rightsHolder }}</p>
-                            <p class="caption" ng-if="image.creator">Photographer: {{ image.creator }}<span ng-if="image.dateTaken"> ({{ image.dateTaken }})</span></p>
-                            <a class="caption" href="${grailsApplication.config.images.service.url}/image/details?imageId={{image.imageId}}" target="_blank">View image details</a>
+
+                            <p class="caption" ng-if="image.metadata.title">"{{ image.metadata.title }}"
+                                <span class="caption" ng-if="image.metadata.creator">by {{ image.metadata.creator }}
+                                    <span ng-if="image.metadata.dateTaken">on {{ image.metadata.dateTaken | date: 'dd/MM/yyyy' }}</span>
+                                </span>
+                                <span ng-if="image.metadata.rightsHolder">(&copy; {{ image.metadata.rightsHolder }})</span>
+                            </p>
+
+
+                            <a class="caption"
+                               href="${grailsApplication.config.images.service.url}/image/details?imageId={{image.imageId}}"
+                               target="_blank" ng-if="!image.staged">View image details</a>
                         </div>
                     </div>
                 </div>
@@ -30,7 +42,7 @@
 </div>
 
 <div class="panel panel-default" ng-form="ImageForm" ng-controller="ImagesController as imageCtrl"
-     ng-init="imageCtrl.init('${edit}')" ng-show="!imageCtrl.readonly" ng-cloak>
+     ng-init="imageCtrl.init('${edit}')" ng-if="!imageCtrl.readonly" ng-cloak>
     <a name="edit_images"></a>
 
     <div class="panel-body">
@@ -55,10 +67,15 @@
                         <div class="imgCon">
                             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
                                target="_blank" ng-if="image.thumbnailUrl">
-                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.thumbnailUrl" class="thumbnail"/>
+                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.thumbnailUrl && !image.staged"
+                                     class="thumbnail"/>
+                                <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
+                                     ng-if="image.thumbnailUrl && image.staged" class="thumbnail"/>
                             </a>
 
                             <div class="meta">{{ image.dataResourceName }}</div>
+                            <button class="btn btn-link" ng-click="imageCtrl.deleteStagedImage(image.imageId)" ng-show="image.staged"><i
+                                    class="fa fa-trash-o color--red"></i> Delete image</button>
                         </div>
                     </div>
 
@@ -92,12 +109,21 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="small margin-top-1 well" ng-show="!imageCtrl.readonly">
+                    <i class="fa fa-info-circle color--medium-blue margin-bottom-1"></i>
+                    <p>
+                        When your profile is locked for major revision, images will only be uploaded to a temporary location. This is referred to as 'staging'. If your profile is not locked for major revision, images will be published immediately.
+                    </p>
+                    <p>
+                        Only staged images can be deleted, as published images are stored in the central Atlas of Living Australia image repository and are accessible by other systems.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 
-
-    <div class="panel-footer">
+    <div class="panel-footer" ng-show="!imageCtrl.readonly">
         <div class="row">
             <div class="col-md-12">
                 <g:if test="${grailsApplication.config.feature.imageUpload == 'true'}">
@@ -156,7 +182,8 @@
                     <label for="dateTaken" class="col-sm-3 control-label">Date Taken</label>
 
                     <div class="col-sm-9">
-                        <input id="dateTaken" type="date" ng-model="imageUploadCtrl.metadata.dateTaken" class="form-control"/>
+                        <input id="dateTaken" type="date" ng-model="imageUploadCtrl.metadata.dateTaken"
+                               class="form-control"/>
                     </div>
                 </div>
             </div>
@@ -177,7 +204,8 @@
                     <label for="owner" class="col-sm-3 control-label" required>Owner</label>
 
                     <div class="col-sm-9">
-                        <input id="owner" type="text" ng-model="imageUploadCtrl.metadata.creator" class="form-control" placeholder="Photographer/illustrator"/>
+                        <input id="owner" type="text" ng-model="imageUploadCtrl.metadata.creator" class="form-control"
+                               placeholder="Photographer/illustrator"/>
                     </div>
                 </div>
             </div>
@@ -187,7 +215,8 @@
                     <label for="rights" class="col-sm-3 control-label" required>Rights</label>
 
                     <div class="col-sm-9">
-                        <input id="rights" type="text" ng-model="imageUploadCtrl.metadata.rights" class="form-control" placeholder="e.g. All rights reserved"/>
+                        <input id="rights" type="text" ng-model="imageUploadCtrl.metadata.rights" class="form-control"
+                               placeholder="e.g. All rights reserved"/>
                     </div>
                 </div>
             </div>
@@ -208,12 +237,19 @@
                     <label for="licence" class="col-sm-3 control-label" required>Licence *</label>
 
                     <div class="col-sm-9">
-                        <select id="licence" ng-options="licence.name for licence in imageUploadCtrl.licences | orderBy:'name'" ng-model="imageUploadCtrl.metadata.licence" class="form-control" ng-required="true">
+                        <select id="licence"
+                                ng-options="licence.name for licence in imageUploadCtrl.licences | orderBy:'name'"
+                                ng-model="imageUploadCtrl.metadata.licence" class="form-control" ng-required="true">
                         </select>
                     </div>
                 </div>
             </div>
 
+            <div class="col-md-12">
+                <p class="small pull-right">
+                    Fields marked with an asterisk (*) are mandatory.
+                </p>
+            </div>
         </div>
 
         <div class="modal-footer">
