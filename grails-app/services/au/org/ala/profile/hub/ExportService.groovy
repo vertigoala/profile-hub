@@ -90,7 +90,7 @@ class ExportService {
         if (params.nomenclature && nslNameIdentifier && nslNomenclatureIdentifier) {
             model.profile.nomenclature = nslService.getConcept(nslNameIdentifier, nslNomenclatureIdentifier)
             model.profile.nomenclature.citations.each {citation ->
-                citation.relationship = stripHtmlTextFromNonFormattingTags(citation.relationship)
+                citation.relationship = stripTextFromNonFormattingHtmlTags(citation.relationship)
             }
         }
 
@@ -257,12 +257,13 @@ class ExportService {
     };
 
     /**
-     *
+     * Removes all XML/HTML tags that are semantic and not for text formatting
+     * At the moment only <i> and <b> are supported. Adding additional ones is trivial now
      * @param html
      * @return
      */
-    static String stripHtmlTextFromNonFormattingTags(String html) {
-        def regex = ~/<\/?(?!i>)(?!b>)([A-Za-z0-9.'()+,=:\s])+>/
+    static String stripTextFromNonFormattingHtmlTags(String html) {
+        def regex = ~/<\/?(?!i>)(?!b>)([A-Za-z0-9.'()+,=:\s-])+>/
         return html.replaceAll(regex, "")
     }
 }
