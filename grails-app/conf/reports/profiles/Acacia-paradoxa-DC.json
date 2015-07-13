@@ -1446,7 +1446,18 @@
             "profileUuid": "bee218e6-e0a4-4b99-8c5e-e63a6e1b93aa"
          }
       ],
-      "bhl": [],
+      "bhl": [{
+         "id": null,
+         "edition": "Rev. and adapted to American zoology / by Joseph B. Holder.",
+         "title": "link to the biodiversity heritage library",
+         "publisherName": "Selmar Hess,",
+         "description": "link to the biodiversity heritage library",
+         "fullTitle": "Animate creation : popular edition of \"Our living world\" : a natural history / by the Rev. J.G. Wood.",
+         "class": "au.org.ala.profile.Link",
+         "uuid": "500b695e-da14-4a9a-bd0f-ddfbfa8b3902",
+         "doi": "10.5962/bhl.title.41363",
+         "url": "http://biodiversitylibrary.org/page/29003916"
+      }],
       "opusName": "NSW flora",
       "bibliography": [],
       "rank": "species",
@@ -6670,7 +6681,18 @@
          ]
       },
       "lastUpdated": "2015-07-01T07:14:01Z",
-      "links": [],
+      "links": [{
+         "id": null,
+         "edition": null,
+         "title": "ALA occurrence",
+         "publisherName": null,
+         "description": "ALA occurrence",
+         "fullTitle": null,
+         "class": "au.org.ala.profile.Link",
+         "uuid": "3b22c095-3946-4ea1-b36a-bbae09086369",
+         "doi": null,
+         "url": "http://biocache.ala.org.au/occurrences/3942d802-12e7-4a31-8a7c-9c602b2d861a"
+      }],
       "privateMode": false,
       "primaryImage": null,
       "guid": "urn:lsid:biodiversity.org.au:apni.taxon:298640",

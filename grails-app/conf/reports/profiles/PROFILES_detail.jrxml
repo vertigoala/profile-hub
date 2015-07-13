@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-13T10:34:45 -->
+<!-- 2015-07-13T14:32:51 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail" language="groovy" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="30" uuid="eb6cf9a1-0a5c-4453-8b43-458e6c8b58f3">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JSON Sample Data Source"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -102,6 +102,15 @@
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.links")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_links.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport overflowType="Stretch">
+				<reportElement positionType="Float" x="0" y="91" width="515" height="10" uuid="c675d85b-9e2b-476e-abd8-fb07375bff13">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.bhllinks)]]></printWhenExpression>
+				</reportElement>
+				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.bhl")]]></dataSourceExpression>
+				<subreportExpression><![CDATA["PROFILES_detail_bhl.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
