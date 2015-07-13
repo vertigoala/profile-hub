@@ -23,7 +23,7 @@
 
                             <p class="caption" ng-if="image.metadata.title">"{{ image.metadata.title }}"
                                 <span class="caption" ng-if="image.metadata.creator">by {{ image.metadata.creator }}
-                                    <span ng-if="image.metadata.dateTaken">on {{ image.metadata.dateTaken | date: 'dd/MM/yyyy' }}</span>
+                                    <span ng-if="image.metadata.dateCreated">on {{ image.metadata.dateCreated | date: 'dd/MM/yyyy' }}</span>
                                 </span>
                                 <span ng-if="image.metadata.rightsHolder">(&copy; {{ image.metadata.rightsHolder }})</span>
                             </p>
@@ -179,10 +179,10 @@
 
             <div class="form-horizontal">
                 <div class="form-group">
-                    <label for="dateTaken" class="col-sm-3 control-label">Date Taken</label>
+                    <label for="dateCreated" class="col-sm-3 control-label">Date Taken</label>
 
                     <div class="col-sm-9">
-                        <input id="dateTaken" type="date" ng-model="imageUploadCtrl.metadata.dateTaken"
+                        <input id="dateCreated" type="date" ng-model="imageUploadCtrl.metadata.dateCreated"
                                class="form-control"/>
                     </div>
                 </div>

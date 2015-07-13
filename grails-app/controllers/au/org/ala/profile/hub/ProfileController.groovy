@@ -243,7 +243,7 @@ class ProfileController extends BaseController {
                             licence         : params.licence ?: "",
                             title           : params.title ?: "",
                             description     : params.description ?: "",
-                            dateTaken       : params.dateTaken ?: "",
+                            dateCreated     : params.dateCreated ?: "",
                             originalFilename: file.originalFilename
                     ]
             ]

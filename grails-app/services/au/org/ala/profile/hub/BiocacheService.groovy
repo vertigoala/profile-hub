@@ -2,8 +2,6 @@ package au.org.ala.profile.hub
 
 import org.springframework.web.multipart.MultipartFile
 
-import javax.annotation.PostConstruct
-
 class BiocacheService {
 
     WebService webService
@@ -21,6 +19,12 @@ class BiocacheService {
         webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json")
     }
 
+    def getOccurrence(String occurrenceId) {
+        log.debug("Fetching occurrence record ${occurrenceId}")
+
+        webService.get("${grailsApplication.config.biocache.base.url}/ws/occurrences/${occurrenceId}")
+    }
+
     def uploadImage(String opusId, String profileId, String dataResourceId, file, Map metadata) {
         String imageId = UUID.randomUUID()
 
@@ -31,20 +35,30 @@ class BiocacheService {
             filename = "${imageId}${extension}"
             file.transferTo(new File(tempDir, "/${filename}"))
         } else if (file instanceof File) {
-            filename = file.getName().substring(0, file.getName().indexOf(0))
+            filename = file.getName()
             file.renameTo(new File(tempDir, file.getName()));
         }
 
         metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${opusId}/profile/${profileId}/file/${filename}"
 
-        log.debug("Uploading image ${metadata.multimedia[0].identifier} to ${grailsApplication.config.image.upload.url}${dataResourceId} with metadata ${metadata}")
-
-        if (dataResourceId == "dr382") {
-            dataResourceId = "dr4"
-        } else if (dataResourceId == "dr2172") {
-            dataResourceId = "dr5"
+        // make sure the spelling of licenSe is US to match the Darwin Core standard
+        if (metadata.containsKey("licence")) {
+            metadata.license = metadata.licence
+            metadata.remove("licence")
         }
 
+        log.debug("Uploading image ${metadata.multimedia[0].identifier} to ${grailsApplication.config.image.upload.url}${dataResourceId} with metadata ${metadata}")
+
+        // TODO: REMOVE THIS - IT IS FOR TESTING ONLY!!!!
+        String hostname = InetAddress.getLocalHost().hostName
+        println "Hostname = ${hostname}"
+        if (hostname == "nci-profiles" || hostname == "profiles-dev" || hostname == "maccy-bm") {
+            if (dataResourceId == "dr382") {
+                dataResourceId = "dr4"
+            } else if (dataResourceId == "dr2172") {
+                dataResourceId = "dr5"
+            }
+        }
 
         webService.doPost("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
     }
