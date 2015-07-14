@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-14T09:58:59 -->
+<!-- 2015-07-14T11:31:43 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail_specimens" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="5" uuid="052ebf40-2ed2-4f4f-b9ab-676a9ef84df6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 	<queryString language="json">
 		<![CDATA[]]>
 	</queryString>
@@ -41,9 +40,8 @@
 	<detail>
 		<band height="60" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 			<frame>
-				<reportElement positionType="Float" x="7" y="7" width="484" height="15" uuid="b0679094-aef6-4169-9730-13809d29a579">
+				<reportElement x="7" y="7" width="484" height="15" uuid="b0679094-aef6-4169-9730-13809d29a579">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<staticText>
