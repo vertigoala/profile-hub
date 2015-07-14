@@ -66,6 +66,10 @@ class ProfileService {
         webService.get("${grailsApplication.config.lists.base.url}/ws/speciesListItems/${drid}?includeKVP=true")?.resp
     }
 
+    def getPublications(String pubId) {
+        webService.get("${grailsApplication.config.profile.service.url}/publication/${enc(pubId)}")?.resp
+    }
+
     def getProfile(String opusId, String profileId, boolean latest = false) {
         log.debug("Loading profile " + profileId)
 
@@ -364,6 +368,10 @@ class ProfileService {
         }
 
         result
+    }
+
+    def getPublicationJson(String pubId){
+        getPublications(pubId)
     }
 
     def enc(String value) {

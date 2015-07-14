@@ -381,6 +381,19 @@ class ProfileController extends BaseController {
         }
     }
 
+    def getPublication (){
+        render view: "publication";
+    }
+
+    def getPublicationJson(){
+        if(!params.pubId){
+            badRequest "Publication Id must be provided";
+        } else {
+            def result = profileService.getPublicationJson(params.pubId);
+            render( text: result as JSON)
+        }
+    }
+
     private getGlossaryUrl(opus) {
         opus?.glossaryUuid ? "${request.contextPath}/opus/${opus.uuid}/glossary" : ""
     }

@@ -632,6 +632,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
 
             return util.toStandardPromise(future);
+        },
+
+        getPublicationsFromId: function(pubId){
+            console.log("Fetching publication with Publication Id:" + pubId);
+
+            var future = $http.get(util.contextRoot() + "/publication/" + pubId + "/json", {cache: true});
+            future.then(function (response) {
+                console.log("Publications fetched with " + response.status);
+            });
+
+            return util.toStandardPromise(future);
         }
     }
 });

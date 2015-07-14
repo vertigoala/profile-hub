@@ -49,6 +49,11 @@ modules = {
         resource url:"js/angular/controllers/ReportController.js"
     }
 
+    doi{
+        dependsOn('profiles')
+        resource url: "js/angular/controllers/DoiController.js"
+    }
+
     angular {
         resource url:"thirdparty/angular/angular-1.3.13.min.js"
         resource url:"thirdparty/angular/ui-bootstrap-tpls-0.12.0.js"
