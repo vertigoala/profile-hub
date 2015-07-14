@@ -164,11 +164,11 @@ class ImageService {
 
             // check if the staged image was set as the primary or an excluded image, and swap the staged id for the new permanent id
             if (profile.profile.primaryImage == imageId) {
-                profileUpdates.primaryImage = getPermanentImageId(uploadResponse)
+                profileUpdates.primaryImage = uploadResponse.data.images[0]
             }
             if (profile.profile.excludedImages.contains(imageId)) {
                 profile.profile.excludedImages.remove(imageId)
-                profile.profile.excludedImages << getPermanentImageId(uploadResponse)
+                profile.profile.excludedImages << uploadResponse.data.images[0]
                 profileUpdates.excludedImages = profile.profile.excludedImages
             }
 
@@ -180,21 +180,6 @@ class ImageService {
         }
 
         void
-    }
-
-    private String getPermanentImageId(uploadResponse) {
-        String permanentImageId = null
-
-        if (uploadResponse.statusCode == SC_OK) {
-            String occurrenceId = uploadResponse.data.occurrenceID;
-
-            def downloadResponse = biocacheService.getOccurrence(occurrenceId)
-            if (downloadResponse.statusCode == SC_OK) {
-                permanentImageId = downloadResponse.data.images[0].filePath
-            }
-        }
-
-        permanentImageId
     }
 
     private static String getExtension(String fileName) {
