@@ -23,7 +23,7 @@ describe("ImagesController tests", function () {
     var profileDefer, imageDefer, saveDefer, metadataDefer;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "excludedImages": ["imageId2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
-    var retrieveImagesResponse = '{"occurrences": [{"image": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"image": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}]}';
+    var retrieveImagesResponse = '[{"imageId": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}]';
 
     beforeAll(function () {
         console.log("****** Images Controller Tests ******");
@@ -167,17 +167,6 @@ describe("ImagesController tests", function () {
         expect(messageService.info.calls.count()).toBe(1);
         expect(messageService.pop).toHaveBeenCalledWith();
         expect(messageService.pop.calls.count()).toBe(1);
-    });
-
-    it("should set the 'excluded' property of each image based on the excludedImages list in the profile", function() {
-        profileDefer.resolve(JSON.parse(getProfileResponse));
-        imageDefer.resolve(JSON.parse(retrieveImagesResponse));
-
-        scope.imageCtrl.init("false");
-        scope.$apply();
-
-        expect(scope.imageCtrl.images[0].excluded).toBeFalsy();
-        expect(scope.imageCtrl.images[1].excluded).toBeTruthy();
     });
 
     it("should use the scientificName to retrieve images if the profile.guid attribute is not present", function () {

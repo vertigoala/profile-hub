@@ -264,6 +264,10 @@ class OpusController extends BaseController {
         render template: "editApprovedLists"
     }
 
+    def editBioStatusPanel = {
+        render template: "editBioStatus"
+    }
+
     def editAuthorshipPanel = {
         render template: "editAuthorship"
     }

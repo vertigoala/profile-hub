@@ -56,3 +56,20 @@ profileEditor.filter("formatProfileName", function(util) {
         return util.formatScientificName(name.scientificName, name.nameAuthor, name.fullName);
     }
 });
+
+/**
+ * replace underscore(s) with white space
+ *
+ * Usage: {{ someTextAttribute | formatText }}
+ *
+ * @param the text value to remove underscore
+ */
+profileEditor.filter("formatText", function () {
+    return function (input) {
+        var result = input;
+        if (input) {
+            result = input.toString().replace(/_+/g," ");
+        }
+        return result
+    }
+});

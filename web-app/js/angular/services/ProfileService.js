@@ -260,6 +260,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        deleteStagedImage: function(opusId, profileId, imageId) {
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/stagedImage/" + imageId + "/delete");
+            future.then(function(response) {
+                console.log("Image deleted with response code " + response.status);
+
+                clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         retrieveLists: function (opusId, profileId, guid) {
             console.log("Retrieving lists for " + guid);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/lists?guid=" + guid, {cache: true});
@@ -324,6 +335,15 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/speciesProfile?guid=" + guid, {cache: true});
             future.then(function (response) {
                 console.log("Species Profile retrieved with response code " + response.status)
+            });
+            return util.toStandardPromise(future);
+        },
+
+        getBioStatus: function(opusId, profileId){
+            console.log("Retrieving bio status for " + profileId);
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/bioStatus");
+            future.then(function (response) {
+                console.log("Bio status retrieved with response code " + response.status)
             });
             return util.toStandardPromise(future);
         },

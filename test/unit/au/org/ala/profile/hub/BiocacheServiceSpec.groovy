@@ -16,11 +16,11 @@ class BiocacheServiceSpec extends Specification {
     def setup() {
         grailsApplication.config.biocache.occurrence.search.path = "/occurrence/search.json"
         grailsApplication.config.biocache.base.url = "http://biocache.base"
+        grailsApplication.config.image.search.url = "http://biocache.base"
 
         webService = Mock(WebService)
         service = new BiocacheService()
         service.grailsApplication = grailsApplication
-        service.init()
         service.webService = webService
 
         mockCodec(URLCodec)
