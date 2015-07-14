@@ -13,7 +13,7 @@
                     <div class="row">
                         <div class="col-md-10">
                             <strong ng-show="publication.title != ''">
-                                Title: {{publication.title}}
+                                Title: {{publication.title}} v. {{publication.version}}
                             </strong>
 
                             <div ng-show="publication.publicationDate != ''">
