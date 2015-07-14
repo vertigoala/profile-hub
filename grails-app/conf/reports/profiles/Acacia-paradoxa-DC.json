@@ -1458,6 +1458,11 @@
          "doi": "10.5962/bhl.title.41363",
          "url": "http://biodiversitylibrary.org/page/29003916"
       }],
+      "specimens": [{
+         "catalogNumber": "MBA 1734.1",
+         "institutionName": "Australian Tropical Herbarium",
+         "collectionName": "Australian Tropical Herbarium"
+      }],
       "opusName": "NSW flora",
       "bibliography": [],
       "rank": "species",
