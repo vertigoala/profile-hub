@@ -8,7 +8,7 @@
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Publication</title>
 
-    <r:require module="doi"/>
+    <r:require module="profiles"/>
 
 </head>
 

@@ -47,10 +47,6 @@ modules = {
         resource url:"js/angular/controllers/ExportController.js"
         resource url:"js/angular/controllers/AboutController.js"
         resource url:"js/angular/controllers/ReportController.js"
-    }
-
-    doi{
-        dependsOn('profiles')
         resource url: "js/angular/controllers/DoiController.js"
     }
 
