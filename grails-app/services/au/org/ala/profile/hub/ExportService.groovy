@@ -182,10 +182,11 @@ class ExportService {
             model.profile.images = model.profile.images.collect {image ->
                 if (!image.excluded) {
                     if (image.metadata) {
+                        String title = image.metadata.title ? "\"${image.metadata.title}\"" : ""
                         String creator = image.metadata.creator ? "by ${image.metadata.creator}" : ""
                         String dateCreated = image.metadata.dateCreated ? ", ${DateFormat.parse(image.metadata.dateCreated).format("dd/MM/yyyy")}" : ""
                         String copyright = image.metadata.rightsHolder ? " (&copy; ${image.metadata.rightsHolder})" : ""
-                        image.metadata.title = "${image.metadata.title ?: ""}${creator}${dateCreated}${copyright}"
+                        image.metadata.title = "${title}${creator}${dateCreated}${copyright}"
                     }
 
                     if (image.staged) {
