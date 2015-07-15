@@ -152,6 +152,30 @@ class ExportService {
                 profiles         : [] as ConcurrentLinkedQueue
         ]
 
+        // Create curated report model
+        Map curatedModel = curateModel(model, params, latest)
+
+        // Transform curated model to JSON format input stream
+        InputStream inputStream = IOUtils.toInputStream((curatedModel as JSON).toString())
+
+        // Runtime classpath directory where the reports are available
+        File reportsDir = new File(grailsApplication.mainContext.getResource('classpath:reports/profiles/PROFILES.jrxml').URL.file.replaceFirst("/[\\w_]+.jrxml\$", ""))
+
+        // Generate report and return byte array
+        JasperReportDef reportDef = new JasperReportDef(
+                name: 'profiles/PROFILES.jrxml',
+                fileFormat: JasperExportFormat.PDF_FORMAT,
+                dataSource: new JsonDataSource(inputStream),
+                parameters: [
+                        'PROFILES_REPORT_OPTIONS': model.options,
+                        'REPORT_FILE_RESOLVER': new SimpleFileResolver(reportsDir)
+                ]
+        )
+
+        return jasperNonTransactionalService.generateReport(reportDef).toByteArray()
+    }
+
+    private Map curateModel(Map model, Map params, boolean latest = false) {
         model.opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
         model.profiles << loadProfileData(params.profileId as String, model.opus, params, latest)
 
@@ -175,32 +199,6 @@ class ExportService {
             model.profiles = model.profiles.sort { it.profile.scientificName }
         }
 
-        // Create curated report model
-        Map curatedModel = curateModel(model)
-
-        // Transform curated model to JSON format input stream
-        InputStream inputStream = IOUtils.toInputStream((curatedModel as JSON).toString())
-
-        // Runtime classpath directory where the reports are available
-        File reportsDir = new File(grailsApplication.mainContext.getResource('classpath:reports/profiles/PROFILES.jrxml').URL.file.replaceFirst("/[\\w_]+.jrxml\$", ""))
-
-        // Generate report and return byte array
-        JasperReportDef reportDef = new JasperReportDef(
-                name: 'profiles/PROFILES.jrxml',
-                fileFormat: JasperExportFormat.PDF_FORMAT,
-                dataSource: new JsonDataSource(inputStream),
-                parameters: [
-                        'PROFILES_REPORT_OPTIONS': model.options,
-                        'REPORT_FILE_RESOLVER': new SimpleFileResolver(reportsDir)
-                ]
-        )
-
-        ByteArrayOutputStream baos = jasperNonTransactionalService.generateReport(reportDef)
-
-        return baos.toByteArray()
-    }
-
-    private Map curateModel(Map model) {
         Map curatedModel = [
                cover: [
                        title: model.opus.title,
