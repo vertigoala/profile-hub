@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-14T11:30:31 -->
+<!-- 2015-07-14T15:42:16 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail" language="groovy" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="30" uuid="eb6cf9a1-0a5c-4453-8b43-458e6c8b58f3">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JSON Sample Data Source"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -36,7 +36,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="113" splitType="Stretch">
+		<band height="142" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField bookmarkLevel="1">
 				<reportElement x="0" y="10" width="515" height="21" uuid="6f637e5f-9279-48f0-9560-d5f20f56cf08">
@@ -120,6 +120,15 @@
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.specimens")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_specimens.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport overflowType="Stretch">
+				<reportElement positionType="Float" x="0" y="111" width="515" height="10" uuid="03b5da42-55f1-4da6-992b-5cacbdbbf258">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.images)]]></printWhenExpression>
+				</reportElement>
+				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.images")]]></dataSourceExpression>
+				<subreportExpression><![CDATA["PROFILES_detail_images.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>

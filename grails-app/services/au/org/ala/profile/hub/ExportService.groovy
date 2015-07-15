@@ -7,10 +7,11 @@ import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
-import org.codehaus.groovy.grails.web.json.JSONObject
+import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.context.request.RequestContextHolder
 
+import java.text.DateFormat
 import java.util.concurrent.ConcurrentLinkedQueue
 
 import static groovyx.gpars.GParsPool.withPool
@@ -22,6 +23,7 @@ class ExportService {
 
     ProfileService profileService
     BiocacheService biocacheService
+    ImageService imageService
     WebService webService
     EmailService emailService
     NslService nslService
@@ -43,9 +45,8 @@ class ExportService {
     ]
 
 
-    private Map loadProfileData(String profileId, opus, Map params) {
-        JSONObject.NULL.metaClass.asBoolean = {-> false}
-        JSONObject.NULL.metaClass.toString = {-> ''}
+    private Map loadProfileData(String profileId, opus, Map params, boolean latest = false) {
+
         Map model = [:]
         model.profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${opus.uuid}/profile/${URLEncoder.encode(profileId, "UTF-8")}?latest=${false}")?.resp
 
@@ -73,14 +74,23 @@ class ExportService {
 
         if (params.images) {
             String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-            def images = biocacheService.retrieveImages(searchIdentifier, opus.imageSources.join(","))?.resp
+            model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.join(","), searchIdentifier)?.resp
 
-            model.profile.images = images?.occurrences?.collect {
-                [
-                        excluded        : model.profile.excludedImages.contains(it.image),
-                        largeImageUrl   : it.largeImageUrl,
-                        dataResourceName: it.dataResourceName
-                ]
+            model.profile.images = model.profile.images.collect {image ->
+                if (!image.excluded) {
+                    if (image.metadata) {
+                        String creator = image.metadata.creator ? "by ${image.metadata.creator}" : ""
+                        String dateCreated = image.metadata.dateCreated ? ", ${DateFormat.parse(image.metadata.dateCreated).format("dd/MM/yyyy")}" : ""
+                        String copyright = image.metadata.rightsHolder ? " (&copy; ${image.metadata.rightsHolder})" : ""
+                        image.metadata.title = "${image.metadata.title ?: ""}${creator}${dateCreated}${copyright}"
+                    }
+
+                    if (image.staged) {
+                        image.largeImageUrl = "${ServletContextHolder.servletContext.contextPath}image.largeImageUrl"
+                    }
+
+                    return image
+                }
             }
         }
 
@@ -115,9 +125,9 @@ class ExportService {
     }
 
     @Async
-    void createPdfAsych(Map params) {
+    void createPdfAsych(Map params, boolean latest = false) {
         try {
-            byte[] pdf = createPdf(params)
+            byte[] pdf = createPdf(params, latest)
 
             String filename = UUID.randomUUID()
             File f = new File("${grailsApplication.config.temp.file.location}/${filename}.pdf")
@@ -136,14 +146,14 @@ class ExportService {
     }
 
     @NotTransactional
-    byte[] createPdf(Map params) {
+    byte[] createPdf(Map params, boolean latest = false) {
         def model = [
                 options          : params,
                 profiles         : [] as ConcurrentLinkedQueue
         ]
 
         model.opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
-        model.profiles << loadProfileData(params.profileId as String, model.opus, params)
+        model.profiles << loadProfileData(params.profileId as String, model.opus, params, latest)
 
         if (params.children) {
             def children = profileService.findByNameAndTaxonLevel(params.opusId, model.profiles[0].profile.rank, model.profiles[0].profile.scientificName, "99999", "0", false)?.resp
@@ -157,7 +167,7 @@ class ExportService {
             withPool(THREAD_COUNT) {
                 children.eachParallel {
                     if (it.profileId != params.profileId && it.scientificName != params.profileId) {
-                        model.profiles << loadProfileData(it.profileId, model.opus, params)
+                        model.profiles << loadProfileData(it.profileId, model.opus, params, latest)
                     }
                 }
             }
@@ -171,6 +181,7 @@ class ExportService {
         // Transform curated model to JSON format input stream
         InputStream inputStream = IOUtils.toInputStream((curatedModel as JSON).toString())
 
+        // Runtime classpath directory where the reports are available
         File reportsDir = new File(grailsApplication.mainContext.getResource('classpath:reports/profiles/PROFILES.jrxml').URL.file.replaceFirst("/[\\w_]+.jrxml\$", ""))
 
         // Generate report and return byte array

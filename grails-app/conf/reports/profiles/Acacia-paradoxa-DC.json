@@ -6,6 +6,123 @@
    "profiles": [{"profile": {
       "hasConservationStatus": true,
       "lastAttributeChange": null,
+      "images": [
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "dfc0883d-1fab-4689-a922-b6f30ab93236",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=dfc0883d-1fab-4689-a922-b6f30ab93236",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=dfc0883d-1fab-4689-a922-b6f30ab93236",
+            "occurrenceId": "50786efe-acdc-4b12-b80d-7cfc28247e12",
+            "staged": false,
+            "metadata": {
+              "title": "Title test by Angel Ruiz, 14/07/2015 (&copy; The Atlas of living Australia)",
+              "creator": "Angel Ruiz",
+              "dateCreated": "14/07/2015",
+              "rightsHolder": "The Atlas of living Australia"
+            }
+         },
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "a4d2b5bb-4798-42ce-aa31-a24ef5c322f1",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=a4d2b5bb-4798-42ce-aa31-a24ef5c322f1",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=a4d2b5bb-4798-42ce-aa31-a24ef5c322f1",
+            "occurrenceId": "d8209b4a-bc82-40cc-8814-bd7d43fc892c",
+            "staged": false,
+            "metadata": null
+         },
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "79895e9f-3ed8-4ce8-bff3-9a7036945e64",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=79895e9f-3ed8-4ce8-bff3-9a7036945e64",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=79895e9f-3ed8-4ce8-bff3-9a7036945e64",
+            "occurrenceId": "4d813920-15cb-488c-93d1-bec269e110db",
+            "staged": false,
+            "metadata": null
+         },
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "f87468e0-7157-4cee-a18c-4f5735d9935d",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=f87468e0-7157-4cee-a18c-4f5735d9935d",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=f87468e0-7157-4cee-a18c-4f5735d9935d",
+            "occurrenceId": "ca8cbe7a-a05c-45d8-ae09-fe3e8caffc07",
+            "staged": false,
+            "metadata": null
+         },
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "311de364-1420-4fbf-a96f-dda22f4ad8e9",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=311de364-1420-4fbf-a96f-dda22f4ad8e9",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=311de364-1420-4fbf-a96f-dda22f4ad8e9",
+            "occurrenceId": "e6a4d1d7-a394-462e-8a56-069134ac36a9",
+            "staged": false,
+            "metadata": null
+         },
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "fa67563d-d1b6-47e2-9c7e-b0d3e8f6d24a",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=fa67563d-d1b6-47e2-9c7e-b0d3e8f6d24a",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=fa67563d-d1b6-47e2-9c7e-b0d3e8f6d24a",
+            "occurrenceId": "b9d26fb3-eb8b-45af-bb9b-1e5383bd6a51",
+            "staged": false,
+            "metadata": null
+         },
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "5bb287ca-1602-4126-bc4f-4bbb943a6ff8",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=5bb287ca-1602-4126-bc4f-4bbb943a6ff8",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=5bb287ca-1602-4126-bc4f-4bbb943a6ff8",
+            "occurrenceId": "ef183465-fc4a-426b-9b41-20de080ddd07",
+            "staged": false,
+            "metadata": null
+         },
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "0f38cdb2-854a-4589-be3f-45a66645ac97",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=0f38cdb2-854a-4589-be3f-45a66645ac97",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=0f38cdb2-854a-4589-be3f-45a66645ac97",
+            "occurrenceId": "dbba93b2-5f50-41cc-8cf9-d5341d9d517a",
+            "staged": false,
+            "metadata": null
+         },
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "79e3f6e3-53fa-45ad-a833-a6a2d2122722",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=79e3f6e3-53fa-45ad-a833-a6a2d2122722",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=79e3f6e3-53fa-45ad-a833-a6a2d2122722",
+            "occurrenceId": "6cfba9c2-1b36-49f4-8bd9-0d8600228879",
+            "staged": false,
+            "metadata": null
+         },
+         {
+            "dataResourceName": "Australian Plant Image Index",
+            "imageId": "a63572c8-6e2b-4610-bfd9-f84b41a41890",
+            "excluded": false,
+            "primary": false,
+            "thumbnailUrl": "http://images.ala.org.au/image/proxyImageThumbnail?imageId=a63572c8-6e2b-4610-bfd9-f84b41a41890",
+            "largeImageUrl": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=a63572c8-6e2b-4610-bfd9-f84b41a41890",
+            "occurrenceId": "728a07ed-3f1b-4592-8163-33023c21b61f",
+            "staged": false,
+            "metadata": null
+         }
+      ],
       "nomenclature": {
          "citation": "CHAH (2006), Australian Plant Census",
          "citationHtml": "CHAH (2006), <i>Australian Plant Census<\/i>",
