@@ -164,11 +164,11 @@ class ImageService {
 
             // check if the staged image was set as the primary or an excluded image, and swap the staged id for the new permanent id
             if (profile.profile.primaryImage == imageId) {
-                profileUpdates.primaryImage = uploadResponse.data.images[0]
+                profileUpdates.primaryImage = uploadResponse.resp.images[0]
             }
             if (profile.profile.excludedImages.contains(imageId)) {
                 profile.profile.excludedImages.remove(imageId)
-                profile.profile.excludedImages << uploadResponse.data.images[0]
+                profile.profile.excludedImages << uploadResponse.resp.images[0]
                 profileUpdates.excludedImages = profile.profile.excludedImages
             }
 
@@ -178,8 +178,6 @@ class ImageService {
         if (profileUpdates) {
             profileService.updateProfile(opusId, profileId, profileUpdates, true)
         }
-
-        void
     }
 
     private static String getExtension(String fileName) {

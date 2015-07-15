@@ -12,11 +12,11 @@
                              ng-show="!image.excluded">
                             <div class="imgCon ">
                                 <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                                   target="_blank" ng-if="image.thumbnailUrl" title="View occurrence record">
-                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.thumbnailUrl && !image.staged"
+                                   target="_blank" ng-if="image.largeImageUrl" title="View occurrence record">
+                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && !image.staged"
                                          class="thumbnail"/>
                                     <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                         ng-if="image.thumbnailUrl && image.staged" class="thumbnail"/>
+                                         ng-if="image.largeImageUrl && image.staged" class="thumbnail"/>
                                 </a>
 
                                 <p class="caption">{{ image.dataResourceName }}</p>
@@ -63,11 +63,11 @@
                         <div class="col-sm-6">
                             <div class="imgCon">
                                 <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                                   target="_blank" ng-if="image.thumbnailUrl">
-                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.thumbnailUrl && !image.staged"
+                                   target="_blank" ng-if="image.largeImageUrl">
+                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && !image.staged"
                                          class="thumbnail"/>
                                     <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                         ng-if="image.thumbnailUrl && image.staged" class="thumbnail"/>
+                                         ng-if="image.largeImageUrl && image.staged" class="thumbnail"/>
                                 </a>
 
                                 <div class="meta">{{ image.dataResourceName }}</div>
