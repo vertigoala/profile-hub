@@ -14,10 +14,14 @@
 
 <body>
 <div ng-controller="DoiController as doiCtrl" ng-init="doiCtrl.loadPublications()">
-    <h1><a href="${request.contextPath}/opus/{{doiCtrl.opusId}}/profile/{{doiCtrl.scientificName}}">{{doiCtrl.scientificName}}</a></h1>
+    <div class="h1"><a class="btn-link"
+                       href="${request.contextPath}/opus/{{doiCtrl.opusId}}/profile/{{doiCtrl.scientificName}}">{{doiCtrl.scientificName}}</a>
+    </div>
+
     <p>You can download snapshots of a profile from this page. <em>Selected Version</em> section highlights file selected.
         <em>Other Versions Available</em> section lists the snapshots available for download.
     </p>
+
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="row">
@@ -69,11 +73,11 @@
                                 <strong>Publication Date:&nbsp;</strong>{{publication.publicationDate | date:"dd/MM/yyyy HH:mm"}}
                             </div>
 
-                            <div ng-show="doiCtrl.selectedPublication.authors != ''">
+                            <div ng-show="publication.authors != ''">
                                 <strong>Authors:&nbsp;</strong>{{publication.authors}}
                             </div>
 
-                            <div ng-show="doiCtrl.selectedPublication.doi">
+                            <div ng-show="publication.doi">
                                 <strong>Unique ID:&nbsp;</strong>{{publication.uuid}}
                             </div>
                         </div>
