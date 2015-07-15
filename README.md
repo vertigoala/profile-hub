@@ -282,10 +282,10 @@ The user is able to select the appropriate nomenclature/concept from a list of a
 There are several options for the selection of the nomenclature/concept during the import process:
 
 1. The source data can specify the NSL identifier of the nomenclature to use
-1. The import process can indicate that the system should attempt to match the profile to an appropriate nomenclature using one of the following rules (assuming the name has matched to the NSL):
+1. The import process can indicate that the system should attempt to match the profile to an appropriate nomenclature using one of the following rules (assuming the name has matched to the NSL) - the customer will need to nominate an option when providing the data:
    1. APC or Latest - if there is an APC concept, use it; otherwise, use the most recent concept
    1. Latest - use the most recent concept
-   1. Containing Text - try to find the most recent concept where the name contains certain text (e.g. find the concept with "Flora of NSW" or "Flora of New South Whales")
+   1. Containing Text - try to find the most recent concept where the name contains certain text (e.g. find the concept with "Flora of NSW" or "Flora of New South Wales")
    1. NSL Search - if the source data includes a concept reference, attempt to find that reference in the NSL using the [Find Concept NSL Service](https://biodiversity.org.au/nsl/docs/main.html#find-concept)
 
 It is important to note that any automated matching process during the bulk import will result in some level of inaccuracy.
