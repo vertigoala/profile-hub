@@ -179,23 +179,18 @@ class ExportService {
             String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
             model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.join(","), searchIdentifier)?.resp
 
-            model.profile.images = model.profile.images.collect {image ->
-                if (!image.excluded) {
-                    if (image.metadata) {
-                        String title = image.metadata.title ? "\"${image.metadata.title}\"" : ""
-                        String creator = image.metadata.creator ? "by ${image.metadata.creator}" : ""
-                        String dateCreated = image.metadata.dateCreated ? ", ${DateFormat.parse(image.metadata.dateCreated).format("dd/MM/yyyy")}" : ""
-                        String copyright = image.metadata.rightsHolder ? " (&copy; ${image.metadata.rightsHolder})" : ""
-                        image.metadata.title = "${title}${creator}${dateCreated}${copyright}"
-                    }
-
-                    if (image.staged) {
-                        image.largeImageUrl = "${grailsApplication.config.grails.serverURL}${image.largeImageUrl}"
-                    }
-
-                    return image
+            List<Map> groupedImagesInPairs = []
+            def images = model.profile.images
+            images.eachWithIndex { image, i ->
+                if (i % 2 == 0) {
+                    image << [imageNumber: i + 1]
+                    Map nextImage = (i + 1 < images.size()) ? images[i + 1] : [:]
+                    nextImage << [imageNumber: i + 2]
+                    groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
                 }
             }
+
+            model.profile.images = groupedImagesInPairs
         }
 
         // Retrieve occurrences-map image url
