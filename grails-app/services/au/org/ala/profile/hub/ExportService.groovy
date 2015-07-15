@@ -45,85 +45,6 @@ class ExportService {
     ]
 
 
-    private Map loadProfileData(String profileId, opus, Map params, boolean latest = false) {
-
-        Map model = [:]
-        model.profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${opus.uuid}/profile/${URLEncoder.encode(profileId, "UTF-8")}?latest=${false}")?.resp
-
-        if (params.taxonomy || params.conservation) {
-            model.profile.speciesProfile = profileService.getSpeciesProfile(model.profile.guid)?.resp
-
-            model.profile.speciesProfile?.conservationStatuses?.each {
-                it.colour = getColourForStatus(it.status)
-                it.regionAbbrev = statusRegions[it.region]
-            }
-
-            model.profile.classifications = profileService.getClassification(opus.uuid, params.profileId, model.profile.guid)?.resp
-        }
-
-        if (params.specimens) {
-            model.profile.specimens = model.profile.specimenIds?.collect {
-                def spec = biocacheService.lookupSpecimen(it)?.resp
-                [
-                        institutionName: spec.processed.attribution.institutionName,
-                        collectionName : spec.processed.attribution.collectionName,
-                        catalogNumber  : spec.raw.occurrence.catalogNumber,
-                ]
-            }
-        }
-
-        if (params.images) {
-            String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-            model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.join(","), searchIdentifier)?.resp
-
-            model.profile.images = model.profile.images.collect {image ->
-                if (!image.excluded) {
-                    if (image.metadata) {
-                        String creator = image.metadata.creator ? "by ${image.metadata.creator}" : ""
-                        String dateCreated = image.metadata.dateCreated ? ", ${DateFormat.parse(image.metadata.dateCreated).format("dd/MM/yyyy")}" : ""
-                        String copyright = image.metadata.rightsHolder ? " (&copy; ${image.metadata.rightsHolder})" : ""
-                        image.metadata.title = "${image.metadata.title ?: ""}${creator}${dateCreated}${copyright}"
-                    }
-
-                    if (image.staged) {
-                        image.largeImageUrl = "${ServletContextHolder.servletContext.contextPath}image.largeImageUrl"
-                    }
-
-                    return image
-                }
-            }
-        }
-
-        // Don't make them String if you want the groovy truth to work
-        def nslNameIdentifier = model.profile.nslNameIdentifier
-        def nslNomenclatureIdentifier = model.profile.nslNomenclatureIdentifier
-        if (params.nomenclature && nslNameIdentifier && nslNomenclatureIdentifier) {
-            model.profile.nomenclature = nslService.getConcept(nslNameIdentifier, nslNomenclatureIdentifier)
-            model.profile.nomenclature.citations.each {citation ->
-                citation.relationship = stripTextFromNonFormattingHtmlTags(citation.relationship)
-            }
-        }
-
-        String occurrenceQuery = createOccurrenceQuery(model.profile, opus)
-        model.profile.mapImageUrl = createMapImageUrl(opus, occurrenceQuery)
-
-        // Format creators and editors
-        model.profile.attributes.each {attribute ->
-            attribute.creators = attribute?.creators && opus.allowFineGrainedAttribution ? attribute.creators.toArray().join(', ') : ''
-            attribute.editors = attribute?.editors && opus.allowFineGrainedAttribution ? attribute.editors.toArray().join(', ') : ''
-        }
-
-        // Format conservation status
-        if (params.conservation && model.profile.speciesProfile?.conservationStatuses) {
-            model.profile.hasConservationStatus = true
-            model.profile.speciesProfile.conservationStatuses = model.profile.speciesProfile?.conservationStatuses.sort {it.region}
-        } else {
-            model.profile.hasConservationStatus = false
-        }
-
-        return model
-    }
-
     @Async
     void createPdfAsych(Map params, boolean latest = false) {
         try {
@@ -175,6 +96,13 @@ class ExportService {
         return jasperNonTransactionalService.generateReport(reportDef).toByteArray()
     }
 
+    /**
+     *
+     * @param model
+     * @param params
+     * @param latest
+     * @return
+     */
     private Map curateModel(Map model, Map params, boolean latest = false) {
         model.opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
         model.profiles << loadProfileData(params.profileId as String, model.opus, params, latest)
@@ -210,6 +138,95 @@ class ExportService {
 
         return curatedModel
 
+    }
+
+    /**
+     *
+     * @param profileId
+     * @param opus
+     * @param params
+     * @param latest
+     * @return
+     */
+    private Map loadProfileData(String profileId, opus, Map params, boolean latest = false) {
+
+        Map model = [:]
+        model.profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${opus.uuid}/profile/${URLEncoder.encode(profileId, "UTF-8")}?latest=${false}")?.resp
+
+        if (params.taxonomy || params.conservation) {
+            model.profile.speciesProfile = profileService.getSpeciesProfile(model.profile.guid)?.resp
+
+            model.profile.speciesProfile?.conservationStatuses?.each {
+                it.colour = getColourForStatus(it.status)
+                it.regionAbbrev = statusRegions[it.region]
+            }
+
+            model.profile.classifications = profileService.getClassification(opus.uuid, params.profileId, model.profile.guid)?.resp
+        }
+
+        if (params.specimens) {
+            model.profile.specimens = model.profile.specimenIds?.collect {
+                def spec = biocacheService.lookupSpecimen(it)?.resp
+                [
+                        institutionName: spec.processed.attribution.institutionName,
+                        collectionName : spec.processed.attribution.collectionName,
+                        catalogNumber  : spec.raw.occurrence.catalogNumber,
+                ]
+            }
+        }
+
+        if (params.images) {
+            String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
+            model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.join(","), searchIdentifier)?.resp
+
+            model.profile.images = model.profile.images.collect {image ->
+                if (!image.excluded) {
+                    if (image.metadata) {
+                        String creator = image.metadata.creator ? "by ${image.metadata.creator}" : ""
+                        String dateCreated = image.metadata.dateCreated ? ", ${DateFormat.parse(image.metadata.dateCreated).format("dd/MM/yyyy")}" : ""
+                        String copyright = image.metadata.rightsHolder ? " (&copy; ${image.metadata.rightsHolder})" : ""
+                        image.metadata.title = "${image.metadata.title ?: ""}${creator}${dateCreated}${copyright}"
+                    }
+
+                    if (image.staged) {
+                        image.largeImageUrl = "${ServletContextHolder.servletContext.contextPath}image.largeImageUrl"
+                    }
+
+                    return image
+                }
+            }
+        }
+
+        // Retrieve occurrences-map image url
+        String occurrenceQuery = createOccurrenceQuery(model.profile, opus)
+        model.profile.mapImageUrl = createMapImageUrl(opus, occurrenceQuery)
+
+        // Don't make them a String if you want the groovy truth to work (Check Bootstrap.groovy for null values workaround)
+        def nslNameIdentifier = model.profile.nslNameIdentifier
+        def nslNomenclatureIdentifier = model.profile.nslNomenclatureIdentifier
+        // Format nomenclature references
+        if (params.nomenclature && nslNameIdentifier && nslNomenclatureIdentifier) {
+            model.profile.nomenclature = nslService.getConcept(nslNameIdentifier, nslNomenclatureIdentifier)
+            model.profile.nomenclature.citations.each {citation ->
+                citation.relationship = stripTextFromNonFormattingHtmlTags(citation.relationship)
+            }
+        }
+
+        // Format creators and editors
+        model.profile.attributes.each {attribute ->
+            attribute.creators = attribute?.creators && opus.allowFineGrainedAttribution ? attribute.creators.toArray().join(', ') : ''
+            attribute.editors = attribute?.editors && opus.allowFineGrainedAttribution ? attribute.editors.toArray().join(', ') : ''
+        }
+
+        // Format conservation status
+        if (params.conservation && model.profile.speciesProfile?.conservationStatuses) {
+            model.profile.hasConservationStatus = true
+            model.profile.speciesProfile.conservationStatuses = model.profile.speciesProfile?.conservationStatuses.sort {it.region}
+        } else {
+            model.profile.hasConservationStatus = false
+        }
+
+        return model
     }
 
     def createOccurrenceQuery = { profile, opus ->
