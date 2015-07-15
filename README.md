@@ -11,6 +11,13 @@ The main web service is ```[host]/import/profile```, which takes a JSON request 
     "opusId": "",
     "profiles":[{
         "scientificName": "",
+        "nameAuthor": "",
+        "fullName": "",
+        "enableNSLMatching": "",
+        "nslNameIdentifier": "",
+        "nslNomenclatureIdentifier": "",
+        "nslNomenclatureMatchStrategy": "",
+        "nslNomenclatureMatchData": [""],
         "links":[{
             "creators": [""],
             "edition": "",
@@ -36,6 +43,12 @@ The main web service is ```[host]/import/profile```, which takes a JSON request 
             "editors": [""],
             "title": "",
             "text": ""
+            }],
+        "images": [{
+            "title": "(mandatory)",
+            "identifier": "(url to the image - mandatory)",
+            "creator": "",
+            "dateCreated": ""
             }]
     }]
 }
@@ -67,168 +80,7 @@ This section lists the steps required to create a completely new collection and 
 
 # Design
 This document covers the design considerations of both the Profile Hub and the Profile Service.
-## URL Patterns
-### Profile Hub
 
-Due to limitations of the ala-cas-client library used to intercept HTTP requests and redirect where necessary to the login page, we cannot use true RESTful URL patterns and rely on the HTTP verb. Therefore, create, update and delete URLs all end with the verb. If in future the ala-cas-client library is updated to handle the HTTP verb, these URLs can simply be modified to remove the verb: no other changes should be necessary. All URLs are mapped with the appropriate HTTP verb as well as having the verb in the URL itself.
-
-* ```/```
-  * Public
-  * GET - index page, lists all collections
-  * PUT, POST, DELETE not allowed
-* ```/opus```
-  * Public
-  * GET - index page, lists all collections
-  * PUT, POST, DELETE not allowed
-* ```/opus/create```
-  * Secured
-  * GET - shows the create opus page
-  * PUT - creates a new opus
-  * POST, DELETE not allowed
-* ```/opus/[opusId]```
-  * Public
-  * GET - view opus page
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/update```
-  * Secured
-  * GET - shows the update opus page
-  * POST - update opus
-  * GET, PUT, DELETE not allowed
-* ```/opus/[opusId]/delete```
-  * Secured
-  * DELETE - delete opus
-  * PUT, GET, POST not allowed
-* ```/opus/[opusId]/profile```
-  * Public
-  * GET - lists all profiles in the opus
-  * PUT, POST, DELETE not allowed
-* ```/profile/search```
-  * Public
-  * GET - search for a profile within an opus or list of opuses
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/create```
-  * Secured
-  * PUT - create a new profile in the opus
-  * POST, GET, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]```
-  * Public
-  * GET - view profile page
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/update```
-  * Secured
-  * GET - shows the update profile page
-  * POST - update profile
-  * DELETE, PUT not allowed
-* ```/opus/[opusId]/profile/[profileId]/delete```
-  * Secured
-  * DELETE - deletes the profile
-  * GET, POST, PUT not allowed
-* ```/opus/[opusId]/profile/[profileId]/json```
-  * Public
-  * GET - view the profile in json format
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/attribute```
-  * Public
-  * GET - lists all attributes for the profile
-  * PUT - creates a new attribute
-  * POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/attribute/[attributeId]```
-  * Public
-  * GET - retrieves the attribute
-* ```/opus/[opusId]/profile/[profileId]/attribute/[attributeId]/update```
-  * Secured
-  * POST - updates the attribute
-  * GET, DELETE, PUT not allowed
-* ```/opus/[opusId]/profile/[profileId]/attribute/[attributeId]/delete```
-  * Secured
-  * DELETE - deletes the attribute
-  * GET, POST, PUT not allowed
-* ```/opus/[opusId]/profile/[profileId]/images```
-  * Public
-  * GET - retrieves images for the profile
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/classifications```
-  * Public
-  * GET - retrieves classifications for the profile
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/publication```
-  * Public
-  * GET - retrieves publications for the profile
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/publication/create```
-  * Public
-  * PUT - creates a new publication
-  * GET, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/publication/[publicationId]```
-  * Secured
-  * POST - updates a publication
-  * PUT, GET, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/lists```
-  * Public
-  * GET - retrieves lists for the profile
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/speciesProfile```
-  * Public
-  * GET - retrieves the species profile for the profile
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/links```
-  * Public
-  * GET - lists all links for the profile
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/links/update```
-  * Secured
-  * POST - updates all links for the profile
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/bhlLinks```
-  * Public
-  * GET - lists all bhl links for the profile
-  * PUT, GET, DELETE not allowed
-* ```/opus/[opusId]/profile/[profileId]/bhlLinks/update```
-  * Secured
-  * POST - updates all bhl links for the profile
-  * PUT, GET, DELETE not allowed
-* ```/opus/[opusId]/vocab/[vocabId]```
-  * Public
-  * GET - retrieves vocab for the opus
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/vocab/[vocabId]/update```
-  * Secured
-  * POST - updates the vocab
-  * PUT, GET, DELETE not allowed
-* ```/opus/[opusId]/vocab/[vocabId]/findUsages```
-  * Public
-  * GET - finds usages of the term
-  * PUT, POST, DELETE not allowed
-* ```/opus/[opusId]/vocab/[vocabId]/replaceUsages```
-  * Secured
-  * POST - replaces all usages of a term with another term
-  * PUT, GET, DELETE not allowed
-* ```/opus/[opusId]/users/update```
-  * Secured
-  * POST - updates admin/editors associated with the opus
-  * PUT, GET, DELETE not allowed
-* ```/bhl/[pageId]```
-  * Public
-  * GET - retrieves the page from BHL
-  * PUT, POST, DELETE not allowed
-* ```/dataResource/```
-  * Public
-  * GET - lists all data resources
-  * PUT, POST, DELETE not allowed
-* ```/dataResource/[dataResourceUid]```
-  * Public
-  * GET - retrieves a single data resource
-  * PUT, POST, DELETE not allowed
-* ```/user/search```
-  * Secured
-  * GET - finds users
-  * PUT, POST, DELETE not allowed
-* ```/audit/object/[objectId]```
-  * Secured
-  * GET - retrieves audit history for the object
-  * PUT, POST, DELETE not allowed
-
-### Profile Service
 
 # Security
 ## Profile Hub
@@ -237,6 +89,13 @@ Due to limitations of the ala-cas-client library used to intercept HTTP requests
 Authentication is controlled via CAS URL pattern matching (see below for the patterns).
 
 #### Secured URL Patterns
+
+Due to limitations of the ala-cas-client library used to intercept HTTP requests and redirect where necessary to the login page, we cannot use true RESTful URL patterns and rely on the HTTP verb. Therefore, create, update and delete URLs all end with the verb. If in future the ala-cas-client library is updated to handle the HTTP verb, these URLs can simply be modified to remove the verb: no other changes should be necessary. All URLs are mapped with the appropriate HTTP verb as well as having the verb in the URL itself.
+
+See [URLMappings.groovy](https://github.com/AtlasOfLivingAustralia/profile-hub/blob/master/grails-app/conf/UrlMappings.groovy) for URL patterns.
+
+This is the URL pattern matching regex list to be used for CAS authentication in the profile hub:
+
 ```
 /.*/update.*, /.*/create.*, /.*/delete.*, /user/.*, /audit/.*, /admin/*
 ```
@@ -351,3 +210,90 @@ You can see a code coverage report for the javascript files by following these s
    1. Run the karma configuration using the ```Run 'karma' with Coverage``` option (the 3rd toolbar button after the run dropdown).
    1. Open ```coverage/<browser>/index.html```
    1. IntelliJ will also annotate the filenames in the project explorer with a percentage of lines covered.
+
+# Name Matching
+
+Naming matching is a complicated process. It is triggered under three scenarios:
+
+1. When creating a new profile
+1. When editing the name of an existing profile
+1. During a bulk import of an existing dataset
+
+The first two scenarios behave in exactly the same manner. The third is a bit different because it is an automatic process (no human involvement).
+
+There are two sources of name matching:
+
+1. The ALA Name index
+1. The National Species List (NSL)
+
+### Matching ALA Names
+
+Names are matched against the ALA Name Index for two purposes:
+
+1. The ALA Name Index caters for complex matching rules which are not currently supported by the NSL.
+1. Matching to an ALA name allows the profile to access information from other ALA systems, such as images and occurrence information.
+
+The ultimate source of names in the ALA Name Index is the NSL. Therefore, baring synchronisation delays, there should be no discrepancies between ALA-matched and NSL-matched names.
+
+### Matching NSL Names
+
+Names are matched against the NSL to allow access to the APNI name concepts (which the user can select from on the Profile Edit page).
+
+## Name matching when creating/editing a profile
+
+1. The user enters the name, with or without the authority (e.g. "Acacia dealbata" or "Acacia dealbata Link"
+   1. The user clicks the Check Name button
+1. The system attempts to match the name using the ALA Name Matching API
+   1. This API follows complex matching rules, including following synonyms, looking at different levels of the taxonomic hierarchy, and so on. The details of this process is not covered here.
+   1. If there is a single _exact_ match, then the system will present the user with options to
+      1. Proceed, whereby the profile will be matched to the name, and the profile name and the matched name will be the same; or
+      1. Manually select a matching name, whereby the profile name will be different to the matched name
+   1. If there is single _non-exact_ match, then the system will present the user with options to
+      1. Use the matched name instead, which will change the profile name to the matched name; or
+      1. Proceed with the name as they entered it, whereby the profile name will be different to the matched name; or
+      1. Manually select a matching name, whereby the profile name will be different to the matched name
+   1. If there is no matching name, or more than matching name, then the system will present the user with options to
+      1. Proceed with the name as they entered it, whereby the profile will NOT be matched to any name; or
+      1. Manually select a matching name, whereby the profile name will be different to the matched name
+1. Once the first step is complete, the system will attempt to match the name against the NSL
+   1. If there is a single match, the profile will be automatically matched to that NSL name
+      1. If the previous step, for any reason, did not identify the name authority, and the matched NSL name includes the authority, then the profile will use the authority from the NSL. This should rarely occur
+   1. If there is no match, or multiple matches, then the profile will not be matched to any NSL name
+
+The user is also able to remove the matched name on the edit profile screen. This is useful for cases where the system automatically matched to the wrong name during a bulk import (see below for more information on bulk imports).
+
+### Nomenclature (aka concept)
+
+The user is able to select the appropriate nomenclature/concept from a list of available concepts (sourced from the NSL), if the name was matched to an NSL name.
+
+## Name matching during a bulk import
+
+1. For each profile in the data set, the system will match the name using the ALA Name Matching API.
+   1. If there is a single match, regardless of whether it was an exact match or not, then the system will match the profile to that name
+   1. If there was no match, or multiple matches, then the system will not match the name
+1. If the source data includes an NSL name identifier, then the system will match the profile to that NSL name
+1. If the source data does not include an NSL name identifier, then the system will attempt to match the name against the NSL
+   1. If there is a single match, the profile will be matched to that NSL name
+      1. If the previous step, for any reason, did not identify the name authority, and the matched NSL name includes the authority, then the profile will use the authority from the NSL. This should rarely occur
+   1. If there is no match, or multiple matches, then the profile will not be matched to any NSL name
+
+### Nomenclature (aka concept)
+
+There are several options for the selection of the nomenclature/concept during the import process:
+
+1. The source data can specify the NSL identifier of the nomenclature to use
+1. The import process can indicate that the system should attempt to match the profile to an appropriate nomenclature using one of the following rules (assuming the name has matched to the NSL):
+   1. APC or Latest - if there is an APC concept, use it; otherwise, use the most recent concept
+   1. Latest - use the most recent concept
+   1. Containing Text - try to find the most recent concept where the name contains certain text (e.g. find the concept with "Flora of NSW" or "Flora of New South Whales")
+   1. NSL Search - if the source data includes a concept reference, attempt to find that reference in the NSL using the [Find Concept NSL Service](https://biodiversity.org.au/nsl/docs/main.html#find-concept)
+
+It is important to note that any automated matching process during the bulk import will result in some level of inaccuracy.
+
+## Mismatched Names Report
+
+The user interface provides a "Mismatched Names Report" for a collection (available to editors and administrators). This report will list any profile where:
+
+1. There is no matched name
+1. The matched name is different to the profile name
+1. There is no matched NSL name
