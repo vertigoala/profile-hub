@@ -25,7 +25,7 @@
                             </div>
 
                             <div ng-show="publication.doi">
-                                <strong>Unique ID:&nbsp;</strong>{{publication.uuid}}
+                                <strong>DOI:&nbsp;</strong><a href="http://dx.doi.org/{{publication.doi}}" target="_blank">{{publication.doi}}</a>
                             </div>
                         </div>
 

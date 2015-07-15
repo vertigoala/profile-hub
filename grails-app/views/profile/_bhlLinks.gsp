@@ -61,7 +61,7 @@
                             </div>
 
                             <div ng-show="link.bhlDoi != ''">
-                                <strong>DOI:&nbsp;</strong><a href="http://dx.doi.org/{{link.doi}}">{{link.doi}}</a>
+                                <strong>DOI:&nbsp;</strong><a href="http://dx.doi.org/{{link.doi}}" target="_blank">{{link.doi}}</a>
                             </div>
                         </div>
                     </div>
