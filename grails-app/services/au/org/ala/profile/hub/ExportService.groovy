@@ -190,7 +190,7 @@ class ExportService {
                     }
 
                     if (image.staged) {
-                        image.largeImageUrl = "${ServletContextHolder.servletContext.contextPath}image.largeImageUrl"
+                        image.largeImageUrl = "${grailsApplication.config.grails.serverURL}${image.largeImageUrl}"
                     }
 
                     return image
