@@ -233,11 +233,11 @@ Names are matched against the ALA Name Index for two purposes:
 1. The ALA Name Index caters for complex matching rules which are not currently supported by the NSL.
 1. Matching to an ALA name allows the profile to access information from other ALA systems, such as images and occurrence information.
 
-The ultimate source of names in the ALA Name Index is the NSL. Therefore, baring synchronisation delays, there should be no discrepancies between ALA-matched and NSL-matched names.
+The ultimate source of names in the ALA Name Index is the NSL. Therefore, barring synchronisation delays, there should be no discrepancies between ALA and NSL name lists.
 
 ### Matching NSL Names
 
-Names are matched against the NSL to allow access to the APNI name concepts (which the user can select from on the Profile Edit page).
+Names are matched against the NSL to allow access to the protolog for the name (the first recorded usage of the name), and the APNI name concepts (which the user can select from on the Profile Edit page).
 
 ## Name matching when creating/editing a profile
 
@@ -252,12 +252,13 @@ Names are matched against the NSL to allow access to the APNI name concepts (whi
       1. Use the matched name instead, which will change the profile name to the matched name; or
       1. Proceed with the name as they entered it, whereby the profile name will be different to the matched name; or
       1. Manually select a matching name, whereby the profile name will be different to the matched name
-   1. If there is no matching name, or more than matching name, then the system will present the user with options to
+   1. If there is no matching name, or more than 1 matching name, then the system will present the user with options to
       1. Proceed with the name as they entered it, whereby the profile will NOT be matched to any name; or
       1. Manually select a matching name, whereby the profile name will be different to the matched name
 1. Once the first step is complete, the system will attempt to match the name against the NSL
    1. If there is a single match, the profile will be automatically matched to that NSL name
       1. If the previous step, for any reason, did not identify the name authority, and the matched NSL name includes the authority, then the profile will use the authority from the NSL. This should rarely occur
+      1. The protolog of the NSL name is recorded against the profile and will be displayed under the name on the profile pages.
    1. If there is no match, or multiple matches, then the profile will not be matched to any NSL name
 
 The user is also able to remove the matched name on the edit profile screen. This is useful for cases where the system automatically matched to the wrong name during a bulk import (see below for more information on bulk imports).
@@ -275,6 +276,7 @@ The user is able to select the appropriate nomenclature/concept from a list of a
 1. If the source data does not include an NSL name identifier, then the system will attempt to match the name against the NSL
    1. If there is a single match, the profile will be matched to that NSL name
       1. If the previous step, for any reason, did not identify the name authority, and the matched NSL name includes the authority, then the profile will use the authority from the NSL. This should rarely occur
+      1. The protolog of the NSL name is recorded against the profile and will be displayed under the name on the profile pages.
    1. If there is no match, or multiple matches, then the profile will not be matched to any NSL name
 
 ### Nomenclature (aka concept)
