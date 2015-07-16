@@ -1,0 +1,24 @@
+<div class="col-md-10">
+    <strong ng-show="title != ''">
+        {{title}}
+    </strong>
+
+    <div ng-show="authors != ''">
+        {{authors}}
+    </div>
+
+    <div ng-show="publicationDate != ''">
+        Published on {{publicationDate | date:"dd/MM/yyyy HH:mm"}}
+    </div>
+
+    <div ng-show="doi">
+        DOI is <a href="{{doi}}">{{doi}}</a>
+    </div>
+
+    <ol class="list-inline margin-top-1">
+        <li><a class="btn-link"
+               ng-href="${grailsApplication.config.profile.service.url}/opus/{{opusId}}/profile/{{uuid}}/publication/{{uuid}}/file"
+               target="_blank">download</a></li>
+        <li ng-show="doi"><a class="btn-link" href="{{doi}}" target="_blank">doi</a></li>
+    </ol>
+</div>

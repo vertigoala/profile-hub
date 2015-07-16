@@ -67,7 +67,7 @@ class ProfileService {
     }
 
     def getPublications(String pubId) {
-        webService.get("${grailsApplication.config.profile.service.url}/publication/${enc(pubId)}")?.resp
+        webService.get("${grailsApplication.config.profile.service.url}/publication/${enc(pubId)}")
     }
 
     def getProfile(String opusId, String profileId, boolean latest = false) {
@@ -368,10 +368,6 @@ class ProfileService {
         }
 
         result
-    }
-
-    def getPublicationJson(String pubId){
-        getPublications(pubId)
     }
 
     def enc(String value) {

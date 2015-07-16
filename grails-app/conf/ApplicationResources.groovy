@@ -25,6 +25,7 @@ modules = {
         resource url:"js/angular/directives/vocabularyEditor.js"
         resource url:"js/angular/directives/profileComparison.js"
         resource url:"js/angular/directives/nomenclature.js"
+        resource url:"js/angular/directives/publication.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"

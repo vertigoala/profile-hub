@@ -21,7 +21,7 @@ profileEditor.controller('DoiController', function (messageService, profileServi
             data.publications = orderBy(data.publications, 'publicationDate', true);
 
             self.publications = data.publications;
-            self.profile = data;
+            self.profile = data.profile;
             self.uuid = data.uuid;
             self.opusId = data.opusId;
             self.scientificName = data.scientificName;
@@ -32,21 +32,10 @@ profileEditor.controller('DoiController', function (messageService, profileServi
     }
 
     self.getSelectedPublication = function () {
-        var remove = null;
         self.publications.forEach(function (item, index) {
             if (item.uuid == self.pubId) {
                 self.selectedPublication = item;
-                remove = index;
             }
         });
-
-        // remove the selected publication from list.
-        if (remove !== null) {
-            self.publications.splice(remove, 1);
-            console.log("removed publication at index " + remove);
-            console.log(self.publications)
-            console.log(self.selectedPublication)
-        }
-
     }
 });
