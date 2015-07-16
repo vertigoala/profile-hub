@@ -12,15 +12,14 @@ profileEditor.directive('publication', function ($browser) {
             publicationDate: '=',
             title: '=',
             uploadDate: '=',
-            uuid: '='
+            uuid: '=',
+            profileId: '=',
+            opusId: '=',
+            context: '=',
+            version:'='
         },
         templateUrl: $browser.baseHref() + 'static/templates/publication.html',
-        controller: ['$scope', 'profileService', 'util', 'config', '$http', '$filter', function ($scope, profileService, util, config, $http, $filter) {
-            $scope.nameCheck = null;
-            $scope.opusId = util.getEntityId("opus");
-
-            var orderBy = $filter("orderBy");
-
+        controller: ['$scope', function ($scope) {
             $scope.load = function (pub) {
                 $scope.authors = pub.authors;
                 $scope.description = pub.description;

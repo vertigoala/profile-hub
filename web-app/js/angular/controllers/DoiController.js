@@ -4,6 +4,7 @@
 profileEditor.controller('DoiController', function (messageService, profileService, util, $filter) {
     var self = this;
     self.opusId = null;
+    self.profileId = null;
     self.uuid = null;
     self.scientificName = null;
     self.pubId = util.getEntityId('publication');
@@ -17,18 +18,23 @@ profileEditor.controller('DoiController', function (messageService, profileServi
     self.loadPublications = function () {
         var promise = profileService.getPublicationsFromId(self.pubId);
         promise.then(function (data) {
-            // makes lastest version appear first
-            data.publications = orderBy(data.publications, 'publicationDate', true);
-
-            self.publications = data.publications;
-            self.profile = data.profile;
-            self.uuid = data.uuid;
-            self.opusId = data.opusId;
-            self.scientificName = data.scientificName;
-            self.getSelectedPublication();
+            self.init(data);
         }, function () {
             messageService.alert('Could not load publications using publication id: ' + self.pubId);
         });
+    }
+
+    self.init = function(data){
+        // makes lastest version appear first
+        data.publications = orderBy(data.publications, 'publicationDate', true);
+
+        self.publications = data.publications;
+        self.profile = data.profile;
+        self.uuid = data.uuid;
+        self.opusId = data.opusId;
+        self.profileId = data.profile.uuid;
+        self.scientificName = data.scientificName;
+        self.getSelectedPublication();
     }
 
     self.getSelectedPublication = function () {

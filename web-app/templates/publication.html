@@ -1,24 +1,26 @@
-<div class="col-md-10">
-    <strong ng-show="title != ''">
-        {{title}}
-    </strong>
-
-    <div ng-show="authors != ''">
-        {{authors}}
-    </div>
-
-    <div ng-show="publicationDate != ''">
-        Published on {{publicationDate | date:"dd/MM/yyyy HH:mm"}}
-    </div>
-
-    <div ng-show="doi">
-        DOI is <a href="{{doi}}">{{doi}}</a>
-    </div>
-
-    <ol class="list-inline margin-top-1">
+<div class="row">
+<div class="col-sm-2">
+    <ol class="list-inline">
         <li><a class="btn-link"
-               ng-href="${grailsApplication.config.profile.service.url}/opus/{{opusId}}/profile/{{uuid}}/publication/{{uuid}}/file"
-               target="_blank">download</a></li>
-        <li ng-show="doi"><a class="btn-link" href="{{doi}}" target="_blank">doi</a></li>
+               ng-href="{{context}}/opus/{{opusId}}/profile/{{profileId}}/publication/{{uuid}}/file"
+               target="_blank">
+            <span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
     </ol>
+</div>
+<div class="col-sm-10">
+    <div ng-show="title">
+        <strong>Title: {{title}} <span ng-show="version">&nbsp;v. {{version}}</span></strong>
+    </div>
+
+    <div ng-show="authors">
+        <strong>Authors: </strong>{{authors}}
+    </div>
+
+    <div>
+        <strong>Publication Date: </strong> {{publicationDate | date:"dd/MM/yyyy HH:mm"}}
+    </div>
+    <div ng-show="doi">
+        <strong>DOI: </strong><a href="http://dx.doi.org/{{doi}}">{{doi}}</a>
+    </div>
+</div>
 </div>

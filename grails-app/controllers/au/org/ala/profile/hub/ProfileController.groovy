@@ -340,7 +340,9 @@ class ProfileController extends BaseController {
                               glossaryUrl : getGlossaryUrl(profile.opus),
                               aboutPageUrl: getAboutUrl(profile.opus),
                               footerText  : profile.opus.footerText,
-                              contact     : profile.opus.contact]
+                              contact     : profile.opus.contact,
+                              publication: pubJson
+                    ]
 
                     render view: "publication", model: model;
                 }
