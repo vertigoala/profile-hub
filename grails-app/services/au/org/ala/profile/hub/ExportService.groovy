@@ -7,11 +7,9 @@ import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.context.request.RequestContextHolder
 
-import java.text.DateFormat
 import java.util.concurrent.ConcurrentLinkedQueue
 
 import static groovyx.gpars.GParsPool.withPool

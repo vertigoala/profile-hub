@@ -6,6 +6,26 @@
    "profiles": [{"profile": {
       "hasConservationStatus": true,
       "lastAttributeChange": null,
+      "bibliography": [
+         {
+            "text": "<p>Aiton, W. 1789: <i>Hortus Kewensis 3<\/i><br/><\/p>",
+            "order": 0,
+            "uuid": "e2874907-c8c4-457e-956a-011c40f43ba2",
+            "plainText": "Aiton, W. 1789: Hortus Kewensis 3"
+         },
+         {
+            "text": "<p>Allan, H.H. 1961: <i>Flora of New Zealand. Vol. I. <u>Indigenous Tracheophyta</u>: Psilopsida, Lycopsida,Filicopsida, Gymnospermae, Dicotyledones. <\/i>Government Printer, Wellington.<br/><\/p>",
+            "order": 1,
+            "uuid": "268fd12a-d3ac-43c9-8216-82670e63483f",
+            "plainText": "Allan, H.H. 1961: Flora of New Zealand. Vol. I. Indigenous Tracheophyta: Psilopsida, Lycopsida,Filicopsida, Gymnospermae, Dicotyledones. Government Printer, Wellington."
+         },
+         {
+            "text": "<p>de Labillardière, J.J.H. 1806: <i>Novae Hollandiae Plantarum Specimen.<\/i> Vol. Vol. 2. Huzard, Paris.<br/><\/p>",
+            "order": 2,
+            "uuid": "cc67e09b-ff23-45d4-84b7-0f7637764669",
+            "plainText": "de Labillardière, J.J.H. 1806: Novae Hollandiae Plantarum Specimen. Vol. Vol. 2. Huzard, Paris."
+         }
+      ],
       "images": [
          {
             "rightImage": {
@@ -1598,7 +1618,6 @@
          "collectionName": "Australian Tropical Herbarium"
       }],
       "opusName": "NSW flora",
-      "bibliography": [],
       "rank": "species",
       "authorship": [{
          "category": "Author",
