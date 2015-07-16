@@ -1,10 +1,3 @@
-
-
-includeTargets << grailsScript("_GrailsBootstrap")
-includeTargets << grailsScript("_GrailsRun")
-includeTargets << grailsScript("_GrailsSettings")
-includeTargets << grailsScript("_GrailsClean")
-
 def ant = new AntBuilder()
 
 eventCompileEnd = {
