@@ -206,6 +206,10 @@ class ExportService {
             }
         }
 
+        // Filter authors and contributors
+        model.profile.acknowledgements = model.profile.authorship?.findAll { it.category != 'Author' }
+        model.profile.authorship = model.profile.authorship?.findAll { it.category == 'Author' }.collect {it.text}.join(", ")
+
         // Format creators and editors
         model.profile.attributes.each {attribute ->
             attribute.creators = attribute?.creators && opus.allowFineGrainedAttribution ? attribute.creators.toArray().join(', ') : ''

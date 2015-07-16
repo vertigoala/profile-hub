@@ -6,6 +6,10 @@
    "profiles": [{"profile": {
       "hasConservationStatus": true,
       "lastAttributeChange": null,
+      "acknowledgements": [{
+         "category": "Tester",
+         "text": "Angel"
+      }],
       "bibliography": [
          {
             "text": "<p>Aiton, W. 1789: <i>Hortus Kewensis 3<\/i><br/><\/p>",
@@ -1619,10 +1623,7 @@
       }],
       "opusName": "NSW flora",
       "rank": "species",
-      "authorship": [{
-         "category": "Author",
-         "text": "P.G. Kodela"
-      }],
+      "authorship": "<i>P.G. Kodela<\/i>",
       "excludedImages": [],
       "matchedName": {
          "scientificName": "Acacia paradoxa",
