@@ -1,7 +1,10 @@
 {
    "cover": {
-      "title": "NSW flora",
-      "subtitle": "Acacia paradoxa"
+     "logo": "http://root.ala.org.au/bdrs-core/files/download.htm?className=au.com.gaiaresources.bdrs.model.theme.Theme&id=217&fileName=processed/images/bdrs/atlasoflivingaust.png",
+     "title": "NSW flora",
+     "subtitle": "Acacia paradoxa DC.",
+     "primaryImage": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=dfc0883d-1fab-4689-a922-b6f30ab93236",
+     "banner": "http://images.ala.org.au//store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original"
    },
    "profiles": [{"profile": {
       "hasConservationStatus": true,

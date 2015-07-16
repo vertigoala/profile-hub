@@ -128,7 +128,10 @@ class ExportService {
         Map curatedModel = [
                cover: [
                        title: model.opus.title,
-                       subtitle: model.profiles[0]?.profile?.scientificName
+                       subtitle: model.profiles[0]?.profile?.scientificName,
+                       logo: model.opus.logoUrl,
+                       banner: model.opus.bannerUrl,
+                       primaryImage: model.profiles[0]?.profile?.primaryImage?: (model.profiles[0]?.profile?.images?.size() > 0 ? model.profiles[0]?.profile?.images[0].leftImage.largeImageUrl : '')
                ],
                profiles: model.profiles
 
