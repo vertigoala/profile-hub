@@ -16,7 +16,8 @@ class ImageServiceSpec extends Specification {
     String testId = UUID.randomUUID().toString()
 
     def setup() {
-        grailsApplication.config.image.staging.dir = System.getProperty("java.io.tmpdir") + "${testId}"
+//        grailsApplication.config.image.staging.dir = System.getProperty("java.io.tmpdir") + "${testId}"
+        grailsApplication.config.image.staging.dir = "/tmp/${testId}"
         new File("${grailsApplication.config.image.staging.dir}").mkdir()
 
         println "Test files will be written to ${grailsApplication.config.image.staging.dir}"
