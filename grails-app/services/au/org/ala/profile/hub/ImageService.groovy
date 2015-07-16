@@ -65,7 +65,6 @@ class ImageService {
         deleted
     }
 
-
     def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier) {
         Map response = [:]
 
@@ -135,7 +134,7 @@ class ImageService {
     def publishImages(String opusId, String profileId) {
         def profile = profileService.getProfile(opusId, profileId, true)
 
-        Map stagedImages = profile.profile.stagedImages.collectEntries {
+        Map stagedImages = profile.profile.stagedImages?.collectEntries {
             [(it.imageId): it]
         }
 
@@ -166,7 +165,7 @@ class ImageService {
             if (profile.profile.primaryImage == imageId) {
                 profileUpdates.primaryImage = uploadResponse.resp.images[0]
             }
-            if (profile.profile.excludedImages.contains(imageId)) {
+            if (profile.profile.excludedImages?.contains(imageId)) {
                 profile.profile.excludedImages.remove(imageId)
                 profile.profile.excludedImages << uploadResponse.resp.images[0]
                 profileUpdates.excludedImages = profile.profile.excludedImages
