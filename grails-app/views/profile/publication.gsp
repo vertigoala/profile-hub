@@ -7,15 +7,6 @@
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Publication</title>
-    <style rel="stylesheet">
-    .selected {
-        background-color: white;
-    }
-
-    .spacing {
-        min-height: 50px;
-    }
-    </style>
 
     <r:require module="profiles"/>
 
@@ -34,17 +25,15 @@
 
     <div class="row">
         <div class="col-sm-12 selected padding-bottom-1">
-            <h2 class="h1" ng-show="doiCtrl.selectedPublication.title">
+            <h2 class="h2 heading-large" ng-show="doiCtrl.selectedPublication.title">
                 {{doiCtrl.selectedPublication.title}}
                 <span ng-show="doiCtrl.selectedPublication.version">&nbsp;v. {{doiCtrl.selectedPublication.version}}</span>
             </h2>
 
             <div class="citation">{{doiCtrl.selectedPublication.authors}}, published on {{doiCtrl.selectedPublication.publicationDate | date:"dd/MM/yyyy HH:mm"}}</div>
 
-            <p class="" ng-show="doiCtrl.selectedPublication.authors">
-                DOI -  <a class=""
-                          href="{{doiCtrl.selectedPublication.doi}}"
-                          target="_blank">{{doiCtrl.selectedPublication.doi}}</a>
+            <p>
+                Click the download button below to download the publication.
             </p>
 
             <ol class="list-inline margin-top-1">
@@ -68,10 +57,7 @@
             <table class="table table-striped" ng-show="doiCtrl.publications.length > 0">
                 <tr ng-repeat="pub in doiCtrl.publications">
                     <td ng-class="{selected: pub.uuid == doiCtrl.pubId}">
-                        <publication title="pub.title" publication-date="pub.publicationDate"
-                                     authors="pub.authors" uuid="pub.uuid" doi="pub.doi"
-                                     version="pub.version" opus-id="doiCtrl.opusId" profile-id="doiCtrl.profileId"
-                                     context="'${grailsApplication.config.profile.service.url}'">
+                        <publication data="pub" opus-id="doiCtrl.opusId" profile-id="doiCtrl.profileId">
 
                         </publication>
                     </td>

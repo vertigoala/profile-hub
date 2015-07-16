@@ -330,7 +330,8 @@ class ProfileController extends BaseController {
             if (!pubJson) {
                 notFound()
             } else {
-                def profile = profileService.getProfile(pubJson.profile.opusId, pubJson.profile.uuid, true);
+                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin;
+                def profile = profileService.getProfile(pubJson.profile.opusId, pubJson.profile.uuid, latest);
 
                 if (!profile) {
                     notFound()

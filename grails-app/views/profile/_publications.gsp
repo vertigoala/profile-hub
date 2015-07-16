@@ -10,11 +10,7 @@
 
             <div class="col-sm-10">
                 <div class="col-sm-12" ng-repeat="pub in pubCtrl.publications">
-                    <publication ng-class="col-sm-10" title="pub.title" publication-date="pub.publicationDate"
-                                 authors="pub.authors" uuid="pub.uuid" doi="pub.doi" version="pub.version"
-                                 profile-id="pubCtrl.profileId" opus-id="pubCtrl.opusId"
-                                 context="'${grailsApplication.config.profile.service.url}'">
-
+                    <publication data="pub" opus-id="pubCtrl.opusId" profile-id="pubCtrl.profileId">
                     </publication>
                     <hr ng-if="!$last"/>
                 </div>

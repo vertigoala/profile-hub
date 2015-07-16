@@ -3,32 +3,16 @@
  */
 profileEditor.directive('publication', function ($browser) {
     return {
-        restrict: 'AE',
+        restrict: 'E',
         require: [],
         scope: {
-            authors: '=',
-            description: '=',
-            doi: '=',
-            publicationDate: '=',
-            title: '=',
-            uploadDate: '=',
-            uuid: '=',
-            profileId: '=',
+            publication: '=data',
             opusId: '=',
-            context: '=',
-            version:'='
+            profileId: '='
         },
         templateUrl: $browser.baseHref() + 'static/templates/publication.html',
-        controller: ['$scope', function ($scope) {
-            $scope.load = function (pub) {
-                $scope.authors = pub.authors;
-                $scope.description = pub.description;
-                $scope.doi = pub.doi;
-                $scope.publicationDate = pub.publicationDate;
-                $scope.title = pub.title;
-                $scope.uploadDate = pub.uploadDate;
-                $scope.uuid = pub.uuid;
-            };
+        controller: ['$scope', 'config', function ($scope, config) {
+            $scope.context = config.profileServiceUrl;
         }],
         link: function (scope, element, attrs, ctrl) {
 

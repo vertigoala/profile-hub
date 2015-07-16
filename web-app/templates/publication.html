@@ -1,26 +1,26 @@
 <div class="row">
-<div class="col-sm-2">
-    <ol class="list-inline">
-        <li><a class="btn-link"
-               ng-href="{{context}}/opus/{{opusId}}/profile/{{profileId}}/publication/{{uuid}}/file"
-               target="_blank">
-            <span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
-    </ol>
-</div>
-<div class="col-sm-10">
-    <div ng-show="title">
-        <strong>Title: {{title}} <span ng-show="version">&nbsp;v. {{version}}</span></strong>
-    </div>
+    <div class="col-sm-9">
+        <div ng-show="publication.title">
+            <strong>Title: {{publication.title}} <span ng-show="publication.version">&nbsp;v. {{publication.version}}</span></strong>
+        </div>
 
-    <div ng-show="authors">
-        <strong>Authors: </strong>{{authors}}
-    </div>
+        <div ng-show="publication.authors">
+            <strong>Authors: </strong>{{publication.authors}}
+        </div>
 
-    <div>
-        <strong>Publication Date: </strong> {{publicationDate | date:"dd/MM/yyyy HH:mm"}}
+        <div>
+            <strong>Publication Date: </strong> {{publication.publicationDate | date:"dd/MM/yyyy HH:mm"}}
+        </div>
+        <div ng-show="publication.doi">
+            <strong>DOI: </strong><a href="http://dx.doi.org/{{publication.doi}}">{{publication.doi}}</a>
+        </div>
     </div>
-    <div ng-show="doi">
-        <strong>DOI: </strong><a href="http://dx.doi.org/{{doi}}">{{doi}}</a>
+    <div class="col-sm-3">
+        <ol class="list-inline pull-right">
+            <li><a class="btn-link"
+                   ng-href="{{context}}/opus/{{opusId}}/profile/{{profileId}}/publication/{{publication.uuid}}/file"
+                   target="_blank">
+                <span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
+        </ol>
     </div>
-</div>
 </div>
