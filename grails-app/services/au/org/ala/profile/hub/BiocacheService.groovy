@@ -16,13 +16,7 @@ class BiocacheService {
 
         log.debug("Image query = ${imagesQuery}")
 
-        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json")
-    }
-
-    def getOccurrence(String occurrenceId) {
-        log.debug("Fetching occurrence record ${occurrenceId}")
-
-        webService.get("${grailsApplication.config.biocache.base.url}/ws/occurrences/${occurrenceId}")
+        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true")
     }
 
     def uploadImage(String opusId, String profileId, String dataResourceId, file, Map metadata) {

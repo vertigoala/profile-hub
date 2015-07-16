@@ -65,7 +65,6 @@ class ImageService {
         deleted
     }
 
-
     def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier) {
         Map response = [:]
 
@@ -135,7 +134,7 @@ class ImageService {
     def publishImages(String opusId, String profileId) {
         def profile = profileService.getProfile(opusId, profileId, true)
 
-        Map stagedImages = profile.profile.stagedImages.collectEntries {
+        Map stagedImages = profile.profile.stagedImages?.collectEntries {
             [(it.imageId): it]
         }
 
@@ -164,11 +163,11 @@ class ImageService {
 
             // check if the staged image was set as the primary or an excluded image, and swap the staged id for the new permanent id
             if (profile.profile.primaryImage == imageId) {
-                profileUpdates.primaryImage = getPermanentImageId(uploadResponse)
+                profileUpdates.primaryImage = uploadResponse.resp.images[0]
             }
-            if (profile.profile.excludedImages.contains(imageId)) {
+            if (profile.profile.excludedImages?.contains(imageId)) {
                 profile.profile.excludedImages.remove(imageId)
-                profile.profile.excludedImages << getPermanentImageId(uploadResponse)
+                profile.profile.excludedImages << uploadResponse.resp.images[0]
                 profileUpdates.excludedImages = profile.profile.excludedImages
             }
 
@@ -178,23 +177,6 @@ class ImageService {
         if (profileUpdates) {
             profileService.updateProfile(opusId, profileId, profileUpdates, true)
         }
-
-        void
-    }
-
-    private String getPermanentImageId(uploadResponse) {
-        String permanentImageId = null
-
-        if (uploadResponse.statusCode == SC_OK) {
-            String occurrenceId = uploadResponse.data.occurrenceID;
-
-            def downloadResponse = biocacheService.getOccurrence(occurrenceId)
-            if (downloadResponse.statusCode == SC_OK) {
-                permanentImageId = downloadResponse.data.images[0].filePath
-            }
-        }
-
-        permanentImageId
     }
 
     private static String getExtension(String fileName) {
