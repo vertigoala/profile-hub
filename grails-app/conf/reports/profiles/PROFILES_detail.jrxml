@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-16T13:36:05 -->
+<!-- 2015-07-16T15:06:07 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail" language="groovy" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="30" uuid="eb6cf9a1-0a5c-4453-8b43-458e6c8b58f3">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JSON Sample Data Source"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -35,7 +35,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="57" splitType="Stretch">
+		<band height="58" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField bookmarkLevel="1">
 				<reportElement x="0" y="10" width="515" height="21" uuid="6f637e5f-9279-48f0-9560-d5f20f56cf08">
@@ -155,6 +155,9 @@
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.acknowledgements")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_acknowledgements.jasper"]]></subreportExpression>
 			</subreport>
+			<break>
+				<reportElement positionType="Float" x="0" y="57" width="515" height="1" uuid="3d1cb14b-a2b8-45ac-8a81-541a4aa0b4f0"/>
+			</break>
 		</band>
 	</detail>
 	<columnFooter>
