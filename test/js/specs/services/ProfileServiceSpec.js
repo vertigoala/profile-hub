@@ -304,4 +304,11 @@ describe("ProfileService tests", function () {
 
         http.expectPOST("/someContext/opus/opusId/profile/profileId/authorship/update", data).respond("bla");
     });
+
+    it("should invoke publication webservice using GET method", function() {
+        var data = "123";
+        service.getPublicationsFromId(data);
+
+        http.expectGET("/someContext/publication/123/json").respond("bla");
+    });
 });

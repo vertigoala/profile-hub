@@ -155,6 +155,8 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
                 entityId = path[1];
             } else if (entity == "profile" && path.length > 1) {
                 entityId = path[3];
+            } else if (entity == "publication" && path.length > 1) {
+                entityId = path[1];
             }
         }
 

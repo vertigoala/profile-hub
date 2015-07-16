@@ -91,6 +91,9 @@ class UrlMappings {
         "/audit/object/$id" controller: "audit", action: [GET: "object"]
         "/audit/user/$id" controller: "audit", action: [GET: "user"]
 
+        "/publication/$pubId" controller: "profile", action: [GET: "getPublication"]
+        "/publication/$pubId/json" controller: "profile", action: [GET: "getPublicationJson"]
+
         "/" controller: "opus", action: [GET: "index"]
 
         "/logout/logout" controller: "logout", action: "logout"

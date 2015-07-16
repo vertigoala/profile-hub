@@ -264,7 +264,7 @@ class ProfileController extends BaseController {
         } else {
             boolean deleted = imageService.deleteStagedImage(params.opusId, params.profileId, params.imageId)
 
-            render ([success: deleted] as JSON)
+            render([success: deleted] as JSON)
         }
     }
 
@@ -318,6 +318,36 @@ class ProfileController extends BaseController {
             def response = profileService.getPublications(params.opusId as String, params.profileId as String)
 
             handle response
+        }
+    }
+
+    def getPublication() {
+        def pubId = params.pubId;
+        if (!pubId) {
+            badRequest "Publication Id must be provided";
+        } else {
+            def pubJson = profileService.getPublications(pubId)?.resp;
+            if (!pubJson) {
+                notFound()
+            } else {
+                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin;
+                def profile = profileService.getProfile(pubJson.profile.opusId, pubJson.profile.uuid, latest);
+
+                if (!profile) {
+                    notFound()
+                } else {
+                    Map model = profile
+                    model << [edit        : false,
+                              glossaryUrl : getGlossaryUrl(profile.opus),
+                              aboutPageUrl: getAboutUrl(profile.opus),
+                              footerText  : profile.opus.footerText,
+                              contact     : profile.opus.contact,
+                              publication: pubJson
+                    ]
+
+                    render view: "publication", model: model;
+                }
+            }
         }
     }
 
@@ -378,6 +408,15 @@ class ProfileController extends BaseController {
             def response = profileService.checkName(params.opusId as String, params.scientificName as String)
 
             handle response
+        }
+    }
+
+    def getPublicationJson() {
+        if (!params.pubId) {
+            badRequest "Publication Id must be provided";
+        } else {
+            def result = profileService.getPublications(params.pubId);
+            handle result;
         }
     }
 
