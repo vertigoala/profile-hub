@@ -1,7 +1,7 @@
 /**
  * Opus controller
  */
-profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter, $q, $http, config) {
+profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter) {
     var self = this;
 
     self.opus = null;
@@ -16,11 +16,14 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.newRecordSources = [];
     self.newSupportingOpuses = [];
     self.newApprovedLists = [];
+    self.newBioStatusLists = [];
     self.valid = false;
     self.editors = [];
     self.initialShortName = null;
     self.keybaseProjects = [];
     self.selectedKeybaseProject = null;
+    self.ranks = util.RANK;
+
 
     loadResources();
     loadOpusList();
@@ -28,7 +31,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
 
     var orderBy = $filter("orderBy");
 
-    self.loadOpus = function() {
+    self.loadOpus = function () {
         self.opusId = util.getEntityId("opus");
 
         if (!self.opusId) {
@@ -41,7 +44,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 console.log("Retrieved " + data.title);
                 self.opus = data;
 
-                angular.forEach(self.opus.authorities, function(auth) {
+                angular.forEach(self.opus.authorities, function (auth) {
                     if (auth.role == "ROLE_PROFILE_EDITOR") {
                         self.editors.push({userId: auth.userId, name: auth.name})
                     }
@@ -75,9 +78,9 @@ profileEditor.controller('OpusController', function (profileService, util, messa
 
         if (self.opus.shortName !== self.initialShortName && self.opus.shortName) {
             var f = profileService.getOpus(self.opus.shortName);
-            f.then(function() {
+            f.then(function () {
                 messageService.alert("The specified short name is already in use. Short Names must be unique across all collections.");
-            }, function() {
+            }, function () {
                 console.log("Short name is unique");
 
                 save(form);
@@ -281,20 +284,60 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         form.$setDirty();
     };
 
+    self.addBioStatusList = function () {
+        self.newBioStatusLists.push({});
+    };
+
+    self.saveBioStatusLists = function (form) {
+        var invalid = [];
+        var valid = [];
+
+        angular.forEach(self.newBioStatusLists, function (bioStatusLists) {
+            if (bioStatusLists.list) {
+                if (bioStatusLists.list.dataResourceUid) {
+                    valid.push(bioStatusLists.list.dataResourceUid);
+                } else {
+                    invalid.push(bioStatusLists);
+                }
+            }
+        });
+
+        if (invalid.length == 0) {
+            self.newBioStatusLists = [];
+            if (valid.length > 0) {
+                angular.forEach(valid, function (record) {
+                    self.opus.bioStatusLists.push(record);
+                });
+            }
+            self.saveOpus(form);
+        } else if (invalid.length > 0) {
+            messageService.alert(invalid.length + " list" + (invalid.length > 1 ? "s are" : " is") + " not valid. You must select items from the list.")
+        }
+    };
+
+    self.removeBioStatusList = function (index, list, form) {
+        if (list == 'existing') {
+            self.opus.bioStatusLists.splice(index, 1);
+        } else {
+            self.newBioStatusLists.splice(index, 1);
+        }
+        form.$setDirty();
+    };
+
     self.opusResourceChanged = function ($item, $model, $label) {
         self.opus.dataResourceUid = $item.id;
 
         loadDataResource(self.opus.dataResourceUid);
     };
 
-    self.deleteOpus = function() {
+    self.deleteOpus = function () {
         var deleteConf = util.confirm("Are you sure you wish to delete this entire collection? This operation cannot be undone.");
-        deleteConf.then(function() {
+        deleteConf.then(function () {
             var promise = profileService.deleteOpus(self.opus.uuid);
-            promise.then(function() {
+            promise.then(function () {
                     util.redirect(util.contextRoot() + "/");
                 },
-                function() {
+                function () {
                     messageService.alert("An error occurred while deleting the collection.")
                 });
         });
@@ -314,7 +357,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     }
 
     function setSelectedKeybaseProject() {
-        angular.forEach(self.keybaseProjects, function(project) {
+        angular.forEach(self.keybaseProjects, function (project) {
             if (project.project_id == self.opus.keybaseProjectId) {
                 self.selectedKeybaseProject = project;
             }
@@ -348,9 +391,9 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         );
 
         var lists = profileService.getAllLists();
-        lists.then(function(data) {
+        lists.then(function (data) {
             self.allSpeciesLists = [];
-            angular.forEach(data.lists, function(list) {
+            angular.forEach(data.lists, function (list) {
                 self.allSpeciesLists.push({dataResourceUid: list.dataResourceUid, listName: list.listName.trim()});
             });
             self.allSpeciesLists = orderBy(self.allSpeciesLists, "listName");
@@ -374,7 +417,13 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         var promise = profileService.listOpus();
         promise.then(function (data) {
             angular.forEach(data, function (opus) {
-                self.opusList.push({uuid: opus.uuid, title: opus.title, thumbnailUrl: opus.thumbnailUrl, shortName: opus.shortName, pubDescription: opus.pubDescription})
+                self.opusList.push({
+                    uuid: opus.uuid,
+                    title: opus.title,
+                    thumbnailUrl: opus.thumbnailUrl,
+                    shortName: opus.shortName,
+                    pubDescription: opus.pubDescription
+                })
             });
         })
     }

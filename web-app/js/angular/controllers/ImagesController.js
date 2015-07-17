@@ -73,28 +73,12 @@ profileEditor.controller('ImagesController', function (profileService, navServic
         imagesPromise.then(function (data) {
                 self.images = [];
 
-                self.primaryImage = data.occurrences[0];
+                self.primaryImage = data[0];
 
-                angular.forEach(data.occurrences, function (occurrence) {
-                    var excluded = false;
-
-                    if (self.profile.excludedImages && self.profile.excludedImages.indexOf(occurrence.image) > -1) {
-                        excluded = true;
-                    }
-
-                    var image = {
-                        imageId: occurrence.image,
-                        occurrenceId: occurrence.uuid,
-                        largeImageUrl: occurrence.largeImageUrl,
-                        thumbnailUrl: occurrence.thumbnailUrl,
-                        dataResourceName: occurrence.dataResourceName,
-                        excluded: excluded,
-                        primary: occurrence.image == self.profile.primaryImage,
-                        metadata: occurrence.imageMetadata
-                    };
+                angular.forEach(data, function (image) {
                     self.images.push(image);
 
-                    if (occurrence.image == self.profile.primaryImage) {
+                    if (image.imageId == self.profile.primaryImage) {
                         self.primaryImage = image;
                     }
                 });
@@ -140,15 +124,28 @@ profileEditor.controller('ImagesController', function (profileService, navServic
             self.loadImages();
         });
     };
+
+    self.deleteStagedImage = function(imageId) {
+        var confirm = util.confirm("Are you sure you wish to delete this image?");
+
+        confirm.then(function() {
+            var future = profileService.deleteStagedImage(self.opusId, self.profileId, imageId);
+            future.then(function () {
+                self.loadImages();
+            }, function() {
+                messageService.alert("An error occurred while deleting your staged image.");
+            });
+        });
+    }
 });
 
 /**
  * Upload image modal dialog controller
  */
-profileEditor.controller("ImageUploadController", function (profileService, util, config, $modalInstance, Upload, opus, $filter) {
+profileEditor.controller("ImageUploadController", function (profileService, util, config, $modalInstance, Upload, $cacheFactory, opus, $filter) {
     var self = this;
 
-    self.metadata = {rightsHolder: opus.title, rights: "All rights reserved"};
+    self.metadata = {rightsHolder: opus.title};
     self.files = null;
     self.error = null;
     self.opus = opus;
@@ -174,6 +171,7 @@ profileEditor.controller("ImageUploadController", function (profileService, util
             self.image = {};
             self.file = null;
             $modalInstance.close();
+            $cacheFactory.get('$http').removeAll();
         }).error(function () {
             self.error = "An error occurred while uploading your image."
         });

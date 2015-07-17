@@ -67,7 +67,7 @@
             <small>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="${request.contextPath}/">Profile collections</a></li>
-                    <g:render template="../layouts/login"/>
+                    <g:render template="/layouts/login"/>
                 </ul>
             </small>
         </div>
@@ -175,8 +175,11 @@
         profileServiceUrl: '${grailsApplication.config.profile.service.url}',
         keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}',
         imageServiceUrl: '${grailsApplication.config.images.service.url}',
+        bieServiceUrl: '${grailsApplication.config.bie.base.url}',
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
-        isOpusReviewer: '${params.isOpusReviewer}'
+        isOpusReviewer: '${params.isOpusReviewer}',
+        nslServiceUrlPrefix: '${grailsApplication.config.nsl.service.url.prefix}',
+        nslServiceApniConceptSuffix: '${grailsApplication.config.nsl.service.apni.concept.suffix}'
      });
 </r:script>
 

@@ -1,7 +1,7 @@
 <g:if test="${params.currentUser}">
 <li class="dropdown font-xsmall">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-        <i class="fa fa-cog fa-spin"></i>&ensp;User settings
+        <i class="fa fa-cog"></i>&ensp;User settings
         <span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">

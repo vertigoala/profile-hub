@@ -1,7 +1,7 @@
 <div class="row padding-bottom-2">
     <div class="col-md-8" ng-cloak>
         <p class="lead">
-            {{opusCtrl.dataResource.pubDescription}}
+            {{opusCtrl.opus.description}}
         </p>
         <g:if test="${aboutPageUrl}">
             <p class="margin-bottom-2">

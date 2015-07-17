@@ -1,7 +1,7 @@
 package au.org.ala.profile.hub
 
 class KeybaseService {
-    static final List<String> RANKS = ["kingdom", "phylum", "class", "subclass", "order", "family", "genus"]
+    static final List<String> RANKS = ["kingdom", "phylum", "class", "subclass", "order", "family", "genus", "species", "subspecies"]
 
     def grailsApplication
     WebService webService

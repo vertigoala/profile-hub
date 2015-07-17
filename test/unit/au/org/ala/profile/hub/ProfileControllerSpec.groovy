@@ -12,6 +12,7 @@ class ProfileControllerSpec extends Specification {
     ProfileService profileService
     AuthService authService
     BiocacheService biocacheService
+    ImageService imageService
 
     def setup() {
         controller = new ProfileController()
@@ -19,9 +20,11 @@ class ProfileControllerSpec extends Specification {
         profileService = Mock(ProfileService)
         authService = Mock(AuthService)
         biocacheService = Mock(BiocacheService)
+        imageService = Mock(ImageService)
         controller.profileService = profileService
         controller.authService = authService
         controller.biocacheService = biocacheService
+        controller.imageService = imageService
 
         authService.getDisplayName() >> "Fred Bloggs"
     }
@@ -452,11 +455,13 @@ class ProfileControllerSpec extends Specification {
 
     def "retrieveImages should return the resp element of the response from the service call on success"() {
         setup:
-        biocacheService.retrieveImages(_, _) >> [resp: [resp: "bla"], statusCode: 200]
+        imageService.retrieveImages(_, _, _, _, _) >> [resp: [resp: "bla"], statusCode: 200]
 
         when:
         params.searchIdentifier = "blabla"
         params.imageSources = "1,2,3"
+        params.profileId = "profile1"
+        params.opusId = "opus1"
         controller.retrieveImages()
 
         then:
@@ -466,11 +471,13 @@ class ProfileControllerSpec extends Specification {
 
     def "retrieveImages should return the error code from the service on failure of the service call"() {
         setup:
-        biocacheService.retrieveImages(_, _) >> [error: "something died!", statusCode: 666]
+        imageService.retrieveImages(_, _, _, _, _) >> [error: "something died!", statusCode: 666]
 
         when:
         params.searchIdentifier = "blabla"
         params.imageSources = "1,2,3"
+        params.profileId = "profile1"
+        params.opusId = "opus1"
         controller.retrieveImages()
 
         then:

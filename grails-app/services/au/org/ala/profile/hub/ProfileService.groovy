@@ -1,6 +1,7 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.profile.hub.util.HubConstants
+import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
 
 class ProfileService {
@@ -10,6 +11,7 @@ class ProfileService {
     WebService webService
     AuthService authService
     KeybaseService keybaseService
+    UtilService utilService
 
     def getOpus(String opusId = "") {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}")?.resp
@@ -56,8 +58,16 @@ class ProfileService {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/toggleDraftMode", null)
     }
 
-     def discardDraftChanges(String opusId, String profileId) {
+    def discardDraftChanges(String opusId, String profileId) {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/discardDraftChanges", null)
+    }
+
+    def getList(String drid) {
+        webService.get("${grailsApplication.config.lists.base.url}/ws/speciesListItems/${drid}?includeKVP=true")?.resp
+    }
+
+    def getPublications(String pubId) {
+        webService.get("${grailsApplication.config.profile.service.url}/publication/${enc(pubId)}")
     }
 
     def getProfile(String opusId, String profileId, boolean latest = false) {
@@ -98,6 +108,12 @@ class ProfileService {
         result
     }
 
+    def renameProfile(String opusId, String profileId, Map json) {
+        log.debug("Renaming profile ${profileId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/rename", json)
+    }
+
     def deleteProfile(String opusId, String profileId) {
         log.debug("Deleting profile ${profileId}")
         webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}")
@@ -112,6 +128,10 @@ class ProfileService {
             it.thumbnailUrl = "${grailsApplication.config.biodiv.library.thumb.url}${pageId}"
         })
         profile
+    }
+
+    def recordStagedImage(String opusId, String profileId, Map metadata) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/recordStagedImage", metadata)
     }
 
     def getPublications(String opusId, String profileId) {
@@ -294,6 +314,60 @@ class ProfileService {
         log.debug("Updating authorship for profile ${profileId}")
 
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/authorship", json)
+    }
+
+    def checkName(String opusId, String scientificName) {
+        log.debug("Checking name ${scientificName}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/checkName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}")
+    }
+
+    def loadReport(String opusId, String reportId, String pageSize, String offset, Map dates) {
+        ReportType report = ReportType.byId(reportId)
+        Map range
+        def resp
+        switch (report) {
+            case ReportType.MISMATCHED_NAME:
+                resp = webService.get("${grailsApplication.config.profile.service.url}/report/mismatchedNames?opusId=${enc(opusId)}&offset=${offset}&max=${pageSize}")
+                break;
+            case ReportType.DRAFT_PROFILE:
+                resp = webService.get("${grailsApplication.config.profile.service.url}/report/draftProfiles?opusId=${enc(opusId)}")
+                break;
+            case ReportType.MOST_RECENT_CHANGE:
+                range = utilService.getDateRange(dates.period, dates.from, dates.to);
+                resp = webService.get("${grailsApplication.config.profile.service.url}/report/mostRecentChange?opusId=${enc(opusId)}&to=${enc(range['to'])}&from=${enc(range['from'])}&offset=${offset}&max=${pageSize}")
+                break;
+        }
+
+        resp
+    }
+
+    def getBioStatus(String opusId, String profileId) {
+        def model = getProfile(opusId, profileId);
+        def opus = model.opus;
+        def profile = model.profile;
+        List result = []
+        if (opus.bioStatusLists?.size()) {
+            opus.bioStatusLists.each({
+                result.addAll(getProfileKVP(profile.scientificName, it));
+            })
+        }
+
+        result
+    }
+
+    def getProfileKVP(String profileId, String drid) {
+        List result = []
+        def list = getList(drid);
+        if (list) {
+            list.each({
+                if (it.name.toLowerCase() == profileId.toLowerCase()) {
+                    result.addAll(it.kvpValues);
+                }
+            })
+        }
+
+        result
     }
 
     def enc(String value) {

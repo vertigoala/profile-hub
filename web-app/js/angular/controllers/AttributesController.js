@@ -77,8 +77,9 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.attributeTitles = [];
                 self.allowedVocabulary = [];
                 angular.forEach(data.terms, function (term) {
-                    if (self.attributeTitles.indexOf(term) == -1) {
-                        self.attributeTitles.push(term);
+                    var title = {name: term.name};
+                    if (self.attributeTitles.map(function(t) { return t.name; }).indexOf(title.name) == -1) {
+                        self.attributeTitles.push(title);
                     }
                     if (self.allowedVocabulary.indexOf(term.name) == -1) {
                         self.allowedVocabulary.push(term.name);
@@ -88,8 +89,38 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.attributeTitles.sort(compareTitles);
 
                 self.vocabularyStrict = data.strict;
+
+                loadMandatoryAttributes(data.terms);
             });
         }
+    }
+
+    function loadMandatoryAttributes(vocabularyTerms) {
+        if (!self.readonly) {
+            var templateAttributes = [];
+            angular.forEach(vocabularyTerms, function (term) {
+                if (term.required === "true" || term.required == true) {
+                    var attribute = findAttributeByTitle(term.name);
+                    if (!attribute || attribute.fromCollection) {
+                        templateAttributes.push({uuid: "", title: term.name, text: ""});
+                    }
+                }
+            });
+
+            self.attributes = self.attributes.concat(templateAttributes);
+        }
+    }
+
+    function findAttributeByTitle(title) {
+        var attribute = null;
+
+        angular.forEach(self.attributes, function(attr) {
+            if (attr.title === title) {
+                attribute = attr;
+            }
+        });
+
+        return attribute;
     }
 
     function compareTitles(left, right) {
@@ -109,7 +140,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     };
 
     self.showAudit = function (idx) {
-        var future = profileService.getAuditForAttribute(self.attributes[idx].uuid);
+        var future = profileService.getAuditHistory(self.attributes[idx].uuid);
         future.then(function (audit) {
                 var d = new diff_match_patch();
 
@@ -148,7 +179,6 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 );
             } else {
                 self.attributes.splice(idx, 1);
-                console.log("Local delete only deleting attributes: " + self.attributes.length);
             }
         });
     };
@@ -254,7 +284,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
 
                                     self.supportingAttributeTitles.push(attribute.title);
 
-                                    if (self.attributeTitles.indexOf(title) == -1) {
+                                    if (self.attributeTitles.map(function(t) { return t.name; }).indexOf(title.name) == -1) {
                                         self.attributeTitles.push(title);
                                     }
                                 }

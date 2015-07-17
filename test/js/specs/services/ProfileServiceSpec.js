@@ -123,8 +123,8 @@ describe("ProfileService tests", function () {
         http.expectPOST("/someContext/opus/opusId/vocab/vocabId/replaceUsages", replacements).respond("bla")
     });
 
-    it("should invoke the get object audit service on the context root when getAuditForAttribute is called", function () {
-        service.getAuditForAttribute("attrId1");
+    it("should invoke the get object audit service on the context root when getAuditHistory is called", function () {
+        service.getAuditHistory("attrId1");
 
         http.expectGET("/someContext/audit/object/attrId1").respond("bla");
     });
@@ -303,5 +303,12 @@ describe("ProfileService tests", function () {
         service.saveAuthorship("opusId", "profileId", data);
 
         http.expectPOST("/someContext/opus/opusId/profile/profileId/authorship/update", data).respond("bla");
+    });
+
+    it("should invoke publication webservice using GET method", function() {
+        var data = "123";
+        service.getPublicationsFromId(data);
+
+        http.expectGET("/someContext/publication/123/json").respond("bla");
     });
 });

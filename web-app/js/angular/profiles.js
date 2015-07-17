@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'textAngular', 'duScroll', 'ngFileUpload']);
+var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'textAngular', 'duScroll', 'ngFileUpload', 'checklist-model']);
 
 profileEditor.config(function () {
 
@@ -29,7 +29,16 @@ profileEditor.directive('ngEnter', function () {
     };
 });
 
-
+profileEditor.directive('loading', function ($browser) {
+    return {
+        restrict: 'AE',
+        require: [],
+        scope: {
+            loading: '='
+        },
+        template: '<div ng-if="loading"><span class="fa fa-spin fa-spinner"></span>&nbsp;Loading...</div>'
+    }
+});
 
 /**
  *  ALA Admin controller

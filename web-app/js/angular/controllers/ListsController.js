@@ -6,6 +6,7 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
 
     self.lists = [];
     self.conservationStatuses = [];
+    self.bioStatuses = [];
 
     var orderBy = $filter("orderBy");
 
@@ -33,8 +34,18 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
         promise.then(function (data) {
             self.conservationStatuses = orderBy(data.conservationStatuses, "region");
 
-            if (self.conservationStatuses.length > 0) {
-                navService.add("Conservation Status", "conservationStatus");
+            if (self.conservationStatuses && self.conservationStatuses.length > 0) {
+                navService.add("Status", "statuses");
+            }
+        });
+    };
+
+    self.loadBioStatus = function () {
+        var promise = profileService.getBioStatus(self.opusId, self.profileId);
+        promise.then(function (data) {
+            self.bioStatuses = orderBy(data, 'key');
+            if (self.bioStatuses && self.bioStatuses.length > 0) {
+                navService.add("Status", "statuses");
             }
         });
     };
@@ -90,14 +101,15 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
                         navService.add("Conservation & Sensitivity Lists", "lists");
                     }
 
-                    self.loadConservationStatus();
-
                     messageService.pop();
                 },
                 function () {
                     messageService.alert("An error occurred while retrieving the lists.");
                 }
             );
+
+            self.loadConservationStatus();
+            self.loadBioStatus();
         }
     }
 });

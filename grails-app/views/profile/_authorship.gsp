@@ -15,8 +15,21 @@
             <div class="row" ng-repeat="authorship in profileCtrl.profile.authorship"
                  ng-if="!profileCtrl.readonly()">
                 <div class="form-group">
-                    <label for="category">Type of contribution</label>
-                    <input id="category" type="text" ng-model="authorship.category" class="form-control"
+                    <label>Type of contribution</label>
+                    <select ng-show="profileCtrl.authorVocabStrict"
+                            ng-disabled="authorship.category == 'Author'"
+                            ng-model="authorship.category" class="form-control">
+                        <option value="">--- Select one ---</option>
+                        <option ng-repeat="term in profileCtrl.authorVocab | orderBy:'toString()'" value="{{term.name}}"
+                                ng-selected="authorship.category == term.name">{{term.name}}</option>
+                    </select>
+                    <input type="text"
+                           autocomplete="off"
+                           required
+                           typeahead="term.name as term.name for term in profileCtrl.authorVocab | filter: $viewValue"
+                           class="form-control"
+                           ng-model="authorship.category"
+                           ng-show="!profileCtrl.authorVocabStrict"
                            ng-disabled="authorship.category == 'Author'"/>
                 </div>
 

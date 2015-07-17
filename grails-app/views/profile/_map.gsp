@@ -8,7 +8,7 @@
         </div>
 
         <div class="col-md-12">
-            <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?q={{mapCtrl.constructQuery()}}" target="_blank">View in {{profileCtrl.opus.biocacheName}}</a>
+            <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?{{mapCtrl.constructQuery()}}" ng-if="profileCtrl.opus.biocacheUrl" target="_blank">View in {{profileCtrl.opus.biocacheName}}</a>
         </div>
     </div>
 
@@ -17,9 +17,11 @@
         <div id="primaryImage" class="col-md-12">
             <div class="primary-image col-md-12">
                 <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{imageCtrl.primaryImage.occurrenceId}}"
-                   target="_blank" ng-if="imageCtrl.primaryImage.largeImageUrl">
+                   target="_blank" ng-show="imageCtrl.primaryImage.largeImageUrl" ng-cloak>
+                    <img ng-src="${request.contextPath}{{imageCtrl.primaryImage.largeImageUrl}}"
+                         ng-if="imageCtrl.primaryImage.thumbnailUrl && imageCtrl.primaryImage.staged" class="thumbnail"/>
                     <img ng-src="{{imageCtrl.primaryImage.largeImageUrl}}" class="thumbnail"
-                         ng-if="imageCtrl.primaryImage.largeImageUrl"/>
+                         ng-if="imageCtrl.primaryImage.largeImageUrl && !imageCtrl.primaryImage.staged"/>
                 </a>
 
             </div>

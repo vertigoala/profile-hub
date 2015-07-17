@@ -9,31 +9,9 @@
             <div class="col-sm-2"><strong>Versions</strong></div>
 
             <div class="col-sm-10">
-                <div ng-repeat="publication in pubCtrl.publications">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <strong ng-show="publication.title != ''">
-                                Title: {{publication.title}}
-                            </strong>
-
-                            <div ng-show="publication.publicationDate != ''">
-                                <strong>Publication Date:&nbsp;</strong>{{publication.publicationDate | date:"dd/MM/yyyy HH:mm"}}
-                            </div>
-
-                            <div ng-show="publication.authors != ''">
-                                <strong>Authors:&nbsp;</strong>{{publication.authors}}
-                            </div>
-
-                            <div ng-show="publication.doi">
-                                <strong>Unique ID:&nbsp;</strong>{{publication.uuid}}
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <a ng-href="${grailsApplication.config.profile.service.url}/opus/{{pubCtrl.opusId}}/profile/{{pubCtrl.profileId}}/publication/{{publication.uuid}}/file"
-                               target="_blank"><span class="fa fa-download color--green">&nbsp;Download</span></a>
-                        </div>
-                    </div>
+                <div class="col-sm-12" ng-repeat="pub in pubCtrl.publications">
+                    <publication data="pub" opus-id="pubCtrl.opusId" profile-id="pubCtrl.profileId">
+                    </publication>
                     <hr ng-if="!$last"/>
                 </div>
             </div>
