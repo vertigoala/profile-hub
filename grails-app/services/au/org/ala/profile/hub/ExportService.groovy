@@ -66,13 +66,9 @@ class ExportService {
 
     @NotTransactional
     byte[] createPdf(Map params, boolean latest = false) {
-        def model = [
-                options          : params,
-                profiles         : [] as ConcurrentLinkedQueue
-        ]
 
         // Create curated report model
-        Map curatedModel = curateModel(model, params, latest)
+        Map curatedModel = getCurateReportModel(params, latest)
 
         // Transform curated model to JSON format input stream
         InputStream inputStream = IOUtils.toInputStream((curatedModel as JSON).toString())
@@ -86,7 +82,7 @@ class ExportService {
                 fileFormat: JasperExportFormat.PDF_FORMAT,
                 dataSource: new JsonDataSource(inputStream),
                 parameters: [
-                        'PROFILES_REPORT_OPTIONS': model.options,
+                        'PROFILES_REPORT_OPTIONS': curatedModel.options,
                         'REPORT_FILE_RESOLVER': new SimpleFileResolver(reportsDir)
                 ]
         )
@@ -96,17 +92,21 @@ class ExportService {
 
     /**
      *
-     * @param model
      * @param params
      * @param latest
      * @return
      */
-    private Map curateModel(Map model, Map params, boolean latest = false) {
-        model.opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
-        model.profiles << loadProfileData(params.profileId as String, model.opus, params, latest)
+    private Map getCurateReportModel(Map params, boolean latest = false) {
+        def curatedModel = [
+                options : params,
+                profiles: [] as ConcurrentLinkedQueue
+        ]
+
+        def opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
+        curatedModel.profiles << loadProfileData(params.profileId as String, opus, params, latest)
 
         if (params.children) {
-            def children = profileService.findByNameAndTaxonLevel(params.opusId, model.profiles[0].profile.rank, model.profiles[0].profile.scientificName, "99999", "0", false)?.resp
+            def children = profileService.findByNameAndTaxonLevel(params.opusId, curatedModel.profiles[0].profile.rank, curatedModel.profiles[0].profile.scientificName, "99999", "0", false)?.resp
 
             // By default, the RequestAttributes thread local used by Grails/Spring is not inheritable, so new threads
             // will not have access to the request context when calling web services. This line works around this issue
@@ -117,24 +117,24 @@ class ExportService {
             withPool(THREAD_COUNT) {
                 children.eachParallel {
                     if (it.profileId != params.profileId && it.scientificName != params.profileId) {
-                        model.profiles << loadProfileData(it.profileId, model.opus, params, latest)
+                        curatedModel.profiles << loadProfileData(it.profileId, opus, params, latest)
                     }
                 }
             }
 
-            model.profiles = model.profiles.sort { it.profile.scientificName }
+            curatedModel.profiles = curatedModel.profiles.sort { it.profile.scientificName }
         }
 
-        Map curatedModel = [
-               cover: [
-                       title: model.opus.title,
-                       subtitle: model.profiles[0]?.profile?.fullName,
-                       logo: model.opus.logoUrl,
-                       banner: model.opus.bannerUrl,
-                       primaryImage: model.profiles[0]?.profile?.primaryImage?: (model.profiles[0]?.profile?.images?.size() > 0 ? model.profiles[0]?.profile?.images[0].leftImage.largeImageUrl : '')
-               ],
-               profiles: model.profiles
+        curatedModel.options << [allowFineGrainedAttribution: opus.allowFineGrainedAttribution]
 
+        curatedModel << [
+                cover: [
+                        title       : opus.title,
+                        subtitle    : curatedModel.profiles[0]?.profile?.fullName,
+                        logo        : opus.logoUrl,
+                        banner      : opus.bannerUrl,
+                        primaryImage: curatedModel.profiles[0]?.profile?.primaryImage ?: (curatedModel.profiles[0]?.profile?.images?.size() > 0 ? curatedModel.profiles[0]?.profile?.images[0].leftImage.largeImageUrl : '')
+                ]
         ]
 
         return curatedModel
