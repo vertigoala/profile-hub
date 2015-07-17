@@ -1,7 +1,8 @@
 <div class="row">
-    <div class="col-sm-9">
+    <div class="col-md-10">
         <div ng-show="publication.title">
-            <strong>Title: {{publication.title}} <span ng-show="publication.version">&nbsp;v. {{publication.version}}</span></strong>
+            <strong>Title: {{publication.title}}
+                <span ng-show="publication.version">v. {{publication.version}}</span></strong>
         </div>
 
         <div ng-show="publication.authors">
@@ -12,15 +13,11 @@
             <strong>Publication Date: </strong> {{publication.publicationDate | date:"dd/MM/yyyy HH:mm"}}
         </div>
         <div ng-show="publication.doi">
-            <strong>DOI: </strong><a href="http://dx.doi.org/{{publication.doi}}">{{publication.doi}}</a>
+            <strong>DOI: </strong><a href="http://dx.doi.org/{{publication.doi}}" target="_blank">{{publication.doi}}</a>
         </div>
     </div>
-    <div class="col-sm-3">
-        <ol class="list-inline pull-right">
-            <li><a class="btn-link"
-                   ng-href="{{context}}/opus/{{opusId}}/profile/{{profileId}}/publication/{{publication.uuid}}/file"
-                   target="_blank">
-                <span class="glyphicon glyphicon-download-alt"></span> Download</a></li>
-        </ol>
+    <div class="col-md-2">
+        <a ng-href="{{context}}/opus/{{opusId}}/profile/{{profileId}}/publication/{{publication.uuid}}/file"
+           target="_blank"><span class="fa fa-download color--green">&nbsp;Download</span></a>
     </div>
 </div>

@@ -331,19 +331,19 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin;
-                def profile = profileService.getProfile(pubJson.profile.opusId, pubJson.profile.uuid, latest);
+                def profile = profileService.getProfile(pubJson.opusId, pubJson.profileId, latest);
 
                 if (!profile) {
                     notFound()
                 } else {
                     Map model = profile
-                    model << [edit        : false,
-                              glossaryUrl : getGlossaryUrl(profile.opus),
-                              aboutPageUrl: getAboutUrl(profile.opus),
-                              footerText  : profile.opus.footerText,
-                              contact     : profile.opus.contact,
-                              publication: pubJson
-                    ]
+                    model.edit = false
+                    model.currentUser = authService.getDisplayName()
+                    model.glossaryUrl = getGlossaryUrl(profile.opus)
+                    model.aboutPageUrl = getAboutUrl(profile.opus)
+                    model.footerText = profile.opus.footerText
+                    model.contact = profile.opus.contact
+                    model.publications = pubJson.publications
 
                     render view: "publication", model: model;
                 }

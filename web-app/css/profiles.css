@@ -421,6 +421,6 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     background-color: white;
 }
 
-.spacing {
-    min-height: 50px;
+.border-top-bottom {
+    border-top: solid 1px lightgray;
 }
