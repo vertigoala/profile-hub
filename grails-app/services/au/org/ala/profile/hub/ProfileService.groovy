@@ -17,12 +17,12 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}")?.resp
     }
 
-    def updateOpus(String opusId, json) {
+    def updateOpus(String opusId, Map json) {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}", json)
     }
 
-    def updateOpusUsers(String opusId, json) {
-        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/updateUsers", [authorities: json])
+    def updateOpusUsers(String opusId, Map json) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/updateUsers", json)
     }
 
     def createOpus(json) {

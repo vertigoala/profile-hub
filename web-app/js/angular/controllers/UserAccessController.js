@@ -4,14 +4,20 @@
 profileEditor.controller('UserAccessController', function (messageService, util, profileService, $modal) {
     var self = this;
 
+    self.opus = null;
     self.users = [];
     self.opusId = util.getEntityId("opus");
-    self.roles = [{name: "Admin", key: "ROLE_PROFILE_ADMIN"}, {name: "Editor", key: "ROLE_PROFILE_EDITOR"}, {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"}];
+    self.roles = [{name: "Admin", key: "ROLE_PROFILE_ADMIN"},
+        {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
+        {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"}];
+
+    var userRole = {name: "User", key: "ROLE_USER"};
 
     loadOpus();
 
     self.save = function (form) {
-        var promise = profileService.updateUsers(self.opusId, self.users);
+        var data = {privateCollection: self.opus.privateCollection, authorities: self.users};
+        var promise = profileService.updateUsers(self.opusId, data);
         promise.then(function () {
             form.$setPristine();
 
@@ -70,6 +76,14 @@ profileEditor.controller('UserAccessController', function (messageService, util,
         });
     };
 
+    self.privateModeChanged = function() {
+        if (self.opus.privateCollection) {
+            self.roles.push(userRole);
+        } else {
+            self.roles.splice(3, 1)
+        }
+    };
+
     function showPopup(user) {
         return $modal.open({
             templateUrl: "addEditUserPopup.html",
@@ -107,10 +121,13 @@ profileEditor.controller('UserAccessController', function (messageService, util,
         promise.then(function (data) {
                 console.log("Retrieved " + data.title);
                 self.users = data.authorities;
+                self.opus = data;
 
                 angular.forEach(self.users, function(user) {
                     popupateUserDetails(user);
                 });
+
+                self.privateModeChanged();
 
                 if (form) {
                     form.$setPristine();

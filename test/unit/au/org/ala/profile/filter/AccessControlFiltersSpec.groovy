@@ -206,6 +206,75 @@ class AccessControlFiltersSpec extends Specification {
         "profileEditorAction"   | 403
         "profileReviewerAction" | 200
     }
+
+    void "users who are not logged in should not be able to see private collections"() {
+        setup:
+        // need to do this because grailsApplication.controllerClasses is empty in the filter when run from the unit test
+        // unless we manually add the dummy controller class used in this test
+        grailsApplication.addArtefact("Controller", SecuredController)
+
+        defineBeans {
+            authService(MockAuthService)
+            profileService(MockProfileService)
+        }
+
+        when:
+        params.opusId = "private"
+        request.userPrincipal = null
+
+        withFilters(controller: "secured", action: "publicAction") {
+            controller.publicAction()
+        }
+
+        then:
+        response.status == 403
+    }
+
+    void "logged in users cannot see private collections they are not registered with"() {
+        setup:
+        // need to do this because grailsApplication.controllerClasses is empty in the filter when run from the unit test
+        // unless we manually add the dummy controller class used in this test
+        grailsApplication.addArtefact("Controller", SecuredController)
+
+        defineBeans {
+            authService(MockAuthService)
+            profileService(MockProfileService)
+        }
+
+        when:
+        params.opusId = "private"
+        request.userPrincipal = new User([authority: "", userid: "9876"])
+
+        withFilters(controller: "secured", action: "publicAction") {
+            controller.publicAction()
+        }
+
+        then:
+        response.status == 403
+    }
+
+    void "logged in users can see private collections they are registered with"() {
+        setup:
+        // need to do this because grailsApplication.controllerClasses is empty in the filter when run from the unit test
+        // unless we manually add the dummy controller class used in this test
+        grailsApplication.addArtefact("Controller", SecuredController)
+
+        defineBeans {
+            authService(MockAuthService)
+            profileService(MockProfileService)
+        }
+
+        when:
+        params.opusId = "private"
+        request.userPrincipal = new User([authority: "", userid: "1234"])
+
+        withFilters(controller: "secured", action: "publicAction") {
+            controller.publicAction()
+        }
+
+        then:
+        response.status == 200
+    }
 }
 
 class User implements Principal {
@@ -283,6 +352,8 @@ class MockProfileService extends ProfileService {
                                                 [userId: 2, role: Role.ROLE_PROFILE_ADMIN.toString()],
                                                 [userId: 3, role: Role.ROLE_PROFILE_EDITOR.toString()],
                                                 [userId: "PROFILE_REVIEWER_USER", role: Role.ROLE_PROFILE_REVIEWER.toString()]]]
+        } else if (opusId == "private") {
+            opus = [uuid: opusId, privateCollection: true, authorities: [[userId: "1234", role: Role.ROLE_USER.toString()]]]
         } else {
             opus = [uuid: opusId, authorities: [[userId: 1],
                                                 [userId: 2],

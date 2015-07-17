@@ -122,7 +122,14 @@ class OpusController extends BaseController {
     }
 
     def list() {
-        render profileService.getOpus() as JSON
+        List opuses = profileService.getOpus()
+
+        // remove all private collections if there is no logged in user, or if the user does not
+        List filtered = opuses.findAll {
+            !it.privateCollection || it.authorities.find { auth -> auth.userId == authService.getUserId() }
+        }
+
+        render filtered as JSON
     }
 
     def getJson() {
