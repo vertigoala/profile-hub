@@ -128,7 +128,7 @@ class ExportService {
         Map curatedModel = [
                cover: [
                        title: model.opus.title,
-                       subtitle: model.profiles[0]?.profile?.scientificName,
+                       subtitle: model.profiles[0]?.profile?.fullName,
                        logo: model.opus.logoUrl,
                        banner: model.opus.bannerUrl,
                        primaryImage: model.profiles[0]?.profile?.primaryImage?: (model.profiles[0]?.profile?.images?.size() > 0 ? model.profiles[0]?.profile?.images[0].leftImage.largeImageUrl : '')
@@ -184,9 +184,17 @@ class ExportService {
             def images = model.profile.images
             images.eachWithIndex { image, i ->
                 if (i % 2 == 0) {
-                    image << [imageNumber: i + 1]
+                    image << [
+                            imageNumber: i + 1,
+                            scientificName: model.profile.scientificName,
+                            imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${image.imageId}"
+                    ]
                     Map nextImage = (i + 1 < images.size()) ? images[i + 1] : [:]
-                    nextImage << [imageNumber: i + 2]
+                    nextImage << [
+                            imageNumber: i + 2,
+                            scientificName: model.profile.scientificName,
+                            imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}"
+                    ]
                     groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
                 }
             }

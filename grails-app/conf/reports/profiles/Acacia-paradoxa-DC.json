@@ -36,7 +36,9 @@
       "images": [
          {
             "rightImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=a4d2b5bb-4798-42ce-aa31-a24ef5c322f1",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "a4d2b5bb-4798-42ce-aa31-a24ef5c322f1",
                "excluded": false,
                "primary": false,
@@ -48,7 +50,9 @@
                "metadata": null
             },
             "leftImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=dfc0883d-1fab-4689-a922-b6f30ab93236",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "dfc0883d-1fab-4689-a922-b6f30ab93236",
                "excluded": false,
                "primary": false,
@@ -57,14 +61,14 @@
                "occurrenceId": "50786efe-acdc-4b12-b80d-7cfc28247e12",
                "imageNumber": 1,
                "staged": false,
-               "metadata": {
-                 "title" : "\"My photo\" by Angel Ruiz, 15/07/2015 (&copy; The Atlas of Living Australia)"
-               }
+               "metadata": null
             }
          },
          {
             "rightImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=f87468e0-7157-4cee-a18c-4f5735d9935d",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "f87468e0-7157-4cee-a18c-4f5735d9935d",
                "excluded": false,
                "primary": false,
@@ -76,7 +80,9 @@
                "metadata": null
             },
             "leftImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=79895e9f-3ed8-4ce8-bff3-9a7036945e64",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "79895e9f-3ed8-4ce8-bff3-9a7036945e64",
                "excluded": false,
                "primary": false,
@@ -90,7 +96,9 @@
          },
          {
             "rightImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=fa67563d-d1b6-47e2-9c7e-b0d3e8f6d24a",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "fa67563d-d1b6-47e2-9c7e-b0d3e8f6d24a",
                "excluded": false,
                "primary": false,
@@ -102,7 +110,9 @@
                "metadata": null
             },
             "leftImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=311de364-1420-4fbf-a96f-dda22f4ad8e9",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "311de364-1420-4fbf-a96f-dda22f4ad8e9",
                "excluded": false,
                "primary": false,
@@ -116,7 +126,9 @@
          },
          {
             "rightImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=0f38cdb2-854a-4589-be3f-45a66645ac97",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "0f38cdb2-854a-4589-be3f-45a66645ac97",
                "excluded": false,
                "primary": false,
@@ -128,7 +140,9 @@
                "metadata": null
             },
             "leftImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=5bb287ca-1602-4126-bc4f-4bbb943a6ff8",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "5bb287ca-1602-4126-bc4f-4bbb943a6ff8",
                "excluded": false,
                "primary": false,
@@ -142,7 +156,9 @@
          },
          {
             "rightImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=a63572c8-6e2b-4610-bfd9-f84b41a41890",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "a63572c8-6e2b-4610-bfd9-f84b41a41890",
                "excluded": false,
                "primary": false,
@@ -154,7 +170,9 @@
                "metadata": null
             },
             "leftImage": {
+               "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=79e3f6e3-53fa-45ad-a833-a6a2d2122722",
                "dataResourceName": "Australian Plant Image Index",
+               "scientificName": "Acacia paradoxa",
                "imageId": "79e3f6e3-53fa-45ad-a833-a6a2d2122722",
                "excluded": false,
                "primary": false,
@@ -167,7 +185,7 @@
             }
          }
       ],
-        "nomenclature": {
+              "nomenclature": {
          "citation": "CHAH (2006), Australian Plant Census",
          "citationHtml": "CHAH (2006), <i>Australian Plant Census<\/i>",
          "APCReference": true,
