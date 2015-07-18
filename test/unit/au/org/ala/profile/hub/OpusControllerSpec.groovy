@@ -171,4 +171,21 @@ class OpusControllerSpec extends Specification {
         then:
         assert response.json == [opus2, opus3, opus4]
     }
+
+    def "list should not remove private collections if the logged in user in an ALA admin"() {
+        setup:
+        mockAuthService.getUserId() >> "1234"
+        Map opus1 = [privateCollection: true, authorities: [[userId: "9876"]]]
+        Map opus2 = [privateCollection: false, authorities: []]
+        Map opus3 = [privateCollection: true, authorities: [[userId: "1234"]]]
+        Map opus4 = [privateCollection: false, authorities: []]
+        mockProfileService.getOpus() >> [opus1, opus2, opus3, opus4]
+
+        when:
+        params.isALAAdmin = true // this is usually determined by the AccessControlFilter
+        controller.list()
+
+        then:
+        assert response.json == [opus1, opus2, opus3, opus4]
+    }
 }

@@ -124,8 +124,8 @@ class OpusController extends BaseController {
     def list() {
         List opuses = profileService.getOpus()
 
-        // remove all private collections if there is no logged in user, or if the user does not
-        List filtered = opuses.findAll {
+        // remove all private collections if there is no logged in user, or if the user is not registered with the collection
+        List filtered = params.isALAAdmin ? opuses : opuses.findAll {
             !it.privateCollection || it.authorities.find { auth -> auth.userId == authService.getUserId() }
         }
 

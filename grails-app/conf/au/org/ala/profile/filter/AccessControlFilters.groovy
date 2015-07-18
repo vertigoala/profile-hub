@@ -44,19 +44,19 @@ class AccessControlFilters {
                                 if (params.opusId && !params.opusId.contains(",")) {
                                     opus = profileService.getOpus(params.opusId)
 
-                                    params.isOpusAdmin = opus.authorities.find {
+                                    params.isOpusAdmin = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_ADMIN.toString()
                                     } != null
 
-                                    params.isOpusEditor = opus.authorities.find {
+                                    params.isOpusEditor = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_EDITOR.toString()
                                     } != null || params.isOpusAdmin
 
-                                    params.isOpusReviewer = opus.authorities.find {
+                                    params.isOpusReviewer = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_REVIEWER.toString()
                                     } != null || params.isOpusAdmin || params.isOpusEditor
 
-                                    params.isOpusUser = opus.authorities.find {
+                                    params.isOpusUser = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_USER.toString()
                                     } != null || params.isOpusReviewer || params.isOpusAdmin || params.isOpusEditor
                                 }

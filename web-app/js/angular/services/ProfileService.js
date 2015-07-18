@@ -395,6 +395,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             if (typeof useWildcard == 'undefined') {
                 useWildcard = true;
             }
+            if (typeof opusId == 'undefined') {
+                opusId = "";
+            }
             var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard);
             future.then(function (response) {
                 console.log("Profile search returned with response code " + response.status);
