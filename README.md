@@ -6,5 +6,6 @@
 See the [project wiki](https://github.com/AtlasOfLivingAustralia/profile-hub/wiki/).
 
 
+# Name Matching
 
-
+This content has been moved to the [project wiki](https://github.com/AtlasOfLivingAustralia/profile-hub/wiki/Name-Matching).
