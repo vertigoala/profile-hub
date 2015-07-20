@@ -8,7 +8,7 @@ class KeybaseService {
     WebService webService
 
     def findKeyForTaxon(classifications, projectId) {
-        if (!classifications) {
+        if (!classifications || !projectId) {
             return null
         }
 
