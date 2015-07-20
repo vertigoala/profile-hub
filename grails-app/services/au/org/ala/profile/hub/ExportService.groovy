@@ -125,7 +125,10 @@ class ExportService {
             curatedModel.profiles = curatedModel.profiles.sort { it.profile.scientificName }
         }
 
-        curatedModel.options << [allowFineGrainedAttribution: opus.allowFineGrainedAttribution]
+        curatedModel.options << [
+                allowFineGrainedAttribution: opus.allowFineGrainedAttribution,
+                displayToc: curatedModel.profiles?.size() > 1
+        ]
 
         curatedModel << [
                 cover: [
