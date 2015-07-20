@@ -48,7 +48,6 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     };
 
     self.isValid = function (attributeTitle) {
-        attributeTitle = capitalize(attributeTitle);
         return !self.vocabularyStrict || (self.vocabularyStrict && self.allowedVocabulary.indexOf(attributeTitle) > -1)
     };
 

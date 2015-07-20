@@ -17,12 +17,12 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}")?.resp
     }
 
-    def updateOpus(String opusId, json) {
+    def updateOpus(String opusId, Map json) {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}", json)
     }
 
-    def updateOpusUsers(String opusId, json) {
-        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/updateUsers", [authorities: json])
+    def updateOpusUsers(String opusId, Map json) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/updateUsers", json)
     }
 
     def createOpus(json) {
@@ -64,6 +64,10 @@ class ProfileService {
 
     def getList(String drid) {
         webService.get("${grailsApplication.config.lists.base.url}/ws/speciesListItems/${drid}?includeKVP=true")?.resp
+    }
+
+    def getPublications(String pubId) {
+        webService.get("${grailsApplication.config.profile.service.url}/publication/${enc(pubId)}")
     }
 
     def getProfile(String opusId, String profileId, boolean latest = false) {

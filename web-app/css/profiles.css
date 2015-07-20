@@ -416,3 +416,11 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     background-color: #39b3d7;
     color: black;
 }
+
+.selected {
+    background-color: white;
+}
+
+.border-top-bottom {
+    border-top: solid 1px lightgray;
+}
