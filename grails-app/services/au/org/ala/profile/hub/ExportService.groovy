@@ -207,6 +207,7 @@ class ExportService {
         // Retrieve occurrences-map image url
         String occurrenceQuery = createOccurrenceQuery(model.profile, opus)
         model.profile.mapImageUrl = createMapImageUrl(opus, occurrenceQuery)
+        model.profile.occurrencesUrl = createOccurrencesUrl(opus, occurrenceQuery)
 
         // Don't make them a String if you want the groovy truth to work (Check Bootstrap.groovy for null values workaround)
         def nslNameIdentifier = model.profile.nslNameIdentifier
@@ -238,6 +239,10 @@ class ExportService {
         }
 
         return model
+    }
+
+    def createOccurrencesUrl = { opus, occurrenceQuery ->
+        return opus.biocacheUrl ? "${(opus.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?q=${occurrenceQuery}" : ""
     }
 
     def createOccurrenceQuery = { profile, opus ->

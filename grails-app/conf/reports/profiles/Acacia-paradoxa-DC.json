@@ -7,6 +7,7 @@
      "banner": "http://images.ala.org.au//store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original"
    },
    "profiles": [{"profile": {
+     "occurrencesUrl": "http://avh.ala.org.au/occurrences/search?q=lsid%3Aurn%3Alsid%3Abiodiversity.org.au%3Aapni.taxon%3A298640+AND+%28data_resource_uid%3A%22dr376%22%29",
       "hasConservationStatus": true,
       "lastAttributeChange": null,
       "acknowledgements": [{
