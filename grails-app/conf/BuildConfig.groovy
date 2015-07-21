@@ -46,6 +46,7 @@ grails.project.dependency.resolution = {
         }
         compile 'net.sf.jasperreports:jasperreports-functions:6.1.0'
         compile 'net.sf.jasperreports:jasperreports-fonts:6.1.0'
+        compile 'net.glxn:qrgen:1.4'
     }
 
     plugins {

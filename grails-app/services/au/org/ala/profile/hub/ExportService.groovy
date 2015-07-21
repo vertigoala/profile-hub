@@ -2,6 +2,8 @@ package au.org.ala.profile.hub
 
 import grails.converters.JSON
 import grails.transaction.NotTransactional
+import net.glxn.qrgen.QRCode
+import net.glxn.qrgen.image.ImageType
 import net.sf.jasperreports.engine.data.JsonDataSource
 import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
@@ -76,6 +78,9 @@ class ExportService {
         // Runtime classpath directory where the reports are available
         File reportsDir = new File(grailsApplication.mainContext.getResource('classpath:reports/profiles/PROFILES.jrxml').URL.file.replaceFirst("/[\\w_]+.jrxml\$", ""))
 
+        // Generate QR code with profile URL
+        InputStream qrCodeInputStream = new ByteArrayInputStream(QRCode.from(curatedModel?.colophon?.profileLink).withSize(150, 150).to(ImageType.JPG).stream().toByteArray())
+
         // Generate report and return byte array
         JasperReportDef reportDef = new JasperReportDef(
                 name: 'profiles/PROFILES.jrxml',
@@ -83,7 +88,8 @@ class ExportService {
                 dataSource: new JsonDataSource(inputStream),
                 parameters: [
                         'PROFILES_REPORT_OPTIONS': curatedModel.options,
-                        'REPORT_FILE_RESOLVER': new SimpleFileResolver(reportsDir)
+                        'REPORT_FILE_RESOLVER': new SimpleFileResolver(reportsDir),
+                        'QR_CODE': qrCodeInputStream
                 ]
         )
 
@@ -136,7 +142,12 @@ class ExportService {
                         subtitle    : curatedModel.profiles[0]?.profile?.fullName,
                         logo        : opus.logoUrl,
                         banner      : opus.bannerUrl,
-                        primaryImage: curatedModel.profiles[0]?.profile?.primaryImage ?: (curatedModel.profiles[0]?.profile?.images?.size() > 0 ? curatedModel.profiles[0]?.profile?.images[0].leftImage.largeImageUrl : '')
+                        primaryImage: curatedModel.profiles[0]?.profile?.primaryImage?: (curatedModel.profiles[0]?.profile?.images?.size() > 0 ? curatedModel.profiles[0]?.profile?.images[0].leftImage.largeImageUrl : '')
+                ],
+                colophon: [
+                        copyright: opus.copyrightText,
+                        logo        : opus.logoUrl,
+                        profileLink: "${grailsApplication.config.grails.serverURL}/opus/${params.opusId}/profile/${curatedModel.profiles[0]?.profile?.uuid}"
                 ]
         ]
 
@@ -178,13 +189,16 @@ class ExportService {
             }
         }
 
-        if (params.images) {
+        if (params.images || model.profile.primaryImage) {
             String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
             model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.join(","), searchIdentifier)?.resp
 
             List<Map> groupedImagesInPairs = []
             def images = model.profile.images
             images.eachWithIndex { image, i ->
+                if (model.profile.primaryImage == image.imageId) {
+                    model.profile.primaryImage = image.largeImageUrl
+                }
                 if (i % 2 == 0) {
                     image << [
                             imageNumber: i + 1,
