@@ -33,7 +33,7 @@
             %{--class="fa fa-camera-retro"></span>&nbsp;&nbsp;Compare with another profile</a>--}%
             %{--</li>--}%
                 <g:if test="${params.isOpusEditor}">
-                    <li class="divider"></li>
+                    <li class="divider" ng-hide="profileCtrl.isArchived()"></li>
                     <li role="presentation" ng-hide="!profileCtrl.readonly() || profileCtrl.isArchived()">
                         <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}/update"
                            target="_self"><span
