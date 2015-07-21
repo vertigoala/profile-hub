@@ -104,7 +104,7 @@
     <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
         <div class="row">
             <div class="col-md-12" ng-cloak>
-                <tabset>
+                <tabset ng-class="profileCtrl.opus.keybaseProjectId ? '' : 'single-tabbed-panel'">
                     <tab heading="Details">
                         <div class="col-md-2 margin-bottom-1">
                             <ul class="nav nav-stacked" id="sidebar" ng-cloak>

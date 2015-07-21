@@ -437,3 +437,12 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     background-color: white;
     margin-bottom: 20px;
 }
+
+.single-tabbed-panel .nav-tabs li {
+    display: none;
+}
+
+.nav-tabs {
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
