@@ -30,6 +30,8 @@
                         ng-if="reportCtrl.selectedReport.id == 'mismatchedNames'"></ng-include>
             <ng-include src="'draftProfilesReport.html'"
                         ng-if="reportCtrl.selectedReport.id == 'draftProfiles'"></ng-include>
+            <ng-include src="'archivedProfilesReport.html'"
+                        ng-if="reportCtrl.selectedReport.id == 'archivedProfiles'"></ng-include>
             <ng-include src="'mostRecentChange.html'"
                         ng-if="reportCtrl.selectedReport.id == 'mostRecentChange'"></ng-include>
         </div>
@@ -95,7 +97,30 @@
             </tbody>
         </table>
     </div>
+    </script>
 
+    <script type="text/ng-template" id="archivedProfilesReport.html">
+    <div class="table-responsive">
+        <table class="table table-striped" ng-show="reportCtrl.reportData.records.length > 0">
+            <thead>
+            <tr><th>Profile</th><th>Date archived</th><th>Archived By</th></tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="profile in reportCtrl.reportData.records">
+                <td>
+                    <a href="${request.contextPath}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.profileId }}"
+                       target="_blank" class="scientific-name">{{profile.scientificName}}</a>
+                </td>
+                <td>
+                    {{ profile.archivedDate | date:'dd/MM/yyyy h:mm a' }}
+                </td>
+                <td>
+                    {{ profile.archivedBy }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     </script>
 
     <script type="text/ng-template" id="mostRecentChange.html">

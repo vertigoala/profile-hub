@@ -7,7 +7,7 @@ describe("ProfileController tests", function () {
     var profileService;
     var util;
     var window;
-    var profileDefer, deleteDefer, confirmDefer, modalDefer, updateDefer, authorDefer;
+    var profileDefer, deleteDefer, confirmDefer, modalDefer, updateDefer, authorDefer, archiveDefer, restoreDefer, searchDefer;
 
     var modal = {
         open: function() {}
@@ -36,6 +36,9 @@ describe("ProfileController tests", function () {
         modalDefer = $q.defer();
         updateDefer = $q.defer();
         authorDefer = $q.defer();
+        archiveDefer = $q.defer();
+        restoreDefer = $q.defer();
+        searchDefer = $q.defer();
 
         var popup = {
             result: modalDefer.promise
@@ -45,6 +48,9 @@ describe("ProfileController tests", function () {
         spyOn(profileService, "deleteProfile").and.returnValue(deleteDefer.promise);
         spyOn(profileService, "updateProfile").and.returnValue(updateDefer.promise);
         spyOn(profileService, "saveAuthorship").and.returnValue(authorDefer.promise);
+        spyOn(profileService, "archiveProfile").and.returnValue(archiveDefer.promise);
+        spyOn(profileService, "restoreArchivedProfile").and.returnValue(restoreDefer.promise);
+        spyOn(profileService, "profileSearch").and.returnValue(searchDefer.promise);
 
         spyOn(modal, "open").and.returnValue(popup);
 
@@ -347,6 +353,128 @@ describe("ProfileController tests", function () {
         // if the full name is not set, use the scientific name and name author
         scope.profileCtrl.profile = {nameAuthor: "Tindale & Kodela", scientificName: "Acacia dealbata subsp. subalpina"};
         expect(scope.profileCtrl.formatName()).toBe("<span class='scientific-name'>Acacia dealbata <span class='normal-text'>subsp.</span> subalpina <span class='normal-text'>Tindale & Kodela</span></span>");
-    })
+    });
+
+    it("should return true when isArchived is called and the profile has an archivedDate, false otherwise", function() {
+        scope.profileCtrl.profile = {archivedDate: new Date()};
+        expect(scope.profileCtrl.isArchived()).toBeTruthy();
+
+        scope.profileCtrl.profile = {archivedDate: null};
+        expect(scope.profileCtrl.isArchived()).toBeFalsy();
+
+        scope.profileCtrl.profile = {};
+        expect(scope.profileCtrl.isArchived()).toBeFalsy();
+
+        scope.profileCtrl.profile = null;
+        expect(scope.profileCtrl.isArchived()).toBeFalsy();
+    });
+
+    it("should show the modal archive profile popup when archiveProfile is invoked", function() {
+        scope.profileCtrl.profile = {uuid: PROFILE_ID};
+        scope.profileCtrl.opus = {uuid: "opusId"};
+
+        scope.profileCtrl.archiveProfile();
+        scope.$apply();
+
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "archiveProfilePopup.html"}));
+    });
+
+    it("should redirect to the profile view page when archiveProfile succeeds", function() {
+        scope.profileCtrl.profile = {uuid: PROFILE_ID};
+        scope.profileCtrl.opus = {uuid: "opusId"};
+        archiveDefer.resolve({});
+        modalDefer.resolve({archiveComment: "archive comment"});
+
+        scope.profileCtrl.archiveProfile();
+        scope.$apply();
+
+        expect(util.redirect).toHaveBeenCalledWith("/context/opus/opusId/profile/" + PROFILE_ID);
+        expect(messageService.alert).not.toHaveBeenCalled();
+    });
+
+    it("should raise an alert message when archiveProfile fails", function() {
+        scope.profileCtrl.profile = {uuid: PROFILE_ID};
+        scope.profileCtrl.opus = {uuid: "opusId"};
+        archiveDefer.reject();
+        modalDefer.resolve({archiveComment: "archive comment"});
+
+        scope.profileCtrl.archiveProfile();
+        scope.$apply();
+
+        expect(util.redirect).not.toHaveBeenCalled();
+        expect(messageService.alert).toHaveBeenCalled();
+    });
+
+    it("should invoke the profile search service when restoreProfile is invoked to check for new profiles with the same name as the profile being restored", function() {
+        scope.profileCtrl.profile = {uuid: PROFILE_ID, scientificName: "archived name", archivedWithName: "original name"};
+        scope.profileCtrl.opusId = "opusId";
+        restoreDefer.resolve({});
+
+        scope.profileCtrl.restoreProfile();
+        scope.$apply();
+
+        expect(profileService.profileSearch).toHaveBeenCalledWith("opusId", "original name", false);
+    });
+
+    it("should show a confirmation dialog when restoreProfile is invoked and there are no duplicate names", function() {
+        scope.profileCtrl.profile = {uuid: PROFILE_ID};
+        scope.profileCtrl.opus = {uuid: "opusId"};
+        searchDefer.resolve([]);
+        confirmDefer.resolve();
+
+        scope.profileCtrl.restoreProfile();
+        scope.$apply();
+
+        expect(util.confirm).toHaveBeenCalled();
+        expect(modal.open).not.toHaveBeenCalled();
+    });
+
+    it("should redirect to the profile view page when restoreProfile succeeds and there are no duplicate profile names and the confirmation was accepted", function() {
+        scope.profileCtrl.profile = {uuid: PROFILE_ID};
+        scope.profileCtrl.opusId = "opusId";
+        scope.profileCtrl.opus = {shortName: "sname"};
+        searchDefer.resolve([]);
+        confirmDefer.resolve();
+        restoreDefer.resolve({scientificName: "updated profile"});
+
+        scope.profileCtrl.restoreProfile();
+        scope.$apply();
+
+        expect(modal.open).not.toHaveBeenCalled();
+        expect(profileService.restoreArchivedProfile).toHaveBeenCalledWith("opusId", PROFILE_ID, null);
+        expect(util.redirect).toHaveBeenCalledWith("/context/opus/sname/profile/updated profile");
+        expect(messageService.alert).not.toHaveBeenCalled();
+    });
+
+    it("should display the restore profile popup when restoreProfile is invoked and there are duplicate profile names", function() {
+        scope.profileCtrl.profile = {uuid: PROFILE_ID};
+        scope.profileCtrl.opus = {shortName: "sname"};
+        scope.profileCtrl.opusId = "opusId";
+        searchDefer.resolve([{uuid: "newProfile1"}]);
+        confirmDefer.resolve();
+
+        scope.profileCtrl.restoreProfile();
+        scope.$apply();
+
+        expect(util.confirm).not.toHaveBeenCalled();
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "restoreProfilePopup.html"}));
+    });
+
+    it("should redirect to the profile view page when restoreProfile succeeds and there are duplicate profile names", function() {
+        scope.profileCtrl.profile = {uuid: PROFILE_ID};
+        scope.profileCtrl.opus = {shortName: "sname"};
+        scope.profileCtrl.opusId = "opusId";
+        searchDefer.resolve([{uuid: "newProfile1"}]);
+        modalDefer.resolve("new profile name");
+        restoreDefer.resolve({scientificName: "new profile name"});
+
+        scope.profileCtrl.restoreProfile();
+        scope.$apply();
+
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "restoreProfilePopup.html"}));
+        expect(profileService.restoreArchivedProfile).toHaveBeenCalledWith("opusId", PROFILE_ID, "new profile name");
+        expect(util.redirect).toHaveBeenCalledWith("/context/opus/sname/profile/new profile name");
+        expect(messageService.alert).not.toHaveBeenCalled();
+    });
 });
 
