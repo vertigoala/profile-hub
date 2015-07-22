@@ -16,7 +16,7 @@ grailsw.bat
 # logs
 /stacktrace.log
 /test/reports
-/logs
+logs/
 
 # project release file
 /*.war
@@ -30,11 +30,12 @@ grailsw.bat
 /web-app/plugins
 
 # "temporary" build files
-/target
-/out
-/.idea
+target/
+out/
+.idea/
 
 *.iml
+*.jasper
 
 grails-app/assets/images/apple-touch-icon-retina.png
 
