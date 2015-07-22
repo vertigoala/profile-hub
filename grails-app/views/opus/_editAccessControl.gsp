@@ -7,12 +7,25 @@
 
     <div class="panel-body">
         <div class="col-sm-12">
+            <div class="checkbox padding-bottom-1">
+                <label for="privateCollection" class="inline-label">
+                    <input id="privateCollection" type="checkbox" name="privateCollection"
+                        ng-change="userCtrl.privateModeChanged()"
+                           ng-model="userCtrl.opus.privateCollection" ng-false-value="false">
+                    Make this collection private
+                </label>
+                <div class="small padding-left-1" ng-show="userCtrl.opus.privateCollection">
+                    When the collection is 'private' only people who have been added to the collection with at least the 'User' role will be allowed to view the profiles within the collection.
+                </div>
+            </div>
+
             <p>Assign users Admin or Editor roles to this profile collection.
             <ul>
                 <li><b>Admin</b> - can edit the configuration for the entire collection, and can modify any profile in the collection.
                 </li>
                 <li><b>Editor</b> - can add and edit content on any profile page within this collection.</li>
                 <li><b>Reviewer</b> - can view and add review comments on any profile page within this collection, but cannot create or modify profiles.
+                <li ng-show="userCtrl.opus.privateCollection"><b>User</b> - can view any profile page within this <i>private</i> collection, but cannot create or modify profiles, and cannot comment on profiles.
                 </li>
             </ul>
 
@@ -26,7 +39,7 @@
                         <th width="15%"></th>
                     </tr>
 
-                    <tr ng-repeat="user in userCtrl.users | orderBy:'name'">
+                    <tr ng-repeat="user in userCtrl.users | orderBy:'name'" ng-if="userCtrl.opus.privateCollection || (!userCtrl.opus.privateCollection && user.role != 'ROLE_USER')">
                         <td>
                             {{ user.name }}
                         </td>
@@ -71,12 +84,12 @@
 
     <script type="text/ng-template" id="addEditUserPopup.html">
     <div class="modal-header">
-        <h3 class="modal-title">{{addUserCtrl.isNewUser ? 'Add User' : 'Edit User'}}</h3>
+        <h4>{{addUserCtrl.isNewUser ? 'Add User' : 'Edit User'}}</h4>
     </div>
 
     <div class="modal-body" ng-form="UserForm">
         <div class="row">
-            <div class="span12">
+            <div class="col-md-12">
 
                 <div class="alert alert-danger" ng-show="addUserCtrl.error">{{addUserCtrl.error}}</div>
 
@@ -104,7 +117,7 @@
                     <hr/>
                 </div>
 
-                <div class="row padding-top-1">
+                <div class="row margin-top-1">
                     <div class="form-horizontal">
                         <div class="form-group">
                             <label for="role" class="col-sm-3 control-label">Role</label>

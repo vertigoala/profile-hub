@@ -424,3 +424,16 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .border-top-bottom {
     border-top: solid 1px lightgray;
 }
+
+.archive-comment {
+    margin: 20px;
+    font-family: "Lucida Grande", "Helvetica Nueue", Arial, sans-serif;
+    font-weight: 200;
+    font-style: italic;
+}
+
+.archived-publication {
+    padding: 10px 20px;
+    background-color: white;
+    margin-bottom: 20px;
+}

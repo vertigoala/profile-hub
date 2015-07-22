@@ -10,7 +10,7 @@
         </div>
 
         <div>
-            <strong>Publication Date: </strong> {{publication.publicationDate | date:"dd/MM/yyyy HH:mm"}}
+            <strong>Publication Date: </strong> {{publication.publicationDate | date:"dd/MM/yyyy H:mm a"}}
         </div>
         <div ng-show="publication.doi">
             <strong>DOI: </strong><a href="http://dx.doi.org/{{publication.doi}}" target="_blank">{{publication.doi}}</a>

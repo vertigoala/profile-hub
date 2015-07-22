@@ -23,18 +23,20 @@ class ProfileController extends BaseController {
             badRequest "opusId and profileId are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
-            def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
+            def model = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
-            if (!profile) {
+            if (!model || !model.profile) {
                 notFound()
+            } else if (model.profile.archivedDate) {
+                // archived profiles cannot be edited by anyone
+                notAuthorised()
             } else {
-                Map model = profile
                 model << [edit        : true,
                           currentUser : authService.getDisplayName(),
-                          glossaryUrl : getGlossaryUrl(profile.opus),
-                          aboutPageUrl: getAboutUrl(profile.opus),
-                          footerText  : profile.opus.footerText,
-                          contact     : profile.opus.contact]
+                          glossaryUrl : getGlossaryUrl(model.opus),
+                          aboutPageUrl: getAboutUrl(model.opus),
+                          footerText  : model.opus.footerText,
+                          contact     : model.opus.contact]
                 render view: "show", model: model
             }
         }
@@ -154,6 +156,35 @@ class ProfileController extends BaseController {
             badRequest "profileId and opusId are required parameters"
         } else {
             def response = profileService.deleteProfile(params.opusId as String, params.profileId as String)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def archiveProfile() {
+        def json = request.getJSON()
+        if (!params.profileId || !params.opusId || !json?.archiveComment) {
+            badRequest "profileId, opusId and archiveComment are required parameters"
+        } else {
+
+            // create a final snapshot version of the profile before archiving it
+            savePublication()
+
+            def response = profileService.archiveProfile(params.opusId as String, params.profileId as String, json.archiveComment as String)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def restoreArchivedProfile() {
+        def json = request.getJSON()
+
+        if (!params.profileId || !params.opusId) {
+            badRequest "profileId and opusId are required parameters"
+        } else {
+            def response = profileService.restoreArchivedProfile(params.opusId as String, params.profileId as String, json?.newName as String)
 
             handle response
         }

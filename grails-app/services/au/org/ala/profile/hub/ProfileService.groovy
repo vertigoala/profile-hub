@@ -17,12 +17,12 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}")?.resp
     }
 
-    def updateOpus(String opusId, json) {
+    def updateOpus(String opusId, Map json) {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}", json)
     }
 
-    def updateOpusUsers(String opusId, json) {
-        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/updateUsers", [authorities: json])
+    def updateOpusUsers(String opusId, Map json) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/updateUsers", json)
     }
 
     def createOpus(json) {
@@ -117,6 +117,18 @@ class ProfileService {
     def deleteProfile(String opusId, String profileId) {
         log.debug("Deleting profile ${profileId}")
         webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}")
+    }
+
+    def archiveProfile(String opusId, String profileId, String archiveComment) {
+        log.debug("Archiving profile ${profileId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/archive/${enc(profileId)}", [archiveComment: archiveComment])
+    }
+
+    def restoreArchivedProfile(String opusId, String profileId, String newName = null) {
+        log.debug("Restoring archived profile ${profileId}")
+
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/restore/${enc(profileId)}", [newName: newName])
     }
 
     void injectThumbnailUrls(profile) {
@@ -332,6 +344,9 @@ class ProfileService {
                 break;
             case ReportType.DRAFT_PROFILE:
                 resp = webService.get("${grailsApplication.config.profile.service.url}/report/draftProfiles?opusId=${enc(opusId)}")
+                break;
+            case ReportType.ARCHIVED_PROFILE:
+                resp = webService.get("${grailsApplication.config.profile.service.url}/report/archivedProfiles?opusId=${enc(opusId)}")
                 break;
             case ReportType.MOST_RECENT_CHANGE:
                 range = utilService.getDateRange(dates.period, dates.from, dates.to);

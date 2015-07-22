@@ -376,6 +376,69 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                 }
             }
         });
+    };
+
+    self.archiveProfile = function() {
+        var popup = $modal.open({
+            templateUrl: "archiveProfilePopup.html",
+            controller: "ArchiveProfileController",
+            controllerAs: "archiveCtrl",
+            size: "md"
+        });
+
+        popup.result.then(function (archiveComment) {
+            var promise = profileService.archiveProfile(self.opusId, self.profileId, archiveComment);
+
+            promise.then(function() {
+                util.redirect(util.contextRoot() + "/opus/" + (self.opus.shortName ? self.opus.shortName : self.opus.uuid) + "/profile/" + self.profile.uuid);
+                messageService.success("Your profile has been successfully archived.")
+            }, function() {
+                messageService.alert("An error occurred while archiving the profile.");
+            });
+        });
+    };
+
+    self.restoreProfile = function() {
+        var search = profileService.profileSearch(self.opusId, self.profile.archivedWithName, false);
+
+        search.then(function (results) {
+            if (!results || results.length == 0 || (results.length == 1 && results[0].profileId == self.profile.uuid)) {
+                var confirm = util.confirm("Are you sure you wish to restore this profile?");
+                confirm.then(function() {
+                    restoreProfile(null);
+                })
+            } else {
+                var popup = $modal.open({
+                    templateUrl: "restoreProfilePopup.html",
+                    controller: "RestoreProfileController",
+                    controllerAs: "restoreCtrl",
+                    size: "md",
+                    resolve: {
+                        profileId: function () {
+                            return self.profile.uuid;
+                        }
+                    }
+                });
+
+                popup.result.then(function (newName) {
+                    restoreProfile(newName);
+                });
+            }
+        });
+    };
+
+    self.isArchived = function() {
+        return self.profile && self.profile.archivedDate != null;
+    };
+
+    function restoreProfile(newName) {
+        var restore = profileService.restoreArchivedProfile(self.opusId, self.profile.uuid, newName ? newName : null);
+
+        restore.then(function(updatedProfile) {
+            util.redirect(util.contextRoot() + "/opus/" + (self.opus.shortName ? self.opus.shortName : self.opus.uuid) + "/profile/" + updatedProfile.scientificName);
+        }, function() {
+            messageService.alert("An error has occurred while restoring your profile.");
+        });
     }
 });
 
@@ -409,5 +472,43 @@ profileEditor.controller('ComparisonPopupController', function ($modalInstance, 
             }
         );
     };
+
+});
+
+/**
+ * Controller for archiving a profile
+ */
+profileEditor.controller('ArchiveProfileController', function ($modalInstance) {
+    var self = this;
+
+    self.archiveComment = null;
+
+    self.cancel = function () {
+        $modalInstance.dismiss("Cancelled");
+    };
+
+    self.ok = function() {
+        $modalInstance.close(self.archiveComment);
+    }
+
+});
+
+/**
+ * Controller for restoring a profile
+ */
+profileEditor.controller('RestoreProfileController', function ($modalInstance, profileId) {
+    var self = this;
+
+    self.newName = null;
+    self.manuallyMatchedGuid = "";
+    self.profileId = profileId;
+
+    self.cancel = function () {
+        $modalInstance.dismiss("Cancelled");
+    };
+
+    self.ok = function() {
+        $modalInstance.close(self.newName);
+    }
 
 });

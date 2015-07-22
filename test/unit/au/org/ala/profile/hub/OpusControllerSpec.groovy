@@ -139,4 +139,53 @@ class OpusControllerSpec extends Specification {
         then:
         assert response.status == HttpStatus.SC_NOT_FOUND
     }
+
+    def "list should remove all private collections if there is no logged in user"() {
+        setup:
+        mockAuthService.getUserId() >> null
+        Map opus1 = [privateCollection: true, authorities: []]
+        Map opus2 = [privateCollection: false, authorities: []]
+        Map opus3 = [privateCollection: true, authorities: []]
+        Map opus4 = [privateCollection: false, authorities: []]
+        mockProfileService.getOpus() >> [opus1, opus2, opus3, opus4]
+
+        when:
+        controller.list()
+
+        then:
+        assert response.json == [opus2, opus4]
+    }
+
+    def "list should remove private collections if the logged in user is not registered with the collection"() {
+        setup:
+        mockAuthService.getUserId() >> "1234"
+        Map opus1 = [privateCollection: true, authorities: [[userId: "9876"]]]
+        Map opus2 = [privateCollection: false, authorities: []]
+        Map opus3 = [privateCollection: true, authorities: [[userId: "1234"]]]
+        Map opus4 = [privateCollection: false, authorities: []]
+        mockProfileService.getOpus() >> [opus1, opus2, opus3, opus4]
+
+        when:
+        controller.list()
+
+        then:
+        assert response.json == [opus2, opus3, opus4]
+    }
+
+    def "list should not remove private collections if the logged in user in an ALA admin"() {
+        setup:
+        mockAuthService.getUserId() >> "1234"
+        Map opus1 = [privateCollection: true, authorities: [[userId: "9876"]]]
+        Map opus2 = [privateCollection: false, authorities: []]
+        Map opus3 = [privateCollection: true, authorities: [[userId: "1234"]]]
+        Map opus4 = [privateCollection: false, authorities: []]
+        mockProfileService.getOpus() >> [opus1, opus2, opus3, opus4]
+
+        when:
+        params.isALAAdmin = true // this is usually determined by the AccessControlFilter
+        controller.list()
+
+        then:
+        assert response.json == [opus1, opus2, opus3, opus4]
+    }
 }
