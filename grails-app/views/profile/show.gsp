@@ -63,7 +63,7 @@
                     ng-show="!profileCtrl.readonly()">&nbsp;Edit name</button>
         </div>
 
-        <div class="col-md-3" ng-cloak>
+        <div class="col-md-3 text-right" ng-cloak>
             <g:render template="optionsMenu"/>
         </div>
     </div>
