@@ -57,6 +57,7 @@ class ExportController extends BaseController {
                 bhllinks    : params.bhllinks,
                 specimens   : params.specimens,
                 conservation: params.conservation,
+                status      : params.status,
                 images      : params.images,
                 children    : params.children,
                 email       : params.email

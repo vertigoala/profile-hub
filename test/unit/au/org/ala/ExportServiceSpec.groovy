@@ -26,4 +26,15 @@ class ExportServiceSpec extends Specification {
         "taxonomic synonym: <scientific><name id='202232'><scientific><name id='103551'><element><i>Racosperma</i></element></name></scientific> <element><i>undulata</i></element> <authors>(<ex-base id='1884' title='Willdenow, C.L. von'>Willd.</ex-base> ex <base id='7255' title='Wendland, H.L.'>H.L.Wendl.</base>) <author id='7355' title='Martius, C.P. von'>Mart.</author></authors></name></scientific>" | "taxonomic synonym: <i>Racosperma</i> <i>undulata</i> (Willd. ex H.L.Wendl.) Mart."
         "doubtful taxonomic synonym: <scientific><name id='71524'><scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia</i></element></name></scientific> <element><i>undulata</i></element></name></scientific> <rank id='54412'>var.</rank> <element><i>longispina</i></element> <authors><ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort.</ex> ex <author id='7665' title='Visiani, R. de'>Vis.</author></authors></name></scientific>" | "doubtful taxonomic synonym: <i>Acacia</i> <i>undulata</i> var. <i>longispina</i> <ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort. ex Vis."
     }
+
+    void "test status text formatting"() {
+        expect:
+        ExportService.formatStatusText(before) == after
+
+        where:
+        before | after
+        "Inflorescence_arrangement" | "Inflorescence arrangement"
+        "pca1" | "Pca1"
+        "precip_seasonality" | "Precip seasonality"
+    }
 }

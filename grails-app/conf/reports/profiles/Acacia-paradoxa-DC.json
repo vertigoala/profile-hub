@@ -12,6 +12,92 @@
       "profileLink": "http://localhost:8080/profile-hub/opus/39295895-f9cd-4189-bc19-64bd46cd689b/profile/bee218e6-e0a4-4b99-8c5e-e63a6e1b93aa"
    },
    "profiles": [{"profile": {
+     "status": [
+        {
+           "value": "Racemose",
+           "key": "Inflorescence arrangement"
+        },
+        {
+           "value": "Globular",
+           "key": "Inflorescence shape"
+        },
+        {
+           "value": "Lemon yellow to golden",
+           "key": "Inflorescence colour"
+        },
+        {
+           "value": "Scattered",
+           "key": "Phyllode arrangement"
+        },
+        {
+           "value": "Phyllodineae",
+           "key": "Section taxonomy"
+        },
+        {
+           "value": "3.87",
+           "key": "Pca1"
+        },
+        {
+           "value": "4.48",
+           "key": "Pca2"
+        },
+        {
+           "value": "10.7",
+           "key": "Pca3"
+        },
+        {
+           "value": "1.15",
+           "key": "Plant height"
+        },
+        {
+           "value": "5.5",
+           "key": "Phyllode length  median"
+        },
+        {
+           "value": "0.09",
+           "key": "Annual mean temp"
+        },
+        {
+           "value": "0.05",
+           "key": "Annual precip"
+        },
+        {
+           "value": "0.1",
+           "key": "Annual mean rad"
+        },
+        {
+           "value": "0.06",
+           "key": "Precip seasonality"
+        },
+        {
+           "value": "0.11",
+           "key": "Temperature season"
+        },
+        {
+           "value": "0.12",
+           "key": "Rad season"
+        },
+        {
+           "value": "0.11",
+           "key": "Ridgetop"
+        },
+        {
+           "value": "0.01",
+           "key": "Rockgrainsz"
+        },
+        {
+           "value": "0.08",
+           "key": "Precip cold quart"
+        },
+        {
+           "value": "0.1",
+           "key": "Clay"
+        },
+        {
+           "value": "0.1",
+           "key": "Sand"
+        }
+     ],
      "nslProtologue": "Candolle, A.P. de (ed.) (1825), Leguminosae. <i>Prodromus Systematis Naturalis Regni Vegetabilis</i> 2",
      "occurrencesUrl": "http://avh.ala.org.au/occurrences/search?q=lsid%3Aurn%3Alsid%3Abiodiversity.org.au%3Aapni.taxon%3A298640+AND+%28data_resource_uid%3A%22dr376%22%29",
       "hasConservationStatus": true,

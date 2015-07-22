@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-20T16:29:49 -->
+<!-- 2015-07-22T15:15:27 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail" language="groovy" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="30" uuid="eb6cf9a1-0a5c-4453-8b43-458e6c8b58f3">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JSON Sample Data Source"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -36,7 +36,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="229" splitType="Stretch">
+		<band height="244" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField bookmarkLevel="1">
 				<reportElement x="0" y="10" width="515" height="21" uuid="6f637e5f-9279-48f0-9560-d5f20f56cf08">
@@ -91,7 +91,16 @@
 				<subreportExpression><![CDATA["PROFILES_detail_conservation.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">
-				<reportElement positionType="Float" x="0" y="108" width="515" height="15" isRemoveLineWhenBlank="true" uuid="0fe15f5a-98a6-4325-b345-fd6deeee2b29">
+				<reportElement positionType="Float" x="0" y="108" width="515" height="15" isRemoveLineWhenBlank="true" uuid="b4919f7c-674a-4180-9d3f-1e7830e644cb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.status)]]></printWhenExpression>
+				</reportElement>
+				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.status")]]></dataSourceExpression>
+				<subreportExpression><![CDATA["PROFILES_detail_status.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport overflowType="Stretch">
+				<reportElement positionType="Float" x="0" y="123" width="515" height="15" isRemoveLineWhenBlank="true" uuid="0fe15f5a-98a6-4325-b345-fd6deeee2b29">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.taxonomy)]]></printWhenExpression>
@@ -100,7 +109,7 @@
 				<subreportExpression><![CDATA["PROFILES_detail_taxonomy.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">
-				<reportElement positionType="Float" x="0" y="123" width="515" height="15" isRemoveLineWhenBlank="true" uuid="552404e2-ac45-41a2-9591-e9b3d8496227">
+				<reportElement positionType="Float" x="0" y="138" width="515" height="15" isRemoveLineWhenBlank="true" uuid="552404e2-ac45-41a2-9591-e9b3d8496227">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.nomenclature) && $F{profile.nomenclature.citationHtml}]]></printWhenExpression>
@@ -110,7 +119,7 @@
 				<subreportExpression><![CDATA["PROFILES_detail_nomenclature.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">
-				<reportElement positionType="Float" x="0" y="138" width="515" height="15" isRemoveLineWhenBlank="true" uuid="4335a7a3-5814-41bd-8b3c-5df2664bd10e">
+				<reportElement positionType="Float" x="0" y="153" width="515" height="15" isRemoveLineWhenBlank="true" uuid="4335a7a3-5814-41bd-8b3c-5df2664bd10e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.links)]]></printWhenExpression>
@@ -119,7 +128,7 @@
 				<subreportExpression><![CDATA["PROFILES_detail_links.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">
-				<reportElement positionType="Float" x="0" y="153" width="515" height="15" isRemoveLineWhenBlank="true" uuid="c675d85b-9e2b-476e-abd8-fb07375bff13">
+				<reportElement positionType="Float" x="0" y="168" width="515" height="15" isRemoveLineWhenBlank="true" uuid="c675d85b-9e2b-476e-abd8-fb07375bff13">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.bhllinks)]]></printWhenExpression>
@@ -128,7 +137,7 @@
 				<subreportExpression><![CDATA["PROFILES_detail_bhl.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">
-				<reportElement positionType="Float" x="0" y="168" width="515" height="15" isRemoveLineWhenBlank="true" uuid="4fc93526-8bdf-4fb2-8457-072c20648f24">
+				<reportElement positionType="Float" x="0" y="183" width="515" height="15" isRemoveLineWhenBlank="true" uuid="4fc93526-8bdf-4fb2-8457-072c20648f24">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.specimens)]]></printWhenExpression>
@@ -137,7 +146,7 @@
 				<subreportExpression><![CDATA["PROFILES_detail_specimens.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">
-				<reportElement positionType="Float" x="0" y="183" width="515" height="15" isRemoveLineWhenBlank="true" uuid="03b5da42-55f1-4da6-992b-5cacbdbbf258">
+				<reportElement positionType="Float" x="0" y="198" width="515" height="15" isRemoveLineWhenBlank="true" uuid="03b5da42-55f1-4da6-992b-5cacbdbbf258">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.images)]]></printWhenExpression>
@@ -146,7 +155,7 @@
 				<subreportExpression><![CDATA["PROFILES_detail_images.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">
-				<reportElement positionType="Float" x="0" y="198" width="515" height="15" isRemoveLineWhenBlank="true" uuid="b1f29293-1251-4267-b7cc-2cbb4c7f158a">
+				<reportElement positionType="Float" x="0" y="213" width="515" height="15" isRemoveLineWhenBlank="true" uuid="b1f29293-1251-4267-b7cc-2cbb4c7f158a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
@@ -156,7 +165,7 @@
 				<subreportExpression><![CDATA["PROFILES_detail_bibliography.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">
-				<reportElement positionType="Float" x="0" y="213" width="515" height="15" isRemoveLineWhenBlank="true" uuid="34368ca4-5a4c-407c-a77b-b4b23c7146c8">
+				<reportElement positionType="Float" x="0" y="228" width="515" height="15" isRemoveLineWhenBlank="true" uuid="34368ca4-5a4c-407c-a77b-b4b23c7146c8">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
@@ -165,7 +174,7 @@
 				<subreportExpression><![CDATA["PROFILES_detail_acknowledgements.jasper"]]></subreportExpression>
 			</subreport>
 			<break>
-				<reportElement positionType="Float" x="0" y="228" width="514" height="1" uuid="3d1cb14b-a2b8-45ac-8a81-541a4aa0b4f0"/>
+				<reportElement positionType="Float" x="0" y="243" width="514" height="1" uuid="3d1cb14b-a2b8-45ac-8a81-541a4aa0b4f0"/>
 			</break>
 		</band>
 	</detail>

@@ -189,33 +189,41 @@ class ExportService {
             }
         }
 
-        if (params.images || model.profile.primaryImage) {
-            String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-            model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.join(","), searchIdentifier)?.resp
+        // Retrieve image and get primary image. This has to be done always, regardless of the user choosing to display the images section or not
+        String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
+        model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.join(","), searchIdentifier)?.resp
 
-            List<Map> groupedImagesInPairs = []
-            def images = model.profile.images
-            images.eachWithIndex { image, i ->
-                if (model.profile.primaryImage == image.imageId) {
-                    model.profile.primaryImage = image.largeImageUrl
-                }
-                if (i % 2 == 0) {
-                    image << [
-                            imageNumber: i + 1,
-                            scientificName: model.profile.scientificName,
-                            imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${image.imageId}"
-                    ]
-                    Map nextImage = (i + 1 < images.size()) ? images[i + 1] : [:]
-                    nextImage << [
-                            imageNumber: i + 2,
-                            scientificName: model.profile.scientificName,
-                            imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}"
-                    ]
-                    groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
-                }
+        List<Map> groupedImagesInPairs = []
+        def images = model.profile.images
+        images.eachWithIndex { image, i ->
+            if (model.profile.primaryImage == image.imageId) {
+                model.profile.primaryImage = image.largeImageUrl
             }
+            if (i % 2 == 0) {
+                image << [
+                        imageNumber: i + 1,
+                        scientificName: model.profile.scientificName,
+                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${image.imageId}"
+                ]
+                Map nextImage = (i + 1 < images.size()) ? images[i + 1] : [:]
+                nextImage << [
+                        imageNumber: i + 2,
+                        scientificName: model.profile.scientificName,
+                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}"
+                ]
+                groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
+            }
+        }
 
-            model.profile.images = groupedImagesInPairs
+        model.profile.images = groupedImagesInPairs
+
+        // Retrieve and format profile statuses
+        if (params.status) {
+            model.profile.status = profileService.getBioStatus(opus.uuid, model.profile.uuid)
+            model.profile.status.each { singleStatus ->
+                singleStatus.key = formatStatusText(singleStatus.key)
+                singleStatus.value = formatStatusText(singleStatus.value)
+            }
         }
 
         // Retrieve occurrences-map image url
@@ -253,6 +261,15 @@ class ExportService {
         }
 
         return model
+    }
+
+    /**
+     * Replaces underscore with spaces and capitalize
+     * @param text
+     * @return
+     */
+    static String formatStatusText(String text) {
+        text.replaceAll('_', ' ').capitalize()
     }
 
     def createOccurrencesUrl = { opus, occurrenceQuery ->
