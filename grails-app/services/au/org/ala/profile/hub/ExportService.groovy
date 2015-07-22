@@ -97,9 +97,9 @@ class ExportService {
     }
 
     /**
-     *
+     * Retrieve profile/s data in multiple threads and other required info. Put them all together in a the required data structure for the report template ingestion
      * @param params
-     * @param latest
+     * @param latest (optional) = defaults to false
      * @return
      */
     private Map getCurateReportModel(Map params, boolean latest = false) {
@@ -139,7 +139,7 @@ class ExportService {
         curatedModel << [
                 cover: [
                         title       : opus.title,
-                        subtitle    : curatedModel.profiles[0]?.profile?.fullName,
+                        subtitle    : curatedModel.profiles[0]?.profile?.fullName?: curatedModel.profiles[0]?.profile?.scientificName,
                         logo        : opus.logoUrl,
                         banner      : opus.bannerUrl,
                         primaryImage: curatedModel.profiles[0]?.profile?.primaryImage?: (curatedModel.profiles[0]?.profile?.images?.size() > 0 ? curatedModel.profiles[0]?.profile?.images[0].leftImage.largeImageUrl : '')
@@ -147,7 +147,7 @@ class ExportService {
                 colophon: [
                         copyright: opus.copyrightText,
                         logo        : opus.logoUrl,
-                        profileLink: "${grailsApplication.config.grails.serverURL}/opus/${params.opusId}/profile/${curatedModel.profiles[0]?.profile?.uuid}"
+                        profileLink: "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${curatedModel.profiles[0]?.profile?.uuid}"
                 ]
         ]
 
@@ -155,11 +155,11 @@ class ExportService {
     }
 
     /**
-     *
+     * Custom ETL process to retrieve and format the profile data required to render the report
      * @param profileId
      * @param opus
      * @param params
-     * @param latest
+     * @param latest (optional) = defaults to false
      * @return
      */
     private Map loadProfileData(String profileId, opus, Map params, boolean latest = false) {
