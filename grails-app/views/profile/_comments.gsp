@@ -2,11 +2,16 @@
     <a name="{{commentCtrl.readonly() ? 'view_' : 'edit_'}}comments"></a>
 
     <div class="panel panel-default" ng-cloak>
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="section-panel-heading">Comments</h4>
+                </div>
+            </div>
+        </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-2"><strong>Comments</strong></div>
-
-                <div class="col-sm-10" ng-if="!specCtrl.readonly()">
+                <div class="col-sm-12" ng-if="!specCtrl.readonly()">
                     <div ng-repeat="comment in commentCtrl.comments | orderBy:'dateCreated'"
                          ng-init="path = [$index]" class="comment">
                         <hr ng-if="!$first" class="comment-divider"/>

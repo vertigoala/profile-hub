@@ -2,36 +2,42 @@
     <div ng-if="imageCtrl.images.length > 0 && imageCtrl.readonly" ng-cloak>
         <a name="view_images"></a>
 
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="section-panel-heading">Images</h4>
+                </div>
+            </div>
+        </div>
+
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-2"><strong>Images</strong></div>
+                <div class="col-sm-12">
+                    <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 padding-bottom-1"
+                         ng-show="!image.excluded">
+                        <div class="imgCon ">
+                            <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
+                               target="_blank" ng-if="image.largeImageUrl" title="View occurrence record">
+                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && !image.staged"
+                                     class="thumbnail"/>
+                                <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
+                                     ng-if="image.largeImageUrl && image.staged" class="thumbnail"/>
+                            </a>
 
-                <div class="col-sm-10">
-                    <div class="row">
-                        <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 padding-bottom-1"
-                             ng-show="!image.excluded">
-                            <div class="imgCon ">
-                                <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                                   target="_blank" ng-if="image.largeImageUrl" title="View occurrence record">
-                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && !image.staged"
-                                         class="thumbnail"/>
-                                    <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                         ng-if="image.largeImageUrl && image.staged" class="thumbnail"/>
-                                </a>
+                            <p class="caption">{{ image.dataResourceName }}</p>
 
-                                <p class="caption">{{ image.dataResourceName }}</p>
-
-                                <p class="caption" ng-if="image.metadata.title">"{{ image.metadata.title }}"
-                                    <span class="caption" ng-if="image.metadata.creator">by {{ image.metadata.creator }}<span ng-if="image.metadata.dateCreated">, {{ image.metadata.dateCreated | date: 'dd/MM/yyyy' }}</span>
-                                    </span>
-                                    <span ng-if="image.metadata.rightsHolder">(&copy; {{ image.metadata.rightsHolder }})</span>
-                                </p>
+                            <p class="caption" ng-if="image.metadata.title">"{{ image.metadata.title }}"
+                                <span class="caption"
+                                      ng-if="image.metadata.creator">by {{ image.metadata.creator }}<span
+                                        ng-if="image.metadata.dateCreated">, {{ image.metadata.dateCreated | date: 'dd/MM/yyyy' }}</span>
+                                </span>
+                                <span ng-if="image.metadata.rightsHolder">(&copy; {{ image.metadata.rightsHolder }})</span>
+                            </p>
 
 
-                                <a class="caption"
-                                   href="${grailsApplication.config.images.service.url}/image/details?imageId={{image.imageId}}"
-                                   target="_blank" ng-if="!image.staged">View image details</a>
-                            </div>
+                            <a class="caption"
+                               href="${grailsApplication.config.images.service.url}/image/details?imageId={{image.imageId}}"
+                               target="_blank" ng-if="!image.staged">View image details</a>
                         </div>
                     </div>
                 </div>
@@ -42,11 +48,17 @@
     <div ng-form="ImageForm" ng-if="!imageCtrl.readonly" ng-cloak>
         <a name="edit_images"></a>
 
-        <div class="panel-body">
-            <div class="col-sm-2"><strong>Images</strong></div>
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="section-panel-heading">Images</h4>
+                </div>
+            </div>
+        </div>
 
-            <div class="col-sm-10">
-                <div class="row" ng-if="imageCtrl.images.length > 0">
+        <div class="panel-body">
+            <div class="col-sm-12">
+                <div class="row section-no-para" ng-if="imageCtrl.images.length > 0">
                     <div class="col-sm-6">
                         <h5>Image</h5>
                     </div>

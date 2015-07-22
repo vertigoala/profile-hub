@@ -1,18 +1,23 @@
 .blues {
     light:      #0087BE;
     dark:       #005082;
-
+    very-dark:  #101C62;
 }
 
 .show-grid [class*="col-"] {
     background-color: blue;
 }
 
+a {
+    color: #005082;
+
+}
+
 a:hover, a:focus {
     color: #0087BE;
 }
 
-h4 {
+h4, h5 {
     color: #0087BE;
 }
 

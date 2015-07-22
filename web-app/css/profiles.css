@@ -199,6 +199,9 @@ hr.comment-divider {
 
 .minor-heading {
     font-weight: bold;
+    padding-top: 2px;
+    padding-bottom: 3px;
+    display: inline-block;
 }
 
 .nomenclature .concept {
@@ -242,19 +245,15 @@ hr.comment-divider {
 }
 
 .imgCon.thumbnail {
-    min-width: 180px;
-    max-width: 400px;
-    /*max-height: 300px;*/
 }
 
 .primary-image {
     display: inline-block;
-    margin: 2px 4px 2px 0;
     width: 100%;
 }
 
-.primary-image img {
-    height: 280px;
+.primary-image div img {
+    height: 300px;
     min-width: 250px;
 }
 
@@ -334,6 +333,19 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     margin-bottom: 0;
 }
 
+.section-panel-heading {
+    margin-bottom: 0;
+    margin-top: 5px;
+}
+
+.section-no-para {
+    padding-left: 15px;
+}
+
+.section-heading {
+    margin-left: 0;
+}
+
 .margin-top-1 {
     margin-top: 10px;
 }
@@ -347,11 +359,22 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 }
 
 .panel {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.panel ul {
+    padding-left: 35px;
 }
 
 .panel-body {
-    padding: 10px 10px 5px 10px;
+    padding: 5px 15px 5px 15px;
+}
+
+
+.panel .panel-heading {
+    border-bottom: 1px solid rgba(0, 135, 190, 0.2);
+    padding: 5px 15px 8px 15px;
+
 }
 
 #primary-nav.navbar {
@@ -381,6 +404,14 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 .alert {
     border-top: none;
+}
+
+.heading-underlined {
+    margin-bottom: 10px;
+}
+
+.black {
+    color: black;
 }
 
 /**

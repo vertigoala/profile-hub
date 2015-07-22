@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="ImageForm" ng-cloak>
     <div class="panel-heading">
         <a name="imageSources">
-            <h4>Approved Image sources</h4>
+            <h4 class="section-panel-heading">Approved Image sources</h4>
         </a>
     </div>
 

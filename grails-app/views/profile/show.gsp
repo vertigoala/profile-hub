@@ -106,42 +106,42 @@
             <div class="col-md-12" ng-cloak>
                 <tabset ng-class="profileCtrl.opus.keybaseProjectId ? '' : 'single-tabbed-panel'">
                     <tab heading="Details">
-                        <div class="col-md-2 margin-bottom-1">
-                            <ul class="nav nav-stacked" id="sidebar" ng-cloak>
-                                <h4 class="font-xxsmall heading-underlined"><strong>Page index</strong></h4>
-                                <li ng-repeat="item in nav | orderBy:'label'">
-                                    <a du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}{{item.key}}"
-                                       target="_self" class="font-xxsmall">{{item.label}}</a>
-                                </li>
-                            </ul>
-                        </div>
+                        <div class="row">
+                            <div class="col-md-2 margin-bottom-1">
+                                <ul class="nav nav-stacked" id="sidebar" ng-cloak>
+                                    <li ng-repeat="item in nav | orderBy:'label'">
+                                        <a du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}{{item.key}}"
+                                           target="_self" class="font-xxsmall">{{item.label}}</a>
+                                    </li>
+                                </ul>
+                            </div>
 
-                        <div class="col-md-10">
-                            <g:include controller="profile" action="attributesPanel" params="[opusId: params.opusId]"/>
-                            <g:if test="${edit}">
-                                <g:include controller="profile" action="nomenclaturePanel" params="[opusId: params.opusId]"/>
-                            </g:if>
-                            <g:include controller="profile" action="linksPanel" params="[opusId: params.opusId]"/>
-                            <g:include controller="profile" action="bhlLinksPanel" params="[opusId: params.opusId]"/>
-                            <g:include controller="profile" action="specimenPanel" params="[opusId: params.opusId]"/>
-                            <g:include controller="profile" action="classificationPanel"
-                                       params="[opusId: params.opusId]"/>
-                            <g:include controller="profile" action="bibliographyPanel"
-                                       params="[opusId: params.opusId]"/>
-                            <g:if test="${!profile.archivedDate}">
-                                <g:include controller="profile" action="listsPanel" params="[opusId: params.opusId]"/>
-                                <g:include controller="profile" action="taxonPanel" params="[opusId: params.opusId]"/>
-                                <g:include controller="profile" action="imagesPanel" params="[opusId: params.opusId]"/>
-                            </g:if>
-                            <g:include controller="profile" action="publicationsPanel"
-                                       params="[opusId: params.opusId]"/>
-                            <g:include controller="profile" action="authorPanel" params="[opusId: params.opusId]"/>
-                            <g:if test="${params.isOpusReviewer}">
-                                <g:include controller="profile" action="commentsPanel"
+                            <div class="col-md-10">
+                                <g:include controller="profile" action="attributesPanel" params="[opusId: params.opusId]"/>
+                                <g:if test="${edit}">
+                                    <g:include controller="profile" action="nomenclaturePanel" params="[opusId: params.opusId]"/>
+                                </g:if>
+                                <g:include controller="profile" action="linksPanel" params="[opusId: params.opusId]"/>
+                                <g:include controller="profile" action="bhlLinksPanel" params="[opusId: params.opusId]"/>
+                                <g:include controller="profile" action="specimenPanel" params="[opusId: params.opusId]"/>
+                                <g:include controller="profile" action="classificationPanel"
                                            params="[opusId: params.opusId]"/>
-                            </g:if>
+                                <g:include controller="profile" action="bibliographyPanel"
+                                           params="[opusId: params.opusId]"/>
+                                <g:if test="${!profile.archivedDate}">
+                                    <g:include controller="profile" action="listsPanel" params="[opusId: params.opusId]"/>
+                                    <g:include controller="profile" action="taxonPanel" params="[opusId: params.opusId]"/>
+                                    <g:include controller="profile" action="imagesPanel" params="[opusId: params.opusId]"/>
+                                </g:if>
+                                <g:include controller="profile" action="publicationsPanel"
+                                           params="[opusId: params.opusId]"/>
+                                <g:include controller="profile" action="authorPanel" params="[opusId: params.opusId]"/>
+                                <g:if test="${params.isOpusReviewer}">
+                                    <g:include controller="profile" action="commentsPanel"
+                                               params="[opusId: params.opusId]"/>
+                                </g:if>
+                            </div>
                         </div>
-
                     </tab>
                     <tab heading="Key" ng-show="profileCtrl.opus.keybaseProjectId">
                         <div key-player key-id="profileCtrl.profile.keybaseKey"

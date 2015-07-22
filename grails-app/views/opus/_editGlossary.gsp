@@ -2,7 +2,7 @@
     <form ng-submit="glossaryCtrl.upload()" role="form">
         <div class="panel-heading">
             <a name="glossary">
-                <h4>Glossary</h4>
+                <h4 class="section-panel-heading">Glossary</h4>
             </a>
         </div>
 

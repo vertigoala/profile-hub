@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="StyleForm" ng-cloak>
     <div class="panel-heading">
         <a name="branding">
-            <h4>Branding</h4>
+            <h4 class="section-panel-heading">Branding</h4>
         </a>
     </div>
 

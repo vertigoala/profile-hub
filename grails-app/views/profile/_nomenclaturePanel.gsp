@@ -1,10 +1,16 @@
 <div class="panel panel-default" ng-cloak ng-form="NomenclatureForm" ng-show="!profileCtrl.readonly()">
     <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}nomenclature"></a>
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-sm-12">
+                <h4 class="section-panel-heading">Nomenclature</h4>
+            </div>
+        </div>
+    </div>
+
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-2"><strong>Nomenclature</strong></div>
-
-            <div class="col-sm-10">
+            <div class="col-sm-12">
                 <nomenclature nsl-name-id="profileCtrl.profile.nslNameIdentifier"
                               nsl-nomenclature-id="profileCtrl.profile.nslNomenclatureIdentifier"
                               readonly="{{profileCtrl.readonly()}}"
