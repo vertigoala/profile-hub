@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-22T14:44:16 -->
+<!-- 2015-07-22T16:12:25 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Wave Cover" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c50b24eb-eb33-413f-8e75-e7e20a5341fd">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -58,18 +58,18 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Generated on " + DATEFORMAT(TODAY( ),"E MMM d, yyyy")]]></textFieldExpression>
 			</textField>
-			<image scaleImage="Clip" hAlign="Center" vAlign="Middle" isLazy="true">
+			<image scaleImage="Clip" hAlign="Center" vAlign="Middle" isLazy="true" onErrorType="Blank">
 				<reportElement x="0" y="0" width="595" height="130" uuid="eaf9ccb6-ecaa-4539-a561-1421b0aa0562"/>
 				<imageExpression><![CDATA[$F{cover.banner}]]></imageExpression>
 			</image>
-			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Blank">
 				<reportElement x="120" y="270" width="360" height="340" uuid="c5735229-bddb-4409-8e46-71965d580786">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<imageExpression><![CDATA[$F{cover.primaryImage}]]></imageExpression>
 			</image>
-			<image hAlign="Center" vAlign="Bottom">
+			<image hAlign="Center" vAlign="Bottom" onErrorType="Blank">
 				<reportElement x="40" y="710" width="200" height="103" uuid="35d09fe4-a238-4d3f-b5ac-d980b825493f"/>
 				<imageExpression><![CDATA[$F{cover.logo}]]></imageExpression>
 			</image>
