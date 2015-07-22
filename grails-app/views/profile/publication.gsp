@@ -46,7 +46,7 @@
         </div>
     </div>
 
-    <h4 class="padding-top-1 margin-top-1">Other available versions</h4>
+    <h4 class="padding-top-1 margin-top-1">All available versions</h4>
     <div class="col-sm-12 padding-top-1 padding-bottom-1 border-top-bottom" ng-class="{selected: pub.uuid == doiCtrl.pubId}" ng-repeat="pub in doiCtrl.publications">
         <div class="col-md-1">
             <span class="fa fa-star color--green" ng-show="pub.uuid == doiCtrl.pubId" title="You are viewing this version"></span>
