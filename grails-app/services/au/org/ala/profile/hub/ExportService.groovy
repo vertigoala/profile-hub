@@ -191,7 +191,7 @@ class ExportService {
 
         // Retrieve image and get primary image. This has to be done always, regardless of the user choosing to display the images section or not
         String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-        model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.join(","), searchIdentifier)?.resp
+        model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.toArray().join(","), searchIdentifier)?.resp
 
         List<Map> groupedImagesInPairs = []
         def images = model.profile.images
