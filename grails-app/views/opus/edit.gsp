@@ -33,7 +33,7 @@
         </div>
 
         <div class="col-md-6">
-            <div class="btn-group padding-bottom-1 pull-right">
+            <div class="row btn-group padding-bottom-1 pull-right">
                 <div class="row">
                     <a href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}"
                        class="btn btn-default" target="_self" ng-show="opusCtrl.opus.uuid"><i

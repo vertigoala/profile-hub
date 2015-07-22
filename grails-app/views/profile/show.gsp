@@ -42,7 +42,7 @@
         </div>
 
         <div class="col-md-3" ng-cloak>
-            <div class="btn-group pull-right">
+            <div class="row btn-group pull-right">
                 <div class="col-md-6">
                     <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}"
                        target="_self" class="btn btn-default" ng-show="!profileCtrl.readonly()"><i
