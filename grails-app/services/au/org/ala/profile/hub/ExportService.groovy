@@ -237,7 +237,7 @@ class ExportService {
         // Format nomenclature references
         if (params.nomenclature && nslNameIdentifier && nslNomenclatureIdentifier) {
             model.profile.nomenclature = nslService.getConcept(nslNameIdentifier, nslNomenclatureIdentifier)
-            model.profile.nomenclature.citations.each {citation ->
+            model.profile.nomenclature?.citations?.each {citation ->
                 citation.relationship = stripTextFromNonFormattingHtmlTags(citation.relationship)
             }
         }
