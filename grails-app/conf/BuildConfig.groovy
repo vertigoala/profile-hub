@@ -44,6 +44,7 @@ grails.project.dependency.resolution = {
                     'batik-css','batik-gvt','batik-script', 'batik-svggen','batik-util','batik-bridge','persistence-api','jdtcore','bcmail-jdk16','bcprov-jdk16','bctsp-jdk16',
                     'bcmail-jdk14','bcprov-jdk14','bctsp-jdk14','xmlbeans', 'olap4j'
         }
+        compile 'com.lowagie:itext:2.1.7'
         compile 'net.sf.jasperreports:jasperreports-functions:6.1.0'
         compile 'net.sf.jasperreports:jasperreports-fonts:6.1.0'
         compile 'net.glxn:qrgen:1.4'
@@ -58,9 +59,7 @@ grails.project.dependency.resolution = {
         compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
         compile ":modernizr:2.7.1.1"
-        compile ":rendering:1.0.0"
         compile ":csv:0.3.1"
-        compile ":wkhtmltopdf:0.1.8"
         compile(":jasper:1.11.0") {
             excludes 'jasperreports'
         }
