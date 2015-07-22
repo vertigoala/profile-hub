@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2015-07-22T14:44:16 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Wave Cover" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c50b24eb-eb33-413f-8e75-e7e20a5341fd">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="BookTitle" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Report Book Template"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BookSubTitle" class="java.lang.String">
+		<defaultValueExpression><![CDATA["A sample template of a ReportBook"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="json">
+		<![CDATA[model]]>
+	</queryString>
+	<field name="cover.title" class="java.lang.String"/>
+	<field name="cover.subtitle" class="java.lang.String"/>
+	<field name="cover.logo" class="java.lang.String"/>
+	<field name="cover.banner" class="java.lang.String"/>
+	<field name="cover.primaryImage" class="java.lang.String"/>
+	<title>
+		<band height="841" splitType="Stretch">
+			<image scaleImage="FillFrame">
+				<reportElement x="0" y="630" width="595" height="211" uuid="7d5f399a-cbec-48b3-979b-064c0b477ca2">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["img/wave.png"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement positionType="Float" x="40" y="160" width="510" height="54" forecolor="#8AA158" uuid="5bb49d37-ea51-4ca3-a18a-38cb0e66e0ee"/>
+				<box leftPadding="20" rightPadding="20"/>
+				<textElement textAlignment="Left">
+					<font size="34"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cover.title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="40" y="209" width="510" height="30" uuid="7f58d454-cae0-4ebb-9ccd-c885124eb525"/>
+				<box leftPadding="20" rightPadding="20"/>
+				<textElement textAlignment="Left">
+					<font size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cover.subtitle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="800" width="420" height="30" uuid="38fc9afd-edcb-42f3-b6bc-cd258f6507b3"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Generated on " + DATEFORMAT(TODAY( ),"E MMM d, yyyy")]]></textFieldExpression>
+			</textField>
+			<image scaleImage="Clip" hAlign="Center" vAlign="Middle" isLazy="true">
+				<reportElement x="0" y="0" width="595" height="130" uuid="eaf9ccb6-ecaa-4539-a561-1421b0aa0562"/>
+				<imageExpression><![CDATA[$F{cover.banner}]]></imageExpression>
+			</image>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement x="120" y="270" width="360" height="340" uuid="c5735229-bddb-4409-8e46-71965d580786">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$F{cover.primaryImage}]]></imageExpression>
+			</image>
+			<image hAlign="Center" vAlign="Bottom">
+				<reportElement x="40" y="710" width="200" height="103" uuid="35d09fe4-a238-4d3f-b5ac-d980b825493f"/>
+				<imageExpression><![CDATA[$F{cover.logo}]]></imageExpression>
+			</image>
+		</band>
+	</title>
+</jasperReport>

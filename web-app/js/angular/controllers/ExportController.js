@@ -61,7 +61,7 @@ profileEditor.controller('ExportController', function (util, $window, $modal, $h
 profileEditor.controller('ExportPDFController', function (opusId, rank, scientificName, $modalInstance, $scope, profileService) {
     var self = this;
 
-    self.ASYNC_THRESHOLD = 10;
+    self.ASYNC_THRESHOLD = 11;
 
     self.loading = false;
     self.children = {id: "children", name: "Lower level taxa", selected: false};
@@ -79,6 +79,7 @@ profileEditor.controller('ExportPDFController', function (opusId, rank, scientif
         {id: "bibliography", name: "Bibliography", selected: false},
         {id: "images", name: "Images", selected: false},
         {id: "conservation", name: "Conservation Status", selected: false},
+        {id: "status", name: "Status", selected: false},
         self.children
     ];
 
