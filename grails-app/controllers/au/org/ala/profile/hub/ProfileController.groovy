@@ -169,7 +169,7 @@ class ProfileController extends BaseController {
         } else {
 
             // create a final snapshot version of the profile before archiving it
-//            savePublication()
+            savePublication()
 
             def response = profileService.archiveProfile(params.opusId as String, params.profileId as String, json.archiveComment as String)
 
