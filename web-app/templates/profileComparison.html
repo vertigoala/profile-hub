@@ -43,7 +43,7 @@
     </div>
 </div>
 
-<div class="row comparison-row" ng-if="diff.authorship.changed || showEverything">
+<div class="row comparison-row" ng-if="diff.attributes.changed || showEverything">
     <div class="col-lg-2 col-md-2 col-sm-2">
         <strong>Attributes</strong>
     </div>
@@ -182,5 +182,53 @@
         <div class="comparison-image" ng-repeat="image in right.excludedImages">
             <img ng-src="{{getImageUrl(image)}}" class="thumbnail">
         </div>
+    </div>
+</div>
+
+<div class="row" ng-if="diff.nslNomenclatureIdentifier.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Nomenclature</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="diff.nslNomenclatureIdentifier.comp"></span>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="right.nslNomenclatureIdentifier"></span>
+    </div>
+</div>
+
+<div class="row" ng-if="diff.archivedDate.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Archive Status</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="left.archivedDate != null">
+        <span>Profile Archived</span>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="left.archivedDate == null">
+        <span>Profile Restored</span>
+    </div>
+</div>
+
+<div class="row" ng-if="diff.privateMode.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Draft Status</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="left.privateMode == true">
+        <span>Draft Created</span>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="left.privateMode == false">
+        <span>Draft Released</span>
+    </div>
+</div>
+
+<div class="row" ng-if="diff.scientificName.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Scientific Name</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="diff.scientificName.comp"></span>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <span data-ng-bind-html="right.scientificName"></span>
     </div>
 </div>
