@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="KeyForm" ng-cloak>
     <div class="panel-heading">
         <a name="key">
-            <h4>Keys configuration</h4>
+            <h4 class="section-panel-heading">Keys configuration</h4>
         </a>
     </div>
 

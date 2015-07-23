@@ -1,11 +1,11 @@
 <div ng-controller="AttributeEditor as attrCtrl" ng-init="attrCtrl.init('${edit}')">
     <div class="row">
-        <div class="col-md-12 padding-bottom-1 padding-top-1" ng-cloak>
+        <div class="col-md-12 padding-bottom-1" ng-cloak>
             <button ng-show="!attrCtrl.readonly" ng-click="attrCtrl.addAttribute()" class="btn btn-default"><i
                     class="fa fa-plus"></i>&nbsp;Add attribute
             </button>
 
-            <div class="small pull-right padding-top-1"
+            <div class="small pull-right"
                  ng-show="(attrCtrl.readonly && attrCtrl.opus.showLinkedOpusAttributes) || (!attrCtrl.readonly && attrCtrl.opus.allowCopyFromLinkedOpus)">
                 Show information from supporting collections:
                 <div class="btn-group">
@@ -64,11 +64,16 @@
 <script type="text/ng-template" id="showReadOnlyAttributeList.html">
 <div ng-repeat="title in attrCtrl.attributeTitles" ng-cloak>
     <div class="panel panel-default" ng-if="attrCtrl.showTitleGroup(title.name)">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="section-panel-heading">{{ title.name }}</h4>
+                </div>
+             </div>
+        </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-2"><strong>{{title.name}}</strong></div>
-
-                <div class="col-sm-10" ng-if="attrCtrl.showTitleGroup(title.name)">
+                <div class="col-sm-12" ng-if="attrCtrl.showTitleGroup(title.name)">
                     <span ng-repeat="attribute in attrCtrl.attributes | groupAttributes:title.name">
                         <ng-include src="'readOnlyAttributeBody.html'"></ng-include>
                     </span>
@@ -82,11 +87,11 @@
 <!-- template for the content of a single read-only attribute, to be displayed either on the view or the edit page -->
 <script type="text/ng-template" id="readOnlyAttributeBody.html">
 <a name="view_{{attribute.key}}"></a>
-<span ng-if="attrCtrl.showAttribute(attribute)">
-    <div class="col-sm-12" ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
+<span ng-show="attrCtrl.showAttribute(attribute)">
+    <div ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
         <div ta-bind ng-model="attribute.text" class="display-text"></div>
 
-        <div ng-if="attrCtrl.opus.allowFineGrainedAttribution">
+        <div ng-show="attrCtrl.opus.allowFineGrainedAttribution">
             <div class="citation" ng-show="attribute.creators.length > 0">
                 Contributed by {{ attribute.creators.join(', ') }}
             </div>
@@ -236,7 +241,7 @@
         </div>
 
         <div class="row-fluid vertical-pad" ng-show="attribute.source">
-            <span class="span12">
+            <span class="col-md-12">
                 <span class="pull-right">
                     <span class="blockquote small">
                         Source: {{attribute.source}}

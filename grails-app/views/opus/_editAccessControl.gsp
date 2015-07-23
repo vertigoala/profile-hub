@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-controller="UserAccessController as userCtrl" ng-form="UserForm" ng-cloak>
     <div class="panel-heading">
         <a name="accessControl">
-            <h4>Access control</h4>
+            <h4 class="section-panel-heading">Access control</h4>
         </a>
     </div>
 

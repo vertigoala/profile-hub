@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="OpusForm" ng-cloak>
     <div class="panel-heading">
         <a name="supportingCollections">
-            <h4>Supporting Collections</h4>
+            <h4 class="section-panel-heading">Supporting Collections</h4>
         </a>
     </div>
 

@@ -3,37 +3,38 @@
      ng-show="profileCtrl.profile.bibliography.length > 0 || !profileCtrl.readonly()">
     <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}bibliography"></a>
 
-    <div class="panel-body">
+    <div class="panel-heading">
         <div class="row">
-            <div class="col-sm-2"><strong>Bibliography</strong></div>
+            <div class="col-sm-12">
+                <h4 class="section-panel-heading">Bibliography</h4>
+            </div>
+        </div>
+    </div>
 
+    <div class="panel-body">
+
+        <div class="row section-no-para" ng-repeat="bibliography in profileCtrl.profile.bibliography">
             <div class="col-sm-10">
-                <ul>
-                    <li ng-repeat="bibliography in profileCtrl.profile.bibliography">
-                        <div ta-bind ng-model="bibliography.text" ng-if="bibliography.uuid" class="inline-block"></div>
+                <div ta-bind ng-model="bibliography.text" ng-show="bibliography.uuid" class="inline-block"></div>
 
-                        <div class="form-group" ng-if="!bibliography.uuid">
-                            <div class="col-sm-10">
-                                <div text-angular text-angular-name="bibliography" ng-model="bibliography.text"
-                                     ta-toolbar="{{richTextToolbarSimple}}" class="single-line-editor"
-                                     ng-enter="" ta-max-text="300"></div>
-                            </div>
-                        </div>
+                <div class="form-group" ng-show="!bibliography.uuid">
+                    <div text-angular text-angular-name="bibliography" ng-model="bibliography.text"
+                         ta-toolbar="{{richTextToolbarSimple}}" class="single-line-editor"
+                         ng-enter="" ta-max-text="300"></div>
+                </div>
+            </div>
 
-                        <div ng-if="!profileCtrl.readonly()" class="inline-block">
-                            <button class="btn btn-link fa fa-trash-o color--red"
-                                    ng-click="profileCtrl.deleteBibliography($index, BiblioForm)"
-                                    title="Delete this bibliography entry"></button>
-                            <button class="btn btn-link fa fa-arrow-down"
-                                    ng-if="!$last"
-                                    ng-click="profileCtrl.moveBibliographyDown($index, BiblioForm)"
-                                    title="Move this bibliography entry down"></button>
-                            <button class="btn btn-link fa fa-arrow-up" ng-if="!$first"
-                                    ng-click="profileCtrl.moveBibliographyUp($index, BiblioForm)"
-                                    title="Move this bibliography entry up"></button>
-                        </div>
-                    </li>
-                </ul>
+            <div class="col-sm-2" ng-class="bibliography.uuid ? '' : 'padding-top-1 margin-top-1'" ng-show="!profileCtrl.readonly()">
+                <button class="btn btn-link fa fa-trash-o color--red"
+                        ng-click="profileCtrl.deleteBibliography($index, BiblioForm)"
+                        title="Delete this bibliography entry"></button>
+                <button class="btn btn-link fa fa-arrow-down"
+                        ng-if="!$last"
+                        ng-click="profileCtrl.moveBibliographyDown($index, BiblioForm)"
+                        title="Move this bibliography entry down"></button>
+                <button class="btn btn-link fa fa-arrow-up" ng-if="!$first"
+                        ng-click="profileCtrl.moveBibliographyUp($index, BiblioForm)"
+                        title="Move this bibliography entry up"></button>
             </div>
         </div>
     </div>

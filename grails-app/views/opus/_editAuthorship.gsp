@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="AuthForm" ng-cloak>
     <div class="panel-heading">
         <a name="authorship">
-            <h4>Authorship and attribution controls</h4>
+            <h4 class="section-panel-heading">Authorship and attribution controls</h4>
         </a>
     </div>
 

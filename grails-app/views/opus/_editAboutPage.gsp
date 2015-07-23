@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-controller="AboutController as aboutCtrl" ng-form="AboutForm" ng-cloak>
     <div class="panel-heading">
         <a name="about">
-            <h4>About page content</h4>
+            <h4 class="section-panel-heading">About page content</h4>
         </a>
     </div>
 

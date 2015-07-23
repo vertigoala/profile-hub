@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="ListForm" ng-cloak>
     <div class="panel-heading">
         <a name="lists">
-            <h4>Approved Lists</h4>
+            <h4 class="section-panel-heading">Approved Lists</h4>
         </a>
     </div>
 

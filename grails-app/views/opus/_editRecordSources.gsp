@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="RecordForm" ng-cloak>
     <div class="panel-heading">
         <a name="recordSources">
-            <h4>Approved Specimen/Observation sources</h4>
+            <h4 class="section-panel-heading">Approved Specimen/Observation sources</h4>
         </a>
     </div>
 

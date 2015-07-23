@@ -4,16 +4,20 @@
      ng-form="PubForm">
     <a name="{{pubCtrl.readonly() ? 'view_' : 'edit_'}}publications"></a>
 
-    <div class="panel-body">
+    <div class="panel-heading">
         <div class="row">
-            <div class="col-sm-2"><strong>Versions</strong></div>
+            <div class="col-sm-12">
+                <h4 class="section-panel-heading">Versions</h4>
+            </div>
+        </div>
+    </div>
 
-            <div class="col-sm-10">
-                <div class="col-sm-12" ng-repeat="pub in pubCtrl.publications">
-                    <publication data="pub" opus-id="pubCtrl.opusId" profile-id="pubCtrl.profileId">
-                    </publication>
-                    <hr ng-if="!$last"/>
-                </div>
+    <div class="panel-body">
+        <div class="row section-no-para">
+            <div class="col-sm-12" ng-repeat="pub in pubCtrl.publications">
+                <publication data="pub" opus-id="pubCtrl.opusId" profile-id="pubCtrl.profileId">
+                </publication>
+                <hr ng-if="!$last"/>
             </div>
         </div>
     </div>

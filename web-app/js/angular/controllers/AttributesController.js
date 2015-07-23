@@ -76,7 +76,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.attributeTitles = [];
                 self.allowedVocabulary = [];
                 angular.forEach(data.terms, function (term) {
-                    var title = {name: term.name};
+                    var title = {name: term.name, order: term.order};
                     if (self.attributeTitles.map(function(t) { return t.name; }).indexOf(title.name) == -1) {
                         self.attributeTitles.push(title);
                     }
@@ -124,6 +124,9 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
 
     function compareTitles(left, right) {
         var compare = -1;
+        console.log(JSON.stringify(left))
+        console.log(JSON.stringify(right))
+        console.log("---");
         if (left.order == right.order) {
             compare = left.name.toLowerCase() < right.name.toLowerCase() ? -1 : left.name.toLowerCase() > right.name.toLowerCase();
         } else {

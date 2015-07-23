@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="StyleForm" ng-cloak>
     <div class="panel-heading">
         <a name="branding">
-            <h4>Branding</h4>
+            <h4 class="section-panel-heading">Branding</h4>
         </a>
     </div>
 
@@ -49,8 +49,8 @@
             <div class="form-group">
                 <label>Copyright statement</label>
 
-                <textarea id="copyright" ng-model="opusCtrl.opus.copyrightText" rows="4"
-                          class="form-control" ng-maxlength="300" maxlength="300"></textarea>
+                <div text-angular text-angular-name="copyright" ng-model="opusCtrl.opus.copyrightText"
+                     ta-toolbar="{{richTextToolbarSimple}}" ta-max-text="1000"></div>
 
                 <span class="small">To be displayed at the bottom of each profile page</span>
             </div>

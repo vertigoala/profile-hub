@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-form="OpusForm" ng-cloak>
     <div class="panel-heading">
         <a name="overview">
-            <h4>Site overview</h4>
+            <h4 class="section-panel-heading">Site overview</h4>
         </a>
     </div>
 

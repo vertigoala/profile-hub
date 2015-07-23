@@ -1,11 +1,8 @@
-package au.org.ala
+package au.org.ala.profile.hub
 
-import au.org.ala.profile.hub.ProfileService
-import au.org.ala.profile.hub.WebService
 import au.org.ala.web.AuthService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
-
 
 @TestFor(ProfileService)
 class ProfileServiceSpec extends Specification {
