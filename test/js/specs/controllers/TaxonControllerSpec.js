@@ -155,8 +155,6 @@ describe("TaxonController tests", function () {
 
         expect(messageService.info).toHaveBeenCalledWith("Loading taxonomy..."); // twice
         expect(messageService.info.calls.count()).toBe(2);
-        expect(messageService.pop).toHaveBeenCalledWith();
-        expect(messageService.pop.calls.count()).toBe(2);
     });
 
     it("should add a 'loading taxonomy' info message when retrieving the classification and species profile (ie 2 messages), and remove them when done", function () {
@@ -169,8 +167,6 @@ describe("TaxonController tests", function () {
 
         expect(messageService.info).toHaveBeenCalledWith("Loading taxonomy..."); // twice
         expect(messageService.info.calls.count()).toBe(2);
-        expect(messageService.pop).toHaveBeenCalledWith();
-        expect(messageService.pop.calls.count()).toBe(2);
     });
 
     it("should not attempt to load classifications or the species profile if the profile.guid attribute is not present", function () {

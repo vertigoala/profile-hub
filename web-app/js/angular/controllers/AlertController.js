@@ -6,7 +6,7 @@ profileEditor.controller('CustomAlertController', function CustomAlertController
             pop();
         }
 
-        $scope.alerts = alerts;
+        $scope.alerts = $scope.alerts.concat(alerts);
 
         var length = 0;
 

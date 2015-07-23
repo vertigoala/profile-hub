@@ -14,58 +14,37 @@ describe("MessageService tests", function () {
     beforeEach(inject(function (_messageService_, _$rootScope_) {
         service = _messageService_;
         rootScope = _$rootScope_;
+        spyOn(rootScope, '$emit');
     }));
 
     it("should add a new success message to the root scope when success is called", function () {
         service.success("test success message");
 
-        expect(rootScope.messages.length).toBe(1);
-        expect(rootScope.messages[0].type).toBe(service.SUCCESS);
-        expect(rootScope.messages[0].msg).toBe("test success message");
+        expect(rootScope.$emit).toHaveBeenCalledWith('displayAlerts', [{ type: 'success', msg: 'test success message' }], undefined);
+    });
+
+    it("should add a new success message to the root scope when success is called and keeping previous message", function () {
+        service.success("test success message", true);
+
+        expect(rootScope.$emit).toHaveBeenCalledWith('displayAlerts', [{ type: 'success', msg: 'test success message' }], true);
     });
 
     it("should add a new info message to the root scope when info is called", function () {
         service.info("test info message");
 
-        expect(rootScope.messages.length).toBe(1);
-        expect(rootScope.messages[0].type).toBe(service.INFO);
-        expect(rootScope.messages[0].msg).toBe("test info message");
+        expect(rootScope.$emit).toHaveBeenCalledWith('displayAlerts', [{ type: 'info', msg: 'test info message' }], undefined);
     });
 
     it("should add a new alert message to the root scope when alert is called", function () {
         service.alert("test alert message");
 
-        expect(rootScope.messages.length).toBe(1);
-        expect(rootScope.messages[0].type).toBe(service.ERROR);
-        expect(rootScope.messages[0].msg).toBe("test alert message");
+        expect(rootScope.$emit).toHaveBeenCalledWith('displayAlerts', [{ type: 'danger', msg: 'test alert message' }], undefined);
     });
 
-    it("should remove existing messages before adding the new one by default", function () {
-        service.info("test info message 1");
-        service.info("test info message 2");
+    it("should add a new warning message to the root scope when alert is called", function () {
+        service.warning("test warning message");
 
-        expect(rootScope.messages.length).toBe(1);
-        expect(rootScope.messages[0].type).toBe(service.INFO);
-        expect(rootScope.messages[0].msg).toBe("test info message 2");
-    });
-
-    it("should not remove existing messages before adding the new one if leaveExisting = true", function () {
-        service.info("test info message 1", true);
-        service.info("test info message 2", true);
-
-        expect(rootScope.messages.length).toBe(2);
-        expect(rootScope.messages[0].msg).toBe("test info message 1");
-        expect(rootScope.messages[1].msg).toBe("test info message 2");
-    });
-
-    it("should remove the last message added when pop is called", function () {
-        service.info("test info message 1", true);
-        service.info("test info message 2", true);
-
-        service.pop();
-
-        expect(rootScope.messages.length).toBe(1);
-        expect(rootScope.messages[0].msg).toBe("test info message 1");
+        expect(rootScope.$emit).toHaveBeenCalledWith('displayAlerts', [{ type: 'warning', msg: 'test warning message' }], undefined);
     });
 });
 

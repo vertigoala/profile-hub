@@ -165,8 +165,6 @@ describe("ImagesController tests", function () {
 
         expect(messageService.info).toHaveBeenCalledWith("Loading images...");
         expect(messageService.info.calls.count()).toBe(1);
-        expect(messageService.pop).toHaveBeenCalledWith();
-        expect(messageService.pop.calls.count()).toBe(1);
     });
 
     it("should use the scientificName to retrieve images if the profile.guid attribute is not present", function () {

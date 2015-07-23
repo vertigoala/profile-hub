@@ -193,8 +193,6 @@ describe("AttributesController tests", function () {
 
         expect(messageService.info).toHaveBeenCalledWith("Loading profile data...");
         expect(messageService.info.calls.count()).toBe(1);
-        expect(messageService.pop).toHaveBeenCalledWith();
-        expect(messageService.pop.calls.count()).toBe(1);
     });
 
     it("should create a new empty attribute object at the start of the attributes list when addAttribute is invoked", function () {

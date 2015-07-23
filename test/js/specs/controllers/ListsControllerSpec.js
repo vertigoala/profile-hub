@@ -135,8 +135,6 @@ describe("ListsController tests", function () {
 
         expect(messageService.info).toHaveBeenCalledWith("Loading lists...");
         expect(messageService.info.calls.count()).toBe(1);
-        expect(messageService.pop).toHaveBeenCalledWith();
-        expect(messageService.pop.calls.count()).toBe(1);
     });
 
     it("should not attempt to load lists if the profile.guid attribute is not present", function () {
