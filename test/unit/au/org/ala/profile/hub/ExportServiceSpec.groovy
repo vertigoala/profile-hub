@@ -1,8 +1,8 @@
-package au.org.ala
+package au.org.ala.profile.hub
 
-import au.org.ala.profile.hub.ExportService
 import grails.test.mixin.TestFor
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
@@ -16,9 +16,10 @@ class ExportServiceSpec extends Specification {
     def cleanup() {
     }
 
-    void "test html text clean up"() {
+    @Unroll
+    def "test html text clean up"() {
         expect:
-        ExportService.stripTextFromNonFormattingHtmlTags(html) == cleanHtml
+        service.stripTextFromNonFormattingHtmlTags(html) == cleanHtml
 
         where:
         html | cleanHtml
@@ -27,9 +28,10 @@ class ExportServiceSpec extends Specification {
         "doubtful taxonomic synonym: <scientific><name id='71524'><scientific><name id='71512'><scientific><name id='56859'><element><i>Acacia</i></element></name></scientific> <element><i>undulata</i></element></name></scientific> <rank id='54412'>var.</rank> <element><i>longispina</i></element> <authors><ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort.</ex> ex <author id='7665' title='Visiani, R. de'>Vis.</author></authors></name></scientific>" | "doubtful taxonomic synonym: <i>Acacia</i> <i>undulata</i> var. <i>longispina</i> <ex id='10201' title='Hortorum (&quot;of gardens&quot;) or Hortulanorum (&quot;of gardeners&quot;)'>Hort. ex Vis."
     }
 
-    void "test status text formatting"() {
+    @Unroll
+    def "test status text formatting"() {
         expect:
-        ExportService.formatStatusText(before) == after
+        service.formatStatusText(before) == after
 
         where:
         before | after
@@ -37,4 +39,18 @@ class ExportServiceSpec extends Specification {
         "pca1" | "Pca1"
         "precip_seasonality" | "Precip seasonality"
     }
+
+    @Unroll
+    def "test attribute text formatting"() {
+        expect:
+        service.formatAttributeText(text, title) == formattedText
+
+        where:
+        text | title | formattedText
+        "kangaroo thorn, hedge wattle" | "Common Name" | "<b>Common Name:</b> kangaroo thorn, hedge wattle"
+        "<p>kangaroo thorn, hedge wattle</p>" | "Common Name" | "<p><b>Common Name:</b> kangaroo thorn, hedge wattle</p>"
+        "<ol><li>July–November.</li></ol>" | "Flowering" | "<p><b>Flowering:</b></p><ol><li>July–November.</li></ol>"
+    }
+
+
 }
