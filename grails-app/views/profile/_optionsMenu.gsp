@@ -1,7 +1,7 @@
-<div class="btn-group pull-right">
-    <div class="col-md-6">
+<div class="btn-group">
+    <div class="col-md-6" ng-show="!profileCtrl.readonly()">
         <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}"
-           target="_self" class="btn btn-default" ng-show="!profileCtrl.readonly()"><i
+           target="_self" class="btn btn-default"><i
                 class="fa fa-eye"></i> Public View</a>
     </div>
 
@@ -14,7 +14,7 @@
                 <span class="fa fa-angle-double-down"></span>
             </button>
 
-            <ul class="dropdown-menu dropdown-menu-right"
+            <ul class="dropdown-menu"
                 role="menu"
                 aria-labelledby="optionsDropdown">
                 <li role="presentation" ng-hide="profileCtrl.isArchived()">
