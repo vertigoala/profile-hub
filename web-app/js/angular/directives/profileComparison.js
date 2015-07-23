@@ -42,7 +42,7 @@ profileEditor.directive('profileComparison', function ($browser) {
                     $scope.diff.nslNomenclatureIdentifier = compare($scope.left.nslNomenclatureIdentifier, $scope.right.nslNomenclatureIdentifier);
                     $scope.diff.scientificName = compare($scope.left.scientificName, $scope.right.scientificName);
                     $scope.diff.archivedDate = compare($scope.left.archivedDate, $scope.right.archivedDate);
-                    $scope.diff.privateMode = compare($scope.left.privateMode, $scope.right.privateMode);
+                    $scope.diff.privateMode = compare($scope.left.privateMode+"", $scope.right.privateMode+"");// convert boolean to string
                 }
             };
 

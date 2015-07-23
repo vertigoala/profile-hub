@@ -201,10 +201,10 @@
     <div class="col-lg-2 col-md-2 col-sm-2">
         <strong>Archive Status</strong>
     </div>
-    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="diff.archivedDate != null">
+    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="left.archivedDate != null">
         <span>Profile Archived</span>
     </div>
-    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="diff.archivedDate == null">
+    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="left.archivedDate == null">
         <span>Profile Restored</span>
     </div>
 </div>
@@ -213,10 +213,10 @@
     <div class="col-lg-2 col-md-2 col-sm-2">
         <strong>Draft Status</strong>
     </div>
-    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="diff.privateMode == true">
+    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="left.privateMode == true">
         <span>Draft Created</span>
     </div>
-    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="diff.privateMode == false">
+    <div class="col-lg-5 col-md-5 col-sm-5" ng-if="left.privateMode == false">
         <span>Draft Released</span>
     </div>
 </div>
