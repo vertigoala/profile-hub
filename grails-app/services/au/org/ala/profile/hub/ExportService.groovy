@@ -217,6 +217,13 @@ class ExportService {
 
         model.profile.images = groupedImagesInPairs
 
+        // Format profile attributes text
+        if (params.attributes) {
+            model.profile.attributes.each { attribute ->
+                attribute.text = formatAttributeText(attribute.text, attribute.title)
+            }
+        }
+
         // Retrieve and format profile statuses
         if (params.status) {
             model.profile.status = profileService.getBioStatus(opus.uuid, model.profile.uuid)
@@ -261,6 +268,24 @@ class ExportService {
         }
 
         return model
+    }
+
+    /**
+     *
+     * @param text
+     * @param tiltle
+     * @return
+     */
+    static String formatAttributeText(String text, String title) {
+        if (text.startsWith('<p>')) {
+            text = text.replaceFirst('<p>', "<p><b>${title}:</b> ")
+        } else if (text.startsWith('<')) {
+            text = "<p><b>${title}:</b></p>${text}"
+        } else {
+            text = "<b>${title}:</b> ${text}"
+        }
+
+        return text
     }
 
     /**
