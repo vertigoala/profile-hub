@@ -49,10 +49,6 @@
         </div>
     </div>
 
-    <div ng-show="messages.length" ng-cloak>
-        <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
-    </div>
-
     <div class="row" ng-cloak>
         <div class="col-md-3 margin-bottom-1 stay-on-screen">
             <ul class="nav nav-stacked" id="sidebar">

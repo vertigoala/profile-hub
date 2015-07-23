@@ -377,6 +377,10 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 }
 
+.panel > .panel-body {
+    padding-top: 1.2em;
+}
+
 #primary-nav.navbar {
     padding-top: 0px;
     min-height: 50px;
@@ -400,10 +404,6 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .main-stats__stat {
     padding: 5px;
     border: 1px solid rgba(233, 0, 74, 0.2);
-}
-
-.alert {
-    border-top: none;
 }
 
 .heading-underlined {
@@ -476,4 +476,24 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .nav-tabs {
     margin-bottom: 15px;
     margin-top: 15px;
+}
+
+#generalAlert {
+    position: fixed;
+    top: 75px;
+    z-index: 9999;
+    width: 100%;
+    text-align: center;
+}
+
+#generalAlert div.alert {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    font-size: 1.2em;
+    line-height: 1.2em;
+    border-width: 2px;
+    -webkit-box-shadow: 6px 5px 5px 0px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow: 6px 5px 5px 0px rgba(50, 50, 50, 0.5);
+    box-shadow: 6px 5px 5px 0px rgba(50, 50, 50, 0.5);
 }

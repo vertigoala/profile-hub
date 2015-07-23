@@ -5,9 +5,9 @@ profileEditor.factory('messageService', function ($rootScope) {
 
     var SUCCESS = "success";
     var ALERT = "danger";
+    var WARNING = "warning";
     var INFO = "info";
 
-    $rootScope.messages = [];
 
     function success(message, leaveExisting) {
         msg(SUCCESS, message, leaveExisting);
@@ -21,28 +21,27 @@ profileEditor.factory('messageService', function ($rootScope) {
         msg(INFO, message, leaveExisting);
     }
 
-    function msg(type, message, leaveExisting) {
-        if (!leaveExisting) {
-            pop();
-        }
-        $rootScope.messages.push({type: type, msg: message});
+    function warning(message, leaveExisting) {
+        msg(WARNING, message, leaveExisting);
     }
 
-    function pop() {
-        $rootScope.messages.pop();
+    function msg(type, message, leaveExisting) {
+        $rootScope.$emit('displayAlerts', [{type: type, msg: message}], leaveExisting);
     }
+
 
     /**
      * Public API
      */
     return {
         success: success,
+        warning: warning,
         info: info,
         alert: alert,
-        pop: pop,
 
         SUCCESS: SUCCESS,
         ERROR: ALERT,
-        INFO: INFO
+        INFO: INFO,
+        WARNING: WARNING
     }
 });

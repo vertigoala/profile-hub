@@ -87,7 +87,6 @@ profileEditor.controller('ImagesController', function (profileService, navServic
                     navService.add("Images", "images");
                 }
 
-                messageService.pop();
             },
             function () {
                 messageService.alert("An error occurred while retrieving the images.");

@@ -49,6 +49,7 @@ modules = {
         resource url:"js/angular/controllers/AboutController.js"
         resource url:"js/angular/controllers/ReportController.js"
         resource url: "js/angular/controllers/DoiController.js"
+        resource url: "js/angular/controllers/AlertController.js"
     }
 
     angular {

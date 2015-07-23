@@ -101,7 +101,6 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
                         navService.add("Conservation & Sensitivity Lists", "lists");
                     }
 
-                    messageService.pop();
                 },
                 function () {
                     messageService.alert("An error occurred while retrieving the lists.");

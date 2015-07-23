@@ -62,7 +62,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
 
                 $window.document.title = self.opus.title + " | Profile Collections";
 
-                messageService.pop();
             },
             function () {
                 messageService.alert("An error occurred while retrieving the opus.");
@@ -103,7 +102,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         promise.then(function (data) {
                 toggleMapPointerColourHash(true);
 
-                messageService.pop();
                 messageService.success("Successfully updated " + self.opus.title + ".");
                 self.saving = false;
                 if (form) {
@@ -117,7 +115,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 }
             },
             function () {
-                messageService.pop();
                 messageService.alert("Failed to update " + self.opus.title + ".");
                 self.saving = false;
             }

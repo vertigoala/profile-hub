@@ -59,7 +59,6 @@ profileEditor.controller('TaxonController', function (profileService, navService
                     console.log("Fetched " + data.length + " classifications");
 
                     self.classifications = data;
-                    messageService.pop();
                 },
                 function () {
                     messageService.alert("An error occurred while retrieving the taxonomy.");
@@ -81,8 +80,6 @@ profileEditor.controller('TaxonController', function (profileService, navService
                     if (self.speciesProfile && self.speciesProfile.taxonConcept) {
                         navService.add("Taxonomy", "taxon");
                     }
-
-                    messageService.pop();
                 },
                 function () {
                     messageService.alert("An error occurred while retrieving the taxonomy.");

@@ -25,7 +25,6 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
         var profilePromise = profileService.getProfile(self.opusId, self.profileId);
         messageService.info("Loading profile data...");
         profilePromise.then(function (data) {
-                messageService.pop();
                 self.profile = data.profile;
                 self.opus = data.opus;
                 self.attributes = data.profile.attributes;

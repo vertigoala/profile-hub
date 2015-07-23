@@ -22,10 +22,6 @@
         <li class="font-xxsmall active">{{profileCtrl.isArchived() ? profileCtrl.profile.archivedWithName : profileCtrl.profile.scientificName}}</li>
     </ol>
 
-    <div ng-show="messages.length" ng-cloak class="row">
-        <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
-    </div>
-
     <div class="row" ng-cloak>
         <alert type="warning"
                ng-if="profileCtrl.profile.privateMode"><span
