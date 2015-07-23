@@ -184,7 +184,7 @@ class ProfileController extends BaseController {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
         } else {
-            def response = profileService.restoreArchivedProfile(params.opusId as String, params.profileId as String, json?.newName as String)
+            def response = profileService.restoreArchivedProfile(params.opusId as String, params.profileId as String, json?.newName ?: null)
 
             handle response
         }
