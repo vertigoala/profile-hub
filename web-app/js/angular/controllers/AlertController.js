@@ -1,4 +1,4 @@
-profileEditor.controller('CustomAlertController', function AlertController($rootScope, $scope, $http, $location, $timeout) {
+profileEditor.controller('CustomAlertController', function CustomAlertController($rootScope, $scope, $http, $location, $timeout) {
     $scope.alerts = [];
 
     $rootScope.$on('displayAlerts', function (event, alerts, leaveExisting) {
