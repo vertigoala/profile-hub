@@ -7,9 +7,9 @@ import org.apache.http.entity.mime.content.ByteArrayBody
 import org.apache.http.entity.mime.content.StringBody
 import org.springframework.http.MediaType
 
-import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.Method.POST
 
+//TODO We should be using an existing REST client like Groovy Http Builder instead of this service -> https://github.com/jgritman/httpbuilder
 class WebService {
     static final String CHAR_ENCODING= "utf-8"
 
@@ -40,8 +40,7 @@ class WebService {
 
             Map result
             if (json) {
-                // We need to use the full JSON qualified name because of the static import of groovyx.net.http.ContentType which includes JSON
-                result = [resp: grails.converters.JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+                result = [resp: JSONUtils.validateAndParseJSON(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
             } else {
                 result = [resp: resp, statusCode: HttpStatus.SC_OK]
             }
@@ -171,7 +170,7 @@ class WebService {
             writer.flush()
             def resp = conn.inputStream.text
 
-            response = [resp:grails.converters.JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+            response = [resp:JSONUtils.validateAndParseJSON(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
             log.debug("Response from POST = ${response}")
             // fail over to empty json object if empty response string otherwise JSON.parse fails
         } catch (FileNotFoundException e) {

@@ -1,7 +1,6 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.web.AuthService
-import au.org.ala.web.UserDetails
 
 class UserService {
     def grailsApplication

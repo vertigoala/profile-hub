@@ -1,4 +1,4 @@
-package au.org.ala.web
+package au.org.ala.profile.hub
 
 /**
  * Copied from ala-web-theme.
