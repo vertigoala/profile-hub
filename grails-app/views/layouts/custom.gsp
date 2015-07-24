@@ -183,7 +183,9 @@
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
         isOpusReviewer: '${params.isOpusReviewer}',
         nslServiceUrlPrefix: '${grailsApplication.config.nsl.service.url.prefix}',
-        nslServiceApniConceptSuffix: '${grailsApplication.config.nsl.service.apni.concept.suffix}'
+        nslServiceApniConceptSuffix: '${grailsApplication.config.nsl.service.apni.concept.suffix}',
+        features: {publications: '${grailsApplication.config.feature.publications}',
+                   imageUpload:'${grailsApplication.config.feature.feature.imageUpload}'}
      });
 </r:script>
 

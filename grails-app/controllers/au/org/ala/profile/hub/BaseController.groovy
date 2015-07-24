@@ -45,4 +45,8 @@ class BaseController {
             render resp.resp as JSON
         }
     }
+
+    def enabled(feature) {
+        return !grailsApplication.config.feature[feature] || grailsApplication.config.feature[feature].toBoolean()
+    }
 }

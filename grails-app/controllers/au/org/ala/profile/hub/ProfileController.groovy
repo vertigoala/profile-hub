@@ -107,7 +107,7 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest()
         } else {
-            if (params.snapshot == 'true') {
+            if (params.snapshot == 'true' && enabled("publications")) {
                 savePublication()
             }
 
@@ -168,8 +168,10 @@ class ProfileController extends BaseController {
             badRequest "profileId, opusId and archiveComment are required parameters"
         } else {
 
-            // create a final snapshot version of the profile before archiving it
-            savePublication()
+            // create a final snapshot version of the profile before archiving it, if the publications feature is enabled
+            if (enabled("publications")) {
+                savePublication()
+            }
 
             def response = profileService.archiveProfile(params.opusId as String, params.profileId as String, json.archiveComment as String)
 
@@ -384,7 +386,9 @@ class ProfileController extends BaseController {
 
     @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def savePublication() {
-        if (!params.profileId || !params.opusId) {
+        if(!enabled("publications")) {
+            badRequest "The publications feature has been disabled"
+        } else if (!params.profileId || !params.opusId) {
             badRequest "profileId and opudId are required parameters"
         } else {
             Map pdfOptions = [
