@@ -52,7 +52,7 @@ class ProfileControllerSpec extends Specification {
 
     def "edit should return the profile, with edit and current user properties added to the model"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: "bla", opus: [title: "opus"]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "1234"], opus: [title: "opus"]]
 
         when:
         params.opusId = "opus"
@@ -64,6 +64,19 @@ class ProfileControllerSpec extends Specification {
         assert model.containsKey("profile")
         assert model.edit == true
         assert model.currentUser == "Fred Bloggs"
+    }
+
+    def "edit should return a 403 not authorised if the profile is archived (archived profiles cannot be edited)"() {
+        setup:
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "1234", archivedDate: new Date()], opus: [title: "opus"]]
+
+        when:
+        params.opusId = "opus"
+        params.profileId = "bla"
+        controller.edit()
+
+        then:
+        assert response.status == HttpStatus.SC_UNAUTHORIZED
     }
 
     def "show should return a 404 if the profile is not found"() {

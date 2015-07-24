@@ -2,15 +2,21 @@
      ng-cloak ng-show="taxonCtrl.classifications.length > 0">
     <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}taxon"></a>
 
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-sm-12">
+                <h4 class="section-panel-heading">Taxonomy</h4>
+            </div>
+        </div>
+    </div>
+
     <div class="panel-body">
         <div class="row">
-            <div class="col-sm-2"><strong>Taxonomy</strong></div>
-
-            <div class="col-sm-10">
+            <div class="col-sm-12">
                 <ul>
                     <li ng-repeat="classification in taxonCtrl.classifications">
                         <span ng-if="classification.profileUuid">
-                            <a href="${request.contextPath}/opus/{{taxonCtrl.opusId}}/profile/{{classification.scientificName}}"
+                            <a href="${request.contextPath}/opus/{{taxonCtrl.opusId}}/profile/{{classification.profileName}}"
                                ng-if="classification.profileUuid"
                                target="_self">{{classification.rank | capitalize}}: {{classification.scientificName}}</a>
                         </span>
@@ -21,11 +27,16 @@
                     </li>
                 </ul>
             </div>
+        </div>
 
-            <div class="col-sm-2" ng-if="taxonCtrl.infraspecificTaxa.length > 0"><hr/><strong>Subspecies</strong></div>
-
-            <div class="col-sm-10" ng-if="taxonCtrl.infraspecificTaxa.length > 0">
+        <div class="row" ng-if="taxonCtrl.infraspecificTaxa.length > 0">
+            <div class="col-sm-12 margin-bottom-1">
                 <hr/>
+                <h4 class="section-heading">Subspecies</h4>
+            </div>
+
+            <div class="col-sm-12" ng-if="taxonCtrl.infraspecificTaxa.length > 0">
+
                 <ul>
                     <li ng-repeat="taxa in taxonCtrl.infraspecificTaxa">
                         <a href="${request.contextPath}/opus/{{taxonCtrl.opusId}}/profile/{{taxa.scientificName}}"

@@ -1,15 +1,14 @@
 <div class="panel panel-default" ng-form="ImageForm" ng-cloak>
     <div class="panel-heading">
         <a name="imageSources">
-            <h4>Approved Image sources</h4>
+            <h4 class="section-panel-heading">Approved Image sources</h4>
         </a>
     </div>
 
     <div class="panel-body">
-        <div class="col-sm-12">
-            <p>Configure the image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
-
+        <div class="row">
             <div class="col-sm-12">
+                <p>Configure the image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
                 <ul>
                     <li ng-repeat="imageSource in opusCtrl.opus.imageSources">
                         <a href="${grailsApplication.config.collectory.base.url}/public/show/{{imageSource}}">{{opusCtrl.dataResources[imageSource] | default:'Loading...'}}</a>

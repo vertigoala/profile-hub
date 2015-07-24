@@ -23,8 +23,6 @@ profileEditor.controller('PublicationController', function (profileService, navS
             var promise = profileService.createPublication(self.opusId, self.profileId);
             messageService.info("Creating snapshot. Please wait...");
             promise.then(function () {
-                messageService.pop();
-
                 loadPublications();
             }, function () {
                 messageService.alert("An error occurred while creating the snapshot.");
@@ -40,8 +38,6 @@ profileEditor.controller('PublicationController', function (profileService, navS
         var promise = profileService.getPublications(self.opusId, self.profileId);
         messageService.info("Loading publications...");
         promise.then(function (data) {
-                messageService.pop();
-
                 console.log(data.length + " publications retreived");
 
                 self.publications = data;

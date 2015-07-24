@@ -1,19 +1,19 @@
 <div class="panel panel-default" ng-form="BioStatusFrom" ng-cloak>
     <div class="panel-heading">
         <a name="biostatus">
-            <h4>Status Lists</h4>
+            <h4 class="section-panel-heading">Status Lists</h4>
         </a>
     </div>
 
     <div class="panel-body">
-        <div class="col-sm-12">
-            <p>Configure the list(s) to be used for the status(es) of your profiles. These lists can include such statuses as biostatus, naturalised status, pest status, and so forth.</p>
-
-            <p>Using the <a href="${grailsApplication.config.lists.base.url}"
-                            target="_blank">Atlas of Living Australia Lists Tool</a>, upload a Species List as a .csv file, where the first column is "scientific_name" (this must match the name of your profile, excluding author information), plus a separate column for each status you wish to display.
-            </p>
-
+        <div class="row">
             <div class="col-sm-12">
+                <p>Configure the list(s) to be used for the status(es) of your profiles. These lists can include such statuses as biostatus, naturalised status, pest status, and so forth.</p>
+
+                <p>Using the <a href="${grailsApplication.config.lists.base.url}"
+                                target="_blank">Atlas of Living Australia Lists Tool</a>, upload a Species List as a .csv file, where the first column is "scientific_name" (this must match the name of your profile, excluding author information), plus a separate column for each status you wish to display.
+                </p>
+
                 <ul>
                     <li ng-repeat="bioStatus in opusCtrl.opus.bioStatusLists">
                         <a href="${grailsApplication.config.lists.base.url}/speciesListItem/list/{{bioStatus}}">{{(opusCtrl.allSpeciesLists | filter: bioStatus)[0].listName | default:'Loading...'}}</a>

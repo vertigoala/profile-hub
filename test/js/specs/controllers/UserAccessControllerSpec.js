@@ -15,7 +15,8 @@ describe("UserAccessController tests", function () {
     var updateUserResponse = '{}';
 
     var modal = {
-        open: function() {}
+        open: function () {
+        }
     };
 
     beforeAll(function () {
@@ -74,13 +75,13 @@ describe("UserAccessController tests", function () {
     }));
 
 
-    it("should display a confirmation dialog when deleteUser is invoked", function() {
+    it("should display a confirmation dialog when deleteUser is invoked", function () {
         scope.userCtrl.deleteUser("bla", form);
 
         expect(util.confirm).toHaveBeenCalled();
     });
 
-    it("should remove the specified user from the list when delete user is invoked and the confirmation is accepted", function() {
+    it("should remove the specified user from the list when delete user is invoked and the confirmation is accepted", function () {
         scope.userCtrl.users = [{userId: "user1"}, {userId: "user2"}, {userId: "user3"}];
 
         confirmDefer.resolve({});
@@ -93,7 +94,7 @@ describe("UserAccessController tests", function () {
         expect(form.$setDirty).toHaveBeenCalled();
     });
 
-    it("should do nothing if the specified user is not recognised when delete user is invoked", function() {
+    it("should do nothing if the specified user is not recognised when delete user is invoked", function () {
         scope.userCtrl.users = [{userId: "user1"}, {userId: "user2"}, {userId: "user3"}];
 
         confirmDefer.resolve({});
@@ -104,25 +105,25 @@ describe("UserAccessController tests", function () {
         expect(form.$setDirty).not.toHaveBeenCalled();
     });
 
-    it("should open the modal dialog when addUser is invoked", function() {
+    it("should open the modal dialog when addUser is invoked", function () {
         scope.userCtrl.addUser(form);
 
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "addEditUserPopup.html"}));
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({ controller: "AddEditUserController"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controller: "AddEditUserController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "addUserCtrl"}));
     });
 
-    it("should open the modal dialog when editUser is invoked", function() {
+    it("should open the modal dialog when editUser is invoked", function () {
         scope.userCtrl.users = [{userId: "user1"}, {userId: "user2"}, {userId: "user3"}];
 
         scope.userCtrl.editUser("user2", form);
 
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "addEditUserPopup.html"}));
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({ controller: "AddEditUserController"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controller: "AddEditUserController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "addUserCtrl"}));
     });
 
-    it("should replace the specified user with the edited details when the edit modal is closed", function() {
+    it("should replace the specified user with the edited details when the edit modal is closed", function () {
         scope.userCtrl.users = [{userId: "user1"}, {userId: "user2"}, {userId: "user3"}];
 
         modalDefer.resolve({userId: "user2", notes: "new notes"});
@@ -134,7 +135,7 @@ describe("UserAccessController tests", function () {
         expect(scope.userCtrl.users[1].notes).toBe("new notes");
     });
 
-    it("should add the new user with the object from the popup when the add modal is closed", function() {
+    it("should add the new user with the object from the popup when the add modal is closed", function () {
         scope.userCtrl.users = [{userId: "user1"}, {userId: "user2"}, {userId: "user3"}];
 
         modalDefer.resolve({userId: "user4"});
@@ -150,6 +151,8 @@ describe("UserAccessController tests", function () {
     it("should raise a success message when the call to updateUsers succeeds", function () {
         updateDefer.resolve(JSON.parse(updateUserResponse));
 
+        scope.userCtrl.opus = {privateCollection: false};
+
         scope.userCtrl.save(form);
         scope.$apply();
 
@@ -159,15 +162,36 @@ describe("UserAccessController tests", function () {
     it("should raise an alert message when the call to updateUsers fails", function () {
         updateDefer.reject();
 
+        scope.userCtrl.opus = {privateCollection: false};
+
         scope.userCtrl.save(form);
         scope.$apply();
 
         expect(messageService.alert).toHaveBeenCalledWith("An error has occurred while updating user access.");
     });
 
+    it("should remove the User role from the list of roles when private mode is disabled", function () {
+        scope.userCtrl.roles.push(scope.userCtrl.userRole);
+
+        scope.userCtrl.opus = {privateCollection: false};
+        scope.userCtrl.privateModeChanged();
+
+        expect(scope.userCtrl.roles).toEqual([{name: "Admin", key: "ROLE_PROFILE_ADMIN"},
+            {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
+            {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"}]);
+    });
+
+    it("should add the User role to the list of roles when private mode is esabled", function () {
+        scope.userCtrl.opus = {privateCollection: true};
+        scope.userCtrl.privateModeChanged();
+
+        expect(scope.userCtrl.roles).toEqual([{name: "Admin", key: "ROLE_PROFILE_ADMIN"},
+            {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
+            {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"},
+            {name: "User", key: "ROLE_USER"}]);
+    });
 
 });
-
 
 
 /**
@@ -186,8 +210,10 @@ describe("AddEditUserController tests", function () {
     var user3 = {userId: "3", firstName: "fred", lastName: "bloggs", email: "fred@bloggs.com"};
 
     var modalInstance = {
-        dismiss: function(d) {},
-        close: function(d) {}
+        dismiss: function (d) {
+        },
+        close: function (d) {
+        }
     };
 
 
@@ -223,13 +249,13 @@ describe("AddEditUserController tests", function () {
 
     }));
 
-    it("should dismiss the modal when cancel is invoked", function() {
+    it("should dismiss the modal when cancel is invoked", function () {
         scope.ctrl.cancel();
 
         expect(modalInstance.dismiss).toHaveBeenCalled();
     });
 
-    it("Should set the error attribute if an error occurs while searching", function() {
+    it("Should set the error attribute if an error occurs while searching", function () {
         searchDefer.reject();
 
         scope.ctrl.userSearch("email");
@@ -257,7 +283,7 @@ describe("AddEditUserController tests", function () {
         expect(scope.ctrl.user.name).toBe(user3.firstName + ' ' + user3.lastName);
     });
 
-    it("should set the error attribute when the search returns a user who has already been authorised", function() {
+    it("should set the error attribute when the search returns a user who has already been authorised", function () {
         scope.ctrl.users = [{userId: "user1"}];
 
         searchDefer.resolve(user1);
@@ -267,7 +293,7 @@ describe("AddEditUserController tests", function () {
         expect(scope.ctrl.error).toBe("This user has already been assigned a role.");
     });
 
-    it("should close the modal instance, passing in updated user, when OK is invoked", function() {
+    it("should close the modal instance, passing in updated user, when OK is invoked", function () {
         var user = {userId: "newUser"};
         scope.ctrl.user = user;
         scope.ctrl.ok();

@@ -78,8 +78,6 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
         var promise = profileService.getGlossary(self.opusId, self.prefix);
         messageService.info("Loading glossary...");
         promise.then(function (data) {
-                messageService.pop();
-
                 console.log(data.items.length + " glossary items retreived");
 
                 self.glossary = data;

@@ -33,8 +33,8 @@ describe("AttributesController tests", function () {
     var window;
     var $q;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
-    var vocabResponse = '{"terms": [{"name": "term1"}, {"name": "term2"}]}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, "opus": {"imageSources": ["source1", "source2"], "attributeVocabUuid": "1"}}';
+    var vocabResponse = '{"terms": [{"name": "term1", "order": 2}, {"name": "term2", "order": 1}]}';
     var saveAttributeResponse = '{"attributeId": "newId"}';
     var deleteAttributeResponse = '{}';
     var showAuditResponse = '[{"userId": "1", "object": {"text":"auditText1", "title":"auditTitle1"}}, {"userId": "2", "object": {"text":"auditText2", "title":"auditTitle2"}}]';
@@ -135,6 +135,19 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributes.length).toBe(2);
     });
 
+    it("should sort the attribute titles array by the order property of the vocabulary term", function () {
+        profileDefer.resolve(JSON.parse(getProfileResponse));
+        vocabDefer.resolve(JSON.parse(vocabResponse));
+
+        scope.attrCtrl.init("false");
+        scope.$apply();
+
+        expect(scope.attrCtrl.attributeTitles.length).toBe(2);
+        // term2 has order = 1, term1 has order = 2
+        expect(scope.attrCtrl.attributeTitles[0].name).toBe("term2");
+        expect(scope.attrCtrl.attributeTitles[1].name).toBe("term1");
+    });
+
     it("should set the attributeTitles array on the scope.attrCtrl with the results from the getOpusVocabulary call if the opus has attributeVocabUuid", function () {
         var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, ' +
             '"opus": {"imageSources": ["source1", "source2"], "attributeVocabUuid": "1234"}}';
@@ -147,8 +160,10 @@ describe("AttributesController tests", function () {
         expect(scope.attrCtrl.attributeTitles.length).toBe(2);
     });
 
-    it("should leave the attributeTitles array empty if the opus has attributeVocabUuid", function () {
-        profileDefer.resolve(JSON.parse(getProfileResponse));
+    it("should leave the attributeTitles array empty if the opus has no attributeVocabUuid", function () {
+        var data = JSON.parse(getProfileResponse);
+        data.opus.attributeVocabUuid = null;
+        profileDefer.resolve(data);
         vocabDefer.resolve(JSON.parse(vocabResponse));
 
         scope.attrCtrl.init("false");
@@ -178,8 +193,6 @@ describe("AttributesController tests", function () {
 
         expect(messageService.info).toHaveBeenCalledWith("Loading profile data...");
         expect(messageService.info.calls.count()).toBe(1);
-        expect(messageService.pop).toHaveBeenCalledWith();
-        expect(messageService.pop.calls.count()).toBe(1);
     });
 
     it("should create a new empty attribute object at the start of the attributes list when addAttribute is invoked", function () {

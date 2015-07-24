@@ -48,7 +48,6 @@ profileEditor.controller('CommentController', function (profileService, navServi
             var comment = find(path);
             var promise = profileService.deleteComment(self.opusId, self.profileId, comment.uuid);
             promise.then(function() {
-                messageService.pop();
                 remove(path);
             }, function() {
                 messageService.alert("An error occurred while deleting the comment.")

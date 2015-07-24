@@ -12,7 +12,8 @@ class ExportController extends BaseController {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
         } else {
-            def model = profileService.getProfile(params.opusId as String, params.profileId as String)
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            def model = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
             if (!model) {
                 notFound()
             } else {
@@ -24,11 +25,11 @@ class ExportController extends BaseController {
                     RequestContextHolder.setRequestAttributes(RequestContextHolder.getRequestAttributes(), true)
                     Map config = extractOptionsFromParams()
                     config.opusTitle = model.opus.title
-                    exportService.createPdfAsych(config)
+                    exportService.createPdfAsych(config, latest)
 
                     render [:] as JSON
                 } else {
-                    byte[] pdfData = exportService.createPdf(extractOptionsFromParams())
+                    byte[] pdfData = exportService.createPdf(extractOptionsFromParams(), latest)
 
                     if (!pdfData) {
                         notFound()
@@ -56,6 +57,7 @@ class ExportController extends BaseController {
                 bhllinks    : params.bhllinks,
                 specimens   : params.specimens,
                 conservation: params.conservation,
+                status      : params.status,
                 images      : params.images,
                 children    : params.children,
                 email       : params.email

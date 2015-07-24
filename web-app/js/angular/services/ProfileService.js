@@ -31,6 +31,30 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        archiveProfile: function(opusId, profileId, archiveComment) {
+            console.log("Archiving profile " + profileId + " from opus " + opusId);
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/archive", {archiveComment: archiveComment});
+            future.then(function (response) {
+                console.log("Profile archived with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        restoreArchivedProfile: function(opusId, profileId, newName) {
+            console.log("Restoring archived profile " + profileId + " from opus " + opusId);
+            if (!newName) {
+                newName = null;
+            }
+            console.log(newName)
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/restore", {newName: newName});
+            future.then(function (response) {
+                console.log("Profile restored with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         createProfile: function(opusId, scientificName, manuallyMatchedGuid) {
             console.log("Creating profile for " + scientificName + " in opus " + opusId);
             var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/create", {opusId: opusId, scientificName: scientificName, manuallyMatchedGuid: manuallyMatchedGuid});
@@ -165,6 +189,26 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 console.log("Opus saved with response code " + response.status);
 
                 clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        updateSupportingCollections: function(opusId, supportingCollections) {
+            console.log("Updating supporting collections for " + opusId);
+
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/supportingCollections/update", supportingCollections);
+            future.then(function(response) {
+                console.log("Supporting collections updated with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        respondToSupportingCollectionRequest: function(opusId, requestingOpusId, accept) {
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/supportingCollections/respond/" + requestingOpusId + "/" + accept);
+            future.then(function(response) {
+                console.log("Supporting collections request responded to with response code " + response.status);
             });
 
             return util.toStandardPromise(future);
@@ -394,6 +438,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
             if (typeof useWildcard == 'undefined') {
                 useWildcard = true;
+            }
+            if (typeof opusId == 'undefined') {
+                opusId = "";
             }
             var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard);
             future.then(function (response) {

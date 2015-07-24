@@ -38,6 +38,10 @@
     </div>
 </g:if>
 
+<div ng-controller="CustomAlertController" id="generalAlert">
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" ng-cloak>{{alert.msg}}</alert>
+</div>
+
 <!-- Navbar -->
 <nav class="navbar navbar-default" id="primary-nav">
     <div class="container">

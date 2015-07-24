@@ -19,6 +19,8 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
         "/opus/$opusId/profile/$profileId/update" controller: "profile", action: [GET: "edit", POST: "updateProfile"]
         "/opus/$opusId/profile/$profileId/rename" controller: "profile", action: [POST: "renameProfile"]
+        "/opus/$opusId/profile/$profileId/archive" controller: "profile", action: [POST: "archiveProfile"]
+        "/opus/$opusId/profile/$profileId/restore" controller: "profile", action: [POST: "restoreArchivedProfile"]
         "/opus/$opusId/profile/$profileId/toggleDraftMode" controller: "profile", action: [POST: "toggleDraftMode"]
         "/opus/$opusId/profile/$profileId/discardDraftChanges" controller: "profile", action: [POST: "discardDraftChanges"]
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
@@ -55,6 +57,10 @@ class UrlMappings {
         "/opus/$opusId/about/json" controller: "opus", action: [GET: "getAboutHtml"]
         "/opus/$opusId/about/update" controller: "opus", action: [PUT: "updateAboutHtml"]
         "/opus/$opusId/about" controller: "opus", action: [GET: "about"]
+
+        "/opus/$opusId/shareRequest/$requestingOpusId/" controller: "opus", action: [GET: "getSupportingCollectionRequest"]
+        "/opus/$opusId/supportingCollections/respond/$requestingOpusId/$requestAction" controller: "opus", action: [POST: "respondToSupportingCollectionRequest"]
+        "/opus/$opusId/supportingCollections/update" controller: "opus", action: [POST: "updateSupportingCollections"]
 
         "/opus/$opusId/glossary/json" controller: "glossary", action: [GET: "getGlossary"]
         "/opus/$opusId/glossary/upload" controller: "glossary", action: [POST: "upload"]

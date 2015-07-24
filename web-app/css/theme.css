@@ -601,9 +601,11 @@ h4 {
 /* Panel
 ================================= */
 
+
+
 .panel .panel-heading {
     background-color: #fff;
-    border-color: #fff;
+    /*border-color: #fff;*/
     color: #262626;
     font-size: 16px;
     font-weight: 700;

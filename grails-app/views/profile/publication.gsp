@@ -6,63 +6,53 @@
 <html>
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
-    <title>Publication</title>
+    <title>${profile.scientificName}</title>
 
     <r:require module="profiles"/>
 
 </head>
 
 <body>
-<div ng-controller="DoiController as doiCtrl" ng-init="doiCtrl.init(${publication})">
+<div ng-controller="DoiController as doiCtrl" ng-init="doiCtrl.init(${publications}, ${profile}, ${opus})" ng-cloak>
 
     <ol class="breadcrumb" ng-cloak>
         <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
         <li><a class="font-xxsmall"
-               href="${request.contextPath}/opus/{{doiCtrl.profile.opusId}}">{{doiCtrl.profile.opusName}}</a>
+               href="${request.contextPath}/opus/{{doiCtrl.opus.shortName ? doiCtrl.opus.shortName : doiCtrl.opus.uuid}}">{{doiCtrl.opus.title}}</a>
         </li>
         <li class="font-xxsmall active">{{doiCtrl.profile.scientificName}}</li>
     </ol>
 
-    <div class="row">
-        <div class="col-sm-12 selected padding-bottom-1">
-            <h2 class="h2 heading-large" ng-show="doiCtrl.selectedPublication.title">
-                {{doiCtrl.selectedPublication.title}}
-                <span ng-show="doiCtrl.selectedPublication.version">&nbsp;v. {{doiCtrl.selectedPublication.version}}</span>
+    <div class="row padding-bottom-2">
+        <div class="col-sm-12 padding-bottom-1">
+            <h2 class="heading-large">
+                {{doiCtrl.selectedPublication.title | default:'Loading...'}}
+                <span ng-show="doiCtrl.selectedPublication.version">v. {{doiCtrl.selectedPublication.version}}</span>
             </h2>
 
-            <div class="citation">{{doiCtrl.selectedPublication.authors}}, published on {{doiCtrl.selectedPublication.publicationDate | date:"dd/MM/yyyy HH:mm"}}</div>
+            <div class="citation padding-bottom-1">{{doiCtrl.selectedPublication.authors}}, published on {{doiCtrl.selectedPublication.publicationDate | date:"dd/MM/yyyy H:mm a"}}</div>
 
-            <p>
-                Click the download button below to download the publication.
+            <p class="lead margin-top-1 margin-bottom-1">
+                Click the download button below to save the publication.
             </p>
 
-            <ol class="list-inline margin-top-1">
-                <li><a class="btn btn-primary"
-                       ng-href="${grailsApplication.config.profile.service.url}/opus/{{doiCtrl.opusId}}/profile/{{doiCtrl.uuid}}/publication/{{doiCtrl.selectedPublication.uuid}}/file"
-                       target="_blank"><span class="glyphicon glyphicon-download"></span> Download PDF</a></li>
-                <li><a class="btn btn-default"
-                       href="${request.contextPath}/opus/{{doiCtrl.opusId}}/profile/{{doiCtrl.profile.scientificName}}">View Profile</a>
-                </li>
-            </ol>
+            <div>
+                <a class="btn btn-primary"
+                       ng-href="${grailsApplication.config.profile.service.url}/opus/{{doiCtrl.opusId}}/profile/{{doiCtrl.profileId}}/publication/{{doiCtrl.selectedPublication.uuid}}/file"
+                       target="_blank"><span class="glyphicon glyphicon-download"></span> Download PDF</a>
+                <a class="btn btn-default"
+                       href="${request.contextPath}/opus/{{doiCtrl.opus.shortName ? doiCtrl.opus.shortName : doiCtrl.opus.uuid}}/profile/{{doiCtrl.profile.scientificName}}" target="_blank">View Profile</a>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="spacing"></div>
-    </div>
-
-    <div class="row">
-        <div class=" col-sm-12">
-            <h4 class="h4">Other Available Versions</h4>
-            <table class="table table-striped" ng-show="doiCtrl.publications.length > 0">
-                <tr ng-repeat="pub in doiCtrl.publications">
-                    <td ng-class="{selected: pub.uuid == doiCtrl.pubId}">
-                        <publication data="pub" opus-id="doiCtrl.opusId" profile-id="doiCtrl.profileId">
-
-                        </publication>
-                    </td>
-                </tr>
-            </table>
+    <h4 class="padding-top-1 margin-top-1">All available versions</h4>
+    <div class="col-sm-12 padding-top-1 padding-bottom-1 border-top-bottom" ng-class="{selected: pub.uuid == doiCtrl.pubId}" ng-repeat="pub in doiCtrl.publications">
+        <div class="col-md-1">
+            <span class="fa fa-star color--green" ng-show="pub.uuid == doiCtrl.pubId" title="You are viewing this version"></span>
+        </div>
+        <div class="col-md-11">
+            <publication data="pub" opus-id="doiCtrl.opusId" profile-id="doiCtrl.profileId"></publication>
         </div>
     </div>
 </div>

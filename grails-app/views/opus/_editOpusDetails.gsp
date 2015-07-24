@@ -1,13 +1,12 @@
 <div class="panel panel-default" ng-form="OpusForm" ng-cloak>
     <div class="panel-heading">
         <a name="overview">
-            <h4>Site overview</h4>
+            <h4 class="section-panel-heading">Site overview</h4>
         </a>
     </div>
 
     <div class="panel-body">
-
-        <div>
+        <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="opusName">Title</label>

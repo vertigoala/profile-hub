@@ -33,24 +33,18 @@
         </div>
 
         <div class="col-md-6">
-            <div class="btn-group padding-bottom-1 pull-right">
-                <div class="row">
+            <div class="padding-bottom-1 pull-right">
                     <a href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}"
                        class="btn btn-default" target="_self" ng-show="opusCtrl.opus.uuid"><i
-                            class="icon-eye-open icon-white"></i> Public View</a>
+                            class="fa fa-eye"></i> Public View</a>
                     <g:if test="${params.isOpusAdmin}">
                         <button ng-click="opusCtrl.deleteOpus()" class="btn btn-danger" target="_self"
                                 ng-show="opusCtrl.opus.uuid"><i
-                                class="icon-remove icon-white"></i> Delete this collection
+                                class="fa fa-trash-o"></i> Delete this collection
                         </button>
                     </g:if>
-                </div>
             </div>
         </div>
-    </div>
-
-    <div ng-show="messages.length" ng-cloak>
-        <alert ng-repeat="message in messages" type="{{message.type}}">{{message.msg}}</alert>
     </div>
 
     <div class="row" ng-cloak>

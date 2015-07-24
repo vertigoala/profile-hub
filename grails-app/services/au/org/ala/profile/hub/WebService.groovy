@@ -1,16 +1,15 @@
 package au.org.ala.profile.hub
 
-import grails.converters.JSON
 import groovyx.net.http.HTTPBuilder
+import org.apache.http.HttpStatus
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.ByteArrayBody
 import org.apache.http.entity.mime.content.StringBody
-
-import static groovyx.net.http.Method.*
-import static groovyx.net.http.ContentType.*
-import org.apache.http.HttpStatus
 import org.springframework.http.MediaType
 
+import static groovyx.net.http.Method.POST
+
+//TODO We should be using an existing REST client like Groovy Http Builder instead of this service -> https://github.com/jgritman/httpbuilder
 class WebService {
     static final String CHAR_ENCODING= "utf-8"
 
@@ -41,7 +40,7 @@ class WebService {
 
             Map result
             if (json) {
-                result = [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+                result = [resp: JSONUtils.validateAndParseJSON(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
             } else {
                 result = [resp: resp, statusCode: HttpStatus.SC_OK]
             }
@@ -119,7 +118,7 @@ class WebService {
 
         http.request(POST) { multipartRequest ->
             MultipartEntityBuilder entityBuilder = new MultipartEntityBuilder()
-            entityBuilder.addPart("data", new StringBody((data as JSON) as String))
+            entityBuilder.addPart("data", new StringBody((data as grails.converters.JSON) as String))
             files.eachWithIndex { it, index ->
                 entityBuilder.addPart("file${index}", new ByteArrayBody(it, "file${index}"))
             }
@@ -138,7 +137,7 @@ class WebService {
 
             def result = null
             response.success = { resp, rData ->
-                result = [resp: rData as JSON, statusCode: HttpStatus.SC_OK]
+                result = [resp: rData as grails.converters.JSON, statusCode: HttpStatus.SC_OK]
             }
 
             return result
@@ -167,11 +166,11 @@ class WebService {
             }
 
             writer = new OutputStreamWriter(conn.getOutputStream(), CHAR_ENCODING)
-            writer.write((postBody as JSON).toString())
+            writer.write((postBody as grails.converters.JSON).toString())
             writer.flush()
             def resp = conn.inputStream.text
 
-            response = [resp:JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+            response = [resp:JSONUtils.validateAndParseJSON(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
             log.debug("Response from POST = ${response}")
             // fail over to empty json object if empty response string otherwise JSON.parse fails
         } catch (FileNotFoundException e) {

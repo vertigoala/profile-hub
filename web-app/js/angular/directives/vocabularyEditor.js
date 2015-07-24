@@ -162,8 +162,6 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
 
                 var promise = profileService.getOpusVocabulary($scope.opusId, $scope.vocabId);
                 promise.then(function (data) {
-                        messageService.pop();
-
                         $scope.vocabulary = data;
 
                         sortVocabTerms();

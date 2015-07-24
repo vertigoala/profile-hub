@@ -1,7 +1,7 @@
 /**
  * Created by temi varghese on 14/07/15.
  */
-profileEditor.controller('DoiController', function (messageService, profileService, util, $filter) {
+profileEditor.controller('DoiController', function (util, $filter) {
     var self = this;
     self.opusId = null;
     self.profileId = null;
@@ -15,30 +15,18 @@ profileEditor.controller('DoiController', function (messageService, profileServi
 
     var orderBy = $filter("orderBy");
 
-    self.loadPublications = function () {
-        var promise = profileService.getPublicationsFromId(self.pubId);
-        promise.then(function (data) {
-            self.init(data);
-        }, function () {
-            messageService.alert('Could not load publications using publication id: ' + self.pubId);
-        });
-    }
-
-    self.init = function(data){
+    self.init = function (publications, profile, opus) {
         // makes lastest version appear first
-        data.publications = orderBy(data.publications, 'publicationDate', true);
-
-        self.publications = data.publications;
-        self.profile = data.profile;
-        self.uuid = data.uuid;
-        self.opusId = data.opusId;
-        self.profileId = data.profile.uuid;
-        self.scientificName = data.scientificName;
+        self.publications = orderBy(publications, 'publicationDate', true);
+        self.profile = profile;
+        self.opus = opus;
+        self.profileId = profile.uuid;
+        self.opusId = opus.uuid;
         self.getSelectedPublication();
-    }
+    };
 
     self.getSelectedPublication = function () {
-        self.publications.forEach(function (item, index) {
+        self.publications.forEach(function (item) {
             if (item.uuid == self.pubId) {
                 self.selectedPublication = item;
             }
