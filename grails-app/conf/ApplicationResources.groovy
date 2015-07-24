@@ -20,6 +20,7 @@ modules = {
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
+        resource url:"js/angular/directives/Misc.js"
         resource url:"js/angular/directives/keyplayer.js"
         resource url:"js/angular/directives/profileName.js"
         resource url:"js/angular/directives/vocabularyEditor.js"
@@ -48,8 +49,9 @@ modules = {
         resource url:"js/angular/controllers/ExportController.js"
         resource url:"js/angular/controllers/AboutController.js"
         resource url:"js/angular/controllers/ReportController.js"
-        resource url: "js/angular/controllers/DoiController.js"
-        resource url: "js/angular/controllers/AlertController.js"
+        resource url:"js/angular/controllers/AlertController.js"
+        resource url:"js/angular/controllers/DoiController.js"
+        resource url:"js/angular/controllers/ShareRequestController.js"
     }
 
     angular {

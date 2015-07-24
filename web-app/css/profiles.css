@@ -497,3 +497,8 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     -moz-box-shadow: 6px 5px 5px 0px rgba(50, 50, 50, 0.5);
     box-shadow: 6px 5px 5px 0px rgba(50, 50, 50, 0.5);
 }
+
+.status-marker-small {
+    font-size: 10px;
+    margin-left: 5px;
+}

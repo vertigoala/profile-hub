@@ -26,7 +26,7 @@ describe("OpusController tests", function () {
     var form;
     var messageService;
     var profileService;
-    var opusDefer, getResourceDefer, listResourcesDefer, saveOpusDefer, listOpusDefer, getListsDefer, keysDefer;
+    var opusDefer, getResourceDefer, listResourcesDefer, saveOpusDefer, listOpusDefer, getListsDefer, keysDefer, supportingCollectionDefer;
 
     var getOpusResponse = '{"title": "OpusName", "dataResourceUid":"dataUid1", "imageSources": ["source1", "source2", "source3"], "recordSources": ["source1", "source2", "source3"], "mapPointColour": "12345", "supportingOpuses": []}';
     var getResourceResponse = '{"pubDescription":"resource description"}';
@@ -54,6 +54,7 @@ describe("OpusController tests", function () {
         listOpusDefer = $q.defer();
         getListsDefer = $q.defer();
         keysDefer = $q.defer();
+        supportingCollectionDefer = $q.defer();
 
         spyOn(profileService, "getOpus").and.returnValue(opusDefer.promise);
         spyOn(profileService, "getResource").and.returnValue(getResourceDefer.promise);
@@ -62,6 +63,7 @@ describe("OpusController tests", function () {
         spyOn(profileService, "listOpus").and.returnValue(listOpusDefer.promise);
         spyOn(profileService, "getAllLists").and.returnValue(getListsDefer.promise);
         spyOn(profileService, "retrieveKeybaseProjects").and.returnValue(keysDefer.promise);
+        spyOn(profileService, "updateSupportingCollections").and.returnValue(supportingCollectionDefer.promise);
 
         spyOn(mockUtil, "redirect").and.returnValue(null);
 
@@ -216,7 +218,7 @@ describe("OpusController tests", function () {
     it("should remove an existing supporting opus from the opus when removeSupportingOpus is invoked with 'existing'", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.$apply();
-        scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {
+        scope.opusCtrl.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {
             opusId: "opus2",
             title: "Opus 2"
         }, {opusId: "opus3", title: "Opus 3"}];
@@ -224,15 +226,15 @@ describe("OpusController tests", function () {
         scope.$apply();
         scope.opusCtrl.removeSupportingOpus(1, 'existing', form);
 
-        expect(scope.opusCtrl.opus.supportingOpuses.length).toBe(2);
-        expect(scope.opusCtrl.opus.supportingOpuses[0].opusId).toBe("opus1");
-        expect(scope.opusCtrl.opus.supportingOpuses[1].opusId).toBe("opus3");
+        expect(scope.opusCtrl.supportingOpuses.length).toBe(2);
+        expect(scope.opusCtrl.supportingOpuses[0].opusId).toBe("opus1");
+        expect(scope.opusCtrl.supportingOpuses[1].opusId).toBe("opus3");
     });
 
     it("should remove a supportingOpus from the list of new supportingOpuses when removeSupportingOpus is invoked with 'new'", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.$apply();
-        scope.opusCtrl.opus.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {
+        scope.opusCtrl.supportingOpuses = [{opusId: "opus1", title: "Opus 1"}, {
             opusId: "opus2",
             title: "Opus 2"
         }, {opusId: "opus3", title: "Opus 3"}];
@@ -244,7 +246,7 @@ describe("OpusController tests", function () {
         }, {opusId: "opus3", title: "Opus 3"}];
         scope.opusCtrl.removeSupportingOpus(1, 'new', form);
 
-        expect(scope.opusCtrl.opus.supportingOpuses.length).toBe(3);
+        expect(scope.opusCtrl.supportingOpuses.length).toBe(3);
         expect(scope.opusCtrl.newSupportingOpuses.length).toBe(2);
         expect(scope.opusCtrl.newSupportingOpuses[0].opusId).toBe("opus1");
         expect(scope.opusCtrl.newSupportingOpuses[1].opusId).toBe("opus3");
@@ -454,23 +456,16 @@ describe("OpusController tests", function () {
         scope.opusCtrl.opusId = OPUS_ID;
 
         scope.$apply();
-        scope.opusCtrl.opus.supportingOpuses = [{uuid: "opus1", title: "Opus 1"}];
+        scope.opusCtrl.supportingOpuses = [{uuid: "opus1", title: "Opus 1"}];
         scope.opusCtrl.newSupportingOpuses = [{opus: {uuid: "opus2", title: "Opus 2"}}];
 
         scope.opusCtrl.saveSupportingOpuses(form);
 
-        var expectedOpus = {
-            title: "OpusName",
-            dataResourceUid: "dataUid1",
-            imageSources: ["source1", "source2", "source3"],
-            recordSources: ["source1", "source2", "source3"],
-            mapPointColour: "12345",
-            supportingOpuses: [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus2", title: "Opus 2"}],
-            keybaseProjectId: "",
-            keybaseKeyId: ""
+        var expectedData = {
+            supportingOpuses: [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus2", title: "Opus 2"}]
         };
 
-        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
+        expect(profileService.updateSupportingCollections).toHaveBeenCalledWith(OPUS_ID, expectedData);
     });
 
     it("should validate that supporting opuses have an associated opus object with and id", function () {
@@ -490,7 +485,7 @@ describe("OpusController tests", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.opusCtrl.opusId = OPUS_ID;
         scope.$apply();
-        scope.opusCtrl.opus.supportingOpuses = [{uuid: "opus1", title: "Opus 1"}, {
+        scope.opusCtrl.supportingOpuses = [{uuid: "opus1", title: "Opus 1"}, {
             uuid: "opus2",
             title: "Opus 2"
         }, {uuid: "opus3", title: "Opus 3"}];
@@ -498,18 +493,36 @@ describe("OpusController tests", function () {
         scope.opusCtrl.removeSupportingOpus(1, 'existing', form);
         scope.opusCtrl.saveSupportingOpuses(form);
 
-        var expectedOpus = {
-            title: "OpusName",
-            dataResourceUid: "dataUid1",
-            mapPointColour: "12345",
-            imageSources: ["source1", "source2", "source3"],
-            recordSources: ["source1", "source2", "source3"],
-            supportingOpuses: [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus3", title: "Opus 3"}],
-            keybaseProjectId: "",
-            keybaseKeyId: ""
+        var expectedData = {
+            supportingOpuses: [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus3", title: "Opus 3"}]
         };
 
-        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
+        expect(profileService.updateSupportingCollections).toHaveBeenCalledWith(OPUS_ID, expectedData);
+    });
+
+    it("should include the data sharing flags in the call to updateSupportingCollections if they have been defined", function () {
+        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
+        scope.opusCtrl.opus.autoApproveShareRequests = true;
+        scope.opusCtrl.opus.allowCopyFromLinkedOpus = true;
+        scope.opusCtrl.opus.showLinkedOpusAttributes = true;
+        scope.opusCtrl.opusId = OPUS_ID;
+        scope.$apply();
+        scope.opusCtrl.supportingOpuses = [{uuid: "opus1", title: "Opus 1"}, {
+            uuid: "opus2",
+            title: "Opus 2"
+        }, {uuid: "opus3", title: "Opus 3"}];
+
+        scope.opusCtrl.removeSupportingOpus(1, 'existing', form);
+        scope.opusCtrl.saveSupportingOpuses(form);
+
+        var expectedData = {
+            supportingOpuses: [{uuid: "opus1", title: "Opus 1"}, {uuid: "opus3", title: "Opus 3"}],
+            autoApproveShareRequests: true,
+            allowCopyFromLinkedOpus: true,
+            showLinkedOpusAttributes: true
+        };
+
+        expect(profileService.updateSupportingCollections).toHaveBeenCalledWith(OPUS_ID, expectedData);
     });
 
     it("should merge newApprovedLists with the existing approvedLists when saveApprovedLists is called", function () {

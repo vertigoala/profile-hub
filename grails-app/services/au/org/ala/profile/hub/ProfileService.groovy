@@ -21,6 +21,14 @@ class ProfileService {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}", json)
     }
 
+    def updateSupportingCollections(String opusId, Map json) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/supportingCollections/update", json)
+    }
+
+    def respondToSupportingCollectionRequest(String opusId, String requestingOpusId, String action) {
+        webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/supportingCollections/respond/${requestingOpusId}/${action}", [:])
+    }
+
     def updateOpusUsers(String opusId, Map json) {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/updateUsers", json)
     }

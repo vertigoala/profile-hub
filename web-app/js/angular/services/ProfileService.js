@@ -194,6 +194,26 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        updateSupportingCollections: function(opusId, supportingCollections) {
+            console.log("Updating supporting collections for " + opusId);
+
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/supportingCollections/update", supportingCollections);
+            future.then(function(response) {
+                console.log("Supporting collections updated with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        respondToSupportingCollectionRequest: function(opusId, requestingOpusId, accept) {
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/supportingCollections/respond/" + requestingOpusId + "/" + accept);
+            future.then(function(response) {
+                console.log("Supporting collections request responded to with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         getOpusVocabulary: function (opusId, vocubularyId) {
             console.log("Fetching vocabulary " + vocubularyId);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/vocab/" + vocubularyId, {cache: true});

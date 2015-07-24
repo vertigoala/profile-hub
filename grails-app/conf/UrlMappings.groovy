@@ -58,6 +58,10 @@ class UrlMappings {
         "/opus/$opusId/about/update" controller: "opus", action: [PUT: "updateAboutHtml"]
         "/opus/$opusId/about" controller: "opus", action: [GET: "about"]
 
+        "/opus/$opusId/shareRequest/$requestingOpusId/" controller: "opus", action: [GET: "getSupportingCollectionRequest"]
+        "/opus/$opusId/supportingCollections/respond/$requestingOpusId/$requestAction" controller: "opus", action: [POST: "respondToSupportingCollectionRequest"]
+        "/opus/$opusId/supportingCollections/update" controller: "opus", action: [POST: "updateSupportingCollections"]
+
         "/opus/$opusId/glossary/json" controller: "glossary", action: [GET: "getGlossary"]
         "/opus/$opusId/glossary/upload" controller: "glossary", action: [POST: "upload"]
         "/opus/$opusId/glossary/item/create" controller: "glossary", action: [PUT: "saveItem"]

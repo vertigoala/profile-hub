@@ -15,30 +15,6 @@ profileEditor.run(function ($rootScope, config) {
     $rootScope.richTextToolbarSimple = "[['bold','italics','underline']]";
 });
 
-profileEditor.directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if (event.which === 13) {
-                scope.$apply(function () {
-                    scope.$eval(attrs.ngEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
-
-profileEditor.directive('loading', function ($browser) {
-    return {
-        restrict: 'AE',
-        require: [],
-        scope: {
-            loading: '='
-        },
-        template: '<div ng-if="loading"><span class="fa fa-spin fa-spinner"></span>&nbsp;Loading...</div>'
-    }
-});
 
 /**
  *  ALA Admin controller

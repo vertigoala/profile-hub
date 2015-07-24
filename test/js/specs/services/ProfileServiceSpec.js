@@ -331,4 +331,16 @@ describe("ProfileService tests", function () {
         service.restoreArchivedProfile("opusId", "profileId", "new name");
         http.expectPOST("/someContext/opus/opusId/profile/profileId/restore", {newName: "new name"}).respond("bla");
     });
+
+    it("should invoke the updateSupportingCollections service when updateSupportingCollections is invoked", function() {
+        service.updateSupportingCollections("opusId", {supportingCollections: "abc"});
+
+        http.expectPOST("/someContext/opus/opusId/supportingCollections/update", {supportingCollections: "abc"}).respond("bla");
+    });
+
+    it("should invoke the respondToSupportingCollectionRequests service when respondToSupportingCollectionRequests is invoked", function() {
+        service.respondToSupportingCollectionRequest("opus1", "opus2", true);
+
+        http.expectPOST("/someContext/opus/opus1/supportingCollections/respond/opus2/true").respond("bla");
+    });
 });

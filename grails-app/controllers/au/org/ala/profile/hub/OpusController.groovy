@@ -95,6 +95,52 @@ class OpusController extends BaseController {
         }
     }
 
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def getSupportingCollectionRequest() {
+        if (!params.opusId || !params.requestingOpusId) {
+            badRequest()
+        } else {
+            def opus = profileService.getOpus(params.opusId as String)
+
+            if (!opus) {
+                notFound()
+            } else {
+                render view: 'shareRequest', model: [
+                        logoUrl     : opus.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                        bannerUrl   : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                        pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
+                        footerText  : opus.footerText,
+                        contact     : opus.contact,
+                        glossaryUrl : getGlossaryUrl(opus),
+                        aboutPageUrl: getAboutUrl(opus)
+                ]
+            }
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def updateSupportingCollections() {
+        def json = request.getJSON()
+        if (!params.opusId || !json) {
+            badRequest()
+        } else {
+            profileService.updateSupportingCollections(params.opusId as String, json)
+
+            render([success: true] as JSON)
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def respondToSupportingCollectionRequest() {
+        if (!params.opusId || !params.requestingOpusId || !params.requestAction) {
+            badRequest()
+        } else {
+            profileService.respondToSupportingCollectionRequest(params.opusId, params.requestingOpusId, params.requestAction)
+
+            render([success: true] as JSON)
+        }
+    }
+
     private getGlossaryUrl(opus) {
         opus.glossaryUuid ? "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/glossary" : ""
     }

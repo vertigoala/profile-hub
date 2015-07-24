@@ -4,6 +4,10 @@
 profileEditor.controller('OpusController', function (profileService, util, messageService, $window, $filter) {
     var self = this;
 
+    var SUPPORTING_COLLECTION_REQUESTED = "REQUESTED";
+    var SUPPORTING_COLLECTION_APPROVED = "APPROVED";
+    var SUPPORTING_COLLECTION_REJECTED = "REJECTED";
+
     self.opus = null;
     self.opusId = null;
     self.opusList = [];
@@ -14,6 +18,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.saving = false;
     self.newImageSources = [];
     self.newRecordSources = [];
+    self.supportingOpuses = []; // separate list because the opus contains two sets of supporting opuses (approved and requested)
     self.newSupportingOpuses = [];
     self.newApprovedLists = [];
     self.newBioStatusLists = [];
@@ -51,6 +56,9 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 });
 
                 self.initialShortName = data.shortName;
+
+                self.supportingOpuses = [].concat(self.opus.supportingOpuses);
+                self.supportingOpuses = self.supportingOpuses.concat(self.opus.requestedSupportingOpuses);
 
                 toggleMapPointerColourHash(true);
 
@@ -202,7 +210,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     };
 
     self.addSupportingOpus = function () {
-        self.newSupportingOpuses.push({});
+        self.newSupportingOpuses.push({requestStatus: SUPPORTING_COLLECTION_REQUESTED});
     };
 
     self.saveSupportingOpuses = function (form) {
@@ -223,18 +231,65 @@ profileEditor.controller('OpusController', function (profileService, util, messa
             self.newSupportingOpuses = [];
             if (valid.length > 0) {
                 angular.forEach(valid, function (opus) {
-                    self.opus.supportingOpuses.push(opus);
+                    self.supportingOpuses.push(opus);
                 });
             }
-            self.saveOpus(form);
+
+            var data = {
+                supportingOpuses: self.supportingOpuses
+            };
+
+            if (typeof self.opus.autoApproveShareRequests != 'undefined') {
+                data.autoApproveShareRequests = self.opus.autoApproveShareRequests;
+            }
+            if (typeof self.opus.allowCopyFromLinkedOpus != 'undefined') {
+                data.allowCopyFromLinkedOpus = self.opus.allowCopyFromLinkedOpus;
+            }
+            if (typeof self.opus.showLinkedOpusAttributes != 'undefined') {
+                data.showLinkedOpusAttributes = self.opus.showLinkedOpusAttributes;
+            }
+
+            var future = profileService.updateSupportingCollections(self.opusId, data);
+            future.then(function () {
+                messageService.success("Supporting collections have been successfully updated.");
+                self.saving = false;
+                form.$setPristine();
+            }, function () {
+                messageService.alert("An error has occurred while updating the supporting collections.");
+            })
         } else if (invalid.length > 0) {
             messageService.alert(invalid.length + " supporting collection" + (invalid.length > 1 ? "s are" : " is") + " not valid. You must select items from the list.")
         }
     };
 
+    self.supportingOpusSelected = function (supportingOpus) {
+        supportingOpus.requestStatus = SUPPORTING_COLLECTION_REQUESTED;
+    };
+
+    self.revokeAccessToSupportedCollection = function(otherOpusUuid) {
+        var confirm = util.confirm("Are you sure you wish to revoke access to your collection's data?");
+
+        confirm.then(function() {
+            var future = profileService.respondToSupportingCollectionRequest(self.opusId, otherOpusUuid, "revoke");
+
+            future.then(function() {
+                var indexToRemove = -1;
+                angular.forEach(self.opus.sharingDataWith, function(opus, index) {
+                    if (opus.uuid == otherOpusUuid) {
+                        indexToRemove = index;
+                    }
+                });
+
+                if (indexToRemove > -1) {
+                    self.opus.sharingDataWith.splice(indexToRemove, 1);
+                }
+            })
+        });
+    };
+
     self.removeSupportingOpus = function (index, list, form) {
         if (list == 'existing') {
-            self.opus.supportingOpuses.splice(index, 1);
+            self.supportingOpuses.splice(index, 1);
         } else {
             self.newSupportingOpuses.splice(index, 1);
         }
