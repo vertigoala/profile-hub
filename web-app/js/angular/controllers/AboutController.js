@@ -6,14 +6,16 @@ profileEditor.controller('AboutController', function (profileService, messageSer
     
     self.opusId = util.getEntityId("opus");
     self.aboutHtml = null;
+    self.citationHtml = null;
 
     var future = profileService.getOpusAbout(self.opusId);
     future.then(function(data) {
         self.aboutHtml = data.opus.aboutHtml;
+        self.citationHtml = data.opus.citationHtml;
     });
 
     self.saveAboutHtml = function (form) {
-        var promise = profileService.updateOpusAbout(self.opusId, self.aboutHtml);
+        var promise = profileService.updateOpusAbout(self.opusId, self.aboutHtml, self.citationHtml);
         promise.then(function () {
                 messageService.success("About page text successfully updated.");
                 form.$setPristine();

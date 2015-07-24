@@ -84,12 +84,12 @@ class OpusController extends BaseController {
     }
 
     @Secured(role = ROLE_PROFILE_ADMIN)
-    def updateAboutHtml() {
+    def updateAbout() {
         def json = request.getJSON()
-        if (!params.opusId || !json || !json.containsKey("aboutHtml")) {
+        if (!params.opusId || !json || !json.containsKey("aboutHtml") || !json.containsKey("citationHtml")) {
             badRequest()
         } else {
-            def response = profileService.updateOpusAboutPage(params.opusId as String, json.aboutHtml)
+            def response = profileService.updateOpusAboutPage(params.opusId as String, json.aboutHtml?:'', json.citationHtml?:'')
 
             handle response
         }
