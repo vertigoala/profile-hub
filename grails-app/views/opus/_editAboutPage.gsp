@@ -21,7 +21,7 @@
                     Enter the <strong>formatted citation</strong> that you wish to be included in the 'about' page for your collection and the generated pdf files.
                 </p>
 
-                <div text-angular text-angular-name="citation" ng-model="aboutCtrl.citationHtml" ta-max-text="500" ta-toolbar="{{richTextToolbarSimple}}"></div>
+                <div id="citationHtml" text-angular text-angular-name="citation" ng-model="aboutCtrl.citationHtml" ta-max-text="500" ta-toolbar="{{richTextToolbarSimple}}"></div>
 
                 <div class="small">(Maximum of 500 characters)</div>
             </div>

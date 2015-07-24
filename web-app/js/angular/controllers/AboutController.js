@@ -14,7 +14,12 @@ profileEditor.controller('AboutController', function (profileService, messageSer
         self.citationHtml = data.opus.citationHtml;
     });
 
+    self.hasCitation = function() {
+        return self.citationHtml != null && self.citationHtml.trim() != ''
+    };
+
     self.saveAboutHtml = function (form) {
+        console.log('About HTML' + self.aboutHtml);
         var promise = profileService.updateOpusAbout(self.opusId, self.aboutHtml, self.citationHtml);
         promise.then(function () {
                 messageService.success("About page text successfully updated.");

@@ -89,7 +89,7 @@ class OpusController extends BaseController {
         if (!params.opusId || !json || !json.containsKey("aboutHtml") || !json.containsKey("citationHtml")) {
             badRequest()
         } else {
-            def response = profileService.updateOpusAboutContent(params.opusId as String, json.getAboutContent, json.citationHtml)
+            def response = profileService.updateOpusAboutContent(params.opusId as String, json.aboutHtml, json.citationHtml)
 
             handle response
         }

@@ -60,6 +60,11 @@ accordion > div.panel-group > div.panel > div.panel-collapse > div.panel-body {
     height: 50px !important;
 }
 
+#citationHtml > .ta-editor{
+    height: 100px !important;
+    min-height: 100px !important;
+}
+
 .inline-block, .ta-bind .inline-block, .single-line-editor > .inline-block {
     display: inline-block !important;
 }
