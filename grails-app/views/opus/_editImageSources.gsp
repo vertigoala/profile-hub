@@ -6,10 +6,9 @@
     </div>
 
     <div class="panel-body">
-        <div class="col-sm-12">
-            <p>Configure the image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
-
+        <div class="row">
             <div class="col-sm-12">
+                <p>Configure the image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
                 <ul>
                     <li ng-repeat="imageSource in opusCtrl.opus.imageSources">
                         <a href="${grailsApplication.config.collectory.base.url}/public/show/{{imageSource}}">{{opusCtrl.dataResources[imageSource] | default:'Loading...'}}</a>

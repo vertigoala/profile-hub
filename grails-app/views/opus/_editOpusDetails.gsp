@@ -6,8 +6,7 @@
     </div>
 
     <div class="panel-body">
-
-        <div>
+        <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
                     <label for="opusName">Title</label>

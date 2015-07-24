@@ -6,12 +6,12 @@
     </div>
 
     <div class="panel-body">
-        <div class="col-sm-12">
-            <p>Configure the record sources to be included in your profile pages. This will set what data is used on maps.
-            These are data resources accessible via Atlas API's.
-            </p>
-
+        <div class="row">
             <div class="col-sm-12">
+                <p>Configure the record sources to be included in your profile pages. This will set what data is used on maps.
+                These are data resources accessible via Atlas API's.
+                </p>
+
                 <ul>
                     <li ng-repeat="recordSource in opusCtrl.opus.recordSources">
                         <a href="${grailsApplication.config.collectory.base.url}/public/show/{{recordSource}}">{{opusCtrl.dataResources[recordSource] | default:'Loading...'}}</a>

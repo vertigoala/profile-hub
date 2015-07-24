@@ -6,7 +6,8 @@
     </div>
 
     <div class="panel-body">
-        <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
             <div class="checkbox padding-bottom-1">
                 <label for="privateCollection" class="inline-label">
                     <input id="privateCollection" type="checkbox" name="privateCollection"
@@ -61,6 +62,7 @@
                     </tr>
                 </table>
             </div>
+        </div>
         </div>
     </div>
 

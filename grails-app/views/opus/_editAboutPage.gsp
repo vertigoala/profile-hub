@@ -6,16 +6,16 @@
     </div>
 
     <div class="panel-body">
-        <div class="col-sm-12">
-            <p>
-                Enter the formatted content that you wish to be included in the 'about' page for your collection.
-            </p>
+        <div class="row">
+            <div class="col-sm-12">
+                <p>
+                    Enter the formatted content that you wish to be included in the 'about' page for your collection.
+                </p>
 
-            <div class="row-fluid">
                 <div text-angular text-angular-name="about" ng-model="aboutCtrl.aboutHtml" ta-max-text="5000"></div>
-            </div>
 
-            <div class="small">(Maximum of 5000 characters)</div>
+                <div class="small">(Maximum of 5000 characters)</div>
+            </div>
         </div>
     </div>
 

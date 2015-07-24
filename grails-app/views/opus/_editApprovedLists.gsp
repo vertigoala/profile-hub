@@ -6,10 +6,10 @@
     </div>
 
     <div class="panel-body">
-        <div class="col-sm-12">
-            <p>Configure the species lists to be included in your profile pages. If you do not approve any specific lists, then all lists will be considered.</p>
-
+        <div class="row">
             <div class="col-sm-12">
+                <p>Configure the species lists to be included in your profile pages. If you do not approve any specific lists, then all lists will be considered.</p>
+
                 <ul>
                     <li ng-repeat="approvedList in opusCtrl.opus.approvedLists">
                         <a href="${grailsApplication.config.lists.base.url}/speciesListItem/list/{{approvedList}}">{{(opusCtrl.allSpeciesLists | filter: approvedList)[0].listName | default:'Loading...'}}</a>

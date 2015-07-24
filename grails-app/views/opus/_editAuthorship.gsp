@@ -6,13 +6,15 @@
     </div>
 
     <div class="panel-body">
-        <div class="col-sm-12">
-            <div class="checkbox">
-                <label for="fineGrainedAttribution" class="inline-label">
-                    <input id="fineGrainedAttribution" type="checkbox" name="allowFineGrainedAttribution"
-                           ng-model="opusCtrl.opus.allowFineGrainedAttribution" ng-false-value="false">
-                    Show contributors and editors for attributes.
-                </label>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="checkbox">
+                    <label for="fineGrainedAttribution" class="inline-label">
+                        <input id="fineGrainedAttribution" type="checkbox" name="allowFineGrainedAttribution"
+                               ng-model="opusCtrl.opus.allowFineGrainedAttribution" ng-false-value="false">
+                        Show contributors and editors for attributes.
+                    </label>
+                </div>
             </div>
         </div>
     </div>
