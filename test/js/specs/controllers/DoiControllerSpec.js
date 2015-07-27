@@ -34,11 +34,11 @@ describe("DoiController tests", function () {
     }));
 
     it("should select the current publication when the controller is loaded", function() {
-        var publications = [{uuid: "pub1"}, {uuid: "pub2"}];
-        var profile = {};
-        var opus = {};
+        var publications = '[{"uuid": "pub1"}, {"uuid": "pub2"}]';
+        var profileId = "profileId1";
+        var opusId = "opusId1";
 
-        scope.doiCtrl.init(publications, profile, opus);
+        scope.doiCtrl.init(publications, profileId, opusId);
 
         expect(scope.doiCtrl.selectedPublication.uuid).toBe("pub2")
     });

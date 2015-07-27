@@ -1,7 +1,7 @@
 /**
  * Created by temi varghese on 14/07/15.
  */
-profileEditor.controller('DoiController', function (util, $filter) {
+profileEditor.controller('DoiController', function (util, $filter, profileService, messageService) {
     var self = this;
     self.opusId = null;
     self.profileId = null;
@@ -15,13 +15,18 @@ profileEditor.controller('DoiController', function (util, $filter) {
 
     var orderBy = $filter("orderBy");
 
-    self.init = function (publications, profile, opus) {
+    self.init = function (publications, profileId, opusId) {
         // makes lastest version appear first
-        self.publications = orderBy(publications, 'publicationDate', true);
-        self.profile = profile;
-        self.opus = opus;
-        self.profileId = profile.uuid;
-        self.opusId = opus.uuid;
+        self.publications = orderBy(JSON.parse(publications), 'publicationDate', true);
+        profileService.getProfile(opusId, profileId).then(function (data) {
+            self.profile = data.profile;
+            self.opus = data.opus;
+            self.profileId = profileId;
+            self.opusId = opusId;
+        }, function() {
+            messageService.alert("An error has occurred while retrieving the publication details.")
+        });
+
         self.getSelectedPublication();
     };
 
