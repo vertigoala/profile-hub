@@ -14,11 +14,15 @@
         <div class="col-md-12 col-xs-12 col-lg-12">
             <div ta-bind ng-model="aboutCtrl.aboutHtml"></div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 col-xs-12 col-lg-12">
-            <p ng-show="aboutCtrl.hasCitation()">This work should be cited as:</p>
+        <div class="col-md-12 col-xs-12 col-lg-12 padding-top-1" ng-show="aboutCtrl.hasCitation()">
+            <p >This work should be cited as:</p>
             <div ta-bind ng-model="aboutCtrl.citationHtml"></div>
+        </div>
+        <div class="col-md-12 col-xs-12 col-lg-12" ng-show="aboutCtrl.hasCitation()">
+            <p>E.g.:</p>
+            <div class="citation-example">
+                <p>Conn, B.J. ({{aboutCtrl.citationYear}}) Loganiaceae. In: <span ta-bind ng-model="aboutCtrl.citationHtml"></span> <a href="{{aboutCtrl.citationUrl}}">{{aboutCtrl.citationUrl}}</a>. {{aboutCtrl.citationDate}}</p>
+            </div>
         </div>
     </div>
 </div>

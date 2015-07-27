@@ -7,11 +7,17 @@ profileEditor.controller('AboutController', function (profileService, messageSer
     self.opusId = util.getEntityId("opus");
     self.aboutHtml = null;
     self.citationHtml = null;
+    self.citationYear = null;
+    self.citationDate = null;
+    self.citationUrl = null;
 
     var future = profileService.getOpusAbout(self.opusId);
     future.then(function(data) {
         self.aboutHtml = data.opus.aboutHtml;
         self.citationHtml = data.opus.citationHtml;
+        self.citationYear = data.opus.year;
+        self.citationDate = data.opus.date;
+        self.citationUrl = data.opus.opusUrl;
     });
 
     self.hasCitation = function() {

@@ -119,6 +119,10 @@ input[type=file] {
     content: '\2014 \00A0';
 }
 
+.citation-example p {
+    display: inline;
+}
+
 .attribute-header-input {
     font-weight: bold;
 }
