@@ -182,9 +182,9 @@ class ExportService {
             model.profile.specimens = model.profile.specimenIds?.collect {
                 def spec = biocacheService.lookupSpecimen(it)?.resp
                 [
-                        institutionName: spec.processed.attribution.institutionName,
-                        collectionName : spec.processed.attribution.collectionName,
-                        catalogNumber  : spec.raw.occurrence.catalogNumber,
+                        institutionName: spec?.processed?.attribution?.institutionName,
+                        collectionName : spec?.processed?.attribution?.collectionName,
+                        catalogNumber  : spec?.raw?.occurrence?.catalogNumber,
                 ]
             }
         }
