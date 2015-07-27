@@ -43,7 +43,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
-					<font fontName="Arial" size="16" isBold="true" isItalic="false"/>
+					<font size="16" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{profile.fullName}]]></textFieldExpression>
 				<anchorNameExpression><![CDATA[$F{profile.fullName}]]></anchorNameExpression>
