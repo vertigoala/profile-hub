@@ -15,13 +15,13 @@
             <div ta-bind ng-model="aboutCtrl.aboutHtml"></div>
         </div>
         <div class="col-md-12 col-xs-12 col-lg-12 padding-top-1" ng-show="aboutCtrl.hasCitation()">
-            <p >This work should be cited as:</p>
-            <div ta-bind ng-model="aboutCtrl.citationHtml"></div>
+            <p >This collection should be cited as:</p>
+            <div ta-bind ng-model="aboutCtrl.citationHtml" class="padding-left-1"></div>
         </div>
         <div class="col-md-12 col-xs-12 col-lg-12" ng-show="aboutCtrl.hasCitation()">
-            <p>E.g.:</p>
+            <p>The taxon profiles in this collection should be cited as per the following example:</p>
             <div class="citation-example">
-                <p>Conn, B.J. ({{aboutCtrl.citationYear}}) Loganiaceae. In: <span ta-bind ng-model="aboutCtrl.citationHtml"></span> <a href="{{aboutCtrl.citationUrl}}">{{aboutCtrl.citationUrl}}</a>. {{aboutCtrl.citationDate}}</p>
+                <p class="padding-left-1">Conn, B.J. ({{aboutCtrl.citationYear}}) Loganiaceae. In: <span ta-bind ng-model="aboutCtrl.citationHtml"></span> <a href="{{aboutCtrl.citationUrl}}">{{aboutCtrl.citationUrl}}</a>. {{aboutCtrl.citationDate}}</p>
             </div>
         </div>
     </div>

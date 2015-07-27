@@ -82,7 +82,7 @@ class OpusController extends BaseController {
         def response = profileService.getOpusAboutContent(params.opusId as String)
         response?.resp?.opus << [
                 opusUrl: "${grailsApplication.config.grails.serverURL}/opus/${params.opusId}",
-                date: new Date().format('dd/MM/yyyy hh:mm'),
+                date: new Date().format('dd MMMM yyyy - hh:mm'),
                 year: new Date().format('yyyy'),
         ]
 

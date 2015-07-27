@@ -123,6 +123,10 @@ input[type=file] {
     display: inline;
 }
 
+.citation-example > p {
+    display: block;
+}
+
 .attribute-header-input {
     font-weight: bold;
 }
