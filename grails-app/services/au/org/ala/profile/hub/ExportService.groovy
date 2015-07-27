@@ -82,6 +82,7 @@ class ExportService {
         InputStream qrCodeInputStream = new ByteArrayInputStream(QRCode.from(curatedModel?.colophon?.profileLink).withSize(150, 150).to(ImageType.JPG).stream().toByteArray())
 
         // Generate report and return byte array
+
         JasperReportDef reportDef = new JasperReportDef(
                 name: 'profiles/PROFILES.jrxml',
                 fileFormat: JasperExportFormat.PDF_FORMAT,
@@ -136,18 +137,29 @@ class ExportService {
                 displayToc: curatedModel.profiles?.size() > 1
         ]
 
+        def firstProfile = curatedModel.profiles[0]?.profile
+
+        // Generate  citation
+        String citation = null
+        if (opus.citationHtml) {
+            Date now = new Date()
+            citation = "${firstProfile?.authorship} (${now[Calendar.YEAR]}) ${firstProfile?.fullName}. In: ${stripTextFromNonFormattingHtmlTags(opus.citationHtml)}. ${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}. ${now.format('dd MMMM yyyy - hh:mm')}"
+        }
+
         curatedModel << [
-                cover: [
+                cover   : [
                         title       : opus.title,
-                        subtitle    : curatedModel.profiles[0]?.profile?.fullName?: curatedModel.profiles[0]?.profile?.scientificName,
+                        subtitle    : firstProfile?.fullName ?: firstProfile?.scientificName,
                         logo        : opus.logoUrl,
                         banner      : opus.bannerUrl,
-                        primaryImage: curatedModel.profiles[0]?.profile?.primaryImage?: (curatedModel.profiles[0]?.profile?.images?.size() > 0 ? curatedModel.profiles[0]?.profile?.images[0].leftImage.largeImageUrl : '')
+                        primaryImage: firstProfile?.primaryImage ?: (firstProfile?.images?.size() > 0 ? firstProfile?.images[0].leftImage.largeImageUrl : '')
                 ],
                 colophon: [
-                        copyright: opus.copyrightText,
-                        logo        : opus.logoUrl,
-                        profileLink: "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${curatedModel.profiles[0]?.profile?.uuid}"
+                        copyright  : opus.copyrightText,
+                        logo       : opus.logoUrl,
+                        profileLink: "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${firstProfile?.uuid}",
+                        citation   : citation,
+                        version    : firstProfile.version ?: null
                 ]
         ]
 
@@ -267,6 +279,11 @@ class ExportService {
             model.profile.hasConservationStatus = false
         }
 
+        // Calculate version number
+        if (params.printVersion) {
+            model.profile.version = model.profile.publications?.size() > 0 ? model.profile.publications.collect {it.version as Integer}.max() + 1 : 1
+        }
+
         return model
     }
 
@@ -361,7 +378,7 @@ class ExportService {
      * @return
      */
     static String stripTextFromNonFormattingHtmlTags(String html) {
-        def regex = ~/<\/?(?!i>)(?!b>)([A-Za-z0-9.'()+,=:\s-])+>/
+        def regex = ~/<\/?(?!i>)(?!b>)([A-Za-z0-9.'"()+,=:\s-])+>/
         return html.replaceAll(regex, "")
     }
 }

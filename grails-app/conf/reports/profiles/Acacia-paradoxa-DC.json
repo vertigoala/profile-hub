@@ -7,9 +7,11 @@
      "banner": "http://images.ala.org.au//store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original"
    },
    "colophon": {
+     "citation": "P.G. Kodela (2015) Acacia paradoxa DC.. In: Kellermann, J. (ed.), <i>Flora of South Australia <\/i>(ed. 5). 10 pp. (State Herbarium of South Australia: Adelaide). http://localhost:8080/profile-hub/opus/39295895-f9cd-4189-bc19-64bd46cd689b. 27 July 2015 - 02:38",
       "logo": "http://root.ala.org.au/bdrs-core/files/download.htm?className=au.com.gaiaresources.bdrs.model.theme.Theme&id=217&fileName=processed/images/bdrs/atlasoflivingaust.png",
       "copyright": "<p>© Landcare Research New Zealand Limited 2014.<\/p><p>This copyright work is licensed under the Creative Commons Attribution3.0 New Zealand license.<\/p><p>Attribution if redistributing to the public without adaptation: “Source:Landcare Research”<\/p><p>Attribution if making an adaptation or derivative work: “Sourced from Landcare Research”<br/><\/p>",
-      "profileLink": "http://localhost:8080/profile-hub/opus/39295895-f9cd-4189-bc19-64bd46cd689b/profile/bee218e6-e0a4-4b99-8c5e-e63a6e1b93aa"
+      "profileLink": "http://localhost:8080/profile-hub/opus/39295895-f9cd-4189-bc19-64bd46cd689b/profile/bee218e6-e0a4-4b99-8c5e-e63a6e1b93aa",
+      "version": "1"
    },
    "profiles": [{"profile": {
      "status": [
