@@ -403,7 +403,9 @@ class ProfileController extends BaseController {
                     bhllinks    : true,
                     specimens   : true,
                     conservation: true,
-                    images      : true
+                    images      : true,
+                    status      : true,
+                    printVersion: true
             ]
 
             byte[] pdf = exportService.createPdf(pdfOptions)

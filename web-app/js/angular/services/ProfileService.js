@@ -145,10 +145,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        updateOpusAbout: function (opusId, html) {
+        updateOpusAbout: function (opusId, aboutHtml, citationHtml) {
             console.log("Updating about page for opus " + opusId);
 
-            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/about/update", {opusId: opusId, aboutHtml: html});
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/about/update", {opusId: opusId, aboutHtml: aboutHtml, citationHtml: citationHtml});
             future.then(function (response) {
                 console.log("Opus fetched with response code " + response.status);
             });

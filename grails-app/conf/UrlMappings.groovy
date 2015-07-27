@@ -55,7 +55,7 @@ class UrlMappings {
         "/opus/$opusId/vocab/$vocabId" controller: "vocab", action: [GET: "show"]
 
         "/opus/$opusId/about/json" controller: "opus", action: [GET: "getAboutHtml"]
-        "/opus/$opusId/about/update" controller: "opus", action: [PUT: "updateAboutHtml"]
+        "/opus/$opusId/about/update" controller: "opus", action: [PUT: "updateAbout"]
         "/opus/$opusId/about" controller: "opus", action: [GET: "about"]
 
         "/opus/$opusId/shareRequest/$requestingOpusId/" controller: "opus", action: [GET: "getSupportingCollectionRequest"]
