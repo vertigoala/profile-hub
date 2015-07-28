@@ -1,11 +1,12 @@
 package au.org.ala.profile.hub
 
-import static au.org.ala.profile.security.Role.*
 import au.org.ala.profile.security.Secured
+import au.org.ala.web.AuthService
+import grails.converters.JSON
 
 import static au.org.ala.profile.hub.util.HubConstants.*
-import grails.converters.JSON
-import au.org.ala.web.AuthService
+import static au.org.ala.profile.security.Role.ROLE_ADMIN
+import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
 
 class OpusController extends BaseController {
 
@@ -78,18 +79,23 @@ class OpusController extends BaseController {
     }
 
     def getAboutHtml() {
-        def response = profileService.getOpusAboutPage(params.opusId as String)
+        def response = profileService.getOpusAboutContent(params.opusId as String)
+        response?.resp?.opus << [
+                opusUrl: "${grailsApplication.config.grails.serverURL}/opus/${params.opusId}",
+                date: new Date().format('dd MMMM yyyy - hh:mm'),
+                year: new Date().format('yyyy'),
+        ]
 
         handle response
     }
 
     @Secured(role = ROLE_PROFILE_ADMIN)
-    def updateAboutHtml() {
+    def updateAbout() {
         def json = request.getJSON()
-        if (!params.opusId || !json || !json.containsKey("aboutHtml")) {
+        if (!params.opusId || !json || !json.containsKey("aboutHtml") || !json.containsKey("citationHtml")) {
             badRequest()
         } else {
-            def response = profileService.updateOpusAboutPage(params.opusId as String, json.aboutHtml)
+            def response = profileService.updateOpusAboutContent(params.opusId as String, json.aboutHtml as String, json.citationHtml as String)
 
             handle response
         }
