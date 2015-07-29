@@ -47,13 +47,13 @@
                 <div class="form-inline">
                     <div class="form-group">
                         <label class="control-label" for="mapDefaultLatitude">Default latitude</label>
-                        <input id="mapDefaultLatitude" type="text" class="form-control" maxlength="4" size="5"
+                        <input id="mapDefaultLatitude" type="text" class="form-control" maxlength="7" size="5"
                                name="mapDefaultLatitude" ng-model="opusCtrl.opus.mapDefaultLatitude">
                     </div>
 
                     <div class="form-group">
                         <label class="control-label" for="mapDefaultLongitude">Default longitude</label>
-                        <input id="mapDefaultLongitude" type="text" class="form-control" maxlength="4" size="5"
+                        <input id="mapDefaultLongitude" type="text" class="form-control" maxlength="7" size="5"
                                name="mapDefaultLongitude" ng-model="opusCtrl.opus.mapDefaultLongitude">
                     </div>
 
