@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import grails.converters.JSON
 import groovyx.net.http.HTTPBuilder
 import org.apache.http.HttpStatus
 import org.apache.http.entity.mime.MultipartEntityBuilder
@@ -40,7 +41,7 @@ class WebService {
 
             Map result
             if (json) {
-                result = [resp: JSONUtils.validateAndParseJSON(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+                result = [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
             } else {
                 result = [resp: resp, statusCode: HttpStatus.SC_OK]
             }
@@ -118,7 +119,7 @@ class WebService {
 
         http.request(POST) { multipartRequest ->
             MultipartEntityBuilder entityBuilder = new MultipartEntityBuilder()
-            entityBuilder.addPart("data", new StringBody((data as grails.converters.JSON) as String))
+            entityBuilder.addPart("data", new StringBody((data as JSON) as String))
             files.eachWithIndex { it, index ->
                 entityBuilder.addPart("file${index}", new ByteArrayBody(it, "file${index}"))
             }
@@ -137,7 +138,7 @@ class WebService {
 
             def result = null
             response.success = { resp, rData ->
-                result = [resp: rData as grails.converters.JSON, statusCode: HttpStatus.SC_OK]
+                result = [resp: rData as JSON, statusCode: HttpStatus.SC_OK]
             }
 
             return result
@@ -166,11 +167,11 @@ class WebService {
             }
 
             writer = new OutputStreamWriter(conn.getOutputStream(), CHAR_ENCODING)
-            writer.write((postBody as grails.converters.JSON).toString())
+            writer.write((postBody as JSON).toString())
             writer.flush()
             def resp = conn.inputStream.text
 
-            response = [resp:JSONUtils.validateAndParseJSON(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+            response = [resp:JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
             log.debug("Response from POST = ${response}")
             // fail over to empty json object if empty response string otherwise JSON.parse fails
         } catch (FileNotFoundException e) {
