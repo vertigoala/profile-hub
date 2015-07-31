@@ -36,9 +36,9 @@ class BiocacheService {
         metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${opusId}/profile/${profileId}/file/${filename}"
 
         // make sure the spelling of licenSe is US to match the Darwin Core standard
-        if (metadata.containsKey("licence")) {
-            metadata.license = metadata.licence
-            metadata.remove("licence")
+        if (metadata.multimedia[0].containsKey("licence")) {
+            metadata.multimedia[0].license = metadata.licence
+            metadata.multimedia[0].remove("licence")
         }
 
         log.debug("Uploading image ${metadata.multimedia[0].identifier} to ${grailsApplication.config.image.upload.url}${dataResourceId} with metadata ${metadata}")
