@@ -7,8 +7,6 @@ package au.org.ala.profile.hub
  */
 class BiodiversityLibraryService {
 
-    // TODO use metaprogramming to create a dynamic method of the form lookupXYZMetadataAsJSON|Text(id) e.g. lookupPageMetadataAsJSON(id) or lookupTitleMetadataAsText(id)
-
     def grailsApplication
     WebService webService
 
