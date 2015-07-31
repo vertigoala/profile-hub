@@ -650,7 +650,8 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        loadReport: function(opusId, reportId, pageSize, offset, period, from, to) {
+        loadReport: function(opusId, reportId, pageSize, offset, period, from, to,
+                             isCountOnly) {
             console.log("Loading report " + reportId);
 
             // these parameters are for recent updates. add them only if value is present.
@@ -662,7 +663,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 }
             }
 
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/report/" + reportId + "?pageSize=" + pageSize + "&offset=" + offset + dateParms);
+            var countParms = '';
+            if (isCountOnly) {
+                countParms = "&countOnly=true";
+            }
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/report/"
+                + reportId + "?pageSize=" + pageSize + "&offset=" + offset + dateParms
+                + countParms);
             future.then(function(response) {
                 console.log("Report loaded with response code " + response.status);
             });
