@@ -37,7 +37,7 @@
             <div class="row section-no-para">
                 <div class="col-md-3 minor-heading">Conservation status</div>
                 <div class="col-md-9">
-                    <div ng-repeat="status in listCtrl.conservationStatuses">
+                    <div ng-repeat="status in listCtrl.conservationStatuses" class="col-md-4">
                         <a href="${grailsApplication.config.collectory.base.url}/public/showDataResource/{{listCtrl.statusRegions[status.region].id}}"
                            title="Threatened Species Codes - details" target="_blank">
                             <div class="status"

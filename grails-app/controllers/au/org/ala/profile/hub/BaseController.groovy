@@ -36,13 +36,18 @@ class BaseController {
     }
 
     def handle (resp) {
-        if (resp.statusCode != SC_OK) {
-            log.debug "Response status ${resp.statusCode} returned from operation"
-            response.status = resp.statusCode
-            sendError(resp.statusCode, resp.error ?: "")
+        if (resp) {
+            if (resp.statusCode != SC_OK) {
+                log.debug "Response status ${resp.statusCode} returned from operation"
+                response.status = resp.statusCode
+                sendError(resp.statusCode, resp.error ?: "")
+            } else {
+                response.setContentType(CONTEXT_TYPE_JSON)
+                render resp.resp as JSON
+            }
         } else {
             response.setContentType(CONTEXT_TYPE_JSON)
-            render resp.resp as JSON
+            render [:] as JSON
         }
     }
 

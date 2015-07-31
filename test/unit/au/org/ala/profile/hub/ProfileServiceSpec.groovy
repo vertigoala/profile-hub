@@ -6,8 +6,6 @@ import spock.lang.Specification
 
 @TestFor(ProfileService)
 class ProfileServiceSpec extends Specification {
-    // TODO when testing updateAttribute, make sure the response includes the attribute for BOTH updating and adding a new attribute...
-
     ProfileService service
     WebService webService
     AuthService authService

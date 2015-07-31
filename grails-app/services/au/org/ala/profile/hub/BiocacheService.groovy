@@ -16,9 +16,7 @@ class BiocacheService {
 
         log.debug("Image query = ${imagesQuery}")
 
-        // TODO get this line back in when it gets fixed
-        // webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true")
-        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json")
+        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true")
     }
 
     def uploadImage(String opusId, String profileId, String dataResourceId, file, Map metadata) {
@@ -38,9 +36,9 @@ class BiocacheService {
         metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${opusId}/profile/${profileId}/file/${filename}"
 
         // make sure the spelling of licenSe is US to match the Darwin Core standard
-        if (metadata.containsKey("licence")) {
-            metadata.license = metadata.licence
-            metadata.remove("licence")
+        if (metadata.multimedia[0].containsKey("licence")) {
+            metadata.multimedia[0].license = metadata.licence
+            metadata.multimedia[0].remove("licence")
         }
 
         log.debug("Uploading image ${metadata.multimedia[0].identifier} to ${grailsApplication.config.image.upload.url}${dataResourceId} with metadata ${metadata}")
