@@ -13,7 +13,7 @@
 </head>
 
 <body>
-<div ng-controller="DoiController as doiCtrl" ng-init="doiCtrl.init(${publications}, ${profile}, ${opus})" ng-cloak>
+<div ng-controller="DoiController as doiCtrl" ng-init="doiCtrl.init('${publications as grails.converters.JSON}', '${profile.uuid}', '${opus.uuid}')" ng-cloak>
 
     <ol class="breadcrumb" ng-cloak>
         <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>

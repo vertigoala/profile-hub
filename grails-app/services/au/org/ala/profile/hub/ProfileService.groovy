@@ -42,12 +42,12 @@ class ProfileService {
         webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}")
     }
 
-    def getOpusAboutPage(String opusId) {
+    def getOpusAboutContent(String opusId) {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/about")
     }
 
-    def updateOpusAboutPage(String opusId, String html) {
-        webService.doPut("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/about", [opusId: opusId, aboutHtml: html])
+    def updateOpusAboutContent(String opusId, String aboutHtml, String citationHtml) {
+        webService.doPut("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/about", [opusId: opusId, aboutHtml: aboutHtml, citationHtml: citationHtml])
     }
 
     def getVocab(String opusId, String vocabId = "") {
@@ -103,7 +103,7 @@ class ProfileService {
                     pageTitle: opus.title ?: HubConstants.DEFAULT_OPUS_TITLE
             ]
 
-            profile.keybaseKey = keybaseService.findKeyForTaxon(profile.classification, opus.keybaseProjectId)
+            profile.keybaseKey = keybaseService.findKeyForTaxon(profile.scientificName, profile.classification, opus.keybaseProjectId)
 
         } catch (FileNotFoundException e) {
             log.error("Profile ${profileId} not found")

@@ -176,7 +176,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     };
 
     self.toggleDraftMode = function() {
-        if (self.profile.privateMode) {
+        if (self.profile.privateMode && config.features.publications !== 'false') {
             var confirm = util.confirm("Would you like to take a snapshot of the current public version before releasing your changes?", "Yes", "No");
 
             confirm.then(function() {

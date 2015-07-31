@@ -48,11 +48,13 @@ class BiocacheService {
         // TODO: REMOVE THIS - IT IS FOR TESTING ONLY!!!!
         String hostname = InetAddress.getLocalHost().hostName
         println "Hostname = ${hostname}"
-        if (hostname == "nci-profiles" || hostname == "profiles-dev" || hostname == "maccy-bm") {
-            if (dataResourceId == "dr382") {
+        if (hostname == "nci-profiles" || hostname == "nci-profiles-dev" || hostname == "maccy-bm") {
+            if (dataResourceId == "dr382") { // foa
                 dataResourceId = "dr4"
-            } else if (dataResourceId == "dr2172") {
+            } else if (dataResourceId == "dr2172") { // nsw
                 dataResourceId = "dr5"
+            } else if (dataResourceId == "dr2172") { // olkola
+                dataResourceId = "dr7"
             }
         }
 

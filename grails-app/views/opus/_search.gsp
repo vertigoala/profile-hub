@@ -28,7 +28,7 @@
             </tr>
             <tr ng-repeat="profile in searchCtrl.profiles">
                 <td><a href="${request.contextPath}/opus/{{ profile.opus.shortName ? profile.opus.shortName : profile.opus.uuid }}/profile/{{ profile.scientificName }}"
-                       target="_self">{{profile.rank | capitalize}}:</a></td>
+                       target="_self">{{profile.rank | capitalize | default:'Unknown'}}:</a></td>
                 <td><a href="${request.contextPath}/opus/{{ profile.opus.shortName ? profile.opus.shortName : profile.opus.uuid }}/profile/{{ profile.scientificName }}"
                        target="_self" class="scientific-name">{{profile.scientificName}}</a></td>
                 <td ng-if="!searchCtrl.opusId">{{profile.opus.title}}</td>

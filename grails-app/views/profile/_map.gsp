@@ -1,12 +1,22 @@
 <div class="col-md-6 col-sm-12" ng-controller="MapController as mapCtrl"
      ng-init="mapCtrl.init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')">
-        <div class="thumbnail pull-left">
-        <leaflet style="height: 300px; width: 450px;" center="mapCtrl.center"
-                 layers="mapCtrl.layers"
-                 event-broadcast="mapCtrl.events"></leaflet>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="thumbnail pull-left">
+                <leaflet style="height: 300px; width: 450px;" center="mapCtrl.center"
+                         layers="mapCtrl.layers"
+                         event-broadcast="mapCtrl.events"></leaflet>
+            </div>
         </div>
+    </div>
 
-        <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?{{mapCtrl.constructQuery()}}" ng-if="profileCtrl.opus.biocacheUrl" target="_blank" class="padding-left-1 margin-top-1 inline-block">View in {{profileCtrl.opus.biocacheName}}</a>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?{{mapCtrl.constructQuery()}}"
+               ng-if="profileCtrl.opus.biocacheUrl" target="_blank"
+               class="padding-left-1 margin-top-1 inline-block">View in {{profileCtrl.opus.biocacheName}}</a>
+        </div>
+    </div>
 </div>
 
 <div class="col-md-6 col-sm-12" ng-controller="ImagesController as imageCtrl"
@@ -17,7 +27,7 @@
                 <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{imageCtrl.primaryImage.occurrenceId}}"
                    target="_blank" ng-show="imageCtrl.primaryImage.largeImageUrl" ng-cloak>
                     <img ng-src="${request.contextPath}{{imageCtrl.primaryImage.largeImageUrl}}"
-                         ng-if="imageCtrl.primaryImage.thumbnailUrl && imageCtrl.primaryImage.staged" />
+                         ng-if="imageCtrl.primaryImage.thumbnailUrl && imageCtrl.primaryImage.staged"/>
                     <img ng-src="{{imageCtrl.primaryImage.largeImageUrl}}"
                          ng-if="imageCtrl.primaryImage.largeImageUrl && !imageCtrl.primaryImage.staged"/>
                 </a>
