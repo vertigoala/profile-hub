@@ -7,21 +7,25 @@ class KeybaseService {
     def grailsApplication
     WebService webService
 
-    def findKeyForTaxon(classifications, projectId) {
-        if (!classifications || !projectId) {
+    def findKeyForTaxon(scientificName, classifications, projectId) {
+        if (!projectId) {
             return null
         }
 
         String key = null
 
-        RANKS.reverse().find {
-            String name = findClassification(classifications, it);
-            if (name) {
-                key = findKey(name, projectId)
-                if (key) {
-                    return true
+        if (classifications) {
+            RANKS.reverse().find {
+                String name = findClassification(classifications, it)
+                if (name) {
+                    key = findKey(name, projectId)
+                    if (key) {
+                        return true
+                    }
                 }
             }
+        } else {
+            key = findKey(scientificName, projectId)
         }
 
         key

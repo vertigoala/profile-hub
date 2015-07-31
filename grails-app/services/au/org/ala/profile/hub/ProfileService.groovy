@@ -103,7 +103,7 @@ class ProfileService {
                     pageTitle: opus.title ?: HubConstants.DEFAULT_OPUS_TITLE
             ]
 
-            profile.keybaseKey = keybaseService.findKeyForTaxon(profile.classification, opus.keybaseProjectId)
+            profile.keybaseKey = keybaseService.findKeyForTaxon(profile.scientificName, profile.classification, opus.keybaseProjectId)
 
         } catch (FileNotFoundException e) {
             log.error("Profile ${profileId} not found")
