@@ -3,6 +3,7 @@ package au.org.ala.profile.hub
 import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
+import org.apache.commons.lang.BooleanUtils
 
 class ProfileService {
 
@@ -319,7 +320,7 @@ class ProfileService {
     }
 
     def updateComment(String opusId, String profileId, String commentId, Map json) {
-        log.debug("Updateing comment ${commentId} for profile ${profileId}")
+        log.debug("Updating comment ${commentId} for profile ${profileId}")
 
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/comment/${enc(commentId)}", json)
     }
@@ -342,23 +343,29 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/checkName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}")
     }
 
-    def loadReport(String opusId, String reportId, String pageSize, String offset, Map dates) {
+    def loadReport(String opusId, String reportId, String pageSize, String offset,
+                   Map dates, boolean countOnly) {
         ReportType report = ReportType.byId(reportId)
+        String urlPrefix = "${grailsApplication.config.profile.service.url}/report/${report.id}"
         Map range
         def resp
         switch (report) {
             case ReportType.MISMATCHED_NAME:
-                resp = webService.get("${grailsApplication.config.profile.service.url}/report/mismatchedNames?opusId=${enc(opusId)}&offset=${offset}&max=${pageSize}")
+                resp = webService.get("${urlPrefix}?opusId=${enc(opusId)}&offset=${offset}&max=${pageSize}")
                 break;
             case ReportType.DRAFT_PROFILE:
-                resp = webService.get("${grailsApplication.config.profile.service.url}/report/draftProfiles?opusId=${enc(opusId)}")
+                resp = webService.get("${urlPrefix}?opusId=${enc(opusId)}")
                 break;
             case ReportType.ARCHIVED_PROFILE:
-                resp = webService.get("${grailsApplication.config.profile.service.url}/report/archivedProfiles?opusId=${enc(opusId)}")
+                resp = webService.get("${urlPrefix}?opusId=${enc(opusId)}")
                 break;
-            case ReportType.MOST_RECENT_CHANGE:
+            case ReportType.RECENT_CHANGE:
                 range = utilService.getDateRange(dates.period, dates.from, dates.to);
-                resp = webService.get("${grailsApplication.config.profile.service.url}/report/mostRecentChange?opusId=${enc(opusId)}&to=${enc(range['to'])}&from=${enc(range['from'])}&offset=${offset}&max=${pageSize}")
+                String url = "${urlPrefix}?opusId=${enc(opusId)}&to=${enc(range['to'])}&from=${enc(range['from'])}&offset=${offset}&max=${pageSize}"
+
+                url += "&countOnly=" + BooleanUtils.toString(countOnly, "true", "false");
+
+                resp = webService.get(url)
                 break;
         }
 

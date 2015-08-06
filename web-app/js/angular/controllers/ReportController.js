@@ -5,15 +5,15 @@ profileEditor.controller('ReportController', function (profileService, util, con
     var self = this;
 
     self.opusId = util.getEntityId("opus");
-
     self.pageSize = 25;
+    self.isCountOnly = false;
 
     self.reports = [
         {id: "mismatchedNames", name: "Mismatched Names"},
         {id: "draftProfiles", name: "Draft Profiles"},
-        {id: "mostRecentChange", name: "Recent updates"},
+        {id: "recentChanges", name: "Recent Updates"},
         {id: "archivedProfiles", name: "Archived Profiles"}
-    ];
+     ];
 
     self.selectedReport = null;
     self.reportData = null;
@@ -71,7 +71,7 @@ profileEditor.controller('ReportController', function (profileService, util, con
         var start = self.dates.from ? self.dates.from.getTime() : null,
             end = self.dates.to ? self.dates.to.getTime() : null;
 
-        var future = profileService.loadReport(self.opusId, self.selectedReport.id, self.pageSize, offset, self.selectedPeriod.id, start, end);
+        var future = profileService.loadReport(self.opusId, self.selectedReport.id, self.pageSize, offset, self.selectedPeriod.id, start, end, self.isCountOnly);
 
         future.then(function (data) {
             self.reportData = data;
@@ -100,6 +100,10 @@ profileEditor.controller('ReportController', function (profileService, util, con
                 self.loadReport(self.selectedReport.id, 0);
                 break;
         }
+    };
+
+    self.toggleCountOnly = function() {
+        self.isCountOnly = !self.isCountOnly;
     };
 
     self.loadCustomDateReport = function () {

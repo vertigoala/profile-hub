@@ -32,8 +32,8 @@
                         ng-if="reportCtrl.selectedReport.id == 'draftProfiles'"></ng-include>
             <ng-include src="'archivedProfilesReport.html'"
                         ng-if="reportCtrl.selectedReport.id == 'archivedProfiles'"></ng-include>
-            <ng-include src="'mostRecentChange.html'"
-                        ng-if="reportCtrl.selectedReport.id == 'mostRecentChange'"></ng-include>
+            <ng-include src="'recentChanges.html'"
+                        ng-if="reportCtrl.selectedReport.id == 'recentChanges'"></ng-include>
         </div>
     </div>
 
@@ -123,11 +123,11 @@
     </div>
     </script>
 
-    <script type="text/ng-template" id="mostRecentChange.html">
+    <script type="text/ng-template" id="recentChanges.html">
     <div class="">
         <label class="control-label">Show updates from:</label>
 
-        <div class="btn-group" role="group" aria-label="List most recent changes with the following options.">
+        <div class="btn-group" role="group" aria-label="List the most recent changes with the following options.">
             <button type="button" class="btn btn-default btn-sm" ng-repeat="period in reportCtrl.periods"
                     ng-click="reportCtrl.setPeriod(period)"
                     ng-class="{active: reportCtrl.selectedPeriod.id == period.id}">{{ period.name }}</button>

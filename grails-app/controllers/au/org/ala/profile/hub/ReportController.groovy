@@ -12,6 +12,7 @@ class ReportController extends BaseController {
     def loadReport() {
         DateRangeType period;
         Date to, from;
+        boolean countOnly = false;
         if (!params.opusId || !params.reportId) {
             badRequest()
         } else {
@@ -20,13 +21,15 @@ class ReportController extends BaseController {
                 try {
                     to = new Date(Long.parseLong(params.to));
                     from = new Date(Long.parseLong(params.from));
+                    countOnly = Boolean.parseBoolean(params.countOnly) ?: false;
                 } catch (Exception e) {
                     badRequest();
                 }
             }
 
             Map dates = ['period': period, 'from': from, 'to': to]
-            def response = profileService.loadReport(params.opusId, params.reportId, params.pageSize, params.offset, dates)
+            def response = profileService.loadReport(params.opusId, params.reportId,
+                    params.pageSize, params.offset, dates, countOnly)
 
             handle response
         }
