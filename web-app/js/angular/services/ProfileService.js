@@ -698,6 +698,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
 
             return util.toStandardPromise(future);
+        },
+
+        getStatistics: function(opusId) {
+            console.log("Fetching statistics");
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/statistics");
+            future.then(function (response) {
+               console.log("Statistics fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
         }
     }
 });

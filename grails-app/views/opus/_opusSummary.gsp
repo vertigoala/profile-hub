@@ -12,30 +12,12 @@
     </div>
 
     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-        <div class="main-stats" ng-cloak>
-            <div class="main-stats__stat col-lg-6 col-md-6 col-sm-3 col-xs-3">
-                <h4 class="stat__title heading-underlined">Profiles</h4>
-
-                <div class="stat__number">{{opusCtrl.opus.profileCount}}</div>
+        <div class="main-stats" ng-cloak ng-controller="StatisticsController as statsCtrl">
+            <div class="main-stats__stat col-lg-6 col-md-6 col-sm-6 col-xs-6"
+                ng-repeat="stat in statsCtrl.statistics">
+                <h4 class="stat__title heading-underlined">{{stat.name}}</h4>
+                <div class="stat__number">{{stat.value}}</div>
             </div>
-
-            <div class="main-stats__stat col-lg-6 col-md-6 col-sm-3 col-xs-3">
-                <h4 class="stat__title heading-underlined">Editors</h4>
-
-                <div class="stat__number">{{opusCtrl.editors.length}}</div>
-            </div>
-
-            %{--<div class="main-stats__stat col-lg-6 col-md-6 col-sm-3 col-xs-3">--}%
-                %{--<h4 class="stat__title heading-underlined">Another statistic</h4>--}%
-
-                %{--<div class="stat__number">?</div>--}%
-            %{--</div>--}%
-
-            %{--<div class="main-stats__stat col-lg-6 col-md-6 col-sm-3 col-xs-3">--}%
-                %{--<h4 class="stat__title heading-underlined">Another statistic</h4>--}%
-
-                %{--<div class="stat__number">?</div>--}%
-            %{--</div>--}%
         </div>
     </div>
 </div>
