@@ -13,10 +13,10 @@
 
     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
         <div class="main-stats" ng-cloak ng-controller="StatisticsController as statsCtrl">
-            <div class="main-stats__stat col-lg-6 col-md-6 col-sm-6 col-xs-12"
+            <div class="main-stats__stat col-lg-4 col-md-4 col-sm-4 col-xs-12"
                 ng-repeat="stat in statsCtrl.statistics">
                 <h4 class="stat__title heading-underlined">{{stat.name}}</h4>
-                <div class="stat__number">{{stat.value}}</div>
+                <div class="stat__number" title="{{stat.tooltip}}">{{stat.value}}</div>
             </div>
         </div>
     </div>
