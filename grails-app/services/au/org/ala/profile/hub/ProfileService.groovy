@@ -372,6 +372,11 @@ class ProfileService {
         resp
     }
 
+    def getStatistics(String opusId) {
+        def urlPrefix = "${grailsApplication.config.profile.service.url}/statistics/index"
+        return webService.get("${urlPrefix}?opusId=${enc(opusId)}")
+    }
+
     def getBioStatus(String opusId, String profileId) {
         def model = getProfile(opusId, profileId);
         def opus = model.opus;
