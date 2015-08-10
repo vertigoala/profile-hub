@@ -411,15 +411,17 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 .stat__number {
     font-size: 12px;
-    min-height: 30px;
-    max-height: 30px;
+    min-height: 35px;
+    max-height: 35px;
     margin-top: 0;
 }
 
 .stat__title {
-    min-height: 30px;
-    max-height: 30px;
+    min-height: 35px;
+    max-height: 35px;
     font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 5px !important;
 }
 
 .main-stats__stat {
