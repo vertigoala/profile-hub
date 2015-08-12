@@ -19,9 +19,10 @@ profileEditor.directive('nomenclature', function ($browser) {
                     profileService.getNomenclatureList($scope.nslNameId).
                         then(function (resp) {
                             $scope.references = [];
+                            console.log(resp.references.length + " references for id "+ $scope.nslNameId)
                             angular.forEach(resp.references, function (reference) {
-                                var url = reference._links.permalink.link;
-                                var id = url.substring(url.lastIndexOf("/") + 1);
+                                var referenceUrl = reference._links.permalink.link;
+                                var referenceId = referenceUrl.substring(referenceUrl.lastIndexOf("/") + 1);
                                 var name = reference.citation;
                                 if (isTruthy(reference.APCReference)) {
                                     name += " (APC)";
@@ -29,24 +30,36 @@ profileEditor.directive('nomenclature', function ($browser) {
                                 var formattedName = reference.citationHtml;
                                 var citations = [];
 
+                                var firstInstanceId = null;
                                 angular.forEach(reference.citations, function (citation) {
                                     citations.push(citation.relationship);
+
+                                    var citationUrl = citation.instance._links.permalink.link;
+                                    var instanceId =  citationUrl.substring(citationUrl.lastIndexOf("/") + 1);
+
+                                    if (!firstInstanceId) {
+                                        firstInstanceId = instanceId;
+                                    }
                                 });
 
                                 var ref = {
-                                    id: id,
-                                    url: url,
+                                    instanceId: firstInstanceId,
+                                    referenceId: referenceId,
+                                    url: referenceUrl,
                                     name: name,
                                     formattedName: formattedName,
                                     citations: citations,
                                     apcReference: isTruthy(reference.APCReference)
                                 };
 
-                                $scope.references.push(ref);
-
-                                if (id == $scope.nslNomenclatureId) {
+                                if (firstInstanceId == $scope.nslNomenclatureId) {
                                     $scope.selectedReference = ref;
+                                    console.log(JSON.stringify(ref))
+                                } else if ($scope.nslNomenclatureId) {
+                                    console.log("No matching nomenclature found for id " + $scope.nslNomenclatureId);
                                 }
+
+                                $scope.references.push(ref);
                             });
 
                             $scope.loading = false;
@@ -79,7 +92,7 @@ profileEditor.directive('nomenclature', function ($browser) {
             scope.$watch("selectedReference", function (newValue) {
                 if (newValue !== undefined) {
                     scope.selectedReference = newValue;
-                    scope.nslNomenclatureId = newValue == null ? null : newValue.id;
+                    scope.nslNomenclatureId = newValue == null ? null : newValue.instanceId;
                 }
             }, true);
             scope.$watch("readonly", function (newValue) {
