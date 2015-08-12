@@ -123,9 +123,6 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
 
     function compareTitles(left, right) {
         var compare = -1;
-        console.log(JSON.stringify(left))
-        console.log(JSON.stringify(right))
-        console.log("---");
         if (left.order == right.order) {
             compare = left.name.toLowerCase() < right.name.toLowerCase() ? -1 : left.name.toLowerCase() > right.name.toLowerCase();
         } else {
