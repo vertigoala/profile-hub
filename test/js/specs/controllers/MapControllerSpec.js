@@ -45,6 +45,7 @@ describe("MapController tests", function () {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
+            config: {map: {mapId: "123", token: "123"}},
             messageService: messageService
         });
 
