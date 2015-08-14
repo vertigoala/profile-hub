@@ -54,9 +54,6 @@ profileEditor.directive('nomenclature', function ($browser) {
 
                                 if (firstInstanceId == $scope.nslNomenclatureId) {
                                     $scope.selectedReference = ref;
-                                    console.log(JSON.stringify(ref))
-                                } else if ($scope.nslNomenclatureId) {
-                                    console.log("No matching nomenclature found for id " + $scope.nslNomenclatureId);
                                 }
 
                                 $scope.references.push(ref);
