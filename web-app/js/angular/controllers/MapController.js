@@ -1,7 +1,7 @@
 /**
  * Map controller
  */
-profileEditor.controller('MapController', function ($scope, profileService, util, messageService, $http, leafletData) {
+profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http, leafletData) {
     var self = this;
 
     var mapBaseLayerAttribution = "Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>";
@@ -10,12 +10,13 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         baselayers: {
             xyz: {
                 name: 'Street',
-                url: 'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png',
+                url: 'https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={token}',
                 type: 'xyz',
                 maxZoom: 18,
                 layerParams: {
                     attribution: mapBaseLayerAttribution,
-                    id: 'examples.map-i875mjb7'
+                    id: config.map.mapId,
+                    token: config.map.accessKey
                 }
             }
         },

@@ -185,7 +185,9 @@
         nslServiceUrlPrefix: '${grailsApplication.config.nsl.service.url.prefix}',
         nslServiceApniConceptSuffix: '${grailsApplication.config.nsl.service.apni.concept.suffix}',
         features: {publications: '${grailsApplication.config.feature.publications}',
-                   imageUpload:'${grailsApplication.config.feature.feature.imageUpload}'}
+                   imageUpload:'${grailsApplication.config.feature.feature.imageUpload}'},
+        map: {mapId: '${grailsApplication.config.map.id}',
+              accessKey: '${grailsApplication.config.map.access.key}'}
      });
 </r:script>
 

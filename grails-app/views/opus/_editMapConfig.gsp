@@ -27,12 +27,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="mapBaseLayer">Base layer URL</label>
-                    <input id="mapBaseLayer" type="text" class="form-control" name="mapBaseLayer"
-                           ng-model="opusCtrl.opus.mapBaseLayer">
-                </div>
-
-                <div class="form-group">
                     <label for="pointColour">Point color</label>
 
                     <div class="input-group">
