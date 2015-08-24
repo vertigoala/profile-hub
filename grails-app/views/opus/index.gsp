@@ -30,7 +30,7 @@
                             <h3 class="heading-medium">Browse by individual collection</h3>
                         </div>
 
-                        <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-xs-12 col-sm-2 text-center">
+                        <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-xs-12 col-md-2 text-center" style="min-height: 170px; height: 170px">
                             <a href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
                                target="_self">
                                 <img class="img-responsive collection-thumbnail thumbnail"
