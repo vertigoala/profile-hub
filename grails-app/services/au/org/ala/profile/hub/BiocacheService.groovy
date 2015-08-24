@@ -51,7 +51,7 @@ class BiocacheService {
                 dataResourceId = "dr4"
             } else if (dataResourceId == "dr2172") { // nsw
                 dataResourceId = "dr5"
-            } else if (dataResourceId == "dr2172") { // olkola
+            } else if (dataResourceId == "dr2341") { // olkola
                 dataResourceId = "dr7"
             }
         }
