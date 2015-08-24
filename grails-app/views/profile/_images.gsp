@@ -142,6 +142,9 @@
                         <button class="btn btn-default" ng-click="imageCtrl.uploadImage()"><i
                                 class="fa fa-plus"></i>&nbsp;Add Image</button>
                     </g:if>
+                    <g:elseif test="${grailsApplication.config.deployment_env.toLowerCase() != 'prod' && grailsApplication.config.deployment_env.toLowerCase() != 'production'}">
+                        <span class="small">Image uploads are not available in ${grailsApplication.config.deployment_env}</span>
+                    </g:elseif>
                     <button class="btn btn-primary pull-right" ng-click="imageCtrl.saveProfile(ImageForm)"><span
                             ng-show="ImageForm.$dirty">*</span> Save</button>
                 </div>
