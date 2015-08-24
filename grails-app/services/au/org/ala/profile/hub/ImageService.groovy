@@ -134,8 +134,11 @@ class ImageService {
     def publishImages(String opusId, String profileId) {
         def profile = profileService.getProfile(opusId, profileId, true)
 
-        Map stagedImages = profile.profile.stagedImages?.collectEntries {
-            [(it.imageId): it]
+        Map stagedImages = [:]
+        if (profile.profile.stagedImages) {
+            stagedImages = profile.profile.stagedImages?.collectEntries {
+                [(it.imageId): it]
+            }
         }
 
         Map profileUpdates = [:]
