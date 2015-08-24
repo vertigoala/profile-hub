@@ -30,6 +30,14 @@
 
 <body id="${pageProperty(name: 'body.id')}" onload="${pageProperty(name: 'body.onload')}">
 
+<g:if test="${grailsApplication.config.environment && grailsApplication.config.environment?.toLowerCase() != "prod" && grailsApplication.config.environment?.toLowerCase() != "production"}">
+    <div class="padding-top-1" ng-cloak>
+        <alert type="warning admin-message">
+            <span class="admin-message-text">This is a ${grailsApplication.config.environment.toUpperCase()} site.</span>
+        </alert>
+    </div>
+</g:if>
+
 <g:if test="${application.getAttribute("alaAdminMessage")}">
     <div class="padding-top-1" ng-cloak>
         <alert type="danger admin-message">
