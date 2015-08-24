@@ -40,6 +40,10 @@
                                     href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
                                     target="_self"><strong>{{opus.title}}</strong></a></h4>
                         </div>
+
+                        <div ng-show="opusCtrl.opusList.length == 0" class="col-md-12 padding-top-1">
+                            There are no visible collections.
+                        </div>
                     </div>
                 </tab>
                 <tab heading="Quick Search" class="font-xxsmall">
