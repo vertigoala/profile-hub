@@ -33,7 +33,7 @@ class ImageService {
             response = profileService.recordStagedImage(opusId, profileId, metadata)
         } else {
             // if the profile is not in draft mode, upload the image to the biocache immediately
-            response = biocacheService.uploadImage(opusId, profileId, dataResourceId, file, metadata)
+            response = biocacheService.uploadImage(opusId, profile.profile.uuid, dataResourceId, file, metadata)
         }
 
         response
@@ -162,7 +162,7 @@ class ImageService {
             ]
             Map metadata = [multimedia: multimedia, scientificName: profile.profile.scientificName]
 
-            def uploadResponse = biocacheService.uploadImage(opusId, profileId, profile.opus.dataResourceUid, it, metadata)
+            def uploadResponse = biocacheService.uploadImage(opusId, profile.profile.uuid, profile.opus.dataResourceUid, it, metadata)
 
             // check if the staged image was set as the primary or an excluded image, and swap the staged id for the new permanent id
             if (profile.profile.primaryImage == imageId) {

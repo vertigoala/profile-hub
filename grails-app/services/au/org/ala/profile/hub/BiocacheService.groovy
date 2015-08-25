@@ -33,7 +33,7 @@ class BiocacheService {
             file.renameTo(new File(tempDir, file.getName()));
         }
 
-        metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${opusId}/profile/${profileId}/file/${filename}"
+        metadata.multimedia[0].identifier = URLEncoder.encode("${grailsApplication.config.grails.serverURL}/opus/${opusId}/profile/${profileId}/file/${filename}", "utf-8")
 
         // make sure the spelling of licenSe is US to match the Darwin Core standard
         if (metadata.multimedia[0].containsKey("licence")) {
