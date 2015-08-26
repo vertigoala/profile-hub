@@ -94,7 +94,7 @@ class ImageService {
                         dataResourceName: it.dataResourceName,
                         excluded        : excluded,
                         primary         : it.image == profile.primaryImage,
-                        metadata        : it.imageMetadata,
+                        metadata        : it.imageMetadata && !it.imageMetadata.isEmpty() ? it.imageMetadata[0] : [:],
                         staged          : false
                 ]
             }
