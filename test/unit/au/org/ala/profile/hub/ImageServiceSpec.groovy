@@ -137,8 +137,8 @@ class ImageServiceSpec extends Specification {
         setup:
         profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1"]]
 
-        Map image1Metadata = [title: "image 1"]
-        Map image2Metadata = [title: "image 2"]
+        List<Map> image1Metadata = [[title: "image 1"]]
+        List<Map> image2Metadata = [[title: "image 2"]]
 
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: [
                 [image: "image1", uuid: "occurrenceId1", largeImageUrl: "largeUrl1", thumbnailUrl: "thumbnailUrl1", dataResourceName: "resource1", imageMetadata: image1Metadata],
@@ -155,14 +155,14 @@ class ImageServiceSpec extends Specification {
         result.resp[0].dataResourceName == "resource1"
         result.resp[0].largeImageUrl == "largeUrl1"
         result.resp[0].thumbnailUrl == "thumbnailUrl1"
-        result.resp[0].metadata == image1Metadata
+        result.resp[0].metadata == image1Metadata[0]
         result.resp[0].staged == false
         result.resp[1].imageId == "image2"
         result.resp[1].occurrenceId == "occurrenceId2"
         result.resp[1].dataResourceName == "resource2"
         result.resp[1].largeImageUrl == "largeUrl2"
         result.resp[1].thumbnailUrl == "thumbnailUrl2"
-        result.resp[1].metadata == image2Metadata
+        result.resp[1].metadata == image2Metadata[0]
         result.resp[1].staged == false
     }
 
@@ -175,8 +175,8 @@ class ImageServiceSpec extends Specification {
                 stagedImage1, stagedImage2
         ]]]
 
-        Map image1Metadata = [title: "image 1"]
-        Map image2Metadata = [title: "image 2"]
+        List<Map> image1Metadata = [[title: "image 1"]]
+        List<Map> image2Metadata = [[title: "image 2"]]
 
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: [
                 [image: "image1", uuid: "occurrenceId1", largeImageUrl: "largeUrl1", thumbnailUrl: "thumbnailUrl1", dataResourceName: "resource1", imageMetadata: image1Metadata],
@@ -193,14 +193,14 @@ class ImageServiceSpec extends Specification {
         result.resp[0].dataResourceName == "resource1"
         result.resp[0].largeImageUrl == "largeUrl1"
         result.resp[0].thumbnailUrl == "thumbnailUrl1"
-        result.resp[0].metadata == image1Metadata
+        result.resp[0].metadata == image1Metadata[0]
         result.resp[0].staged == false
         result.resp[1].imageId == "image2"
         result.resp[1].occurrenceId == "occurrenceId2"
         result.resp[1].dataResourceName == "resource2"
         result.resp[1].largeImageUrl == "largeUrl2"
         result.resp[1].thumbnailUrl == "thumbnailUrl2"
-        result.resp[1].metadata == image2Metadata
+        result.resp[1].metadata == image2Metadata[0]
         result.resp[1].staged == false
 
         result.resp[2].imageId == "staged1"
