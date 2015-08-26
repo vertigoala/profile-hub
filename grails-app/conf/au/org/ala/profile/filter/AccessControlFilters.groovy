@@ -61,7 +61,7 @@ class AccessControlFilters {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_USER.toString()
                                     } != null || params.isOpusReviewer || params.isOpusAdmin || params.isOpusEditor
                                 }
-                                log.debug("Opus Admin? ${params.isOpusAdmin}; Opus editor? ${params.isOpusEditor}; Opus reviewer? ${params.isOpusReviewer}; Opus user? ${params.isOpusUserr};")
+                                log.debug("User ${request.userPrincipal?.name} is : Opus Admin? ${params.isOpusAdmin}; Opus editor? ${params.isOpusEditor}; Opus reviewer? ${params.isOpusReviewer}; Opus user? ${params.isOpusUserr};")
 
                                 if (!opus || !opus.privateCollection || params.isOpusUser || controllerAction.isAnnotationPresent(PrivateCollectionSecurityExempt)) {
                                     if (controllerAction.isAnnotationPresent(Secured)) {
@@ -73,29 +73,31 @@ class AccessControlFilters {
                                             if (opus) {
                                                 if (requiredRole == Role.ROLE_PROFILE_ADMIN.toString()) {
                                                     authorised = params.isOpusAdmin
-                                                    log.trace "Action ${actionFullName} requires ROLE_PROFILE_ADMIN. User has it? ${authorised}"
+                                                    log.debug "Action ${actionFullName} requires ROLE_PROFILE_ADMIN. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_EDITOR.toString()) {
                                                     authorised = params.isOpusAdmin || params.isOpusEditor
-                                                    log.trace "Action ${actionFullName} requires ${requiredRole}. User has it? ${authorised}"
+                                                    log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_REVIEWER.toString()) {
                                                     authorised = params.isOpusAdmin || params.isOpusEditor || params.isOpusReviewer
-                                                    log.trace "Action ${actionFullName} requires ${requiredRole}. User has it? ${authorised}"
+                                                    log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 }
                                             } else {
-                                                log.trace "Security for action ${actionFullName} is opus specific, but no matching opus was found with id ${params.opusId}"
+                                                log.debug "Security for action ${actionFullName} is opus specific, but no matching opus was found with id ${params.opusId}"
                                             }
                                         }
                                     } else {
-                                        log.trace "Action ${actionFullName} is not secured"
+                                        log.debug "Action ${actionFullName} is not secured"
                                         authorised = true
                                     }
+                                } else {
+                                    log.debug "The collection is private and the user is not registered with the collection."
                                 }
                             } else {
                                 params.isOpusAdmin = true
                                 params.isOpusEditor = true
                                 params.isOpusReviewer = true
                                 params.isOpusUser = true
-                                log.trace "ALA Admin user"
+                                log.debug "User ${request.userPrincipal?.name} is an ALA Admin user"
                                 authorised = true
                             }
                         }
