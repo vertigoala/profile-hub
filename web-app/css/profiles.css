@@ -406,7 +406,7 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .main-stats .main-stats__stat {
     text-align: center;
     border: 1px solid rgba(233, 0, 74, 0.2);
-    overflow: scroll;
+    overflow: auto;
 }
 
 .stat__number {
