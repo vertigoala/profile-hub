@@ -3,6 +3,7 @@ package au.org.ala.profile.filter
 import au.org.ala.profile.hub.ProfileService
 import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
+import au.org.ala.profile.security.PrivateCollectionSecurityExempt
 import au.org.ala.web.AuthService
 import org.apache.http.HttpStatus
 
@@ -62,7 +63,7 @@ class AccessControlFilters {
                                 }
                                 log.debug("Opus Admin? ${params.isOpusAdmin}; Opus editor? ${params.isOpusEditor}; Opus reviewer? ${params.isOpusReviewer}; Opus user? ${params.isOpusUserr};")
 
-                                if (!opus || !opus.privateCollection || params.isOpusUser) {
+                                if (!opus || !opus.privateCollection || params.isOpusUser || controllerAction.isAnnotationPresent(PrivateCollectionSecurityExempt)) {
                                     if (controllerAction.isAnnotationPresent(Secured)) {
                                         def annotation = controllerAction.getAnnotation(Secured)
 

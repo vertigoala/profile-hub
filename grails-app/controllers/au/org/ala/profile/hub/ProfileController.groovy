@@ -2,6 +2,7 @@ package au.org.ala.profile.hub
 
 import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
+import au.org.ala.profile.security.PrivateCollectionSecurityExempt
 import au.org.ala.web.AuthService
 import grails.converters.JSON
 import org.springframework.web.multipart.MultipartFile
@@ -305,11 +306,12 @@ class ProfileController extends BaseController {
         downloadFile("${grailsApplication.config.image.staging.dir}/${params.profileId}", params.imageId, "image/*")
     }
 
+    @PrivateCollectionSecurityExempt
     def downloadTempFile() {
-        downloadFile("${grailsApplication.config.temp.file.location}", params.fileId, "application/pdf")
+        downloadFile("${grailsApplication.config.temp.file.location}", params.fileId)
     }
 
-    private downloadFile(String path, String filename, String contentType) {
+    private downloadFile(String path, String filename) {
         if (!filename) {
             badRequest "fileId is a required parameter"
         } else {
@@ -319,8 +321,22 @@ class ProfileController extends BaseController {
                 notFound "The requested file could not be found"
             } else {
                 response.setHeader("Content-disposition", "attachment;filename=${filename}")
+                response.setContentType(getContentType(file))
                 response.outputStream << file.newInputStream()
             }
+        }
+    }
+
+    private getContentType(File file) {
+        String extension = file.getName().substring(file.getName().lastIndexOf("."))
+
+        List images = ["jpg", "jpeg", "gif", "tiff", "png", "bmp"]
+        if (images.contains(extension)) {
+            "image/*"
+        } else if (extension == "pdf") {
+            "application/pdf"
+        } else {
+            ""
         }
     }
 

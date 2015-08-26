@@ -1,6 +1,7 @@
 package au.org.ala.profile.filter
 
 import au.org.ala.profile.hub.ProfileService
+import au.org.ala.profile.security.PrivateCollectionSecurityExempt
 import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
@@ -275,6 +276,29 @@ class AccessControlFiltersSpec extends Specification {
         then:
         response.status == 200
     }
+
+    void "methods for private collections annotated with @PrivateCollectionSecurityExempt can be accessed by anyone"() {
+        setup:
+        // need to do this because grailsApplication.controllerClasses is empty in the filter when run from the unit test
+        // unless we manually add the dummy controller class used in this test
+        grailsApplication.addArtefact("Controller", SecuredController)
+
+        defineBeans {
+            authService(MockAuthService)
+            profileService(MockProfileService)
+        }
+
+        when:
+        params.opusId = "private"
+        request.userPrincipal = null
+
+        withFilters(controller: "secured", action: "privateCollectionSecurityExemptAction") {
+            controller.privateCollectionSecurityExemptAction()
+        }
+
+        then:
+        response.status == 200
+    }
 }
 
 class User implements Principal {
@@ -317,6 +341,11 @@ class SecuredController {
 
     @Secured(role = Role.ROLE_PROFILE_REVIEWER)
     def profileReviewerAction() {
+
+    }
+
+    @PrivateCollectionSecurityExempt
+    def privateCollectionSecurityExemptAction() {
 
     }
 }
