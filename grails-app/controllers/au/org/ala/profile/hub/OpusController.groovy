@@ -152,7 +152,7 @@ class OpusController extends BaseController {
     }
 
     private getAboutUrl(opus) {
-        opus.hasAboutPage ? "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/about" : ""
+        "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/about"
     }
 
     def show() {
