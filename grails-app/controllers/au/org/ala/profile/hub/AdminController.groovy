@@ -8,12 +8,12 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 class AdminController extends BaseController {
 
-    @Secured(role = Role.ROLE_ADMIN)
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
     def index() {
         render view: "admin.gsp"
     }
 
-    @Secured(role = Role.ROLE_ADMIN)
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
     def postMessage() {
         if (request.getJSON().message) {
             servletContext.setAttribute("alaAdminMessage", request.getJSON().message)
@@ -32,7 +32,7 @@ class AdminController extends BaseController {
     /**
      * Reload external config file
      */
-    @Secured(role = Role.ROLE_ADMIN)
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
     def reloadConfig() {
         // reload system config
         def configLocation = "file:${grailsApplication.config.default_config}"
