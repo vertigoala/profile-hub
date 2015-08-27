@@ -3,7 +3,7 @@
 <head>
     <r:require module="profiles"/>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
-    <title>About ${pageTitle}</title>
+    <title>${pageTitle}</title>
 </head>
 
 <body>
