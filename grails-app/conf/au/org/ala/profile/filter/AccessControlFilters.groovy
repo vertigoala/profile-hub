@@ -33,7 +33,7 @@ class AccessControlFilters {
 
                         if (actionName) {
                             def controllerAction = controllerClass.getClazz().declaredMethods.find {
-                                it.toString().indexOf(actionName) > -1
+                                it.getName() == actionName
                             }
 
                             if (!usersRoles.contains(Role.ROLE_ADMIN.toString())) {
