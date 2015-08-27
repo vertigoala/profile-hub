@@ -32,9 +32,7 @@ class AccessControlFilters {
                         }
 
                         if (actionName) {
-                            def controllerAction = controllerClass.getClazz().declaredMethods.find {
-                                it.getName() == actionName
-                            }
+                            def controllerAction = controllerClass.getClazz().getDeclaredMethod(actionName)
 
                             if (!usersRoles.contains(Role.ROLE_ADMIN.toString())) {
                                 // If we have a request for a single opus, check if the user is associated with that opus.
