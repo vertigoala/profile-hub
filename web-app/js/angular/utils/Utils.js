@@ -305,7 +305,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         }
 
         var name = null;
-        if (fullName) {
+        if (fullName && fullName.trim().length > 0) {
             name = fullName;
         } else if (scientificName && nameAuthor) {
             name = scientificName + " " + nameAuthor;
