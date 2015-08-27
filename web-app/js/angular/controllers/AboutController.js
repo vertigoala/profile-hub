@@ -18,6 +18,7 @@ profileEditor.controller('AboutController', function (profileService, messageSer
         self.citationYear = data.opus.year;
         self.citationDate = data.opus.date;
         self.citationUrl = data.opus.opusUrl;
+        self.administrators = data.opus.administrators;
     });
 
     self.hasCitation = function() {
