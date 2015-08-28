@@ -45,15 +45,21 @@ class BiocacheService {
 
         // TODO: REMOVE THIS - IT IS FOR TESTING ONLY!!!!
         String hostname = InetAddress.getLocalHost().hostName
-        println "Hostname = ${hostname}"
         if (hostname == "nci-profiles" || hostname == "nci-profiles-dev" || hostname == "maccy-bm") {
-            if (dataResourceId == "dr382") { // foa
-                dataResourceId = "dr4"
-            } else if (dataResourceId == "dr2172") { // nsw
-                dataResourceId = "dr5"
-            } else if (dataResourceId == "dr2341") { // olkola
-                dataResourceId = "dr7"
-            }
+            Map drIdMapping = [
+                    dr382: "dr4",
+                    dr2172: "dr5",
+                    dr2341: "dr7",
+                    dr2484: "dr12",
+                    dr2485: "dr13",
+                    dr2486: "dr15",
+                    dr2482: "dr11",
+                    dr2487: "dr14",
+                    dr2483: "dr16",
+                    dr2488: "dr17"
+            ]
+            log.debug "Mapping prod drId ${dataResourceId} to collectory-dev drId ${drIdMapping[dataResourceId]}"
+            dataResourceId = drIdMapping[dataResourceId]
         }
 
         webService.doPost("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
