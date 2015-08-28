@@ -47,7 +47,7 @@
                         <accordion-heading>
                             <i class="fa fa-circle-thin"></i>
                         &emsp;<a ng-href="#"
-                                 ng-click="searchCtrl.searchByTaxonLevel(taxon.key)">{{taxon.name}} ({{searchCtrl.taxonLevels[taxon.key]}})</a>
+                                 ng-click="searchCtrl.searchByTaxonLevel(taxon.key)">{{taxon.name}} ({{searchCtrl.taxonLevels[taxon.key] ? searchCtrl.taxonLevels[taxon.key] : '0'}})</a>
                             <span class="caret"></span>
                         </accordion-heading>
 
