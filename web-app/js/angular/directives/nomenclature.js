@@ -19,7 +19,7 @@ profileEditor.directive('nomenclature', function ($browser) {
                     profileService.getNomenclatureList($scope.nslNameId).
                         then(function (resp) {
                             $scope.references = [];
-                            console.log(resp.references.length + " references for id "+ $scope.nslNameId)
+
                             angular.forEach(resp.references, function (reference) {
                                 var referenceUrl = reference._links.permalink.link;
                                 var referenceId = referenceUrl.substring(referenceUrl.lastIndexOf("/") + 1);

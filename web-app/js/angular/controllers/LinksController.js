@@ -21,8 +21,7 @@ profileEditor.controller('LinksEditor', function (profileService, navService, ut
                 self.profile = data.profile;
                 self.opus = data.opus;
                 self.links = data.profile.links;
-
-                if (self.links || !self.readonly) {
+                if (self.links && self.links.length > 0 || !self.readonly) {
                     navService.add("Links", "links");
                 }
             },
