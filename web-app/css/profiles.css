@@ -532,3 +532,11 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     font-size: 10px;
     margin-left: 5px;
 }
+
+.italics {
+    font-style: italic;
+}
+
+.bold {
+    font-weight: bold;
+}
