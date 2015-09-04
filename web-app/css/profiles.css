@@ -149,6 +149,13 @@ input[type=file] {
     background-color: #fff;
 }
 
+.status.small {
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    font-size: 8px;
+}
+
 .status.green {
     background-color: #43c205;
     border-color: #43c205;
