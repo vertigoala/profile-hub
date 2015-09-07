@@ -56,7 +56,8 @@ class BiocacheService {
                     dr2482: "dr11",
                     dr2487: "dr14",
                     dr2483: "dr16",
-                    dr2488: "dr17"
+                    dr2488: "dr17",
+                    dr2502: "dr18"
             ]
             log.debug "Mapping prod drId ${dataResourceId} to collectory-dev drId ${drIdMapping[dataResourceId]}"
             dataResourceId = drIdMapping[dataResourceId]
