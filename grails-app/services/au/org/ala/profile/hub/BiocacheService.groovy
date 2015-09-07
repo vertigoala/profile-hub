@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import groovy.json.JsonSlurper
 import org.springframework.web.multipart.MultipartFile
 
 class BiocacheService {
@@ -45,20 +46,10 @@ class BiocacheService {
 
         // TODO: REMOVE THIS - IT IS FOR TESTING ONLY!!!!
         String hostname = InetAddress.getLocalHost().hostName
-        if (hostname == "nci-profiles" || hostname == "nci-profiles-dev" || hostname == "maccy-bm") {
-            Map drIdMapping = [
-                    dr382: "dr4",
-                    dr2172: "dr5",
-                    dr2341: "dr7",
-                    dr2484: "dr12",
-                    dr2485: "dr13",
-                    dr2486: "dr15",
-                    dr2482: "dr11",
-                    dr2487: "dr14",
-                    dr2483: "dr16",
-                    dr2488: "dr17",
-                    dr2502: "dr18"
-            ]
+        if ((hostname == "nci-profiles" || hostname == "nci-profiles-dev" || hostname == "maccy-bm")
+                && grailsApplication.config.test.collectory.drid.mappings) {
+            Map drIdMapping = new JsonSlurper().parseText(grailsApplication.config.test.collectory.drid.mappings)
+
             log.debug "Mapping prod drId ${dataResourceId} to collectory-dev drId ${drIdMapping[dataResourceId]}"
             dataResourceId = drIdMapping[dataResourceId]
         }
