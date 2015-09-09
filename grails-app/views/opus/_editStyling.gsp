@@ -48,12 +48,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Copyright statement</label>
+                    <label for="copyright">Copyright statement</label>
 
-                    <div text-angular text-angular-name="copyright" ng-model="opusCtrl.opus.copyrightText"
-                         ta-toolbar="{{richTextToolbarSimple}}" ta-max-text="1000"></div>
-
-                    <span class="small">To be displayed at the bottom of each profile page</span>
+                    <div class="input-group">
+                        <span class="input-group-addon">&copy;</span>
+                        <input id="copyright" type="text" class="form-control" name="copyright" ng-model="opusCtrl.opus.copyrightText"/> <br/>
+                    </div>
+                    <span class="small">e.g. &copy; {{opusCtrl.opus.title}}, 2015. To be displayed at the bottom of each profile page</span>
                 </div>
 
                 <div class="form-group">

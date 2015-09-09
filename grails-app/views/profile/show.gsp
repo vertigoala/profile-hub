@@ -160,9 +160,9 @@
         </div>
     </g:if>
 
-    <div class="row margin-top-1" ng-if="profileCtrl.opus.copyrightText">
-        <div class="col-md-12">
-            <div ta-bind ng-model="profileCtrl.opus.copyrightText" class="small text-center"></div>
+    <div class="row margin-top-1">
+        <div class="col-md-12 col-xs-12 col-lg-12 small text-center" ng-cloak>
+            <p><span ng-show="profileCtrl.opus.copyrightText">&copy; {{ profileCtrl.opus.copyrightText }}.</span> <a href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/about##copyright" target="_blank">Copyright Notice</a>.</p>
         </div>
     </div>
 

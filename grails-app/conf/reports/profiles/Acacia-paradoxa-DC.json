@@ -9,7 +9,8 @@
    "colophon": {
      "citation": "P.G. Kodela (2015) Acacia paradoxa DC.. In: Kellermann, J. (ed.), <i>Flora of South Australia <\/i>(ed. 5). 10 pp. (State Herbarium of South Australia: Adelaide). http://localhost:8080/profile-hub/opus/39295895-f9cd-4189-bc19-64bd46cd689b. 27 July 2015 - 02:38",
       "logo": "http://root.ala.org.au/bdrs-core/files/download.htm?className=au.com.gaiaresources.bdrs.model.theme.Theme&id=217&fileName=processed/images/bdrs/atlasoflivingaust.png",
-      "copyright": "<p>© Landcare Research New Zealand Limited 2014.<\/p><p>This copyright work is licensed under the Creative Commons Attribution3.0 New Zealand license.<\/p><p>Attribution if redistributing to the public without adaptation: “Source:Landcare Research”<\/p><p>Attribution if making an adaptation or derivative work: “Sourced from Landcare Research”<br/><\/p>",
+      "collectionCopyright": "© Flora of Australia 2015.",
+      "genericCopyright": "<p>The material in profiles is protected by copyright laws and may be used as permitted under the Copyright Act 1968 or in accordance with licences granted by the copyright owner.</p><p>Images and maps used in this profile have been contributed to the ALA and are subject to copyright. Your right to use these is subject to the terms of the licence that the contributor has applied to the image or map. You may not remove any copyright or other notices applied to maps. In some cases you may need to seek the permission of the copyright owner to use images. Information on using images can be found <a href='http://www.ala.org.au/faq/using-images-found-on-the-ala/' target='_blank'>here</a>.</p><p>Text used in this profile has been contributed by the editors and others identified. Except where indicated, text is licensed under a <a href='http://creativecommons.org/licenses/by/4.0/' target='_blank'>Creative Commons Attribution 4.0 License</a>.</p><p>No rights are granted to the Commonwealth Coat of Arms or to any logos or trademarks used on the site.</p><p>If you believe material available on this website infringes any rights or breaches any contract or licence obligations please contact us <a href='mailto:support@ala.org.au'>support@ala.org.au</a> with details.</p>",
       "profileLink": "http://localhost:8080/profile-hub/opus/39295895-f9cd-4189-bc19-64bd46cd689b/profile/bee218e6-e0a4-4b99-8c5e-e63a6e1b93aa",
       "version": "1"
    },
@@ -142,7 +143,8 @@
                "occurrenceId": "d8209b4a-bc82-40cc-8814-bd7d43fc892c",
                "imageNumber": 2,
                "staged": false,
-               "metadata": null
+               "metadata": null,
+               "licenceIcon": "https://licensebuttons.net/l/by-nc/3.0/80x15.png"
             },
             "leftImage": {
                "imageDetailsUrl": "http://images.ala.org.au/image/details?imageId=dfc0883d-1fab-4689-a922-b6f30ab93236",
@@ -156,7 +158,8 @@
                "occurrenceId": "50786efe-acdc-4b12-b80d-7cfc28247e12",
                "imageNumber": 1,
                "staged": false,
-               "metadata": null
+               "metadata": {"title":"image title"},
+               "licenceIcon": "https://licensebuttons.net/l/by-nc/3.0/80x15.png"
             }
          },
          {

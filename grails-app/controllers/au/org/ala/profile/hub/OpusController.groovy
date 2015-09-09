@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
@@ -84,6 +85,7 @@ class OpusController extends BaseController {
                 opusUrl: "${grailsApplication.config.grails.serverURL}/opus/${params.opusId}",
                 date: new Date().format('dd MMMM yyyy - hh:mm'),
                 year: new Date().format('yyyy'),
+                genericCopyrightHtml: HubConstants.GENERIC_COPYRIGHT_TEXT
         ]
 
         handle response

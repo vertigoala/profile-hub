@@ -10,6 +10,7 @@
 
 <div class="container">
     <div class="margin-bottom-2"></div>
+    <h2 class="heading-large">${pageTitle}</h2>
     <div class="row" ng-controller="AboutController as aboutCtrl">
         <div class="col-md-12 col-xs-12 col-lg-12">
             <div ta-bind ng-model="aboutCtrl.aboutHtml"></div>
@@ -34,6 +35,16 @@
                     <a href="mailto:{{admin.email}}">{{ admin.name }}</a>
                 </li>
             </ul>
+        </div>
+
+        <div class="col-md-12 col-xs-12 col-lg-12 padding-top-1" ng-cloak>
+            <a name="copyright"></a>
+
+            <h4>Copyright</h4>
+
+            <p ng-show="aboutCtrl.collectionCopyright">&copy; {{ aboutCtrl.collectionCopyright }}</p>
+
+            <div data-ng-bind-html="aboutCtrl.genericCopyrightHtml"></div>
         </div>
     </div>
 </div>

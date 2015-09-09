@@ -10,6 +10,8 @@ profileEditor.controller('AboutController', function (profileService, messageSer
     self.citationYear = null;
     self.citationDate = null;
     self.citationUrl = null;
+    self.collectionCopyright = null;
+    self.genericCopyright = null;
 
     var future = profileService.getOpusAbout(self.opusId);
     future.then(function(data) {
@@ -19,6 +21,8 @@ profileEditor.controller('AboutController', function (profileService, messageSer
         self.citationDate = data.opus.date;
         self.citationUrl = data.opus.opusUrl;
         self.administrators = data.opus.administrators;
+        self.collectionCopyright = data.opus.copyright;
+        self.genericCopyrightHtml = data.opus.genericCopyrightHtml;
     });
 
     self.hasCitation = function() {

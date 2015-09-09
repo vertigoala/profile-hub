@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.hub.util.HubConstants
 import grails.converters.JSON
 import grails.transaction.NotTransactional
 import net.glxn.qrgen.QRCode
@@ -19,7 +20,7 @@ import static groovyx.gpars.GParsPool.withPool
 class ExportService {
 
     private static final int THREAD_COUNT = 10
-    def transactional = false
+    static transactional = false
 
     ProfileService profileService
     BiocacheService biocacheService
@@ -89,8 +90,8 @@ class ExportService {
                 dataSource: new JsonDataSource(inputStream),
                 parameters: [
                         'PROFILES_REPORT_OPTIONS': curatedModel.options,
-                        'REPORT_FILE_RESOLVER': new SimpleFileResolver(reportsDir),
-                        'QR_CODE': qrCodeInputStream
+                        'REPORT_FILE_RESOLVER'   : new SimpleFileResolver(reportsDir),
+                        'QR_CODE'                : qrCodeInputStream
                 ]
         )
 
@@ -134,7 +135,7 @@ class ExportService {
 
         curatedModel.options << [
                 allowFineGrainedAttribution: opus.allowFineGrainedAttribution,
-                displayToc: curatedModel.profiles?.size() > 1
+                displayToc                 : curatedModel.profiles?.size() > 1
         ]
 
         def firstProfile = curatedModel.profiles[0]?.profile
@@ -155,11 +156,12 @@ class ExportService {
                         primaryImage: firstProfile?.primaryImage ?: (firstProfile?.images?.size() > 0 ? firstProfile?.images[0].leftImage.largeImageUrl : '')
                 ],
                 colophon: [
-                        copyright  : opus.copyrightText,
-                        logo       : opus.logoUrl,
-                        profileLink: "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${firstProfile?.uuid}",
-                        citation   : citation,
-                        version    : firstProfile.version ?: null
+                        collectionCopyright: "&copy; ${opus.copyrightText}",
+                        genericCopyright   : HubConstants.GENERIC_COPYRIGHT_TEXT,
+                        logo               : opus.logoUrl,
+                        profileLink        : "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${firstProfile?.uuid}",
+                        citation           : citation,
+                        version            : firstProfile.version ?: null
                 ]
         ]
 
@@ -213,15 +215,17 @@ class ExportService {
             }
             if (i % 2 == 0) {
                 image << [
-                        imageNumber: i + 1,
-                        scientificName: model.profile.scientificName,
-                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${image.imageId}"
+                        imageNumber    : i + 1,
+                        scientificName : model.profile.scientificName,
+                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${image.imageId}",
+                        licenceIcon : getCCLicenceIcon(image.metadata.license)
                 ]
                 Map nextImage = (i + 1 < images.size()) ? images[i + 1] : [:]
                 nextImage << [
-                        imageNumber: i + 2,
-                        scientificName: model.profile.scientificName,
-                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}"
+                        imageNumber    : i + 2,
+                        scientificName : model.profile.scientificName,
+                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}",
+                        licenceIcon : getCCLicenceIcon(image.metadata.license)
                 ]
                 groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
             }
@@ -256,17 +260,19 @@ class ExportService {
         // Format nomenclature references
         if (params.nomenclature && nslNameIdentifier && nslNomenclatureIdentifier) {
             model.profile.nomenclature = nslService.getConcept(nslNameIdentifier, nslNomenclatureIdentifier)
-            model.profile.nomenclature?.citations?.each {citation ->
+            model.profile.nomenclature?.citations?.each { citation ->
                 citation.relationship = stripTextFromNonFormattingHtmlTags(citation.relationship)
             }
         }
 
         // Filter authors and contributors
         model.profile.acknowledgements = model.profile.authorship?.findAll { it.category != 'Author' }
-        model.profile.authorship = model.profile.authorship?.findAll { it.category == 'Author' }.collect {it.text}.join(", ")
+        model.profile.authorship = model.profile.authorship?.findAll { it.category == 'Author' }.collect {
+            it.text
+        }.join(", ")
 
         // Format creators and editors
-        model.profile.attributes.each {attribute ->
+        model.profile.attributes.each { attribute ->
             attribute.creators = attribute?.creators && opus.allowFineGrainedAttribution ? attribute.creators.toArray().join(', ') : ''
             attribute.editors = attribute?.editors && opus.allowFineGrainedAttribution ? attribute.editors.toArray().join(', ') : ''
         }
@@ -274,14 +280,18 @@ class ExportService {
         // Format conservation status
         if (params.conservation && model.profile.speciesProfile?.conservationStatuses) {
             model.profile.hasConservationStatus = true
-            model.profile.speciesProfile.conservationStatuses = model.profile.speciesProfile?.conservationStatuses.sort {it.region}
+            model.profile.speciesProfile.conservationStatuses = model.profile.speciesProfile?.conservationStatuses.sort {
+                it.region
+            }
         } else {
             model.profile.hasConservationStatus = false
         }
 
         // Calculate version number
         if (params.printVersion) {
-            model.profile.version = model.profile.publications?.size() > 0 ? model.profile.publications.collect {it.version as Integer}.max() + 1 : 1
+            model.profile.version = model.profile.publications?.size() > 0 ? model.profile.publications.collect {
+                it.version as Integer
+            }.max() + 1 : 1
         }
 
         return model
@@ -380,5 +390,28 @@ class ExportService {
     static String stripTextFromNonFormattingHtmlTags(String html) {
         def regex = ~/<\/?(?!i>)(?!b>)([A-Za-z0-9.'"()+,=:\s-])+>/
         return html.replaceAll(regex, "")
+    }
+
+    static String getCCLicenceIcon(String ccLicence) {
+        String icon
+
+        switch (ccLicence) {
+            case "Creative Commons Attribution":
+                icon = "https://licensebuttons.net/l/by/4.0/80x15.png"
+                break
+            case "Creative Commons Attribution-Noncommercial":
+                icon = "https://licensebuttons.net/l/by-nc/3.0/80x15.png"
+                break
+            case "Creative Commons Attribution-Share Alike":
+                icon = "https://licensebuttons.net/l/by-sa/3.0/80x15.png"
+                break
+            case "Creative Commons Attribution-Noncommercial-Share Alike":
+                icon = "https://licensebuttons.net/l/by-nc-sa/3.0/80x15.png"
+                break
+            default:
+                icon = "https://licensebuttons.net/l/by/4.0/80x15.png"
+        }
+
+        icon
     }
 }
