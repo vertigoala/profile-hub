@@ -225,7 +225,7 @@ class ExportService {
                         imageNumber    : i + 2,
                         scientificName : model.profile.scientificName,
                         imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}",
-                        licenceIcon : image.metadata.license ? getCCLicenceIcon(image.metadata.license) : ""
+                        licenceIcon : nextImage.metadata.license ? getCCLicenceIcon(nextImage.metadata.license) : ""
                 ]
                 groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
             }
