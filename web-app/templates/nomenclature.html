@@ -36,7 +36,7 @@
         <div class="apc" ng-show="selectedReference.apcReference"
              title="This is the Australian Plant Census accepted name"><i class="fa fa-check">&nbsp;</i>APC
         </div>
-        <div class="nsl-link" ng-show="showSynonomy"><a href="{{selectedReference.url}}" target="_blank">View in National
+        <div class="nsl-link" ng-show="showSynonomy"><a href="{{viewInNslLink}}" target="_blank">View in National
             Species List</a></div>
         <div class="concept-detail" ng-repeat="citation in selectedReference.citations" ng-show="showSynonomy"
              data-ng-bind-html="citation"></div>

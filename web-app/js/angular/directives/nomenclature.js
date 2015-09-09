@@ -12,6 +12,7 @@ profileEditor.directive('nomenclature', function ($browser) {
             $scope.selectedReference = null;
             $scope.nslNomenclatureId = null;
             $scope.loading = false;
+            $scope.viewInNslLink = null;
 
             $scope.loadConcepts = function () {
                 $scope.loading = true;
@@ -35,7 +36,7 @@ profileEditor.directive('nomenclature', function ($browser) {
                                     citations.push(citation.relationship);
 
                                     var citationUrl = citation.instance._links.permalink.link;
-                                    var instanceId =  citationUrl.substring(citationUrl.lastIndexOf("/") + 1);
+                                    var instanceId = citationUrl.substring(citationUrl.lastIndexOf("/") + 1);
 
                                     if (!firstInstanceId) {
                                         firstInstanceId = instanceId;
@@ -54,6 +55,7 @@ profileEditor.directive('nomenclature', function ($browser) {
 
                                 if (firstInstanceId == $scope.nslNomenclatureId) {
                                     $scope.selectedReference = ref;
+                                    $scope.viewInNslLink = reference.citations[0].instance._links.permalink.link;
                                 }
 
                                 $scope.references.push(ref);
