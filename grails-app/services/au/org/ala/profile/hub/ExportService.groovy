@@ -218,14 +218,14 @@ class ExportService {
                         imageNumber    : i + 1,
                         scientificName : model.profile.scientificName,
                         imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${image.imageId}",
-                        licenceIcon : getCCLicenceIcon(image.metadata.license)
+                        licenceIcon : image.metadata.license ? getCCLicenceIcon(image.metadata.license) : ""
                 ]
                 Map nextImage = (i + 1 < images.size()) ? images[i + 1] : [:]
                 nextImage << [
                         imageNumber    : i + 2,
                         scientificName : model.profile.scientificName,
                         imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}",
-                        licenceIcon : getCCLicenceIcon(image.metadata.license)
+                        licenceIcon : image.metadata.license ? getCCLicenceIcon(image.metadata.license) : ""
                 ]
                 groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
             }
