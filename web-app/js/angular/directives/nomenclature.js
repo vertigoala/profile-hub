@@ -13,6 +13,7 @@ profileEditor.directive('nomenclature', function ($browser) {
             $scope.nslNomenclatureId = null;
             $scope.loading = false;
             $scope.viewInNslLink = null;
+            var IGNORE_STATUSES = ["legitimate", "[n/a]"];
 
             $scope.loadConcepts = function () {
                 $scope.loading = true;
@@ -29,11 +30,18 @@ profileEditor.directive('nomenclature', function ($browser) {
                                     name += " (APC)";
                                 }
                                 var formattedName = reference.citationHtml;
-                                var citations = [];
+                                if (reference.citations && reference.citations.length > 1 && reference.citations[0].page) {
+                                    formattedName += " " + reference.citations[0].page;
+                                }
+                                var details = [];
 
                                 var firstInstanceId = null;
                                 angular.forEach(reference.citations, function (citation) {
-                                    citations.push(citation.relationship);
+                                    var text = citation.relationship;
+                                    if (citation.name && citation.name.nameStatus && IGNORE_STATUSES.indexOf(citation.name.nameStatus) == -1) {
+                                        text = text + " " + citation.name.nameStatus;
+                                    }
+                                    details.push(text);
 
                                     var citationUrl = citation.instance._links.permalink.link;
                                     var instanceId = citationUrl.substring(citationUrl.lastIndexOf("/") + 1);
@@ -43,13 +51,19 @@ profileEditor.directive('nomenclature', function ($browser) {
                                     }
                                 });
 
+                                angular.forEach(reference.notes, function (note) {
+                                    if (note.instanceNoteKey === "Type") {
+                                        details.unshift("<b>Type:</b> " + note.instanceNoteText);
+                                    }
+                                });
+
                                 var ref = {
                                     instanceId: firstInstanceId,
                                     referenceId: referenceId,
                                     url: referenceUrl,
                                     name: name,
                                     formattedName: formattedName,
-                                    citations: citations,
+                                    details: details,
                                     apcReference: isTruthy(reference.APCReference)
                                 };
 

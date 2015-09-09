@@ -21,8 +21,8 @@
             </div>
             <div class="nsl-link"><a href="{{selectedReference.url}}" target="_blank">View in National Species List</a>
             </div>
-            <div class="concept-detail" ng-repeat="citation in selectedReference.citations"
-                 data-ng-bind-html="citation"></div>
+            <div class="concept-detail" ng-repeat="detail in selectedReference.details"
+                 data-ng-bind-html="detail"></div>
         </div>
     </div>
 
@@ -38,7 +38,7 @@
         </div>
         <div class="nsl-link" ng-show="showSynonomy"><a href="{{viewInNslLink}}" target="_blank">View in National
             Species List</a></div>
-        <div class="concept-detail" ng-repeat="citation in selectedReference.citations" ng-show="showSynonomy"
-             data-ng-bind-html="citation"></div>
+        <div class="concept-detail" ng-repeat="detail in selectedReference.details" ng-show="showSynonomy"
+             data-ng-bind-html="detail"></div>
     </div>
 </div>
