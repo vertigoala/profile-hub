@@ -73,8 +73,10 @@ class WebService {
         conn.setConnectTimeout(getConnectTimeout())
         conn.setReadTimeout(readTimeout)
         def user = userService.getUser()
-        if (includeUserId && user) {
-            conn.setRequestProperty(grailsApplication.config.app.http.header.userId, user.userId)
+
+        if (user) {
+            conn.setRequestProperty(grailsApplication.config.app.http.header.userId as String, user.userId as String)
+            conn.setRequestProperty("Cookie", "ALA-Auth=${URLEncoder.encode(user.userName, CHAR_ENCODING)}")
         }
 
         String apiKey = getApiKey(url)
