@@ -23,7 +23,7 @@
                 <div class="form-group">
                     <label>Thumbnail</label>
                     <input type="text" class="form-control" name="thumbnailUrl" ng-model="opusCtrl.opus.thumbnailUrl"/><br/>
-                    <span class="small">Recommended size 350px by 100px.</span>
+                    <span class="small">Recommended size 160px by 100px.</span>
                 </div>
 
                 <div class="form-group">

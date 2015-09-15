@@ -7,7 +7,7 @@
 }
 
 .collection-thumbnail {
-    width: 350px;
+    width: 160px;
     height: 100px
 }
 
@@ -539,4 +539,9 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 .bold {
     font-weight: bold;
+}
+
+.div-centre {
+    min-width: 180px;
+    margin: 0 auto;
 }
