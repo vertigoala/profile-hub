@@ -10,17 +10,20 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label>Banner image</label>
-                    <input type="text" class="form-control" name="bannerUrl" ng-model="opusCtrl.opus.bannerUrl"/>
+                    <input type="text" class="form-control" name="bannerUrl" ng-model="opusCtrl.opus.bannerUrl"/><br/>
+                    <span class="small">Recommended size is at least 1000px wide by 100px high.</span>
                 </div>
 
                 <div class="form-group">
                     <label>Logo</label>
-                    <input type="text" class="form-control" name="logoUrl" ng-model="opusCtrl.opus.logoUrl"/>
+                    <input type="text" class="form-control" name="logoUrl" ng-model="opusCtrl.opus.logoUrl"/><br/>
+                    <span class="small">Recommended maximum width is 275px. There is no height limit.</span>
                 </div>
 
                 <div class="form-group">
                     <label>Thumbnail</label>
-                    <input type="text" class="form-control" name="thumbnailUrl" ng-model="opusCtrl.opus.thumbnailUrl"/>
+                    <input type="text" class="form-control" name="thumbnailUrl" ng-model="opusCtrl.opus.thumbnailUrl"/><br/>
+                    <span class="small">Recommended size 350px by 100px.</span>
                 </div>
 
                 <div class="form-group">
