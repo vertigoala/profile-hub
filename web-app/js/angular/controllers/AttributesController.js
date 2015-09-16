@@ -15,6 +15,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     self.supportingAttributeTitles = [];
 
     var capitalize = $filter("capitalize");
+    var orderBy = $filter("orderBy");
 
     self.init = function (edit) {
         self.readonly = edit != 'true';
@@ -100,12 +101,12 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 if (term.required === "true" || term.required == true) {
                     var attribute = findAttributeByTitle(term.name);
                     if (!attribute || attribute.fromCollection) {
-                        templateAttributes.push({uuid: "", title: term.name, text: ""});
+                        templateAttributes.push({uuid: "", title: term.name, text: "", order: term.order});
                     }
                 }
             });
 
-            self.attributes = self.attributes.concat(templateAttributes);
+            self.attributes = orderBy(self.attributes.concat(templateAttributes), 'order');
         }
     }
 
