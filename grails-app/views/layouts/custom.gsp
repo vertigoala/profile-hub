@@ -4,6 +4,8 @@
     <base href="${request.contextPath}/">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
     <meta name="app.version" content="${g.meta(name: 'app.version')}"/>
     <meta name="app.build" content="${g.meta(name: 'app.build')}"/>
     <meta name="description" content="Atlas of Living Australia"/>
