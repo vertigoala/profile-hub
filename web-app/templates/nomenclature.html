@@ -19,7 +19,7 @@
             <div class="apc" ng-show="selectedReference.apcReference"
                  title="This is the Australian Plant Census accepted name"><i class="fa fa-check">&nbsp;</i>APC
             </div>
-            <div class="nsl-link"><a href="{{selectedReference.url}}" target="_blank">View in National Species List</a>
+            <div class="nsl-link"><a href="{{selectedReference.url}}" target="_blank"><span class="fa fa-search">&nbsp;</span>NSL</a>
             </div>
             <div class="concept-detail" ng-repeat="detail in selectedReference.details"
                  data-ng-bind-html="detail"></div>
@@ -36,8 +36,7 @@
         <div class="apc" ng-show="selectedReference.apcReference"
              title="This is the Australian Plant Census accepted name"><i class="fa fa-check">&nbsp;</i>APC
         </div>
-        <div class="nsl-link" ng-show="showSynonomy"><a href="{{viewInNslLink}}" target="_blank">View in National
-            Species List</a></div>
+        <div class="nsl-link" ng-show="showSynonomy"><a href="{{viewInNslLink}}" target="_blank"><span class="fa fa-search">&nbsp;</span>NSL</a></div>
         <div class="concept-detail" ng-repeat="detail in selectedReference.details" ng-show="showSynonomy"
              data-ng-bind-html="detail"></div>
     </div>

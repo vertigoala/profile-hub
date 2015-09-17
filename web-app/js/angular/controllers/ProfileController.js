@@ -52,6 +52,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
                     findCommonName();
                     loadVocabulary();
+                    loadNslNameDetails();
 
                     if (self.profile.matchedName) {
                         self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.matchedName.nameAuthor, self.profile.matchedName.fullName);
@@ -63,6 +64,16 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             );
         }
     };
+
+    function loadNslNameDetails() {
+        if (self.profile.nslNameIdentifier) {
+            var nslPromise = profileService.getNslNameDetails(self.profile.nslNameIdentifier);
+            nslPromise.then(function (data) {
+                self.nslNameStatus = data.name.status;
+                self.nslProtologue = data.name.primaryInstance[0].citationHtml;
+            });
+        }
+    }
 
     function loadVocabulary() {
         if (self.opus.attributeVocabUuid != null) {

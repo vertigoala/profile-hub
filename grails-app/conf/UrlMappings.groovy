@@ -91,6 +91,7 @@ class UrlMappings {
         "/checkName" controller: "profile", action: [GET: "checkName"]
 
         "/nsl/listConcepts/$nslNameIdentifier" controller: "NSL", action: [GET: "listConcepts"]
+        "/nsl/nameDetails/$nslNameIdentifier" controller: "NSL", action: [GET: "nameDetails"]
 
         "/bhl/$pageId"(controller: "BHL", action: "pageLookup")
 

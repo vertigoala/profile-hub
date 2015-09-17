@@ -689,6 +689,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        getNslNameDetails: function(nslNameIdentifier) {
+            console.log("Fetching name details for NSL name " + nslNameIdentifier);
+
+            var future = $http.get(util.contextRoot() + "/nsl/nameDetails/" + nslNameIdentifier, {cache: true});
+            return util.toStandardPromise(future);
+        },
+
         getPublicationsFromId: function(pubId){
             console.log("Fetching publication with Publication Id:" + pubId);
 

@@ -58,7 +58,7 @@
 
             <div class="margin-bottom-1 inline-block small">
                 <a href="${grailsApplication.config.bie.base.url}/species/{{ profileCtrl.profile.guid }}" ng-show="profileCtrl.profile.guid" title="View this taxon in the Atlas of Living Australia" class="padding-left-1" target="_blank"><span class="fa fa-search">&nbsp;</span>ALA</a>
-                <a href="${grailsApplication.config.nsl.service.url.prefix}/{{ profileCtrl.profile.nslNameIdentifier }}" ng-show="profileCtrl.profile.nslNameIdentifier" title="View this name in the National Species List" class="padding-left-1" target="_blank"><span class="fa fa-search">&nbsp;</span>NSL</a>
+                <a href="${grailsApplication.config.nsl.service.url.prefix}/{{ profileCtrl.profile.nslNameIdentifier }}" ng-show="profileCtrl.profile.nslNameIdentifier" title="View this name in the National Species List" class="padding-left-1" target="_blank"><span class="fa fa-search">&nbsp;</span>NSL <span ng-show="profileCtrl.nslNameStatus">[{{profileCtrl.nslNameStatus}}]</span></a>
             </div>
 
             <button class="btn btn-link fa fa-edit" ng-click="profileCtrl.editName()"
@@ -68,15 +68,16 @@
         <div class="col-md-3 text-right" ng-cloak>
             <g:render template="optionsMenu"/>
         </div>
+
     </div>
 
-    <div class="row margin-bottom-1" ng-if="profileCtrl.profile.nslProtologue" ng-cloak>
+    <div class="row margin-bottom-1" ng-show="profileCtrl.nslProtologue" ng-cloak>
         <div class="col-md-12">
-            <div class="citation zero-margin" data-ng-bind-html="profileCtrl.profile.nslProtologue"></div>
+            <div class="citation zero-margin" data-ng-bind-html="profileCtrl.nslProtologue"></div>
         </div>
     </div>
 
-    <div class="row margin-bottom-1" ng-if="profileCtrl.commonNames.length > 0" ng-cloak>
+    <div class="row margin-bottom-1" ng-show="profileCtrl.commonNames.length > 0" ng-cloak>
         <div class="col-md-12">
             <h4 class="zero-margin">{{profileCtrl.commonNames.join(', ')}}</h4>
         </div>

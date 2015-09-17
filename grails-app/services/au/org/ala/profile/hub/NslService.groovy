@@ -4,6 +4,12 @@ class NslService {
     WebService webService
     def grailsApplication
 
+    def getNameDetails(String nslNameIdentifier) {
+        if (nslNameIdentifier && nslNameIdentifier != "null") {
+            webService.get("${grailsApplication.config.nsl.service.url.prefix}${nslNameIdentifier}.json")
+        }
+    }
+
     def listConcepts(String nslNameIdentifier) {
         if (nslNameIdentifier && nslNameIdentifier != "null") {
             webService.get("${grailsApplication.config.nsl.service.url.prefix}${nslNameIdentifier}${grailsApplication.config.nsl.service.apni.concept.suffix}")
