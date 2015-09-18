@@ -39,10 +39,8 @@ profileEditor.directive('statusIndicator', function () {
         scope: {
             iconClass: '@',
             text: '@',
-            title: '@',
-            link: '@'
+            title: '@'
         },
-        template: '<span ng-if="!link" class="status {{iconClass}}" title="{{title}}">{{text}}</span>' +
-        '<a href="{{link}}" ng-if="link" target="_blank"><span class="status {{iconClass}}" title="{{title}}">{{text}}</span></a>'
-}
+        template: '<span class="fa {{iconClass}} {{colorClass}} padding-left-1" title="{{title}}"><span class="status-marker-small" title="{{title}}">{{text}}</span></span>'
+    }
 });
