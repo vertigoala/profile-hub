@@ -34,7 +34,7 @@
         </div>
 
         <div class="panel-body">
-            <div class="row section-no-para">
+            <div class="row section-no-para" ng-show="listCtrl.conservationStatuses.length > 0">
                 <div class="col-md-3 minor-heading">Conservation status</div>
                 <div class="col-md-9">
                     <div ng-repeat="status in listCtrl.conservationStatuses" class="col-md-4">
