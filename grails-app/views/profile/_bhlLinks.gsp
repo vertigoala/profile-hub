@@ -25,8 +25,14 @@
                 <div class="col-md-12">
                     <div ng-show="!bhlCtrl.readonly" class="form-group">
                         <label for="url">URL</label>
-                        <input id="url" type="text" class="form-control" ng-model="link.url" value="{{link.url}}"
-                               ng-change="bhlCtrl.updateThumbnail($index)"/>
+                        <div class="input-group">
+                            <input id="url" type="text" class="form-control" ng-model="link.url" value="{{link.url}}"
+                                   ng-blur="bhlCtrl.updateThumbnail($index)"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-success" type="button"><span class="fa fa-check color--white"></span></button>
+                            </span>
+                        </div>
+
                     </div>
 
                     <div>

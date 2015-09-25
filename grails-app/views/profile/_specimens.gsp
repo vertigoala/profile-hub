@@ -26,8 +26,14 @@
                     <div ng-if="!specCtrl.readonly() && !specimen.saved">
                         <div class="form-group">
                             <label>URL</label>
-                            <input type="text" class="form-control" ng-model="specimen.url"
-                                   ng-change="specCtrl.lookupSpecimenDetails($index, null, specimen.url)"/><br/>
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-model="specimen.url"
+                                       ng-blur="specCtrl.lookupSpecimenDetails($index, null, specimen.url)"/><br/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success" type="button"><span class="fa fa-check color--white"></span></button>
+                                </span>
+                            </div>
+
                             <alert type="danger"
                                    ng-if="specimen.url && !specimen.id">Invalid URL. The URL must of the form specified above.</alert>
                         </div>
