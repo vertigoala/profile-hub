@@ -74,7 +74,7 @@
                     <li><a href="${glossaryUrl}" target="_blank">Glossary</a></li>
                 </g:if>
                 <g:if test="${aboutPageUrl}">
-                    <li><a href="${aboutPageUrl}" target="_blank">About&nbsp;&nbsp;</a></li>
+                    <li><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
                 </g:if>
             </ul>
 

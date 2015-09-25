@@ -12,6 +12,8 @@ profileEditor.controller('AboutController', function (profileService, messageSer
     self.citationUrl = null;
     self.collectionCopyright = null;
     self.genericCopyright = null;
+    self.fromProfile = util.getQueryParameter("profile");
+    console.log(self.fromProfile);
 
     var future = profileService.getOpusAbout(self.opusId);
     future.then(function(data) {

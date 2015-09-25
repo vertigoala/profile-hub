@@ -73,6 +73,7 @@ class OpusController extends BaseController {
                         bannerUrl : opus.bannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                         footerText: opus.footerText,
                         contact   : opus.contact,
+                        opusTitle : opus.title,
                         pageTitle : "About ${opus.title}" ?: DEFAULT_OPUS_TITLE
                 ])
             }
