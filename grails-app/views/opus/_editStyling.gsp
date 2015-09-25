@@ -28,8 +28,15 @@
 
                 <div class="form-group">
                     <label>Short Name</label>
-                    <input type="text" class="form-control" name="shortName" ng-model="opusCtrl.opus.shortName"/> <br/>
+                    <input type="text" class="form-control" name="shortName" ng-model="opusCtrl.opus.shortName" ng-change="opusCtrl.showShortNameTip()"/> <br/>
                     <span class="small">The URL for your collection will be http://${request.serverName}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid | lowercase}}</span>
+                    <div class="well small" ng-show="opusCtrl.shortNameTipVisible">
+                        <i class="fa fa-info-circle color--medium-blue margin-bottom-1"></i>
+                        <p/>
+                        NOTE: Changing the Short Name of your collection will change the URL used to access it. This will affect any existing bookmarks, and may affect some of the collection statistics.
+                        <p/>
+                        When changing the Short Name, save the Branding section and leave the Edit Configuration page, then return - this will ensure that your browser is using the new URL.
+                    </div>
                 </div>
 
                 <div class="form-group">

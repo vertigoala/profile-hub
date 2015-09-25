@@ -28,7 +28,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.keybaseProjects = [];
     self.selectedKeybaseProject = null;
     self.ranks = util.RANK;
-
+    self.shortNameTipVisible = false;
 
     loadResources();
     loadOpusList();
@@ -393,6 +393,11 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                     messageService.alert("An error occurred while deleting the collection.")
                 });
         });
+    };
+
+    self.showShortNameTip = function() {
+        console.log("here...why")
+        self.shortNameTipVisible = true;
     };
 
     function loadKeybaseProjects() {
