@@ -101,7 +101,7 @@ class ProfileControllerSpec extends Specification {
 
     def "show should return the profile, with edit = false added to the model"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: "bla", opus: [title: "opus"]]
+        profileService.getProfile(_, _, _) >> [profile: [scientificName: "bla"], opus: [title: "opus"]]
 
         when:
         params.profileId = "bla"
