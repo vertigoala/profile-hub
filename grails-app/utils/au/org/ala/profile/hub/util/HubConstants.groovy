@@ -24,4 +24,18 @@ class HubConstants {
 
             <p>If you believe material available on this website infringes any rights or breaches any contract or licence obligations please contact us <a href="mailto:support@ala.org.au">support@ala.org.au</a> with details.</p>
 """
+
+    static final String PDF_COPYRIGHT_TEXT = """
+            <p>The material in this profile is protected by copyright laws and may be used as permitted under the Copyright Act 1968 or in accordance with licences granted by the copyright owner.</p>
+
+            <p>Your right to use <strong>images and maps</strong> or to permit others to use these is subject to the terms of the licence that the contributor of them has applied to the image or map. Information on copyright in images is set out in the Acknowledgements section and through the ALA site at <a href="http://www.ala.org.au/faq/using-images-found-on-the-ala/" target="_blank">http://www.ala.org.au/faq/using-images-found-on-the-ala/</a></p>
+
+            <p><strong>Text</strong> used in this profile has been contributed by the editors and others identified. Unless permitted by the copyright owner, you may download or print a single copy of this material for your own information, research or study.</p>
+
+            <p>You may not remove any copyright or other notices appearing in this profile.</p>
+
+            <p>No rights are granted to the Commonwealth Coat of Arms or to any logos or trade marks.</p>
+
+            <p>Please contact ALA at <a href="mailto:support@ala.org.au">support@ala.org.au</a> if you believe material in this profile infringes any rights or breaches any contract or licence obligations.</p>
+"""
 }

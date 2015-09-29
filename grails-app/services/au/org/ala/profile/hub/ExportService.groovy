@@ -157,7 +157,7 @@ class ExportService {
                 ],
                 colophon: [
                         collectionCopyright: "&copy; ${opus.copyrightText}",
-                        genericCopyright   : HubConstants.GENERIC_COPYRIGHT_TEXT,
+                        genericCopyright   : HubConstants.PDF_COPYRIGHT_TEXT,
                         logo               : opus.logoUrl,
                         profileLink        : "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${firstProfile?.uuid}",
                         citation           : citation,
