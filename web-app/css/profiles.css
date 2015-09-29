@@ -545,3 +545,11 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     min-width: 180px;
     margin: 0 auto;
 }
+
+.toolbar-plus-minus:after {
+    content: '\00B1';
+}
+
+.toolbar-endash:after {
+    content: '\2013';
+}
