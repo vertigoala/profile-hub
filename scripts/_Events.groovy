@@ -21,3 +21,9 @@ eventCompileEnd = {
     }
     println "-------\n- JasperReports compilation process finished"
 }
+
+eventCreateWarStart = { warName, stagingDir ->
+    ant.propertyfile(file: "${stagingDir}/WEB-INF/classes/application.properties") {
+        entry(key:"app.build", value: new Date().format("dd/MM/yyyy HH:mm:ss"))
+    }
+}
