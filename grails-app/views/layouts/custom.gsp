@@ -199,6 +199,10 @@
         map: {mapId: '${grailsApplication.config.map.id}',
               accessKey: '${grailsApplication.config.map.access.key}'}
      });
+
+
+
+
 </r:script>
 
 <!-- JS resources-->
@@ -212,5 +216,25 @@
         bh.src = '//www.bugherd.com/sidebarv2.js?apikey=kqamg3xuhww6j6zrpthdmw';
         s.parentNode.insertBefore(bh, s);
     })(document, 'script');
+
+    // This unsaved changes code relies on AngularJS adding the ng-dirty flag to fields as they are modified.
+    $(window).bind('beforeunload', function() {
+        var dirty = false;
+
+        $(":not(form).ng-dirty").each(function (index, field) {
+            if (!$(field).hasClass("ignore-save-warning") && (!$(field).is("div") || $(field).hasClass("ta-bind"))) {
+                $(field).addClass("show-dirty");
+                dirty = true;
+            }
+
+            if ($(field).attr("type") == "checkbox" || $(field).attr("type") == "radio") {
+                $(field).parent().addClass("show-dirty");
+            }
+        });
+
+        if (dirty) {
+            return "You have unsaved changes. These changes will be lost if you navigate away from this page."
+        }
+    })
 </script>
 </html>

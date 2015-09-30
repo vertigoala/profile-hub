@@ -553,3 +553,8 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .toolbar-endash:after {
     content: '\2013';
 }
+
+.show-dirty {
+    border: 2px solid red;
+}
+

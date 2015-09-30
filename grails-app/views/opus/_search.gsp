@@ -8,7 +8,7 @@
                    ng-change="searchCtrl.search()"
                    ng-model="searchCtrl.searchTerm"
                    name="searchTerm"
-                   class="input-lg form-control"
+                   class="input-lg form-control ignore-save-warning"
                    autocomplete="off"
                    placeholder="e.g. Acacia abbatiana"
                    type="text">

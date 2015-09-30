@@ -17,7 +17,7 @@
                             <div class="panel-body">
                                 <form class="navbar-form" role="search">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="e.g. Acacia binervata"
+                                        <input type="text" class="form-control ignore-save-warning" placeholder="e.g. Acacia binervata"
                                                ng-change="searchCtrl.search()"
                                                name="searchTerm"
                                                autocomplete="off"
