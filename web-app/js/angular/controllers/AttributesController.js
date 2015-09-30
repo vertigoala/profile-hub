@@ -252,7 +252,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     self.loadAttributesFromSupportingCollections = function () {
         var profileAttributeMap = [];
         angular.forEach(self.attributes, function (attribute) {
-            profileAttributeMap.push(attribute.title)
+            profileAttributeMap.push(attribute.title.toLowerCase())
         });
 
         var supportingOpusList = [];
@@ -268,7 +268,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                         profilePromise.then(function (supporting) {
 
                             angular.forEach(supporting.profile.attributes, function (attribute) {
-                                if (profileAttributeMap.indexOf(attribute.title) == -1) {
+                                if (profileAttributeMap.indexOf(attribute.title.toLowerCase()) == -1) {
                                     attribute.fromCollection = {
                                         opusId: supporting.opus.uuid,
                                         opusTitle: supporting.opus.title,
@@ -283,15 +283,16 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
 
                                     self.supportingAttributeTitles.push(attribute.title);
 
-                                    if (self.attributeTitles.map(function(t) { return t.name; }).indexOf(title.name) == -1) {
+                                    if (self.attributeTitles.map(function(t) { return t.name.toLowerCase(); }).indexOf(title.name.toLowerCase()) == -1) {
                                         self.attributeTitles.push(title);
                                     }
                                 }
 
-                                if (!self.supportingAttributes[attribute.title]) {
-                                    self.supportingAttributes[attribute.title] = [];
+                                if (!self.supportingAttributes[attribute.title.toLowerCase()]) {
+                                    self.supportingAttributes[attribute.title.toLowerCase()] = [];
                                 }
-                                self.supportingAttributes[attribute.title].push({
+
+                                self.supportingAttributes[attribute.title.toLowerCase()].push({
                                     opusId: supporting.opus.uuid,
                                     opusTitle: supporting.opus.title,
                                     profileId: supporting.profile.uuid,
@@ -307,7 +308,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     };
 
     self.viewInOtherCollections = function (title) {
-        var supporting = self.supportingAttributes[title];
+        var supporting = self.supportingAttributes[title.toLowerCase()];
 
         $modal.open({
             templateUrl: "supportingCollections.html",
