@@ -87,6 +87,7 @@ class UrlMappings {
         "/licences/" controller: "collectory", action: [GET: "licences"]
 
         "/keybase/projects" controller: "opus", action: [GET: "retrieveKeybaseProjects"]
+        "/keybase/findKey" controller: "keybase", action: [GET: "findKey"]
 
         "/checkName" controller: "profile", action: [GET: "checkName"]
 

@@ -4,19 +4,28 @@ profileEditor.directive('keyPlayer', function ($browser) {
         require: ['?keyId', '?profileUrl', '?keybaseUrl', '?keybaseWebUrl'],
         scope: {
             keyId: '=',
+            taxonName: '=',
+            opusId: '=',
             profileUrl: '@',
             keybaseUrl: '@',
-            keybaseWebUrl: '@'
+            keybaseWebUrl: '@',
+            keyLookupUrl: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/keyplayer.html',
         controller: ['$scope', '$http', '$window', function ($scope, $http, $window) {
             angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";.keyplayer-panel{overflow: auto; max-height: 300px; min-height: 300px}</style>');
 
             $scope.visitedKeys = [];
+            $scope.hasKey = false;
+            $scope.loading = false;
 
             $scope.loadKey = function (key) {
-                $http.jsonp($scope.keybaseUrl + key)
+                $scope.hasKey = false;
+                $scope.loading = true;
+                $http.jsonp($scope.keybaseUrl + key, {cache: true})
                     .success(function (data) {
+                        $scope.hasKey = true;
+
                         $scope.visitedKeys.push({id: key, name: data.key_name});
 
                         $scope.json = data;
@@ -27,9 +36,32 @@ profileEditor.directive('keyPlayer', function ($browser) {
                         nextCouplet(nextId, $scope.rootNodeId);
 
                         $scope.projectName = data.project.project_name;
+                        $scope.loading = false;
                     }
                 ).error(function () {
-                        console.log("something died")
+                        console.log("Failed to load key for id " + key);
+                        $scope.hasKey = false;
+                        $scope.loading = false;
+                    }
+                );
+            };
+
+            $scope.loadKeyFromName = function(taxonName) {
+                $scope.loading = true;
+                $http.get($scope.keyLookupUrl + "?opusId=" + $scope.opusId + "&scientificName=" + taxonName, {cache: true})
+                    .success(function (data) {
+                        if (data.keyId) {
+                            $scope.loadKey(data.keyId)
+                        } else {
+                            console.log("No key found for " + taxonName + " in opus " + $scope.opusId);
+                            $scope.hasKey = false;
+                            $scope.loading = false;
+                        }
+                    }
+                ).error(function () {
+                        console.log("Failed to load key for taxon " + taxonName);
+                        $scope.hasKey = false;
+                        $scope.loading = false;
                     }
                 );
             };
@@ -167,6 +199,11 @@ profileEditor.directive('keyPlayer', function ($browser) {
             scope.$watch("keyId", function (keyId) {
                 if (keyId) {
                     scope.loadKey(keyId);
+                }
+            });
+            scope.$watch("taxonName", function (taxonName) {
+                if (taxonName) {
+                    scope.loadKeyFromName(taxonName);
                 }
             });
         }

@@ -1,4 +1,7 @@
-<div class="col-md-12">
+<div ng-show="loading"><span class="fa fa-spin fa-spinner"></span>&nbsp;Loading...</div>
+<alert type="warning"
+       ng-show="!hasKey && !loading">There is no key available for {{taxonName ? taxonName : ' this taxon'}}.</alert>
+<div class="col-md-12" ng-show="hasKey">
     <div class="row" ng-show="error">
         <alert type="warning">{{error}}</alert>
     </div>

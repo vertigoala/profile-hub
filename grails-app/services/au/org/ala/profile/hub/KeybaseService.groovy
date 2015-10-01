@@ -7,7 +7,7 @@ class KeybaseService {
     def grailsApplication
     WebService webService
 
-    def findKeyForTaxon(scientificName, classifications, projectId) {
+    String findKeyForTaxon(scientificName, classifications, projectId) {
         if (!projectId) {
             return null
         }

@@ -148,10 +148,11 @@
                     </tab>
                     <tab heading="Key" ng-show="profileCtrl.opus.keybaseProjectId">
                         <div class="row">
-                        <div key-player key-id="profileCtrl.profile.keybaseKey"
-                             ng-show="profileCtrl.profile.keybaseKey"
+                        <div key-player taxon-name="profileCtrl.profile.scientificName"
+                             opus-id="profileCtrl.opus.uuid"
                              keybase-url="${grailsApplication.config.keybase.key.lookup}"
                              keybase-web-url="${grailsApplication.config.keybase.web.url}"
+                             key-lookup-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
                              profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></div>
                             <div class="col-md-12">
 
@@ -159,8 +160,6 @@
                                 Matching is based on the taxonomic rank: if no key can be found for the profile's rank, then the parent rank will be used, and so on until a match is found. This matching depends on the structure of the keys in KeyBase.</p>
                             </div>
                         </div>
-                        <alert type="warning"
-                            ng-show="!profileCtrl.profile.keybaseKey">There is no key available for {{profileCtrl.profile.scientificName}}.</alert>
                     </tab>
                 </tabset>
             </div>
