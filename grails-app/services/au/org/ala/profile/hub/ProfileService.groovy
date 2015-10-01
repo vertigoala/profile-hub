@@ -104,7 +104,11 @@ class ProfileService {
                     pageTitle: opus.title ?: HubConstants.DEFAULT_OPUS_TITLE
             ]
 
-            profile.keybaseKey = keybaseService.findKeyForTaxon(profile.scientificName, profile.classification, opus.keybaseProjectId)
+            try {
+                profile.keybaseKey = keybaseService.findKeyForTaxon(profile.scientificName, profile.classification, opus.keybaseProjectId)
+            } catch (Exception e) {
+                log.warn "Failed to retrieve key from keybase", e
+            }
 
         } catch (FileNotFoundException e) {
             log.error("Profile ${profileId} not found")
