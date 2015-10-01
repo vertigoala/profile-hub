@@ -104,7 +104,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
         angular.forEach(self.profile.attributes, function(attribute) {
             var title = attribute.title.toLowerCase();
-            if (title === "common name" || title === "commonname" || title === "common-name") {
+            if (title === "common name" || title === "common names" || title === "commonname" || title === "common-name") {
                 self.commonNames.push(attribute.plainText);
             }
         });
