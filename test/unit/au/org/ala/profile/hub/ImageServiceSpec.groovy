@@ -45,7 +45,7 @@ class ImageServiceSpec extends Specification {
 
     def "uploadImage should send the image to the biocache immediately if the profile is not in draft mode"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [privateMode: false]]
+        profileService.getProfile(_, _, _) >> [profile: [privateMode: false], opus:[]]
 
         when:
         imageService.uploadImage("opusId", "profileId", "dataResourceId", [:], dummyFile)
@@ -135,7 +135,7 @@ class ImageServiceSpec extends Specification {
 
     def "retrieveImages should fetch images from the biocache"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1"]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1"], opus:[]]
 
         List<Map> image1Metadata = [[title: "image 1"]]
         List<Map> image2Metadata = [[title: "image 2"]]
@@ -156,14 +156,14 @@ class ImageServiceSpec extends Specification {
         result.resp[0].largeImageUrl == "largeUrl1"
         result.resp[0].thumbnailUrl == "thumbnailUrl1"
         result.resp[0].metadata == image1Metadata[0]
-        result.resp[0].staged == false
+        result.resp[0].type == ImageType.PUBLIC
         result.resp[1].imageId == "image2"
         result.resp[1].occurrenceId == "occurrenceId2"
         result.resp[1].dataResourceName == "resource2"
         result.resp[1].largeImageUrl == "largeUrl2"
         result.resp[1].thumbnailUrl == "thumbnailUrl2"
         result.resp[1].metadata == image2Metadata[0]
-        result.resp[1].staged == false
+        result.resp[1].type == ImageType.PUBLIC
     }
 
     def "retrieveImages should fetch staged images if the profile is in draft mode"() {
@@ -171,7 +171,7 @@ class ImageServiceSpec extends Specification {
         Map stagedImage1 = [imageId: "staged1", originalFileName: "staged1.jpg", title: "staged image 1" ]
         Map stagedImage2 = [imageId: "staged2", originalFileName: "staged2.jpg", title: "staged image 2" ]
 
-        profileService.getProfile(_, _, _) >> [opus: [title: "opus title"], profile: [uuid: "profileId", privateMode: true, stagedImages: [
+        profileService.getProfile(_, _, _) >> [opus: [uuid: "opusId", title: "opus title"], profile: [uuid: "profileId", privateMode: true, stagedImages: [
                 stagedImage1, stagedImage2
         ]]]
 
@@ -194,27 +194,27 @@ class ImageServiceSpec extends Specification {
         result.resp[0].largeImageUrl == "largeUrl1"
         result.resp[0].thumbnailUrl == "thumbnailUrl1"
         result.resp[0].metadata == image1Metadata[0]
-        result.resp[0].staged == false
+        result.resp[0].type == ImageType.PUBLIC
         result.resp[1].imageId == "image2"
         result.resp[1].occurrenceId == "occurrenceId2"
         result.resp[1].dataResourceName == "resource2"
         result.resp[1].largeImageUrl == "largeUrl2"
         result.resp[1].thumbnailUrl == "thumbnailUrl2"
         result.resp[1].metadata == image2Metadata[0]
-        result.resp[1].staged == false
+        result.resp[1].type == ImageType.PUBLIC
 
         result.resp[2].imageId == "staged1"
         result.resp[2].dataResourceName == "opus title"
-        result.resp[2].largeImageUrl == "/opus/opusId/profile/profileId/stagedImage/staged1.jpg"
-        result.resp[2].thumbnailUrl == "/opus/opusId/profile/profileId/stagedImage/staged1.jpg"
+        result.resp[2].largeImageUrl == "/opus/opusId/profile/profileId/image/staged1.jpg?type=STAGED"
+        result.resp[2].thumbnailUrl == "/opus/opusId/profile/profileId/image/staged1.jpg?type=STAGED"
         result.resp[2].metadata == stagedImage1
-        result.resp[2].staged == true
+        result.resp[2].type == ImageType.STAGED
         result.resp[3].imageId == "staged2"
         result.resp[3].dataResourceName == "opus title"
-        result.resp[3].largeImageUrl == "/opus/opusId/profile/profileId/stagedImage/staged2.jpg"
-        result.resp[3].thumbnailUrl == "/opus/opusId/profile/profileId/stagedImage/staged2.jpg"
+        result.resp[3].largeImageUrl == "/opus/opusId/profile/profileId/image/staged2.jpg?type=STAGED"
+        result.resp[3].thumbnailUrl == "/opus/opusId/profile/profileId/image/staged2.jpg?type=STAGED"
         result.resp[3].metadata == stagedImage2
-        result.resp[3].staged == true
+        result.resp[3].type == ImageType.STAGED
     }
 
     def "retrieveImages should not fetch staged images if the profile is not in draft mode"() {
@@ -289,7 +289,7 @@ class ImageServiceSpec extends Specification {
 
     def "retrieveImages should set the excluded and primary flags for biocache images"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", excludedImages: ["image2"]]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", excludedImages: ["image2"]], opus: [:]]
 
         Map image1Metadata = [title: "image 1"]
         Map image2Metadata = [title: "image 2"]
@@ -317,7 +317,7 @@ class ImageServiceSpec extends Specification {
         profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1"]]
 
         when:
-        imageService.publishImages("opusId", "profileId")
+        imageService.publishStagedImages("opusId", "profileId")
 
         then:
         0 * profileService.updateProfile(_, _, _, _)
@@ -342,7 +342,7 @@ class ImageServiceSpec extends Specification {
         new File("${grailsApplication.config.image.staging.dir}/profile1").list().size() == 2
 
         when:
-        imageService.publishImages("opusId", "profile1")
+        imageService.publishStagedImages("opusId", "profile1")
 
         then:
         2 * profileService.recordStagedImage(_, _, _)
@@ -372,7 +372,7 @@ class ImageServiceSpec extends Specification {
         Map expectedUpdates = [primaryImage: "permId1", excludedImages: ["permId2"]]
 
         when:
-        imageService.publishImages("opusId", "profile1")
+        imageService.publishStagedImages("opusId", "profile1")
 
         then:
         1 * profileService.updateProfile(_, _, expectedUpdates, true)

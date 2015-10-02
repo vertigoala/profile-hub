@@ -115,7 +115,7 @@ class ProfileController extends BaseController {
             // if we're already in draft mode and are publishing the changes, then we also need to publish any staged images
             def profile = profileService.getProfile(params.opusId, params.profileId, true)
             if (profile.profile.privateMode) {
-                imageService.publishImages(params.opusId, params.profileId)
+                imageService.publishStagedImages(params.opusId, params.profileId)
             }
 
             def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String)
@@ -292,18 +292,46 @@ class ProfileController extends BaseController {
     }
 
     @Secured(role = Role.ROLE_PROFILE_EDITOR)
-    def deleteStagedImage() {
-        if (!params.opusId || !params.profileId || !params.imageId) {
-            badRequest "opusId, profileId and imageId are required parameters"
+    def deleteLocalImage() {
+        if (!params.opusId || !params.profileId || !params.imageId || !params.type) {
+            badRequest "opusId, profileId, imageId and type are required parameters"
         } else {
-            boolean deleted = imageService.deleteStagedImage(params.opusId, params.profileId, params.imageId)
+            try {
+                ImageType imageType = params.type as ImageType
 
-            render([success: deleted] as JSON)
+                boolean deleted = false
+
+                if (imageType == ImageType.STAGED) {
+                    deleted = imageService.deleteStagedImage(params.opusId, params.profileId, params.imageId)
+                } else if (imageType == ImageType.PRIVATE) {
+                    deleted = imageService.deletePrivateImage(params.opusId, params.profileId, params.imageId)
+                }
+
+                render([success: deleted] as JSON)
+            } catch (IllegalArgumentException e) {
+                log.warn(e)
+                badRequest "Invalid image type ${params.type}"
+            }
         }
     }
 
-    def getStagedImage() {
-        downloadFile("${grailsApplication.config.image.staging.dir}/${params.profileId}", params.imageId, "image/*")
+    def getLocalImage() {
+        if (!params.type) {
+            badRequest "type is a required parameter"
+        } else {
+            try {
+                ImageType type = params.type as ImageType
+
+                if (type == ImageType.STAGED) {
+                    downloadFile("${grailsApplication.config.image.staging.dir}/${params.profileId}", params.imageId)
+                } else if (type == ImageType.PRIVATE) {
+                    downloadFile("${grailsApplication.config.image.private.dir}/${params.profileId}", params.imageId)
+                }
+            } catch (IllegalArgumentException e) {
+                log.warn(e)
+                badRequest "Invalid image type ${params.type}"
+            }
+        }
     }
 
     @PrivateCollectionSecurityExempt
