@@ -40,6 +40,7 @@ profileEditor.directive('keyPlayer', function ($browser) {
                     }
                 ).error(function () {
                         console.log("Failed to load key for id " + key);
+                        $scope.error = "Unable to connect to KeyBase.";
                         $scope.hasKey = false;
                         $scope.loading = false;
                     }
@@ -60,6 +61,7 @@ profileEditor.directive('keyPlayer', function ($browser) {
                     }
                 ).error(function () {
                         console.log("Failed to load key for taxon " + taxonName);
+                        $scope.error = "Unable to connect to KeyBase.";
                         $scope.hasKey = false;
                         $scope.loading = false;
                     }
