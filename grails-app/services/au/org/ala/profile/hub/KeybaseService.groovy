@@ -37,7 +37,7 @@ class KeybaseService {
         String key = null
 
         def json = webService.get("${grailsApplication.config.keybase.taxon.lookup}${name}").resp
-        json.Items.each {
+        json?.Items?.each {
             if (it.ProjectsID == projectId) {
                 key = it.KeysID
             }
