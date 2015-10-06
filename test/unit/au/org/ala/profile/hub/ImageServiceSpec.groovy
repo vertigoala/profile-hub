@@ -56,7 +56,7 @@ class ImageServiceSpec extends Specification {
 
     def "uploadImage should move the image to the staging directory and invoke profileService.recordStagedImage if the profile is in draft mode"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", privateMode: true]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", privateMode: true], opus: [:]]
 
         when:
         imageService.uploadImage("opusId", "profileId", "dataResourceId", [:], dummyFile)
@@ -135,7 +135,7 @@ class ImageServiceSpec extends Specification {
 
     def "retrieveImages should fetch images from the biocache"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1"], opus:[]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1"], opus:[:]]
 
         List<Map> image1Metadata = [[title: "image 1"]]
         List<Map> image2Metadata = [[title: "image 2"]]
@@ -143,7 +143,7 @@ class ImageServiceSpec extends Specification {
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: [
                 [image: "image1", uuid: "occurrenceId1", largeImageUrl: "largeUrl1", thumbnailUrl: "thumbnailUrl1", dataResourceName: "resource1", imageMetadata: image1Metadata],
                 [image: "image2", uuid: "occurrenceId2", largeImageUrl: "largeUrl2", thumbnailUrl: "thumbnailUrl2", dataResourceName: "resource2", imageMetadata: image2Metadata]
-        ]]]
+        ], privateImages: []]]
 
         when:
         Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
@@ -173,7 +173,7 @@ class ImageServiceSpec extends Specification {
 
         profileService.getProfile(_, _, _) >> [opus: [uuid: "opusId", title: "opus title"], profile: [uuid: "profileId", privateMode: true, stagedImages: [
                 stagedImage1, stagedImage2
-        ]]]
+        ], privateImages: []]]
 
         List<Map> image1Metadata = [[title: "image 1"]]
         List<Map> image2Metadata = [[title: "image 2"]]
@@ -224,7 +224,7 @@ class ImageServiceSpec extends Specification {
 
         profileService.getProfile(_, _, _) >> [opus: [title: "opus title"], profile: [uuid: "profileId", privateMode: false, stagedImages: [
                 stagedImage1, stagedImage2
-        ]]]
+        ], privateImages: []]]
 
         Map image1Metadata = [title: "image 1"]
         Map image2Metadata = [title: "image 2"]
@@ -250,7 +250,7 @@ class ImageServiceSpec extends Specification {
 
         profileService.getProfile(_, _, _) >> [opus: [title: "opus title"], profile: [uuid: "profileId", privateMode: true, stagedImages: [
                 stagedImage1, stagedImage2
-        ]]]
+        ], privateImages: []]]
 
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
 
@@ -270,7 +270,7 @@ class ImageServiceSpec extends Specification {
 
         profileService.getProfile(_, _, _) >> [opus: [title: "opus title"], profile: [uuid: "profileId", privateMode: true, stagedImages: [
                 stagedImage1, stagedImage2
-        ], primaryImage: "staged1", excludedImages: ["staged2"]]]
+        ], privateImages: [], primaryImage: "staged1", excludedImages: ["staged2"]]]
 
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
 
@@ -289,7 +289,7 @@ class ImageServiceSpec extends Specification {
 
     def "retrieveImages should set the excluded and primary flags for biocache images"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", excludedImages: ["image2"]], opus: [:]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", excludedImages: ["image2"], privateImages: []], opus: [:]]
 
         Map image1Metadata = [title: "image 1"]
         Map image2Metadata = [title: "image 2"]
@@ -297,7 +297,7 @@ class ImageServiceSpec extends Specification {
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: [
                 [image: "image1", uuid: "occurrenceId1", largeImageUrl: "largeUrl1", thumbnailUrl: "thumbnailUrl1", dataResourceName: "resource1", imageMetadata: image1Metadata],
                 [image: "image2", uuid: "occurrenceId2", largeImageUrl: "largeUrl2", thumbnailUrl: "thumbnailUrl2", dataResourceName: "resource2", imageMetadata: image2Metadata]
-        ]]]
+        ], privateImages: []]]
 
         when:
         Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")

@@ -140,7 +140,7 @@ class ImageService {
 
             // The collection may now, or may have been at some point, private, so look for any private images that may exist.
             // When a collection is changed from private to public, existing private images are NOT published automatically.
-            images.addAll(convertLocalImages(profile.privateImages, opus, profile, ImageType.PRIVATE, useInternalPaths))
+            images.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths))
 
             response.statusCode = SC_OK
             response.resp = images
