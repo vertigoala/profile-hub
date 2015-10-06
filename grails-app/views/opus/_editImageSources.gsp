@@ -6,9 +6,25 @@
     </div>
 
     <div class="panel-body">
+        <div class="row" ng-show="opusCtrl.opus.privateCollection">
+            <div class="col-sm-12">
+                <div class="checkbox padding-bottom-1">
+                    <label for="privateImages" class="inline-label">
+                        <input id="privateImages" type="checkbox" name="privateImages"
+                               ng-change="opusCtrl.privateImageModeChanged()"
+                               ng-model="opusCtrl.opus.keepImagesPrivate" ng-false-value="false">
+                        Do not publish images
+                    </label>
+                    <div class="small padding-left-1" ng-show="opusCtrl.opus.keepImagesPrivate">
+                        When this option is selected, any images uploaded to this collection will NOT be published to the Atlas of Living Australia's public image repository. This option is only available to Private collections.
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-sm-12">
-                <p>Configure the image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
+                <p>Configure additional image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
                 <ul>
                     <li ng-repeat="imageSource in opusCtrl.opus.imageSources">
                         <a href="${grailsApplication.config.collectory.base.url}/public/show/{{imageSource}}">{{opusCtrl.dataResources[imageSource] | default:'Loading...'}}</a>

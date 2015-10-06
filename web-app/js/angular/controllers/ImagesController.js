@@ -120,11 +120,12 @@ profileEditor.controller('ImagesController', function (profileService, navServic
         });
     };
 
-    self.deleteStagedImage = function(imageId) {
+    self.deleteLocalImage = function(imageId, type) {
         var confirm = util.confirm("Are you sure you wish to delete this image?");
 
         confirm.then(function() {
-            var future = profileService.deleteStagedImage(self.opusId, self.profileId, imageId);
+            var future = profileService.deleteLocalImage(self.opusId, self.profileId, imageId, type);
+
             future.then(function () {
                 self.loadImages();
             }, function() {

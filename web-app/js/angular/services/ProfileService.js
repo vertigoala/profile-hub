@@ -304,8 +304,8 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        deleteStagedImage: function(opusId, profileId, imageId) {
-            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/stagedImage/" + imageId + "/delete");
+        deleteLocalImage: function(opusId, profileId, imageId, type) {
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/image/" + imageId + "/delete?type=" + type);
             future.then(function(response) {
                 console.log("Image deleted with response code " + response.status);
 

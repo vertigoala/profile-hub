@@ -18,10 +18,10 @@
                         <div class="imgCon ">
                             <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
                                target="_blank" ng-if="image.largeImageUrl" title="View occurrence record">
-                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && !image.staged"
+                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type == 'PUBLIC'"
                                      class="thumbnail"/>
                                 <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                     ng-if="image.largeImageUrl && image.staged" class="thumbnail"/>
+                                     ng-if="image.largeImageUrl && image.type != 'PUBLIC'" class="thumbnail"/>
                             </a>
 
                             <p class="caption">{{ image.dataResourceName }}</p>
@@ -37,7 +37,7 @@
 
                             <a class="caption"
                                href="${grailsApplication.config.images.service.url}/image/details?imageId={{image.imageId}}"
-                               target="_blank" ng-if="!image.staged">View image details</a>
+                               target="_blank" ng-if="image.type == 'PUBLIC'">View image details</a>
                         </div>
                     </div>
                 </div>
@@ -76,15 +76,15 @@
                             <div class="imgCon">
                                 <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
                                    target="_blank" ng-if="image.largeImageUrl">
-                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && !image.staged"
+                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type == 'PUBLIC'"
                                          class="thumbnail"/>
                                     <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                         ng-if="image.largeImageUrl && image.staged" class="thumbnail"/>
+                                         ng-if="image.largeImageUrl && image.type != 'PUBLIC'" class="thumbnail"/>
                                 </a>
 
                                 <div class="meta">{{ image.dataResourceName }}</div>
-                                <button class="btn btn-link" ng-click="imageCtrl.deleteStagedImage(image.imageId)"
-                                        ng-show="image.staged"><i
+                                <button class="btn btn-link" ng-click="imageCtrl.deleteLocalImage(image.imageId, image.type)"
+                                        ng-show="image.type != 'PUBLIC'"><i
                                         class="fa fa-trash-o color--red"></i> Delete image</button>
                             </div>
                         </div>
@@ -128,7 +128,7 @@
                         </p>
 
                         <p>
-                            Only staged images can be deleted, as published images are stored in the central Atlas of Living Australia image repository and are accessible by other systems.
+                            Only staged <span ng-show="imageCtrl.opus.keepImagesPrivate">or private</span> images can be deleted, as published images are stored in the central Atlas of Living Australia image repository and are accessible by other systems.
                         </p>
                     </div>
                 </div>
