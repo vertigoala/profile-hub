@@ -16,8 +16,9 @@ class ImageService {
 
         def response
 
-        if (profile.profile.privateMode) {
-            // if the profile is in draft (private) mode, then stage the image: it will be uploaded to the biocache when the profile's draft is released
+        if (profile.profile.privateMode && !profile.opus.keepImagesPrivate) {
+            // if the collection is public and the profile is in draft (private) mode, then stage the image: it will be
+            // uploaded to the biocache when the profile's draft is released
             storeLocalImage(profile.profile, metadata, file, "${grailsApplication.config.image.staging.dir}")
 
             response = profileService.recordStagedImage(opusId, profileId, metadata)
@@ -97,7 +98,7 @@ class ImageService {
         deleted
     }
 
-    def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier) {
+    def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false) {
         Map response = [:]
 
         def model = profileService.getProfile(opusId, profileId, latest)
@@ -134,12 +135,12 @@ class ImageService {
             images.addAll(biocacheImages)
 
             if (profile.privateMode && profile.stagedImages) {
-                images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED))
+                images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths))
             }
 
-            if (opus.privateCollection && opus.keepImagesPrivate) {
-                images.addAll(convertLocalImages(profile.privateImages, opus, profile, ImageType.PRIVATE))
-            }
+            // The collection may now, or may have been at some point, private, so look for any private images that may exist.
+            // When a collection is changed from private to public, existing private images are NOT published automatically.
+            images.addAll(convertLocalImages(profile.privateImages, opus, profile, ImageType.PRIVATE, useInternalPaths))
 
             response.statusCode = SC_OK
             response.resp = images
@@ -148,7 +149,9 @@ class ImageService {
         response
     }
 
-    private static convertLocalImages(List images, Map opus, Map profile, ImageType type) {
+    private static convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false) {
+        String imageUrlPrefix = useInternalPaths ? "file:///data/profile-hub/private-images/${profile.uuid}" : "/opus/${opus.uuid}/profile/${profile.uuid}/image"
+
         images?.collect {
             String extension = getExtension(it.originalFileName)
             boolean excluded = false
@@ -158,8 +161,8 @@ class ImageService {
 
             [
                     imageId         : it.imageId,
-                    thumbnailUrl    : "/opus/${opus.uuid}/profile/${profile.uuid}/image/${it.imageId}${extension}?type=${type}",
-                    largeImageUrl   : "/opus/${opus.uuid}/profile/${profile.uuid}/image/${it.imageId}${extension}?type=${type}",
+                    thumbnailUrl    : "${imageUrlPrefix}/${it.imageId}${extension}?type=${type}",
+                    largeImageUrl   : "${imageUrlPrefix}/${it.imageId}${extension}?type=${type}",
                     dataResourceName: opus.title,
                     metadata        : it,
                     excluded        : excluded,
