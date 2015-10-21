@@ -15,12 +15,12 @@
 
         <div class="row section-no-para" ng-repeat="bibliography in profileCtrl.profile.bibliography">
             <div class="col-sm-10">
-                <div ta-bind ng-model="bibliography.text" ng-show="bibliography.uuid" class="inline-block"></div>
+                <div data-ng-bind-html="bibliography.text | sanitizeHtml" ng-show="bibliography.uuid" class="inline-block"></div>
 
                 <div class="form-group" ng-show="!bibliography.uuid">
-                    <div text-angular text-angular-name="bibliography" ng-model="bibliography.text"
-                         ta-toolbar="{{richTextToolbarSimple}}" class="single-line-editor"
-                         ng-enter="" ta-max-text="300"></div>
+                    <label for="bibliographyText" class="screen-reader-label">Bibliography text</label>
+                    <textarea id="bibliographyText" ng-model="bibliography.text" ckeditor="richTextSmall"
+                              class="single-line-editor" required="required"></textarea>
                 </div>
             </div>
 

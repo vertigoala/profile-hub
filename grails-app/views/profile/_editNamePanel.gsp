@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <p>
-                        Current matched name: <span data-ng-bind-html="profileCtrl.profile.matchedName.formattedName | default: 'Not matched'"></span>
+                        Current matched name: <span data-ng-bind-html="profileCtrl.profile.matchedName.formattedName | default: 'Not matched' | sanitizeHtml"></span>
                     </p>
                 </div>
             </div>

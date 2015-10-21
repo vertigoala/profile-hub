@@ -222,7 +222,7 @@
         var dirty = false;
 
         $(":not(form).ng-dirty").each(function (index, field) {
-            if (!$(field).hasClass("ignore-save-warning") && (!$(field).is("div") || $(field).hasClass("ta-bind"))) {
+            if (!$(field).hasClass("ignore-save-warning") && (!$(field).is("div"))) {
                 $(field).addClass("show-dirty");
                 dirty = true;
             }

@@ -51,10 +51,10 @@
             <tr ng-repeat="profile in reportCtrl.reportData.records">
                 <td>
                     <a href="${request.contextPath}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.profileName.scientificName }}"
-                       target="_blank"><span data-ng-bind-html="profile.profileName | formatProfileName"></span></a>
+                       target="_blank"><span data-ng-bind-html="profile.profileName | formatProfileName | sanitizeHtml"></span></a>
                 </td>
                 <td>
-                    <span data-ng-bind-html="profile.matchedName | formatProfileName | default:'Not matched'"></span>
+                    <span data-ng-bind-html="profile.matchedName | formatProfileName | default:'Not matched' | sanitizeHtml"></span>
                 </td>
                 <td>
                     <a href="${grailsApplication.config.nsl.name.url.prefix}{{profile.nslNameId}}"

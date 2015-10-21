@@ -12,7 +12,8 @@
                     Enter the formatted content that you wish to be included in the 'about' page for your collection.
                 </p>
 
-                <div text-angular text-angular-name="about" ng-model="aboutCtrl.aboutHtml" ta-max-text="5000"></div>
+                <label for="aboutHtml" class="screen-reader-label">About text</label>
+                <textarea id="aboutHtml" ng-model="aboutCtrl.aboutHtml" name="attribute" ckeditor="richTextFullToolbar"></textarea>
 
                 <div class="small">(Maximum of 5000 characters)</div>
             </div>
@@ -21,7 +22,8 @@
                     Enter the <strong>formatted citation</strong> that you wish to be included in the 'about' page for your collection and the generated pdf files.
                 </p>
 
-                <div id="citationHtml" text-angular text-angular-name="citation" ng-model="aboutCtrl.citationHtml" ta-max-text="500" ta-toolbar="{{richTextToolbarSimple}}"></div>
+                <label for="citationHtml" class="screen-reader-label">Citation text</label>
+                <textarea id="citationHtml" ng-model="aboutCtrl.citationHtml" name="attribute" ckeditor="richTextFullToolbar"></textarea>
 
                 <div class="small">(Maximum of 500 characters)</div>
             </div>
@@ -33,7 +35,7 @@
             <div class="col-md-12">
                 <button class="btn btn-primary pull-right" ng-click="aboutCtrl.saveAboutHtml(AboutForm)"
                         ng-disabled="AboutForm.$invalid">
-                    <span ng-show="AboutForm.$dirty">*</span> Save</span>
+                    <span ng-show="AboutForm.$dirty">*</span> Save
                 </button>
             </div>
         </div>

@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'textAngular', 'duScroll', 'ngFileUpload', 'checklist-model']);
+var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor']);
 
 profileEditor.config(function () {
 
@@ -11,82 +11,46 @@ profileEditor.config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) 
 profileEditor.run(function ($rootScope, config) {
     $rootScope.config = config;
 
-    $rootScope.richTextToolbarFull = "[['h1','h2','h3','p'],['bold','italics','underline'],['ul','ol'],['indent', 'outdent'],['insertLink'],['male', 'female', 'plusMinus', 'endash'],['html'],['undo', 'redo']]";
-    $rootScope.richTextToolbarSimple = "[['bold','italics','underline']]";
-});
+    CKEDITOR.plugins.addExternal('alaToolbar', config.contextPath + '/static/js/ckeditor/plugins/alaToolbar/');
 
-profileEditor.config(function($provide){
-    $provide.decorator('taOptions', ['taRegisterTool', '$delegate', function(taRegisterTool, taOptions){
-        taRegisterTool('male', {
-            iconclass: "fa fa-mars",
-            tooltiptext: "Insert male symbol",
-            action: function(){
-                insertTextAtCursor("\u2642");
-                return moveCaret(1);
-            }
-        });
+    $rootScope.richTextSmall = {
+        language: 'en-au',
+        'skin': 'moono',
+        removeButtons: '',
+        removePlugins: '',
+        height: 50,
+        toolbar: [
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline' ] }
+        ]
+    };
 
-        taRegisterTool('female', {
-            iconclass: "fa fa-venus",
-            tooltiptext: "Insert female symbol",
-            action: function(){
-                insertTextAtCursor("\u2640");
-                return moveCaret(1);
-            }
-        });
+    $rootScope.richTextSimpleToolbar = {
+        language: 'en-au',
+        'skin': 'moono',
+        removeButtons: '',
+        removePlugins: '',
+        toolbar: [
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline' ] }
+        ]
+    };
 
-        taRegisterTool('plusMinus', {
-            iconclass: "toolbar-plus-minus",
-            tooltiptext: "Insert plus / minus symbol",
-            action: function(){
-                insertTextAtCursor("\u00B1");
-                return moveCaret(1);
-            }
-        });
-
-        taRegisterTool('endash', {
-            iconclass: "toolbar-endash",
-            tooltiptext: "Insert endash symbol",
-            action: function(){
-                insertTextAtCursor("\u2013");
-                return moveCaret(1);
-            }
-        });
-
-        return taOptions;
-    }]);
-
-    function insertTextAtCursor(text) {
-        var sel, range;
-        if (window.getSelection) {
-            sel = window.getSelection();
-            if (sel.getRangeAt && sel.rangeCount) {
-                range = sel.getRangeAt(0);
-                range.deleteContents();
-                range.insertNode(document.createTextNode(text));
-            }
-        } else if (document.selection && document.selection.createRange) {
-            document.selection.createRange().text = text;
-        }
-    }
-
-    function moveCaret(charCount) {
-        var sel, range;
-        if (window.getSelection) {
-            sel = window.getSelection();
-            if (sel.rangeCount > 0) {
-                var textNode = sel.focusNode;
-                sel.collapse(textNode.nextSibling, charCount);
-            }
-        } else if ((sel = window.document.selection)) {
-            if (sel.type != "Control") {
-                range = sel.createRange();
-                range.move("character", charCount);
-                range.select();
-            }
-        }
-    }
-
+    $rootScope.richTextFullToolbar = {
+        language: 'en-au',
+        'skin': 'moono',
+        removeButtons: '',
+        removePlugins: '',
+        extraPlugins: 'symbol,sourcedialog,alaToolbar',
+        toolbar: [
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
+            { name: 'clipboard', items: ['PasteText', '-', 'Undo', 'Redo' ] },
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent' ] },
+            { name: 'links', items: [ 'Link', 'Unlink' ] },
+            { name: 'insert', items: [ 'Table', 'HorizontalRule', 'Symbol', 'Male', 'Female', 'PlusMinus', 'Endash' ] },
+            { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+            { name: 'tools', items: [ 'Maximize', '-', 'Sourcedialog' ] },
+            { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] }
+        ]
+    };
 });
 
 /**

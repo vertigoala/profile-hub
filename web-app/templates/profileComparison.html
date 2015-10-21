@@ -14,10 +14,10 @@
         <strong>Profile Name</strong>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="diff.fullName.comp"></span>
+        <span data-ng-bind-html="diff.fullName.comp | sanitizeHtml"></span>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="right.fullName"></span>
+        <span data-ng-bind-html="right.fullName | sanitizeHtml"></span>
     </div>
 </div>
 
@@ -26,10 +26,10 @@
         <strong>Matched Name</strong>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="diff.matchedName.fullName.comp"></span>
+        <span data-ng-bind-html="diff.matchedName.fullName.comp | sanitizeHtml"></span>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="right.matchedName.fullName"></span>
+        <span data-ng-bind-html="right.matchedName.fullName | sanitizeHtml"></span>
     </div>
 </div>
 
@@ -38,7 +38,7 @@
         <strong>Attributes</strong>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="diff.lastAttributeChange.left"></span><br/>
+        <span data-ng-bind-html="diff.lastAttributeChange.left | sanitizeHtml"></span><br/>
         <small>Detailed revision history for each attribute can be seen under the 'Show history' link for individual attributes.</small>
     </div>
 </div>
@@ -50,14 +50,14 @@
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="attribute in diff.attributes.comp | orderBy:'title'" ng-if="attribute.title">
             <div class="minor-heading">{{attribute.title}}</div>
-            <div data-ng-bind-html="attribute.plainText.left"></div>
+            <div data-ng-bind-html="attribute.plainText.left | sanitizeHtml"></div>
             <div class="comparison-divider" ng-if="!$last"></div>
         </div>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="attribute in right.attributes | orderBy:'title'">
             <div class="minor-heading">{{attribute.title}}</div>
-            <div data-ng-bind-html="attribute.plainText"></div>
+            <div data-ng-bind-html="attribute.plainText | sanitizeHtml"></div>
             <div class="comparison-divider" ng-if="!$last"></div>
         </div>
     </div>
@@ -70,13 +70,13 @@
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="author in diff.authorship.comp">
             <div class="minor-heading">{{author.category}}</div>
-            <div data-ng-bind-html="author.text.comp"></div>
+            <div data-ng-bind-html="author.text.comp | sanitizeHtml"></div>
         </div>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="author in right.authorship">
             <div class="minor-heading">{{author.category}}</div>
-            <div data-ng-bind-html="author.text"></div>
+            <div data-ng-bind-html="author.text | sanitizeHtml"></div>
         </div>
     </div>
 </div>
@@ -87,17 +87,17 @@
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="link in diff.links.comp">
-            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url.comp"></span><br/>
-            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title.comp"></span><br/>
-            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description.comp"></span><br/>
+            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description.comp | sanitizeHtml"></span><br/>
             <div class="comparison-divider" ng-if="!$last"></div>
         </div>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="link in right.links">
-            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url"></span><br/>
-            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title"></span><br/>
-            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description"></span><br/>
+            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description | sanitizeHtml"></span><br/>
             <div class="comparison-divider" ng-if="!$last"></div>
         </div>
     </div>
@@ -109,17 +109,17 @@
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="link in diff.bhl.comp">
-            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url.comp"></span><br/>
-            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title.comp"></span><br/>
-            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description.comp"></span><br/>
+            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description.comp | sanitizeHtml"></span><br/>
             <div class="comparison-divider" ng-if="!$last"></div>
         </div>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="link in right.bhl">
-            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url"></span><br/>
-            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title"></span><br/>
-            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description"></span><br/>
+            <span class="minor-heading">URL: </span><span data-ng-bind-html="link.url | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Title: </span><span data-ng-bind-html="link.title | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Description: </span><span data-ng-bind-html="link.description | sanitizeHtml"></span><br/>
             <div class="comparison-divider" ng-if="!$last"></div>
         </div>
     </div>
@@ -131,12 +131,12 @@
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="bib in diff.bibliography.comp">
-            <span data-ng-bind-html="bib.plainText.comp"></span>
+            <span data-ng-bind-html="bib.plainText.comp | sanitizeHtml"></span>
         </div>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
         <div ng-repeat="bib in right.bibliography">
-            <span data-ng-bind-html="bib.plainText"></span>
+            <span data-ng-bind-html="bib.plainText | sanitizeHtml"></span>
         </div>
     </div>
 </div>
@@ -146,10 +146,10 @@
         <strong>Specimens</strong>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="diff.specimenIds.comp"></span>
+        <span data-ng-bind-html="diff.specimenIds.comp | sanitizeHtml"></span>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="right.specimenIds"></span>
+        <span data-ng-bind-html="right.specimenIds | sanitizeHtml"></span>
     </div>
 </div>
 
@@ -190,10 +190,10 @@
         <strong>Nomenclature</strong>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="diff.nslNomenclatureIdentifier.comp"></span>
+        <span data-ng-bind-html="diff.nslNomenclatureIdentifier.comp | sanitizeHtml"></span>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="right.nslNomenclatureIdentifier"></span>
+        <span data-ng-bind-html="right.nslNomenclatureIdentifier | sanitizeHtml"></span>
     </div>
 </div>
 
@@ -226,9 +226,9 @@
         <strong>Scientific Name</strong>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="diff.scientificName.comp"></span>
+        <span data-ng-bind-html="diff.scientificName.comp | sanitizeHtml"></span>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <span data-ng-bind-html="right.scientificName"></span>
+        <span data-ng-bind-html="right.scientificName | sanitizeHtml"></span>
     </div>
 </div>
