@@ -15,14 +15,14 @@
         </div>
 
         <div class="col-md-12 nomenclature" ng-show="selectedReference && !loading">
-            <div class="concept" data-ng-bind-html="selectedReference.formattedName"></div>
+            <div class="concept" data-ng-bind-html="selectedReference.formattedName | sanitizeHtml"></div>
             <div class="apc" ng-show="selectedReference.apcReference"
                  title="This is the Australian Plant Census accepted name"><i class="fa fa-check">&nbsp;</i>APC
             </div>
             <div class="nsl-link"><a href="{{selectedReference.url}}" target="_blank"><span class="fa fa-search">&nbsp;</span>NSL</a>
             </div>
             <div class="concept-detail" ng-repeat="detail in selectedReference.details"
-                 data-ng-bind-html="detail"></div>
+                 data-ng-bind-html="detail | sanitizeHtml"></div>
         </div>
     </div>
 
@@ -30,7 +30,7 @@
     <div class="col-md-12 nomenclature" ng-show="selectedReference && readonly">
         <a href="" class="btn btn-link btn-sm fa" ng-click="toggleSynonomy()"
            ng-class="showSynonomy ? 'fa-angle-double-up' : 'fa-angle-double-down'">&nbsp;
-            <div class="concept" data-ng-bind-html="selectedReference.formattedName"></div>
+            <div class="concept" data-ng-bind-html="selectedReference.formattedName | sanitizeHtml"></div>
         </a>
 
         <div class="apc" ng-show="selectedReference.apcReference"
@@ -38,6 +38,6 @@
         </div>
         <div class="nsl-link" ng-show="showSynonomy"><a href="{{viewInNslLink}}" target="_blank"><span class="fa fa-search">&nbsp;</span>NSL</a></div>
         <div class="concept-detail" ng-repeat="detail in selectedReference.details" ng-show="showSynonomy"
-             data-ng-bind-html="detail"></div>
+             data-ng-bind-html="detail | sanitizeHtml"></div>
     </div>
 </div>

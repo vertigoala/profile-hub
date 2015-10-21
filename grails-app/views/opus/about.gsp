@@ -8,7 +8,7 @@
 
 <body>
 
-<div class="container" ng-controller="AboutController as aboutCtrl">
+<div class="container" ng-controller="AboutController as aboutCtrl" ng-cloak>
     <ol class="breadcrumb" ng-cloak>
         <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
         <li><a class="font-xxsmall"
@@ -23,17 +23,17 @@
     <h2 class="heading-large">${pageTitle}</h2>
     <div class="row">
         <div class="col-md-12 col-xs-12 col-lg-12">
-            <div ta-bind ng-model="aboutCtrl.aboutHtml"></div>
+            <div data-ng-bind-html="aboutCtrl.aboutHtml | sanitizeHtml"></div>
         </div>
         <div class="col-md-12 col-xs-12 col-lg-12 padding-top-1" ng-show="aboutCtrl.hasCitation()">
             <h4>Citations</h4>
             <p>This collection should be cited as:</p>
-            <div ta-bind ng-model="aboutCtrl.citationHtml" class="padding-left-1"></div>
+            <div data-ng-bind-html="aboutCtrl.citationHtml | sanitizeHtml" class="padding-left-1"></div>
         </div>
         <div class="col-md-12 col-xs-12 col-lg-12" ng-show="aboutCtrl.hasCitation()">
             <p>The taxon profiles in this collection should be cited as per the following example:</p>
             <div class="citation-example">
-                <p class="padding-left-1">Conn, B.J. ({{aboutCtrl.citationYear}}) Loganiaceae. In: <span ta-bind ng-model="aboutCtrl.citationHtml"></span>. <a href="{{aboutCtrl.citationUrl}}">{{aboutCtrl.citationUrl}}</a>. {{aboutCtrl.citationDate}}</p>
+                <p class="padding-left-1">Conn, B.J. ({{aboutCtrl.citationYear}}) Loganiaceae. In: <span data-ng-bind-html="aboutCtrl.citationHtml | sanitizeHtml"></span>. <a href="{{aboutCtrl.citationUrl}}">{{aboutCtrl.citationUrl}}</a>. {{aboutCtrl.citationDate}}</p>
             </div>
         </div>
 
@@ -54,7 +54,7 @@
 
             <p ng-show="aboutCtrl.collectionCopyright">&copy; {{ aboutCtrl.collectionCopyright }}</p>
 
-            <div data-ng-bind-html="aboutCtrl.genericCopyrightHtml"></div>
+            <div data-ng-bind-html="aboutCtrl.genericCopyrightHtml | sanitizeHtml"></div>
         </div>
     </div>
 </div>

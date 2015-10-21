@@ -15,7 +15,7 @@
 
     <div class="small"
          ng-if="nameCheck.matchedName">Matched name: <span
-            data-ng-bind-html="nameCheck.matchedName.formattedName | default:'None'"></span></div>
+            data-ng-bind-html="nameCheck.matchedName.formattedName | default:'None' | sanitizeHtml"></span></div>
 </div>
 
 <alert type="danger" class="error" ng-if="nameCheck.providedNameDuplicate">
@@ -23,17 +23,17 @@
 </alert>
 
 <alert type="danger" ng-if="nameCheck.providedNameDuplicate && nameCheck.mismatch && nameCheck.matchedNameDuplicate">
-    The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName"></span>', and a
+    The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName | sanitizeHtml"></span>', and a
     profile already exists for this name.
 </alert>
 <alert type="warning" class="warning"
        ng-if="!nameCheck.providedNameDuplicate && nameCheck.mismatch && nameCheck.matchedNameDuplicate">
-    The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName"></span>', and a
+    The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName | sanitizeHtml"></span>', and a
     profile already exists for this name. Are you sure you wish to {{currentProfileId ? "change the profile name to" : "create a new profile for"}} '{{name}}'?
 </alert>
 <alert type="warning" class="warning"
        ng-if="nameCheck.mismatch && nameCheck.matchedName.scientificName && !nameCheck.matchedNameDuplicate">
-    The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName"></span>'. Would
+    The name you provided was matched to '<span data-ng-bind-html="nameCheck.matchedName.formattedName | sanitizeHtml"></span>'. Would
     you like to use that instead? <br/>
     <button class="btn btn-link" ng-click="useMatchedName()"><i
             class="fa fa-check">&nbsp;</i>Yes, use the matched name

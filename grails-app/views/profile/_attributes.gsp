@@ -89,7 +89,7 @@
 <a name="view_{{attribute.key}}"></a>
 <span ng-show="attrCtrl.showAttribute(attribute)">
     <div ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
-        <div ta-bind ng-model="attribute.text" class="display-text"></div>
+        <div ng-bind-html="attribute.text | sanitizeHtml" class="display-text"></div>
 
         <div ng-show="attrCtrl.opus.allowFineGrainedAttribution">
             <div class="citation" ng-show="attribute.creators.length > 0">
@@ -136,7 +136,8 @@
 
 <div class="panel panel-default" id="browse_attributes_edit">
     <div class="panel-body">
-        <select ng-show="attrCtrl.vocabularyStrict"
+        <label for="attributeTitle" class="screen-reader-label">Title</label>
+        <select id="attributeTitle" ng-show="attrCtrl.vocabularyStrict"
                 ng-model="attribute.title" class="form-control attribute-header-input margin-bottom-1">
             <option value="">--- Select one ---</option>
             <option ng-repeat="(key, value) in attrCtrl.allowedVocabulary | orderBy:'toString()'" value="{{value}}"
@@ -152,8 +153,8 @@
         <alert ng-show="attribute.title && !attrCtrl.isValid(attribute.title)"
                type="danger">You must select a value from the list of approved titles.</alert>
 
-        <div text-angular text-angular-name="attribute" ng-model="attribute.text"
-             ta-toolbar="{{richTextToolbarFull}}"></div>
+        <label for="attributeContent" class="screen-reader-label">Content</label>
+        <textarea id="attributeContent" ng-model="attribute.text" name="attribute" ckeditor="richTextFullToolbar" required="required"></textarea>
 
         <div class="row"
              ng-if="attrCtrl.opus.allowFineGrainedAttribution && (attribute.uuid || attribute.original)">
@@ -225,9 +226,9 @@
                             <b>{{ auditItem.object.title }}</b>
                             <br/>
 
-                            <div data-ng-bind-html="auditItem.diff" ng-if="auditItem.diff"></div>
+                            <div data-ng-bind-html="auditItem.diff | sanitizeHtml" ng-if="auditItem.diff"></div>
 
-                            <div data-ng-bind-html="auditItem.object.plainText" ng-if="!auditItem.diff"></div>
+                            <div data-ng-bind-html="auditItem.object.plainText | sanitizeHtml" ng-if="!auditItem.diff"></div>
                         </td>
                         <td>{{ auditItem.userDisplayName }}</td>
                         <td>{{ auditItem.date | date:'dd/MM/yyyy h:mm a' }}</td>
@@ -284,7 +285,7 @@
             <div class="col-sm-2"><strong>{{attribute.opusTitle}}</strong></div>
 
             <div class="col-sm-10">
-                <div ta-bind ng-model="attribute.text" class="display-text"></div>
+                <div ng-bind-html="attribute.text | sanitizeHtml" class="display-text"></div>
             </div>
         </div>
     </div>

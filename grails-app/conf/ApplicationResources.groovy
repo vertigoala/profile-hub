@@ -11,7 +11,7 @@ modules = {
         dependsOn "angular_bootstrap_colourpicker"
         dependsOn "angular_loading_bar"
         dependsOn "fontawesome"
-        dependsOn "richText"
+        dependsOn "ckeditor"
         dependsOn "google_diff"
         dependsOn "jspath"
         dependsOn "angular_scroll"
@@ -91,14 +91,6 @@ modules = {
         resource url:"thirdparty/bootstrap-fileupload/bootstrap-fileupload.min.css"
     }
 
-    richText {
-        resource url:"thirdparty/textAngular/textAngular-1.3.11.min.js"
-        resource url:"thirdparty/textAngular/textAngular-1.3.11.css"
-        resource url:"thirdparty/textAngular/textAngular-rangy-1.3.11.min.js"
-        resource url:"thirdparty/textAngular/textAngular-sanitize-1.3.11.min.js"
-        dependsOn "fontawesome"
-    }
-
     google_diff {
         resource url:"thirdparty/google-diff-match-patch/diff_match_patch.js"
     }
@@ -118,5 +110,13 @@ modules = {
 
     checklist_model {
         resource url:"thirdparty/checklist-model/checklist-model-0.2.4.js"
+    }
+
+    ckeditor {
+        defaultBundle false
+
+        resource url:"thirdparty/ckeditor/ckeditor.js", disposition: 'head', exclude: 'hashandcache'
+        resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.css"
+        resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.min.js"
     }
 }

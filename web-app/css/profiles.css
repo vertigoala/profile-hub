@@ -65,7 +65,7 @@ accordion > div.panel-group > div.panel > div.panel-collapse > div.panel-body {
     min-height: 100px !important;
 }
 
-.inline-block, .ta-bind .inline-block, .single-line-editor > .inline-block {
+.inline-block, .single-line-editor > .inline-block {
     display: inline-block !important;
 }
 
@@ -546,12 +546,49 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     margin: 0 auto;
 }
 
-.toolbar-plus-minus:after {
+.screen-reader-label {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+.cke_button__plusminus_icon,
+.cke_button__endash_icon,
+.cke_button__male_icon,
+.cke_button__female_icon,
+.cke_button__sourcedialog_label {
+    display: none !important;
+}
+
+.cke_button__plusminus:before,
+.cke_button__endash:before,
+.cke_button__male:before,
+.cke_button__female:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    color: #000;
+    font-size: 18px;
+}
+
+.cke_button__plusminus:before {
     content: '\00B1';
 }
 
-.toolbar-endash:after {
+.cke_button__endash:before {
     content: '\2013';
+}
+
+.cke_button__male:before {
+    content: '\2642';
+}
+
+.cke_button__female:before {
+    content: '\2640';
 }
 
 .show-dirty {

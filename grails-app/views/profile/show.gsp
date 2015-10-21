@@ -54,7 +54,7 @@
     <div class="row">
         <div class="col-md-9" ng-cloak>
             <h2 class="heading-large inline"><span
-                    data-ng-bind-html="profileCtrl.formatName() | default:'Loading...'"></span></h2>
+                    data-ng-bind-html="profileCtrl.formatName() | default:'Loading...' | sanitizeHtml"></span></h2>
 
             <div class="margin-bottom-1 inline-block small">
                 <a href="${grailsApplication.config.bie.base.url}/species/{{ profileCtrl.profile.guid }}" ng-show="profileCtrl.profile.guid" title="View this taxon in the Atlas of Living Australia" class="padding-left-1" target="_blank"><span class="fa fa-search">&nbsp;</span>ALA</a>
@@ -73,7 +73,7 @@
 
     <div class="row margin-bottom-1" ng-show="profileCtrl.nslProtologue" ng-cloak>
         <div class="col-md-12">
-            <div class="citation zero-margin" data-ng-bind-html="profileCtrl.nslProtologue"></div>
+            <div class="citation zero-margin" data-ng-bind-html="profileCtrl.nslProtologue | sanitizeHtml"></div>
         </div>
     </div>
 
