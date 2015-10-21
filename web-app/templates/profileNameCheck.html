@@ -3,7 +3,7 @@
 
     <div class="input-group">
         <input id="scientificName" type="text" ng-model="name"
-               class="form-control" ng-change="resetNameCheck()" required
+               class="form-control ignore-save-warning" ng-change="resetNameCheck()" required
                ng-enter="checkName()"
                placeholder="e.g Acacia abbatiana"/>
                     <span class="input-group-btn">
@@ -53,7 +53,7 @@
 
         <div class="form-group">
             <input id="manualName" type="text"
-                   class="form-control"
+                   class="form-control ignore-save-warning"
                    autocomplete="off" value="bla"
                    ng-model="manuallyMatchedName" typeahead-editable="false"
                    typeahead="match.guid as match.name for match in autocompleteName($viewValue) | filter:$viewValue | limitTo:10"
