@@ -57,7 +57,6 @@
                 <g:else>
                     <li><a href="#about" du-smooth-scroll class="font-xxsmall">About page</a></li>
                     <li><a href="#accessControl" du-smooth-scroll class="font-xxsmall">Access control</a></li>
-                    <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Approved image sources</a></li>
                     <li><a href="#lists" du-smooth-scroll class="font-xxsmall">Approved lists</a></li>
                     <li><a href="#recordSources" du-smooth-scroll
                            class="font-xxsmall">Approved specimen/observation sources</a></li>
@@ -68,6 +67,7 @@
                     </li>
                     <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
                     <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>
+                    <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Image options</a></li>
                     <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
                     <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
                     <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>

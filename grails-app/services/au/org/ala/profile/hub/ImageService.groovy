@@ -22,8 +22,8 @@ class ImageService {
             storeLocalImage(profile.profile, metadata, file, "${grailsApplication.config.image.staging.dir}")
 
             response = profileService.recordStagedImage(opusId, profileId, metadata)
-        } else if (profile.opus.privateCollection && profile.opus.keepImagesPrivate) {
-            // if the collection is Private and the admin has elected not to publish images, then store the image in the local image dir
+        } else if (profile.opus.keepImagesPrivate) {
+            // if the admin has elected not to publish images, then store the image in the local image dir
             storeLocalImage(profile.profile, metadata, file, "${grailsApplication.config.image.private.dir}")
 
             response = profileService.recordPrivateImage(opusId, profileId, metadata)

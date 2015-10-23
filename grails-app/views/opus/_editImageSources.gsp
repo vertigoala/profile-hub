@@ -1,29 +1,43 @@
 <div class="panel panel-default" ng-form="ImageForm" ng-cloak>
     <div class="panel-heading">
         <a name="imageSources">
-            <h4 class="section-panel-heading">Approved Image sources</h4>
+            <h4 class="section-panel-heading">Image options</h4>
         </a>
     </div>
 
     <div class="panel-body">
-        <div class="row" ng-show="opusCtrl.opus.privateCollection">
+        <div class="row">
             <div class="col-sm-12">
-                <div class="checkbox padding-bottom-1">
-                    <label for="privateImages" class="inline-label">
-                        <input id="privateImages" type="checkbox" name="privateImages"
-                               ng-change="opusCtrl.privateImageModeChanged()"
-                               ng-model="opusCtrl.opus.keepImagesPrivate" ng-false-value="false">
-                        Do not publish images
-                    </label>
-                    <div class="small padding-left-1" ng-show="opusCtrl.opus.keepImagesPrivate">
-                        When this option is selected, any images uploaded to this collection will NOT be published to the Atlas of Living Australia's public image repository. This option is only available to Private collections.
+                <h5 class="section-panel-heading padding-bottom-1">Image visibility</h5>
+
+                <div class="col-sm-6">
+                    <div class="radio">
+                        <label for="privateImagesNo" class="inline-label">
+                            <input id="privateImagesNo" type="radio" name="privateImages" ng-value="false"
+                                   ng-model="opusCtrl.opus.keepImagesPrivate">
+                            Automatically publish images to the Atlas of Living Australia image repository. This will make the images available to other Atlas of Living Australia applications.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="radio">
+                        <label for="privateImagesYes" class="inline-label">
+                            <input id="privateImagesYes" type="radio" name="privateImages" ng-value="true"
+                                   ng-model="opusCtrl.opus.keepImagesPrivate">
+                            Do not publish images to the public Atlas of Living Australia image repository. Images will only be visible within this collection.
+                        </label>
                     </div>
                 </div>
             </div>
         </div>
 
+        <hr/>
+
         <div class="row">
+
             <div class="col-sm-12">
+                <h5 class="section-panel-heading padding-bottom-1">Approved Image sources</h5>
                 <p>Configure additional image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
                 <ul>
                     <li ng-repeat="imageSource in opusCtrl.opus.imageSources">
