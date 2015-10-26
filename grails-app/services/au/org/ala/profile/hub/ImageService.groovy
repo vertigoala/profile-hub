@@ -239,7 +239,7 @@ class ImageService {
         }
 
         if (profileUpdates) {
-            profileService.updateProfile(opusId, profileId, profileUpdates, true)
+            profileService.updateProfile(opus.uuid, profile.uuid, profileUpdates, true)
         }
     }
 
