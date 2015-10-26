@@ -304,6 +304,15 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        publishPrivateImage: function(opusId, profileId, imageId) {
+            var future = $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/image/" + imageId + "/publish");
+            future.then(function(response) {
+                console.log("Image published wtih response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         deleteLocalImage: function(opusId, profileId, imageId, type) {
             var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/image/" + imageId + "/delete?type=" + type);
             future.then(function(response) {

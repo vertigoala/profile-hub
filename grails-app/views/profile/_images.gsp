@@ -13,16 +13,16 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-sm-12">
-                    <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 padding-bottom-1"
+                    <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 margin-bottom-2"
                          ng-show="!image.excluded">
                         <div class="imgCon ">
-                            <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                               target="_blank" ng-if="image.largeImageUrl" title="View occurrence record">
-                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type == 'PUBLIC'"
+                            <ala-link href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
+                               target="_blank" ng-if="image.largeImageUrl" title="View occurrence record" disable="{{image.type.name != 'PUBLIC'}}">
+                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'PUBLIC'"
                                      class="thumbnail"/>
                                 <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                     ng-if="image.largeImageUrl && image.type != 'PUBLIC'" class="thumbnail"/>
-                            </a>
+                                     ng-if="image.largeImageUrl && image.type.name != 'PUBLIC'" class="thumbnail"/>
+                            </ala-link>
 
                             <p class="caption">{{ image.dataResourceName }}</p>
 
@@ -34,10 +34,9 @@
                                 <span ng-if="image.metadata.rightsHolder">(&copy; {{ image.metadata.rightsHolder }})</span>
                             </p>
 
-
                             <a class="caption"
                                href="${grailsApplication.config.images.service.url}/image/details?imageId={{image.imageId}}"
-                               target="_blank" ng-if="image.type == 'PUBLIC'">View image details</a>
+                               target="_blank" ng-if="image.type.name == 'PUBLIC'">View image details</a>
                         </div>
                     </div>
                 </div>
@@ -71,21 +70,32 @@
                         <h5>Use as the main image</h5>
                     </div>
 
-                    <div ng-repeat="image in imageCtrl.images" class="row border-bottom">
+                    <div ng-repeat="image in imageCtrl.images" class="row border-bottom margin-bottom-1">
                         <div class="col-sm-6">
                             <div class="imgCon">
-                                <a href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                                   target="_blank" ng-if="image.largeImageUrl">
-                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type == 'PUBLIC'"
+                                <ala-link href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
+                                   target="_blank" ng-if="image.largeImageUrl" disable="{{image.type.name != 'PUBLIC'}}">
+                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'PUBLIC'"
                                          class="thumbnail"/>
                                     <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                         ng-if="image.largeImageUrl && image.type != 'PUBLIC'" class="thumbnail"/>
-                                </a>
+                                         ng-if="image.largeImageUrl && image.type.name != 'PUBLIC'" class="thumbnail"/>
+                                </ala-link>
+                                <span class="pill"
+                                      ng-class="image.type.name == 'PUBLIC' ? 'pill-blue' : image.type.name == 'PRIVATE' ? 'pill-green' : 'pill-yellow'"
+                                      title="This image is {{image.type.name == 'PUBLIC' ? 'available in the Atlas of Living Australia image library' : image.type.name == 'PRIVATE' || ? 'only visible within this collection' : 'only visible in draft mode'}}">{{image.type.name}}</span>
 
-                                <div class="meta">{{ image.dataResourceName }}</div>
-                                <button class="btn btn-link" ng-click="imageCtrl.deleteLocalImage(image.imageId, image.type)"
-                                        ng-show="image.type != 'PUBLIC'"><i
-                                        class="fa fa-trash-o color--red"></i> Delete image</button>
+                                <div class="meta inline-block">{{ image.dataResourceName }}</div>
+
+                                <div>
+                                    <button class="btn btn-link" ng-click="imageCtrl.deleteLocalImage(image.imageId, image.type.name)"
+                                            ng-show="image.type.name != 'PUBLIC'"><i
+                                            class="fa fa-trash-o color--red"></i> Delete image</button>
+
+                                    <button class="btn btn-link" ng-click="imageCtrl.publishPrivateImage(image.imageId)"
+                                            ng-show="image.type.name == 'PRIVATE'"><i
+                                            class="fa fa-paper-plane color--green"></i> Publish image</button>
+                                </div>
+
                             </div>
                         </div>
 

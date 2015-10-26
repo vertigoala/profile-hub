@@ -595,3 +595,35 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     border: 2px solid red;
 }
 
+.pill {
+    font-size: 8px;
+    height: 20px;
+    width: 40px;
+    margin: 5px;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 20px;
+    color: #333a3f;
+    text-align: center;
+    -moz-border-radius: 2em;
+    -webkit-border-radius: 2em;
+    border-radius: 2em; /* Opera 10.5, IE 9 */
+    font-variant: small-caps;
+    border: 1px solid #3d464c;
+    background-color: #fff;
+}
+
+.pill-green {
+    background-color: #1fff18;
+    border-color: #5cb82e;
+}
+
+.pill-blue {
+    background-color: #04d8ff;
+    border-color: #16B5D2;
+}
+
+.pill-yellow {
+    background-color: #faff18;
+    border-color: #CAB80C;
+}

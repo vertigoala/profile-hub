@@ -120,6 +120,22 @@ profileEditor.controller('ImagesController', function (profileService, navServic
         });
     };
 
+    self.publishPrivateImage = function(imageId) {
+        var confirm = util.confirm("Are you sure you wish to make this image available to other Atlas of Living Australia applications?");
+
+        confirm.then(function() {
+            var future = profileService.publishPrivateImage(self.opusId, self.profileId, imageId);
+
+            future.then(function () {
+                self.loadImages();
+
+                messageService.success("You images has been successfully published to the Atlas of Living Australia image library.");
+            }, function() {
+                messageService.alert("An error occurred while publishing your image.");
+            })
+        })
+    };
+
     self.deleteLocalImage = function(imageId, type) {
         var confirm = util.confirm("Are you sure you wish to delete this image?");
 

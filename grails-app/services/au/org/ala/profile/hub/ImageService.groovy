@@ -48,20 +48,6 @@ class ImageService {
         file.transferTo(new File(localDir, "${metadata.imageId}${extension}"))
     }
 
-    private static boolean deleteLocalImage(List images, String imageId, String directory) {
-        def image = images.find { it.imageId == imageId }
-        String extension = getExtension(image.originalFileName)
-        File localDir = new File(directory)
-        File file = new File(localDir, "${imageId}${extension}")
-        boolean deleted = file.delete();
-
-        if (localDir.listFiles().length == 0) {
-            localDir.delete()
-        }
-
-        deleted
-    }
-
     def deleteStagedImage(String opusId, String profileId, String imageId) {
         boolean deleted = false;
 
@@ -73,7 +59,7 @@ class ImageService {
             if (deleted) {
                 profileService.recordStagedImage(opusId, profileId, [imageId: imageId, action: "delete"])
             } else {
-                log.warn("Failed to delete staged image file ${file.getAbsolutePath()}")
+                log.warn("Failed to delete staged image ${image}")
             }
         }
 
@@ -89,9 +75,9 @@ class ImageService {
             deleted = deleteLocalImage(profile.profile.privateImages, imageId, "${grailsApplication.config.image.private.dir}/${profile.profile.uuid}/")
 
             if (deleted) {
-                profileService.recordStagedImage(opusId, profileId, [imageId: imageId, action: "delete"])
+                profileService.recordPrivateImage(opusId, profileId, [imageId: imageId, action: "delete"])
             } else {
-                log.warn("Failed to delete private image file ${file.getAbsolutePath()}")
+                log.warn("Failed to delete private image ${imageId}")
             }
         }
 
@@ -149,6 +135,21 @@ class ImageService {
         response
     }
 
+
+    private static boolean deleteLocalImage(List images, String imageId, String directory) {
+        def image = images.find { it.imageId == imageId }
+        String extension = getExtension(image.originalFileName)
+        File localDir = new File(directory)
+        File file = new File(localDir, "${imageId}${extension}")
+        boolean deleted = file.delete();
+
+        if (localDir.listFiles()?.length == 0) {
+            localDir.delete()
+        }
+
+        deleted
+    }
+
     private static convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false) {
         String imageUrlPrefix = useInternalPaths ? "file:///data/profile-hub/private-images/${profile.uuid}" : "/opus/${opus.uuid}/profile/${profile.uuid}/image"
 
@@ -172,50 +173,69 @@ class ImageService {
         }
     }
 
-    def publishStagedImages(String opusId, String profileId) {
-        def profile = profileService.getProfile(opusId, profileId, true)
+    def publishPrivateImage(String opusId, String profileId, String imageId) {
+        def model = profileService.getProfile(opusId, profileId, true)
 
-        Map stagedImages = [:]
-        if (profile.profile.stagedImages) {
-            stagedImages = profile.profile.stagedImages?.collectEntries {
+        if (model.profile.privateImages) {
+            def image = model.profile.privateImages.find { it.imageId == imageId }
+
+            publishImages(model.opus, model.profile, [(imageId): image], false)
+        }
+    }
+
+    def publishStagedImages(String opusId, String profileId) {
+        def model = profileService.getProfile(opusId, profileId, true)
+
+        if (model.profile.stagedImages) {
+            Map images = model.profile.stagedImages?.collectEntries {
                 [(it.imageId): it]
             }
-        }
 
+            publishImages(model.opus, model.profile, images, true)
+        }
+    }
+
+    private def publishImages(Map opus, Map profile, Map images, boolean staged) {
         Map profileUpdates = [:]
 
-        File stagingDir = new File("${grailsApplication.config.image.staging.dir}/${profileId}/")
-        stagingDir.listFiles().each {
+        String localDirPath = staged ? grailsApplication.config.image.staging.dir : grailsApplication.config.image.private.dir
+
+        File localDir = new File("${localDirPath}/${profile.uuid}")
+        localDir.listFiles().each {
             String imageId = it.name.substring(0, it.name.indexOf("."))
-            Map stagedImage = stagedImages[imageId]
+            Map localImage = images[imageId]
 
             List<Map> multimedia = [
                     [
-                            creator         : stagedImage.creator ?: "",
-                            rights          : stagedImage.rights ?: "",
-                            rightsHolder    : stagedImage.rightsHolder ?: "",
-                            license         : stagedImage.licence ?: "",
-                            title           : stagedImage.title ?: "",
-                            description     : stagedImage.description ?: "",
-                            dateCreated     : stagedImage.dateCreated ?: "",
-                            originalFilename: stagedImage.originalFilename
+                            creator         : localImage.creator ?: "",
+                            rights          : localImage.rights ?: "",
+                            rightsHolder    : localImage.rightsHolder ?: "",
+                            license         : localImage.licence ?: "",
+                            title           : localImage.title ?: "",
+                            description     : localImage.description ?: "",
+                            dateCreated     : localImage.dateCreated ?: "",
+                            originalFilename: localImage.originalFilename
                     ]
             ]
-            Map metadata = [multimedia: multimedia, scientificName: profile.profile.scientificName]
+            Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
 
-            def uploadResponse = biocacheService.uploadImage(opusId, profile.profile.uuid, profile.opus.dataResourceUid, it, metadata)
+            def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
 
-            // check if the staged image was set as the primary or an excluded image, and swap the staged id for the new permanent id
-            if (profile.profile.primaryImage == imageId) {
+            // check if the local image was set as the primary or an excluded image, and swap the local id for the new permanent id
+            if (profile.primaryImage == imageId) {
                 profileUpdates.primaryImage = uploadResponse.resp.images[0]
             }
-            if (profile.profile.excludedImages?.contains(imageId)) {
-                profile.profile.excludedImages.remove(imageId)
-                profile.profile.excludedImages << uploadResponse.resp.images[0]
-                profileUpdates.excludedImages = profile.profile.excludedImages
+            if (profile.excludedImages?.contains(imageId)) {
+                profile.excludedImages.remove(imageId)
+                profile.excludedImages << uploadResponse.resp.images[0]
+                profileUpdates.excludedImages = profile.excludedImages
             }
 
-            deleteStagedImage(opusId, profileId, imageId)
+            if (staged) {
+                deleteStagedImage(opus.uuid, profile.uuid, imageId)
+            } else {
+                deletePrivateImage(opus.uuid, profile.uuid, imageId)
+            }
         }
 
         if (profileUpdates) {

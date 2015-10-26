@@ -125,6 +125,17 @@ class ProfileController extends BaseController {
     }
 
     @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    def publishPrivateImage() {
+        if (!params.opusId || !params.profileId || !params.imageId) {
+            badRequest()
+        } else {
+            def response = imageService.publishPrivateImage(params.opusId, params.profileId, params.imageId)
+
+            handle response
+        }
+    }
+
+    @Secured(role = Role.ROLE_PROFILE_EDITOR)
     def discardDraftChanges() {
         if (!params.profileId) {
             badRequest()
@@ -345,7 +356,7 @@ class ProfileController extends BaseController {
         } else {
             File file = new File("${path}/${filename}")
 
-            if (!file) {
+            if (!file.exists()) {
                 notFound "The requested file could not be found"
             } else {
                 response.setHeader("Content-disposition", "attachment;filename=${filename}")
