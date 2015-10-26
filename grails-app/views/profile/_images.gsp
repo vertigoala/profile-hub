@@ -82,7 +82,7 @@
                                 </ala-link>
                                 <span class="pill"
                                       ng-class="image.type.name == 'PUBLIC' ? 'pill-blue' : image.type.name == 'PRIVATE' ? 'pill-green' : 'pill-yellow'"
-                                      title="This image is {{image.type.name == 'PUBLIC' ? 'available in the Atlas of Living Australia image library' : image.type.name == 'PRIVATE' || ? 'only visible within this collection' : 'only visible in draft mode'}}">{{image.type.name}}</span>
+                                      title="This image is {{image.type.name == 'PUBLIC' ? 'available in the Atlas of Living Australia image library' : image.type.name == 'PRIVATE' ? 'only visible within this collection' : 'only visible in draft mode'}}">{{image.type.name}}</span>
 
                                 <div class="meta inline-block">{{ image.dataResourceName }}</div>
 
