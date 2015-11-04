@@ -35,8 +35,8 @@
                             </p>
 
                             <a class="caption"
-                               href="${grailsApplication.config.images.service.url}/image/details?imageId={{image.imageId}}"
-                               target="_blank" ng-if="image.type.name == 'PUBLIC'">View image details</a>
+                               href="" ng-click="imageCtrl.showMetadata(image)">View image details</a>
+
                         </div>
                     </div>
                 </div>

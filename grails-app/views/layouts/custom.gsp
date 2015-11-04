@@ -190,6 +190,8 @@
         keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}',
         imageServiceUrl: '${grailsApplication.config.images.service.url}',
         bieServiceUrl: '${grailsApplication.config.bie.base.url}',
+        biocacheServiceUrl: '${grailsApplication.config.biocache.base.url}',
+        biocacheRecordUrl: '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}',
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
         isOpusReviewer: '${params.isOpusReviewer}',
         nslServiceUrlPrefix: '${grailsApplication.config.nsl.service.url.prefix}',

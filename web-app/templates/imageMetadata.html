@@ -1,0 +1,100 @@
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">Image details</h4>
+    </div>
+
+    <div class="modal-body" ng-cloak>
+        <div class="row margin-bottom-1">
+            <div class="col-sm-12">
+                <div class="imgConLarge">
+                    <img src="{{ imageMetadataCtrl.image.type.name == 'PRIVATE' ? config.contextPath : '' }}{{ imageMetadataCtrl.image.largeImageUrl }}" class="thumbnail">
+                </div>
+            </div>
+        </div>
+        <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.title">
+            <div class="col-md-3">
+                <span class="output-label">Title</span>
+            </div>
+            <div class="col-sm-9">
+                <span>{{ imageMetadataCtrl.image.metadata.title }}</span>
+            </div>
+        </div>
+
+        <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.dateCreated">
+            <div class="col-sm-3">
+                <span class="output-label">Date Taken</span>
+            </div>
+
+            <div class="col-sm-9">
+                <span>{{ imageMetadataCtrl.image.metadata.dateCreated }}</span>
+            </div>
+        </div>
+
+        <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.description">
+            <div class="col-md-3">
+                <span class="output-label">Description</span>
+            </div>
+
+            <div class="col-sm-9">
+                <span>{{ imageMetadataCtrl.image.metadata.description }}</span>
+            </div>
+        </div>
+
+        <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.creator">
+            <div class="col-sm-3">
+                <span class="output-label">Owner</span>
+            </div>
+
+            <div class="col-sm-9">
+                <span>{{ imageMetadataCtrl.image.metadata.creator }}</span>
+            </div>
+        </div>
+
+        <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.rights">
+            <div class="col-sm-3">
+                <span class="output-label">Rights</span>
+            </div>
+
+            <div class="col-sm-9">
+                <span>{{ imageMetadataCtrl.image.metadata.rights }}</span>
+            </div>
+        </div>
+
+        <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.rightsHolder">
+            <div class="col-sm-3">
+                <span class="output-label">Rights Holder</span>
+            </div>
+            <div class="col-sm-9">
+                <span>{{ imageMetadataCtrl.image.metadata.rightsHolder }}</span>
+            </div>
+        </div>
+
+        <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.licence">
+            <div class="col-sm-3">
+                <span class="output-label">Licence</span>
+            </div>
+            <div class="col-sm-9">
+                <span>{{ imageMetadataCtrl.image.metadata.licence }}</span>
+            </div>
+        </div>
+
+        <div class= "row margin-top-1 padding-top-1">
+            <div class="col-sm-12">
+                <a class="pull-right"
+                   href="{{config.imageServiceUrl}}/image/details?imageId={{imageMetadataCtrl.image.imageId}}"
+                   target="_blank" ng-if="imageMetadataCtrl.image.type.name == 'PUBLIC'">View the image in the Atlas of Living Australia&nbsp;<span class="fa fa-external-link"></span></a>
+            </div>
+        </div>
+        <div class= "row margin-top-1 padding-top-1">
+            <div class="col-sm-12">
+                <a class="pull-right"
+                   href="{{config.biocacheRecordUrl}}{{imageMetadataCtrl.image.occurrenceId}}"
+                   target="_blank" ng-if="imageMetadataCtrl.image.type.name == 'PUBLIC'">View the record in the Atlas of Living Australia&nbsp;<span class="fa fa-external-link"></span></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="imageMetadataCtrl.cancel()">Cancel</button>
+    </div>
+</div>

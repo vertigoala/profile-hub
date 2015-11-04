@@ -1,7 +1,7 @@
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function (profileService, navService, util, messageService, $modal) {
+profileEditor.controller('ImagesController', function ($browser, profileService, navService, util, messageService, $modal) {
     var self = this;
 
     self.images = [];
@@ -120,6 +120,24 @@ profileEditor.controller('ImagesController', function (profileService, navServic
         });
     };
 
+    self.showMetadata = function (image) {
+        var popup = $modal.open({
+            templateUrl: $browser.baseHref() + "static/templates/imageMetadata.html",
+            controller: "ImageMetadataController",
+            controllerAs: "imageMetadataCtrl",
+            size: "md",
+            resolve: {
+                image: function () {
+                    return image;
+                }
+            }
+        });
+
+        popup.result.then(function () {
+            self.loadImages();
+        });
+    };
+
     self.publishPrivateImage = function(imageId) {
         var confirm = util.confirm("Are you sure you wish to make this image available to other Atlas of Living Australia applications?");
 
@@ -188,6 +206,19 @@ profileEditor.controller("ImageUploadController", function (profileService, util
             self.error = "An error occurred while uploading your image."
         });
     };
+
+    self.cancel = function () {
+        $modalInstance.dismiss("cancel");
+    }
+});
+
+/**
+ * Image metadata modal dialog controller
+ */
+profileEditor.controller("ImageMetadataController", function($modalInstance, image) {
+    var self = this;
+
+    self.image = image;
 
     self.cancel = function () {
         $modalInstance.dismiss("cancel");
