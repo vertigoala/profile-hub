@@ -16,13 +16,12 @@
                     <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 margin-bottom-2"
                          ng-show="!image.excluded">
                         <div class="imgCon ">
-                            <ala-link href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                               target="_blank" ng-if="image.largeImageUrl" title="View occurrence record" disable="{{image.type.name != 'PUBLIC'}}">
+                            <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.largeImageUrl" title="View details">
                                 <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'PUBLIC'"
                                      class="thumbnail"/>
                                 <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
                                      ng-if="image.largeImageUrl && image.type.name != 'PUBLIC'" class="thumbnail"/>
-                            </ala-link>
+                            </a>
 
                             <p class="caption">{{ image.dataResourceName }}</p>
 
@@ -73,13 +72,12 @@
                     <div ng-repeat="image in imageCtrl.images" class="row border-bottom margin-bottom-1">
                         <div class="col-sm-6">
                             <div class="imgCon">
-                                <ala-link href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{image.occurrenceId}}"
-                                   target="_blank" ng-if="image.largeImageUrl" disable="{{image.type.name != 'PUBLIC'}}">
+                                <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.largeImageUrl" title="View details">
                                     <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'PUBLIC'"
                                          class="thumbnail"/>
                                     <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
                                          ng-if="image.largeImageUrl && image.type.name != 'PUBLIC'" class="thumbnail"/>
-                                </ala-link>
+                                </a>
                                 <span class="pill"
                                       ng-class="image.type.name == 'PUBLIC' ? 'pill-blue' : image.type.name == 'PRIVATE' ? 'pill-green' : 'pill-yellow'"
                                       title="This image is {{image.type.name == 'PUBLIC' ? 'available in the Atlas of Living Australia image library' : image.type.name == 'PRIVATE' ? 'only visible within this collection' : 'only visible in draft mode'}}">{{image.type.name}}</span>
