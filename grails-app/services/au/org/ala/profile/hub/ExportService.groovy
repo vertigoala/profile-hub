@@ -389,7 +389,7 @@ class ExportService {
      */
     static String stripTextFromNonFormattingHtmlTags(String html) {
         def regex = ~/<\/?(?!i>)(?!b>)([A-Za-z0-9.'"()+,=:\s-])+>/
-        return html.replaceAll(regex, "")
+        return html ? html.replaceAll(regex, "") : ""
     }
 
     static String getCCLicenceIcon(String ccLicence) {
