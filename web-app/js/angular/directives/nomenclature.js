@@ -30,18 +30,31 @@ profileEditor.directive('nomenclature', function ($browser) {
                                     name += " (APC)";
                                 }
                                 var formattedName = reference.citationHtml;
-                                if (reference.citations && reference.citations.length > 1 && reference.citations[0].page) {
-                                    formattedName += " " + reference.citations[0].page;
+                                if (reference.citations && reference.citations.length > 0 && reference.citations[0].page) {
+                                    formattedName += ": " + reference.citations[0].page;
                                 }
                                 var details = [];
 
                                 var firstInstanceId = null;
                                 angular.forEach(reference.citations, function (citation) {
-                                    var text = citation.relationship;
-                                    if (citation.name && citation.name.nameStatus && IGNORE_STATUSES.indexOf(citation.name.nameStatus) == -1) {
-                                        text = text + " " + citation.name.nameStatus;
+                                    var citationPage = citation.page;
+
+                                    if (citation.relationship) {
+                                        var text = citation.relationship;
+                                        if (citation.page && citation.page != citationPage && citation.page != "-") {
+                                            text += ": " + citation.page;
+                                        }
+                                        details.push(text);
+                                    } else if (citation.relationships) {
+                                        angular.forEach(citation.relationships, function (relationship) {
+                                            text = relationship.relationship;
+                                            if (relationship.page && relationship.page != citationPage && relationship.page != "-") {
+                                                text += ": " + relationship.page;
+                                            }
+                                            details.push(text);
+                                        });
                                     }
-                                    details.push(text);
+
 
                                     var citationUrl = citation._links.permalink.link;
                                     var instanceId = citationUrl.substring(citationUrl.lastIndexOf("/") + 1);
