@@ -43,7 +43,7 @@ profileEditor.directive('nomenclature', function ($browser) {
                                     }
                                     details.push(text);
 
-                                    var citationUrl = citation.instance._links.permalink.link;
+                                    var citationUrl = citation._links.permalink.link;
                                     var instanceId = citationUrl.substring(citationUrl.lastIndexOf("/") + 1);
 
                                     if (!firstInstanceId) {
@@ -69,7 +69,7 @@ profileEditor.directive('nomenclature', function ($browser) {
 
                                 if (firstInstanceId == $scope.nslNomenclatureId) {
                                     $scope.selectedReference = ref;
-                                    $scope.viewInNslLink = reference.citations[0].instance._links.permalink.link;
+                                    $scope.viewInNslLink = reference.citations[0]._links.permalink.link;
                                 }
 
                                 $scope.references.push(ref);
