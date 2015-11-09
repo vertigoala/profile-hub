@@ -1,7 +1,7 @@
 package au.org.ala.profile.hub
 
 enum ImageType {
-    PUBLIC,
+    OPEN,
     PRIVATE,
     STAGED
 }

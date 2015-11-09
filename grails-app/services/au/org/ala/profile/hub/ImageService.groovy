@@ -114,7 +114,7 @@ class ImageService {
                         excluded        : excluded,
                         primary         : it.image == profile.primaryImage,
                         metadata        : it.imageMetadata && !it.imageMetadata.isEmpty() ? it.imageMetadata[0] : [:],
-                        type            : ImageType.PUBLIC
+                        type            : ImageType.OPEN
                 ]
             }
 
@@ -205,7 +205,7 @@ class ImageService {
             String imageId = it.name.substring(0, it.name.indexOf("."))
             Map localImage = images[imageId]
 
-            List<Map> multimedia = [
+            List<Map> multimedia = localImage ? [
                     [
                             creator         : localImage.creator ?: "",
                             rights          : localImage.rights ?: "",
@@ -216,7 +216,7 @@ class ImageService {
                             dateCreated     : localImage.dateCreated ?: "",
                             originalFilename: localImage.originalFilename
                     ]
-            ]
+            ]: []
             Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
 
             def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)

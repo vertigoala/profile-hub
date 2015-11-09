@@ -17,10 +17,10 @@
                          ng-show="!image.excluded">
                         <div class="imgCon ">
                             <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.largeImageUrl" title="View details">
-                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'PUBLIC'"
+                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'OPEN'"
                                      class="thumbnail"/>
                                 <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                     ng-if="image.largeImageUrl && image.type.name != 'PUBLIC'" class="thumbnail"/>
+                                     ng-if="image.largeImageUrl && image.type.name != 'OPEN'" class="thumbnail"/>
                             </a>
 
                             <p class="caption">{{ image.dataResourceName }}</p>
@@ -73,25 +73,25 @@
                         <div class="col-sm-6">
                             <div class="imgCon">
                                 <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.largeImageUrl" title="View details">
-                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'PUBLIC'"
+                                    <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'OPEN'"
                                          class="thumbnail"/>
                                     <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                         ng-if="image.largeImageUrl && image.type.name != 'PUBLIC'" class="thumbnail"/>
+                                         ng-if="image.largeImageUrl && image.type.name != 'OPEN'" class="thumbnail"/>
                                 </a>
                                 <span class="pill"
-                                      ng-class="image.type.name == 'PUBLIC' ? 'pill-blue' : image.type.name == 'PRIVATE' ? 'pill-green' : 'pill-yellow'"
-                                      title="This image is {{image.type.name == 'PUBLIC' ? 'available in the Atlas of Living Australia image library' : image.type.name == 'PRIVATE' ? 'only visible within this collection' : 'only visible in draft mode'}}">{{image.type.name}}</span>
+                                      ng-class="image.type.name == 'OPEN' ? 'pill-blue' : image.type.name == 'PRIVATE' ? 'pill-green' : 'pill-yellow'"
+                                      title="This image is {{image.type.name == 'OPEN' ? 'available in the Atlas of Living Australia image library' : image.type.name == 'PRIVATE' ? 'only visible within this collection' : 'only visible in draft mode'}}">{{image.type.name}}</span>
 
                                 <div class="meta inline-block">{{ image.dataResourceName }}</div>
 
                                 <div>
                                     <button class="btn btn-link" ng-click="imageCtrl.deleteLocalImage(image.imageId, image.type.name)"
-                                            ng-show="image.type.name != 'PUBLIC'"><i
+                                            ng-show="image.type.name != 'OPEN'"><i
                                             class="fa fa-trash-o color--red"></i> Delete image</button>
 
                                     <button class="btn btn-link" ng-click="imageCtrl.publishPrivateImage(image.imageId)"
                                             ng-show="image.type.name == 'PRIVATE'"><i
-                                            class="fa fa-paper-plane color--green"></i> Publish image</button>
+                                            class="fa fa-paper-plane color--green"></i> Push image to open repository</button>
                                 </div>
 
                             </div>

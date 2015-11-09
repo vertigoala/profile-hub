@@ -15,7 +15,7 @@
                         <label for="privateImagesNo" class="inline-label">
                             <input id="privateImagesNo" type="radio" name="privateImages" ng-value="false"
                                    ng-model="opusCtrl.opus.keepImagesPrivate">
-                            Automatically publish images to the Atlas of Living Australia image repository. This will make the images available to other Atlas of Living Australia applications.
+                            Automatically push images to the Atlas of Living Australia image repository. This will make the images available to other Atlas of Living Australia applications.
                         </label>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                         <label for="privateImagesYes" class="inline-label">
                             <input id="privateImagesYes" type="radio" name="privateImages" ng-value="true"
                                    ng-model="opusCtrl.opus.keepImagesPrivate">
-                            Do not publish images to the public Atlas of Living Australia image repository. Images will only be visible within this collection.
+                            Do not push images to the public Atlas of Living Australia image repository. Images will only be visible within this collection.
                         </label>
                     </div>
                 </div>

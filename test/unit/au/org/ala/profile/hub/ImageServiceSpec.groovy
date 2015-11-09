@@ -156,14 +156,14 @@ class ImageServiceSpec extends Specification {
         result.resp[0].largeImageUrl == "largeUrl1"
         result.resp[0].thumbnailUrl == "thumbnailUrl1"
         result.resp[0].metadata == image1Metadata[0]
-        result.resp[0].type == ImageType.PUBLIC
+        result.resp[0].type == ImageType.OPEN
         result.resp[1].imageId == "image2"
         result.resp[1].occurrenceId == "occurrenceId2"
         result.resp[1].dataResourceName == "resource2"
         result.resp[1].largeImageUrl == "largeUrl2"
         result.resp[1].thumbnailUrl == "thumbnailUrl2"
         result.resp[1].metadata == image2Metadata[0]
-        result.resp[1].type == ImageType.PUBLIC
+        result.resp[1].type == ImageType.OPEN
     }
 
     def "retrieveImages should fetch staged images if the profile is in draft mode"() {
@@ -194,14 +194,14 @@ class ImageServiceSpec extends Specification {
         result.resp[0].largeImageUrl == "largeUrl1"
         result.resp[0].thumbnailUrl == "thumbnailUrl1"
         result.resp[0].metadata == image1Metadata[0]
-        result.resp[0].type == ImageType.PUBLIC
+        result.resp[0].type == ImageType.OPEN
         result.resp[1].imageId == "image2"
         result.resp[1].occurrenceId == "occurrenceId2"
         result.resp[1].dataResourceName == "resource2"
         result.resp[1].largeImageUrl == "largeUrl2"
         result.resp[1].thumbnailUrl == "thumbnailUrl2"
         result.resp[1].metadata == image2Metadata[0]
-        result.resp[1].type == ImageType.PUBLIC
+        result.resp[1].type == ImageType.OPEN
 
         result.resp[2].imageId == "staged1"
         result.resp[2].dataResourceName == "opus title"

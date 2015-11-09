@@ -25,7 +25,7 @@
         <div class="primary-image col-md-12">
             <div class="thumbnail pull-left">
                 <ala-link href="${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}{{imageCtrl.primaryImage.occurrenceId}}"
-                   target="_blank" ng-show="imageCtrl.primaryImage.largeImageUrl" disable="{{imageCtrl.primaryImage.type.name != 'PUBLIC'}}" ng-cloak>
+                   target="_blank" ng-show="imageCtrl.primaryImage.largeImageUrl" disable="{{imageCtrl.primaryImage.type.name != OPEN}}" ng-cloak>
                     <img ng-src="${request.contextPath}{{imageCtrl.primaryImage.largeImageUrl}}"
                          ng-if="imageCtrl.primaryImage.thumbnailUrl && imageCtrl.primaryImage.type.name != 'PUBLIC'"/>
                     <img ng-src="{{imageCtrl.primaryImage.largeImageUrl}}"
