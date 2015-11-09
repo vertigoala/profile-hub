@@ -59,7 +59,7 @@ class ImageService {
             if (deleted) {
                 profileService.recordStagedImage(opusId, profileId, [imageId: imageId, action: "delete"])
             } else {
-                log.warn("Failed to delete staged image ${image}")
+                log.warn("Failed to delete staged image ${imageId}")
             }
         }
 
