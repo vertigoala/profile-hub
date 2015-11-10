@@ -82,14 +82,14 @@
             <div class="col-sm-12">
                 <a class="pull-right"
                    href="{{config.imageServiceUrl}}/image/details?imageId={{imageMetadataCtrl.image.imageId}}"
-                   target="_blank" ng-if="imageMetadataCtrl.image.type.name == 'PUBLIC'">View the image in the Atlas of Living Australia&nbsp;<span class="fa fa-external-link"></span></a>
+                   target="_blank" ng-if="imageMetadataCtrl.image.type.name == 'OPEN'">View the image in the Atlas of Living Australia&nbsp;<span class="fa fa-external-link"></span></a>
             </div>
         </div>
         <div class= "row margin-top-1 padding-top-1">
             <div class="col-sm-12">
                 <a class="pull-right"
                    href="{{config.biocacheRecordUrl}}{{imageMetadataCtrl.image.occurrenceId}}"
-                   target="_blank" ng-if="imageMetadataCtrl.image.type.name == 'PUBLIC'">View the record in the Atlas of Living Australia&nbsp;<span class="fa fa-external-link"></span></a>
+                   target="_blank" ng-if="imageMetadataCtrl.image.type.name == 'OPEN'">View the record in the Atlas of Living Australia&nbsp;<span class="fa fa-external-link"></span></a>
             </div>
         </div>
     </div>
