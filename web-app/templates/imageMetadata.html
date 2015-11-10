@@ -7,7 +7,7 @@
         <div class="row margin-bottom-1">
             <div class="col-sm-12">
                 <div class="imgConLarge">
-                    <img src="{{ imageMetadataCtrl.image.type.name == 'PRIVATE' ? config.contextPath : '' }}{{ imageMetadataCtrl.image.largeImageUrl }}" class="thumbnail">
+                    <img ng-src="{{ imageMetadataCtrl.image.type.name != 'OPEN' ? config.contextPath : '' }}{{ imageMetadataCtrl.image.largeImageUrl }}" class="thumbnail">
                 </div>
             </div>
         </div>
