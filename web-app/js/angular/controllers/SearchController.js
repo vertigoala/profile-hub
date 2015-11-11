@@ -4,6 +4,11 @@
 profileEditor.controller('SearchController', function (profileService, util, messageService) {
     var self = this;
 
+    self.showSearchOptions = false;
+    self.searchOptions = {
+        nameOnly: false
+    };
+
     self.pageSizes = [5, 10, 25, 50, 100];
     self.pagesToShow = 10;
     self.pageSize = 25;
@@ -23,7 +28,21 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     self.profiles = [];
     self.selectedTaxon = {};
 
-    self.search = function (wildcard) {
+    self.search = function () {
+        var searchResult = profileService.search(self.opusId, self.searchTerm, self.searchOptions);
+        searchResult.then(function (data) {
+                console.log("Found " + data.length + " results");
+
+                self.totalResults = data.total;
+                self.profiles = data.items;
+            },
+            function () {
+                messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
+            }
+        );
+    };
+
+    self.searchByScientificName = function (wildcard) {
         if (wildcard === undefined) {
             wildcard = true
         }
@@ -91,5 +110,17 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         if (self.profiles.length == 1) {
             util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + self.profiles[0].scientificName);
         }
+    };
+
+    self.toggleSearchOptions = function() {
+        self.showSearchOptions = !self.showSearchOptions;
+    };
+
+    self.formatScore = function(score) {
+        return Math.round(score * 100);
+    };
+
+    self.setSearchOption = function(option) {
+        self.searchOptions.nameOnly = option == 'name'
     }
 });

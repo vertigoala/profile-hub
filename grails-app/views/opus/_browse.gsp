@@ -18,7 +18,7 @@
                                 <form class="navbar-form" role="search">
                                     <div class="form-group">
                                         <input type="text" class="form-control ignore-save-warning" placeholder="e.g. Acacia binervata"
-                                               ng-change="searchCtrl.search()"
+                                               ng-change="searchCtrl.searchByScientificName()"
                                                name="searchTerm"
                                                autocomplete="off"
                                                ng-enter="searchCtrl.selectSingleResult()"

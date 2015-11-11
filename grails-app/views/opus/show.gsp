@@ -32,6 +32,9 @@
     </div>
 
     <tabset>
+        <tab heading="Search" class="font-xxsmall">
+            <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
+        </tab>
         <tab heading="Browse" class="font-xxsmall">
             <g:include controller="opus" action="browsePanel" params="[opusId: params.opusId]"/>
         </tab>

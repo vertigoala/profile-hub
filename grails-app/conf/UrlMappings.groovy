@@ -10,7 +10,8 @@ class UrlMappings {
 
         "/opus/list" controller: "opus", action: [GET: "list"]
 
-        "/profile/search" controller: "search", action: [GET: "findByScientificName"]
+        "/profile/search" controller: "search", action: [GET: "search"]
+        "/profile/search/scientificName" controller: "search", action: [GET: "findByScientificName"]
         "/profile/search/taxon/name" controller: "search", action: "findByNameAndTaxonLevel"
         "/profile/search/taxon/level" controller: "search", action: "groupByTaxonLevel"
         "/profile/search/taxon/levels" controller: "search", action: "getTaxonLevels"

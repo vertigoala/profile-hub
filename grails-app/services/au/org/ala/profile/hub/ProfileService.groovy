@@ -187,10 +187,16 @@ class ProfileService {
         bieService.getSpeciesProfile(guid)
     }
 
+    def search(String opusId, String term, List params) {
+        log.debug("Searching for '${term}' in opus ${opusId}")
+
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${enc(opusId)}&term=${enc(term)}${params.join("")}")
+    }
+
     def findByScientificName(String opusId, String scientificName, String max, boolean useWildcard) {
         log.debug("Searching for '${scientificName}' in opus ${opusId}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&max=${max ?: ""}&useWildcard=${useWildcard}")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search/scientificName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&max=${max ?: ""}&useWildcard=${useWildcard}")
     }
 
     def findByNameAndTaxonLevel(String opusId, String taxon, String scientificName, String max, String offset, boolean wildcard) {
@@ -408,6 +414,6 @@ class ProfileService {
     }
 
     def enc(String value) {
-        URLEncoder.encode(value, "UTF-8")
+        value ? URLEncoder.encode(value, "UTF-8") : ""
     }
 }

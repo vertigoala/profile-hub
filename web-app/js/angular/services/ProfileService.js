@@ -442,6 +442,23 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        search: function(opusId, term, options) {
+            var queryParams = "";
+            if (options) {
+                for (var key in options) {
+                    if (options.hasOwnProperty(key)) {
+                        queryParams += "&" + key + "=" + options[key]
+                    }
+                }
+            }
+
+            var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&term=" + term + queryParams);
+            future.then(function (response) {
+                console.log("Profile search returned with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
         profileSearch: function(opusId, scientificName, useWildcard) {
             console.log("Searching for " + scientificName + (useWildcard ? " with wildcard" : ""));
 
@@ -451,7 +468,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             if (typeof opusId == 'undefined') {
                 opusId = "";
             }
-            var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard);
+            var future = $http.get(util.contextRoot() + "/profile/search/scientificName?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard);
             future.then(function (response) {
                 console.log("Profile search returned with response code " + response.status);
             });

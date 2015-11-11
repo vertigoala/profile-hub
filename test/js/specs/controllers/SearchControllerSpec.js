@@ -55,7 +55,7 @@ describe("SearchController tests", function () {
 
     it("should set the search results attribute of the current scope when search is invoked", function () {
         searchDefer.resolve(JSON.parse(searchResponse));
-        scope.searchCtrl.search();
+        scope.searchCtrl.searchByScientificName();
         scope.$apply();
 
         expect(scope.searchCtrl.profiles.length).toBe(2); // there are 2 results in the dummy searchResponse
@@ -67,7 +67,7 @@ describe("SearchController tests", function () {
         var searchTerm = "searchValue";
         scope.searchCtrl.searchTerm = searchTerm;
 
-        scope.searchCtrl.search();
+        scope.searchCtrl.searchByScientificName();
         scope.$apply();
 
         expect(profileService.profileSearch).toHaveBeenCalledWith("opusId1", searchTerm, true);
