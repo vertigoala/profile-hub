@@ -1,7 +1,7 @@
 /**
  * Profile Search controller
  */
-profileEditor.controller('SearchController', function (profileService, util, messageService) {
+profileEditor.controller('SearchController', function (profileService, util, messageService, $filter) {
     var self = this;
 
     self.showSearchOptions = false;
@@ -31,15 +31,36 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     self.search = function () {
         var searchResult = profileService.search(self.opusId, self.searchTerm, self.searchOptions);
         searchResult.then(function (data) {
-                console.log("Found " + data.length + " results");
+                console.log("Found " + data.items.length + " results");
 
                 self.totalResults = data.total;
                 self.profiles = data.items;
+
+                angular.forEach(self.profiles, function(profile) {
+                    profile.image = {};
+                    profile.image.type = {};
+                })
             },
             function () {
                 messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
             }
         );
+    };
+
+    self.loadImageForProfile = function(profileId) {
+        var profile = $filter('filter')(self.profiles, {uuid: profileId}, true)[0];
+
+        if (!profile.image.status) {
+            var future = profileService.getPrimaryImage(profile.opusId, profileId);
+            profile.image.status = 'checking';
+            future.then(function (data) {
+                if (data) {
+                    profile.image.url = data.thumbnailUrl;
+                    profile.image.type = data.type;
+                }
+                profile.image.status = 'checked';
+            });
+        }
     };
 
     self.searchByScientificName = function (wildcard) {
@@ -114,10 +135,6 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
     self.toggleSearchOptions = function() {
         self.showSearchOptions = !self.showSearchOptions;
-    };
-
-    self.formatScore = function(score) {
-        return Math.round(score * 100);
     };
 
     self.setSearchOption = function(option) {

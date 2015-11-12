@@ -87,7 +87,7 @@
                 <tr ng-repeat="profile in searchCtrl.profiles">
                     <td>{{profile.rank | capitalize | default:'Unknown'}}:</td>
                     <td>
-                        <a href="${request.contextPath}/opus/{{ searchCtrl.opusId }}/profile/{{ profile.scientificName }}"
+                        <a href="${request.contextPath}/opus/{{ searchCtrl.opusId }}/profile/{{ profile.scientificName | enc }}"
                            target="_self" class="scientific-name">{{profile.scientificName}}</a>
                     </td>
                 </tr>

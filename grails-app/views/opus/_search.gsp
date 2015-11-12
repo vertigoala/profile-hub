@@ -5,7 +5,8 @@
 
         <div class="input-group">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-default dropdown-toggle btn-lg" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                     {{ searchCtrl.searchOptions.nameOnly ? 'by name' : 'containing' }} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
@@ -31,39 +32,58 @@
         <div class="col-md-12">
             <a href="" class="btn btn-link btn-sm fa" ng-click="searchCtrl.toggleSearchOptions()"
                ng-class="searchCtrl.showSearchOptions ? 'fa-angle-double-up' : 'fa-angle-double-down'">&nbsp;
-                Search options
+            Search options
             </a>
         </div>
 
         <div class="col-md-12" ng-show="searchCtrl.showSearchOptions">
             <label for="nameSearch">Name search</label>
-            <input id="nameSearch" type="checkbox" class="ignore-save-warning" ng-model="searchCtrl.searchOptions.nameOnly">
+            <input id="nameSearch" type="checkbox" class="ignore-save-warning"
+                   ng-model="searchCtrl.searchOptions.nameOnly">
         </div>
     </div>
 
-    <div  ng-show="searchCtrl.profiles.length > 0">
+    <div ng-show="searchCtrl.profiles.length > 0">
         <div class="col-xs-12 col-sm-12 col-md-12">
             Showing {{ searchCtrl.profiles.length }} of {{ searchCtrl.totalResults }} results, sorted by relevance.
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <tr>
-                        <th>Rank</th>
-                        <th>Taxon</th>
-                        <th ng-if="!searchCtrl.opusId">Collection</th>
-                        <th>Relevance</th>
-                    </tr>
-                    <tr ng-repeat="profile in searchCtrl.profiles">
-                        <td><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.scientificName }}"
-                               target="_self">{{profile.rank | capitalize | default:'Unknown'}}:</a></td>
-                        <td><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.scientificName }}"
-                               target="_self" class="scientific-name">{{profile.scientificName}}</a></td>
-                        <td ng-if="!searchCtrl.opusId">{{profile.opusName}}</td>
-                        <td><percent-display percent="searchCtrl.formatScore(profile.score)" side="40" colors="#AEFFFC #0087BE"></percent-display></td>
-                    </tr>
-                </table>
+
+        <div class="col-md-12 padding-top-1" ng-repeat="profile in searchCtrl.profiles" ng-cloak>
+            <div class="col-md-2 col-sm-6 col-xs-12">
+                <a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.scientificName | enc }}"
+                   target="_self">
+                    <div class="imgConSmall" in-view="searchCtrl.loadImageForProfile(profile.uuid)">
+                        <div ng-show="profile.image.url">
+                            <img ng-src="{{profile.image.url}}"
+                                 ng-if="profile.image.url && profile.image.type.name == 'OPEN'"
+                                 class="thumbnail"/>
+                            <img ng-src="${request.contextPath}{{profile.image.url}}"
+                                 ng-if="profile.image.url && profile.image.type.name != 'OPEN'"
+                                 class="thumbnail"/>
+                        </div>
+                        <img src="${request.contextPath}/images/not-available.png"
+                             ng-hide="profile.image.url || profile.image.status == 'checking'" class="thumbnail"
+                             alt="There is no image for this profile"/>
+                        <div class="fa fa-spinner fa-spin" ng-show="profile.image.status == 'checking'"></div>
+                    </div>
+                </a>
+            </div>
+
+            <div ng-class="searchCtrl.opusId ? 'col-md-10 col-sm-6 col-xs-12' : 'col-md-8 col-sm-6 col-xs-12'">
+                <h4><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.scientificName | enc }}"
+                       target="_self">{{ profile.scientificName }}</a></h4>
+
+                <div class="small" ng-show="profile.rank">{{profile.rank | capitalize}}</div>
+            </div>
+
+            <div class="col-md-2 col-sm-6 col-xs-12" ng-show="!searchCtrl.opusId">
+                {{profile.opusName}}
+            </div>
+
+            <div class="col-md-12">
+                <hr/>
             </div>
         </div>
+
     </div>
 </div>

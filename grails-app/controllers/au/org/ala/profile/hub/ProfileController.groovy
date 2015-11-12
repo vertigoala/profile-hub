@@ -259,6 +259,25 @@ class ProfileController extends BaseController {
         }
     }
 
+    def getPrimaryImage() {
+        if (!params.opusId || !params.profileId) {
+            badRequest "opusId and profileId are required parameters"
+        } else {
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+
+            def model = profileService.getProfile(params.opusId, params.profileId, latest)
+
+            String primaryImageId = model.profile.primaryImage
+
+            String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
+            List images = imageService.retrieveImages(params.opusId, params.profileId, latest, model.opus.imageSources.toArray().join(","), searchIdentifier, true)?.resp
+
+            Map primaryImage = images.find { it.imageId == primaryImageId } ?: images[0] ?: [:]
+
+            render primaryImage as JSON
+        }
+    }
+
     def retrieveImages() {
         if (!params.opusId || !params.profileId || !params.imageSources || !params.searchIdentifier) {
             badRequest "opusId, profileId, imageSources and searchIdentifier are required parameters"

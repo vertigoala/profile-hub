@@ -17,7 +17,7 @@ modules = {
         dependsOn "angular_scroll"
         dependsOn "ng_file_upload"
         dependsOn "checklist_model"
-        dependsOn "ng_percent_display"
+        dependsOn "angular_inview"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -122,8 +122,7 @@ modules = {
         resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.min.js"
     }
 
-    ng_percent_display {
-        resource url:"thirdparty/ngPercentDisplay/css/ngPercentDisplay.css"
-        resource url:"thirdparty/ngPercentDisplay/js/ngPercentDisplay.js"
+    angular_inview {
+        resource url:"thirdparty/angular-inview/angular-inview-1.5.6.js"
     }
 }

@@ -290,6 +290,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        getPrimaryImage: function(opusId, profileId) {
+            console.log("Retrieving primary image for profile " + profileId);
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/primaryImage");
+            return util.toStandardPromise(future);
+        },
+
         retrieveImages: function (opusId, profileId, searchIdentifier, imageSources) {
             console.log("Retrieving images for " + searchIdentifier);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/images?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources, {cache: true});

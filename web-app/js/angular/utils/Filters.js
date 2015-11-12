@@ -76,3 +76,10 @@ profileEditor.filter("formatText", function () {
         return result
     }
 });
+
+/**
+ * URL encodes the provided text
+ */
+profileEditor.filter('enc', function() {
+    return window.encodeURIComponent;
+});
