@@ -428,7 +428,7 @@ class ProfileController extends BaseController {
                     model.edit = false
                     model.currentUser = authService.getDisplayName()
                     model.glossaryUrl = getGlossaryUrl(profile.opus)
-                    model.aboutPageUrl = getAboutUrl(profile.opus)
+                    model.aboutPageUrl = getAboutUrl(profile.opus, profile)
                     model.footerText = profile.opus.footerText
                     model.contact = profile.opus.contact
                     model.publications = pubJson.publications
