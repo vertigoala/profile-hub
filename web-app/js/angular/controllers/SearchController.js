@@ -6,7 +6,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
     self.showSearchOptions = false;
     self.searchOptions = {
-        nameOnly: false
+        nameOnly: true
     };
 
     self.pageSizes = [5, 10, 25, 50, 100];
@@ -55,6 +55,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
             profile.image.status = 'checking';
             future.then(function (data) {
                 if (data) {
+                    console.log(JSON.stringify(data))
                     profile.image.url = data.thumbnailUrl;
                     profile.image.type = data.type;
                 }

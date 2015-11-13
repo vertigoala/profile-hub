@@ -291,8 +291,6 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         getPrimaryImage: function(opusId, profileId) {
-            console.log("Retrieving primary image for profile " + profileId);
-
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/primaryImage");
             return util.toStandardPromise(future);
         },

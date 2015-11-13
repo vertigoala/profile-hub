@@ -4,8 +4,8 @@
         <h3 class="heading-medium">Search for a profile</h3>
 
         <div class="input-group">
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle btn-lg" data-toggle="dropdown"
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle btn-lg search-type-control" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                     {{ searchCtrl.searchOptions.nameOnly ? 'by name' : 'containing' }} <span class="caret"></span>
                 </button>
@@ -13,14 +13,13 @@
                     <li><a href="#" ng-click="searchCtrl.setSearchOption('name')">by name</a></li>
                     <li><a href="#" ng-click="searchCtrl.setSearchOption('text')">containing</a></li>
                 </ul>
-            </span>
+            </div>
             <input id="searchTerm"
                    ng-model="searchCtrl.searchTerm"
                    ng-enter="searchCtrl.search()"
                    name="searchTerm"
                    class="input-lg form-control ignore-save-warning"
                    autocomplete="on"
-                   placeholder="e.g. Acacia abbatiana"
                    type="text">
             <span class="input-group-btn">
                 <button class="btn btn-primary btn-lg" type="button" ng-click="searchCtrl.search()">Search</button>
@@ -29,17 +28,12 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <a href="" class="btn btn-link btn-sm fa" ng-click="searchCtrl.toggleSearchOptions()"
-               ng-class="searchCtrl.showSearchOptions ? 'fa-angle-double-up' : 'fa-angle-double-down'">&nbsp;
-            Search options
-            </a>
-        </div>
-
-        <div class="col-md-12" ng-show="searchCtrl.showSearchOptions">
-            <label for="nameSearch">Name search</label>
-            <input id="nameSearch" type="checkbox" class="ignore-save-warning"
-                   ng-model="searchCtrl.searchOptions.nameOnly">
+        <div class="col-md-12 padding-top-1 padding-bottom-1">
+            <div class="info-box">
+                <i class="fa fa-info-circle color--medium-blue margin-bottom-1"></i>
+                <span ng-show="searchCtrl.searchOptions.nameOnly">A name search will look for all words in the provided text within the profile name, the matched name, and any attribute where the title contains the word 'name'. A name search will also attempt to match against any synonyms or common names that are recorded in the Atlas of Living Australia.</span>
+                <span ng-show="!searchCtrl.searchOptions.nameOnly">A 'contains' search will look for all words in the provided text within the profile name, the matched name, and any attributes. This type of search will <i>not</i> attempt to match synonyms or other names.</span>
+            </div>
         </div>
     </div>
 
@@ -70,10 +64,11 @@
             </div>
 
             <div ng-class="searchCtrl.opusId ? 'col-md-10 col-sm-6 col-xs-12' : 'col-md-8 col-sm-6 col-xs-12'">
-                <h4><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.scientificName | enc }}"
+                <h4 class="inline-block"><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.scientificName | enc }}"
                        target="_self">{{ profile.scientificName }}</a></h4>
+                <div class="inline-block padding-left-1" ng-show="profile.rank">({{profile.rank | capitalize}})</div>
 
-                <div class="small" ng-show="profile.rank">{{profile.rank | capitalize}}</div>
+                <div class="font-xsmall" ng-show="profile.rank"><span ng-repeat="name in profile.otherNames">{{ name.text | capitalize }}<span ng-show="!$last">, </span></span></div>
             </div>
 
             <div class="col-md-2 col-sm-6 col-xs-12" ng-show="!searchCtrl.opusId">

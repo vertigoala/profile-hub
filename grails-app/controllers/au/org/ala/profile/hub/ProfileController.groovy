@@ -270,7 +270,7 @@ class ProfileController extends BaseController {
             String primaryImageId = model.profile.primaryImage
 
             String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-            List images = imageService.retrieveImages(params.opusId, params.profileId, latest, model.opus.imageSources.toArray().join(","), searchIdentifier, true)?.resp
+            List images = imageService.retrieveImages(params.opusId, params.profileId, latest, model.opus.imageSources.toArray().join(","), searchIdentifier)?.resp
 
             Map primaryImage = images.find { it.imageId == primaryImageId } ?: images[0] ?: [:]
 
