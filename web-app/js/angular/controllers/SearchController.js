@@ -34,8 +34,6 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     self.search = function () {
         var searchResult = profileService.search(self.opusId, self.searchTerm, self.searchOptions);
         searchResult.then(function (data) {
-                console.log("Found " + data.items.length + " results");
-
                 self.searchResults = data;
 
                 angular.forEach(self.searchResults.items, function(profile) {
@@ -60,8 +58,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         }
         $sessionStorage.searches[self.opusId ? self.opusId : 'all'].result = result;
         $sessionStorage.searches[self.opusId ? self.opusId : 'all'].term = self.searchTerm;
-
-        console.log(JSON.stringify($sessionStorage.searches))
+        $sessionStorage.searches[self.opusId ? self.opusId : 'all'].options = self.searchOptions;
     }
 
     function retrieveCachedSearchResult() {
@@ -69,6 +66,9 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         if (cachedResult) {
             self.searchResults = cachedResult.result;
             self.searchTerm = cachedResult.term;
+            self.searchOptions = cachedResult.options ? cachedResult.options :  {
+                nameOnly: true
+            };
         }
     }
 
@@ -104,7 +104,6 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
         var searchResult = profileService.profileSearch(self.opusId, self.searchTerm, wildcard);
         searchResult.then(function (data) {
-                console.log("Found " + data.length + " results");
                 self.profiles = data;
             },
             function () {
@@ -150,7 +149,6 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
         var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon, scientificName, self.pageSize, offset);
         results.then(function (data) {
-                console.log("Found " + data.length + " results");
                 self.profiles = data;
             },
             function () {

@@ -10,8 +10,8 @@
                     {{ searchCtrl.searchOptions.nameOnly ? 'by name' : 'containing' }} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#" ng-click="searchCtrl.setSearchOption('name')">by name</a></li>
-                    <li><a href="#" ng-click="searchCtrl.setSearchOption('text')">containing</a></li>
+                    <li><a href="" ng-click="searchCtrl.setSearchOption('name')">by name</a></li>
+                    <li><a href="" ng-click="searchCtrl.setSearchOption('text')">containing</a></li>
                 </ul>
             </div>
             <input id="searchTerm"
@@ -31,16 +31,22 @@
     <div class="row">
         <div class="col-md-12 padding-top-1 padding-bottom-1">
             <div class="info-box">
-                <i class="fa fa-info-circle color--medium-blue margin-bottom-1"></i>
+                <i class="fa fa-info-circle color--medium-blue margin-bottom-1 padding-right-1"></i>
                 <span ng-show="searchCtrl.searchOptions.nameOnly">A name search will look for all words in the provided text within the profile name, the matched name, and any attribute where the title contains the word 'name'. A name search will also attempt to match against any synonyms or common names that are recorded in the Atlas of Living Australia.</span>
                 <span ng-show="!searchCtrl.searchOptions.nameOnly">A 'contains' search will look for all words in the provided text within the profile name, the matched name, and any attributes. This type of search will <i>not</i> attempt to match synonyms or other names.</span>
             </div>
         </div>
     </div>
 
+    <div ng-show="searchCtrl.searchResults.items.length == 0">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            No results containing your search terms were found.
+        </div>
+    </div>
+
     <div ng-show="searchCtrl.searchResults.items.length > 0">
         <div class="col-xs-12 col-sm-12 col-md-12">
-            Showing {{ searchCtrl.searchResults.items.length }} of {{ searchCtrl.searchResults.total }} results, sorted by relevance.
+            Showing 1 to {{ searchCtrl.searchResults.items.length }} of {{ searchCtrl.searchResults.total }} results, sorted by relevance.
         </div>
 
         <div class="col-md-12 padding-top-1" ng-repeat="profile in searchCtrl.searchResults.items" ng-cloak>

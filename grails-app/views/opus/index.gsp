@@ -46,7 +46,7 @@
                         </div>
                     </div>
                 </tab>
-                <tab heading="Quick Search" class="font-xxsmall">
+                <tab heading="Search" class="font-xxsmall">
                     <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
                 </tab>
             </tabset>
