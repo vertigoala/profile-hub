@@ -18,6 +18,7 @@ modules = {
         dependsOn "ng_file_upload"
         dependsOn "checklist_model"
         dependsOn "angular_inview"
+        dependsOn "ng_storage"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -124,5 +125,9 @@ modules = {
 
     angular_inview {
         resource url:"thirdparty/angular-inview/angular-inview-1.5.6.js"
+    }
+
+    ng_storage {
+        resource url:"thirdparty/ngStorage/ngStorage-0.3.10.min.js"
     }
 }

@@ -1,13 +1,17 @@
 /**
  * Profile Search controller
  */
-profileEditor.controller('SearchController', function (profileService, util, messageService, $filter) {
+profileEditor.controller('SearchController', function (profileService, util, messageService, $filter, $sessionStorage) {
     var self = this;
+
+    self.opusId = util.getEntityId("opus");
 
     self.showSearchOptions = false;
     self.searchOptions = {
         nameOnly: true
     };
+    self.searchResults = {};
+    retrieveCachedSearchResult();
 
     self.pageSizes = [5, 10, 25, 50, 100];
     self.pagesToShow = 10;
@@ -22,7 +26,6 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         {key: "order", name: "Order", order: 4},
         {key: "family", name: "Family", order: 5},
         {key: "genus", name: "Genus", order: 6}];
-    self.opusId = util.getEntityId("opus");
     self.taxonResults = {};
     self.taxonLevels = [];
     self.profiles = [];
@@ -33,13 +36,14 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         searchResult.then(function (data) {
                 console.log("Found " + data.items.length + " results");
 
-                self.totalResults = data.total;
-                self.profiles = data.items;
+                self.searchResults = data;
 
-                angular.forEach(self.profiles, function(profile) {
+                angular.forEach(self.searchResults.items, function(profile) {
                     profile.image = {};
                     profile.image.type = {};
-                })
+                });
+
+                cacheSearchResult(self.searchResults);
             },
             function () {
                 messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
@@ -47,15 +51,42 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         );
     };
 
+    function cacheSearchResult(result) {
+        if (!$sessionStorage.searches) {
+            $sessionStorage.searches = {};
+        }
+        if (!$sessionStorage.searches[self.opusId ? self.opusId : 'all']) {
+            $sessionStorage.searches[self.opusId ? self.opusId : 'all'] = {};
+        }
+        $sessionStorage.searches[self.opusId ? self.opusId : 'all'].result = result;
+        $sessionStorage.searches[self.opusId ? self.opusId : 'all'].term = self.searchTerm;
+
+        console.log(JSON.stringify($sessionStorage.searches))
+    }
+
+    function retrieveCachedSearchResult() {
+        var cachedResult =  $sessionStorage.searches ? $sessionStorage.searches[self.opusId ? self.opusId : 'all'] : {};
+        if (cachedResult) {
+            self.searchResults = cachedResult.result;
+            self.searchTerm = cachedResult.term;
+        }
+    }
+
+    self.clearSearch = function() {
+        self.searchResults = {};
+        self.searchTerm = "";
+
+        $sessionStorage.searches[self.opusId ? self.opusId : 'all'] = {};
+    };
+
     self.loadImageForProfile = function(profileId) {
-        var profile = $filter('filter')(self.profiles, {uuid: profileId}, true)[0];
+        var profile = $filter('filter')(self.searchResults.items, {uuid: profileId}, true)[0];
 
         if (!profile.image.status) {
             var future = profileService.getPrimaryImage(profile.opusId, profileId);
             profile.image.status = 'checking';
             future.then(function (data) {
                 if (data) {
-                    console.log(JSON.stringify(data))
                     profile.image.url = data.thumbnailUrl;
                     profile.image.type = data.type;
                 }

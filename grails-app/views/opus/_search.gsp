@@ -23,6 +23,7 @@
                    type="text">
             <span class="input-group-btn">
                 <button class="btn btn-primary btn-lg" type="button" ng-click="searchCtrl.search()">Search</button>
+                <button class="btn btn-default btn-lg" type="button" ng-click="searchCtrl.clearSearch()" title="Clear search"><span class="fa fa-trash"></span></button>
             </span>
         </div>
     </div>
@@ -37,12 +38,12 @@
         </div>
     </div>
 
-    <div ng-show="searchCtrl.profiles.length > 0">
+    <div ng-show="searchCtrl.searchResults.items.length > 0">
         <div class="col-xs-12 col-sm-12 col-md-12">
-            Showing {{ searchCtrl.profiles.length }} of {{ searchCtrl.totalResults }} results, sorted by relevance.
+            Showing {{ searchCtrl.searchResults.items.length }} of {{ searchCtrl.searchResults.total }} results, sorted by relevance.
         </div>
 
-        <div class="col-md-12 padding-top-1" ng-repeat="profile in searchCtrl.profiles" ng-cloak>
+        <div class="col-md-12 padding-top-1" ng-repeat="profile in searchCtrl.searchResults.items" ng-cloak>
             <div class="col-md-2 col-sm-6 col-xs-12">
                 <a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.scientificName | enc }}"
                    target="_self">
