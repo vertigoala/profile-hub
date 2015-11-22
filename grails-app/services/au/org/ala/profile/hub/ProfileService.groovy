@@ -139,13 +139,16 @@ class ProfileService {
     }
 
     void injectThumbnailUrls(profile) {
-        profile.bhl.each({
-            String pageId = it.url.split("/").last()
-            if (pageId =~ /\?#/) {
-                pageId = pageId.split(/\?#/).first()
+        profile.bhl.each {
+            if (it) {
+                String pageId = it.url.split("/").last()
+                if (pageId =~ /\?#/) {
+                    pageId = pageId.split(/\?#/).first()
+                }
+                it.thumbnailUrl = "${grailsApplication.config.biodiv.library.thumb.url}${pageId}"
             }
-            it.thumbnailUrl = "${grailsApplication.config.biodiv.library.thumb.url}${pageId}"
-        })
+        }
+
         profile
     }
 

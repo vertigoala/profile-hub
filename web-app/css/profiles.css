@@ -281,8 +281,8 @@ hr.comment-divider {
 }
 
 .imgConSmall img {
-    max-width: 100px !important;
-    min-width: 100px !important;
+    max-width: 150px !important;
+    min-width: 150px !important;
 }
 
 .imgConLarge img {
