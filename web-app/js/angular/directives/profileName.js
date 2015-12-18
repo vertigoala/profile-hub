@@ -44,7 +44,7 @@ profileEditor.directive('profileName', function ($browser) {
 
                         $scope.nameCheck.providedNameDuplicate = report.providedNameDuplicates.length > 0 && report.providedNameDuplicates[0].profileId != $scope.currentProfileId;
                         $scope.nameCheck.noMatch = !report.matchedName || !report.matchedName.scientificName;
-                        $scope.nameCheck.mismatch = report.matchedName && report.matchedName.scientificName != $scope.name && report.matchedName.fullName != $scope.name;
+                        $scope.nameCheck.mismatch = report.matchedName && report.matchedName.scientificName.toLowerCase() != $scope.name.toLowerCase() && report.matchedName.fullName.toLowerCase() != $scope.name.toLowerCase();
                         $scope.nameCheck.matchedNameDuplicate = $scope.nameCheck.mismatch && report.matchedNameDuplicates.length > 0 && report.matchedNameDuplicates[0].profileId != $scope.currentProfileId;
 
                         $scope.valid = $scope.nameCheck != null && !$scope.nameCheck.providedNameDuplicate;
