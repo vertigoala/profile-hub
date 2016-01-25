@@ -4,16 +4,6 @@
         <h3 class="heading-medium">Search for a profile</h3>
 
         <div class="input-group">
-            <div class="input-group-btn">
-                <button type="button" class="btn btn-default dropdown-toggle btn-lg search-type-control" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                    {{ searchCtrl.searchOptions.nameOnly ? 'by name' : 'containing' }} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="" ng-click="searchCtrl.setSearchOption('name')">by name</a></li>
-                    <li><a href="" ng-click="searchCtrl.setSearchOption('text')">containing</a></li>
-                </ul>
-            </div>
             <input id="searchTerm"
                    ng-model="searchCtrl.searchTerm"
                    ng-enter="searchCtrl.search()"
@@ -25,16 +15,6 @@
                 <button class="btn btn-primary btn-lg" type="button" ng-click="searchCtrl.search()">Search</button>
                 <button class="btn btn-default btn-lg" type="button" ng-click="searchCtrl.clearSearch()" title="Clear search"><span class="fa fa-trash"></span></button>
             </span>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12 padding-top-1 padding-bottom-1">
-            <div class="info-box">
-                <i class="fa fa-info-circle color--medium-blue margin-bottom-1 padding-right-1"></i>
-                <span ng-show="searchCtrl.searchOptions.nameOnly">A name search will look for all words in the provided text within the profile name, the matched name, and any attribute where the title contains the word 'name'. A name search will also attempt to match against any synonyms or common names that are recorded in the Atlas of Living Australia.</span>
-                <span ng-show="!searchCtrl.searchOptions.nameOnly">A 'contains' search will look for all words in the provided text within the profile name, the matched name, and any attributes. This type of search will <i>not</i> attempt to match synonyms or other names.</span>
-            </div>
         </div>
     </div>
 
