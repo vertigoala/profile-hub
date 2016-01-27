@@ -19,6 +19,7 @@ modules = {
         dependsOn "checklist_model"
         dependsOn "angular_inview"
         dependsOn "ng_storage"
+        dependsOn "angular_truncate"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -129,5 +130,9 @@ modules = {
 
     ng_storage {
         resource url:"thirdparty/ngStorage/ngStorage-0.3.10.min.js"
+    }
+
+    angular_truncate {
+        resource url:"thirdparty/angular-truncate/truncate.js"
     }
 }

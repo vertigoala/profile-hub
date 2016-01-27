@@ -8,7 +8,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
     self.showSearchOptions = false;
     self.searchOptions = {
-        nameOnly: true
+        nameOnly: false
     };
     self.searchResults = {};
     retrieveCachedSearchResult();
@@ -31,22 +31,26 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     self.profiles = [];
     self.selectedTaxon = {};
 
-    self.search = function () {
+    self.search = function (pageSize, offset) {
+        self.searchOptions.offset = offset || 0;
+        self.searchOptions.pageSize = pageSize || self.pageSize;
+
         var searchResult = profileService.search(self.opusId, self.searchTerm, self.searchOptions);
         searchResult.then(function (data) {
                 self.searchResults = data;
 
-                angular.forEach(self.searchResults.items, function(profile) {
-                    profile.image = {};
-                    profile.image.type = {};
+                angular.forEach(self.searchResults.items, function (profile) {
+                    profile.image = {
+                        status: 'not-checked',
+                        type: {}
+                    };
                 });
 
                 cacheSearchResult(self.searchResults);
             },
             function () {
                 messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
-            }
-        );
+            });
     };
 
     function cacheSearchResult(result) {
@@ -62,27 +66,27 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     }
 
     function retrieveCachedSearchResult() {
-        var cachedResult =  $sessionStorage.searches ? $sessionStorage.searches[self.opusId ? self.opusId : 'all'] : {};
+        var cachedResult = $sessionStorage.searches ? $sessionStorage.searches[self.opusId ? self.opusId : 'all'] : {};
         if (cachedResult) {
             self.searchResults = cachedResult.result;
             self.searchTerm = cachedResult.term;
-            self.searchOptions = cachedResult.options ? cachedResult.options :  {
-                nameOnly: true
+            self.searchOptions = cachedResult.options ? cachedResult.options : {
+                nameOnly: false
             };
         }
     }
 
-    self.clearSearch = function() {
+    self.clearSearch = function () {
         self.searchResults = {};
         self.searchTerm = "";
 
         $sessionStorage.searches[self.opusId ? self.opusId : 'all'] = {};
     };
 
-    self.loadImageForProfile = function(profileId) {
+    self.loadImageForProfile = function (profileId) {
         var profile = $filter('filter')(self.searchResults.items, {uuid: profileId}, true)[0];
 
-        if (!profile.image.status) {
+        if (profile.image.status == 'not-checked') {
             var future = profileService.getPrimaryImage(profile.opusId, profileId);
             profile.image.status = 'checking';
             future.then(function (data) {
@@ -112,33 +116,33 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         );
     };
 
-    self.getTaxonLevels = function() {
+    self.getTaxonLevels = function () {
         var levels = profileService.getTaxonLevels(self.opusId);
         levels.then(function (data) {
-            self.taxonLevels = data;
-        },
-        function() {
-            messageService.alert("An error occurred while determining taxon levels.");
-        });
+                self.taxonLevels = data;
+            },
+            function () {
+                messageService.alert("An error occurred while determining taxon levels.");
+            });
     };
 
-    self.searchByTaxonLevel = function(level, offset) {
+    self.searchByTaxonLevel = function (level, offset) {
         if (offset === undefined) {
             offset = 0;
         }
 
         var result = profileService.profileSearchByTaxonLevel(self.opusId, level, self.MAX_FACET_ITEMS, offset);
-        result.then(function(data) {
+        result.then(function (data) {
             if (!self.taxonResults[level]) {
                 self.taxonResults[level] = {};
             }
             angular.extend(self.taxonResults[level], data);
-        }, function() {
+        }, function () {
             messageService.alert("Failed to perform taxon level search.");
         });
     };
 
-    self.searchByTaxon = function(taxon, scientificName, count, offset) {
+    self.searchByTaxon = function (taxon, scientificName, count, offset) {
         self.selectedTaxon = {level: taxon, name: scientificName, count: count};
 
         if (offset === undefined) {
@@ -157,17 +161,17 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         );
     };
 
-    self.selectSingleResult = function() {
+    self.selectSingleResult = function () {
         if (self.profiles.length == 1) {
             util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + self.profiles[0].scientificName);
         }
     };
 
-    self.toggleSearchOptions = function() {
+    self.toggleSearchOptions = function () {
         self.showSearchOptions = !self.showSearchOptions;
     };
 
-    self.setSearchOption = function(option) {
+    self.setSearchOption = function (option) {
         self.searchOptions.nameOnly = option == 'name'
     }
 });
