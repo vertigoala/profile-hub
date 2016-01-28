@@ -1,7 +1,8 @@
 package au.org.ala.profile.hub
 
+import org.apache.http.HttpStatus
+
 import grails.test.mixin.TestFor
-import org.apache.commons.httpclient.HttpStatus
 import org.springframework.web.multipart.MultipartFile
 import spock.lang.Specification
 
