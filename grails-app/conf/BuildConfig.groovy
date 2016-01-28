@@ -72,7 +72,11 @@ grails.project.dependency.resolution = {
         }
 
         runtime ":resources:1.2.14"
-        runtime ":ala-bootstrap3:1.1"
-        runtime ":ala-auth:1.3.1"
+        runtime(":ala-bootstrap3:1.1") {
+            excludes "ala-cas-client"
+        }
+        runtime(":ala-auth:1.3.1") {
+            excludes "commons-httpclient"
+        }
     }
 }
