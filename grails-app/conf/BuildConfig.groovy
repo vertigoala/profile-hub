@@ -25,8 +25,6 @@ grails.project.dependency.resolution = {
     inherits("global") {
         // This is to remove itext conficting version with jasperreports and we don't need that plugin anyway
         excludes "grails-docs"
-
-        excludes 'httpcore'
     }
     log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
@@ -75,6 +73,6 @@ grails.project.dependency.resolution = {
 
         runtime ":resources:1.2.14"
         runtime ":ala-bootstrap3:1.1"
-        runtime ":ala-auth:1.2"
+        runtime ":ala-auth:1.3.1"
     }
 }
