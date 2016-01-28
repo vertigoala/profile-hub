@@ -241,8 +241,7 @@
 
                         <div class="col-sm-9">
                             <input id="rights" type="text" ng-model="imageUploadCtrl.metadata.rights"
-                                   class="form-control"
-                                   placeholder="e.g. All rights reserved"/>
+                                   class="form-control"/>
                         </div>
                     </div>
                 </div>
