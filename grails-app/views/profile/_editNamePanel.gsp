@@ -1,6 +1,14 @@
 <div  ng-show="profileCtrl.showNameEditControls" ng-cloak>
-    <span class="status small" ng-class="profileCtrl.profile.matchedName ? 'green' : 'red'" title="The name has{{ profileCtrl.profile.matchedName ? '' : ' not' }} been matched against the ALA">ALA</span>
-    <span class="status small" ng-class="profileCtrl.profile.nslNameIdentifier ? 'green' : 'red'"title="The name has{{ profileCtrl.profile.nslNameIdentifier ? '' : ' not' }} been matched against the NSL">NSL</span>
+    <div class="row">
+        <div class="pull-left padding-left-1">
+            <span class="status small" ng-class="profileCtrl.profile.matchedName ? 'green' : 'red'" title="The name has{{ profileCtrl.profile.matchedName ? '' : ' not' }} been matched against the ALA">ALA</span>
+            <span class="status small" ng-class="profileCtrl.profile.nslNameIdentifier ? 'green' : 'red'"title="The name has{{ profileCtrl.profile.nslNameIdentifier ? '' : ' not' }} been matched against the NSL">NSL</span>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-link fa fa-close" ng-click="profileCtrl.editName()"
+                    ng-show="!profileCtrl.readonly()">&nbsp;Close</button>
+        </div>
+    </div>
 
     <div class="panel panel-default">
         <div class="panel-body">
