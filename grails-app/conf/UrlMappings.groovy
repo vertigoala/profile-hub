@@ -113,6 +113,7 @@ class UrlMappings {
 
         "/admin/message" controller: "admin", action: [GET: "getMessage", POST: "postMessage"]
         "/admin/reloadConfig" controller: "admin", action: [POST: "reloadConfig"]
+        "/admin/reindex" controller: "admin", action: [POST: "reindex"]
         "/admin" controller: "admin", action: [GET: "index"]
 
         "500"(view: "/error")
