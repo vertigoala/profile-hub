@@ -264,20 +264,25 @@ hr.comment-divider {
 /* ---- */
 
 /* Gallery styling */
-.imgCon, .imgConLarge {
+.imgCon, .imgConLarge, .imgConSmall {
     display: inline-block;
     margin: 2px 4px 2px 0;
     width: 100%;
 }
 
 .imgConLarge {
-    max-height: 500px;
-    overflow-y: scroll;
-}
+     max-height: 500px;
+     overflow-y: scroll;
+ }
 
 .imgCon img {
     height: 200px !important;
     min-width: 180px !important;
+}
+
+.imgConSmall img {
+    max-width: 150px !important;
+    min-width: 150px !important;
 }
 
 .imgConLarge img {
@@ -650,4 +655,21 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .pill-yellow {
     background-color: #faff18;
     border-color: #CAB80C;
+}
+
+.bottom-border {
+    border-bottom: solid 1px #04d8ff;
+}
+
+.info-box {
+    margin-left: 15px;
+    margin-right: 15px;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+    border: 1px solid #e3e3e3;
+    padding: 15px;
+}
+
+.search-type-control {
+    width: 135px;
 }

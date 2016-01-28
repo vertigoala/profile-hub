@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor']);
+var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate']);
 
 profileEditor.config(function () {
 
@@ -75,5 +75,10 @@ profileEditor.controller('ALAAdminController', function ($http, util) {
 
     self.reloadConfig = function () {
         $http.post(util.contextRoot() + "/admin/reloadConfig")
+    };
+
+    self.reindex = function () {
+        console.log("reindexing...");
+        $http.post(util.contextRoot() + "/admin/reindex")
     };
 });

@@ -5,7 +5,7 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
-                <h4 class="section-panel-heading">Authors and Acknowledgements</h4>
+                <h4 class="section-panel-heading">Acknowledgements</h4>
             </div>
         </div>
     </div>

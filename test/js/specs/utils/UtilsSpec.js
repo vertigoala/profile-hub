@@ -56,11 +56,11 @@ describe("Util tests", function () {
     it("should extract the profile identifier from the URL when getEntityId is invoked with 'profile'", function() {
         location.path("/opus/opusId1");
 
-        expect(service.getEntityId("profile")).not.toBeDefined();
+        expect(service.getEntityId("profile")).toBe('');
 
         location.path("/opus/opusId2/profile/");
 
-        expect(service.getEntityId("profile")).not.toBeDefined();
+        expect(service.getEntityId("profile")).toBe('');
 
         location.path("/opus/opusId3/profile/profileId1");
 

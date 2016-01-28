@@ -224,7 +224,7 @@
         var dirty = false;
 
         $(":not(form).ng-dirty").each(function (index, field) {
-            if (!$(field).hasClass("ignore-save-warning") && (!$(field).is("div"))) {
+            if (!$(field).hasClass("ignore-save-warning") && !$(field).is("div") && !$(field).is("ul")) {
                 $(field).addClass("show-dirty");
                 dirty = true;
             }

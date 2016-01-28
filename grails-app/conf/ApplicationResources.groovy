@@ -17,6 +17,9 @@ modules = {
         dependsOn "angular_scroll"
         dependsOn "ng_file_upload"
         dependsOn "checklist_model"
+        dependsOn "angular_inview"
+        dependsOn "ng_storage"
+        dependsOn "angular_truncate"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -35,6 +38,7 @@ modules = {
         resource url:"js/angular/controllers/OpusController.js"
         resource url:"js/angular/controllers/ProfileController.js"
         resource url:"js/angular/controllers/UserAccessController.js"
+        resource url:"js/angular/controllers/BrowseController.js"
         resource url:"js/angular/controllers/SearchController.js"
         resource url:"js/angular/controllers/AttributesController.js"
         resource url:"js/angular/controllers/BhlLinksController.js"
@@ -119,5 +123,17 @@ modules = {
         resource url:"thirdparty/ckeditor/ckeditor.js", disposition: 'head', exclude: 'hashandcache'
         resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.css"
         resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.min.js"
+    }
+
+    angular_inview {
+        resource url:"thirdparty/angular-inview/angular-inview-1.5.6.js"
+    }
+
+    ng_storage {
+        resource url:"thirdparty/ngStorage/ngStorage-0.3.10.min.js"
+    }
+
+    angular_truncate {
+        resource url:"thirdparty/angular-truncate/truncate.js"
     }
 }

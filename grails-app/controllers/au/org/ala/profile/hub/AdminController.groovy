@@ -8,6 +8,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 class AdminController extends BaseController {
 
+    WebService webService
+
     @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
     def index() {
         render view: "admin.gsp"
@@ -68,5 +70,10 @@ class AdminController extends BaseController {
         finally {
             stream?.close()
         }
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def reindex() {
+        webService.doPost("${grailsApplication.config.profile.service.url}/admin/search/reindex", [:])
     }
 }

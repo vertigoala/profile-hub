@@ -164,8 +164,8 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
             entityId = entityId.substring(0, entityId.indexOf(";"))
         }
 
-        if (KEYWORDS.indexOf(entityId) > -1) {
-            entityId = null;
+        if (KEYWORDS.indexOf(entityId) > -1 || typeof entityId === 'undefined') {
+            entityId = ""; // using empty string instead of null so the value does not convert to the string "null" if put into a url query string
         }
         return entityId;
     }

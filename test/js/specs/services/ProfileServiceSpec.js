@@ -201,13 +201,13 @@ describe("ProfileService tests", function () {
     it("should invoke the profile search operation on the context root when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName");
 
-        http.expectGET("/someContext/profile/search?opusId=opusId&scientificName=scientificName&useWildcard=true").respond("bla");
+        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=true").respond("bla");
     });
 
     it("should invoke the profile search operation on the context root with wildcard=false if false is passed in when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName", false);
 
-        http.expectGET("/someContext/profile/search?opusId=opusId&scientificName=scientificName&useWildcard=false").respond("bla");
+        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false").respond("bla");
     });
 
     it("should invoke the taxon level search service on the context root when profileSearchByTaxonLevel is invoked", function() {

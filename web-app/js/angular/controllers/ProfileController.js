@@ -43,7 +43,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                     }
 
                     if (!self.readonly() || self.profile.authorship.length > 1) {
-                        navService.add("Authors & Acknowledgements", "authorship");
+                        navService.add("Acknowledgements", "authorship");
                     }
 
                     if (!self.readonly()) {
@@ -274,9 +274,9 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         future.then(function() {
             form.$setPristine();
 
-            messageService.success("Authorship and acknowledgements successfully updated.");
+            messageService.success("Acknowledgements successfully updated.");
         }, function() {
-            messageService.alert("An error occurred while updating authorship and acknowledgements.");
+            messageService.alert("An error occurred while updating acknowledgements.");
         })
     };
 

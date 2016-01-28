@@ -62,7 +62,7 @@
                            class="font-xxsmall">Approved specimen/observation sources</a></li>
                     <li><a href="#attributeVocab" du-smooth-scroll class="font-xxsmall">Attribute vocabulary</a></li>
                     <li><a href="#authorshipVocab" du-smooth-scroll
-                           class="font-xxsmall">Authors &amp; acknowledgements vocabulary</a></li>
+                           class="font-xxsmall">Acknowledgements vocabulary</a></li>
                     <li><a href="#authorship" du-smooth-scroll class="font-xxsmall">Authorship &amp; attribution</a>
                     </li>
                     <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
