@@ -23,6 +23,12 @@ class AccessControlFiltersSpec extends Specification {
 
     def controller = new SecuredController()
 
+    // the following is required to get defineBeans to work in grails 2.5.2
+    def doWithSpring = {
+        authService au.org.ala.web.AuthService
+        profileService au.org.ala.profile.hub.ProfileService
+    }
+
     def setup() {
         grailsApplication.config.security.authorisation.disable = false
     }
