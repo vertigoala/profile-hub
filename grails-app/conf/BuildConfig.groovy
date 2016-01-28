@@ -23,8 +23,10 @@ grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
 
     inherits("global") {
-        excludes "grails-docs"
         // This is to remove itext conficting version with jasperreports and we don't need that plugin anyway
+        excludes "grails-docs"
+
+        excludes 'httpcore'
     }
     log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
