@@ -99,7 +99,7 @@
             <g:include controller="profile" action="nomenclaturePanel" params="[opusId: params.opusId]"/>
         </g:if>
 
-        <div class="row margin-bottom-1" ng-cloak>
+        <div class="row margin-bottom-1" ng-cloak ng-if="profileCtrl.profile.matchedName">
             <g:include controller="profile" action="mapPanel" params="[opusId: params.opusId]"/>
         </div>
     </g:if>
