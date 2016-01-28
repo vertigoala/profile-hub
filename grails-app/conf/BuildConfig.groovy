@@ -9,25 +9,33 @@ grails.project.source.level = 1.7
 //grails.plugin.location.'ala-web-theme' = "../ala-web-theme"
 
 grails.project.fork = [
-        test: false,
-        run: false
+        // configure settings for the test-app JVM, uses the daemon by default
+        test   : [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, daemon: true],
+        // configure settings for the run-app JVM
+        run    : [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, forkReserve: false],
+        // configure settings for the run-war JVM
+        war    : [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, forkReserve: false],
+        // configure settings for the Console UI JVM
+        console: [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256]
 ]
 
 grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
 
     inherits("global") {
-        excludes "grails-docs" // This is to remove itext conficting version with jasperreports and we don't need that plugin anyway
+        excludes "grails-docs"
+        // This is to remove itext conficting version with jasperreports and we don't need that plugin anyway
     }
     log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
-    legacyResolve false // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
+    legacyResolve false
+    // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
 
     def httpmimeVersion = "4.3.3"
 
     repositories {
         mavenLocal()
-        mavenRepo ("http://nexus.ala.org.au/content/groups/public/") {
+        mavenRepo("http://nexus.ala.org.au/content/groups/public/") {
             updatePolicy 'always'
         }
     }
@@ -39,10 +47,10 @@ grails.project.dependency.resolution = {
 
         compile('net.sf.jasperreports:jasperreports:6.1.0') {
             excludes 'antlr', 'commons-logging',
-                    'ant', 'mondrian', 'commons-javaflow','barbecue', 'xml-apis-ext','xml-apis', 'xalan', 'groovy-all', 'hibernate', 'saaj-api', 'servlet-api',
-                    'xercesImpl','xmlParserAPIs','spring-core','bsh', 'spring-beans', 'jaxen', 'barcode4j','batik-svg-dom','batik-xml','batik-awt-util','batik-dom',
-                    'batik-css','batik-gvt','batik-script', 'batik-svggen','batik-util','batik-bridge','persistence-api','jdtcore','bcmail-jdk16','bcprov-jdk16','bctsp-jdk16',
-                    'bcmail-jdk14','bcprov-jdk14','bctsp-jdk14','xmlbeans', 'olap4j'
+                    'ant', 'mondrian', 'commons-javaflow', 'barbecue', 'xml-apis-ext', 'xml-apis', 'xalan', 'groovy-all', 'hibernate', 'saaj-api', 'servlet-api',
+                    'xercesImpl', 'xmlParserAPIs', 'spring-core', 'bsh', 'spring-beans', 'jaxen', 'barcode4j', 'batik-svg-dom', 'batik-xml', 'batik-awt-util', 'batik-dom',
+                    'batik-css', 'batik-gvt', 'batik-script', 'batik-svggen', 'batik-util', 'batik-bridge', 'persistence-api', 'jdtcore', 'bcmail-jdk16', 'bcprov-jdk16', 'bctsp-jdk16',
+                    'bcmail-jdk14', 'bcprov-jdk14', 'bctsp-jdk14', 'xmlbeans', 'olap4j'
         }
         compile 'net.sf.jasperreports:jasperreports-functions:6.1.0'
         compile 'net.sf.jasperreports:jasperreports-fonts:6.1.0'
@@ -54,7 +62,7 @@ grails.project.dependency.resolution = {
         build ":tomcat:7.0.55"
 
         compile ":mail:1.0.7"
-        compile ":cache:1.1.6"
+        compile ":cache:1.1.8"
         compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
         compile ":modernizr:2.7.1.1"
