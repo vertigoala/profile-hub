@@ -5,6 +5,7 @@ class UrlMappings {
         "/speciesList/" controller: "speciesList", action: [GET: "getAllLists"]
 
         "/user/search" controller: "user", action: [GET: "findUser"]
+        "/user/details" controller: "user", action: [GET: "getUserDetails"]
 
         "/opus/create" controller: "opus", action: [GET: "create", PUT: "createOpus"]
 

@@ -741,9 +741,18 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         getStatistics: function(opusId) {
             console.log("Fetching statistics");
 
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/statistics");
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/statistics", {cache: true});
             future.then(function (response) {
                console.log("Statistics fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        getUserDetails: function(opusId) {
+            var future = $http.get(util.contextRoot() + "/user/details?opusId=" + opusId, {cache: true});
+            future.then(function (response) {
+                console.log("User details fetched with response code " + response.status);
             });
 
             return util.toStandardPromise(future);

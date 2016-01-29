@@ -407,6 +407,10 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     z-index: 9999;
 }
 
+.no-icon-menu-item {
+    padding-left: 20px;
+}
+
 .panel {
     margin-bottom: 10px;
 }

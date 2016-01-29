@@ -1,10 +1,13 @@
 <g:if test="${params.currentUser}">
-<li class="dropdown font-xsmall">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-        <i class="fa fa-user"></i>&ensp;User settings
+<li class="dropdown font-xsmall" ng-controller="UserDetailController as userCtrl">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" title="{{ userCtrl.tooltip }}">
+        <i class="fa fa-user {{ userCtrl.user.role.colour }}"></i>&ensp;User settings
         <span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
+        <li role="separator">
+            <span role="menuitem" class="no-icon-menu-item">Role: {{ userCtrl.user.role.name }}</span>
+        </li>
         <li role="presentation">
             <a role="menuitem"
                tabindex="-1"
