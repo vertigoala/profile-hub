@@ -122,18 +122,6 @@ class ImageServiceSpec extends Specification {
         new File("${grailsApplication.config.image.staging.dir}/profile1").exists() == false
     }
 
-    def "retrieveImages should return the response object if the call to the biocache fails"() {
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1"]]
-        setup:
-        biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_BAD_REQUEST, resp: "Something blew up!!"]
-
-        when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
-
-        then:
-        result == [statusCode: HttpStatus.SC_BAD_REQUEST, resp: "Something blew up!!"]
-    }
-
     def "retrieveImages should fetch images from the biocache"() {
         setup:
         profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1"], opus:[:]]
