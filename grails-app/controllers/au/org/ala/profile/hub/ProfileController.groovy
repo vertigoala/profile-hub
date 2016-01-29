@@ -279,8 +279,8 @@ class ProfileController extends BaseController {
     }
 
     def retrieveImages() {
-        if (!params.opusId || !params.profileId || !params.imageSources || !params.searchIdentifier) {
-            badRequest "opusId, profileId, imageSources and searchIdentifier are required parameters"
+        if (!params.opusId || !params.profileId || !params.imageSources) {
+            badRequest "opusId, profileId and imageSources are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
 

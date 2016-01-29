@@ -9,6 +9,10 @@ class BiocacheService {
     def grailsApplication
 
     def retrieveImages(String searchIdentifier, String imageSources) {
+        if (!searchIdentifier) {
+            return [:]
+        }
+
         log.debug("Fetching images for ${searchIdentifier} using sources ${imageSources}")
         String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
 

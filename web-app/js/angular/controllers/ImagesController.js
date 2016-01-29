@@ -59,7 +59,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
     self.loadImages = function () {
         messageService.info("Loading images...");
 
-        var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : self.profile.scientificName;
+        var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : "";
 
         var sources = angular.copy(self.opus.imageSources);
         sources.unshift(self.opus.dataResourceUid);

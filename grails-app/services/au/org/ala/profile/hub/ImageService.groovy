@@ -95,10 +95,7 @@ class ImageService {
 
         List images = []
 
-        if (publishedImages.statusCode != SC_OK) {
-            log.debug "Response status ${publishedImages.resp} returned from operation"
-            response = publishedImages
-        } else {
+        if (publishedImages && publishedImages.statusCode == SC_OK) {
             List biocacheImages = publishedImages.resp.occurrences.collect {
                 boolean excluded = false
                 if (profile.excludedImages && profile.excludedImages.contains(it.image)) {
@@ -119,18 +116,18 @@ class ImageService {
             }
 
             images.addAll(biocacheImages)
-
-            if (profile.privateMode && profile.stagedImages) {
-                images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths))
-            }
-
-            // The collection may now, or may have been at some point, private, so look for any private images that may exist.
-            // When a collection is changed from private to public, existing private images are NOT published automatically.
-            images.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths))
-
-            response.statusCode = SC_OK
-            response.resp = images
         }
+
+        if (profile.privateMode && profile.stagedImages) {
+            images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths))
+        }
+
+        // The collection may now, or may have been at some point, private, so look for any private images that may exist.
+        // When a collection is changed from private to public, existing private images are NOT published automatically.
+        images.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths))
+
+        response.statusCode = SC_OK
+        response.resp = images
 
         response
     }
