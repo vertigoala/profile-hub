@@ -621,7 +621,7 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 }
 
 .show-dirty {
-    border: 2px solid red;
+    border: 2px solid red !important;
 }
 
 .pill {

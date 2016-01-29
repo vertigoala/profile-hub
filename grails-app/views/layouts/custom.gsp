@@ -224,13 +224,23 @@
         var dirty = false;
 
         $(":not(form).ng-dirty").each(function (index, field) {
-            if (!$(field).hasClass("ignore-save-warning") && !$(field).is("div") && !$(field).is("ul")) {
-                $(field).addClass("show-dirty");
+            var $field = $(field);
+
+            if (!$field.hasClass("ignore-save-warning") && !$field.is("div") && !$field.is("ul")) {
+                $field.addClass("show-dirty");
                 dirty = true;
             }
 
-            if ($(field).attr("type") == "checkbox" || $(field).attr("type") == "radio") {
-                $(field).parent().addClass("show-dirty");
+            // handle CKE Text editors: the input field is a hidden textarea, followed by a number of divs and an iframe
+            // with the rendered content. We need to highlight the nested div with the class 'cke_contents'
+            if ($field.is("textarea") && $field.next().hasClass("cke")) {
+                $field.next().find(".cke_contents").addClass("show-dirty");
+                dirty = true;
+            }
+
+            if ($field.attr("type") == "checkbox" || $field.attr("type") == "radio") {
+                $field.parent().addClass("show-dirty");
+                dirty = true;
             }
         });
 
