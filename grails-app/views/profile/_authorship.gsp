@@ -1,5 +1,5 @@
 <div class="panel panel-default" ng-controller="ProfileController as profileCtrl" ng-init="profileCtrl.loadProfile()"
-     ng-form="AuthorForm" ng-cloak ng-if="!profileCtrl.readonly() || profileCtrl.profile.authorship.length > 1">
+     ng-form="AuthorForm" ng-cloak ng-if="!profileCtrl.readonly() || profileCtrl.authorshipCount > 1">
     <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}authorship"></a>
 
     <div class="panel-heading">
@@ -15,7 +15,7 @@
             <div class="col-sm-12">
                 <div class="row section-no-para"
                      ng-repeat="authorship in profileCtrl.profile.authorship | filter:{category: '!Author'}:true"
-                     ng-if="profileCtrl.readonly() && authorship.text">
+                     ng-if="profileCtrl.readonly() && (authorship.text)">
                     <h5>{{authorship.category}}</h5>
                     {{authorship.text}}
                 </div>

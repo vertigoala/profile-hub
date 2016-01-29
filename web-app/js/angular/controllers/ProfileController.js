@@ -42,7 +42,13 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                         navService.add("Bibliography", "bibliography");
                     }
 
-                    if (!self.readonly() || self.profile.authorship.length > 1) {
+                    self.authorshipCount = 0;
+                    angular.forEach(self.profile.authorship, function (auth) {
+                        if (auth.text && auth.text.length > 0) {
+                            self.authorshipCount++;
+                        }
+                    });
+                    if (!self.readonly() || self.authorshipCount > 1) {
                         navService.add("Acknowledgements", "authorship");
                     }
 
