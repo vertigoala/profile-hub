@@ -20,7 +20,7 @@
 
                     <div ng-if="commentCtrl.currentComment && !commentCtrl.currentComment.uuid && !commentCtrl.currentComment.parentCommentId">
                         <label for="commentText" class="screen-reader-label">Comment text</label>
-                        <textarea id="commentText" ng-model="commentCtrl.currentComment.text" ckeditor="richTextSimpleToolbar" required="required"></textarea>
+                        <textarea id="commentText" ng-model="commentCtrl.currentComment.text" ckeditor="richTextFullToolbar" required="required"></textarea>
 
                         <div class="row pull-right">
                             <div class="col-sm-12 padding-top-1">
@@ -83,7 +83,7 @@
             <div class="col-md-12">
                 <div ng-if="commentCtrl.currentComment && (comment.uuid == commentCtrl.currentComment.uuid || commentCtrl.currentComment.parentCommentId == comment.uuid)">
                     <label for="commentText2" class="screen-reader-label">Comment text</label>
-                    <textarea id="commentText2" ng-model="commentCtrl.currentComment.text" ckeditor="richTextSimpleToolbar" required="required"></textarea>
+                    <textarea id="commentText2" ng-model="commentCtrl.currentComment.text" ckeditor="richTextFullToolbar" required="required"></textarea>
 
                     <div class="row pull-right">
                         <div class="col-sm-12 padding-top-1">
