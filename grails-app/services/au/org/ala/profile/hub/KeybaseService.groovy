@@ -1,30 +1,15 @@
 package au.org.ala.profile.hub
 
 class KeybaseService {
-    static final List<String> RANKS = ["kingdom", "phylum", "class", "subclass", "order", "family", "genus", "species", "subspecies"]
     static final String CHAR_ENCODING = "utf-8"
 
     def grailsApplication
     WebService webService
 
-    String findKeyForTaxon(scientificName, classifications, projectId) {
-        if (!projectId) {
-            return null
-        }
-
+    String findKeyForTaxon(scientificName, projectId) {
         String key = null
 
-        if (classifications) {
-            RANKS.reverse().find {
-                String name = findClassification(classifications, it)
-                if (name) {
-                    key = findKey(name, projectId)
-                    if (key) {
-                        return true
-                    }
-                }
-            }
-        } else {
+        if (projectId) {
             key = findKey(scientificName, projectId)
         }
 
@@ -44,10 +29,6 @@ class KeybaseService {
         }
 
         key
-    }
-
-    private findClassification(classifications, rank) {
-        classifications.find { it.rank == rank }?.name
     }
 
     def retrieveAllProjects() {

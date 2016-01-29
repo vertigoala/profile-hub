@@ -13,7 +13,7 @@ class KeybaseController extends BaseController {
         } else {
             def model = profileService.getProfile(params.opusId as String, params.scientificName as String)
 
-            String key = keybaseService.findKeyForTaxon(model.profile.scientificName, model.profile.classification, model.opus.keybaseProjectId)
+            String key = keybaseService.findKeyForTaxon(model.profile.scientificName, model.opus.keybaseProjectId)
 
             render ([keyId: key] as JSON)
         }
