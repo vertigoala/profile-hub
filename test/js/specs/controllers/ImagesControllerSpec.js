@@ -167,7 +167,7 @@ describe("ImagesController tests", function () {
         expect(messageService.info.calls.count()).toBe(1);
     });
 
-    it("should use the scientificName to retrieve images if the profile.guid attribute is not present", function () {
+    it("should not use the scientificName to retrieve images if the profile.guid attribute is not present", function () {
         scope.imageCtrl.opusId = "opusId1";
         scope.imageCtrl.profileId = "profileId1";
         var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"dataResourceUid": "drId", "imageSources": ["source1", "source2"]}}';
@@ -178,7 +178,7 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "profileName", "drId,source1,source2");
+        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "", "drId,source1,source2");
     });
 
     it("should use the profile.guid attribute prefixed with 'lsid:' to retrieve images if it is present", function () {
@@ -212,7 +212,7 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.opusId = "opusId";
         scope.imageCtrl.profileId = "profileId";
 
-        var expectedProfile = {uuid: "profile1", excludedImages: ["image1", "image3"]};
+        var expectedProfile = {uuid: "profile1", excludedImages: ["image1", "image3"], primaryImage: null};
 
         scope.imageCtrl.saveProfile(form);
 

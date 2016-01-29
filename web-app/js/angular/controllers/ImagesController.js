@@ -31,6 +31,8 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
     self.saveProfile = function (form) {
         self.profile.excludedImages = [];
 
+        self.profile.primaryImage = null;
+
         angular.forEach(self.images, function (image) {
             if (image.excluded) {
                 self.profile.excludedImages.push(image.imageId);
@@ -69,15 +71,23 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
         imagesPromise.then(function (data) {
                 self.images = [];
 
-                self.primaryImage = data[0];
-
                 angular.forEach(data, function (image) {
-                    self.images.push(image);
+                    if (!self.readonly || !image.excluded) {
+                        self.images.push(image);
 
-                    if (image.imageId == self.profile.primaryImage) {
-                        self.primaryImage = image;
+                        if (image.imageId == self.profile.primaryImage) {
+                            self.primaryImage = image;
+                        }
                     }
                 });
+
+                if (!self.primaryImage && self.images.length > 0) {
+                    angular.forEach(self.images, function (image) {
+                        if (!image.excluded && !self.primaryImage) {
+                            self.primaryImage = image;
+                        }
+                    });
+                }
 
                 if (self.images.length > 0 || !self.readonly) {
                     navService.add("Images", "images");
