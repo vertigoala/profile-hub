@@ -227,7 +227,14 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @returns {Array|{index: number, input: string}|*}
      */
     function isUuid(id) {
-        return id && id.match(UUID_REGEX_PATTERN)
+        var uuid = false;
+
+        if (id && id != null && typeof id !== "undefined") {
+            var match = id.match(UUID_REGEX_PATTERN);
+            uuid = match != null && match.length > 0;
+        }
+
+        return uuid;
     }
 
     /**

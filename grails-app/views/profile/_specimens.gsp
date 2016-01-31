@@ -34,8 +34,7 @@
                                 </span>
                             </div>
 
-                            <alert type="danger"
-                                   ng-if="specimen.url && !specimen.id">Invalid URL. The URL must of the form specified above.</alert>
+                            <alert type="danger" ng-if="specimen.error">{{ specimen.error }}</alert>
                         </div>
                     </div>
 

@@ -82,6 +82,30 @@ describe("Util tests", function () {
     it("should replace all punctuation and whitespace with underscores, and convert to lowercase, when toKey is called", function() {
         expect(service.toKey("Hello World")).toBe("hello_world");
         expect(service.toKey("Hello: World!")).toBe("hello__world_");
-    })
+    });
+
+    it("should return false when a null value is passed to isUuid", function() {
+        expect(service.isUuid(null)).toBe(false);
+    });
+
+    it("should return false when an undefined value is passed to isUuid", function() {
+        expect(service.isUuid(undefined)).toBe(false);
+    });
+
+    it("should return false when an empty string is passed to isUuid", function() {
+        expect(service.isUuid("")).toBe(false);
+    });
+
+    it("should return false when a string of whitespace is passed to isUuid", function() {
+        expect(service.isUuid("     ")).toBe(false);
+    });
+
+    it("should return false when a non-uuid string is passed to isUuid", function() {
+        expect(service.isUuid("this is not a uuid")).toBe(false);
+    });
+
+    it("should return true when a valid uuid is passed to isUuid", function() {
+        expect(service.isUuid("e0fd3aca-7b21-44de-abe4-6b392cd32aae")).toBe(true);
+    });
 });
 

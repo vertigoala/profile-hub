@@ -86,6 +86,27 @@ describe("SpecimenController tests", function () {
         expect(scope.ctrl.specimens[0].catalogNumber).toBe("catNo");
     });
 
+    it("should use the raw occurrence institutionCode if the processed attribution does not contain an institution name", function () {
+        profileDefer.resolve(JSON.parse(getProfileResponse));
+
+        lookupDefer.resolve({
+                processed: {
+                    attribution: {}
+                }, raw: {
+                    occurrence: {
+                        institutionCode: "inst code"
+                    }
+                }
+        });
+
+        scope.$apply();
+
+        expect(scope.ctrl.specimens).toBeDefined();
+        expect(scope.ctrl.specimens.length).toBeDefined(0);
+        expect(scope.ctrl.specimens[0].id).toBe("e0fd3aca-7b21-44de-abe4-6b392cd32aae");
+        expect(scope.ctrl.specimens[0].institutionName).toBe("inst code");
+    });
+
     it("should replace the profile's specimenIds list with the ids from the specimens list when the profile is saved", function() {
         scope.ctrl.specimens = [{id: "spec1"}, {id: "spec2"}];
         scope.ctrl.profile = {uuid: "profileId", specimenIds: ["id1", "id2"]};

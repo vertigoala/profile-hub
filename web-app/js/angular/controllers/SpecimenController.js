@@ -36,34 +36,36 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
     self.loadSpecimens();
 
     self.lookupSpecimenDetails = function (index, specimenId, url) {
-        console.log("Updating...");
+        self.error = null;
         var saved = true;
+        var errorMsg = "Invalid URL. The URL must of the form specified above.";
 
         if (url) {
             specimenId = util.getPathItemFromUrl(util.LAST, url);
-            console.log("Using " + specimenId + " from url " + url);
             saved = false;
         }
 
         if (specimenId && util.isUuid(specimenId)) {
             var promise = profileService.lookupSpecimenDetails(specimenId);
             promise.then(function (data) {
+                console.log(JSON.stringify(data, undefined, 2))
                     var specimen = self.specimens[index];
 
                     specimen.id = specimenId;
                     specimen.collectionName = data.processed.attribution.collectionName;
                     specimen.collectionUid = data.processed.attribution.collectionUid;
-                    specimen.institutionName = data.processed.attribution.institutionName;
+                    specimen.institutionName = data.processed.attribution.institutionName || data.raw.occurrence.institutionCode;
                     specimen.institutionUid = data.processed.attribution.institutionUid;
                     specimen.catalogNumber = data.raw.occurrence.catalogNumber;
                     specimen.saved = saved;
                 },
                 function () {
+                    self.specimens[index].error = "Invalid URL. The URL must of the form specified above.";
                     messageService.alert("Failed to lookup specimen information.");
                 }
             );
         } else {
-            self.specimens[index] = {url: url};
+            self.specimens[index] = {url: url, error: errorMsg};
         }
     };
 
