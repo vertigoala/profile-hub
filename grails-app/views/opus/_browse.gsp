@@ -43,11 +43,12 @@
                 </div>
 
                 <accordion close-others="true">
-                    <accordion-group ng-repeat="taxon in browseCtrl.orderedTaxonLevels | orderBy:order">
+                    <accordion-group ng-repeat="taxon in browseCtrl.orderedTaxonLevels | orderBy:order" ng-if="browseCtrl.taxonLevels[taxon.key] > 0">
                         <accordion-heading>
                             <i class="fa fa-circle-thin"></i>
-                        &emsp;<a ng-href="#"
-                                 ng-click="browseCtrl.searchByTaxonLevel(taxon.key)">{{taxon.name}} ({{browseCtrl.taxonLevels[taxon.key] ? browseCtrl.taxonLevels[taxon.key] : '0'}})</a>
+                        &emsp;<a ng-href="#" title="{{ taxon.help }}"
+                                 ng-click="browseCtrl.searchByTaxonLevel(taxon.key)">{{taxon.name}} ({{browseCtrl.taxonLevels[taxon.key] ? browseCtrl.taxonLevels[taxon.key] : '0'}})
+                            <span ng-if="taxon.help" class="fa fa-question-circle small"></span></a>
                             <span class="caret"></span>
                         </accordion-heading>
 
@@ -76,7 +77,10 @@
             </p>
         </div>
         <h4 class="heading-underlined"
-            ng-show="browseCtrl.selectedTaxon.name">{{browseCtrl.selectedTaxon.level | capitalize}}: {{browseCtrl.selectedTaxon.name | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
+            ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level != browseCtrl.selectedTaxon.name">{{browseCtrl.selectedTaxon.level | capitalize}}: {{browseCtrl.selectedTaxon.name | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
+        </h4>
+        <h4 class="heading-underlined"
+            ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level == browseCtrl.selectedTaxon.name">{{browseCtrl.selectedTaxon.level | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
         </h4>
         <h4 class="heading-underlined"
             ng-show="browseCtrl.searchTerm && !browseCtrl.selectedTaxon.name">Results for "{{browseCtrl.searchTerm}}*"</small>

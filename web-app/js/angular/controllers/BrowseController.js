@@ -10,13 +10,16 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
 
     self.MAX_FACET_ITEMS = 25;
 
-    self.orderedTaxonLevels = [{key: "kingdom", name: "Kingdom", order: 0},
+    self.orderedTaxonLevels = [
+        {key: "kingdom", name: "Kingdom", order: 0},
         {key: "phylum", name: "Phylum", order: 1},
         {key: "class", name: "Class", order: 2},
         {key: "subclass", name: "Subclass", order: 3},
         {key: "order", name: "Order", order: 4},
         {key: "family", name: "Family", order: 5},
-        {key: "genus", name: "Genus", order: 6}];
+        {key: "genus", name: "Genus", order: 6},
+        {key: "unknown", name: "Unknown Rank", order: 7, help: "This category lists all profiles which do not have a matched name"}
+    ];
     self.opusId = util.getEntityId("opus");
     self.taxonResults = {};
     self.taxonLevels = [];
