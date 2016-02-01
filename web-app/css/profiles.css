@@ -677,3 +677,7 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .search-type-control {
     width: 135px;
 }
+
+.superscript {
+    vertical-align: super;
+}

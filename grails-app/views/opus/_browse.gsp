@@ -48,7 +48,7 @@
                             <i class="fa fa-circle-thin"></i>
                         &emsp;<a ng-href="#" title="{{ taxon.help }}"
                                  ng-click="browseCtrl.searchByTaxonLevel(taxon.key)">{{taxon.name}} ({{browseCtrl.taxonLevels[taxon.key] ? browseCtrl.taxonLevels[taxon.key] : '0'}})
-                            <span ng-if="taxon.help" class="fa fa-question-circle small"></span></a>
+                            <span ng-if="taxon.help" class="fa fa-question-circle small superscript"></span></a>
                             <span class="caret"></span>
                         </accordion-heading>
 
