@@ -19,6 +19,6 @@ class NslService {
     def getConcept(String nslNameIdentifier, String nslNomenclatureIdentifier) {
         def concepts = listConcepts(nslNameIdentifier)?.resp
 
-        concepts?.references?.find { it?._links?.permalink?.link?.endsWith(nslNomenclatureIdentifier) }
+        concepts?.references?.find { it?.citations?.find { it._links?.permalink?.link?.endsWith(nslNomenclatureIdentifier) } != null }
     }
 }

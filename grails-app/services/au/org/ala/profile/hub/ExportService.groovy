@@ -260,9 +260,28 @@ class ExportService {
         // Format nomenclature references
         if (params.nomenclature && nslNameIdentifier && nslNomenclatureIdentifier) {
             model.profile.nomenclature = nslService.getConcept(nslNameIdentifier, nslNomenclatureIdentifier)
-            model.profile.nomenclature?.citations?.each { citation ->
-                citation.relationship = stripTextFromNonFormattingHtmlTags(citation.relationship)
+            String type = null
+            model.profile.nomenclature?.notes?.each { note ->
+                if (note.instanceNoteKey == "Type") {
+                    type = "<b>Type:</b> ${note.instanceNoteText}";
+                }
             }
+            model.profile.nomenclature?.citations?.each { citation ->
+                if (citation.relationship) {
+                    citation.relationship = stripTextFromNonFormattingHtmlTags(citation.relationship)
+                } else if (citation.relationships) {
+                    citation.relationship = citation.relationships.collect {
+                        stripTextFromNonFormattingHtmlTags(it.relationship)
+                    }.join("<br/>")
+                } else {
+                    citation.relationship = ""
+                }
+
+                if (type) {
+                    citation.relationship += citation.relationship ? "<br/>${type}" : type
+                }
+            }
+
         }
 
         // Filter authors and contributors
