@@ -20,73 +20,9 @@ profileEditor.directive('nomenclature', function ($browser) {
                 if (!$scope.references) {
                     profileService.getNomenclatureList($scope.nslNameId).
                         then(function (resp) {
-                            $scope.references = [];
+                            $scope.references = resp;
 
-                            angular.forEach(resp.references, function (reference) {
-                                var referenceUrl = reference._links.permalink.link;
-                                var referenceId = referenceUrl.substring(referenceUrl.lastIndexOf("/") + 1);
-                                var name = reference.citation;
-                                if (isTruthy(reference.APCReference)) {
-                                    name += " (APC)";
-                                }
-                                var formattedName = reference.citationHtml;
-                                if (reference.citations && reference.citations.length > 0 && reference.citations[0].page) {
-                                    formattedName += ": " + reference.citations[0].page;
-                                }
-                                var details = [];
-
-                                var firstInstanceId = null;
-                                angular.forEach(reference.citations, function (citation) {
-                                    var citationPage = citation.page;
-
-                                    if (citation.relationship) {
-                                        var text = citation.relationship;
-                                        if (citation.page && citation.page != citationPage && citation.page != "-") {
-                                            text += ": " + citation.page;
-                                        }
-                                        details.push(text);
-                                    } else if (citation.relationships) {
-                                        angular.forEach(citation.relationships, function (relationship) {
-                                            text = relationship.relationship;
-                                            if (relationship.page && relationship.page != citationPage && relationship.page != "-") {
-                                                text += ": " + relationship.page;
-                                            }
-                                            details.push(text);
-                                        });
-                                    }
-
-
-                                    var citationUrl = citation._links.permalink.link;
-                                    var instanceId = citationUrl.substring(citationUrl.lastIndexOf("/") + 1);
-
-                                    if (!firstInstanceId) {
-                                        firstInstanceId = instanceId;
-                                    }
-                                });
-
-                                angular.forEach(reference.notes, function (note) {
-                                    if (note.instanceNoteKey === "Type") {
-                                        details.unshift("<b>Type:</b> " + note.instanceNoteText);
-                                    }
-                                });
-
-                                var ref = {
-                                    instanceId: firstInstanceId,
-                                    referenceId: referenceId,
-                                    url: referenceUrl,
-                                    name: name,
-                                    formattedName: formattedName,
-                                    details: details,
-                                    apcReference: isTruthy(reference.APCReference)
-                                };
-
-                                if (firstInstanceId == $scope.nslNomenclatureId) {
-                                    $scope.selectedReference = ref;
-                                    $scope.viewInNslLink = reference.citations[0]._links.permalink.link;
-                                }
-
-                                $scope.references.push(ref);
-                            });
+                            $scope.selectedReference = _.find($scope.references, function (ref) { return ref.instanceId == $scope.nslNomenclatureId });
 
                             $scope.loading = false;
                         }

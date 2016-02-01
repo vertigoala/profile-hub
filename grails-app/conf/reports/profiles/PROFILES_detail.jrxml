@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-27T14:41:08 -->
+<!-- 2016-02-01T16:25:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail" language="groovy" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="30" uuid="eb6cf9a1-0a5c-4453-8b43-458e6c8b58f3">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JSON Sample Data Source"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -9,7 +9,7 @@
 		<![CDATA[]]>
 	</queryString>
 	<field name="profile.fullName" class="java.lang.String"/>
-	<field name="profile.nomenclature.citationHtml" class="java.lang.String"/>
+	<field name="profile.nomenclature.formattedName" class="java.lang.String"/>
 	<field name="profile.authorship" class="java.lang.String"/>
 	<field name="profile.nslProtologue" class="java.lang.String"/>
 	<background>
@@ -114,10 +114,10 @@
 				<reportElement positionType="Float" x="0" y="138" width="515" height="15" isRemoveLineWhenBlank="true" uuid="552404e2-ac45-41a2-9591-e9b3d8496227">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.nomenclature) && $F{profile.nomenclature.citationHtml}]]></printWhenExpression>
+					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.nomenclature) && $F{profile.nomenclature.formattedName}]]></printWhenExpression>
 				</reportElement>
-				<parametersMapExpression><![CDATA[["citationHtml": $F{profile.nomenclature.citationHtml}]]]></parametersMapExpression>
-				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.nomenclature.citations")]]></dataSourceExpression>
+				<parametersMapExpression><![CDATA[["formattedName": $F{profile.nomenclature.formattedName}]]]></parametersMapExpression>
+				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.nomenclature.details")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_nomenclature.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">

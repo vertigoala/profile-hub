@@ -20,6 +20,7 @@ modules = {
         dependsOn "angular_inview"
         dependsOn "ng_storage"
         dependsOn "angular_truncate"
+        dependsOn "underscore"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -136,5 +137,9 @@ modules = {
 
     angular_truncate {
         resource url:"thirdparty/angular-truncate/truncate.js"
+    }
+
+    underscore {
+        resource url:"thirdparty/underscore/underscore-1.8.3.min.js"
     }
 }

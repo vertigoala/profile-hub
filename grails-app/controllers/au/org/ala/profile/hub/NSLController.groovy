@@ -1,5 +1,7 @@
 package au.org.ala.profile.hub
 
+import grails.converters.JSON
+
 class NSLController extends BaseController {
     NslService nslService
 
@@ -17,9 +19,9 @@ class NSLController extends BaseController {
         if (!params.nslNameIdentifier) {
             badRequest "nslNameIdentifier is a required parameter"
         } else {
-            def response = nslService.listConcepts(params.nslNameIdentifier)
+            def concepts = nslService.listConcepts(params.nslNameIdentifier)
 
-            handle response
+            render concepts as JSON
         }
     }
 }
