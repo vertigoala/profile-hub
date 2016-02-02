@@ -154,12 +154,6 @@ describe("ProfileService tests", function () {
         http.expectGET("/someContext/opus/opusId/profile/profileId/lists?guid=guid1").respond("bla");
     });
 
-    it("should invoke the retrieve classifications service on the context root when getClassifications is called", function () {
-        service.getClassifications("opusId", "profileId", "guid1");
-
-        http.expectGET("/someContext/opus/opusId/profile/profileId/classifications?guid=guid1").respond("bla");
-    });
-
     it("should invoke the retrieve species profile service on the context root when getSpeciesProfile is called", function () {
         service.getSpeciesProfile("opusId", "profileId", "guid1");
 

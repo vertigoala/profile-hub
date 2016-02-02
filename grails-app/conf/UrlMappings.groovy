@@ -35,7 +35,6 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/file/$fileId" controller: "profile", action: [GET: "downloadTempFile"]
         "/opus/$opusId/profile/$profileId/image/upload" controller: "profile", action: [POST: "uploadImage"]
         "/opus/$opusId/profile/$profileId/lists" controller: "speciesList", action: [GET: "retrieveLists"]
-        "/opus/$opusId/profile/$profileId/classifications" controller: "profile", action: [GET: "retrieveClassifications"]
         "/opus/$opusId/profile/$profileId/publication" controller: "profile", action: [GET: "retrievePublication"]
         "/opus/$opusId/profile/$profileId/publication/create" controller: "profile", action: [PUT: "savePublication"]
         "/opus/$opusId/profile/$profileId/publication/$publicationId/update" controller: "profile", action: [POST: "savePublication"]

@@ -55,6 +55,9 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                     if (!self.readonly()) {
                         navService.add("Nomenclature", "nomenclature");
                     }
+                    if (self.profile.classification) {
+                        navService.add("Taxonomy", "taxon");
+                    }
 
                     findCommonName();
                     loadVocabulary();

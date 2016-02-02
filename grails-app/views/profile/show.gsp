@@ -19,7 +19,7 @@
         <li><a class="font-xxsmall"
                href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}">{{profileCtrl.opus.title}}</a>
         </li>
-        <li class="font-xxsmall active">{{profileCtrl.isArchived() ? profileCtrl.profile.archivedWithName : profileCtrl.profile.scientificName}}</li>
+        <taxonomy data="profileCtrl.profile.classification" opus-id="profileCtrl.opusId" layout="horizontal" limit="3"></taxonomy>
     </ol>
 
     <div class="row" ng-cloak>

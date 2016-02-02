@@ -543,7 +543,7 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 #generalAlert {
     position: fixed;
-    top: 75px;
+    top: 50px;
     z-index: 9999;
     width: 100%;
     text-align: center;
@@ -680,4 +680,20 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 .superscript {
     vertical-align: super;
+}
+
+ul.breadcrumb {
+    display: inline;
+}
+
+ul.breadcrumb li:before {
+    padding-left: 10px;
+    padding-right: 5px;
+    color: #ccc;
+    content: "/\00a0";
+}
+
+.breadcrumb>li+li:before {
+    padding-left: 10px;
+    padding-right: 5px;
 }

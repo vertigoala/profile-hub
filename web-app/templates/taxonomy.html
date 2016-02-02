@@ -1,0 +1,58 @@
+<!-- ng-if: -->
+<ul class="{{ layout == 'horizontal' ? 'breadcrumb' : layout == 'indent' ? 'indent-list' : '' }}">
+    <li ng-repeat="classification in taxonomy" ng-if="taxonomy.length >= limit && (limit < 0 || $index >= taxonomy.length - limit)">
+        <span ng-if="classification.profileId">
+            <a href="{{contextPath}}/opus/{{opusId}}/profile/{{classification.profileName}}"
+               ng-if="classification.profileId"
+               class="{{ layout == 'horizontal' ? 'font-xxsmall' : '' }}"
+               target="_self">
+                <span ng-if="includeRank">{{ classification.rank | capitalize }}: </span>{{ classification.name }}
+            </a>
+        </span>
+        <span ng-if="!classification.profileId" class="{{ layout == 'horizontal' ? 'font-xxsmall' : '' }}">
+            <span ng-if="includeRank">{{ classification.rank | capitalize }}: </span>{{ classification.name }}
+        </span>
+        <span ng-if="showChildren && classification.childCount > 0" class="padding-left-1">
+            <a href="" class="fa fa-list-ul"
+               title="Show members {{ classification.childCount }} of {{ classification.rank }} {{ classification.name }}"
+               ng-click="fetchChildren(classification.rank, classification.name, classification.childCount)"></a>
+        </span>
+    </li>
+</ul>
+
+
+<!-- template for the popup displayed when Export as PDF is selected -->
+<script type="text/ng-template" id="showTaxonChildren.html">
+    <div class="modal-header">
+        <h4 class="modal-title">{{taxonChildrenCtrl.taxon.level | capitalize}}: {{taxonChildrenCtrl.taxon.scientificName
+            | capitalize}}</h4>
+    </div>
+
+    <div class="modal-body">
+        <table class="table table-striped" ng-show="taxonChildrenCtrl.profiles.length > 0">
+            <tr>
+                <th>Rank</th>
+                <th>Taxon</th>
+            </tr>
+            <tr ng-repeat="profile in taxonChildrenCtrl.profiles">
+                <td>{{profile.rank | capitalize}}</td>
+                <td>
+                    <a href="{{taxonChildrenCtrl.contextPath}}/opus/{{ taxonChildrenCtrl.opusId }}/profile/{{ profile.scientificName }}"
+                       target="_self">{{profile.scientificName}}</a>
+                </td>
+            </tr>
+        </table>
+        <pagination total-items="taxonChildrenCtrl.taxon.count"
+                    ng-change="taxonChildrenCtrl.loadChildren((taxonChildrenCtrl.page - 1) * taxonChildrenCtrl.pageSize)"
+                    ng-model="taxonChildrenCtrl.page" max-size="10" class="pagination-sm"
+                    items-per-page="taxonChildrenCtrl.pageSize"
+                    previous-text="Prev" boundary-links="true"
+                    ng-show="taxonChildrenCtrl.taxon.count > taxonChildrenCtrl.pageSize"></pagination>
+
+        <span ng-show="taxonChildrenCtrl.profiles.length == 0">There are no child taxa for {{taxonChildrenCtrl.taxon.scientificName | capitalize}}</span>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="taxonChildrenCtrl.cancel()">Close</button>
+    </div>
+</script>
