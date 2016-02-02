@@ -388,7 +388,7 @@ class ProfileService {
     }
 
     def getStatistics(String opusId) {
-        def urlPrefix = "${grailsApplication.config.profile.service.url}/statistics/index"
+        def urlPrefix = "${grailsApplication.config.profile.service.url}/statistics"
         return webService.get("${urlPrefix}?opusId=${enc(opusId)}")
     }
 
