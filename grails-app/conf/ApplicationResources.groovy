@@ -4,6 +4,7 @@ modules = {
         resource url:"css/theme.css"
         resource url:"css/profiles.css"
         resource url:"css/colour.css"
+        resource url:"css/tree.css"
         resource url:"css/sidebar.css"
         dependsOn "jquery"
         dependsOn "bootstrap3"

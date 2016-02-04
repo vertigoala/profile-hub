@@ -24,7 +24,10 @@
             <li><a class="font-xxsmall"
                    href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}">{{profileCtrl.opus.title}}</a>
             </li>
-            <taxonomy data="profileCtrl.profile.classification" opus-id="profileCtrl.opusId" layout="horizontal" limit="3"></taxonomy>
+            <li class="font-xxsmall active" ng-if="profileCtrl.profile.classification.length == 0">{{profileCtrl.isArchived() ? profileCtrl.profile.archivedWithName : profileCtrl.profile.scientificName}}</li>
+            <span ng-if="profileCtrl.profile.classification.length > 0">
+                <taxonomy data="profileCtrl.profile.classification" current-name="profileCtrl.profile.scientificName" opus-id="profileCtrl.opusId" layout="horizontal" limit="3"></taxonomy>
+            </span>
         </ol>
 
         <div class="row" ng-cloak>

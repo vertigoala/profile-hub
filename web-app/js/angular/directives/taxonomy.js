@@ -4,6 +4,7 @@ profileEditor.directive('taxonomy', function ($browser) {
         require: [],
         scope: {
             taxonomy: '=data',
+            currentName: "@",
             opusId: '=',
             layout: '@',
             includeRank: '@',
@@ -11,11 +12,12 @@ profileEditor.directive('taxonomy', function ($browser) {
             limit: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/taxonomy.html',
-        controller: ['$scope', 'config', '$modal', function ($scope, config, $modal) {
+        controller: ['$scope', 'config', '$modal', 'messageService', 'profileService', function ($scope, config, $modal, messageService, profileService) {
             $scope.contextPath = config.contextPath;
             $scope.showChildren = false;
             $scope.includeRank = false;
             $scope.limit = -1;
+            $scope.pageSize = 10;
 
             $scope.fetchChildren = function (level, scientificName, childCount) {
                 $modal.open({
@@ -63,6 +65,28 @@ profileEditor.directive('taxonomy', function ($browser) {
                         }
                     }
                 });
+            };
+
+
+            $scope.loadSubordinateTaxa = function (offset, taxon) {
+                taxon.expanded = !taxon.expanded | false;
+
+                if (taxon.expanded) {
+                    if (offset === undefined) {
+                        offset = 0;
+                    }
+
+                    //var results = profileService.profileSearchByTaxonLevelAndName($scope.opusId, taxon.rank, taxon.name, $scope.pageSize, offset);
+                    var results = profileService.profileSearchByTaxonLevel($scope.opusId, taxon.rank, $scope.pageSize, offset);
+                    results.then(function (data) {
+                            taxon.children = data;
+                            console.log(JSON.stringify(taxon, undefined, 2))
+                        },
+                        function () {
+                            messageService.alert("Failed to perform search for '" + $scope.searchTerm + "'.");
+                        }
+                    );
+                }
             };
         }],
         link: function (scope, element, attrs, ctrl) {}

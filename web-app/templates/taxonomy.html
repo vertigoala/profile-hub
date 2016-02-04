@@ -1,24 +1,59 @@
-<ul class="{{ layout == 'horizontal' ? 'breadcrumb' : layout == 'indent' ? 'indent-list' : '' }}">
-    <li ng-repeat="classification in taxonomy" ng-if="taxonomy.length >= limit && (limit < 0 || $index >= taxonomy.length - limit)">
-        <span ng-if="classification.profileId">
-            <a href="{{contextPath}}/opus/{{opusId}}/profile/{{classification.profileName}}"
-               ng-if="classification.profileId"
-               class="{{ layout == 'horizontal' ? 'font-xxsmall' : '' }}"
-               target="_self">
-                <span ng-if="includeRank">{{ classification.rank | capitalize }}: </span>{{ classification.name }}
-            </a>
-        </span>
-        <span ng-if="!classification.profileId" class="{{ layout == 'horizontal' ? 'font-xxsmall' : '' }}">
-            <span ng-if="includeRank">{{ classification.rank | capitalize }}: </span>{{ classification.name }}
-        </span>
-        <span ng-if="showChildren && classification.childCount > 0" class="padding-left-1">
-            <a href="" class="fa fa-list-ul"
-               title="Show members {{ classification.childCount }} of {{ classification.rank }} {{ classification.name }}"
-               ng-click="fetchChildren(classification.rank, classification.name, classification.childCount)"></a>
-        </span>
+<div ng-if="!taxonomy || taxonomy.length == 0">
+    The taxonomy for this profile is unknown.
+</div>
+
+<ul class="{{ layout == 'horizontal' ? 'breadcrumb' : layout == 'tree' ? 'tree' : '' }}">
+    <li ng-repeat="taxon in taxonomy" ng-if="taxonomy.length >= limit && (limit < 0 || $index >= taxonomy.length - limit)">
+        <span ng-include src="'taxon.html'"></span>
     </li>
 </ul>
 
+<!-- template for the popup displayed when the 'show children' link is clicked -->
+<script type="text/ng-template" id="taxon.html">
+    <span ng-if="layout != 'tree'">
+        <span ng-if="taxon.profileId">
+            <a href="{{contextPath}}/opus/{{opusId}}/profile/{{taxon.profileName}}"
+               class="{{ layout == 'horizontal' ? 'font-xxsmall' : '' }}"
+               target="_self">
+                <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name }}
+            </a>
+        </span>
+        <span ng-if="!taxon.profileId" class="{{ layout == 'horizontal' ? 'font-xxsmall' : '' }}">
+            <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name }}
+        </span>
+
+        <span ng-if="showChildren && taxon.childCount > 0" class="padding-left-1">
+            <a href="" class="fa fa-list-ul"
+               title="Show members {{ taxon.childCount }} of {{ taxon.rank }} {{ taxon.name }}"
+               ng-click="fetchChildren(taxon.rank, taxon.name, taxon.childCount)"></a>
+        </span>
+    </span>
+
+    <span ng-if="layout == 'tree'">
+        <span ng-if="taxon.childCount > 0" title="Click to view subordinate taxa">
+            <a href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon)"
+               target="_self">
+                <span class="fa {{ taxon.expanded ? 'fa-minus' : 'fa-plus' }} small"></span>
+                <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name | default:taxon.scientificName }}
+            </a>
+        </span>
+        <span ng-if="!taxon.childCount || taxon.childCount == 0">
+            <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name | default:taxon.scientificName }}
+        </span>
+
+        <span ng-if="taxon.profileId">
+            <a href="{{contextPath}}/opus/{{opusId}}/profile/{{taxon.name}}" target="_self">
+                <span title="View the {{ taxon.name }} profile" class="padding-left-1 fa fa-mail-forward"></span>
+            </a>
+        </span>
+
+        <ul ng-if="taxon.children.length > 0 && taxon.expanded">
+            <li ng-repeat="taxon in taxon.children">
+                <span ng-include src="'taxon.html'"></span>
+            </li>
+        </ul>
+    </span>
+</script>
 
 <!-- template for the popup displayed when the 'show children' link is clicked -->
 <script type="text/ng-template" id="showTaxonChildren.html">
