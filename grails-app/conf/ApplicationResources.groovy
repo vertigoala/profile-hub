@@ -34,7 +34,7 @@ modules = {
         resource url:"js/angular/directives/publication.js"
         resource url:"js/angular/directives/link.js"
         resource url:"js/angular/directives/taxonomy.js"
-        resource url:"js/angular/directives/optDatePicker.js"
+        resource url:"js/angular/directives/fallbackDatePicker.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"

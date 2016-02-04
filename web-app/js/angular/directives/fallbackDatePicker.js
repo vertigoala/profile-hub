@@ -7,25 +7,29 @@ profileEditor.directive('fallbackDatePicker', function ($browser) {
       'format': '@',
       'fieldId': '@'
     },
+    bindToController: true,
     templateUrl: $browser.baseHref() + 'static/templates/fallbackDatePicker.html',
-    controller: ['$scope', function($scope) {
+    controllerAs: 'ctrl',
+    controller: function() {
 
-      if (!$scope.format) $scope.format = "dd/MM/yyyy";  // TODO user locale -> date format.
+      var self = this;
 
-      $scope.datePopupOpen = false;
-      $scope.dateOptions = {
+      if (!self.format) self.format = "dd/MM/yyyy";  // TODO user locale -> date format.
+
+      self.datePopupOpen = false;
+      self.dateOptions = {
         startingDay: 1
       };
 
-      $scope.openDatePicker = function($event) {
+      self.openDatePicker = function($event) {
         if ($event) {
           $event.preventDefault();
           $event.stopPropagation();
         }
-        $scope.datePopupOpen = true;
+        self.datePopupOpen = true;
       };
 
-      $scope.isDateInputSupported = Modernizr.inputtypes.date;
-    }]
+      self.isDateInputSupported = Modernizr.inputtypes.date;
+    }
   };
 });
