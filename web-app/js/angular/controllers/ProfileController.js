@@ -18,11 +18,11 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
     var orderBy = $filter("orderBy");
 
-    self.readonly = function() {
+    self.readonly = function () {
         return config.readonly
     };
 
-    self.loadProfile = function() {
+    self.loadProfile = function () {
         if (self.profileId) {
             var promise = profileService.getProfile(self.opusId, self.profileId);
             promise.then(function (data) {
@@ -93,13 +93,13 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                 self.authorVocabStrict = data.strict;
 
                 var authorCategories = [];
-                angular.forEach(self.profile.authorship, function(author) {
+                angular.forEach(self.profile.authorship, function (author) {
                     if (authorCategories.indexOf(author.category) == -1) {
                         authorCategories.push(author.category);
                     }
                 });
 
-                angular.forEach(self.authorVocab, function(term) {
+                angular.forEach(self.authorVocab, function (term) {
                     if (authorCategories.indexOf(term.name) == -1) {
                         self.profile.authorship.push({category: term.name, text: null});
                     }
@@ -111,7 +111,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     function findCommonName() {
         self.commonNames = [];
 
-        angular.forEach(self.profile.attributes, function(attribute) {
+        angular.forEach(self.profile.attributes, function (attribute) {
             var title = attribute.title.toLowerCase();
             if (title === "common name" || title === "common names" || title === "commonname" || title === "common-name") {
                 self.commonNames.push(attribute.plainText);
@@ -119,14 +119,14 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         });
     }
 
-    self.deleteProfile = function() {
+    self.deleteProfile = function () {
         var deleteConf = util.confirm("Are you sure you wish to delete this profile? This operation cannot be undone.");
-        deleteConf.then(function() {
+        deleteConf.then(function () {
             var promise = profileService.deleteProfile(self.opus.uuid, self.profileId);
-            promise.then(function() {
+            promise.then(function () {
                     util.redirect(util.contextRoot() + "/opus/" + self.opus.uuid);
                 },
-                function() {
+                function () {
                     messageService.alert("An error occurred while deleting the profile.");
                 });
         });
@@ -139,7 +139,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             controllerAs: "createProfileCtrl",
             size: "md",
             resolve: {
-                opusId: function() {
+                opusId: function () {
                     return opusId;
                 }
             }
@@ -151,7 +151,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         });
     };
 
-    self.addBibliography = function(form) {
+    self.addBibliography = function (form) {
         if (!self.profile.bibliography) {
             self.profile.bibliography = [];
         }
@@ -160,11 +160,11 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         form.$setDirty();
     };
 
-    self.deleteBibliography = function(index, form) {
+    self.deleteBibliography = function (index, form) {
         var deletedItemOrder = self.profile.bibliography[index].order;
         self.profile.bibliography.splice(index, 1);
 
-        angular.forEach(self.profile.bibliography, function(bib) {
+        angular.forEach(self.profile.bibliography, function (bib) {
             if (bib.order > deletedItemOrder) {
                 bib.order = bib.order - 1;
             }
@@ -173,7 +173,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         form.$setDirty();
     };
 
-    self.moveBibliographyUp = function(index, form) {
+    self.moveBibliographyUp = function (index, form) {
         if (index > 0) {
             self.profile.bibliography[index].order = self.profile.bibliography[index].order - 1;
             self.profile.bibliography[index - 1].order = self.profile.bibliography[index - 1].order + 1;
@@ -184,7 +184,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         }
     };
 
-    self.moveBibliographyDown = function(index, form) {
+    self.moveBibliographyDown = function (index, form) {
         if (index < self.profile.bibliography.length) {
             self.profile.bibliography[index].order = self.profile.bibliography[index].order + 1;
             self.profile.bibliography[index + 1].order = self.profile.bibliography[index + 1].order - 1;
@@ -195,13 +195,13 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         }
     };
 
-    self.toggleDraftMode = function() {
+    self.toggleDraftMode = function () {
         if (self.profile.privateMode && config.features.publications !== 'false') {
             var confirm = util.confirm("Would you like to take a snapshot of the current public version before releasing your changes?", "Yes", "No");
 
-            confirm.then(function() {
+            confirm.then(function () {
                 toggleDraftMode(true);
-            }, function() {
+            }, function () {
                 toggleDraftMode(false);
             });
         } else {
@@ -218,21 +218,21 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
         var future = profileService.toggleDraftMode(self.opusId, self.profileId, snapshot);
 
-        future.then(function() {
+        future.then(function () {
             messageService.success("The profile has been successfully updated.");
 
             // the name may have been changed in the draft, so the url parameter may no longer be correct. Update the profileId to ensure we load the correct name.
             self.profileId = self.profile.scientificName;
 
             self.loadProfile();
-        }, function() {
+        }, function () {
             messageService.alert("An error has occurred while updating the profile.");
         });
     }
 
-    self.discardDraftChanges = function() {
+    self.discardDraftChanges = function () {
         var confirm = util.confirm("Are you sure you wish to discard all draft changes? This operation cannot be undone.");
-        confirm.then(function() {
+        confirm.then(function () {
             var future = profileService.discardDraftChanges(self.opusId, self.profileId);
 
             future.then(function () {
@@ -245,10 +245,10 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         })
     };
 
-    self.saveProfile = function(form) {
+    self.saveProfile = function (form) {
         var future = profileService.updateProfile(self.opusId, self.profileId, self.profile);
 
-        future.then(function(data) {
+        future.then(function (data) {
             messageService.success("The profile has been successfully updated.");
 
             self.profile = data;
@@ -256,12 +256,12 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             if (form) {
                 form.$setPristine();
             }
-        }, function() {
+        }, function () {
             messageService.alert("An error has occurred while updating the profile.");
         });
     };
 
-    self.addAuthorship = function(form) {
+    self.addAuthorship = function (form) {
         if (!self.profile.authorship || self.profile.authorship.length == 0) {
             self.profile.authorship = [{category: "Author", text: ""}];
         } else {
@@ -271,7 +271,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         form.$setDirty();
     };
 
-    self.saveAuthorship = function(form) {
+    self.saveAuthorship = function (form) {
         for (var i = self.profile.authorship.length - 1; i >= 0; i--) {
             if (!self.profile.authorship[i].text) {
                 self.profile.authorship.splice(i, 1);
@@ -280,22 +280,22 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
         var future = profileService.saveAuthorship(self.opusId, self.profileId, {authorship: self.profile.authorship});
 
-        future.then(function() {
+        future.then(function () {
             form.$setPristine();
 
             messageService.success("Acknowledgements successfully updated.");
-        }, function() {
+        }, function () {
             messageService.alert("An error occurred while updating acknowledgements.");
         })
     };
 
-    self.deleteAuthorship = function(index, form) {
+    self.deleteAuthorship = function (index, form) {
         self.profile.authorship.splice(index, 1);
 
         form.$setDirty();
     };
 
-    self.formatName = function() {
+    self.formatName = function () {
         if (!self.profile) {
             return null;
         }
@@ -307,58 +307,62 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         }
     };
 
-    self.editName = function() {
+    self.editName = function () {
         self.showNameEditControls = !self.showNameEditControls;
         self.newName = self.profile.scientificName;
     };
 
-    self.saveNameChange = function() {
+    self.saveNameChange = function () {
         var confirm = util.confirm("Are you sure you wish to rename this profile?");
 
-        confirm.then(function() {
-            var future = profileService.renameProfile(self.opusId, self.profileId, {newName: self.newName, manuallyMatchedGuid: self.manuallyMatchedGuid, clearMatch: false});
+        confirm.then(function () {
+            var future = profileService.renameProfile(self.opusId, self.profileId, {
+                newName: self.newName,
+                manuallyMatchedGuid: self.manuallyMatchedGuid,
+                clearMatch: false
+            });
 
-            future.then(function(profile) {
+            future.then(function (profile) {
                 self.profile = profile;
 
                 messageService.success("The profile name has been successfully updated.");
 
                 util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.scientificName + "/update");
-            }, function() {
+            }, function () {
                 messageService.error("An error occurred while updating the profile name.");
             });
         });
     };
 
-    self.clearNameMatch = function() {
+    self.clearNameMatch = function () {
         var confirm = util.confirm("Are you sure you wish to remove the matched name from this profile? This will mean that information from Atlas of Living Australia resources will not be available.");
 
-        confirm.then(function() {
+        confirm.then(function () {
             var future = profileService.renameProfile(self.opusId, self.profileId, {newName: null, clearMatch: true});
 
-            future.then(function(profile) {
+            future.then(function (profile) {
                 self.profile = profile;
 
                 messageService.success("The profile name has been successfully updated.");
 
                 util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.scientificName + "/update");
-            }, function() {
+            }, function () {
                 messageService.error("An error occurred while updating the profile name.");
             });
         });
     };
 
-    self.toggleAudit = function() {
+    self.toggleAudit = function () {
         self.showProfileAudit = !self.showProfileAudit;
 
         if (self.showProfileAudit && !self.profileAudit) {
             self.loading = true;
             var future = profileService.getAuditHistory(self.profileId);
 
-            future.then(function(data) {
+            future.then(function (data) {
                 self.audit = data;
                 self.loading = false;
-            }, function() {
+            }, function () {
                 messageService.error("An error occurred while retrieving the audit history");
             })
         }
@@ -371,34 +375,34 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             controllerAs: "compareCtrl",
             size: "lg",
             resolve: {
-                left: function() {
+                left: function () {
                     return self.audit[index];
                 },
-                right: function() {
+                right: function () {
                     return self.audit[index + 1];
                 }
             }
         });
     };
 
-    self.compareWithOtherProfile = function() {
+    self.compareWithOtherProfile = function () {
         $modal.open({
             templateUrl: "profileComparisonPopup.html",
             controller: "ComparisonPopupController",
             controllerAs: "compareCtrl",
             size: "lg",
             resolve: {
-                left: function() {
+                left: function () {
                     return self.profile;
                 },
-                right: function() {
+                right: function () {
                     return null;
                 }
             }
         });
     };
 
-    self.archiveProfile = function() {
+    self.archiveProfile = function () {
         var popup = $modal.open({
             templateUrl: "archiveProfilePopup.html",
             controller: "ArchiveProfileController",
@@ -409,22 +413,22 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         popup.result.then(function (archiveComment) {
             var promise = profileService.archiveProfile(self.opusId, self.profileId, archiveComment);
 
-            promise.then(function() {
+            promise.then(function () {
                 util.redirect(util.contextRoot() + "/opus/" + (self.opus.shortName ? self.opus.shortName : self.opus.uuid) + "/profile/" + self.profile.uuid);
                 messageService.success("Your profile has been successfully archived.")
-            }, function() {
+            }, function () {
                 messageService.alert("An error occurred while archiving the profile.");
             });
         });
     };
 
-    self.restoreProfile = function() {
+    self.restoreProfile = function () {
         var search = profileService.profileSearch(self.opusId, self.profile.archivedWithName, false);
 
         search.then(function (results) {
             if (!results || results.length == 0 || (results.length == 1 && results[0].profileId == self.profile.uuid)) {
                 var confirm = util.confirm("Are you sure you wish to restore this profile?");
-                confirm.then(function() {
+                confirm.then(function () {
                     restoreProfile(null);
                 })
             } else {
@@ -447,16 +451,16 @@ profileEditor.controller('ProfileController', function (profileService, util, me
         });
     };
 
-    self.isArchived = function() {
+    self.isArchived = function () {
         return self.profile && self.profile.archivedDate != null;
     };
 
     function restoreProfile(newName) {
         var restore = profileService.restoreArchivedProfile(self.opusId, self.profile.uuid, newName ? newName : null);
 
-        restore.then(function(updatedProfile) {
+        restore.then(function (updatedProfile) {
             util.redirect(util.contextRoot() + "/opus/" + (self.opus.shortName ? self.opus.shortName : self.opus.uuid) + "/profile/" + updatedProfile.scientificName);
-        }, function() {
+        }, function () {
             messageService.alert("An error has occurred while restoring your profile.");
         });
     }
@@ -472,11 +476,11 @@ profileEditor.controller('ComparisonPopupController', function ($modalInstance, 
     self.right = right;
     self.opusId = util.getEntityId("opus");
 
-    self.selectProfile = function(profile) {
+    self.selectProfile = function (profile) {
         self.right = null;
         self.loading = true;
         var future = profileService.getProfile(self.opusId, profile.profileId);
-        future.then(function(data) {
+        future.then(function (data) {
             self.right = data.profile;
             self.loading = false;
         });
@@ -507,7 +511,7 @@ profileEditor.controller('ArchiveProfileController', function ($modalInstance) {
         $modalInstance.dismiss("Cancelled");
     };
 
-    self.ok = function() {
+    self.ok = function () {
         $modalInstance.close(self.archiveComment);
     }
 
@@ -527,7 +531,7 @@ profileEditor.controller('RestoreProfileController', function ($modalInstance, p
         $modalInstance.dismiss("Cancelled");
     };
 
-    self.ok = function() {
+    self.ok = function () {
         $modalInstance.close(self.newName);
     }
 
