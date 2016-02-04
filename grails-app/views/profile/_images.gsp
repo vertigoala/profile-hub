@@ -206,8 +206,7 @@
                         <label for="dateCreated" class="col-sm-3 control-label">Date Taken</label>
 
                         <div class="col-sm-9">
-                            <input id="dateCreated" type="date" ng-model="imageUploadCtrl.metadata.dateCreated"
-                                   class="form-control"/>
+                            <fallback-date-picker field-id="dateCreated" ng-model="imageUploadCtrl.metadata.dateCreated" />
                         </div>
                     </div>
                 </div>

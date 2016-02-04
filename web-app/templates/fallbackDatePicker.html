@@ -1,0 +1,11 @@
+<input ng-if="ctrl.isDateInputSupported" ng-attr-id="{{ctrl.fieldId}}" type="date" ng-model="ctrl.ngModel" class="form-control" />
+<div ng-if="!ctrl.isDateInputSupported" class="input-group">
+    <input ng-attr-id="{{ctrl.fieldId}}" type="text" ng-model="ctrl.ngModel"
+           datepicker-popup="{{ctrl.format}}" datepicker-options="ctrl.dateOptions" is-open="ctrl.datePopupOpen"
+           placeholder="{{ctrl.format | lowercase }}" class="form-control"/>
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default" ng-click="ctrl.openDatePicker($event)">
+            <i class="glyphicon glyphicon-calendar"></i>
+        </button>
+    </span>
+</div>

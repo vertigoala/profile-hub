@@ -219,7 +219,7 @@ profileEditor.controller("ImageUploadController", function (profileService, util
 
     self.cancel = function () {
         $modalInstance.dismiss("cancel");
-    }
+    };
 });
 
 /**

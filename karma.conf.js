@@ -42,6 +42,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
+            'web-app/thirdparty/modernizr/modernizer.js',
             'web-app/thirdparty/angular/angular-1.3.13.min.js',
             'test/js/thirdparty/angular-mocks-1.3.13.js',
             'web-app/thirdparty/angular/ui-bootstrap-tpls-0.12.0.js',

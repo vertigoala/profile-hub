@@ -21,6 +21,7 @@ modules = {
         dependsOn "ng_storage"
         dependsOn "angular_truncate"
         dependsOn "underscore"
+        dependsOn "modernizr3"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -33,6 +34,7 @@ modules = {
         resource url:"js/angular/directives/publication.js"
         resource url:"js/angular/directives/link.js"
         resource url:"js/angular/directives/taxonomy.js"
+        resource url:"js/angular/directives/fallbackDatePicker.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"
@@ -141,5 +143,9 @@ modules = {
 
     underscore {
         resource url:"thirdparty/underscore/underscore-1.8.3.min.js"
+    }
+
+    modernizr3 {
+        resource url:"thirdparty/modernizr/modernizer.js", disposition:'head'
     }
 }

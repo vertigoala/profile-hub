@@ -9,6 +9,9 @@ grailsw.bat
 # default HSQL database files for production mode
 /prodDb.*
 
+#spring loaded cache
+.slcache
+
 # general HSQL database files
 *Db.properties
 *Db.script
@@ -82,3 +85,4 @@ grails-app/assets/stylesheets/mobile.css
 # karma files
 node_modules/*
 coverage/*
+package.json
