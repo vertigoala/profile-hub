@@ -12,6 +12,9 @@ describe("BrowseController tests", function () {
                 return "profileId1"
             }
         },
+        contextRoot: function() {
+
+        },
         LAST: "last"
     };
     var messageService;

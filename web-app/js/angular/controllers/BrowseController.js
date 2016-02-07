@@ -25,6 +25,7 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
     self.taxonLevels = [];
     self.profiles = [];
     self.selectedTaxon = {};
+    self.contextPath = util.contextRoot();
 
     self.searchByScientificName = function (wildcard) {
         if (wildcard === undefined) {
