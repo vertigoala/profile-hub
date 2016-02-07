@@ -206,10 +206,10 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/profile/search/scientificName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&max=${max ?: ""}&useWildcard=${useWildcard}")
     }
 
-    def findByNameAndTaxonLevel(String opusId, String taxon, String scientificName, String max, String offset, boolean wildcard) {
+    def findByNameAndTaxonLevel(String opusId, String taxon, String scientificName, String max, String offset, boolean wildcard, boolean recursive = true, boolean countChildren = false) {
         log.debug("Searching for '${scientificName}' in taxon ${taxon}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/name?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&taxon=${enc(taxon)}&useWildcard=${wildcard}&max=${max}&offset=${offset}")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/name?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&taxon=${enc(taxon)}&useWildcard=${wildcard}&max=${max}&offset=${offset}&recursive=${recursive}&countChildren=${countChildren}")
     }
 
     def groupByTaxonLevel(String opusId, String taxon, String max, String offset) {

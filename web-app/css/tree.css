@@ -1,13 +1,14 @@
 .tree, .tree ul {
-    margin: 0 0 0 1em;
-    padding: 0;
+    margin: 0 0 0 0.5em;
+    padding: 0 1em 0 0;
     list-style: none;
     color: #369;
     position: relative;
 }
 
 .tree ul {
-    margin-left: .5em
+    margin-left: 0;
+    padding-right: 0;
 }
 
 .tree:before, .tree ul:before {
@@ -23,7 +24,7 @@
 
 .tree li {
     margin: 0;
-    padding: 0 1.5em;
+    padding: 0 0 0 1.5em;
     line-height: 2em;
     position: relative;
 }
@@ -41,7 +42,7 @@
 }
 
 .tree li:last-child:before {
-    background: white;
+    background: #F8F8F8;
     height: auto;
     top: 1em;
     bottom: 0;

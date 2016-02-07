@@ -1,14 +1,34 @@
+<alert ng-if="layout == 'tree'" alert-type="warn">Under construction</alert>
 <div ng-if="!taxonomy || taxonomy.length == 0">
     The taxonomy for this profile is unknown.
 </div>
 
-<ul class="{{ layout == 'horizontal' ? 'breadcrumb' : layout == 'tree' ? 'tree' : '' }}">
+<div ng-if="layout == 'tree'">
+    <div class="pull-right">
+        <a href="" class="small" ng-click="hierarchialiseTaxonomy()"><span class="fa fa-refresh">&nbsp;</span>Reset</a>
+    </div>
+    <div class="clearfix"></div>
+
+    <ul class="{{ layout == 'horizontal' ? 'breadcrumb' : layout == 'tree' ? 'tree' : '' }}">
+        <li ng-repeat="taxon in hierarchy" ng-if="taxonomy.length >= limit && (limit < 0 || $index >= taxonomy.length - limit)">
+            <span ng-include src="'taxon.html'"></span>
+        </li>
+    </ul>
+
+    <div class="info-box margin-top-2">
+        <span class="fa fa-info-circle padding-right-1 small"></span>Note: this view only includes taxa with profiles in this collection.
+    </div>
+</div>
+
+
+<ul ng-if="layout != 'tree'"  class="{{ layout == 'horizontal' ? 'breadcrumb' : layout == 'tree' ? 'tree' : '' }}">
     <li ng-repeat="taxon in taxonomy" ng-if="taxonomy.length >= limit && (limit < 0 || $index >= taxonomy.length - limit)">
         <span ng-include src="'taxon.html'"></span>
     </li>
 </ul>
 
-<!-- template for the popup displayed when the 'show children' link is clicked -->
+
+<!-- template for each list item -->
 <script type="text/ng-template" id="taxon.html">
     <span ng-if="layout != 'tree'">
         <span ng-if="taxon.profileId">
@@ -31,10 +51,10 @@
 
     <span ng-if="layout == 'tree'">
         <span ng-if="taxon.childCount > 0" title="Click to view subordinate taxa">
-            <a href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon)"
+            <a href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, false)"
                target="_self">
                 <span class="fa {{ taxon.expanded ? 'fa-minus' : 'fa-plus' }} small"></span>
-                <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name | default:taxon.scientificName }}
+                <span ng-show="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name | default:taxon.scientificName }}
             </a>
         </span>
         <span ng-if="!taxon.childCount || taxon.childCount == 0">
@@ -48,9 +68,15 @@
         </span>
 
         <ul ng-if="taxon.children.length > 0 && taxon.expanded">
+            <li ng-if="taxon.showingCurrentProfileOnly">
+                <a ng-href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, true)"><span class="small">Show all {{ taxon.name }}...</span>
+                </a>
             <li ng-repeat="taxon in taxon.children">
                 <span ng-include src="'taxon.html'"></span>
             </li>
+            <li ng-if="!taxon.showingCurrentProfileOnly && taxon.offset > -1 && taxon.childCount > taxon.children.length">
+                <a ng-href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, true)"><span class="small">View more...</span>
+            </a>
         </ul>
     </span>
 </script>
@@ -58,8 +84,7 @@
 <!-- template for the popup displayed when the 'show children' link is clicked -->
 <script type="text/ng-template" id="showTaxonChildren.html">
     <div class="modal-header">
-        <h4 class="modal-title">{{taxonChildrenCtrl.taxon.level | capitalize}}: {{taxonChildrenCtrl.taxon.scientificName
-            | capitalize}}</h4>
+        <h4 class="modal-title">{{taxonChildrenCtrl.taxon.rank | capitalize}}: {{taxonChildrenCtrl.taxon.name | capitalize}}</h4>
     </div>
 
     <div class="modal-body">
@@ -83,7 +108,7 @@
                     previous-text="Prev" boundary-links="true"
                     ng-show="taxonChildrenCtrl.taxon.count > taxonChildrenCtrl.pageSize"></pagination>
 
-        <span ng-show="taxonChildrenCtrl.profiles.length == 0">There are no child taxa for {{taxonChildrenCtrl.taxon.scientificName | capitalize}}</span>
+        <span ng-show="taxonChildrenCtrl.profiles.length == 0">There are no child taxa for {{taxonChildrenCtrl.taxon.name | capitalize}}</span>
     </div>
 
     <div class="modal-footer">
