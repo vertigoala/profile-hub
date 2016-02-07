@@ -60,6 +60,7 @@ module.exports = function (config) {
             'web-app/thirdparty/angular-truncate/truncate.js',
             'web-app/thirdparty/angular-inview/angular-inview-1.5.6.js',
             'web-app/thirdparty/ngStorage/ngStorage-0.3.10.min.js',
+            'web-app/thirdparty/underscore/underscore-1.8.3.min.js',
             'web-app/js/angular/profiles.js',
             'web-app/js/angular/utils/*.js',
             'web-app/js/angular/services/*.js',
