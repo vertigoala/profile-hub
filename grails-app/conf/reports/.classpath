@@ -3,6 +3,6 @@
 	<classpathentry exported="true" kind="con" path="net.sf.jasperreports.JR_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="com.jaspersoft.server.JRS_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Groovy"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/groovy"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

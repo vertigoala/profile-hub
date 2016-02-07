@@ -26,7 +26,6 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
                     self.specimens.push({id: specimenId});
                     self.lookupSpecimenDetails(index, specimenId, null);
                 });
-                console.log("Fetched " + self.specimens.length + " specimens");
             },
             function () {
                 messageService.alert("An error occurred while retrieving the Biodiversity Heritage References.");
@@ -48,7 +47,6 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
         if (specimenId && util.isUuid(specimenId)) {
             var promise = profileService.lookupSpecimenDetails(specimenId);
             promise.then(function (data) {
-                console.log(JSON.stringify(data, undefined, 2))
                     var specimen = self.specimens[index];
 
                     specimen.id = specimenId;

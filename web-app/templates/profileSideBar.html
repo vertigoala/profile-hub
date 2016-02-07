@@ -1,0 +1,27 @@
+<div click-off="sidebar.close()">
+    <div class="vertical-centre-fixed">
+        <button class="btn btn-info" title="Show table of contents" ng-click="sidebar.open('profileTableOfContentsSideBar')">
+            <span class="fa fa-bars"></span></button>
+        <button class="btn btn-info" title="View full taxonomic hierarchy" ng-click="sidebar.open('profileTaxonomySideBar')">
+            <span class="fa fa-tree"></span></button>
+        <button class="btn btn-info" title="Search for profiles" ng-click="sidebar.open('profileSearchSideBar')"><span
+                class="fa fa-search"></span></button>
+    </div>
+
+    <div class="sidebar sidebar-vertical sidebar-left" id="sideBarContents">
+        <div class="margin-bottom-2">
+            <button class="btn btn-info btn-sm" title="Show table of contents" ng-click="sidebar.close(); sidebar.open('profileTableOfContentsSideBar')">
+                <span class="fa fa-bars"></span></button>
+            <button class="btn btn-info btn-sm" title="View full taxonomic hierarchy" ng-click="sidebar.close(); sidebar.open('profileTaxonomySideBar')">
+                <span class="fa fa-tree"></span></button>
+            <button class="btn btn-info btn-sm" title="Search for profiles" ng-click="sidebar.close(); sidebar.open('profileSearchSideBar')"><span
+                    class="fa fa-search"></span></button>
+
+            <button class="btn btn-primary btn-sm pull-right" title="Close sidebar" ng-click="sidebar.close()">
+                <span class="fa fa-close"></span>
+            </button>
+        </div>
+
+        <div ng-include src="sidebar.url"></div>
+    </div>
+</div>

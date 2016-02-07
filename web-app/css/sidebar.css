@@ -1,0 +1,139 @@
+/* General styles for all menus */
+.sidebar {
+    position: fixed;
+    background: #F8F8F8;
+    border-right: 1px solid #afdefa;
+    padding: 5px 5px 5px 10px;
+}
+
+/* Orientation-dependent styles for the content of the menu */
+
+.sidebar-vertical {
+    width: 300px;
+    height: 100%;
+    top: 0;
+    z-index: 1000;
+    overflow: scroll;
+    white-space: nowrap;
+}
+
+.sidebar-horizontal {
+    width: 100%;
+    height: 150px;
+    left: 0;
+    z-index: 1000;
+    overflow: scroll;
+}
+
+/* Vertical menu that slides from the left or right */
+
+.sidebar-left {
+    left: -300px;
+}
+
+.sidebar-right {
+    right: -300px;
+}
+
+.sidebar-left.sidebar-open {
+    left: 0;
+    min-width: 300px;
+    width: inherit;
+
+    -moz-box-shadow: 3px 3px 25px 6px #ccc;
+    -webkit-box-shadow: 3px 3px 25px 6px #ccc;
+    box-shadow: 3px 3px 25px 6px #ccc;
+}
+
+.sidebar-right.sidebar-open {
+    right: 0;
+    min-width: 300px;
+    width: inherit;
+
+    -moz-box-shadow: 3px 3px 25px 6px #ccc;
+    -webkit-box-shadow: 3px 3px 25px 6px #ccc;
+    box-shadow: 3px 3px 25px 6px #ccc;
+}
+
+/* Horizontal menu that slides from the top or bottom */
+
+.sidebar-top {
+    top: -150px;
+}
+
+.sidebar-bottom {
+    bottom: -150px;
+}
+
+.sidebar-top.sidebar-open {
+    top: 0;
+}
+
+.sidebar-bottom.sidebar-open {
+    bottom: 0;
+}
+
+/* Push classes applied to the body */
+
+.sidebar-push {
+    overflow-x: scroll;
+    position: relative;
+    left: 0;
+}
+
+.sidebar-push-toright {
+    left: 300px;
+}
+
+.sidebar-push-toleft {
+    left: -300px;
+}
+
+/* Transitions */
+
+.sidebar,
+.sidebar-push {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+/* Example media queries */
+
+@media screen and (max-width: 55.1875em) {
+
+    .sidebar-horizontal {
+        font-size: 75%;
+        height: 110px;
+    }
+
+    .sidebar-top {
+        top: -110px;
+    }
+
+    .sidebar-bottom {
+        bottom: -110px;
+    }
+
+}
+
+@media screen and (max-height: 26.375em) {
+
+    .sidebar-vertical {
+        font-size: 90%;
+        width: 190px;
+    }
+
+    .sidebar-left,
+    .sidebar-push-toleft {
+        left: -190px;
+    }
+
+    .sidebar-right {
+        right: -190px;
+    }
+
+    .sidebar-push-toright {
+        left: 190px;
+    }
+}
