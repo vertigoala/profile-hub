@@ -29,6 +29,18 @@ class OpusController extends BaseController {
         ]
     }
 
+    def search() {
+        render view: 'search', model: [
+                logoUrl   : DEFAULT_OPUS_LOGO_URL,
+                bannerUrl : DEFAULT_OPUS_BANNER_URL,
+                pageTitle : DEFAULT_OPUS_TITLE,
+                footerText: ALA_FOOTER_TEXT,
+                contact   : [email   : ALA_CONTACT_EMAIL,
+                             facebook: ALA_CONTACT_FACEBOOK,
+                             twitter : ALA_CONTACT_TWITTER]
+        ]
+    }
+
     @Secured(role = ROLE_ADMIN, opusSpecific = false)
     def create() {
         render view: "edit", model: [

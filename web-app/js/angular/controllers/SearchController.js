@@ -11,7 +11,6 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         nameOnly: false
     };
     self.searchResults = {};
-    retrieveCachedSearchResult();
 
     self.pageSize = 25;
 
@@ -49,16 +48,23 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         $sessionStorage.searches[self.opusId ? self.opusId : 'all'].options = self.searchOptions;
     }
 
-    function retrieveCachedSearchResult() {
-        var cachedResult = $sessionStorage.searches ? $sessionStorage.searches[self.opusId ? self.opusId : 'all'] : {};
-        if (cachedResult) {
-            self.searchResults = cachedResult.result;
-            self.searchTerm = cachedResult.term;
-            self.searchOptions = cachedResult.options ? cachedResult.options : {
-                nameOnly: false
-            };
+    self.retrieveCachedOrDelegatedSearch = function() {
+        if ($sessionStorage.delegatedSearches && $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'] != null) {
+            self.searchTerm = $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'];
+            delete $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'];
+
+            self.search();
+        } else {
+            var cachedResult = $sessionStorage.searches ? $sessionStorage.searches[self.opusId ? self.opusId : 'all'] : {};
+            if (cachedResult) {
+                self.searchResults = cachedResult.result;
+                self.searchTerm = cachedResult.term;
+                self.searchOptions = cachedResult.options ? cachedResult.options : {
+                    nameOnly: false
+                };
+            }
         }
-    }
+    };
 
     self.clearSearch = function () {
         self.searchResults = {};
@@ -89,5 +95,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
     self.setSearchOption = function (option) {
         self.searchOptions.nameOnly = option == 'name'
-    }
+    };
+
+    self.retrieveCachedOrDelegatedSearch();
+
 });

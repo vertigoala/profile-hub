@@ -1,0 +1,18 @@
+<div class="{{ delSearchCtrl.layout == 'large' ? '' : 'form-inline header-control' }}">
+    <div class="input-group">
+        <input id="searchTerm"
+               ng-model="delSearchCtrl.searchTerm"
+               ng-enter="delSearchCtrl.search()"
+               name="searchTerm"
+               title="Enter a search term"
+               placeholder="Search..."
+               class="delegated-search-control form-control ignore-save-warning {{ delSearchCtrl.layout == 'large' ? 'input-lg' : 'input-sm' }}"
+               autocomplete="on"
+               type="text">
+            <span class="input-group-btn">
+                <button class="btn {{ delSearchCtrl.layout == 'large' ? 'btn-lg btn-primary' : 'btn-sm btn-default' }}"
+                        type="button" ng-click="delSearchCtrl.search()"><span
+                        class="fa fa-search"></span></button>
+            </span>
+    </div>
+</div>

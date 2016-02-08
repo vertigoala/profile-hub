@@ -80,6 +80,7 @@
 
             <small>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><delegated-search></delegated-search></li>
                     <li><a href="${request.contextPath}/">Profile collections</a></li>
                     <g:render template="/layouts/login"/>
                 </ul>

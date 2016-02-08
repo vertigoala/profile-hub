@@ -24,7 +24,7 @@ describe("BrowseController tests", function () {
     var searchResponse = '[{"guid":"null","scientificName":"Acacia excelsa subsp. angusta","profileId":"e077b602-2a53-44f2-988d-6b54a35f323c"},{"guid":"null","scientificName":"Acacia excelsa subsp. excelsa","profileId":"63155a38-ba7e-4d33-8432-3a9a3556f588"}]';
 
     beforeAll(function () {
-        console.log("****** Search Controller Tests ******");
+        console.log("****** Browse Controller Tests ******");
     });
     afterAll(function () {
         console.log("----------------------------");

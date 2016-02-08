@@ -717,3 +717,32 @@ ul.breadcrumb li:before {
     margin-left: 0;
     max-width: 40px;
 }
+
+.header-control {
+    padding-top: 10px;
+}
+
+.header-control input {
+    border-radius: 10px !important;
+    width: 100px !important;
+    -webkit-transition: width 1s ease-in-out;
+    -moz-transition: width 1s ease-in-out;
+    -o-transition: width 1s ease-in-out;
+    transition: width 1s ease-in-out;
+}
+
+.header-control input:focus {
+    border-radius: 10px !important;
+    width: 250px !important;
+}
+
+.header-control button {
+    border: none;
+    background: transparent;
+    margin-left: -30px !important;
+    z-index: 99;
+}
+
+.header-control button:focus, .header-control button:hover {
+    background: transparent !important;
+}

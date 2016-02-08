@@ -8,6 +8,7 @@ class UrlMappings {
         "/user/details" controller: "user", action: [GET: "getUserDetails"]
 
         "/opus/create" controller: "opus", action: [GET: "create", PUT: "createOpus"]
+        "/opus/search" controller: "opus", action: [GET: "search"]
 
         "/opus/list" controller: "opus", action: [GET: "list"]
 

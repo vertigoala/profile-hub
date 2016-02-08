@@ -10,7 +10,7 @@
 
 <body>
 
-<div ng-controller="OpusController as opusCtrl" class="margin-bottom-3">
+<div ng-controller="OpusController as opusCtrl" class="margin-bottom-3" ng-cloak>
     <div class="row">
         <div class="col-md-12">
 
@@ -23,34 +23,35 @@
                 </div>
             </g:if>
 
-            <tabset>
-                <tab heading="Collections" class="font-xxsmall">
-                    <div ng-cloak>
-                        <div class="col-md-12">
-                            <h3 class="heading-medium">Browse by individual collection</h3>
-                        </div>
+        </div>
+    </div>
 
-                        <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'" class="col-md-2 col-sm-4 col-xs-6 text-center div-centre" style="min-height: 170px; height: 170px">
-                            <a href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
-                               target="_self">
-                                <img class="img-responsive collection-thumbnail thumbnail"
-                                     src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
-                                     alt="{{opus.title}} logo" title="{{opus.title}}"></a>
-                            <h4 class="font-xxsmall" style="width: 160px;"><a
-                                    href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
-                                    target="_self"><strong>{{opus.title}}</strong></a></h4>
-                        </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="heading-medium">Search for a profile</h3>
+            <delegated-search layout="large"></delegated-search>
+        </div>
+    </div>
 
-                        <div ng-show="opusCtrl.opusList.length == 0" class="col-md-12 padding-top-1">
-                            There are no visible collections.
-                        </div>
-                    </div>
-                </tab>
-                <tab heading="Search" class="font-xxsmall">
-                    <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
-                </tab>
-            </tabset>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="heading-medium">Browse by collection</h3>
+        </div>
 
+        <div ng-repeat="opus in opusCtrl.opusList | orderBy: 'title'"
+             class="col-md-2 col-sm-4 col-xs-6 text-center div-centre" style="min-height: 170px; height: 170px">
+            <a href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
+               target="_self">
+                <img class="img-responsive collection-thumbnail thumbnail"
+                     src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
+                     alt="{{opus.title}} logo" title="{{opus.title}}"></a>
+            <h4 class="font-xxsmall" style="width: 160px;"><a
+                    href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
+                    target="_self"><strong>{{opus.title}}</strong></a></h4>
+        </div>
+
+        <div ng-show="opusCtrl.opusList.length == 0" class="col-md-12 padding-top-1">
+            There are no visible collections.
         </div>
     </div>
 </div>
