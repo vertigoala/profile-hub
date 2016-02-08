@@ -1,10 +1,16 @@
-<input ng-if="ctrl.isDateInputSupported" ng-attr-id="{{ctrl.fieldId}}" type="date" ng-model="ctrl.ngModel" class="form-control" />
-<div ng-if="!ctrl.isDateInputSupported" class="input-group">
-    <input ng-attr-id="{{ctrl.fieldId}}" type="text" ng-model="ctrl.ngModel"
+<input ng-if="ctrl.isDateInputSupported" ng-attr-id="{{ctrl.fieldId}}" type="date" ng-model="ctrl.ngModel"
+       class="form-control" ng-class="ctrl.inputClass" ng-required="ctrl.ng-required" />
+<div ng-if="!ctrl.isDateInputSupported" class="input-group fallback-date-picker">
+    <!-- angular-ui-bs 1.1 remove explicit options and retain datepicker-options only -->
+    <input ng-attr-id="{{ctrl.fieldId}}" type="text" ng-model="ctrl.ngModel" ng-required="ctrl.ng-required"
            datepicker-popup="{{ctrl.format}}" datepicker-options="ctrl.dateOptions" is-open="ctrl.datePopupOpen"
-           placeholder="{{ctrl.format | lowercase }}" class="form-control"/>
+           placeholder="{{ ctrl.format | lowercase }}"
+           datepicker-append-to-body="ctrl.dateOptions.datepickerAppendToBody"
+           show-button-bar="ctrl.dateOptions.showButtonBar"
+           type="ctrl.dateOptions.type"
+           class="form-control" ng-class="ctrl.inputClass" />
     <span class="input-group-btn">
-        <button type="button" class="btn btn-default" ng-click="ctrl.openDatePicker($event)">
+        <button type="button" class="btn btn-default" ng-class="ctrl.btnClass" ng-click="ctrl.openDatePicker($event)">
             <i class="glyphicon glyphicon-calendar"></i>
         </button>
     </span>

@@ -27,6 +27,8 @@ profileEditor.controller('ReportController', function (profileService, util, con
 
     self.selectedPeriod = self.periods[2];
 
+    self.datePickerOptions = { datepickerAppendToBody: true, showButtonBar: false };
+
     self.dates = {
         to: undefined,
         from: undefined

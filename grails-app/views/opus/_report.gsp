@@ -141,33 +141,13 @@
                     <div class="form-group">
                         <label class="control-label" for="inputFromDate">Find profiles updated between</label>
 
-                        <div role="group" class="input-group customdatepicker">
-                            <input type="text" id="inputFromDate" class="form-control input-sm" ng-required="true"
-                                   is-open="reportCtrl.isFromOpen" show-button-bar="false"
-                                   datepicker-popup="dd-MMMM-yyyy" ng-model="reportCtrl.dates.from"/>
-                            <span class="input-group-btn">
-                                <button class="btn btn-default btn-sm" type="button"
-                                        ng-click="reportCtrl.open('from',$event)">
-                                    <i class="glyphicon glyphicon-calendar"></i>
-                                </button>
-                            </span>
-                        </div>
+                        <fallback-date-picker field-id="inputFromDate" ng-required="true" ng-model="reportCtrl.dates.from" format="dd-MMMM-yyyy" fallback-options="reportCtrl.datePickerOptions" size="small" ></fallback-date-picker>
                     </div>
 
                     <div class="form-group">
                         <label class="control-label" for="inputToDate">and</label>
 
-                            <div class="input-group customdatepicker">
-                                <input type="text" id="inputToDate" class="form-control input-sm" ng-required="true"
-                                       ng-model="reportCtrl.dates.to" is-open="reportCtrl.isToOpen"
-                                       show-button-bar="false" datepicker-popup="dd-MMMM-yyyy"/>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default btn-sm" type="button"
-                                            ng-click="reportCtrl.open('to', $event)">
-                                        <i class="glyphicon glyphicon-calendar"></i>
-                                    </button>
-                                </span>
-                            </div>
+                        <fallback-date-picker field-id="inputToDate" ng-required="true" ng-model="reportCtrl.dates.to" format="dd-MMMM-yyyy" fallback-options="reportCtrl.datePickerOptions" size="small" ></fallback-date-picker>
                     </div>
 
                     <div class="form-group">
