@@ -366,4 +366,29 @@ class ImageServiceSpec extends Specification {
         then:
         1 * profileService.updateProfile(_, _, expectedUpdates, true)
     }
+
+    def "publishImages should no crash if the images do not have any metadata"() {
+        setup:
+        setup:
+        profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1"], profile: [uuid: "profile1", stagedImages: [
+                [imageId: "image2", originalFileName: "image2.jpg"]
+        ]]]
+        File stagedDir = new File("${grailsApplication.config.image.staging.dir}/profile1")
+        stagedDir.mkdir()
+        File stagedFile1 = new File("${grailsApplication.config.image.staging.dir}/profile1/image1.jpg")
+        File stagedFile2 = new File("${grailsApplication.config.image.staging.dir}/profile1/image2.jpg")
+        stagedFile1.createNewFile()
+        stagedFile2.createNewFile()
+
+        expect:
+        new File("${grailsApplication.config.image.staging.dir}/profile1").list().size() == 2
+
+        when:
+        imageService.publishStagedImages("opusId", "profile1")
+
+        then:
+        1 * biocacheService.uploadImage(_, _, _, _, _)
+        1 * profileService.recordStagedImage(_, _, _)
+        new File("${grailsApplication.config.image.staging.dir}/profile1").exists() == false
+    }
 }

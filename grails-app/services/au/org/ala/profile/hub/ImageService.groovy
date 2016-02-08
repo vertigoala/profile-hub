@@ -138,7 +138,11 @@ class ImageService {
         String extension = getExtension(image.originalFileName)
         File localDir = new File(directory)
         File file = new File(localDir, "${imageId}${extension}")
-        boolean deleted = file.delete();
+        deleteFileAndDirIfEmpty(file, localDir)
+    }
+
+    private static deleteFileAndDirIfEmpty(File file, File localDir) {
+        boolean deleted = file.delete()
 
         if (localDir.listFiles()?.length == 0) {
             localDir.delete()
@@ -198,9 +202,16 @@ class ImageService {
         String localDirPath = staged ? grailsApplication.config.image.staging.dir : grailsApplication.config.image.private.dir
 
         File localDir = new File("${localDirPath}/${profile.uuid}")
-        localDir.listFiles().each {
-            String imageId = it.name.substring(0, it.name.indexOf("."))
+        for (def it : localDir.listFiles()) {
+            String imageId = imageIdFromFile(it)
             Map localImage = images[imageId]
+
+            if (!localImage) {
+                log.error("Skipping publishing $it with id $imageId because it is missing image metadata.")
+                // Clean up staged / private file
+                deleteFileAndDirIfEmpty(it, localDir)
+                continue;
+            }
 
             List<Map> multimedia = localImage ? [
                     [
@@ -238,6 +249,10 @@ class ImageService {
         if (profileUpdates) {
             profileService.updateProfile(opus.uuid, profile.uuid, profileUpdates, true)
         }
+    }
+
+    private static String imageIdFromFile(File file) {
+        file.name.substring(0, file.name.indexOf("."))
     }
 
     private static String getExtension(String fileName) {
