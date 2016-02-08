@@ -1,5 +1,5 @@
 <div class="col-md-6 col-sm-12" ng-controller="MapController as mapCtrl"
-     ng-cloak ng-if="mapCtrl.profile.matchedName"
+     ng-cloak
      ng-init="mapCtrl.init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')">
     <div class="row">
         <div class="col-md-12">
