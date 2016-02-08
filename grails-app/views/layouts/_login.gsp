@@ -5,7 +5,7 @@
         <span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
-        <li role="separator">
+        <li role="separator" class="padding-bottom-1">
             <span role="menuitem" class="no-icon-menu-item">Role: {{ userCtrl.user.role.name }}</span>
         </li>
         <li role="presentation">

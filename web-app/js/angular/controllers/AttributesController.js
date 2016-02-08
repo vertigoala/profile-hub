@@ -76,7 +76,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.attributeTitles = [];
                 self.allowedVocabulary = [];
                 angular.forEach(data.terms, function (term) {
-                    var title = {name: term.name, order: term.order};
+                    var title = {name: term.name, order: term.order, key: util.toKey(term.name)};
                     if (self.attributeTitles.map(function(t) { return t.name; }).indexOf(title.name) == -1) {
                         self.attributeTitles.push(title);
                     }

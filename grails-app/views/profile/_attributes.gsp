@@ -63,6 +63,7 @@
 <!-- template for the read-only view of an attribute list -->
 <script type="text/ng-template" id="showReadOnlyAttributeList.html">
 <div ng-repeat="title in attrCtrl.attributeTitles" ng-cloak>
+    <a name="view_{{title.key}}"></a>
     <div class="panel panel-default" ng-if="attrCtrl.showTitleGroup(title.name)">
         <div class="panel-heading">
             <div class="row">
@@ -86,7 +87,6 @@
 
 <!-- template for the content of a single read-only attribute, to be displayed either on the view or the edit page -->
 <script type="text/ng-template" id="readOnlyAttributeBody.html">
-<a name="view_{{attribute.key}}"></a>
 <span ng-show="attrCtrl.showAttribute(attribute)">
     <div ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
         <div ng-bind-html="attribute.text | sanitizeHtml" class="display-text"></div>
