@@ -133,3 +133,7 @@ footer p.lead {
 .panel-footer {
     border-color: rgba(0, 135, 190, 0.2);
 }
+
+.comments-panel .panel, .comments-panel .panel-heading {
+    background-color: #F1F0F3 !important;
+}
