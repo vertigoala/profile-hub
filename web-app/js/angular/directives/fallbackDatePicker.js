@@ -21,8 +21,8 @@ profileEditor.directive('fallbackDatePicker', function ($browser) {
       self.size = self.size || '';
       self.dateOptions = self.dateOptions || {};
       self.dateOptions.type = self.dateOptions.type || 'date';
-      if (angular.isUndefined(self.dateOptions.datepickerAppendToBody) || self.datePickerOptions.datepickerAppendToBody === null) { self.dateOptions.datepickerAppendToBody = false; }
-      if (angular.isUndefined(self.dateOptions.showButtonBar) || self.datePickerOptions.showButtonBar === null) { self.dateOptions.showButtonBar = true; }
+      if (angular.isUndefined(self.dateOptions.datepickerAppendToBody) || self.dateOptions.datepickerAppendToBody === null) { self.dateOptions.datepickerAppendToBody = false; }
+      if (angular.isUndefined(self.dateOptions.showButtonBar) || self.dateOptions.showButtonBar === null) { self.dateOptions.showButtonBar = true; }
 
       switch (self.size) {
         case 'small':

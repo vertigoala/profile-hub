@@ -367,7 +367,7 @@ class ImageServiceSpec extends Specification {
         1 * profileService.updateProfile(_, _, expectedUpdates, true)
     }
 
-    def "publishImages should no crash if the images do not have any metadata"() {
+    def "publishImages should not crash if the images do not have any metadata"() {
         setup:
         setup:
         profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1"], profile: [uuid: "profile1", stagedImages: [
