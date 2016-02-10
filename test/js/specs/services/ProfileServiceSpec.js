@@ -213,7 +213,7 @@ describe("ProfileService tests", function () {
     it("should invoke the taxon level and name search service on the context root when profileSearchByTaxonLevelAndName is invoked", function() {
         service.profileSearchByTaxonLevelAndName("opusId", "taxonName", "sciName", 10, 5);
 
-        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&recursive=true&countChildren=false").respond("bla");
+        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&countChildren=false").respond("bla");
     });
 
     it("should invoke the taxon levels search service on the context root when getTaxonLevels is invoked", function() {

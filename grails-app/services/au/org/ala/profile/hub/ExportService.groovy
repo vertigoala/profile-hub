@@ -113,7 +113,7 @@ class ExportService {
         def opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
         curatedModel.profiles << loadProfileData(params.profileId as String, opus, params, latest)
 
-        if (params.children) {
+        if (params.children && curatedModel.profiles[0].profile.rank) {
             def children = profileService.findByNameAndTaxonLevel(params.opusId, curatedModel.profiles[0].profile.rank, curatedModel.profiles[0].profile.scientificName, "99999", "0", false)?.resp
 
             // By default, the RequestAttributes thread local used by Grails/Spring is not inheritable, so new threads

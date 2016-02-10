@@ -32,10 +32,8 @@ class SearchController extends BaseController {
         if (!params.taxon || !params.scientificName) {
             badRequest "taxon (e.g. phylum, genus, species, etc) and scientificName are a required parameters. You can also optionally supply opusId (comma-separated list of opus ids), max (max records to return), offset (0 based index to start from)."
         } else {
-            boolean wildcard = params.useWildcard ? params.useWildcard.toBoolean() : true
-            boolean recursive = params.recursive ? params.recursive.toBoolean() : true
             boolean countChildren = params.countChildren ? params.countChildren.toBoolean() : false
-            def response = profileService.findByNameAndTaxonLevel(params.opusId, params.taxon, params.scientificName, params.max, params.offset, wildcard, recursive, countChildren)
+            def response = profileService.findByNameAndTaxonLevel(params.opusId, params.taxon, params.scientificName, params.max, params.offset, countChildren)
 
             handle response
         }

@@ -480,13 +480,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         profileSearchByTaxonLevelAndName: function(opusId, taxon, scientificName, max, offset, recursive, countChildren) {
-            if (_.isUndefined(recursive)) {
-                recursive = true;
-            }
             if (_.isUndefined(countChildren)) {
                 countChildren = false;
             }
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset + "&recursive=" + recursive + "&countChildren=" + countChildren);
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset + "&countChildren=" + countChildren);
             future.then(function(response) {
                 $log.debug("Facet search returned with response code " + response.status);
             });
