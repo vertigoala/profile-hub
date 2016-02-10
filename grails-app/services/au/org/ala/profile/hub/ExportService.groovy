@@ -125,12 +125,16 @@ class ExportService {
             withPool(THREAD_COUNT) {
                 children.eachParallel {
                     if (it.profileId != params.profileId && it.scientificName != params.profileId) {
-                        curatedModel.profiles << loadProfileData(it.profileId, opus, params, latest)
+                        Map profile = loadProfileData(it.profileId, opus, params, latest)
+                        profile.taxonomicOrder = it.taxonomicOrder
+                        curatedModel.profiles << profile
                     }
                 }
             }
 
-            curatedModel.profiles = curatedModel.profiles.sort { it.profile.scientificName }
+            // the findByNameAndTaxonLevel operation returns the profiles in the correct taxonomic order (genera inside
+            // families, species inside genera, etc), so ensure that the order is correct after the multithreaded processing
+            curatedModel.profiles = curatedModel.profiles.sort { it.taxonomicOrder }
         }
 
         curatedModel.options << [
