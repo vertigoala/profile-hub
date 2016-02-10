@@ -2,7 +2,7 @@
     <div class="vertical-centre-fixed">
         <button class="btn btn-info" title="Show table of contents" ng-click="sidebar.open('profileTableOfContentsSideBar')">
             <span class="fa fa-bars"></span></button>
-        <button class="btn btn-info" title="View full taxonomic hierarchy" ng-click="sidebar.open('profileTaxonomySideBar')">
+        <button class="btn btn-info" title="View full taxonomic hierarchy" ng-click="sidebar.open('profileTaxonomySideBar')" ng-if="profileCtrl.profile.classification.length > 0">
             <span class="fa fa-tree"></span></button>
         <button class="btn btn-info" title="Find by profile name" ng-click="sidebar.open('profileSearchSideBar')"><span
                 class="fa fa-binoculars"></span></button>
@@ -12,7 +12,7 @@
         <div class="margin-bottom-2">
             <button class="btn btn-info btn-sm" title="Show table of contents" ng-click="sidebar.close(); sidebar.open('profileTableOfContentsSideBar')">
                 <span class="fa fa-bars"></span></button>
-            <button class="btn btn-info btn-sm" title="View full taxonomic hierarchy" ng-click="sidebar.close(); sidebar.open('profileTaxonomySideBar')">
+            <button class="btn btn-info btn-sm" title="View full taxonomic hierarchy" ng-click="sidebar.close(); sidebar.open('profileTaxonomySideBar')" ng-if="profileCtrl.profile.classification.length > 0">
                 <span class="fa fa-tree"></span></button>
             <button class="btn btn-info btn-sm" title="Find by profile name" ng-click="sidebar.close(); sidebar.open('profileSearchSideBar')"><span
                     class="fa fa-binoculars"></span></button>

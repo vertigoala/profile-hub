@@ -1,4 +1,3 @@
-<alert ng-if="layout == 'tree'" alert-type="warn">Under construction</alert>
 <div ng-if="!taxonomy || taxonomy.length == 0">
     The taxonomy for this profile is unknown.
 </div>
@@ -14,10 +13,6 @@
             <span ng-include src="'taxon.html'"></span>
         </li>
     </ul>
-
-    <div class="info-box margin-top-2">
-        <span class="fa fa-info-circle padding-right-1 small"></span>Note: this view only includes taxa with profiles in this collection.
-    </div>
 </div>
 
 

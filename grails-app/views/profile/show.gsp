@@ -8,7 +8,7 @@
 
 </head>
 
-<body class="cbp-spmenu-push">
+<body>
 
 <div class="row" ng-controller="ProfileController as profileCtrl"
      ng-init="profileCtrl.loadProfile()">
