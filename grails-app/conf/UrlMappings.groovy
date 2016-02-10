@@ -17,6 +17,7 @@ class UrlMappings {
         "/profile/search/taxon/name" controller: "search", action: "findByNameAndTaxonLevel"
         "/profile/search/taxon/level" controller: "search", action: "groupByTaxonLevel"
         "/profile/search/taxon/levels" controller: "search", action: "getTaxonLevels"
+        "/profile/search/children" controller: "search", action: "getImmediateChildren"
 
         "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]

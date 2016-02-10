@@ -53,7 +53,7 @@
         <span ng-if="taxon.childCount > 0" title="Click to view subordinate taxa">
             <a href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, false)"
                target="_self">
-                <span class="fa {{ taxon.expanded ? 'fa-minus' : 'fa-plus' }} small"></span>
+                <span class="fa {{ taxon.loading ? 'fa-spin fa-spinner' : taxon.expanded ? 'fa-minus' : 'fa-plus' }} small"></span>
                 <span ng-show="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name | default:taxon.scientificName }}
             </a>
         </span>
@@ -74,7 +74,7 @@
             <li ng-repeat="taxon in taxon.children">
                 <span ng-include src="'taxon.html'"></span>
             </li>
-            <li ng-if="!taxon.showingCurrentProfileOnly && taxon.offset > -1 && taxon.childCount > taxon.children.length">
+            <li ng-if="!taxon.showingCurrentProfileOnly && taxon.offset > -1 && taxon.mightHaveMore">
                 <a ng-href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, true)"><span class="small">View more...</span>
             </a>
         </ul>

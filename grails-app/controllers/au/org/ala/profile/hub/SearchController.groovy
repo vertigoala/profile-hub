@@ -53,9 +53,20 @@ class SearchController extends BaseController {
     def getTaxonLevels() {
         if (!params.opusId) {
             badRequest "opusId is a required parameter"
-        }
+        } else {
+            def response = profileService.getTaxonLevels(params.opusId)
 
-        def response = profileService.getTaxonLevels(params.opusId)
-        handle response
+            handle response
+        }
+    }
+
+    def getImmediateChildren() {
+        if (!params.opusId || !params.rank || !params.name) {
+            badRequest "opusId, rank and name are required parameters"
+        } else {
+            def response = profileService.getImmediateChildren(params.opusId, params.rank, params.name, params.max, params.offset)
+
+            handle response
+        }
     }
 }

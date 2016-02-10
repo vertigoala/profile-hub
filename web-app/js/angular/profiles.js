@@ -1,6 +1,7 @@
 var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'leaflet-directive', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate']);
 
-profileEditor.config(function () {
+profileEditor.config(function ($logProvider) {
+    $logProvider.debugEnabled(false);
 
 });
 

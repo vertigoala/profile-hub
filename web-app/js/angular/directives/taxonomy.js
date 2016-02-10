@@ -67,10 +67,13 @@ profileEditor.directive('taxonomy', function ($browser) {
                 });
             };
 
-
             $scope.loadSubordinateTaxa = function (offset, taxon, viewMore) {
                 if (!viewMore) {
                     taxon.expanded = !taxon.expanded | false;
+
+                    if (offset > 0 || taxon.showingCurrentProfileOnly) {
+                        return;
+                    }
                 }
 
                 if (taxon.expanded) {
@@ -78,7 +81,8 @@ profileEditor.directive('taxonomy', function ($browser) {
                         offset = 0;
                     }
 
-                    var results = profileService.profileSearchByTaxonLevelAndName($scope.opusId, taxon.rank, taxon.name, $scope.pageSize, offset, false, true);
+                    var results = profileService.profileSearchGetImmediateChildren($scope.opusId, taxon.rank, taxon.name, $scope.pageSize, offset, false, true);
+                    taxon.loading = true;
                     results.then(function (data) {
                             if (!_.isUndefined(data) && data.length > 0) {
                                 if (offset > 0) {
@@ -90,17 +94,15 @@ profileEditor.directive('taxonomy', function ($browser) {
                                 }
                                 taxon.offset = (taxon.offset || 0) + $scope.pageSize;
                                 taxon.showingCurrentProfileOnly = false;
+
+                                taxon.mightHaveMore = data.length >= $scope.pageSize;
                             } else {
-                                for (var i = 0; i < $scope.taxonomy.length; i++) {
-                                    if ($scope.taxonomy[i].rank == taxon.rank && i + 1 < $scope.taxonomy.length) {
-                                        taxon.children = [angular.copy($scope.taxonomy[i + 1])];
-                                        taxon.offset = -1;
-                                        taxon.showingCurrentProfileOnly = true;
-                                    }
-                                }
+                                taxon.mightHaveMore = false;
                             }
+                            taxon.loading = false;
                         },
                         function () {
+                            taxon.loading = false;
                             messageService.alert("Failed to perform search for '" + taxon.rank + " " + taxon.name + "'.");
                         }
                     );
@@ -118,6 +120,7 @@ profileEditor.directive('taxonomy', function ($browser) {
                             previous.expanded = true;
                             previous.offset = -1;
                             previous.showingCurrentProfileOnly = true;
+                            previous.mightHaveMore = true;
                         }
                         previous = next;
                     });
