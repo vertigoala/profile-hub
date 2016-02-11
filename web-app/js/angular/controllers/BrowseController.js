@@ -5,6 +5,8 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
     var self = this;
 
     self.pageSizes = [5, 10, 25, 50, 100];
+    self.sortOptions = ["name", "taxonomy"];
+    self.sortOption = "taxonomy";
     self.pagesToShow = 10;
     self.pageSize = 25;
 
@@ -20,6 +22,7 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
         {key: "genus", name: "Genus", order: 6},
         {key: "unknown", name: "Unknown Rank", order: 7, help: "This category lists all profiles which do not have a matched name"}
     ];
+
     self.opusId = util.getEntityId("opus");
     self.taxonResults = {};
     self.taxonLevels = [];
@@ -28,21 +31,24 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
     self.contextPath = util.contextRoot();
 
     self.searchByScientificName = function (wildcard) {
-        if (wildcard === undefined) {
-            wildcard = true
-        }
-
-        self.selectedTaxon = {};
-
-        var searchResult = profileService.profileSearch(self.opusId, self.searchTerm, wildcard);
-        searchResult.then(function (data) {
-                console.log("Found " + data.length + " results");
-                self.profiles = data;
-            },
-            function () {
-                messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
+        if (!self.searchTerm || typeof self.searchTerm == 'undefined' || self.searchTerm.length == 0) {
+            self.profiles = [];
+        } else {
+            if (wildcard === undefined) {
+                wildcard = true
             }
-        );
+
+            self.selectedTaxon = {};
+
+            var searchResult = profileService.profileSearch(self.opusId, self.searchTerm, wildcard, self.sortOption);
+            searchResult.then(function (data) {
+                    self.profiles = data;
+                },
+                function () {
+                    messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
+                }
+            );
+        }
     };
 
     self.getTaxonLevels = function () {
@@ -80,9 +86,8 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
 
         self.searchTerm = null;
 
-        var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon, scientificName, self.pageSize, offset);
+        var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon, scientificName, self.pageSize, offset, self.sortOption);
         results.then(function (data) {
-                console.log("Found " + data.length + " results");
                 self.profiles = data;
             },
             function () {
@@ -90,4 +95,15 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
             }
         );
     };
+
+    self.changeSortOrder = function() {
+        self.page = 0;
+        self.offset = 0;
+
+        if (self.searchTerm) {
+            self.searchByScientificName();
+        } else if (self.selectedTaxon != {}) {
+            self.searchByTaxon(self.selectedTaxon.level, self.selectedTaxon.name, self.selectedTaxon.count, 0);
+        }
+    }
 });

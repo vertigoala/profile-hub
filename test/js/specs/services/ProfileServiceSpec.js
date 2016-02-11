@@ -195,13 +195,19 @@ describe("ProfileService tests", function () {
     it("should invoke the profile search operation on the context root when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName");
 
-        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=true").respond("bla");
+        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=true&sortBy=name").respond("bla");
     });
 
     it("should invoke the profile search operation on the context root with wildcard=false if false is passed in when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName", false);
 
-        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false").respond("bla");
+        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false&sortBy=name").respond("bla");
+    });
+
+    it("should invoke the profile search operation on the context root with the sort by value provided when profileSearch is called ", function() {
+        service.profileSearch("opusId", "scientificName", false, "sortme");
+
+        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false&sortBy=sortme").respond("bla");
     });
 
     it("should invoke the taxon level search service on the context root when profileSearchByTaxonLevel is invoked", function() {
@@ -213,7 +219,13 @@ describe("ProfileService tests", function () {
     it("should invoke the taxon level and name search service on the context root when profileSearchByTaxonLevelAndName is invoked", function() {
         service.profileSearchByTaxonLevelAndName("opusId", "taxonName", "sciName", 10, 5);
 
-        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&countChildren=false").respond("bla");
+        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&sortBy=name&countChildren=false").respond("bla");
+    });
+
+    it("should invoke the taxon level and name search service on the context root with a sort param if provided when profileSearchByTaxonLevelAndName is invoked", function() {
+        service.profileSearchByTaxonLevelAndName("opusId", "taxonName", "sciName", 10, 5, "sortme");
+
+        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&sortBy=sortme&countChildren=false").respond("bla");
     });
 
     it("should invoke the taxon levels search service on the context root when getTaxonLevels is invoked", function() {

@@ -455,16 +455,19 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        profileSearch: function(opusId, scientificName, useWildcard) {
+        profileSearch: function(opusId, scientificName, useWildcard, sortBy) {
             $log.debug("Searching for " + scientificName + (useWildcard ? " with wildcard" : ""));
 
+            if (typeof sortBy == 'undefined') {
+                sortBy = "name";
+            }
             if (typeof useWildcard == 'undefined') {
                 useWildcard = true;
             }
             if (typeof opusId == 'undefined') {
                 opusId = "";
             }
-            var future = $http.get(util.contextRoot() + "/profile/search/scientificName?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard);
+            var future = $http.get(util.contextRoot() + "/profile/search/scientificName?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard + "&sortBy=" + sortBy);
             future.then(function (response) {
                 $log.debug("Profile search returned with response code " + response.status);
             });
@@ -479,11 +482,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        profileSearchByTaxonLevelAndName: function(opusId, taxon, scientificName, max, offset, recursive, countChildren) {
+        profileSearchByTaxonLevelAndName: function(opusId, taxon, scientificName, max, offset, sortBy, countChildren) {
             if (_.isUndefined(countChildren)) {
                 countChildren = false;
             }
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset + "&countChildren=" + countChildren);
+            if (_.isUndefined(sortBy)) {
+                sortBy = "name";
+            }
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset + "&sortBy=" + sortBy + "&countChildren=" + countChildren);
             future.then(function(response) {
                 $log.debug("Facet search returned with response code " + response.status);
             });

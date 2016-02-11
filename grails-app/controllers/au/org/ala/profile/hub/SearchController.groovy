@@ -19,10 +19,10 @@ class SearchController extends BaseController {
 
     def findByScientificName() {
         if (!params.scientificName) {
-            badRequest "scientificName is a required parameter. opusId and useWildcard are optional."
+            badRequest "scientificName is a required parameter. opusId, sortBy and useWildcard are optional."
         } else {
             boolean wildcard = params.useWildcard ? params.useWildcard.toBoolean() : true
-            def response = profileService.findByScientificName(params.opusId, params.scientificName, params.max, wildcard);
+            def response = profileService.findByScientificName(params.opusId, params.scientificName, params.max, params.sortBy, wildcard);
 
             handle response
         }
@@ -33,7 +33,7 @@ class SearchController extends BaseController {
             badRequest "taxon (e.g. phylum, genus, species, etc) and scientificName are a required parameters. You can also optionally supply opusId (comma-separated list of opus ids), max (max records to return), offset (0 based index to start from)."
         } else {
             boolean countChildren = params.countChildren ? params.countChildren.toBoolean() : false
-            def response = profileService.findByNameAndTaxonLevel(params.opusId, params.taxon, params.scientificName, params.max, params.offset, countChildren)
+            def response = profileService.findByNameAndTaxonLevel(params.opusId, params.taxon, params.scientificName, params.max, params.offset, params.sortBy, countChildren)
 
             handle response
         }

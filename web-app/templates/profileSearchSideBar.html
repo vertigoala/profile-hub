@@ -10,6 +10,12 @@
                autocomplete="off"
                ng-enter="browseCtrl.selectSingleResult()"
                ng-model="browseCtrl.searchTerm">
+        <div class="padding-top-1" ng-show="browseCtrl.searchTerm && !browseCtrl.selectedTaxon.name">
+            <label for="sort" class="compact-label small">Sort by</label>
+            <select id="sort" ng-options="sort for sort in browseCtrl.sortOptions" ng-change="browseCtrl.changeSortOrder()"
+                    ng-model="browseCtrl.sortOption" class="ignore-save-warning">
+            </select>
+        </div>
     </div>
 
     <div ng-show="browseCtrl.searchTerm && !browseCtrl.selectedTaxon.name">

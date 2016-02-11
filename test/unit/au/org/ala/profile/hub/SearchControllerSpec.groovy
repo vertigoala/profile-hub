@@ -28,7 +28,7 @@ class SearchControllerSpec extends Specification {
 
     def "search should return the resp element of the response from the service call on success"() {
         setup:
-        profileService.findByScientificName(_, _, _, _) >> [resp: [resp: "search results"], statusCode: 200]
+        profileService.findByScientificName(_, _, _, _, _) >> [resp: [resp: "search results"], statusCode: 200]
 
         when:
         params.opusId = "guid1"
@@ -42,7 +42,7 @@ class SearchControllerSpec extends Specification {
 
     def "search should return the error code from the service on failure of the service call"() {
         setup:
-        profileService.findByScientificName(_, _, _, _) >> [error: "something died!", statusCode: 666]
+        profileService.findByScientificName(_, _, _, _, _) >> [error: "something died!", statusCode: 666]
 
         when:
         params.opusId = "guid1"

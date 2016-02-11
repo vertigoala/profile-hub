@@ -58,6 +58,7 @@ describe("BrowseController tests", function () {
 
     it("should set the search results attribute of the current scope when search is invoked", function () {
         searchDefer.resolve(JSON.parse(searchResponse));
+        scope.browseCtrl.searchTerm = "test";
         scope.browseCtrl.searchByScientificName();
         scope.$apply();
 
@@ -73,7 +74,7 @@ describe("BrowseController tests", function () {
         scope.browseCtrl.searchByScientificName();
         scope.$apply();
 
-        expect(profileService.profileSearch).toHaveBeenCalledWith("opusId1", searchTerm, true);
+        expect(profileService.profileSearch).toHaveBeenCalledWith("opusId1", searchTerm, true, 'taxonomy');
     });
 
     it("should fetch the list of all available taxon levels for the current opus when getTaxonLevels is invoked", function() {
@@ -145,13 +146,13 @@ describe("BrowseController tests", function () {
     it("should default the offset to 0 if it is not provided to searchByTaxon", function() {
         scope.browseCtrl.searchByTaxon("taxonName", "sciName", 10);
 
-        expect(profileService.profileSearchByTaxonLevelAndName).toHaveBeenCalledWith("opusId1", "taxonName", "sciName", 25, 0);
+        expect(profileService.profileSearchByTaxonLevelAndName).toHaveBeenCalledWith("opusId1", "taxonName", "sciName", 25, 0, 'taxonomy');
     });
 
     it("should use the provided offset to searchByTaxon", function() {
         scope.browseCtrl.searchByTaxon("taxonName", "sciName", 10, 666);
 
-        expect(profileService.profileSearchByTaxonLevelAndName).toHaveBeenCalledWith("opusId1", "taxonName", "sciName", 25, 666);
+        expect(profileService.profileSearchByTaxonLevelAndName).toHaveBeenCalledWith("opusId1", "taxonName", "sciName", 25, 666, 'taxonomy');
     });
 
     it("should raise an alert message if the call to searchByTaxonLevel fails", function() {

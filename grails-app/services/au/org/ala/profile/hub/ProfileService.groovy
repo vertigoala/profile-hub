@@ -200,16 +200,16 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/profile/search?opusId=${enc(opusId)}&term=${enc(term)}${params.join("")}")
     }
 
-    def findByScientificName(String opusId, String scientificName, String max, boolean useWildcard) {
+    def findByScientificName(String opusId, String scientificName, String max, String sortBy, boolean useWildcard) {
         log.debug("Searching for '${scientificName}' in opus ${opusId}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/profile/search/scientificName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&max=${max ?: ""}&useWildcard=${useWildcard}")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search/scientificName?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&max=${max ?: ""}&sortBy=${sortBy}&useWildcard=${useWildcard}")
     }
 
-    def findByNameAndTaxonLevel(String opusId, String taxon, String scientificName, String max, String offset, boolean countChildren = false) {
+    def findByNameAndTaxonLevel(String opusId, String taxon, String scientificName, String max, String offset, String sortBy, boolean countChildren = false) {
         log.debug("Searching for '${scientificName}' in taxon ${taxon}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/name?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&taxon=${enc(taxon)}&max=${max}&offset=${offset}&countChildren=${countChildren}")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/name?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&taxon=${enc(taxon)}&max=${max}&offset=${offset}&sortBy=${sortBy}&countChildren=${countChildren}")
     }
 
     def groupByTaxonLevel(String opusId, String taxon, String max, String offset) {

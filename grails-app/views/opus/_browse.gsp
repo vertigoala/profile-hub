@@ -76,18 +76,32 @@
                 Alternatively, you can select the Identify tab and search for a profile using the dichotomous key player.
             </p>
         </div>
-        <h4 class="heading-underlined"
-            ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level != browseCtrl.selectedTaxon.name">{{browseCtrl.selectedTaxon.level | capitalize}}: {{browseCtrl.selectedTaxon.name | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
-        </h4>
-        <h4 class="heading-underlined"
-            ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level == browseCtrl.selectedTaxon.name">{{browseCtrl.selectedTaxon.level | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
-        </h4>
-        <h4 class="heading-underlined"
-            ng-show="browseCtrl.searchTerm && !browseCtrl.selectedTaxon.name">Results for "{{browseCtrl.searchTerm}}*"</small>
-        </h4>
 
-        <div class="table-responsive">
-            <table class="table table-striped" ng-show="browseCtrl.profiles.length > 0">
+
+        <div class="row bottom-border" ng-show="browseCtrl.selectedTaxon.name || browseCtrl.searchTerm">
+            <div class="col-md-6">
+                <h4 ng-show="browseCtrl.searchTerm && !browseCtrl.selectedTaxon.name">
+                    Results for "{{browseCtrl.searchTerm}}*"
+                </h4>
+                <h4 ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level != browseCtrl.selectedTaxon.name">
+                    {{browseCtrl.selectedTaxon.level | capitalize}}: {{browseCtrl.selectedTaxon.name | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
+                </h4>
+                <h4 ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level == browseCtrl.selectedTaxon.name">
+                    {{browseCtrl.selectedTaxon.level | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
+                </h4>
+            </div>
+            <div class="col-md-6">
+                <div class="pull-right padding-top-1">
+                    <label for="sort" class="compact-label small">Sort by</label>
+                    <select id="sort" ng-options="sort for sort in browseCtrl.sortOptions" ng-change="browseCtrl.changeSortOrder()"
+                            ng-model="browseCtrl.sortOption" class="ignore-save-warning">
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive" ng-show="browseCtrl.profiles.length > 0">
+            <table class="table table-striped">
                 <tr ng-repeat="profile in browseCtrl.profiles">
                     <td>{{profile.rank | capitalize | default:'Unknown'}}:</td>
                     <td>
