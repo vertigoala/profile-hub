@@ -42,11 +42,12 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'target/work/plugins/ala-map-1.1/web-app/vendor/jquery-2.1.4/jquery-2.1.4.min.js',
-            'target/work/plugins/ala-map-1.1/web-app/vendor/leaflet-0.7.7/leaflet.js',
-            'target/work/plugins/ala-map-1.1/web-app/vendor/**/*.js',
-            'target/work/plugins/ala-map-1.1/web-app/js/**/*.js',
-            'target/work/plugins/ala-map-1.1/web-app/js/Map.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/jquery-2.1.4/jquery-2.1.4.min.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/leaflet.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.Coordinates-0.1.5/Leaflet.Coordinates-0.1.5.min.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.loading-0.1.16/Control.Loading.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/layers/SmartWmsLayer.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/Map.js',
             'web-app/thirdparty/modernizr/modernizer.js',
             'web-app/thirdparty/angular/angular-1.3.13.min.js',
             'test/js/thirdparty/angular-mocks-1.3.13.js',
