@@ -388,9 +388,9 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        getBioStatus: function(opusId, profileId){
+        getFeature: function(opusId, profileId){
             $log.debug("Retrieving bio status for " + profileId);
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/bioStatus");
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/featureList");
             future.then(function (response) {
                 $log.debug("Bio status retrieved with response code " + response.status)
             });

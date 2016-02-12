@@ -66,12 +66,12 @@
                     <li><a href="#authorship" du-smooth-scroll class="font-xxsmall">Authorship &amp; attribution</a>
                     </li>
                     <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
+                    <li><a href="#featureLists" du-smooth-scroll class="font-xxsmall">Feature Lists</a></li>
                     <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>
                     <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Image options</a></li>
                     <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
                     <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
                     <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
-                    <li><a href="#biostatus" du-smooth-scroll class="font-xxsmall">Status lists</a></li>
                     <li><a href="#supportingCollections" du-smooth-scroll
                            class="font-xxsmall">Supporting collections</a></li>
                 </g:else>
@@ -104,7 +104,7 @@
 
                 <g:include controller="opus" action="editApprovedListsPanel" params="[opusId: params.opusId]"/>
 
-                <g:include controller="opus" action="editBioStatusPanel" params="[opusId: params.opusId]"/>
+                <g:include controller="opus" action="editFeatureListPanel" params="[opusId: params.opusId]"/>
 
                 <g:include controller="opus" action="editSupportingOpusPanel" params="[opusId: params.opusId]"/>
 

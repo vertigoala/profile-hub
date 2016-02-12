@@ -79,7 +79,7 @@ profileEditor.controller('ExportPDFController', function (opusId, rank, scientif
         {id: "bibliography", name: "Bibliography", selected: false},
         {id: "images", name: "Images", selected: false},
         {id: "conservation", name: "Conservation Status", selected: false},
-        {id: "status", name: "Status", selected: false},
+        {id: "features", name: "Features", selected: false},
         self.children
     ];
 

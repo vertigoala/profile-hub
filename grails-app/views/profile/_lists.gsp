@@ -23,12 +23,12 @@
         </div>
     </div>
 
-    <div class="panel panel-default" ng-show="(listCtrl.conservationStatuses.length + listCtrl.bioStatuses.length) > 0">
-        <a name="{{listCtrl.readonly ? 'view_' : 'edit_'}}statuses"></a>
+    <div class="panel panel-default" ng-show="listCtrl.conservationStatuses.length > 0">
+        <a name="{{listCtrl.readonly ? 'view_' : 'edit_'}}conservationStatus"></a>
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="section-panel-heading">Status</h4>
+                    <h4 class="section-panel-heading">Conservation status</h4>
                 </div>
             </div>
         </div>
@@ -47,12 +47,25 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="row section-no-para" ng-repeat="status in listCtrl.bioStatuses">
-                <div class="col-md-3 minor-heading">{{status.key | formatText | capitalize}}</div>
+    <div class="panel panel-default" ng-show="listCtrl.features.length > 0">
+        <a name="{{listCtrl.readonly ? 'view_' : 'edit_'}}features"></a>
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="section-panel-heading">{{ listCtrl.opus.featureListSectionName | default:'Feature List' }}</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row section-no-para" ng-repeat="feature in listCtrl.features">
+                <div class="col-md-3 minor-heading">{{feature.key | formatText | capitalize}}</div>
 
                 <div class="col-md-9">
-                    {{status.value  | formatText}}
+                    {{feature.value  | formatText}}
                 </div>
             </div>
         </div>

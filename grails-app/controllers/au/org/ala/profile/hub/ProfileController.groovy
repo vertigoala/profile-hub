@@ -493,11 +493,11 @@ class ProfileController extends BaseController {
         }
     }
 
-    def getBioStatus() {
+    def getFeatureLists() {
         if (!params.profileId || !params.opusId) {
             badRequest "profile id and opus id must be provided";
         } else {
-            def response = profileService.getBioStatus(params.opusId, params.profileId);
+            def response = profileService.getFeatureLists(params.opusId, params.profileId);
             render response as JSON
         }
     }

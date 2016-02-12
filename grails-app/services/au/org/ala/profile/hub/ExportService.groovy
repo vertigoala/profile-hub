@@ -246,7 +246,7 @@ class ExportService {
 
         // Retrieve and format profile statuses
         if (params.status) {
-            model.profile.status = profileService.getBioStatus(opus.uuid, model.profile.uuid)
+            model.profile.status = profileService.getFeatureLists(opus.uuid, model.profile.uuid)
             model.profile.status.each { singleStatus ->
                 singleStatus.key = formatStatusText(singleStatus.key)
                 singleStatus.value = formatStatusText(singleStatus.value)

@@ -6,7 +6,7 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
 
     self.lists = [];
     self.conservationStatuses = [];
-    self.bioStatuses = [];
+    self.features = [];
 
     var orderBy = $filter("orderBy");
 
@@ -35,17 +35,17 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
             self.conservationStatuses = orderBy(data.conservationStatuses, "region");
 
             if (self.conservationStatuses && self.conservationStatuses.length > 0) {
-                navService.add("Status", "statuses");
+                navService.add("Conservation Status", "conservationStatus");
             }
         });
     };
 
-    self.loadBioStatus = function () {
-        var promise = profileService.getBioStatus(self.opusId, self.profileId);
+    self.loadFeature = function () {
+        var promise = profileService.getFeature(self.opusId, self.profileId);
         promise.then(function (data) {
-            self.bioStatuses = orderBy(data, 'key');
-            if (self.bioStatuses && self.bioStatuses.length > 0) {
-                navService.add("Status", "statuses");
+            self.features = orderBy(data, 'key');
+            if (self.features && self.features.length > 0) {
+                navService.add(self.opus.featureListSectionName || 'Feature List', "features");
             }
         });
     };
@@ -108,7 +108,7 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
             );
 
             self.loadConservationStatus();
-            self.loadBioStatus();
+            self.loadFeature();
         }
     }
 });

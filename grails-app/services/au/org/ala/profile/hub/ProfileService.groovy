@@ -398,13 +398,13 @@ class ProfileService {
         return webService.get("${urlPrefix}?opusId=${enc(opusId)}")
     }
 
-    def getBioStatus(String opusId, String profileId) {
+    def getFeatureLists(String opusId, String profileId) {
         def model = getProfile(opusId, profileId);
         def opus = model.opus;
         def profile = model.profile;
         List result = []
-        if (opus.bioStatusLists?.size()) {
-            opus.bioStatusLists.each({
+        if (opus.featureLists?.size()) {
+            opus.featureLists.each({
                 result.addAll(getProfileKVP(profile.scientificName, it));
             })
         }

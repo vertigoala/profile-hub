@@ -21,7 +21,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.supportingOpuses = []; // separate list because the opus contains two sets of supporting opuses (approved and requested)
     self.newSupportingOpuses = [];
     self.newApprovedLists = [];
-    self.newBioStatusLists = [];
+    self.newFeatureLists = [];
     self.valid = false;
     self.editors = [];
     self.initialShortName = null;
@@ -336,29 +336,29 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         form.$setDirty();
     };
 
-    self.addBioStatusList = function () {
-        self.newBioStatusLists.push({});
+    self.addFeatureList = function () {
+        self.newFeatureLists.push({});
     };
 
-    self.saveBioStatusLists = function (form) {
+    self.saveFeatureLists = function (form) {
         var invalid = [];
         var valid = [];
 
-        angular.forEach(self.newBioStatusLists, function (bioStatusLists) {
-            if (bioStatusLists.list) {
-                if (bioStatusLists.list.dataResourceUid) {
-                    valid.push(bioStatusLists.list.dataResourceUid);
+        angular.forEach(self.newFeatureLists, function (featureLists) {
+            if (featureLists.list) {
+                if (featureLists.list.dataResourceUid) {
+                    valid.push(featureLists.list.dataResourceUid);
                 } else {
-                    invalid.push(bioStatusLists);
+                    invalid.push(featureLists);
                 }
             }
         });
 
         if (invalid.length == 0) {
-            self.newBioStatusLists = [];
+            self.newFeatureLists = [];
             if (valid.length > 0) {
                 angular.forEach(valid, function (record) {
-                    self.opus.bioStatusLists.push(record);
+                    self.opus.featureLists.push(record);
                 });
             }
             self.saveOpus(form);
@@ -367,11 +367,11 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         }
     };
 
-    self.removeBioStatusList = function (index, list, form) {
+    self.removeFeatureList = function (index, list, form) {
         if (list == 'existing') {
-            self.opus.bioStatusLists.splice(index, 1);
+            self.opus.featureLists.splice(index, 1);
         } else {
-            self.newBioStatusLists.splice(index, 1);
+            self.newFeatureLists.splice(index, 1);
         }
         form.$setDirty();
     };

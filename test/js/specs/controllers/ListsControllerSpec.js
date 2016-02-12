@@ -16,7 +16,7 @@ describe("ListsController tests", function () {
     };
     var messageService;
     var profileService;
-    var profileDefer, listsDefer, speciesProfileDefer, getBioStatusDefer;
+    var profileDefer, listsDefer, speciesProfileDefer, getFeatureDefer;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
     var listsResponse = '[{},{}]';
@@ -37,12 +37,12 @@ describe("ListsController tests", function () {
         profileDefer = $q.defer();
         listsDefer = $q.defer();
         speciesProfileDefer = $q.defer();
-        getBioStatusDefer = $q.defer();
+        getFeatureDefer = $q.defer();
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "retrieveLists").and.returnValue(listsDefer.promise);
         spyOn(profileService, "getSpeciesProfile").and.returnValue(speciesProfileDefer.promise);
-        spyOn(profileService, "getBioStatus").and.returnValue(getBioStatusDefer.promise);
+        spyOn(profileService, "getFeature").and.returnValue(getFeatureDefer.promise);
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -174,16 +174,17 @@ describe("ListsController tests", function () {
         expect(scope.listCtrl.conservationStatuses).toEqual([{region: "a"}, {region: "b"}, {region: "c"}])
     });
 
-    it("should retrieve bio status when loadBioStatus is invoked", function () {
+    it("should retrieve features when loadFeature is invoked", function () {
         scope.listCtrl.opusId = "opusId";
+        scope.listCtrl.opus = {};
         scope.listCtrl.profileId = "profileId";
         scope.listCtrl.profile = {guid: "guid"};
 
-        getBioStatusDefer.resolve([{key: "a", value: "b"}, {key: "c", value: "d"}]);
-        scope.listCtrl.loadBioStatus();
+        getFeatureDefer.resolve([{key: "a", value: "b"}, {key: "c", value: "d"}]);
+        scope.listCtrl.loadFeature();
         scope.$apply();
 
-        expect(profileService.getBioStatus).toHaveBeenCalledWith("opusId", "profileId");
-        expect(scope.listCtrl.bioStatuses).toEqual([{key: "a", value: "b"}, {key: "c", value: "d"}])
+        expect(profileService.getFeature).toHaveBeenCalledWith("opusId", "profileId");
+        expect(scope.listCtrl.features).toEqual([{key: "a", value: "b"}, {key: "c", value: "d"}])
     });
 });
