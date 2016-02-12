@@ -9,7 +9,6 @@ modules = {
         dependsOn "jquery"
         dependsOn "bootstrap3"
         dependsOn "angular"
-        dependsOn "leaflet"
         dependsOn "angular_bootstrap_colourpicker"
         dependsOn "angular_loading_bar"
         dependsOn "fontawesome"
@@ -77,12 +76,6 @@ modules = {
     bootstrap3 {
         resource url:"thirdparty/bootstrap/css/bootstrap3.3.4.min.css"
         resource url:"thirdparty/bootstrap/js/bootstrap.min.js"
-    }
-
-    leaflet {
-        resource url:"thirdparty/leaflet/leaflet-0.7.3.js"
-        resource url:"thirdparty/angular-leaflet/angular-leaflet-directive.min.js"
-        resource url:"thirdparty/leaflet/leaflet.css"
     }
 
     angular_bootstrap_colourpicker {

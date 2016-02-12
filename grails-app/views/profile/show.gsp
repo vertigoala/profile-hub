@@ -4,7 +4,7 @@
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Profile</title>
 
-    <r:require module="profiles"/>
+    <r:require modules="profiles, map"/>
 
 </head>
 

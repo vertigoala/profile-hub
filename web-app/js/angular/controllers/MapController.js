@@ -1,34 +1,8 @@
 /**
  * Map controller
  */
-profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http, leafletData) {
+profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http) {
     var self = this;
-
-    var mapBaseLayerAttribution = "Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>";
-
-    self.layers = {
-        baselayers: {
-            xyz: {
-                name: 'Street',
-                url: 'https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={token}',
-                type: 'xyz',
-                maxZoom: 18,
-                layerParams: {
-                    attribution: mapBaseLayerAttribution,
-                    id: config.map.mapId,
-                    token: config.map.accessKey
-                }
-            }
-        },
-        overlays: {}
-    };
-    self.events = {
-        map: {
-            enable: ['click'],
-            logic: 'emit'
-        }
-    };
-    self.center = {};
 
     self.init = function (biocacheWMSUrl, biocacheInfoUrl) {
         self.biocacheInfoUrl = biocacheInfoUrl;
@@ -37,7 +11,6 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         self.opusId = util.getEntityId("opus");
         self.profileId = util.getEntityId("profile");
 
-        messageService.info("Loading map...");
         var future = profileService.getProfile(self.opusId, self.profileId);
 
         future.then(function (data) {
@@ -48,34 +21,30 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
                 var wmsLayer = biocacheWMSUrl + occurrenceQuery;
 
-                angular.extend(self, {
-                    center: {
-                        lat: self.opus.mapDefaultLatitude,
-                        lng: self.opus.mapDefaultLongitude,
-                        zoom: self.opus.mapZoom
-                    },
-                    layers: {
-                        overlays: {
-                            wms: {
-                                name: self.profile.scientificName,
-                                url: wmsLayer,
-                                type: "wms",
-                                visible: true,
-                                layerOptions: {
-                                    layers: 'ALA:occurrences',
-                                    format: 'image/png',
-                                    transparent: true,
-                                    attribution: self.opus.mapAttribution,
-                                    id: "bla",
-                                    bgcolor: "0x000000",
-                                    outline: "true",
-                                    ENV: "color:" + self.opus.mapPointColour + ";name:circle;size:4;opacity:1"
-                                }
-                            }
-                        }
-                    }
+                self.map = new ALA.Map("occurrenceMap", {
+                    drawControl: false,
+                    singleMarker: false,
+                    useMyLocation: false,
+                    allowSearchLocationByAddress: false,
+                    allowSearchRegionByAddress: false,
+                    draggableMarkers: false,
+                    showReset: false,
+                    zoom: self.opus.mapZoom,
+                    center: [self.opus.mapDefaultLatitude, self.opus.mapDefaultLongitude]
                 });
 
+                var layer = L.tileLayer.smartWms(wmsLayer, {
+                    layers: 'ALA:occurrences',
+                    format: 'image/png',
+                    attribution: self.opus.mapAttribution,
+                    outline: "true",
+                    ENV: "color:" + self.opus.mapPointColour + ";name:circle;size:4;opacity:1"
+                });
+                layer.setZIndex(99);
+
+                self.map.addLayer(layer, {});
+
+                self.map.registerListener("click", self.showOccurrenceDetails);
             },
             function () {
                 messageService.alert("An error occurred while retrieving the map information.");
@@ -83,29 +52,26 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         );
     };
 
-    $scope.$on('leafletDirectiveMap.click', function(event, args){
+    self.showOccurrenceDetails = function (clickEvent) {
         var url = self.biocacheInfoUrl
             + self.constructQuery()
             + "&zoom=6"
-            + "&lat=" + args.leafletEvent.latlng.lat
-            + "&lon=" + args.leafletEvent.latlng.lng
+            + "&lat=" + clickEvent.latlng.lat
+            + "&lon=" + clickEvent.latlng.lng
             + "&radius=20&format=json"
             + "&callback=JSON_CALLBACK";
 
         var future = $http.jsonp(url);
         future.success(function (response) {
-            leafletData.getMap().then(function(map) {
-                L.popup()
-                    .setLatLng(args.leafletEvent.latlng)
-                    .setContent("Occurrences at this point: " + response.count)
-                    .openOn(map);
-            });
+            L.popup()
+                .setLatLng(clickEvent.latlng)
+                .setContent("Occurrences at this point: " + response.count)
+                .openOn(self.map.getMapImpl());
         });
         future.error(function () {
-                messageService.alert("Unable to find occurrences for the specified location.");
-            }
-        );
-    });
+            messageService.alert("Unable to find occurrences for the specified location.");
+        });
+    };
 
     self.constructQuery = function () {
         var result = "";
@@ -135,7 +101,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         if (self.opus.excludeRanksFromMap && self.opus.excludeRanksFromMap.length > 0) {
             exclusionList = "fq=-(";
 
-            angular.forEach(self.opus.excludeRanksFromMap, function(rank, index) {
+            angular.forEach(self.opus.excludeRanksFromMap, function (rank, index) {
                 if (index > 0) {
                     exclusionList += " OR ";
                 }

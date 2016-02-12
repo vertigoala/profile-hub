@@ -4,10 +4,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="thumbnail pull-left">
-                <leaflet style="height: 300px; width: 450px;" center="mapCtrl.center"
-                         layers="mapCtrl.layers"
-                         event-broadcast="mapCtrl.events"></leaflet>
-            </div>
+                <m:map id="occurrenceMap" height="300px" width="450px"/>
+              </div>
         </div>
     </div>
 

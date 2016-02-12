@@ -18,6 +18,7 @@ describe("MapController tests", function () {
     var profileService;
     var profileDefer, popupDefer;
     var http;
+    var html = "<div id='occurrenceMap' data-leaflet-img='pathToLeafletImages'/>";
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "links":[{},{}]}, "opus": {"imageSources": ["source1", "source2"], "mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1"}}';
 
@@ -31,6 +32,9 @@ describe("MapController tests", function () {
     beforeEach(module("profileEditor"));
 
     beforeEach(inject(function ($controller, $rootScope, _profileService_, $q, _messageService_, _$httpBackend_) {
+        $('#mapId').remove();
+        $(document.body).html(html);
+
         scope = $rootScope.$new();
         profileService = _profileService_;
 
@@ -80,52 +84,43 @@ describe("MapController tests", function () {
         expect(scope.mapCtrl.biocacheWMSUrl).toBe("biocacheWmsUrl");
     });
 
-    it("should specify the map center when init is called", function () {
-        profileDefer.resolve(JSON.parse(getProfileResponse));
-
-        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
-        scope.$apply();
-
-        expect(scope.mapCtrl.center).toEqual({lat: '123', lng: '987', zoom: '2'});
-    });
-
-    it("should specify the base layer when the controller loads", function () {
-        expect(scope.mapCtrl.layers.baselayers.xyz).toBeDefined();
-        expect(scope.mapCtrl.layers.baselayers.xyz.name).toBe("Street");
-        expect(scope.mapCtrl.layers.baselayers.xyz.layerParams).toBeDefined();
-    });
-
-    it("should register a click event listener when the controller loads", function () {
-        expect(scope.mapCtrl.events).toEqual({map: {enable: ['click'], logic: 'emit'}});
-    });
-
     it("should specify the overlay layer for the profile when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
         scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
         scope.$apply();
 
-        expect(scope.mapCtrl.layers.overlays.wms).toBeDefined();
-        expect(scope.mapCtrl.layers.overlays.wms.name).toBe("profileName");
-        expect(scope.mapCtrl.layers.overlays.wms.visible).toBe(true);
-        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?q=lsid%3Aguid1");
-        expect(scope.mapCtrl.layers.overlays.wms.layerOptions.attribution).toBe("mapAttr1");
+        var layers = [];
+        scope.mapCtrl.map.getMapImpl().eachLayer(function (layer) { layers.push(layer) });
+
+        expect(layers.length).toBe(3); // 2 base layers plus the occurrence layer
+
+        expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?q=lsid%3Aguid1");
+        expect(layers[2].options.attribution).toBe("mapAttr1");
     });
 
     it("should add the rank exclusion clause to the wms url when there is one excluded rank", function() {
-        profileDefer.resolve({profile: {guid: "guid1"}, opus: {excludeRanksFromMap: ["cultivar"]}});
+        profileDefer.resolve({profile: {guid: "guid1"}, opus: {"mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1", excludeRanksFromMap: ["cultivar"]}});
+
         scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
         scope.$apply();
 
-        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar)&q=lsid%3Aguid1");
+        var layers = [];
+        scope.mapCtrl.map.getMapImpl().eachLayer(function (layer) { layers.push(layer) });
+
+        expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar)&q=lsid%3Aguid1");
     });
 
     it("should add the rank exclusion clause to the wms url when there are multiple excluded ranks", function() {
-        profileDefer.resolve({profile: {guid: "guid1"}, opus: {excludeRanksFromMap: ["cultivar","species"]}});
+        profileDefer.resolve({profile: {guid: "guid1"}, opus: {"mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1", excludeRanksFromMap: ["cultivar","species"]}});
         scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
+
         scope.$apply();
 
-        expect(scope.mapCtrl.layers.overlays.wms.url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar OR rank:species)&q=lsid%3Aguid1");
+        var layers = [];
+        scope.mapCtrl.map.getMapImpl().eachLayer(function (layer) { layers.push(layer) });
+
+        expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar OR rank:species)&q=lsid%3Aguid1");
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {
