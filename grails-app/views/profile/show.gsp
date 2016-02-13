@@ -12,6 +12,11 @@
 
 <div class="row" ng-controller="ProfileController as profileCtrl"
      ng-init="profileCtrl.loadProfile()">
+
+    <g:if test="${edit}">
+        <keepalive></keepalive>
+    </g:if>
+
     <a name="top"></a>
 
     <div class="col-md-1 col-sm-1 col-xs-1 min-col">

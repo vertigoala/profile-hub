@@ -18,6 +18,9 @@
 
 <div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
     <a name="top"></a>
+
+    <keepalive></keepalive>
+
     <ol class="breadcrumb" ng-cloak>
         <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
         <li><a class="font-xxsmall"

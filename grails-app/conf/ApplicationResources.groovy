@@ -27,6 +27,7 @@ modules = {
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
         resource url:"js/angular/directives/Misc.js"
+        resource url:"js/angular/directives/keepalive.js"
         resource url:"js/angular/directives/keyplayer.js"
         resource url:"js/angular/directives/profileName.js"
         resource url:"js/angular/directives/vocabularyEditor.js"
