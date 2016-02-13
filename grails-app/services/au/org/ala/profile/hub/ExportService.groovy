@@ -114,7 +114,7 @@ class ExportService {
         curatedModel.profiles << loadProfileData(params.profileId as String, opus, params, latest)
 
         if (params.children && curatedModel.profiles[0].profile.rank) {
-            def children = profileService.findByNameAndTaxonLevel(params.opusId, curatedModel.profiles[0].profile.rank, curatedModel.profiles[0].profile.scientificName, "99999", "0", false)?.resp
+            def children = profileService.findByNameAndTaxonLevel(params.opusId, curatedModel.profiles[0].profile.rank, curatedModel.profiles[0].profile.scientificName, "99999", "0", "taxonomy", false)?.resp
 
             // By default, the RequestAttributes thread local used by Grails/Spring is not inheritable, so new threads
             // will not have access to the request context when calling web services. This line works around this issue

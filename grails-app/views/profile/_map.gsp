@@ -4,6 +4,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="thumbnail pull-left">
+                <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}map"></a>
+
                 <m:map id="occurrenceMap" height="300px" width="450px"/>
               </div>
         </div>

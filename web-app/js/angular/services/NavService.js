@@ -7,7 +7,7 @@ profileEditor.factory('navService', function ($rootScope, $filter) {
 
     var orderBy = $filter("orderBy");
 
-    function add(label, key) {
+    function add(label, key, category) {
         var exists = false;
         angular.forEach($rootScope.nav, function(item) {
             if (item.key === key) {
@@ -15,7 +15,7 @@ profileEditor.factory('navService', function ($rootScope, $filter) {
             }
         });
 
-        var item = {label: label, key: key};
+        var item = {label: label, key: key, category: category};
         if (!exists) {
             $rootScope.nav.push(item);
             $rootScope.nav = orderBy($rootScope.nav, 'label');

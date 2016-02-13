@@ -58,30 +58,29 @@ profileEditor.controller('ExportController', function (util, $window, $modal, $h
 /**
  * Export pdf modal dialog controller
  */
-profileEditor.controller('ExportPDFController', function (opusId, rank, scientificName, $modalInstance, $scope, profileService) {
+profileEditor.controller('ExportPDFController', function (opusId, rank, scientificName, $modalInstance, $scope, profileService, $rootScope) {
     var self = this;
 
     self.ASYNC_THRESHOLD = 11;
 
     self.loading = false;
-    self.children = {id: "children", name: "Lower level taxa", selected: false};
+    self.children = {id: "children", name: "Lower level taxa", selected: true};
 
     self.childCount = -1;
 
-    self.options = [
-        {id: "attributes", name: "Attributes", selected: true},
-        {id: "map", name: "Map", selected: false},
-        {id: "taxonomy", name: "Taxonomy", selected: true},
-        {id: "nomenclature", name: "Nomenclature", selected: true},
-        {id: "links", name: "Links", selected: false},
-        {id: "bhllinks", name: "Biodiversity Heritage Library References", selected: false},
-        {id: "specimens", name: "Specimens", selected: false},
-        {id: "bibliography", name: "Bibliography", selected: false},
-        {id: "images", name: "Images", selected: false},
-        {id: "conservation", name: "Conservation Status", selected: false},
-        {id: "features", name: "Features", selected: false},
-        self.children
-    ];
+    var exportableSections = ["attributes", "map", "taxonomy", "nomenclature", "links", "bhllinks", "specimens", "bibliography", "images", "conservation", "features"];
+
+    self.options = [];
+    var attributeAdded = false;
+    angular.forEach($rootScope.nav, function (navItem) {
+        if ((_.isUndefined(navItem.category) || !navItem.category) && exportableSections.indexOf(navItem.key) > -1) {
+            self.options.push({id: navItem.key, name: navItem.label, selected: true});
+        } else if (navItem.category == "attribute" && !attributeAdded) {
+            self.options.push({id: "attributes", name: "Attributes", selected: true});
+            attributeAdded = true;
+        }
+    });
+    self.options.push(self.children);
 
     self.email = null;
 

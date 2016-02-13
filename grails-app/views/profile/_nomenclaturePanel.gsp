@@ -1,5 +1,5 @@
 <div class="panel panel-default" ng-cloak ng-form="NomenclatureForm" ng-show="!profileCtrl.readonly()">
-    <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}nomenclature"></a>
+    <a name="edit_nomenclature"></a>
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
@@ -34,6 +34,7 @@
 
 
 <div class="row padding-bottom-1" ng-if="profileCtrl.readonly()">
+    <a name="view_nomenclature"></a>
     <nomenclature nsl-name-id="profileCtrl.profile.nslNameIdentifier"
                   nsl-nomenclature-id="profileCtrl.profile.nslNomenclatureIdentifier"
                   readonly="{{profileCtrl.readonly()}}"

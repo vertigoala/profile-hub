@@ -22,7 +22,7 @@
                        target="_blank"><span class="fa fa-file-text-o"></span>&nbsp;&nbsp;Export as JSON
                     </a>
                 </li>
-                <li role="presentation" ng-controller="ExportController as exportCtrl" ng-hide="profileCtrl.isArchived()">
+                <li role="presentation" ng-controller="ExportController as exportCtrl" ng-hide="profileCtrl.isArchived() || !profileCtrl.readonly()">
                     <a href=""
                        ng-click="exportCtrl.exportPdf(profileCtrl.profile.rank, profileCtrl.profile.scientificName)"
                        target="_blank"><span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;Export as PDF

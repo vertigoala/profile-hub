@@ -31,7 +31,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.attributes = data.profile.attributes;
 
                 angular.forEach(self.attributes, function(attribute) {
-                    navService.add(attribute.title, util.toKey(attribute.title));
+                    navService.add(attribute.title, util.toKey(attribute.title), 'attribute');
                     attribute.key = util.toKey(attribute.title);
                 });
 

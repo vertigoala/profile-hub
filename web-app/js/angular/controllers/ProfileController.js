@@ -42,6 +42,14 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                         navService.add("Bibliography", "bibliography");
                     }
 
+                    if (self.profile.guid) {
+                        navService.add("Map", "map");
+                    }
+
+                    if (self.profile.nslNomenclatureIdentifier) {
+                        navService.add("Nomenclature", "nomenclature");
+                    }
+
                     self.authorshipCount = 0;
                     angular.forEach(self.profile.authorship, function (auth) {
                         if (auth.text && auth.text.length > 0) {
