@@ -13,6 +13,10 @@ profileEditor.run(function ($rootScope, config) {
     $rootScope.config = config;
 
     CKEDITOR.plugins.addExternal('alaToolbar', config.contextPath + '/static/js/ckeditor/plugins/alaToolbar/');
+    // use HTML4 elements for Jasper compatibility.
+    CKEDITOR.config.coreStyles_bold = { element: 'b', overrides: 'strong' };
+    CKEDITOR.config.coreStyles_italic = { element: 'i', overrides: 'em' };
+    CKEDITOR.config.coreStyles_strike = { element: 'strike', overrides: 's' };
 
     $rootScope.richTextSmall = {
         language: 'en-au',
@@ -40,16 +44,16 @@ profileEditor.run(function ($rootScope, config) {
         'skin': 'moono',
         removeButtons: '',
         removePlugins: '',
-        extraPlugins: 'symbol,sourcedialog,alaToolbar',
+        extraPlugins: 'symbol,alaToolbar',
         toolbar: [
             { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
             { name: 'clipboard', items: ['PasteText', '-', 'Undo', 'Redo' ] },
             { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent' ] },
             { name: 'links', items: [ 'Link', 'Unlink' ] },
-            { name: 'insert', items: [ 'Table', 'HorizontalRule', 'Symbol', 'Male', 'Female', 'PlusMinus', 'Endash' ] },
+            { name: 'insert', items: [ 'HorizontalRule', 'Symbol', 'Male', 'Female', 'PlusMinus', 'Endash' ] },
             { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-            { name: 'tools', items: [ 'Maximize', '-', 'Sourcedialog' ] },
-            { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] }
+            { name: 'tools', items: [ 'Maximize', '-' ] },
+            { name: 'styles', items: [ 'Styles', 'Format' ] }
         ]
     };
 });

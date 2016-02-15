@@ -52,5 +52,14 @@ class ExportServiceSpec extends Specification {
         "<ol><li>July–November.</li></ol>" | "Flowering" | "<p><b>Flowering:</b></p><ol><li>July–November.</li></ol>"
     }
 
+    @Unroll
+    def "test Jasper element conversion"() {
+        expect:
+        ExportService.convertTagsForJasper(text) == formattedText
+
+        where:
+        text | formattedText
+        '<p><b>Common Name:</b><em><div><strong><em>strong <s>em</s> text em <strong</em></strong></p></em> something <p></em>' | '<p><b>Common Name:</b><i><div><b><i>strong <strike>em</strike> text em <strong</i></b></p></i> something <p></i>'
+    }
 
 }

@@ -1,12 +1,17 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.profile.hub.util.HubConstants
+
 import grails.converters.JSON
 import grails.transaction.NotTransactional
 import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
 import net.sf.jasperreports.engine.data.JsonDataSource
+import net.sf.jasperreports.engine.export.JRPdfExporter
+import net.sf.jasperreports.engine.export.JRPdfExporterParameter
 import net.sf.jasperreports.engine.util.SimpleFileResolver
+import net.sf.jasperreports.export.ExporterConfiguration
+import net.sf.jasperreports.export.PdfExporterConfiguration
 import org.apache.commons.io.IOUtils
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
@@ -16,6 +21,12 @@ import org.springframework.web.context.request.RequestContextHolder
 import java.util.concurrent.ConcurrentLinkedQueue
 
 import static groovyx.gpars.GParsPool.withPool
+import static org.owasp.html.Sanitizers.BLOCKS
+import static org.owasp.html.Sanitizers.FORMATTING
+import static org.owasp.html.Sanitizers.IMAGES
+import static org.owasp.html.Sanitizers.LINKS
+import static org.owasp.html.Sanitizers.STYLES
+import static org.owasp.html.Sanitizers.TABLES
 
 class ExportService {
 
@@ -74,7 +85,7 @@ class ExportService {
         Map curatedModel = getCurateReportModel(params, latest)
 
         // Transform curated model to JSON format input stream
-        InputStream inputStream = IOUtils.toInputStream((curatedModel as JSON).toString())
+        InputStream inputStream = IOUtils.toInputStream((curatedModel as JSON).toString(), "UTF-8")
 
         // Runtime classpath directory where the reports are available
         File reportsDir = new File(grailsApplication.mainContext.getResource('classpath:reports/profiles/PROFILES.jrxml').URL.file.replaceFirst("/[\\w_]+.jrxml\$", ""))
@@ -83,6 +94,7 @@ class ExportService {
         InputStream qrCodeInputStream = new ByteArrayInputStream(QRCode.from(curatedModel?.colophon?.profileLink).withSize(150, 150).to(ImageType.JPG).stream().toByteArray())
 
         // Generate report and return byte array
+
 
         JasperReportDef reportDef = new JasperReportDef(
                 name: 'profiles/PROFILES.jrxml',
@@ -240,7 +252,7 @@ class ExportService {
         // Format profile attributes text
         if (params.attributes) {
             model.profile.attributes.each { attribute ->
-                attribute.text = formatAttributeText(attribute.text, attribute.title)
+                attribute.text = convertTagsForJasper(sanitizeHtml(formatAttributeText(attribute.text, attribute.title)))
             }
         }
 
@@ -320,6 +332,35 @@ class ExportService {
         }
 
         return text
+    }
+
+    // Applies all the default HTML sanitizers to convert text
+    static String sanitizeHtml(String html) {
+        // Note that the FORMATTING pre defined policy allows font tags but does not allow the attributes on them,
+        // so font tags are effectively stripped out of the output.
+        FORMATTING.and(STYLES).and(LINKS).and(BLOCKS).and(IMAGES).and(TABLES).sanitize(html)
+    }
+
+    /**
+     * As of JasperReports v6.2.0, HTML5 tags like strong, em and s are not supported.  This function converts
+     * such tags to the older, similar and JasperReports supported b, i and strike.
+     *
+     * @param text The text to convert.
+     * @return The converted text
+     */
+    static String convertTagsForJasper(String text) {
+        convertTags(convertTags(convertTags(text, "strong", "b"), "em", "i"), "s", "strike")
+    }
+
+    /**
+     * Converts empty tags from one element name to another using regex
+     * @param text the text to find tags in
+     * @param from the tag to find
+     * @param to the tag to convert to
+     * @return the converted string
+     */
+    private static String convertTags(String text, String from, String to) {
+        text.replaceAll("<$from>", "<$to>").replaceAll("</$from>", "</${to.split('\\s')[0]}>")
     }
 
     /**
