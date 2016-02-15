@@ -70,14 +70,14 @@ grails.project.dependency.resolution = {
         compile(":jasper:1.11.0") {
             excludes 'jasperreports'
         }
-        compile ":ala-map:1.2-SNAPSHOT"
+   //     compile ":ala-map:1.2-SNAPSHOT"
 
         runtime ":resources:1.2.14"
         runtime(":ala-bootstrap3:1.1") {
-   //         excludes "ala-cas-client"
+            excludes "ala-cas-client"
         }
         runtime(":ala-auth:1.3.1") {
-   //         excludes "commons-httpclient"
+            excludes "commons-httpclient"
         }
     }
 }
