@@ -41,6 +41,11 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
+        build 'org.apache.httpcomponents:httpcore:4.3.3'
+        build 'org.apache.httpcomponents:httpclient:4.3.3'
+        runtime 'org.apache.httpcomponents:httpcore:4.3.3'
+        runtime 'org.apache.httpcomponents:httpclient:4.3.3'
+
         compile 'net.sf.ehcache:ehcache:2.8.4'
         compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
         runtime "org.springframework:spring-test:4.1.2.RELEASE" // required by the rendering plugin
