@@ -55,7 +55,13 @@ grails.project.dependency.resolution = {
         compile 'net.sf.jasperreports:jasperreports-functions:6.1.0'
         compile 'net.sf.jasperreports:jasperreports-fonts:6.1.0'
         compile 'net.glxn:qrgen:1.4'
-        compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160203.1'
+        compile('com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160203.1') {
+            excludes 'guava', 'commons-codec'
+        }
+        // the following dependencies are required for owasp-java-html-sanitizer and are hard coded here
+        // to prevent it from pulling in snapshot versions which seem to break the release plugin.
+        compile 'com.google.guava:guava:19.0'
+        compile 'commons-codec:commons-codec:1.6' // this version is used by grails-codecs plugin
 
     }
 
