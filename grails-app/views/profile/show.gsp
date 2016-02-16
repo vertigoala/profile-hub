@@ -131,7 +131,7 @@
             <div class="row">
                 <div class="col-md-12" ng-cloak>
                     <tabset ng-class="profileCtrl.opus.keybaseProjectId ? '' : 'single-tabbed-panel'">
-                        <tab heading="Details">
+                        <tab heading="Details" class="font-xxsmall" >
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -170,24 +170,13 @@
                                 </div>
                             </div>
                         </tab>
-                        <tab heading="Key" ng-show="profileCtrl.opus.keybaseProjectId">
+                        <tab heading="Key" class="font-xxsmall" ng-show="profileCtrl.opus.keybaseProjectId">
                             <div class="row">
-                                <div key-player taxon-name="profileCtrl.profile.scientificName"
+                                <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                      opus-id="profileCtrl.opus.uuid"
                                      keybase-url="${grailsApplication.config.keybase.key.lookup}"
-                                     keybase-web-url="${grailsApplication.config.keybase.web.url}"
                                      key-lookup-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
-                                     profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></div>
-
-                                <div class="col-md-12">
-
-                                    <p class="small padding-top-1"
-                                       ng-show="profileCtrl.profile.keybaseKey">The key displayed here is the closest match that could be found for the profile in the <a
-                                            href="${grailsApplication.config.keybase.web.url}"
-                                            target="_blank">KeyBase</a> project for this collection.
-                                    Matching is based on the taxonomic rank: if no key can be found for the profile's rank, then the parent rank will be used, and so on until a match is found. This matching depends on the structure of the keys in KeyBase.
-                                    </p>
-                                </div>
+                                     profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
                             </div>
                         </tab>
                     </tabset>

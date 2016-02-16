@@ -1,0 +1,53 @@
+#keybase-player {
+    margin: 20px 0;
+}
+
+.keybase-player-menu .keybase-player-startover,
+.keybase-player-menu .keybase-player-stepback,
+.keybase-player-filter, .keybase-player-filter-remove {
+    background-image: none;
+    background-color: #ddd;
+    border: solid 1px #999;
+    border-radius: 5px;
+    margin-left: 3px;
+}
+
+.keybase-player-menu .keybase-player-startover a,
+.keybase-player-menu .keybase-player-stepback a,
+.keybase-player-filter a, .keybase-player-filter-remove a {
+    position: relative;
+    top: -2px;
+    background-image: none;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    color: #5093c3
+}
+
+.keybase-player-window h3 {
+    background: none;
+    color: #0087BE;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.keybase-lead-text {
+    width: 100%;
+}
+
+.keybase-player-window {
+    margin-top: 1em;
+}
+
+.keybase-player-currentnode, .keybase-player-path, .keybase-player-remainingitems, .keybase-player-discardeditems {
+    border-color: rgba(0, 135, 190, 0.2)
+}
+
+.keybase-indented-key {
+    margin-top: 0;
+}
+
+.keybase-player-filter {
+    float: right;
+}

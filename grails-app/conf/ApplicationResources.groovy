@@ -23,6 +23,8 @@ modules = {
         dependsOn "angular_truncate"
         dependsOn "underscore"
         dependsOn "modernizr3"
+        dependsOn "keybase"
+        dependsOn "keybase_overrides"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -145,5 +147,15 @@ modules = {
 
     modernizr3 {
         resource url:"thirdparty/modernizr/modernizer.js", disposition:'head'
+    }
+
+    keybase {
+        resource url:"thirdparty/ala-keyplayer/jquery.keybase.key.js"
+        resource url:"thirdparty/ala-keyplayer/keybase.player.css"
+    }
+
+    keybase_overrides {
+        dependsOn "keybase"
+        resource url:"css/keybase-override.css"
     }
 }

@@ -761,3 +761,17 @@ ul.breadcrumb li:before {
 .header-control button:focus, .header-control button:hover {
     background: transparent !important;
 }
+
+.keybase-logo {
+    margin-top: 1em;
+    background-image: -webkit-linear-gradient(top, #2688c9, #89a1bb);
+    height: 50px;
+    width: 50px;
+    display: inline-block;
+    padding: 3px;
+}
+
+.keybase-logo img {
+    height: 100%;
+    width: 100%;
+}

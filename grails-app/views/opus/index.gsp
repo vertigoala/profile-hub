@@ -42,8 +42,8 @@
              class="col-md-2 col-sm-4 col-xs-6 text-center div-centre" style="min-height: 170px; height: 170px">
             <a href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
                target="_self">
-                <img class="img-responsive collection-thumbnail thumbnail"
-                     src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
+                <img class="img-responsive collection-thumbnail thumbnail" src=""
+                     ng-src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
                      alt="{{opus.title}} logo" title="{{opus.title}}"></a>
             <h4 class="font-xxsmall" style="width: 160px;"><a
                     href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"

@@ -1,213 +1,279 @@
 profileEditor.directive('keyPlayer', function ($browser) {
     return {
-        restrict: 'A',
-        require: ['?keyId', '?profileUrl', '?keybaseUrl', '?keybaseWebUrl'],
+        restrict: 'E',
+        require: ['?keyId', '?profileUrl', '?keybaseUrl'],
         scope: {
             keyId: '=',
             taxonName: '=',
             opusId: '=',
             profileUrl: '@',
             keybaseUrl: '@',
-            keybaseWebUrl: '@',
             keyLookupUrl: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/keyplayer.html',
-        controller: ['$scope', '$http', '$window', function ($scope, $http, $window) {
-            angular.element(document).find('head').prepend('<style type="text/css">@charset "UTF-8";.keyplayer-panel{overflow: auto; max-height: 300px; min-height: 300px}</style>');
+        controllerAs: "keyplayer",
+        controller: ['$scope', '$http', '$compile', '$window', function ($scope, $http, $compile, $window) {
+            var self = this;
+            self.format = 'player';
 
-            $scope.visitedKeys = [];
-            $scope.hasKey = false;
-            $scope.loading = false;
+            self.keyId = $scope.keyId;
+            self.currentKeyId = $scope.keyId;
 
-            $scope.loadKey = function (key) {
-                $scope.hasKey = false;
-                $scope.loading = true;
-                $http.jsonp($scope.keybaseUrl + key, {cache: true})
-                    .success(function (data) {
-                        $scope.hasKey = true;
+            $scope.contextPath = $browser.baseHref();
 
-                        $scope.visitedKeys.push({id: key, name: data.key_name});
+            self.initialised = false;
+            self.bracketedInitialised = false;
+            self.indentedInitialised = false;
 
-                        $scope.json = data;
-                        $scope.rootNodeId = data.first_step.root_node_id;
-                        var nextId = $scope.rootNodeId;
+            self.loadKey = function (keyId) {
+                self.error = null;
+                self.hasKey = keyId != null;
 
-                        nestedSets($scope.rootNodeId);
-                        nextCouplet(nextId, $scope.rootNodeId);
+                if (keyId) {
+                    var settings = {
+                        ajaxDataType: "jsonp",
+                        baseUrl: $scope.keybaseUrl,
+                        key: keyId,
+                        title: false,
+                        source: true,
+                        reset: true,
+                        onLoad: keybaseOnLoad
+                    };
 
-                        $scope.projectName = data.project.project_name;
-                        $scope.loading = false;
+                    var action;
+                    var initialised = false;
+                    if (self.format == 'bracketed') {
+                        action = 'bracketedKey';
+                        settings.bracketedKeyDiv = '.keybase-key-bracketed';
+                        settings.bracketedKeyDisplay = bracketedKeyDisplay;
+                        initialised = self.bracketedInitialised;
+                    } else if (self.format == 'indented') {
+                        action = 'indentedKey';
+                        settings.indentedKeyDiv = '.keybase-key-indented';
+                        settings.indentedKeyDisplay = indentedKeyDisplay;
+                        initialised = self.indentedInitialised;
+                    } else {
+                        action = 'player';
+                        settings.playerDiv = ".keybase-key-player";
+                        settings.titleDiv = ".keybase-key-title";
+                        settings.sourceDiv = ".keybase-key-source";
+                        settings.discardedItemsDisplay = buildInteractiveListItems;
+                        settings.remainingItemsDisplay = buildInteractiveListItems;
+                        initialised = self.initialised;
                     }
-                ).error(function () {
-                        console.log("Failed to load key for id " + key);
-                        $scope.error = "Unable to connect to KeyBase.";
-                        $scope.hasKey = false;
-                        $scope.loading = false;
-                    }
-                );
-            };
 
-            $scope.loadKeyFromName = function(taxonName) {
-                $scope.loading = true;
-                $http.get($scope.keyLookupUrl + "?opusId=" + $scope.opusId + "&scientificName=" + taxonName, {cache: true})
-                    .success(function (data) {
-                        if (data.keyId) {
-                            $scope.loadKey(data.keyId)
+                    if (!initialised || self.currentKeyId != keyId) {
+                        self.loading = true;
+                        $.fn.keybase(action, settings);
+                        if (self.format == 'bracketed') {
+                            self.bracketedInitialised = true;
+                        } else if (self.format == 'indented') {
+                            self.indentedInitialised = true;
                         } else {
-                            console.log("No key found for " + taxonName + " in opus " + $scope.opusId);
-                            $scope.hasKey = false;
-                            $scope.loading = false;
+                            self.initialised = true;
                         }
                     }
-                ).error(function () {
-                        console.log("Failed to load key for taxon " + taxonName);
-                        $scope.error = "Unable to connect to KeyBase.";
-                        $scope.hasKey = false;
-                        $scope.loading = false;
-                    }
-                );
+                }
+
+                self.currentKeyId = keyId;
             };
 
-            $scope.viewItem = function (name) {
-                $scope.error = null;
+            self.setFormat = function (format) {
+                self.error = null;
+                self.format = format;
+                self.loadKey(self.currentKeyId);
+            };
+
+            self.viewItem = function (name) {
+                self.error = null;
 
                 $http.get($scope.profileUrl + "/" + name).success(function () {
                     $window.location = $scope.profileUrl + "/" + name;
                 }).error(function (responseData, statusCode) {
                     if (statusCode == 404) {
-                        $scope.error = " A profile page does not exist for " + name;
+                        self.error = " A profile page does not exist for " + name;
                     }
                 });
-
             };
 
-            $scope.loadPreviousKey = function () {
-                $scope.visitedKeys.splice($scope.visitedKeys.length - 1, 1);
-
-                $scope.loadKey($scope.visitedKeys.splice($scope.visitedKeys.length - 1, 1)[0].id);
+            self.loadKeyFromName = function (taxonName) {
+                self.taxonName = taxonName;
+                self.loading = true;
+                $http.get($scope.keyLookupUrl + "?opusId=" + $scope.opusId + "&scientificName=" + taxonName, {cache: true})
+                    .success(function (data) {
+                            self.keyId = data.keyId;
+                            if (data.keyId) {
+                                self.loadKey(data.keyId);
+                                self.hasKey = true;
+                            } else {
+                                console.log("No key found for " + taxonName + " in opus " + $scope.opusId);
+                                self.hasKey = false;
+                            }
+                            self.loading = false;
+                        }
+                    ).error(function () {
+                        console.log("Failed to load key for taxon " + taxonName);
+                        self.error = "Unable to connect to KeyBase.";
+                        self.hasKey = false;
+                        self.loading = false;
+                    }
+                );
             };
 
-            $scope.loadItem = function (selectedKey) {
-                nextCouplet(selectedKey, $scope.rootNodeId);
-            };
+            function keybaseOnLoad(json) {
+                self.projectName = json.project.project_name;
+                self.projectIcon = json.project.project_icon;
+                self.keyName = json.key_name;
 
-            $scope.loadParent = function (selectedKey) {
-                var newKey = getParent(selectedKey);
-                nextCouplet(newKey, $scope.rootNodeId);
-            };
+                self.loading = false;
+                self.initialised = true;
 
-            function nestedSets(rootNodeId) {
-                $scope.nested_sets = [];
-
-                getNode(rootNodeId, 1);
-
-                $scope.nested_sets.sort(function (a, b) {
-                    return a.left - b.left;
-                });
-
-                $scope.json.first_step.left = 1;
-                $scope.json.first_step.right = Math.max.apply(Math, JSPath.apply('.right', $scope.nested_sets));
+                // the keyplayer plugin changes the DOM outside of Angular's digest cycle,
+                // so make sure all bindings are applied
+                $scope.$apply();
             }
 
-            function getNode(parentID, i) {
-                var items = JSPath.apply('.leads{.parent_id==' + parentID + '}', $scope.json);
+            function buildListItem(item) {
+                var entity = '<a href="" ng-click="keyplayer.viewItem(\'' + item.item_name + '\')">' + item.item_name + '</a>';
+
+                if (item.to_key) {
+                    entity += '<a href="" ng-click="keyplayer.loadKey(\'' + item.to_key + '\')" title="Load key for ' + item.item_name + '"><span class="keybase-player-tokey"></span></a>';
+                }
+
+                if (item.link_to_item_name) {
+                    entity += ': ';
+                    entity += '<a href="" ng-click="keyplayer.viewItem(\'' + item.link_to_item_name + '\')">' + item.link_to_item_name + '</a>';
+
+                    if (item.link_to_key) {
+                        entity += '<a href="" ng-click="keyplayer.loadKey(\'' + item.link_to_key + '\')" title="Load key for ' + item.link_to_item_name + '"><span class="keybase-player-tokey"></span></a>';
+                    }
+                }
+
+                return entity;
+            }
+
+            function buildInteractiveListItems(items, itemsDiv) {
+                var list = [];
                 $.each(items, function (index, item) {
-                    i++;
-                    item.left = i;
-                    if (!item.item) {
-                        i = getNode(item.lead_id, i);
-                    }
-                    item.right = i;
-                    $scope.nested_sets.push(item);
+                    var entity = '<li>' + buildListItem(item) + '</li>';
+                    list.push(entity);
                 });
-                return i;
+
+                $(itemsDiv).eq(0).find('.keybase-num-remaining').eq(0).html(items.length);
+
+                $(itemsDiv).eq(0).children('div').eq(0).html($compile('<ul>' + list.join('') + '</ul>')($scope));
             }
 
-            function nextCouplet(nextId, rootNodeId) {
-                var left = 1;
-                var right = 1;
-                if (nextId == rootNodeId) {
-                    left = $scope.json.first_step.left;
-                    right = $scope.json.first_step.right;
+            function bracketedKeyDisplay(json) {
+                var bracketed_key = $.fn.keybase.getters.bracketedKey();
+                var settings = $.fn.keybase.getters.settings();
+                var html = '<div class="keybase-bracketed-key">';
+                var couplets = bracketed_key[0].children;
+                for (var i = 0; i < couplets.length; i++) {
+                    var couplet = couplets[i];
+                    var leads = couplet.children;
+                    html += '<div class="keybase-couplet" id="l_' + leads[0].parent_id + '"><a name="l_' + leads[0].parent_id + '"></a>';
+                    for (var j = 0; j < leads.length; j++) {
+                        var lead = leads[j];
+                        var items = lead.children;
+                        html += '<div class="keybase-lead">';
+                        html += '<span class="keybase-from-node">' + lead.fromNode + '</span>';
+                        html += '<span class="keybase-lead-text">' + lead.title;
+                        if (lead.toNode !== undefined) {
+                            html += '<span class="keybase-to-node"><a du-smooth-scroll="l_' + lead.lead_id + '" target="_self">' + lead.toNode + '</a></span>';
+                        }
+                        else {
+                            var toItem = items[0].children[0];
+                            var item = JSPath.apply('.items{.item_id==' + toItem.item_id + '}', json)[0];
+                            html += '<span class="keybase-to-item">';
+                            html += buildListItem(item);
+                            html += '</span>';
+                        }
+                        html += '</span>';
+                        html += '</div>';
+                    }
+                    html += '</div>';
+
                 }
-                else {
-                    var curnode = JSPath.apply('.leads{.lead_id === "' + nextId + '"}', $scope.json);
-                    if (curnode && curnode[0]) {
-                        left = curnode[0].left;
-                        right = curnode[0].right;
+                html += '</div>';
+                $(settings.bracketedKeyDiv).html($compile(html)($scope));
+                $(settings.bracketedKeyDiv).prepend($compile('<div class="keybase-bracketed-key-filter"><span class="keybase-player-filter"><a href="#"><i class="fa fa-filter fa-lg"></i></a></span></div>')($scope));
+
+                var contentHeight = $(settings.bracketedKeyDiv).offset().top + $(settings.bracketedKeyDiv).height();
+                if (contentHeight > $(window).height() - 60) {
+                    $('body').css('height', contentHeight);
+                }
+            }
+
+            function indentedKeyDisplay(json) {
+                var indentedKeyHtml = '<div class="keybase-indented-key">';
+                indentedKeyHtml += displayIndentedKeyCouplet($.fn.keybase.getters.indentedKey()[0].children[0]);
+
+                indentedKeyHtml += '</div>';
+
+                $($.fn.keybase.getters.settings().indentedKeyDiv).html($compile(indentedKeyHtml)($scope));
+                $($.fn.keybase.getters.settings().indentedKeyDiv).prepend('<div class="keybase-indented-key-filter"><span class="keybase-player-filter"><a href="#"><i class="fa fa-filter fa-lg"></i></a></span></div>');
+
+                $.fn.keybase.getters.settings().onIndentedKeyComplete();
+            }
+
+            function displayIndentedKeyCouplet(couplet) {
+                var leads = couplet.children;
+                var indentedKeyHtml = '<ul class="keybase-couplet">';
+                for (var i = 0; i < leads.length; i++) {
+                    var lead = leads[i];
+                    indentedKeyHtml += '<li>';
+                    indentedKeyHtml += '<div class="keybase-lead">';
+                    indentedKeyHtml += '<span class="keybase-from-node">' + lead.fromNode + '</span>';
+                    indentedKeyHtml += '<span class="keybase-lead-text">' + lead.title + '</span>';
+
+                    var child = lead.children[0];
+                    if (child.title === "Couplet") {
+                        indentedKeyHtml += '</div>';
+                        indentedKeyHtml += displayIndentedKeyCouplet(child);
                     } else {
-                        return;
+                        var item = JSPath.apply('.items{.item_id==' + child.children[0].item_id + '}', $.fn.keybase.getters.jsonKey())[0];
+                        indentedKeyHtml += '<span class="keybase-to-item">';
+
+                        indentedKeyHtml += buildListItem(item);
+
+                        indentedKeyHtml += '</span>';
+                        indentedKeyHtml += '</div>';
                     }
+                    indentedKeyHtml += '</li>';
                 }
 
-                // Current node
-                var current_node = currentNode(nextId);
+                indentedKeyHtml += '</ul>';
 
-                if (current_node.length > 0) {
-                    $scope.currentHtml = [];
-                    $.each(current_node, function (index, item) {
-                        $scope.currentHtml.push({id: item.lead_id, text: item.lead_text});
-                    });
-                }
-                else {
-                    $scope.currentHtml = [{id: 0, text: "Result: " + getResult(nextId)[0].item_name}];
-                }
-                $scope.previousId = nextId;
-                $scope.firstId = rootNodeId;
-
-                // Path
-                $scope.path = [];
-
-                $.each(getPath(left, right), function (index, item) {
-                    $scope.path.push({id: item.lead_id, text: item.lead_text});
-                });
-
-                // remaining and discarded nodes
-                $scope.remainingItems = [];
-                $scope.discardedItems = [];
-
-                var aux_remaining = JSPath.apply('.leads{.item && .left >= ' + left + ' && .right <= ' + right + '}.item', $scope.json);
-
-                $.each($scope.json.items, function (index, item) {
-                    if (aux_remaining.indexOf(item.item_id) > -1) {
-                        $scope.remainingItems.push(item);
-                    }
-                    else {
-                        $scope.discardedItems.push(item);
-                    }
-                });
-
-            }
-
-            function getParent(leadId) {
-                return JSPath.apply('.leads{.lead_id === "' + leadId + '"}.parent_id[0]', $scope.json);
-            }
-
-            function currentNode(parentId) {
-                return JSPath.apply('.leads{.parent_id === "' + parentId + '"}', $scope.json);
-            }
-
-            function getResult(nextId) {
-                var itemId = JSPath.apply('.leads{.lead_id == "' + nextId + '"}.item', $scope.json)[0];
-                return JSPath.apply('.items{.item_id == "' + itemId + '"}', $scope.json);
-            }
-
-            function getPath(left, right) {
-                return JSPath.apply('.leads{.left <= ' + left + ' && .right >= ' + right + '}', $scope.json);
+                return indentedKeyHtml;
             }
 
         }],
         link: function (scope, element, attrs, ctrl) {
             scope.$watch("keyId", function (keyId) {
-                if (keyId) {
-                    scope.loadKey(keyId);
+                if (!_.isUndefined(keyId)) {
+                    scope.keyplayer.keyId = keyId;
                 }
             });
+
             scope.$watch("taxonName", function (taxonName) {
-                if (taxonName) {
-                    scope.loadKeyFromName(taxonName);
+                if (!_.isUndefined(taxonName)) {
+                    scope.keyplayer.taxonName = taxonName;
+                }
+            });
+
+            // Only render the keyplayer if the container is actually visible (otherwise we get 0 width panels on the player)
+            scope.$watch(function () {
+                return !$(element).is(':hidden')
+            }, function () {
+                var visible = !$(element).is(':hidden');
+
+                if (visible && !_.isUndefined(scope.keyplayer.taxonName)) {
+                    scope.keyplayer.loadKeyFromName(scope.keyplayer.taxonName);
+                } else if (visible && !_.isUndefined(scope.keyplayer.keyId)) {
+                    scope.keyplayer.loadKey(scope.keyplayer.keyId);
                 }
             });
         }
-    }
+    };
 });

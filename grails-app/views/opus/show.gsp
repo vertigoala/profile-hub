@@ -39,14 +39,11 @@
             <g:include controller="opus" action="browsePanel" params="[opusId: params.opusId]"/>
         </tab>
         <tab heading="Identify" class="font-xxsmall" ng-show="opusCtrl.opus.keybaseKeyId">
-            <alert type="warning"
-                   ng-show="!opusCtrl.opus.keybaseKeyId">No key has been configured for this collection.</alert>
-
-            <div key-player key-id="opusCtrl.opus.keybaseKeyId"
-                 ng-show="opusCtrl.opus.keybaseKeyId"
-                 keybase-url="${grailsApplication.config.keybase.key.lookup}"
-                 keybase-web-url="${grailsApplication.config.keybase.web.url}"
-                 profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></div>
+            <div class="row">
+                <key-player key-id="opusCtrl.opus.keybaseKeyId" style="display: block"
+                     keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                     profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></key-player>
+            </div>
         </tab>
         <g:if test="${params.isOpusEditor}">
             <tab heading="Reports" class="font-xxsmall">
