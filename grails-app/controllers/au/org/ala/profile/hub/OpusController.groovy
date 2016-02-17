@@ -71,6 +71,40 @@ class OpusController extends BaseController {
         }
     }
 
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def generateAccessToken() {
+        if (!params.opusId) {
+            badRequest()
+        } else {
+            def opus = profileService.getOpus(params.opusId as String)
+
+            if (!opus) {
+                notFound()
+            } else {
+                def response = profileService.generateAccessTokenForOpus(params.opusId as String)
+
+                handle response
+            }
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def revokeAccessToken() {
+        if (!params.opusId) {
+            badRequest()
+        } else {
+            def opus = profileService.getOpus(params.opusId as String)
+
+            if (!opus) {
+                notFound()
+            } else {
+                def response = profileService.revokeAccessTokenForOpus(params.opusId as String)
+
+                handle response
+            }
+        }
+    }
+
     def about() {
         if (!params.opusId) {
             badRequest()

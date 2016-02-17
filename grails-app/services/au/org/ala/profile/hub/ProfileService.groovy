@@ -51,6 +51,14 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/about")
     }
 
+    def generateAccessTokenForOpus(String opusId) {
+        webService.doPut("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/access/token", [:])
+    }
+
+    def revokeAccessTokenForOpus(String opusId) {
+        webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/access/token")
+    }
+
     def updateOpusAboutContent(String opusId, String aboutHtml, String citationHtml) {
         webService.doPut("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/about", [opusId: opusId, aboutHtml: aboutHtml, citationHtml: citationHtml])
     }

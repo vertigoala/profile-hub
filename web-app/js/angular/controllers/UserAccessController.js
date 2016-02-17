@@ -154,6 +154,35 @@ profileEditor.controller('UserAccessController', function (messageService, util,
         );
     }
 
+    self.generateAccessToken = function() {
+        var promise = profileService.generateAccessTokenForOpus(self.opus.uuid);
+        promise.then(function (data) {
+                self.opus.accessToken = data.token;
+            },
+            function () {
+                messageService.alert("An error occurred while generating an access token.")
+            }
+        );
+    };
+
+    self.accessControlTabChanged = function(tab) {
+        self.accessControlTab = tab;
+    };
+
+    self.revokeAccessToken = function () {
+        var deleteConf = util.confirm("Are you sure you wish to revoke this access token? Doing so will prevent all services from accessing your data. To re-enable service access, you will need to generate and distribute a new access token.");
+        deleteConf.then(function () {
+            var promise = profileService.revokeAccessTokenForOpus(self.opus.uuid);
+            promise.then(function () {
+                    self.opus.accessToken = null;
+                },
+                function () {
+                    messageService.alert("An error occurred while revoking the access token.")
+                }
+            );
+        });
+    };
+
 });
 
 

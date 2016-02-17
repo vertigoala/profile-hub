@@ -396,7 +396,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     };
 
     self.showShortNameTip = function() {
-        console.log("here...why")
         self.shortNameTipVisible = true;
     };
 

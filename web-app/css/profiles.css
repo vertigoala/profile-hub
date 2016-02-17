@@ -775,3 +775,9 @@ ul.breadcrumb li:before {
     height: 100%;
     width: 100%;
 }
+
+.panel .nav-tabs {
+    padding-left: 5px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}

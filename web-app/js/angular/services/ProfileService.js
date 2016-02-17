@@ -194,6 +194,28 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        generateAccessTokenForOpus: function(opusId) {
+            $log.debug("Creating access token for opus " + opusId);
+
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/access/token");
+            future.then(function(response) {
+                $log.debug("Created access token with " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        revokeAccessTokenForOpus: function(opusId) {
+            $log.debug("Revoking access token for opus " + opusId);
+
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/access/token");
+            future.then(function(response) {
+                $log.debug("Revoked access token with " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         updateSupportingCollections: function(opusId, supportingCollections) {
             $log.debug("Updating supporting collections for " + opusId);
 
@@ -263,7 +285,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
         deleteAttribute: function (opusId, profileId, attributeId) {
             $log.debug("Deleting attribute " + attributeId);
-            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/attribute/" + attributeId + "/delete", {cache: true});
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/attribute/" + attributeId + "/delete");
             future.then(function (response) {
                 $log.debug("Attribute deleted with response code " + response.status);
 
