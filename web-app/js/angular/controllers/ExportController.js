@@ -68,12 +68,12 @@ profileEditor.controller('ExportPDFController', function (opusId, rank, scientif
 
     self.childCount = -1;
 
-    var exportableSections = ["attributes", "map", "taxonomy", "nomenclature", "links", "bhllinks", "specimens", "bibliography", "images", "conservation", "features"];
+    var exportableSections = ["attributes", "map", "taxonomy", "taxon", "nomenclature", "links", "bhllinks", "specimens", "bibliography", "images", "conservation", "features", "key"];
 
     self.options = [];
     var attributeAdded = false;
     angular.forEach($rootScope.nav, function (navItem) {
-        if ((_.isUndefined(navItem.category) || !navItem.category) && exportableSections.indexOf(navItem.key) > -1) {
+        if ((_.isUndefined(navItem.category) || !navItem.category || navItem.category == 'pdf') && exportableSections.indexOf(navItem.key) > -1) {
             self.options.push({id: navItem.key, name: navItem.label, selected: true});
         } else if (navItem.category == "attribute" && !attributeAdded) {
             self.options.push({id: "attributes", name: "Attributes", selected: true});

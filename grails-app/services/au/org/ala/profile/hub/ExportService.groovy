@@ -7,11 +7,7 @@ import grails.transaction.NotTransactional
 import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
 import net.sf.jasperreports.engine.data.JsonDataSource
-import net.sf.jasperreports.engine.export.JRPdfExporter
-import net.sf.jasperreports.engine.export.JRPdfExporterParameter
 import net.sf.jasperreports.engine.util.SimpleFileResolver
-import net.sf.jasperreports.export.ExporterConfiguration
-import net.sf.jasperreports.export.PdfExporterConfiguration
 import org.apache.commons.io.IOUtils
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
@@ -39,6 +35,7 @@ class ExportService {
     WebService webService
     EmailService emailService
     NslService nslService
+    KeybaseService keybaseService
     JasperNonTransactionalService jasperNonTransactionalService
     def grailsApplication
 
@@ -258,7 +255,12 @@ class ExportService {
 
         // Retrieve and format profile statuses
         if (params.status) {
-            model.profile.status = profileService.getFeatureLists(opus.uuid, model.profile.uuid)
+            model.profile.status = []
+            profileService.getFeatureLists(opus.uuid, model.profile.uuid)?.each { list ->
+                list.items.each { item ->
+                    model.profile.status << item
+                }
+            }
             model.profile.status.each { singleStatus ->
                 singleStatus.key = formatStatusText(singleStatus.key)
                 singleStatus.value = formatStatusText(singleStatus.value)
