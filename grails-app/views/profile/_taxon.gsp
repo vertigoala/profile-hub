@@ -4,7 +4,7 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
-                <h4 class="section-panel-heading">Taxonomy</h4>
+                <h4 class="section-panel-heading">Taxonomy <span ng-show="profileCtrl.profile.taxonomyTree"> from {{ profileCtrl.profile.taxonomyTree }}</span></h4>
             </div>
         </div>
     </div>

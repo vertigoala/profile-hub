@@ -410,7 +410,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        getFeature: function(opusId, profileId){
+        getFeatureLists: function(opusId, profileId){
             $log.debug("Retrieving bio status for " + profileId);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/featureList");
             future.then(function (response) {

@@ -42,7 +42,7 @@ describe("ListsController tests", function () {
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "retrieveLists").and.returnValue(listsDefer.promise);
         spyOn(profileService, "getSpeciesProfile").and.returnValue(speciesProfileDefer.promise);
-        spyOn(profileService, "getFeature").and.returnValue(getFeatureDefer.promise);
+        spyOn(profileService, "getFeatureLists").and.returnValue(getFeatureDefer.promise);
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -174,17 +174,17 @@ describe("ListsController tests", function () {
         expect(scope.listCtrl.conservationStatuses).toEqual([{region: "a"}, {region: "b"}, {region: "c"}])
     });
 
-    it("should retrieve features when loadFeature is invoked", function () {
+    it("should retrieve features when loadFeatureLists is invoked", function () {
         scope.listCtrl.opusId = "opusId";
         scope.listCtrl.opus = {};
         scope.listCtrl.profileId = "profileId";
         scope.listCtrl.profile = {guid: "guid"};
 
-        getFeatureDefer.resolve([{key: "a", value: "b"}, {key: "c", value: "d"}]);
-        scope.listCtrl.loadFeature();
+        getFeatureDefer.resolve([{metadata: {listName: "list1"}, items: [{key: "a", value: "b"}, {key: "c", value: "d"}]}]);
+        scope.listCtrl.loadFeatureLists();
         scope.$apply();
 
-        expect(profileService.getFeature).toHaveBeenCalledWith("opusId", "profileId");
-        expect(scope.listCtrl.features).toEqual([{key: "a", value: "b"}, {key: "c", value: "d"}])
+        expect(profileService.getFeatureLists).toHaveBeenCalledWith("opusId", "profileId");
+        expect(scope.listCtrl.featureLists).toEqual([{metadata: {listName: "list1"}, items: [{key: "a", value: "b"}, {key: "c", value: "d"}]}])
     });
 });

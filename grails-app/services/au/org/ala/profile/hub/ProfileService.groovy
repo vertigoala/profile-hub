@@ -83,7 +83,11 @@ class ProfileService {
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/discardDraftChanges", null)
     }
 
-    def getList(String drid) {
+    def getListMetadata(String drid) {
+        webService.get("${grailsApplication.config.lists.base.url}/ws/speciesList/${drid}")?.resp
+    }
+
+    def getListItems(String drid) {
         webService.get("${grailsApplication.config.lists.base.url}/ws/speciesListItems/${drid}?includeKVP=true")?.resp
     }
 
@@ -407,14 +411,16 @@ class ProfileService {
     }
 
     def getFeatureLists(String opusId, String profileId) {
-        def model = getProfile(opusId, profileId);
-        def opus = model.opus;
-        def profile = model.profile;
+        Map model = getProfile(opusId, profileId);
+        Map opus = model.opus;
+        Map profile = model.profile;
+
         List result = []
-        if (opus.featureLists?.size()) {
-            opus.featureLists.each({
-                result.addAll(getProfileKVP(profile.scientificName, it));
-            })
+        opus.featureLists?.each { listId ->
+            Map list = [:]
+            list.metadata = getListMetadata(listId)
+            list.items = getProfileKVP(profile.scientificName, listId)
+            result << list
         }
 
         result
@@ -422,13 +428,13 @@ class ProfileService {
 
     def getProfileKVP(String profileId, String drid) {
         List result = []
-        def list = getList(drid);
+        def list = getListItems(drid);
         if (list) {
-            list.each({
+            list.each {
                 if (it.name.toLowerCase() == profileId.toLowerCase()) {
-                    result.addAll(it.kvpValues);
+                    result.addAll(it.kvpValues)
                 }
-            })
+            }
         }
 
         result

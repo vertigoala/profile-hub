@@ -6,7 +6,8 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
 
     self.lists = [];
     self.conservationStatuses = [];
-    self.features = [];
+    self.featureLists = [];
+    self.hasFeatures = false;
 
     var orderBy = $filter("orderBy");
 
@@ -40,11 +41,17 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
         });
     };
 
-    self.loadFeature = function () {
-        var promise = profileService.getFeature(self.opusId, self.profileId);
+    self.loadFeatureLists = function () {
+        var promise = profileService.getFeatureLists(self.opusId, self.profileId);
         promise.then(function (data) {
-            self.features = orderBy(data, 'key');
-            if (self.features && self.features.length > 0) {
+            angular.forEach(data, function (list) {
+                list.items = orderBy(list.items, 'key');
+                self.hasFeatures |= list.items.length > 0;
+            });
+
+            self.featureLists = data;
+
+            if (self.hasFeatures) {
                 navService.add(self.opus.featureListSectionName || 'Feature List', "features");
             }
         });
@@ -108,7 +115,7 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
             );
 
             self.loadConservationStatus();
-            self.loadFeature();
+            self.loadFeatureLists();
         }
     }
 });
