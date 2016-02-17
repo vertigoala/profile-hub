@@ -96,7 +96,7 @@
                         <div ng-show="userCtrl.opus.accessToken">
                             <p>Your access token is:</p>
                             <div class="well">{{ userCtrl.opus.accessToken }}</div>
-                            <p>Your collection identifier (ala opusId) is:</p>
+                            <p>Your collection identifier (opusId) is:</p>
                             <div class="well">{{ userCtrl.opus.uuid }}</div>
                         </div>
 
