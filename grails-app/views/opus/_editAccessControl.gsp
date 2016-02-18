@@ -90,7 +90,7 @@
                         </p>
                         <p>
                             To use an access token, all service requests must include the token in a header field named
-                            <b>accessToken</b>.
+                            <b>ACCESS-TOKEN</b>.
                         </p>
 
                         <div ng-show="userCtrl.opus.accessToken">
