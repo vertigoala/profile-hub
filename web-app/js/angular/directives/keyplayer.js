@@ -37,7 +37,8 @@ profileEditor.directive('keyPlayer', function ($browser) {
                         title: false,
                         source: true,
                         reset: true,
-                        onLoad: keybaseOnLoad
+                        onLoad: keybaseOnLoad,
+                        resultDisplay: resultDisplay
                     };
 
                     var action;
@@ -119,6 +120,12 @@ profileEditor.directive('keyPlayer', function ($browser) {
                     }
                 );
             };
+
+            function resultDisplay(result, resultDiv) {
+                var text = '<a href="" ng-click="keyplayer.viewItem(\'' + result[0].item_name + '\')">' + result[0].item_name + '</a>'
+
+                $(resultDiv).eq(0).children('div').eq(0).html($compile('<div class="keybase-player-result">Result: <b>' + text + '</b></div>')($scope));
+            }
 
             function keybaseOnLoad(json) {
                 self.projectName = json.project.project_name;
