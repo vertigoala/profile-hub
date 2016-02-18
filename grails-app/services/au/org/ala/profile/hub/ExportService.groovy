@@ -203,6 +203,13 @@ class ExportService {
             }
 
             model.profile.classifications = profileService.getClassification(opus.uuid, params.profileId, model.profile.guid)?.resp
+            if (model.profile.classifications && model.profile.taxonomyTree) {
+                model.profile.classifications.add(0, [rank: "Source", scientificName: model.profile.taxonomyTree])
+            }
+        }
+
+        if (params.key) {
+            model.profile.bracketedKey = keybaseService.getPrintableBracketedKey(opus.keybaseProjectId, model.profile.scientificName)
         }
 
         if (params.specimens) {

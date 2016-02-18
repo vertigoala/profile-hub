@@ -289,6 +289,44 @@
             }
           }
         ],
+        "bracketedKey": {
+          "keyName": "Acacia",
+          "projectName": "Flora of Victoria",
+          "projectIcon": "http://keybase.rbg.vic.gov.au/images/projecticons/epacris.png",
+          "source": "Modified from: <b>Entwisle, T.J.; Maslin, B.R.; Cowan, R.S.; Court, A.B.</b> (1996). Mimosaceae. In: Walsh, N.G.; Entwisle, T.J. (eds), Flora of Victoria. Vol. 3. Dicotyledons Winteraceae to Myrtaceae. Inkata Press, Melbourne.",
+          "items": [
+            {
+              "id": 1,
+              "text": "Mature leaves modified into phyllodes (either flat, spiny or needle-like) or absent",
+              "target": 2
+            },
+            {
+              "id": 1,
+              "text": "Mature leaves bipinnate",
+              "target": 114
+            },
+            {
+              "id": 2,
+              "text": "Flowers in globular (rarely obloid) heads",
+              "target": 3
+            },
+            {
+              "id": 2,
+              "text": "Flowers in cylindric spikes",
+              "target": 100
+            },
+            {
+              "id": 3,
+              "text": "Phyllodes with more than 1 main vein or veins obscure",
+              "target": 4
+            },
+            {
+              "id": 3,
+              "text": "Phyllodes with 1 main vein per face (if 4-angled in cross-section then 4-veined overall)",
+              "target": 37
+            }
+          ]
+        },
         "nomenclature": {
           "formattedName": "bla bla bla bla",
           "details": [

@@ -130,7 +130,7 @@
         <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
             <div class="row">
                 <div class="col-md-12" ng-cloak>
-                    <tabset ng-class="profileCtrl.opus.keybaseProjectId ? '' : 'single-tabbed-panel'">
+                    <tabset ng-class="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey ? '' : 'single-tabbed-panel'">
                         <tab heading="Details" class="font-xxsmall" >
 
                             <div class="row">
@@ -170,7 +170,7 @@
                                 </div>
                             </div>
                         </tab>
-                        <tab heading="Key" class="font-xxsmall" ng-show="profileCtrl.opus.keybaseProjectId">
+                        <tab heading="Key" class="font-xxsmall" ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey">
                             <div class="row">
                                 <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                      opus-id="profileCtrl.opus.uuid"

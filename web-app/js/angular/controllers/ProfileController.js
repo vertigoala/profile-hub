@@ -8,6 +8,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.profileId = util.getEntityId("profile");
     self.opus = null;
     self.readonly = true;
+    self.hasKeybaseKey = false;
 
     self.showMap = true;
 
@@ -36,6 +37,16 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
                     if (self.profile.specimenIds && self.profile.specimenIds.length > 0 || !self.readonly()) {
                         navService.add("Specimens", "specimens");
+                    }
+
+                    if (self.opus.keybaseProjectId) {
+                        var keyPromise = profileService.findKeybaseKeyForName(self.opus.uuid, self.profile.scientificName);
+                        keyPromise.then(function (data) {
+                            if (data && data.keyId) {
+                                self.hasKeybaseKey = true;
+                                navService.add("Key", "key", "pdf");
+                            }
+                        });
                     }
 
                     if (self.profile.bibliography && self.profile.bibliography.length > 0 || !self.readonly()) {

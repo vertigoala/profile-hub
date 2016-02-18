@@ -695,6 +695,12 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        findKeybaseKeyForName: function(opusId, scientificName) {
+            var future = $http.get(util.contextRoot() + "/keybase/findKey?opusId=" + opusId + "&scientificName=" + scientificName, {cache: true});
+
+            return util.toStandardPromise(future);
+        },
+
         retrieveKeybaseProjects: function() {
             $log.debug("Retrieving keybase projects");
 
