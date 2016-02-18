@@ -122,7 +122,11 @@ profileEditor.directive('keyPlayer', function ($browser) {
 
             function keybaseOnLoad(json) {
                 self.projectName = json.project.project_name;
-                self.projectIcon = json.project.project_icon;
+                self.projectIcon = $scope.contextPath + "static/images/keybase-logo-blue-80.png";
+                if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(json.project.project_icon)) {
+                    self.projectIcon = json.project.project_icon;
+                }
+
                 self.keyName = json.key_name;
 
                 self.loading = false;
