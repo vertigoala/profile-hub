@@ -764,7 +764,12 @@ ul.breadcrumb li:before {
 
 .keybase-logo {
     margin-top: 1em;
-    background-image: -webkit-linear-gradient(top, #2688c9, #89a1bb);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#2688c9), to(#89a1bb)); /* Safari 4+, Chrome 1-9 */
+    background-image: -webkit-linear-gradient(top, #2688c9, #89a1bb); /* Safari 5.1+, Mobile Safari, Chrome 10+ */
+    background-image: -moz-linear-gradient(top, #2688c9, #89a1bb); /* Firefox 3.6+ */
+    background-image: -ms-linear-gradient(top, #2688c9, #89a1bb); /* IE 10+ */
+    background-image: -o-linear-gradient(top, #2688c9, #89a1bb); /* Opera 11.10+ */
+    background-image: linear-gradient(top, #89a1bb, #2688c9);
     height: 50px;
     width: 50px;
     display: inline-block;
