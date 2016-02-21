@@ -4,6 +4,9 @@ import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
 import org.apache.commons.lang.BooleanUtils
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
+
+import javax.servlet.http.HttpServletResponse
 
 class ProfileService {
 
@@ -11,7 +14,6 @@ class ProfileService {
     BieService bieService
     WebService webService
     AuthService authService
-    KeybaseService keybaseService
     UtilService utilService
 
     def getOpus(String opusId = "") {
@@ -152,6 +154,40 @@ class ProfileService {
         log.debug("Restoring archived profile ${profileId}")
 
         webService.doPost("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/restore/${enc(profileId)}", [newName: newName])
+    }
+
+    def saveAttachment(String opusId, String profileId, Map metadata, DefaultMultipartHttpServletRequest request) {
+        List files = request.getFileNames().collect { request.getFile(it) }
+
+        if (profileId) {
+            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attachment?latest=true", metadata, files)
+        } else {
+            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/attachment", metadata, files)
+        }
+    }
+
+    def getAttachmentMetadata(String opusId, String profileId = null, String attachmentId = null, boolean latest = false) {
+        if (profileId) {
+            webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attachment/${enc(attachmentId)}?latest=${latest}")
+        } else {
+            webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/attachment/${enc(attachmentId)}")
+        }
+    }
+
+    def downloadAttachment(HttpServletResponse response, String opusId, String profileId, String attachmentId, boolean latest = false) {
+        if (profileId) {
+            webService.proxyGetRequest(response, "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attachment/${enc(attachmentId)}/download?latest=${latest}")
+        } else {
+            webService.proxyGetRequest(response, "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/attachment/${enc(attachmentId)}/download")
+        }
+    }
+
+    def deleteAttachment(String opusId, String profileId, String attachmentId) {
+        if (profileId) {
+            webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attachment/${enc(attachmentId)}?latest=true")
+        } else {
+            webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/attachment/${enc(attachmentId)}")
+        }
     }
 
     void injectThumbnailUrls(profile) {

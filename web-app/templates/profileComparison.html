@@ -232,3 +232,33 @@
         <span data-ng-bind-html="right.scientificName | sanitizeHtml"></span>
     </div>
 </div>
+
+<div class="row comparison-row" ng-if="diff.attachments.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Attachments</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="attachment in diff.attachments.comp">
+            <span class="minor-heading">Title:&nbsp; </span><span data-ng-bind-html="attachment.title.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Description:&nbsp; </span><span data-ng-bind-html="attachment.description.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Rights:&nbsp; </span><span data-ng-bind-html="attachment.rights.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Rights holder:&nbsp; </span><span data-ng-bind-html="attachment.rightsHolder.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Licence:&nbsp; </span><span data-ng-bind-html="attachment.licence.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Author:&nbsp; </span><span data-ng-bind-html="attachment.creator.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Date:&nbsp; </span><span data-ng-bind-html="attachment.createdDate.comp | sanitizeHtml"></span><br/>
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="attachment in right.attachments">
+            <span class="minor-heading">Title:&nbsp; </span><span data-ng-bind-html="attachment.title | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Description:&nbsp; </span><span data-ng-bind-html="attachment.description | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Rights:&nbsp; </span><span data-ng-bind-html="attachment.rights | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Rights holder:&nbsp; </span><span data-ng-bind-html="attachment.rightsHolder | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Licence:&nbsp; </span><span data-ng-bind-html="attachment.licence | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Author:&nbsp; </span><span data-ng-bind-html="attachment.creator | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Date:&nbsp; </span><span data-ng-bind-html="attachment.createdDate | sanitizeHtml"></span><br/>
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+</div>

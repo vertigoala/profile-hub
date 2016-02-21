@@ -130,9 +130,8 @@
         <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
             <div class="row">
                 <div class="col-md-12" ng-cloak>
-                    <tabset ng-class="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey ? '' : 'single-tabbed-panel'">
-                        <tab heading="Details" class="font-xxsmall" >
-
+                    <tabset ng-class="!profileCtrl.readonly() || (profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey) || (profileCtrl.profile.attachments.length > 0) ? '' : 'single-tabbed-panel'">
+                        <tab heading="Details" class="font-xxsmall">
                             <div class="row">
                                 <div class="col-md-12">
                                     <g:include controller="profile" action="attributesPanel"
@@ -178,6 +177,9 @@
                                      key-lookup-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
                                      profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
                             </div>
+                        </tab>
+                        <tab heading="Documents" class="font-xxsmall" ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0">
+                            <g:render template="../common/attachments"/>
                         </tab>
                     </tabset>
                 </div>

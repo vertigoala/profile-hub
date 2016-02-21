@@ -4,6 +4,9 @@ import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
+import groovy.json.JsonSlurper
+import org.springframework.web.multipart.MultipartHttpServletRequest
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
 import static au.org.ala.profile.hub.util.HubConstants.*
 import static au.org.ala.profile.security.Role.ROLE_ADMIN
@@ -302,6 +305,58 @@ class OpusController extends BaseController {
         def response = keybaseService.retrieveAllProjects()
 
         handle response
+    }
+
+    def getAttachmentMetadata() {
+        if (!params.opusId) {
+            badRequest "opusId is a required parameter"
+        } else {
+            def result = profileService.getAttachmentMetadata(params.opusId, null, params.attachmentId ?: null)
+
+            handle result
+        }
+    }
+
+    def downloadAttachment() {
+        if (!params.opusId || !params.attachmentId) {
+            badRequest "opusId and attachmentId are required parameters"
+        } else {
+            profileService.downloadAttachment(response, params.opusId, null, params.attachmentId)
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def saveAttachment() {
+        if (!params.opusId || !(request instanceof MultipartHttpServletRequest) || !request.getParameter("data")) {
+            badRequest "opusId is a required parameter, a JSON data paramaeter must be provided, and the request must be a multipart request"
+        } else if (request instanceof DefaultMultipartHttpServletRequest) {
+            if (request.fileNames && request.getFile(request.fileNames[0]).contentType != "application/pdf") {
+                badRequest "Invalid file type - must be one of [PDF]"
+            } else {
+                Map attachment = new JsonSlurper().parseText(request.getParameter("data"))
+
+                if (!attachment.uuid) {
+                    attachment.filename = request.getFile("file").originalFilename
+                }
+
+                def result = profileService.saveAttachment(params.opusId, null, attachment, request)
+
+                handle result
+            }
+        } else {
+            badRequest "Request is not multipart"
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def deleteAttachment() {
+        if (!params.opusId || !params.attachmentId) {
+            badRequest "opusId and attachmentId are required parameters"
+        } else {
+            def result = profileService.deleteAttachment(params.opusId, null, params.attachmentId)
+
+            handle result
+        }
     }
 
     def searchPanel = {

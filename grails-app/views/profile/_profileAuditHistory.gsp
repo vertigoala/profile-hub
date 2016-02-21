@@ -1,31 +1,33 @@
 <div class="row" ng-cloak>
-    <div class="panel panel-default" ng-show="profileCtrl.showProfileAudit" ng-cloak>
-        <div class="panel-body">
-            <div ng-if="profileCtrl.loading"><span class="fa fa-spin fa-spinner"></span>&nbsp;Loading...</div>
-            <div class="table-responsive" ng-if="!profileCtrl.loading">
-                <table class="table table-striped">
-                    <thead>
-                    <th>Date updated</th>
-                    <th>Editor</th>
-                    <th></th>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="audit in profileCtrl.audit">
-                        <td>{{audit.date | date:'dd/MM/yyyy h:mm a'}}</td>
-                        <td>{{audit.userDisplayName | default:'Unknown'}}</td>
-                        <td><button class="btn btn-link pull-right"
-                                    ng-click="profileCtrl.showAuditComparison($index)"
-                                    ng-show="!$last">Compare with previous revision</button></td>
-                    </tr>
-                    </tbody>
-                </table>
+    <div class="col-md-12">
+        <div class="panel panel-default" ng-show="profileCtrl.showProfileAudit" ng-cloak>
+            <div class="panel-body">
+                <div ng-if="profileCtrl.loading"><span class="fa fa-spin fa-spinner"></span>&nbsp;Loading...</div>
+                <div class="table-responsive" ng-if="!profileCtrl.loading">
+                    <table class="table table-striped">
+                        <thead>
+                        <th>Date updated</th>
+                        <th>Editor</th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="audit in profileCtrl.audit">
+                            <td>{{audit.date | date:'dd/MM/yyyy h:mm a'}}</td>
+                            <td>{{audit.userDisplayName | default:'Unknown'}}</td>
+                            <td><button class="btn btn-link pull-right"
+                                        ng-click="profileCtrl.showAuditComparison($index)"
+                                        ng-show="!$last">Compare with previous revision</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        <div class="panel-footer">
-            <div class="row">
-                <div class="col-md-12">
-                    <button class="btn btn-default pull-right" ng-click="profileCtrl.toggleAudit()">Hide revision history</button>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-default pull-right" ng-click="profileCtrl.toggleAudit()">Hide revision history</button>
+                    </div>
                 </div>
             </div>
         </div>

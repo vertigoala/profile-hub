@@ -6,13 +6,18 @@ import org.apache.http.HttpStatus
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.ByteArrayBody
 import org.apache.http.entity.mime.content.StringBody
+import org.codehaus.groovy.grails.web.servlet.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.web.multipart.commons.CommonsMultipartFile
+
+import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletResponse
 
 import static groovyx.net.http.Method.POST
 
 //TODO We should be using an existing REST client like Groovy Http Builder instead of this service -> https://github.com/jgritman/httpbuilder
 class WebService {
-    static final String CHAR_ENCODING= "utf-8"
+    static final String CHAR_ENCODING = "utf-8"
 
     static final DEFAULT_TIMEOUT_MILLIS = 600000; // five minutes
     // TODO refactor this class, it's really ugly
@@ -91,6 +96,77 @@ class WebService {
         return get(url, true, json)
     }
 
+    /**
+     * Proxies a request URL but doesn't assume the response is text based. (Used for proxying requests to
+     * ecodata for excel-based reports)
+     */
+    def proxyGetRequest(HttpServletResponse response, String url) {
+
+        HttpURLConnection conn = configureConnection(url, true)
+        conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
+        conn.setReadTimeout(readTimeout)
+
+        def user = userService.getUser()
+        if (user) {
+            conn.setRequestProperty(grailsApplication.config.app.http.header.userId as String, user.userId as String)
+            conn.setRequestProperty("Cookie", "ALA-Auth=${URLEncoder.encode(user.userName, CHAR_ENCODING)}")
+        }
+
+        def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.TRANSFER_ENCODING]
+        response.setContentType(conn.getContentType())
+        response.setContentLength(conn.getContentLength())
+
+        headers.each { header ->
+            response.setHeader(header, conn.getHeaderField(header))
+        }
+        response.status = conn.responseCode
+        response.outputStream << conn.inputStream
+
+    }
+
+
+    /**
+     * Proxies a request URL with post data but doesn't assume the response is text based. (Used for proxying requests to
+     * ecodata for excel-based reports)
+     */
+    def proxyPostRequest(HttpServletResponse response, String url, Map postBody) {
+
+        HttpURLConnection conn = configureConnection(url, true)
+
+        conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
+        conn.setRequestProperty("Content-Type", "application/json;charset=${CHAR_ENCODING}");
+        conn.setRequestMethod("POST")
+        conn.setReadTimeout(DEFAULT_TIMEOUT_MILLIS)
+        conn.setDoOutput(true);
+
+        def user = userService.getUser()
+
+        if (user) {
+            conn.setRequestProperty(grailsApplication.config.app.http.header.userId as String, user.userId as String)
+            conn.setRequestProperty("Cookie", "ALA-Auth=${URLEncoder.encode(user.userName, CHAR_ENCODING)}")
+        }
+
+        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), CHAR_ENCODING)
+        wr.write((postBody as JSON).toString())
+        wr.flush()
+        wr.close()
+
+        def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.TRANSFER_ENCODING]
+        response.setContentType(conn.getContentType())
+        response.setContentLength(conn.getContentLength())
+
+        headers.each { header ->
+            response.setHeader(header, conn.getHeaderField(header))
+        }
+        response.status = conn.responseCode
+
+        // to make jqueryFiledownload plugin happy
+        def cookie = new Cookie("filedownload", "true")
+        cookie.setPath("/")
+        response.addCookie(cookie)
+
+        response.outputStream << conn.inputStream
+    }
 
     /**
      * Reads the response from a URLConnection taking into account the character encoding.
@@ -123,7 +199,13 @@ class WebService {
             MultipartEntityBuilder entityBuilder = new MultipartEntityBuilder()
             entityBuilder.addPart("data", new StringBody((data as JSON) as String))
             files.eachWithIndex { it, index ->
-                entityBuilder.addPart("file${index}", new ByteArrayBody(it, "file${index}"))
+                if (it instanceof byte[]) {
+                    entityBuilder.addPart("file${index}", new ByteArrayBody(it, "file${index}"))
+                } else if (it instanceof CommonsMultipartFile) {
+                    entityBuilder.addPart(it.originalFilename, new ByteArrayBody(it.bytes, it.contentType, it.originalFilename))
+                } else {
+                    entityBuilder.addPart("file${index}", new ByteArrayBody(it.bytes, "file${index}"))
+                }
             }
             multipartRequest.entity = entityBuilder.build()
 
@@ -142,12 +224,15 @@ class WebService {
             response.success = { resp, rData ->
                 result = [resp: rData as JSON, statusCode: HttpStatus.SC_OK]
             }
+            response.failure = { resp ->
+                result = [resp: [:], statusCode: resp.status]
+            }
 
             return result
         }
     }
 
-    def send = {String url, Map postBody, String method ->
+    def send = { String url, Map postBody, String method ->
         URLConnection conn = null
         def response = [:]
         OutputStreamWriter writer = null
@@ -173,15 +258,15 @@ class WebService {
             writer.flush()
             def resp = conn.inputStream.text
 
-            response = [resp:JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+            response = [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
             log.debug("Response from POST = ${response}")
             // fail over to empty json object if empty response string otherwise JSON.parse fails
         } catch (FileNotFoundException e) {
-            response = [error: "Not Found: URL= ${url}.",
+            response = [error     : "Not Found: URL= ${url}.",
                         statusCode: conn?.responseCode ?: HttpStatus.SC_NOT_FOUND]
             log.error(response, e)
         } catch (SocketTimeoutException e) {
-            response = [error: "Timed out calling web service. URL= ${url}.",
+            response = [error     : "Timed out calling web service. URL= ${url}.",
                         statusCode: conn?.responseCode ?: HttpStatus.SC_GATEWAY_TIMEOUT]
             log.error(response, e)
         } catch (Exception e) {
@@ -218,12 +303,12 @@ class WebService {
             if (responseCode == HttpStatus.SC_OK || responseCode == HttpStatus.SC_NO_CONTENT) {
                 response = [resp: [success: true], statusCode: responseCode]
             } else {
-                response = [error: "Delete Failed",
-                           statusCode: responseCode]
+                response = [error     : "Delete Failed",
+                            statusCode: responseCode]
                 log.error("Delete failed with response code ${responseCode}")
             }
         } catch (SocketTimeoutException e) {
-            response = [error: "Timed out calling web service. URL= ${url}.",
+            response = [error     : "Timed out calling web service. URL= ${url}.",
                         statusCode: conn?.responseCode ?: HttpStatus.SC_GATEWAY_TIMEOUT]
             log.error(response, e)
         } catch (Exception e) {

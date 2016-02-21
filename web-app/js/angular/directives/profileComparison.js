@@ -43,6 +43,8 @@ profileEditor.directive('profileComparison', function ($browser) {
                     $scope.diff.scientificName = compare($scope.left.scientificName, $scope.right.scientificName);
                     $scope.diff.archivedDate = compare($scope.left.archivedDate, $scope.right.archivedDate);
                     $scope.diff.privateMode = compare($scope.left.privateMode+"", $scope.right.privateMode+"");// convert boolean to string
+                    var attachmentFields = getAttachmentFields($scope.left, $scope.right);
+                    $scope.diff.attachments = compareLists($scope.left.attachments, $scope.right.attachments, "uuid", attachmentFields)
                 }
             };
 
@@ -51,6 +53,18 @@ profileEditor.directive('profileComparison', function ($browser) {
             };
 
             $scope.compareProfiles();
+
+            function getAttachmentFields(left, right) {
+                var fields = [];
+
+                if (!_.isUndefined(left.attachments) && left.attachments.length > 0) {
+                    fields = Object.keys($scope.left.attachments[0]);
+                } else if (!_.isUndefined(right.attachments) && right.attachments.length > 0) {
+                    fields = Object.keys($scope.right.attachments[0])
+                }
+
+                return fields;
+            }
         }],
         link: function (scope, element, attrs, ctrl) {
             scope.$watch("left", function(newValue) {
@@ -94,7 +108,7 @@ profileEditor.directive('profileComparison', function ($browser) {
             var oldInNew = false;
             var comparison = null;
             angular.forEach(left, function(leftItem) {
-                if (leftItem[keyField] === rightItem[keyField]) {
+                if (leftItem[keyField] == rightItem[keyField]) {
                     comparison = {};
                     comparison[keyField] = leftItem[keyField];
                     angular.forEach(compareFields, function(compareField) {
@@ -124,7 +138,7 @@ profileEditor.directive('profileComparison', function ($browser) {
         angular.forEach(left, function(leftItem) {
             var newInOld = false;
             angular.forEach(right, function(rightItem) {
-                if (leftItem[keyField] === rightItem[keyField]) {
+                if (leftItem[keyField] == rightItem[keyField]) {
                     newInOld = true;
                 }
             });

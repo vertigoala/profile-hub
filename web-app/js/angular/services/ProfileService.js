@@ -792,6 +792,46 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
 
             return util.toStandardPromise(future);
+        },
+
+        deleteAttachment: function(opusId, profileId, attachmentId) {
+            $log.debug("Deleting attachment " + attachmentId);
+
+            var url = util.contextRoot() + "/opus/" + opusId;
+            if (!_.isUndefined(profileId) && profileId && profileId.trim().length > 0) {
+                url += "/profile/" + profileId;
+            }
+            url +=  "/attachment/" + attachmentId;
+
+            var future = $http.delete(url);
+
+            future.then(function (response) {
+                $log.debug("Attachment deleted with response code " + response.status);
+
+                clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        getAttachmentMetadata: function(opusId, profileId, attachmentId) {
+            $log.debug("Getting attachment metadata");
+
+            var url = util.contextRoot() + "/opus/" + opusId;
+            if (!_.isUndefined(profileId) && profileId && profileId.trim().length > 0) {
+                url += "/profile/" + profileId;
+            }
+            url +=  "/attachment";
+            if (!_.isUndefined(attachmentId) && attachmentId && attachmentId.trim().length > 0) {
+                url +=  "/" + attachmentId;
+            }
+
+            var future = $http.get(url, {cache: true});
+            future.then(function (response) {
+                $log.debug("Attachment metadatd retrieved with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
         }
     }
 });

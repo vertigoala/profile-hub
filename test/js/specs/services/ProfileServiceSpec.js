@@ -324,7 +324,7 @@ describe("ProfileService tests", function () {
         http.expectPOST("/someContext/opus/opusId/profile/profileId/archive", {archiveComment: "archive comment"}).respond("bla");
     });
 
-    it("should invoke the retore archived profile service when restoreArchivedProfile is invoked", function() {
+    it("should invoke the restore archived profile service when restoreArchivedProfile is invoked", function() {
         service.restoreArchivedProfile("opusId", "profileId");
         http.expectPOST("/someContext/opus/opusId/profile/profileId/restore", {newName: null}).respond("bla");
 
@@ -348,5 +348,49 @@ describe("ProfileService tests", function () {
         service.respondToSupportingCollectionRequest("opus1", "opus2", true);
 
         http.expectPOST("/someContext/opus/opus1/supportingCollections/respond/opus2/true").respond("bla");
+    });
+
+    it("should construct the correct url when delete attachment is called with no profile id", function() {
+        service.deleteAttachment("opusId", undefined, "attachmentId");
+
+        http.expectDELETE("/someContext/opus/opusId/attachment/attachmentId").respond("bla");
+
+        service.deleteAttachment("opusId", null, "attachmentId");
+
+        http.expectDELETE("/someContext/opus/opusId/attachment/attachmentId").respond("bla");
+
+        service.deleteAttachment("opusId", "", "attachmentId");
+
+        http.expectDELETE("/someContext/opus/opusId/attachment/attachmentId").respond("bla");
+    });
+
+    it("should construct the correct url when delete attachment is called with a profile id", function() {
+        service.deleteAttachment("opusId", "profileId", "attachmentId");
+
+        http.expectDELETE("/someContext/opus/opusId/profile/profileId/attachment/attachmentId").respond("bla");
+    });
+
+    it("should construct the correct url when getAttachmentMetadata is called with no profile id", function() {
+        service.getAttachmentMetadata("opusId", undefined, "attachmentId");
+
+        http.expectGET("/someContext/opus/opusId/attachment/attachmentId").respond("bla");
+    });
+
+    it("should construct the correct url when getAttachmentMetadata is called with a profile id", function() {
+        service.getAttachmentMetadata("opusId", "profileId", "attachmentId");
+
+        http.expectGET("/someContext/opus/opusId/profile/profileId/attachment/attachmentId").respond("bla");
+    });
+
+    it("should construct the correct url when getAttachmentMetadata is called with no attachment id", function() {
+        service.getAttachmentMetadata("opusId", "profileId", undefined);
+
+        http.expectGET("/someContext/opus/opusId/profile/profileId/attachment").respond("bla");
+    });
+
+    it("should construct the correct url when getAttachmentMetadata is called with a profile id", function() {
+        service.getAttachmentMetadata("opusId", "profileId", "attachmentId");
+
+        http.expectGET("/someContext/opus/opusId/profile/profileId/attachment/attachmentId").respond("bla");
     });
 });

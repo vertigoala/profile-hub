@@ -5,8 +5,14 @@ import au.org.ala.profile.security.Secured
 import au.org.ala.profile.security.PrivateCollectionSecurityExempt
 import au.org.ala.web.AuthService
 import grails.converters.JSON
+import groovy.json.JsonSlurper
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
+
+import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
+import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
+import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
 
 class ProfileController extends BaseController {
 
@@ -469,6 +475,7 @@ class ProfileController extends BaseController {
                     conservation: true,
                     images      : true,
                     status      : true,
+                    key         : true,
                     printVersion: true
             ]
 
@@ -518,6 +525,61 @@ class ProfileController extends BaseController {
         } else {
             def result = profileService.getPublications(params.pubId);
             handle result;
+        }
+    }
+
+    def getAttachmentMetadata() {
+        if (!params.opusId || !params.profileId) {
+            badRequest "opusId and profileId are required parameters"
+        } else {
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+
+            def result = profileService.getAttachmentMetadata(params.opusId, params.profileId, params.attachmentId ?: null, latest)
+
+            handle result
+        }
+    }
+
+    def downloadAttachment() {
+        if (!params.opusId || !params.profileId || !params.attachmentId) {
+            badRequest "opusId, profileId and attachmentId are required parameters"
+        } else {
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            profileService.downloadAttachment(response, params.opusId, params.profileId, params.attachmentId, latest)
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def saveAttachment() {
+        if (!params.opusId || !params.profileId || !(request instanceof MultipartHttpServletRequest) || !request.getParameter("data")) {
+            badRequest "opusId and profile are required parameters, a JSON data paramaeter must be provided, and the request must be a multipart request"
+        } else if (request instanceof DefaultMultipartHttpServletRequest) {
+            if (request.fileNames && request.getFile(request.fileNames[0]).contentType != "application/pdf") {
+                badRequest "Invalid file type - must be one of [PDF]"
+            } else {
+                Map attachment = new JsonSlurper().parseText(request.getParameter("data"))
+
+                if (!attachment.uuid) {
+                    attachment.filename = request.getFile("file").originalFilename
+                }
+
+                def result = profileService.saveAttachment(params.opusId, params.profileId, attachment, request)
+
+                handle result
+            }
+        } else {
+            badRequest "Request is not multipart"
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def deleteAttachment() {
+        if (!params.opusId || !params.profileId || !params.attachmentId) {
+            badRequest "opusId, profileId and attachmentId are required parameters"
+        } else {
+            def result = profileService.deleteAttachment(params.opusId, params.profileId, params.attachmentId)
+
+            handle result
         }
     }
 

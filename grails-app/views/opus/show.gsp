@@ -45,6 +45,9 @@
                      profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></key-player>
             </div>
         </tab>
+        <tab heading="Documents" class="font-xxsmall">
+            <g:render template="../common/attachments"/>
+        </tab>
         <g:if test="${params.isOpusEditor}">
             <tab heading="Reports" class="font-xxsmall">
                 <g:include controller="opus" action="reportPanel" params="[opusId: params.opusId]"/>

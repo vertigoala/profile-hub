@@ -238,14 +238,14 @@ class ExportService {
                         imageNumber    : i + 1,
                         scientificName : model.profile.scientificName,
                         imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${image.imageId}",
-                        licenceIcon : image?.metadata?.license ? getCCLicenceIcon(image?.metadata?.license) : ""
+                        licenceIcon : image?.metadata?.license ? Utils.getCCLicenceIcon(image?.metadata?.license) : ""
                 ]
                 Map nextImage = (i + 1 < images.size()) ? images[i + 1] : [:]
                 nextImage << [
                         imageNumber    : i + 2,
                         scientificName : model.profile.scientificName,
                         imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}",
-                        licenceIcon : nextImage?.metadata?.license ? getCCLicenceIcon(nextImage?.metadata?.license) : ""
+                        licenceIcon : nextImage?.metadata?.license ? Utils.getCCLicenceIcon(nextImage?.metadata?.license) : ""
                 ]
                 groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
             }
@@ -447,28 +447,5 @@ class ExportService {
     static String stripTextFromNonFormattingHtmlTags(String html) {
         def regex = ~/<\/?(?!i>)(?!b>)([A-Za-z0-9.'"()+,=:\s-])+>/
         return html ? html.replaceAll(regex, "") : ""
-    }
-
-    static String getCCLicenceIcon(String ccLicence) {
-        String icon
-
-        switch (ccLicence) {
-            case "Creative Commons Attribution":
-                icon = "https://licensebuttons.net/l/by/4.0/80x15.png"
-                break
-            case "Creative Commons Attribution-Noncommercial":
-                icon = "https://licensebuttons.net/l/by-nc/3.0/80x15.png"
-                break
-            case "Creative Commons Attribution-Share Alike":
-                icon = "https://licensebuttons.net/l/by-sa/3.0/80x15.png"
-                break
-            case "Creative Commons Attribution-Noncommercial-Share Alike":
-                icon = "https://licensebuttons.net/l/by-nc-sa/3.0/80x15.png"
-                break
-            default:
-                icon = "https://licensebuttons.net/l/by/4.0/80x15.png"
-        }
-
-        icon
     }
 }
