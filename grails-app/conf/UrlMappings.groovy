@@ -55,7 +55,6 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/comment/$commentId/update" controller: "comment", action: [POST: "updateComment"]
         "/opus/$opusId/profile/$profileId/comment/$commentId/delete" controller: "comment", action: [DELETE: "deleteComment"]
         "/opus/$opusId/profile/$profileId/authorship/update" controller: "profile", action: [POST: "updateAuthorship"]
-        "/opus/$opusId/profile/$profileId/attachment/$attachmentId/download" controller: "profile", action: [GET: "downloadAttachment"]
         "/opus/$opusId/profile/$profileId/attachment/$attachmentId" controller: "profile", action: [GET: "getAttachmentMetadata", DELETE: "deleteAttachment"]
         "/opus/$opusId/profile/$profileId/attachment/" controller: "profile", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
 
@@ -80,7 +79,6 @@ class UrlMappings {
         "/opus/$opusId/glossary/item/$glossaryItemId/delete" controller: "glossary", action: [DELETE: "deleteItem"]
         "/opus/$opusId/glossary" controller: "glossary", action: [GET: "view"]
 
-        "/opus/$opusId/attachment/$attachmentId/download" controller: "opus", action: [GET: "downloadAttachment"]
         "/opus/$opusId/attachment/$attachmentId" controller: "opus", action: [GET: "getAttachmentMetadata", DELETE: "deleteAttachment"]
         "/opus/$opusId/attachment/" controller: "opus", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
 

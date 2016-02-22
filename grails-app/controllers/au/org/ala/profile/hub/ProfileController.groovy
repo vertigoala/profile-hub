@@ -540,15 +540,6 @@ class ProfileController extends BaseController {
         }
     }
 
-    def downloadAttachment() {
-        if (!params.opusId || !params.profileId || !params.attachmentId) {
-            badRequest "opusId, profileId and attachmentId are required parameters"
-        } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
-            profileService.downloadAttachment(response, params.opusId, params.profileId, params.attachmentId, latest)
-        }
-    }
-
     @Secured(role = ROLE_PROFILE_EDITOR)
     def saveAttachment() {
         if (!params.opusId || !params.profileId || !(request instanceof MultipartHttpServletRequest) || !request.getParameter("data")) {

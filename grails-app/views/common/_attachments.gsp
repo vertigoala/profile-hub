@@ -1,7 +1,7 @@
 <div class="padding-top-1" ng-controller="AttachmentController as attachmentCtrl" ng-cloak>
     <div class="padding-top-1 padding-bottom-1" ng-repeat="attachment in attachmentCtrl.attachments">
         <div class="col-md-3">
-            <a ng-href="{{attachmentCtrl.downloadUrl}}{{attachment.uuid}}/download" target="_blank"><span class="fa fa-file-pdf-o padding-right-1"></span>{{ attachment.title }}</a>
+            <a ng-href="{{attachment.downloadUrl}}" target="_blank"><span class="fa fa-file-pdf-o padding-right-1"></span>{{ attachment.title }}</a>
         </div>
 
         <div class="col-md-6">
@@ -16,9 +16,9 @@
         </div>
         <div class="col-md-3">
             <div class="pull-right">
-                <a ng-href="{{attachmentCtrl.downloadUrl}}{{attachment.uuid}}/download" target="_blank"><span
+                <a ng-href="{{attachment.downloadUrl}}" target="_blank"><span
                         class="fa fa-download color--green">&nbsp;Download</span></a>
-                <span class="padding-left-1"><img ng-src="{{attachment.licenceIcon}}" alt="{{attachment.licence}}"></span>
+                <span class="padding-left-1"><img src="" ng-src="{{attachment.licenceIcon}}" alt="{{attachment.licence}}" title="{{attachment.licence}}"></span>
             </div>
             <g:if test="${profile ? (edit ? params.isOpusEditor : false) : params.isOpusAdmin}">
                 <div class="pull-right padding-top-1">

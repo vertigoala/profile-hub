@@ -317,14 +317,6 @@ class OpusController extends BaseController {
         }
     }
 
-    def downloadAttachment() {
-        if (!params.opusId || !params.attachmentId) {
-            badRequest "opusId and attachmentId are required parameters"
-        } else {
-            profileService.downloadAttachment(response, params.opusId, null, params.attachmentId)
-        }
-    }
-
     @Secured(role = ROLE_PROFILE_ADMIN)
     def saveAttachment() {
         if (!params.opusId || !(request instanceof MultipartHttpServletRequest) || !request.getParameter("data")) {
