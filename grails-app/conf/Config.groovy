@@ -99,6 +99,7 @@ grails.hibernate.osiv.readonly = false
 layout = 'custom'
 skin.fluidLayout = true
 app.http.header.userId = "X-ALA-userId"
+app.view.nocache = true
 
 environments {
     development {
