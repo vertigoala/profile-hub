@@ -113,13 +113,14 @@ class KeybaseService {
                                                      it == lead.lead_id
                                                  } + 1)]
                 }
-            }
 
-            result.keyName = key.key_name
-            result.projectName = key.project.project_name
-            result.projectIcon = key.project.project_icon
-            result.source = constructSourceText(key.source)
-            result.items = couplets.values().flatten()
+                result.keyName = key.key_name
+                result.projectName = key.project.project_name
+                result.projectIcon = key.project.project_icon
+                result.source = constructSourceText(key.source)
+                result.items = couplets.values().flatten()
+            }
+            log.info("Error retrieving data from Keybase webservice while generating PDF, Key data will be missing from the PDF for keyId: "+keyId);
         }
 
         result
