@@ -51,6 +51,7 @@ grails.project.dependency.resolution = {
         compile 'net.sf.ehcache:ehcache:2.8.4'
         compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
         runtime "org.springframework:spring-test:4.1.2.RELEASE" // required by the rendering plugin
+        runtime 'au.org.ala:image-utils:1.8.2'
 
         compile('net.sf.jasperreports:jasperreports:6.1.0') {
             excludes 'antlr', 'commons-logging',
@@ -76,12 +77,14 @@ grails.project.dependency.resolution = {
         compile ":cache:1.1.8"
         compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
-//        compile ":modernizr:2.7.1.1"
         compile ":csv:0.3.1"
         compile(":jasper:1.11.0") {
             excludes 'jasperreports'
         }
         compile ":ala-map:1.2"
+        runtime(":images-client-plugin:0.6.1") {
+            excludes "ala-bootstrap3"
+        }
 
         runtime ":resources:1.2.14"
         runtime(":ala-bootstrap3:1.1") {

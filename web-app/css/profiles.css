@@ -791,3 +791,7 @@ ul.breadcrumb li:before {
     margin-top: 0;
     margin-bottom: 10px;
 }
+
+.image-viewer {
+    height: 500px;
+}

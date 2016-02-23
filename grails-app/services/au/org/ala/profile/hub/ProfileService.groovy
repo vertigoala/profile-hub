@@ -182,6 +182,10 @@ class ProfileService {
         }
     }
 
+    def getImageMetadata(String imageId) {
+        webService.get("${grailsApplication.config.profile.service.url}/image/${imageId}")
+    }
+
     void injectThumbnailUrls(profile) {
         profile.bhl.each {
             if (it) {

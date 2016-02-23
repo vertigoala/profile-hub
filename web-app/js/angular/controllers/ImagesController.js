@@ -1,7 +1,7 @@
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function ($browser, profileService, navService, util, messageService, $modal) {
+profileEditor.controller('ImagesController', function ($browser, profileService, navService, util, messageService, $modal, config) {
     var self = this;
 
     self.images = [];
@@ -135,12 +135,29 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
             templateUrl: $browser.baseHref() + "static/templates/imageMetadata.html",
             controller: "ImageMetadataController",
             controllerAs: "imageMetadataCtrl",
-            size: "md",
+            size: "lg",
             resolve: {
                 image: function () {
                     return image;
                 }
             }
+        });
+
+        popup.opened.then(function() {
+            // Disable the Leaflet.Sleep functionality, which is enabled by default as soon as Leaflet.Sleep.js is included.
+            // The ALA Map plugin uses this, but it explicitly enables/disables the feature based on its config.
+            L.Map.mergeOptions({
+                sleep: false
+            });
+
+            imgvwr.viewImage('#imageViewer', image.imageId, {
+                imageServiceBaseUrl: image.type.name == 'OPEN' ? config.imageServiceUrl : util.contextRoot(),
+                addDrawer: false,
+                addSubImageToggle: false,
+                addCalibration: false,
+                addImageInfo: false,
+                imageClientUrl: util.contextRoot()
+            });
         });
 
         popup.result.then(function () {

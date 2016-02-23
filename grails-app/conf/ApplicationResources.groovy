@@ -159,4 +159,15 @@ modules = {
         dependsOn "keybase"
         resource url:"css/keybase-override.css"
     }
+
+    // not using the resource that comes with the plugin as it causes issues with the bootstrap styles being used
+    images_plugin {
+        dependsOn 'jquery', 'leaflet', 'leaflet-draw', 'leaflet-loading', 'font-awesome'
+        resource url: [plugin: "images-client-plugin", dir: 'js', file: 'ala-image-viewer.js']
+        resource url: [plugin: "images-client-plugin", dir: 'js/img-gallery/lib/slider-pro/css', file: 'slider-pro.css']
+        resource url: [plugin: "images-client-plugin", dir: 'js/img-gallery/css', file: 'img-gallery.css']
+
+        resource url: [plugin: "images-client-plugin", dir: 'js/img-gallery/lib/slider-pro/js', file: 'jquery.sliderPro.custom.js']
+        resource url: [plugin: "images-client-plugin", dir: 'js/img-gallery/js', file: 'img-gallery.js']
+    }
 }

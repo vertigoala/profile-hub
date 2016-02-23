@@ -1,18 +1,66 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.images.tiling.ImageTiler
+import au.org.ala.images.tiling.ImageTilerConfig
 import org.springframework.web.multipart.MultipartFile
+
+import javax.imageio.ImageIO
+import java.awt.image.BufferedImage
 
 import static org.apache.http.HttpStatus.SC_OK
 
 class ImageService {
     ProfileService profileService
     BiocacheService biocacheService
+    WebService webService
     def grailsApplication
+
+    Map getImageDetails(String imageId, String contextPath, boolean includeFile = false) {
+        Map imageDetails = [:]
+
+        Map response = profileService.getImageMetadata(imageId)
+
+        if (response.statusCode == SC_OK) {
+            Map imageProperties = response.resp as Map
+            String dir = imageProperties.type as ImageType == ImageType.PRIVATE ? "${grailsApplication.config.image.private.dir}" : "${grailsApplication.config.image.staging.dir}"
+            String extension = getExtension(imageProperties.originalFileName)
+
+            File file = getLocalImageFile(dir, imageProperties.profileId, imageId, extension)
+
+            BufferedImage image = ImageIO.read(file)
+
+            // additional metadata about the physical image, required by the image client plugin
+            imageDetails = [
+                    success       : true,
+                    imageUrl      : "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}",
+                    width         : image.getWidth(),
+                    height        : image.getHeight(),
+                    tileZoomLevels: new File("${dir}/${imageProperties.profileId}/${imageId}_tiles/").listFiles().size(),
+                    tileUrlPattern: "${contextPath}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
+            ]
+
+            imageDetails.putAll(imageProperties)
+
+            if (includeFile) {
+                imageDetails.bufferedImage = image
+                imageDetails.file = file
+            }
+        }
+
+        imageDetails
+    }
+
+    File getTile(String profileId, String imageId, String type, int zoom, int x, int y) {
+        String baseDir = type as ImageType == ImageType.PRIVATE ? "${grailsApplication.config.image.private.dir}" : "${grailsApplication.config.image.staging.dir}"
+
+        new File("${baseDir}/${profileId}/${imageId}_tiles/${zoom}/${x}/${y}.png")
+    }
 
     def uploadImage(String opusId, String profileId, String dataResourceId, Map metadata, MultipartFile file) {
         def profile = profileService.getProfile(opusId, profileId, true)
 
         metadata.scientificName = profile.profile.scientificName
+        metadata.contentType = file.contentType
 
         def response
 
@@ -45,7 +93,19 @@ class ImageService {
         metadata.imageId = UUID.randomUUID().toString()
         metadata.action = "add"
 
-        file.transferTo(new File(localDir, "${metadata.imageId}${extension}"))
+        File imageFile = new File(localDir, "${metadata.imageId}${extension}")
+        file.transferTo(imageFile)
+
+        // create tiles
+        File tileDir = new File(localDir, "${metadata.imageId}_tiles")
+        tileDir.mkdir()
+
+        ImageTiler tiler = new ImageTiler(new ImageTilerConfig())
+        tiler.tileImage(imageFile, tileDir)
+    }
+
+    private static File getLocalImageFile(String directory, String profileId, String imageId, String extension) {
+        new File("${directory}/${profileId}/${imageId}${extension}")
     }
 
     def deleteStagedImage(String opusId, String profileId, String imageId) {
@@ -138,11 +198,16 @@ class ImageService {
         String extension = getExtension(image.originalFileName)
         File localDir = new File(directory)
         File file = new File(localDir, "${imageId}${extension}")
-        deleteFileAndDirIfEmpty(file, localDir)
+        deleteFileAndDirIfEmpty(imageId, file, localDir)
     }
 
-    private static deleteFileAndDirIfEmpty(File file, File localDir) {
+    private static deleteFileAndDirIfEmpty(String imageId, File file, File localDir) {
         boolean deleted = file.delete()
+
+        File tileDir = new File(localDir, "${imageId}_tiles")
+        if (tileDir.exists()) {
+            deleted &= tileDir.deleteDir()
+        }
 
         if (localDir.listFiles()?.length == 0) {
             localDir.delete()
@@ -151,7 +216,8 @@ class ImageService {
         deleted
     }
 
-    private static convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false) {
+    private
+    static convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false) {
         String imageUrlPrefix = useInternalPaths ? "file:///data/profile-hub/private-images/${profile.uuid}" : "/opus/${opus.uuid}/profile/${profile.uuid}/image"
 
         images?.collect {
@@ -209,7 +275,7 @@ class ImageService {
             if (!localImage) {
                 log.error("Skipping publishing $it with id $imageId because it is missing image metadata.")
                 // Clean up staged / private file
-                deleteFileAndDirIfEmpty(it, localDir)
+                deleteFileAndDirIfEmpty(imageId, it, localDir)
                 continue;
             }
 
@@ -222,9 +288,10 @@ class ImageService {
                             title           : localImage.title ?: "",
                             description     : localImage.description ?: "",
                             dateCreated     : localImage.dateCreated ?: "",
-                            originalFilename: localImage.originalFilename
+                            originalFilename: localImage.originalFilename,
+                            contentType     : localImage.contentType
                     ]
-            ]: []
+            ] : []
             Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
 
             def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
