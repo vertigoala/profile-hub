@@ -46,7 +46,7 @@
 
     <span ng-if="layout == 'tree'">
         <span ng-if="taxon.childCount > 0" title="Click to view subordinate taxa">
-            <a href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, false)"
+            <a href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, true)"
                target="_self">
                 <span class="fa {{ taxon.loading ? 'fa-spin fa-spinner' : taxon.expanded ? 'fa-minus' : 'fa-plus' }} small"></span>
                 <span ng-show="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name | default:taxon.scientificName }}
@@ -62,15 +62,31 @@
             </a>
         </span>
 
+        <div class="form-group" ng-form="filterForm" ng-if="!taxon.showingCurrentProfileOnly && (taxon.children.length >= pageSize || taxon.filter) && taxon.expanded">
+            <label for="filter" class="screen-reader-label">Filter by name starting with...</label>
+            <input id="filter" type="text"
+                   class="form-control input-sm ignore-save-warning tree-input"
+                   placeholder="Name starting with..."
+                   ng-enter="loadSubordinateTaxa(taxon.offset, taxon, false)"
+                   ng-change="filterChanged(taxon)"
+                   name="filter"
+                   autocomplete="off"
+                   ng-required="true"
+                   ng-model="taxon.filter">
+            <button type="submit" class="btn btn-primary btn-sm input-append" ng-click="loadSubordinateTaxa(taxon.offset, taxon, false)" ng-disabled="filterForm.$invalid">
+                <span class="fa fa-filter"></span>
+            </button>
+        </div>
+
         <ul ng-if="taxon.children.length > 0 && taxon.expanded">
             <li ng-if="taxon.showingCurrentProfileOnly">
-                <a ng-href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, true)"><span class="small">Show all {{ taxon.name }}...</span>
+                <a ng-href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, false)"><span class="small">Show all {{ taxon.name }}...</span>
                 </a>
             <li ng-repeat="taxon in taxon.children">
                 <span ng-include src="'taxon.html'"></span>
             </li>
             <li ng-if="!taxon.showingCurrentProfileOnly && taxon.offset > -1 && taxon.mightHaveMore">
-                <a ng-href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, true)"><span class="small">View more...</span>
+                <a ng-href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, false)"><span class="small">View more...</span>
             </a>
         </ul>
     </span>

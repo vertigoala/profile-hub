@@ -234,6 +234,26 @@ describe("ProfileService tests", function () {
         http.expectGET("/someContext/profile/search/taxon/levels?opusId=opusId").respond("bla");
     });
 
+    it("shold invoke the getImmediateChildren service on the context root with all provided parameters when getImmediateChildren is invoked", function() {
+        service.profileSearchGetImmediateChildren("opus1", "rank", "name", 10, 20, "filter");
+
+        http.expectGET("/someContext/profile/search/children?opusId=opus1&rank=rank&name=name&max=10&offset=20&filter=filter").respond("bla");
+    });
+
+    it("shold not include the filter param when getImmediateChildren is invoked with a null, empty or undefined filter term", function() {
+        service.profileSearchGetImmediateChildren("opus1", "rank", "name", 10, 20, " ");
+
+        http.expectGET("/someContext/profile/search/children?opusId=opus1&rank=rank&name=name&max=10&offset=20").respond("bla");
+
+        service.profileSearchGetImmediateChildren("opus1", "rank", "name", 10, 20, null);
+
+        http.expectGET("/someContext/profile/search/children?opusId=opus1&rank=rank&name=name&max=10&offset=20").respond("bla");
+
+        service.profileSearchGetImmediateChildren("opus1", "rank", "name", 10, 20, undefined);
+
+        http.expectGET("/someContext/profile/search/children?opusId=opus1&rank=rank&name=name&max=10&offset=20").respond("bla");
+    });
+
     it("should invoke the user search operation on the context root when userSearch is called ", function() {
         service.userSearch("fred");
 

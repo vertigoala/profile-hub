@@ -268,10 +268,10 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/levels?opusId=${enc(opusId)}")
     }
 
-    def getImmediateChildren(String opusId, String rank, String name, String max, String offset) {
+    def getImmediateChildren(String opusId, String rank, String name, String max, String offset, String filter) {
         log.debug("Searching for children of '${rank} ${name}'")
 
-        webService.get("${grailsApplication.config.profile.service.url}/profile/search/children?opusId=${enc(opusId)}&rank=${enc(rank)}&name=${enc(name)}&max=${max}&offset=${offset}")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search/children?opusId=${enc(opusId)}&rank=${enc(rank)}&name=${enc(name)}&max=${max}&offset=${offset}&filter=${enc(filter) ?: ""}")
     }
 
     def updateBHLLinks(String opusId, String profileId, def links) {

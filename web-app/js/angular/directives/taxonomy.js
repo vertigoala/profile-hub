@@ -17,7 +17,7 @@ profileEditor.directive('taxonomy', function ($browser) {
             $scope.showChildren = false;
             $scope.includeRank = false;
             $scope.limit = -1;
-            $scope.pageSize = 10;
+            $scope.pageSize = 15;
 
             $scope.fetchChildren = function (level, scientificName, childCount) {
                 $modal.open({
@@ -67,9 +67,9 @@ profileEditor.directive('taxonomy', function ($browser) {
                 });
             };
 
-            $scope.loadSubordinateTaxa = function (offset, taxon, viewMore) {
-                if (!viewMore) {
-                    taxon.expanded = !taxon.expanded | false;
+            $scope.loadSubordinateTaxa = function (offset, taxon, openCloseSection) {
+                if (openCloseSection) {
+                    taxon.expanded = !taxon.expanded || false;
 
                     if (offset > 0 || taxon.showingCurrentProfileOnly) {
                         return;
@@ -77,11 +77,11 @@ profileEditor.directive('taxonomy', function ($browser) {
                 }
 
                 if (taxon.expanded) {
-                    if (offset === undefined || offset < 0) {
+                    if (_.isUndefined(offset) || offset < 0) {
                         offset = 0;
                     }
 
-                    var results = profileService.profileSearchGetImmediateChildren($scope.opusId, taxon.rank, taxon.name, $scope.pageSize, offset, false, true);
+                    var results = profileService.profileSearchGetImmediateChildren($scope.opusId, taxon.rank, taxon.name, $scope.pageSize, offset, taxon.filter);
                     taxon.loading = true;
                     results.then(function (data) {
                             if (!_.isUndefined(data) && data.length > 0) {
@@ -97,6 +97,9 @@ profileEditor.directive('taxonomy', function ($browser) {
 
                                 taxon.mightHaveMore = data.length >= $scope.pageSize;
                             } else {
+                                if (!_.isUndefined(taxon.filter) && taxon.filter) {
+                                    taxon.children = [];
+                                }
                                 taxon.mightHaveMore = false;
                             }
                             taxon.loading = false;
@@ -106,6 +109,13 @@ profileEditor.directive('taxonomy', function ($browser) {
                             messageService.alert("Failed to perform search for '" + taxon.rank + " " + taxon.name + "'.");
                         }
                     );
+                }
+            };
+
+            $scope.filterChanged = function(taxon) {
+                taxon.offset = 0;
+                if (_.isUndefined(taxon.filter) || taxon.filter.trim().length == 0) {
+                    $scope.loadSubordinateTaxa(0, taxon, true);
                 }
             };
 
@@ -121,6 +131,7 @@ profileEditor.directive('taxonomy', function ($browser) {
                             previous.offset = -1;
                             previous.showingCurrentProfileOnly = true;
                             previous.mightHaveMore = true;
+                            previous.filter = null;
                         }
                         previous = next;
                     });
@@ -128,7 +139,7 @@ profileEditor.directive('taxonomy', function ($browser) {
                 }
             }
         }],
-        link: function (scope, element, attrs, ctrl) {
+        link: function (scope) {
             scope.$watch("includeRank", function(newValue) {
                 if (!_.isUndefined(newValue)) {
                     scope.includeRank = isTruthy(newValue);

@@ -62,7 +62,7 @@ class SearchController extends BaseController {
         if (!params.opusId || !params.rank || !params.name) {
             badRequest "opusId, rank and name are required parameters"
         } else {
-            def response = profileService.getImmediateChildren(params.opusId, params.rank, params.name, params.max, params.offset)
+            def response = profileService.getImmediateChildren(params.opusId, params.rank, params.name, params.max, params.offset, params.filter)
 
             handle response
         }
