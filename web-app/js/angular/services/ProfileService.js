@@ -518,8 +518,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        profileSearchGetImmediateChildren: function(opusId, rank, name, max, offset) {
-            var future = $http.get(util.contextRoot() + "/profile/search/children?opusId=" + opusId + "&rank=" + rank + "&name=" + name + "&max=" + max + "&offset=" + offset);
+        profileSearchGetImmediateChildren: function(opusId, rank, name, max, offset, filter) {
+            if (_.isUndefined(filter) || !filter || filter.trim().length == 0) {
+                filter = "";
+            } else {
+                filter = "&filter=" + filter;
+            }
+
+            var future = $http.get(util.contextRoot() + "/profile/search/children?opusId=" + opusId + "&rank=" + rank + "&name=" + name + "&max=" + max + "&offset=" + offset + filter);
             future.then(function(response) {
                 $log.debug("Child search returned with response code " + response.status);
             });

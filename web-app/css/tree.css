@@ -29,6 +29,10 @@
     position: relative;
 }
 
+.tree-input {
+    width: 200px;
+}
+
 .tree li:before {
     content: "";
     display: block;
