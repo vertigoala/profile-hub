@@ -5,7 +5,7 @@
                     class="fa fa-plus"></i>&nbsp;Add attribute
             </button>
 
-            <div class="small pull-right"
+            <div class="small pull-right ignore-save-warning"
                  ng-show="(attrCtrl.readonly && attrCtrl.opus.showLinkedOpusAttributes) || (!attrCtrl.readonly && attrCtrl.opus.allowCopyFromLinkedOpus)">
                 Show information from supporting collections:
                 <div class="btn-group">
