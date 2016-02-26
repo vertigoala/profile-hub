@@ -66,14 +66,18 @@ class AnalyticsFilters {
      * @return The Google Analytics CID parameter
      */
     private String extractClientIdFromGoogleAnalyticsCookie(Cookie[] cookies) {
+        final GA_VERSION_INDEX = 0
+        final GA_CLIENT_ID_PART_1_INDEX = 2
+        final GA_CLIENT_ID_PART_2_INDEX = 3
+        final GA_COOKIE_PARTS_EXPECTED_LENGTH = 4
         final cookie = cookies.find { it.name == '_ga' }
         def clientId = null
         if (cookie) {
             def analyticsCookieComponents = cookie.value.split('\\.')
             if (analyticsCookieComponents.length > 1
-                    && analyticsCookieComponents[0] == 'GA1'
-                    && analyticsCookieComponents.length == 4) {
-                clientId = analyticsCookieComponents[2] + '.' + analyticsCookieComponents[3]
+                    && analyticsCookieComponents[GA_VERSION_INDEX] == 'GA1'
+                    && analyticsCookieComponents.length == GA_COOKIE_PARTS_EXPECTED_LENGTH) {
+                clientId = analyticsCookieComponents[GA_CLIENT_ID_PART_1_INDEX] + '.' + analyticsCookieComponents[GA_CLIENT_ID_PART_2_INDEX]
             } else {
                 log.warn("Got Google Analytics cookie but not of a known version: ${cookie.value}")
             }
