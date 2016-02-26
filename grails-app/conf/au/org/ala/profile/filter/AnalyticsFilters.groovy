@@ -4,6 +4,9 @@ import javax.servlet.http.Cookie
 
 import au.org.ala.profile.analytics.Analytics
 
+import static org.codehaus.groovy.grails.web.servlet.HttpHeaders.REFERER
+import static org.codehaus.groovy.grails.web.servlet.HttpHeaders.USER_AGENT
+
 class AnalyticsFilters {
 
     def analyticsService
@@ -17,14 +20,14 @@ class AnalyticsFilters {
                 try {
                     if (response.getStatus() in 200..299) { // only care about successful HTTP responses
                         final artefact = grailsApplication.getArtefactByLogicalPropertyName('Controller', controllerName)
-                        final annotation = artefact.clazz.with {
-                            (it.methods.find { it.name == actionName }?.getAnnotation(Analytics) ?: it.declaredFields.find { it.name == actionName }?.getAnnotation(Analytics)) ?: it.getAnnotation(Analytics)
+                        final annotation = artefact.clazz.with { clazz ->
+                            (clazz.methods.find { it.name == actionName }?.getAnnotation(Analytics) ?: clazz.declaredFields.find { it.name == actionName }?.getAnnotation(Analytics)) ?: clazz.getAnnotation(Analytics)
                         }
                         if (annotation) {
-                            final cid = extractCidFromGACookie(request.cookies)
+                            final clientId = extractClientIdFromGoogleAnalyticsCookie(request.cookies)
                             final path = URLDecoder.decode(request.forwardURI, 'utf-8')
-                            log.debug("Sending pageview to analytics for ${request.serverName}, $path, $cid, $request.remoteAddr")
-                            analyticsService.pageView(request.serverName, path, cid, request.remoteAddr, request.getHeader("user-agent"), request.getHeader("referer"))
+                            log.debug("Sending pageview to analytics for ${request.serverName}, $path, $clientId, $request.remoteAddr")
+                            analyticsService.pageView(request.serverName, path, clientId, request.remoteAddr, request.getHeader(USER_AGENT), request.getHeader(REFERER))
                         }
                     }
                 } catch (e) {
@@ -44,10 +47,10 @@ class AnalyticsFilters {
      * IDs. However, it also supports the old X.Y 32-bit IDs used in the previous generation of GA.
 
      * 2. Universal Analytics analytics.js creates a cookie called _ga. There's just one cookie, not several as there used
-     * to be in ye olde GA. The cookie contains four values: 1.2.299259584.1357814039257.
+     * to be in ye olde GA. The cookie contains four values: GA1.2.299259584.1357814039257.
      * (There are no longer two underscores as there were on old GA cookies).
      *
-     * 1 = The cookie format version
+     * GA1 = The cookie format version
      * 2 = The domain depth on which the cookie is written
      * 299259584.1357814039257 = The client id (cid)
      *
@@ -59,25 +62,27 @@ class AnalyticsFilters {
      * the case that a download or PDF link has been given directly to a user.
      * TODO use a persistent UUID per user.
      *
-     * @param cookie
-     * @return
+     * @param cookies The cookies from a request
+     * @return The Google Analytics CID parameter
      */
-    private String extractCidFromGACookie(Cookie[] cookies) {
-        def cookie = cookies.find { it.name == '_ga' }
-        def value = null
+    private String extractClientIdFromGoogleAnalyticsCookie(Cookie[] cookies) {
+        final cookie = cookies.find { it.name == '_ga' }
+        def clientId = null
         if (cookie) {
-            def splits = cookie.value.split('\\.')
-            if (splits.length > 1 && splits[0] == 'GA1' && splits.length == 4) {
-                value = splits[2] + '.' + splits[3]
+            def analyticsCookieComponents = cookie.value.split('\\.')
+            if (analyticsCookieComponents.length > 1
+                    && analyticsCookieComponents[0] == 'GA1'
+                    && analyticsCookieComponents.length == 4) {
+                clientId = analyticsCookieComponents[2] + '.' + analyticsCookieComponents[3]
             } else {
-                log.warn("Got Google Analytics cookie but not of known version: ${cookie.value}")
+                log.warn("Got Google Analytics cookie but not of a known version: ${cookie.value}")
             }
         }
 
-        if (!value) {
-            value = UUID.randomUUID().toString()
+        if (!clientId) {
+            clientId = UUID.randomUUID().toString()
         }
 
-        return value
+        return clientId
     }
 }

@@ -12,17 +12,18 @@ class AnalyticsService {
     GoogleAnalyticsClient googleAnalyticsClient
 
     /**
-     * Asynchronously Send an analytics event to the analytics end point.
-     * @param hostname The hostname of the request
-     * @param path The path of the request
-     * @param cid The client id of the request
+     * Asynchronously send a page view to the analytics end point.
+     * @param hostname The hostname of the page view
+     * @param path The path of the page view
+     * @param clientId The client id of the page view
+     * @param userIp The originating ip of the page view
+     * @param userAgent The user agent for the page view
+     * @param referrer The 'referer' for the page view
      */
-    void pageView(String hostname, String path, String cid, String userIp, String userAgent, String referrer) {
+    void pageView(String hostname, String path, String clientId, String userIp, String userAgent, String referrer) {
         final String googleAnalyticsId = grailsApplication.config.googleAnalyticsId
         if (googleAnalyticsId) {
             task {
-                final v = '1'
-                final t = 'pageview'
                 final data = [
                         dh : hostname,         // Document hostname.
                         dp : path,             // Page.
@@ -30,11 +31,11 @@ class AnalyticsService {
                         ua : userAgent ?: '',  // User Agent
                         dr : referrer ?: '',   // Document referrer
                 ]
-                def call = googleAnalyticsClient.collect(v, googleAnalyticsId, cid, t, data)
+                final call = googleAnalyticsClient.collect('1', googleAnalyticsId, clientId, 'pageview', data)
                 try {
-                    def resp = call.execute()
+                    final resp = call.execute()
                     if (!resp.success) {
-                        log.warn("Analytics pageview for $cid with data: $data failed")
+                        log.warn("Analytics pageview for $clientId with data: $data failed")
                     }
                 } catch(e) {
                     log.error("Caught exception while sending pageview to analytics", e)
