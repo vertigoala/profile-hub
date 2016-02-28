@@ -126,6 +126,7 @@ environments {
 }
 
 jasper.dir.reports = 'classpath:reports'
+googleAnalyticsId = 'UA-4355440-1'
 
 grails.cache.config = {
     provider {

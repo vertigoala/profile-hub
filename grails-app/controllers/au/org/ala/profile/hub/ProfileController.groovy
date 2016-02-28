@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.analytics.Analytics
 import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
 import au.org.ala.profile.security.PrivateCollectionSecurityExempt
@@ -414,6 +415,7 @@ class ProfileController extends BaseController {
         }
     }
 
+    @Analytics
     def retrievePublication() {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
@@ -459,7 +461,7 @@ class ProfileController extends BaseController {
         if(!enabled("publications")) {
             badRequest "The publications feature has been disabled"
         } else if (!params.profileId || !params.opusId) {
-            badRequest "profileId and opudId are required parameters"
+            badRequest "profileId and opusId are required parameters"
         } else {
             Map pdfOptions = [
                     profileId   : params.profileId,

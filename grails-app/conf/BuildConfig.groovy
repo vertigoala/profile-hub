@@ -43,8 +43,6 @@ grails.project.dependency.resolution = {
     management {
         dependency "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
         dependency "org.apache.httpcomponents:httpclient:${httpmimeVersion}"
-        //dependency 'com.google.guava:guava:18.0'
-        //dependency 'commons-codec:commons-codec:1.6'
     }
 
     dependencies {
@@ -64,6 +62,7 @@ grails.project.dependency.resolution = {
         compile 'net.sf.jasperreports:jasperreports-fonts:6.1.0'
         compile 'net.glxn:qrgen:1.4'
         compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160203.1-ALA'
+        compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
 
     }
 

@@ -28,7 +28,7 @@ class NslService {
     }
 
     private static Map formatReference(reference) {
-        String referenceUrl = reference.citations[0]._links.permalink.link
+        String referenceUrl = reference.citations[0]?._links?.permalink?.link
         String name = reference.citation
         if (reference.APCReference?.toBoolean()) {
             name += " (APC)"
