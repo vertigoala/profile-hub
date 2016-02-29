@@ -74,7 +74,7 @@ class AnalyticsFilters {
         final cookie = cookies.find { it.name == '_ga' }
         String clientId = ''
         if (cookie) {
-            def analyticsCookieComponents = cookie.value.split('\\.')
+            final analyticsCookieComponents = cookie.value.split('\\.')
             if (analyticsCookieComponents.length > 1
                     && analyticsCookieComponents[GA_VERSION_INDEX] == GA_EXPECTED_VERSION
                     && analyticsCookieComponents.length == GA_COOKIE_PARTS_EXPECTED_LENGTH) {
