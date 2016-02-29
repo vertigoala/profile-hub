@@ -106,7 +106,7 @@
                 <button class="btn btn-default" ng-click="bhlCtrl.addLink(BhlForm)"><i
                         class="fa fa-plus"></i> Add new reference
                 </button>
-                <button class="btn btn-primary pull-right" ng-click="bhlCtrl.saveLinks(BhlForm)">
+                <button class="btn btn-primary pull-right" ng-click="bhlCtrl.saveLinks(BhlForm)" ng-disabled="!BhlForm.$dirty">
                     <span id="saved"><span ng-show="BhlForm.$dirty">*</span> Save</span>
                 </button>
             </div>

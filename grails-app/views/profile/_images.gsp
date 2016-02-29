@@ -153,7 +153,7 @@
                     <g:elseif test="${grailsApplication.config.deployment_env.toLowerCase() != 'prod' && grailsApplication.config.deployment_env.toLowerCase() != 'production'}">
                         <span class="small">Image uploads are not available in ${grailsApplication.config.deployment_env}</span>
                     </g:elseif>
-                    <button class="btn btn-primary pull-right" ng-click="imageCtrl.saveProfile(ImageForm)"><span
+                    <button class="btn btn-primary pull-right" ng-click="imageCtrl.saveProfile(ImageForm)" ng-disabled="!ImageForm.$dirty"><span
                             ng-show="ImageForm.$dirty">*</span> Save</button>
                 </div>
             </div>

@@ -44,7 +44,7 @@
             <div class="col-md-12">
                 <button class="btn btn-default" ng-click="profileCtrl.addBibliography(BiblioForm)"><i
                         class="fa fa-plus"></i> Add bibliography</button>
-                <button class="btn btn-primary pull-right" ng-click="profileCtrl.saveProfile(BiblioForm)"><span
+                <button class="btn btn-primary pull-right" ng-click="profileCtrl.saveProfile(BiblioForm)" ng-disabled="!BiblioForm.$dirty"><span
                         ng-show="BiblioForm.$dirty">*</span> Save</button>
             </div>
         </div>

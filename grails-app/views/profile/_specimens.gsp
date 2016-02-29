@@ -72,7 +72,7 @@
                 <button class="btn btn-default" ng-click="specCtrl.addSpecimen(SpecimenForm)"><i
                         class="fa fa-plus"></i> Add Specimen</button>
                 <button class="btn btn-primary pull-right" ng-click="specCtrl.save(SpecimenForm)"
-                        ng-disabled="!specCtrl.isValid()"><span
+                        ng-disabled="!SpecimenForm.$dirty || !specCtrl.isValid()"><span
                         ng-show="SpecimenForm.$dirty">*</span> Save</button>
             </div>
         </div>

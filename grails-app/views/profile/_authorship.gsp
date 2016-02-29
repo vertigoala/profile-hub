@@ -68,8 +68,8 @@
             <div class="col-md-12">
                 <button class="btn btn-default" ng-click="profileCtrl.addAuthorship(AuthorForm)"><i
                         class="fa fa-plus"></i> Add section</button>
-                <button class="btn btn-primary pull-right" ng-click="profileCtrl.saveAuthorship(AuthorForm)"><span
-                        ng-show="AuthorForm.$dirty">*</span> Save</button>
+                <button class="btn btn-primary pull-right" ng-click="profileCtrl.saveAuthorship(AuthorForm)" ng-disabled="!AuthorForm.$dirty">
+                    <span ng-show="AuthorForm.$dirty">*</span> Save</button>
             </div>
         </div>
     </div>

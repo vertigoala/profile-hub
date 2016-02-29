@@ -53,7 +53,7 @@
                 <button class="btn btn-default" ng-click="linkCtrl.addLink(LinkForm)"><i
                         class="fa fa-plus"></i> Add new link
                 </button>
-                <button class="btn btn-primary pull-right" ng-click="linkCtrl.saveLinks(LinkForm)">
+                <button class="btn btn-primary pull-right" ng-click="linkCtrl.saveLinks(LinkForm)" ng-disabled="!LinkForm.$dirty">
                     <span id="saved"><span ng-show="LinkForm.$dirty">*</span> Save</span>
                 </button>
             </div>
