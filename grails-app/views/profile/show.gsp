@@ -63,7 +63,7 @@
                 <p>
                     Archived profiles will not appear in search results. Use the following URL to create a direct link to this profile:
                     <br/>
-                    http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.uuid}}/profile/{{profileCtrl.profile.uuid}}
+                    ${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.uuid}}/profile/{{profileCtrl.profile.uuid}}
                 </p>
             </alert>
         </div>
@@ -174,8 +174,8 @@
                                 <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                      opus-id="profileCtrl.opus.uuid"
                                      keybase-url="${grailsApplication.config.keybase.key.lookup}"
-                                     key-lookup-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
-                                     profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
+                                     key-lookup-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
+                                     profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
                             </div>
                         </tab>
                         <tab heading="Documents" class="font-xxsmall" ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0">
