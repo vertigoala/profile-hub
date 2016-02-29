@@ -1,7 +1,6 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.profile.analytics.Analytics
-import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
 import au.org.ala.profile.security.PrivateCollectionSecurityExempt
 import au.org.ala.web.AuthService
@@ -11,8 +10,6 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
-import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
-import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
 
 class ProfileController extends BaseController {
@@ -25,7 +22,7 @@ class ProfileController extends BaseController {
 
     def index() {}
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def edit() {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
@@ -71,7 +68,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def createProfile() {
         def jsonRequest = request.getJSON();
 
@@ -84,7 +81,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateProfile() {
         def json = request.getJSON()
 
@@ -98,7 +95,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def renameProfile() {
         def json = request.getJSON()
         if (!params.opusId || !params.profileId || !json) {
@@ -110,7 +107,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def toggleDraftMode() {
         if (!params.profileId) {
             badRequest()
@@ -131,7 +128,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def publishPrivateImage() {
         if (!params.opusId || !params.profileId || !params.imageId) {
             badRequest()
@@ -142,7 +139,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def discardDraftChanges() {
         if (!params.profileId) {
             badRequest()
@@ -169,7 +166,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def deleteProfile() {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
@@ -180,7 +177,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def archiveProfile() {
         def json = request.getJSON()
         if (!params.profileId || !params.opusId || !json?.archiveComment) {
@@ -198,7 +195,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def restoreArchivedProfile() {
         def json = request.getJSON()
 
@@ -211,7 +208,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateBHLLinks() {
         def jsonRequest = request.getJSON()
 
@@ -225,7 +222,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateLinks() {
         def jsonRequest = request.getJSON()
 
@@ -240,7 +237,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateAttribute() {
         log.debug "Updating attributing....."
         def jsonRequest = request.getJSON()
@@ -255,7 +252,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def deleteAttribute() {
         if (!params.attributeId || !params.profileId) {
             badRequest "attributeId and profileId are required parameters"
@@ -290,14 +287,15 @@ class ProfileController extends BaseController {
             badRequest "opusId, profileId and imageSources are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean readonlyView = params.readonlyView?.toBoolean()
 
-            def response = imageService.retrieveImages(params.opusId, params.profileId, latest, params.imageSources, params.searchIdentifier)
+            def response = imageService.retrieveImages(params.opusId, params.profileId, latest, params.imageSources, params.searchIdentifier, false, readonlyView)
 
             handle response
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def uploadImage() {
         if (!params.opusId || !params.profileId || !params.dataResourceId || !params.title) {
             badRequest "opusId, dataResourceId, title and profileId are mandatory fields"
@@ -328,7 +326,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def deleteLocalImage() {
         if (!params.opusId || !params.profileId || !params.imageId || !params.type) {
             badRequest "opusId, profileId, imageId and type are required parameters"
@@ -456,7 +454,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def savePublication() {
         if(!enabled("publications")) {
             badRequest "The publications feature has been disabled"
@@ -489,7 +487,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateAuthorship() {
         def json = request.getJSON()
 

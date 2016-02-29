@@ -143,9 +143,9 @@ describe("ProfileService tests", function () {
     });
 
     it("should invoke the retrieve images service on the context root when retrieveImages is called", function () {
-        service.retrieveImages("opusId", "profileId", "searchId1", "sourceList");
+        service.retrieveImages("opusId", "profileId", "searchId1", "sourceList", true);
 
-        http.expectGET("/someContext/opus/opusId/profile/profileId/images?searchIdentifier=searchId1&imageSources=sourceList").respond("bla");
+        http.expectGET("/someContext/opus/opusId/profile/profileId/images?searchIdentifier=searchId1&imageSources=sourceList&readonlyView=true").respond("bla");
     });
 
     it("should invoke the retrieve lists service on the context root when retrieveLists is called", function () {

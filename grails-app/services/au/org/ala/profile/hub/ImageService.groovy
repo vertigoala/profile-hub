@@ -144,7 +144,7 @@ class ImageService {
         deleted
     }
 
-    def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false) {
+    def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
         Map response = [:]
 
         def model = profileService.getProfile(opusId, profileId, latest)
@@ -156,35 +156,41 @@ class ImageService {
         List images = []
 
         if (publishedImages && publishedImages.statusCode == SC_OK) {
-            List biocacheImages = publishedImages.resp.occurrences.collect {
-                boolean excluded = false
-                if (profile.excludedImages && profile.excludedImages.contains(it.image)) {
-                    excluded = true
-                }
+            List biocacheImages = publishedImages.resp.occurrences.findResults { biocacheImage ->
+                boolean excluded = isExcluded(opus.approvedImageOption, profile.imageDisplayOptions ?: null, biocacheImage.image)
 
-                [
-                        imageId         : it.image,
-                        occurrenceId    : it.uuid,
-                        largeImageUrl   : it.largeImageUrl,
-                        thumbnailUrl    : it.thumbnailUrl,
-                        dataResourceName: it.dataResourceName,
+                Map image = [
+                        imageId         : biocacheImage.image,
+                        occurrenceId    : biocacheImage.uuid,
+                        largeImageUrl   : biocacheImage.largeImageUrl,
+                        thumbnailUrl    : biocacheImage.thumbnailUrl,
+                        dataResourceName: biocacheImage.dataResourceName,
                         excluded        : excluded,
-                        primary         : it.image == profile.primaryImage,
-                        metadata        : it.imageMetadata && !it.imageMetadata.isEmpty() ? it.imageMetadata[0] : [:],
+                        displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
+                        primary         : biocacheImage.image == profile.primaryImage,
+                        metadata        : biocacheImage.imageMetadata && !biocacheImage.imageMetadata.isEmpty() ? biocacheImage.imageMetadata[0] : [:],
                         type            : ImageType.OPEN
                 ]
+
+                // only return images that have not been included, unless we are in the edit view, in which case we
+                // need to show all available images in order for the editor to decide which to include/exclude
+                if (!excluded || !readonlyView) {
+                    image
+                }
             }
 
             images.addAll(biocacheImages)
+        } else {
+            log.error("A HTTP status of ${publishedImages.statusCode} was returned from the biocache image lookup")
         }
 
         if (profile.privateMode && profile.stagedImages) {
-            images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths))
+            images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
         }
 
         // The collection may now, or may have been at some point, private, so look for any private images that may exist.
         // When a collection is changed from private to public, existing private images are NOT published automatically.
-        images.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths))
+        images.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
 
         response.statusCode = SC_OK
         response.resp = images
@@ -217,27 +223,44 @@ class ImageService {
     }
 
     private
-    static convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false) {
+    static convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false, boolean readonlyView = true) {
         String imageUrlPrefix = useInternalPaths ? "file:///data/profile-hub/private-images/${profile.uuid}" : "/opus/${opus.uuid}/profile/${profile.uuid}/image"
 
-        images?.collect {
+        images?.findResults {
             String extension = getExtension(it.originalFileName)
-            boolean excluded = false
-            if (profile.excludedImages && profile.excludedImages.contains(it.imageId)) {
-                excluded = true
-            }
+            boolean excluded = isExcluded(opus.approvedImageOption, profile.imageDisplayOptions ?: null, it.imageId)
 
-            [
+            Map image = [
                     imageId         : it.imageId,
                     thumbnailUrl    : "${imageUrlPrefix}/${it.imageId}${extension}?type=${type}",
                     largeImageUrl   : "${imageUrlPrefix}/${it.imageId}${extension}?type=${type}",
                     dataResourceName: opus.title,
                     metadata        : it,
                     excluded        : excluded,
+                    displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
                     primary         : it.imageId == profile.primaryImage,
                     type            : type
             ]
+
+            // only return images that have not been included, unless we are in the edit view, in which case we
+            // need to show all available images in order for the editor to decide which to include/exclude
+            if (!excluded || !readonlyView) {
+                image
+            }
         }
+    }
+
+    private static boolean isExcluded(String defaultOptionStr, List<Map> imageDisplayOptions, String imageId) {
+        boolean excluded
+
+        ImageOption defaultOption = ImageOption.byName(defaultOptionStr, ImageOption.INCLUDE)
+        if (defaultOption == ImageOption.EXCLUDE) {
+            excluded = imageDisplayOptions?.find { it.imageId == imageId && ImageOption.byName(it.displayOption) == ImageOption.INCLUDE } == null
+        } else {
+            excluded = imageDisplayOptions?.find { it.imageId == imageId && ImageOption.byName(it.displayOption) == ImageOption.EXCLUDE } != null
+        }
+
+        excluded
     }
 
     def publishPrivateImage(String opusId, String profileId, String imageId) {
@@ -296,14 +319,17 @@ class ImageService {
 
             def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
 
-            // check if the local image was set as the primary or an excluded image, and swap the local id for the new permanent id
-            if (profile.primaryImage == imageId) {
-                profileUpdates.primaryImage = uploadResponse.resp.images[0]
-            }
-            if (profile.excludedImages?.contains(imageId)) {
-                profile.excludedImages.remove(imageId)
-                profile.excludedImages << uploadResponse.resp.images[0]
-                profileUpdates.excludedImages = profile.excludedImages
+            if (uploadResponse?.resp) {
+                // check if the local image was set as the primary, and swap the local id for the new permanent id
+                if (profile.primaryImage == imageId) {
+                    profileUpdates.primaryImage = uploadResponse.resp.images[0]
+                }
+
+                // check for any display options that were set for the local image, and swap the local id for the new permanent id
+                Map imageDisplayOption = profile.imageDisplayOptions?.find { it.imageId == imageId }
+                if (imageDisplayOption) {
+                    imageDisplayOption?.imageId = uploadResponse.resp.images[0]
+                }
             }
 
             if (staged) {

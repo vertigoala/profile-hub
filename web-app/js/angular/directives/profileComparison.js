@@ -36,9 +36,7 @@ profileEditor.directive('profileComparison', function ($browser) {
                     $scope.diff.specimenIds = compare(
                         $scope.left.specimenIds ? $scope.left.specimenIds.join(", ") : "",
                         $scope.right.specimenIds ? $scope.right.specimenIds.join(", ") : "");
-                    $scope.diff.excludedImages = compare(
-                        $scope.left.excludedImages ? $scope.left.excludedImages.join(", ") : "",
-                        $scope.right.excludedImages ? $scope.right.excludedImages.join(", ") : "");
+                    $scope.diff.imageDisplayOptions = compareLists($scope.left.imageDisplayOptions, $scope.right.imageDisplayOptions, "imageId", ["displayOption"]);
                     $scope.diff.nslNomenclatureIdentifier = compare($scope.left.nslNomenclatureIdentifier, $scope.right.nslNomenclatureIdentifier);
                     $scope.diff.scientificName = compare($scope.left.scientificName, $scope.right.scientificName);
                     $scope.diff.archivedDate = compare($scope.left.archivedDate, $scope.right.archivedDate);
@@ -48,8 +46,24 @@ profileEditor.directive('profileComparison', function ($browser) {
                 }
             };
 
-            $scope.getImageUrl = function(imageId) {
-                return config.imageServiceUrl + "/image/proxyImageThumbnailLarge?imageId=" + imageId;
+            $scope.getImageUrl = function(profile, imageId) {
+                var url = null;
+
+                var privateImage = _.find(profile.privateImages, function(item) { return item.imageId == imageId });
+                if (!_.isUndefined(privateImage)) {
+                    var extension = privateImage.originalFileName.substring(privateImage.originalFileName.lastIndexOf("."));
+                    url = config.contextPath + "/opus/" + profile.opusId + "/profile/" + profile.uuid + "/image/" + imageId + extension + "?type=PRIVATE";
+                } else {
+                    var stagedImage = _.find(profile.stagedImages, function(item) { return item.imageId == imageId });
+                    if (!_.isUndefined(stagedImage)) {
+                        var extension = stagedImage.originalFileName.substring(stagedImage.originalFileName.lastIndexOf("."));
+                        url = config.contextPath + "/opus/" + profile.opusId + "/profile/" + profile.uuid + "/image/" + imageId + extension + "?type=STAGED";
+                    } else {
+                        url = config.imageServiceUrl + "/image/proxyImageThumbnail?imageId=" + imageId;
+                    }
+                }
+
+                return url;
             };
 
             $scope.compareProfiles();

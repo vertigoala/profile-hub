@@ -252,14 +252,14 @@ class ImageServiceSpec extends Specification {
         result.resp[1].imageId == "staged2"
     }
 
-    def "retrieveImages should set the excluded and primary flags for staged images"() {
+    def "retrieveImages should set the primary flag for staged images"() {
         setup:
         Map stagedImage1 = [imageId: "staged1", originalFileName: "staged1.jpg", title: "staged image 1" ]
         Map stagedImage2 = [imageId: "staged2", originalFileName: "staged2.jpg", title: "staged image 2" ]
 
         profileService.getProfile(_, _, _) >> [opus: [title: "opus title"], profile: [uuid: "profileId", privateMode: true, stagedImages: [
                 stagedImage1, stagedImage2
-        ], privateImages: [], primaryImage: "staged1", excludedImages: ["staged2"]]]
+        ], privateImages: [], primaryImage: "staged1"]]
 
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
 
@@ -270,15 +270,93 @@ class ImageServiceSpec extends Specification {
         result.resp.size() == 2
         result.resp[0].imageId == "staged1"
         result.resp[0].primary == true
-        result.resp[0].excluded == false
         result.resp[1].imageId == "staged2"
         result.resp[1].primary == false
-        result.resp[1].excluded == true
     }
 
-    def "retrieveImages should set the excluded and primary flags for biocache images"() {
+    def "retrieveImages should set the display option for staged images"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", excludedImages: ["image2"], privateImages: []], opus: [:]]
+        Map stagedImage1 = [imageId: "staged1", originalFileName: "staged1.jpg", title: "staged image 1" ]
+        Map stagedImage2 = [imageId: "staged2", originalFileName: "staged2.jpg", title: "staged image 2" ]
+
+        profileService.getProfile(_, _, _) >> [
+                opus: [title: "opus title"],
+                profile: [uuid: "profileId", privateMode: true, stagedImages: [stagedImage1, stagedImage2],
+                          privateImages: [], primaryImage: "staged1",
+                          imageDisplayOptions: [
+                                  [imageId: "staged1", displayOption: "INCLUDE"],
+                                  [imageId: "staged2", displayOption: "INCLUDE"]
+                          ]
+                ]
+        ]
+
+        biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
+
+        when:
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+
+        then:
+        result.resp.size() == 2
+        result.resp[0].imageId == "staged1"
+        result.resp[0].displayOption == "INCLUDE"
+        result.resp[1].imageId == "staged2"
+        result.resp[1].displayOption == "INCLUDE"
+    }
+
+    def "retrieveImages should set the primary flag for private images"() {
+        setup:
+        Map privateImage1 = [imageId: "private1", originalFileName: "private1.jpg", title: "private image 1" ]
+        Map privateImage2 = [imageId: "private2", originalFileName: "private2.jpg", title: "private image 2" ]
+
+        profileService.getProfile(_, _, _) >> [opus: [title: "opus title"], profile: [uuid: "profileId", privateMode: true, privateImages: [
+                privateImage1, privateImage2
+        ], stagedImages: [], primaryImage: "private1"]]
+
+        biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
+
+        when:
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+
+        then:
+        result.resp.size() == 2
+        result.resp[0].imageId == "private1"
+        result.resp[0].primary == true
+        result.resp[1].imageId == "private2"
+        result.resp[1].primary == false
+    }
+
+    def "retrieveImages should set the display option for private images"() {
+        setup:
+        Map privateImage1 = [imageId: "private1", originalFileName: "private1.jpg", title: "private image 1" ]
+        Map privateImage2 = [imageId: "private2", originalFileName: "private2.jpg", title: "private image 2" ]
+
+        profileService.getProfile(_, _, _) >> [
+                opus: [title: "opus title"],
+                profile: [uuid: "profileId", privateMode: true, privateImages: [privateImage1, privateImage2],
+                          stagedImages: [], primaryImage: "private1",
+                          imageDisplayOptions: [
+                                  [imageId: "private1", displayOption: "INCLUDE"],
+                                  [imageId: "private2", displayOption: "INCLUDE"]
+                          ]
+                ]
+        ]
+
+        biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
+
+        when:
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+
+        then:
+        result.resp.size() == 2
+        result.resp[0].imageId == "private1"
+        result.resp[0].displayOption == "INCLUDE"
+        result.resp[1].imageId == "private2"
+        result.resp[1].displayOption == "INCLUDE"
+    }
+    
+    def "retrieveImages should set the primary flag for biocache images"() {
+        setup:
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", privateImages: []], opus: [:]]
 
         Map image1Metadata = [title: "image 1"]
         Map image2Metadata = [title: "image 2"]
@@ -295,10 +373,31 @@ class ImageServiceSpec extends Specification {
         result.resp.size() == 2
         result.resp[0].imageId == "image1"
         result.resp[0].primary == true
-        result.resp[0].excluded == false
         result.resp[1].imageId == "image2"
         result.resp[1].primary == false
-        result.resp[1].excluded == true
+    }
+
+    def "retrieveImages should set the display option for biocache images"() {
+        setup:
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", privateImages: [], imageDisplayOptions: [[imageId: "image1", displayOption: "INCLUDE"], [imageId: "image2", displayOption: "INCLUDE"]]], opus: [:]]
+
+        Map image1Metadata = [title: "image 1"]
+        Map image2Metadata = [title: "image 2"]
+
+        biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: [
+                [image: "image1", uuid: "occurrenceId1", largeImageUrl: "largeUrl1", thumbnailUrl: "thumbnailUrl1", dataResourceName: "resource1", imageMetadata: image1Metadata],
+                [image: "image2", uuid: "occurrenceId2", largeImageUrl: "largeUrl2", thumbnailUrl: "thumbnailUrl2", dataResourceName: "resource2", imageMetadata: image2Metadata]
+        ], privateImages: []]]
+
+        when:
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+
+        then:
+        result.resp.size() == 2
+        result.resp[0].imageId == "image1"
+        result.resp[0].displayOption == "INCLUDE"
+        result.resp[1].imageId == "image2"
+        result.resp[1].displayOption == "INCLUDE"
     }
 
     def "publishImage should do nothing if there are no staged images"() {
@@ -339,12 +438,12 @@ class ImageServiceSpec extends Specification {
         new File("${grailsApplication.config.image.staging.dir}/profile1").exists() == false
     }
 
-    def "publishImages should replace staged ids with permanent ids for primary and excluded images that were staged"() {
+    def "publishImages should replace the staged id with a permanent id for the primary image if it was a staged image"() {
         setup:
         profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1"], profile: [uuid: "profile1", stagedImages: [
                 [imageId: "image1", originalFileName: "image1.jpg"],
                 [imageId: "image2", originalFileName: "image2.jpg"]
-        ], primaryImage: "image1", excludedImages: ["image2"]]]
+        ], primaryImage: "image1"]]
         File stagedDir = new File("${grailsApplication.config.image.staging.dir}/profile1")
         stagedDir.mkdir()
         File stagedFile1 = new File("${grailsApplication.config.image.staging.dir}/profile1/image1.jpg")
@@ -358,7 +457,7 @@ class ImageServiceSpec extends Specification {
         expect:
         new File("${grailsApplication.config.image.staging.dir}/profile1").list().size() == 2
 
-        Map expectedUpdates = [primaryImage: "permId1", excludedImages: ["permId2"]]
+        Map expectedUpdates = [primaryImage: "permId1"]
 
         when:
         imageService.publishStagedImages("opusId", "profile1")
@@ -368,7 +467,6 @@ class ImageServiceSpec extends Specification {
     }
 
     def "publishImages should not crash if the images do not have any metadata"() {
-        setup:
         setup:
         profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1"], profile: [uuid: "profile1", stagedImages: [
                 [imageId: "image2", originalFileName: "image2.jpg"]

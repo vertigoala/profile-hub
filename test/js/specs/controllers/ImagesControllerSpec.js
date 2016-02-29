@@ -22,7 +22,7 @@ describe("ImagesController tests", function () {
     var profileService;
     var profileDefer, imageDefer, saveDefer, metadataDefer;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "excludedImages": ["imageId2"]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "imageDisplayOptions": [{"imageId": "imageId2", "displayOption": "INCLUDE"}]}, "opus": {"imageSources": ["source1", "source2"]}}';
     var retrieveImagesResponse = '[{"imageId": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}]';
 
     beforeAll(function () {
@@ -178,7 +178,7 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "", "drId,source1,source2");
+        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "", "drId,source1,source2", true);
     });
 
     it("should use the profile.guid attribute prefixed with 'lsid:' to retrieve images if it is present", function () {
@@ -192,7 +192,7 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "lsid:guid1", "drId,source1,source2");
+        expect(profileService.retrieveImages).toHaveBeenCalledWith("opusId1", "profileId1", "lsid:guid1", "drId,source1,source2", true);
     });
 
     it("should ensure only 1 image is primary when changePrimaryImage is invoked", function() {
@@ -206,13 +206,13 @@ describe("ImagesController tests", function () {
         expect(form.$setDirty).toHaveBeenCalled();
     });
 
-    it("should add all excluded images to the profile's excludedImages list on save", function() {
+    it("should add all image display options to the profile's imageDisplayOption list on save", function() {
         scope.imageCtrl.profile = {uuid: "profile1"};
-        scope.imageCtrl.images = [{imageId: "image1", excluded: true}, {imageId: "image2", excluded: false}, {imageId: "image3", excluded: true}];
+        scope.imageCtrl.images = [{imageId: "image1", displayOption: "INCLUDE"}, {imageId: "image2", displayOption: "EXCLUDE"}, {imageId: "image3", displayOption: "INCLUDE"}];
         scope.imageCtrl.opusId = "opusId";
         scope.imageCtrl.profileId = "profileId";
 
-        var expectedProfile = {uuid: "profile1", excludedImages: ["image1", "image3"], primaryImage: null};
+        var expectedProfile = {uuid: "profile1", imageDisplayOptions: [{imageId: "image1", displayOption: "INCLUDE"}, {imageId: "image2", displayOption: "EXCLUDE"}, {imageId: "image3", displayOption: "INCLUDE"}], primaryImage: null};
 
         scope.imageCtrl.saveProfile(form);
 
@@ -221,11 +221,11 @@ describe("ImagesController tests", function () {
 
     it("should set the primary image attribute of the profile on save", function() {
         scope.imageCtrl.profile = {uuid: "profile1"};
-        scope.imageCtrl.images = [{imageId: "image1", primary: false}, {imageId: "image2", primary: true}, {imageId: "image3", primary: false}];
+        scope.imageCtrl.images = [{imageId: "image1", displayOption: "INCLUDE"}, {imageId: "image2", displayOption: "INCLUDE", primary: true}];
         scope.imageCtrl.opusId = "opusId";
         scope.imageCtrl.profileId = "profileId";
 
-        var expectedProfile = {uuid: "profile1", primaryImage: "image2", excludedImages: []};
+        var expectedProfile = {uuid: "profile1", primaryImage: "image2", imageDisplayOptions: [{imageId: "image1", displayOption: "INCLUDE"}, {imageId: "image2", displayOption: "INCLUDE"}]};
 
         scope.imageCtrl.saveProfile(form);
 

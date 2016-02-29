@@ -29,14 +29,13 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
     };
 
     self.saveProfile = function (form) {
-        self.profile.excludedImages = [];
+        self.profile.imageDisplayOptions = [];
 
         self.profile.primaryImage = null;
 
         angular.forEach(self.images, function (image) {
-            if (image.excluded) {
-                self.profile.excludedImages.push(image.imageId);
-            }
+            self.profile.imageDisplayOptions.push({imageId: image.imageId, displayOption: image.displayOption});
+
             if (image.primary) {
                 self.profile.primaryImage = image.imageId;
             }
@@ -66,7 +65,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
         var sources = angular.copy(self.opus.imageSources);
         sources.unshift(self.opus.dataResourceUid);
 
-        var imagesPromise = profileService.retrieveImages(self.opusId, self.profileId, searchIdentifier, sources.join());
+        var imagesPromise = profileService.retrieveImages(self.opusId, self.profileId, searchIdentifier, sources.join(), self.readonly);
 
         imagesPromise.then(function (data) {
                 self.images = [];

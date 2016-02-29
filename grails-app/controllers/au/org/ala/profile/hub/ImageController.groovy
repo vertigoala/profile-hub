@@ -56,8 +56,10 @@ class ImageController extends BaseController {
         } else {
             File tile = imageService.getTile(params.profileId, params.imageId, params.type, params.zoom as int, params.x as int, params.y as int)
 
-            response.outputStream << tile.newInputStream()
-            response.outputStream.flush()
+            if (tile.exists()) {
+                response.outputStream << tile.newInputStream()
+                response.outputStream.flush()
+            }
         }
     }
 }

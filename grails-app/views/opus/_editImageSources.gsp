@@ -37,8 +37,33 @@
         <div class="row">
 
             <div class="col-sm-12">
-                <h5 class="section-panel-heading padding-bottom-1">Approved Image sources</h5>
-                <p>Configure additional image sources to be included in your profile pages. These are image data resources accessible via Atlas API's.</p>
+                <h5 class="section-panel-heading padding-bottom-1">Approved image sources</h5>
+                <p>Configure additional image sources to be included in your profile pages. These are image libraries from the Atlas of Living Australia.</p>
+
+                <div class="col-sm-6">
+                    <div class="radio">
+                        <label for="includeImages" class="inline-label">
+                            <input id="includeImages" type="radio" name="approvedImageOption" ng-value="'INCLUDE'"
+                                   ng-model="opusCtrl.opus.approvedImageOption">
+                            Display all images from the approved image sources in profiles unless the Profile Editor explicitly chooses not to show them.
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="radio">
+                        <label for="excludeImages" class="inline-label">
+                            <input id="excludeImages" type="radio" name="approvedImageOption" ng-value="'EXCLUDE'"
+                                   ng-model="opusCtrl.opus.approvedImageOption">
+                            Only display images from approved image sources where the Profile Editor has explicitly chosen to show them.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-12">
+                <h6 class="section-panel-heading padding-bottom-1">Selected image sources</h6>
                 <ul>
                     <li ng-repeat="imageSource in opusCtrl.opus.imageSources">
                         <a href="${grailsApplication.config.collectory.base.url}/public/show/{{imageSource}}">{{opusCtrl.dataResources[imageSource] | default:'Loading...'}}</a>

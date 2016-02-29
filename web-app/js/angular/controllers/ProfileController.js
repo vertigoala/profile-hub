@@ -348,7 +348,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
                 util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.scientificName + "/update");
             }, function () {
-                messageService.error("An error occurred while updating the profile name.");
+                messageService.alert("An error occurred while updating the profile name.");
             });
         });
     };
@@ -366,7 +366,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
                 util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.scientificName + "/update");
             }, function () {
-                messageService.error("An error occurred while updating the profile name.");
+                messageService.alert("An error occurred while updating the profile name.");
             });
         });
     };
@@ -382,7 +382,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                 self.audit = data;
                 self.loading = false;
             }, function () {
-                messageService.error("An error occurred while retrieving the audit history");
+                messageService.alert("An error occurred while retrieving the audit history");
             })
         }
     };

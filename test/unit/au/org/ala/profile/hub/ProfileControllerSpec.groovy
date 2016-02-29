@@ -466,7 +466,7 @@ class ProfileControllerSpec extends Specification {
         assert response.status == HttpStatus.SC_BAD_REQUEST
     }
 
-    def "retrieveImages should return the resp element of the response from the service call on success"() {
+    def "retrieveImages should return an empty map with there are no visible images"() {
         setup:
         imageService.retrieveImages(_, _, _, _, _) >> [resp: [resp: "bla"], statusCode: 200]
 
@@ -479,24 +479,8 @@ class ProfileControllerSpec extends Specification {
 
         then:
         assert response.status == HttpStatus.SC_OK
-        assert response.json == [resp: "bla"]
+        assert response.json == [:]
     }
-
-    def "retrieveImages should return the error code from the service on failure of the service call"() {
-        setup:
-        imageService.retrieveImages(_, _, _, _, _) >> [error: "something died!", statusCode: 666]
-
-        when:
-        params.searchIdentifier = "blabla"
-        params.imageSources = "1,2,3"
-        params.profileId = "profile1"
-        params.opusId = "opus1"
-        controller.retrieveImages()
-
-        then:
-        assert response.status == 666
-    }
-
 
     def "retrieveSpeciesProfile should return a 400 (BAD REQUEST) if the guid parameter is not set"() {
         when:

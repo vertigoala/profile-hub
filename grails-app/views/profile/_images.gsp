@@ -100,11 +100,11 @@
                         <div class="col-sm-3">
                             <div class="small center">
                                 <div class="btn-group">
-                                    <label class="btn btn-xs" ng-class="image.excluded ? 'btn-default' : 'btn-success'"
-                                           ng-model="image.excluded" btn-radio="false"
+                                    <label class="btn btn-xs" ng-class="image.displayOption == 'INCLUDE' ? 'btn-success' : 'btn-default'"
+                                           ng-model="image.displayOption" btn-radio="'INCLUDE'"
                                            ng-change="imageCtrl.changeImageDisplay(ImageForm)">Yes</label>
-                                    <label class="btn btn-xs" ng-class="image.excluded ? 'btn-danger' : 'btn-default'"
-                                           ng-model="image.excluded" btn-radio="true"
+                                    <label class="btn btn-xs" ng-class="image.displayOption == 'EXCLUDE' ? 'btn-danger' : 'btn-default'"
+                                           ng-model="image.displayOption" btn-radio="'EXCLUDE'"
                                            ng-change="imageCtrl.changeImageDisplay(ImageForm)">No</label>
                                 </div>
                             </div>
