@@ -26,7 +26,7 @@ class AnalyticsFilters {
                         if (annotation) {
                             final clientId = extractClientIdFromGoogleAnalyticsCookie(request.cookies)
                             final path = URLDecoder.decode(request.forwardURI, 'utf-8')
-                            log.debug("Sending pageview to analytics for ${request.serverName}, $path, $clientId, $request.remoteAddr")
+                            log.debug("Sending pageview to analytics for ${request.serverName}, $path, $clientId, ${request.remoteAddr}")
                             analyticsService.pageView(request.serverName, path, clientId, request.remoteAddr, request.getHeader(USER_AGENT), request.getHeader(REFERER))
                         }
                     }
