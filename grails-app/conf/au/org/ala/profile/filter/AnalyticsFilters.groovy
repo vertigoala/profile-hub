@@ -70,12 +70,13 @@ class AnalyticsFilters {
         final GA_CLIENT_ID_PART_1_INDEX = 2
         final GA_CLIENT_ID_PART_2_INDEX = 3
         final GA_COOKIE_PARTS_EXPECTED_LENGTH = 4
+        final GA_EXPECTED_VERSION = 'GA1'
         final cookie = cookies.find { it.name == '_ga' }
-        def clientId = null
+        String clientId = ''
         if (cookie) {
-            def analyticsCookieComponents = cookie.value.split('\\.')
+            final analyticsCookieComponents = cookie.value.split('\\.')
             if (analyticsCookieComponents.length > 1
-                    && analyticsCookieComponents[GA_VERSION_INDEX] == 'GA1'
+                    && analyticsCookieComponents[GA_VERSION_INDEX] == GA_EXPECTED_VERSION
                     && analyticsCookieComponents.length == GA_COOKIE_PARTS_EXPECTED_LENGTH) {
                 clientId = analyticsCookieComponents[GA_CLIENT_ID_PART_1_INDEX] + '.' + analyticsCookieComponents[GA_CLIENT_ID_PART_2_INDEX]
             } else {
