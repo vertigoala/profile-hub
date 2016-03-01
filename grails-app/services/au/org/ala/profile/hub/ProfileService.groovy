@@ -256,10 +256,10 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/name?opusId=${enc(opusId)}&scientificName=${enc(scientificName)}&taxon=${enc(taxon)}&max=${max}&offset=${offset}&sortBy=${sortBy}&countChildren=${countChildren}")
     }
 
-    def groupByTaxonLevel(String opusId, String taxon, String max, String offset) {
+    def groupByTaxonLevel(String opusId, String taxon, String max, String offset, String filter = null) {
         log.debug("Searching for '${taxon}' level")
 
-        webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/level?opusId=${enc(opusId)}&taxon=${enc(taxon)}&max=${max}&offset=${offset}")
+        webService.get("${grailsApplication.config.profile.service.url}/profile/search/taxon/level?opusId=${enc(opusId)}&taxon=${enc(taxon)}&max=${max}&offset=${offset}${filter ? "&filter=${enc(filter)}" : ""}")
     }
 
     def getTaxonLevels(String opusId) {

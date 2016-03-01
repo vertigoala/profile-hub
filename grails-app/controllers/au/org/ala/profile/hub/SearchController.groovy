@@ -43,7 +43,7 @@ class SearchController extends BaseController {
         if (!params.opusId || !params.taxon) {
             badRequest "opusId and taxon are required parameters. You can also optionally supply max (max records to return) and offset (0 based index to start from)."
         } else {
-            def response = profileService.groupByTaxonLevel(params.opusId, params.taxon, params.max, params.offset)
+            def response = profileService.groupByTaxonLevel(params.opusId, params.taxon, params.max, params.offset, params.filter)
             handle response
         }
     }

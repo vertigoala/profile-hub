@@ -496,8 +496,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        profileSearchByTaxonLevel: function(opusId, taxon, max, offset) {
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/level?opusId=" + opusId + "&taxon=" + taxon + "&max=" + max + "&offset=" + offset);
+        profileSearchByTaxonLevel: function(opusId, taxon, filter, max, offset) {
+            if (!_.isUndefined(filter)) {
+                filter = "&filter=" + filter
+            } else {
+                filter = "";
+            }
+
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/level?opusId=" + opusId + "&taxon=" + taxon + "&max=" + max + "&offset=" + offset + filter);
             future.then(function(response) {
                 $log.debug("Facet search returned with response code " + response.status);
             });

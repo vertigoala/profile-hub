@@ -23,6 +23,8 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
         {key: "unknown", name: "Unknown Rank", order: 7, help: "This category lists all profiles which do not have a matched name"}
     ];
 
+    self.filters = {};
+
     self.opusId = util.getEntityId("opus");
     self.taxonResults = {};
     self.taxonLevels = [];
@@ -66,12 +68,16 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
             offset = 0;
         }
 
-        var result = profileService.profileSearchByTaxonLevel(self.opusId, level, self.MAX_FACET_ITEMS, offset);
+        var result = profileService.profileSearchByTaxonLevel(self.opusId, level, self.filters[level], self.MAX_FACET_ITEMS, offset);
         result.then(function (data) {
             if (!self.taxonResults[level]) {
                 self.taxonResults[level] = {};
             }
-            angular.extend(self.taxonResults[level], data);
+            if (self.filters[level] && offset == 0) {
+                self.taxonResults[level] = data;
+            } else {
+                angular.extend(self.taxonResults[level], data);
+            }
         }, function () {
             messageService.alert("Failed to perform taxon level search.");
         });

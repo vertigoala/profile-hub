@@ -52,6 +52,18 @@
                             <span class="caret pull-right"></span></a>
                         </accordion-heading>
 
+                        <div class="form-group">
+                            <label for="filter" class="screen-reader-label">Filter by name starting with...</label>
+                            <input id="filter" type="text"
+                                   class="form-control input-sm ignore-save-warning"
+                                   placeholder="Name starting with..."
+                                   ng-change="browseCtrl.searchByTaxonLevel(taxon.key)"
+                                   name="filter"
+                                   autocomplete="off"
+                                   ng-required="true"
+                                   ng-model="browseCtrl.filters[taxon.key]">
+                        </div>
+
                         <div ng-repeat="(name, count) in browseCtrl.taxonResults[taxon.key]" class="accordion-item">
                             <a ng-href=""
                                ng-click="browseCtrl.searchByTaxon(taxon.key, name, count)">{{name | capitalize}} ({{count}})</a>
