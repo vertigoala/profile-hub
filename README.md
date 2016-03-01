@@ -1,5 +1,7 @@
 # Profile Hub
-[![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub.svg?branch=master)](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub)
+Master: [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub.svg?branch=master)](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub)
+
+Dev: [![Build Status](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub.svg?branch=dev)](https://travis-ci.org/AtlasOfLivingAustralia/profile-hub)
 
 # Design notes and setup instructions
 
