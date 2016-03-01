@@ -264,3 +264,45 @@
         </div>
     </div>
 </div>
+
+<div class="row comparison-row" ng-if="diff.privateImages.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Private Images</strong>
+        <div>
+            <em>Note that if private images are published the private images will show up as deletions in this comparison</em>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="image in diff.privateImages.comp">
+            <img ng-src="{{getStagedImageUrl(left, image.imageId)}}" missing-image="/images/not-available.png" class="thumbnail">
+            <div class="caption">{{image.title || image.originalFileName}}</div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="image in right.privateImages">
+            <img ng-src="{{getStagedImageUrl(right, image.imageId)}}" missing-image="/images/not-available.png" class="thumbnail">
+            <div class="caption">{{image.title || image.originalFileName}}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row comparison-row" ng-if="diff.stagedImages.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Staged Images</strong>
+        <div>
+            <em>Note that when a draft is published the staged images will be displayed as deletions in this comparison</em>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div class="comparison-image" ng-repeat="image in left.stagedImages">
+            <img ng-src="{{getImageUrl(left, image.imageId)}}" missing-image="/images/not-available.png" class="thumbnail">
+            <div class="caption">{{image.title || image.originalFileName}}</div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div class="comparison-image" ng-repeat="image in right.stagedImages">
+            <img ng-src="{{getImageUrl(right, image.imageId)}}" missing-image="/images/not-available.png" class="thumbnail">
+            <div class="caption">{{image.title || image.originalFileName}}</div>
+        </div>
+    </div>
+</div>

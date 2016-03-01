@@ -42,7 +42,12 @@ profileEditor.directive('profileComparison', function ($browser) {
                     $scope.diff.archivedDate = compare($scope.left.archivedDate, $scope.right.archivedDate);
                     $scope.diff.privateMode = compare($scope.left.privateMode+"", $scope.right.privateMode+"");// convert boolean to string
                     var attachmentFields = getAttachmentFields($scope.left, $scope.right);
-                    $scope.diff.attachments = compareLists($scope.left.attachments, $scope.right.attachments, "uuid", attachmentFields)
+                    $scope.diff.attachments = compareLists($scope.left.attachments, $scope.right.attachments, "uuid", attachmentFields);
+
+                    var imageFields = ["license", "originalFileName", "rights", "rightsHolder", "title", "description"];
+                    $scope.diff.privateImages = compareLists($scope.left.privateImages, $scope.right.privateImages, "imageId", imageFields);
+                    $scope.diff.stagedImages = compareLists($scope.left.stagedImages, $scope.right.stagedImages, "imageId", imageFields);
+
                 }
             };
 
