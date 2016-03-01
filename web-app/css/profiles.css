@@ -795,3 +795,8 @@ ul.breadcrumb li:before {
 .image-viewer {
     height: 500px;
 }
+
+.profile-audit .pagination {
+    padding-left: 0;
+    margin: 0;
+}

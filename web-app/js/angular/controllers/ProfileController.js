@@ -17,6 +17,13 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.showNameEditControls = false;
     self.manuallyMatchedGuid = "";
 
+    self.audit = {
+        pageSize: 20,
+        data: [],
+        total: 0,
+        page:1
+    };
+
     var orderBy = $filter("orderBy");
 
     self.readonly = function () {
@@ -374,17 +381,20 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.toggleAudit = function () {
         self.showProfileAudit = !self.showProfileAudit;
 
-        if (self.showProfileAudit && !self.profileAudit) {
-            self.loading = true;
-            var future = profileService.getAuditHistory(self.profileId);
+        self.loadAuditData();
+    };
 
-            future.then(function (data) {
-                self.audit = data;
-                self.loading = false;
-            }, function () {
-                messageService.alert("An error occurred while retrieving the audit history");
-            })
-        }
+    self.loadAuditData = function() {
+        self.loading = true;
+        var future = profileService.getAuditHistory(self.profileId, self.audit.pageSize * (self.audit.page-1), self.audit.pageSize);
+
+        future.then(function (data) {
+            self.audit.total = data.total;
+            self.audit.data = data.items;
+            self.loading = false;
+        }, function () {
+            messageService.alert("An error occurred while retrieving the audit history");
+        });
     };
 
     self.showAuditComparison = function (index) {
@@ -395,10 +405,10 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             size: "lg",
             resolve: {
                 left: function () {
-                    return self.audit[index];
+                    return self.audit.data[index];
                 },
                 right: function () {
-                    return self.audit[index + 1];
+                    return self.audit.data[index + 1];
                 }
             }
         });

@@ -312,10 +312,10 @@ class ProfileService {
         webService.doDelete("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attribute/${enc(attributeId)}?profileId=${enc(profileId)}")
     }
 
-    def getAuditHistory(String objectId, String userId) {
+    def getAuditHistory(String objectId, String userId, Integer offset = 0, Integer max = 100) {
         log.debug("Retrieving audit history for ${objectId ?: userId}")
 
-        webService.get("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${enc(objectId ?: userId)}")
+        webService.get("${grailsApplication.config.profile.service.url}/audit/${objectId ? 'object' : 'user'}/${enc(objectId ?: userId)}?offset=${offset}&max=${max}")
     }
 
     def updateVocabulary(String opusId, String vocabId, vocab) {
