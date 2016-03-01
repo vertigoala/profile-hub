@@ -1,7 +1,9 @@
 /**
  * Profile controller
  */
-profileEditor.controller('ProfileController', function (profileService, util, messageService, navService, config, $modal, $window, $filter, $sce, $location) {
+profileEditor.controller('ProfileController',
+    ['profileService', 'profileComparisonService', 'util', 'messageService', 'navService', 'config', '$modal', '$window', '$filter', '$sce', '$location',
+        function (profileService, profileComparisonService, util, messageService, navService, config, $modal, $window, $filter, $sce, $location) {
     var self = this;
 
     self.profile = null;
@@ -386,18 +388,33 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
     self.loadAuditData = function() {
         self.loading = true;
-        var future = profileService.getAuditHistory(self.profileId, self.audit.pageSize * (self.audit.page-1), self.audit.pageSize);
-
+        // Always get one more profile than the page size so the last comparison can be performed.
+        var future = profileService.getAuditHistory(self.profileId, self.audit.pageSize * (self.audit.page-1), self.audit.pageSize+1);
         future.then(function (data) {
             self.audit.total = data.total;
-            self.audit.data = data.items;
+            self.audit.data = self.filterAuditData(data.items);
             self.loading = false;
         }, function () {
             messageService.alert("An error occurred while retrieving the audit history");
         });
     };
 
-    self.showAuditComparison = function (index) {
+    self.filterAuditData = function(data) {
+        var auditData = [];
+
+        for (var i=0; i<data.length-1; i++) {
+            var diff = profileComparisonService.compareProfiles(data[i].object, data[i+1].object);
+            if (diff.changed) {
+                auditData.push({left:data[i], right:data[i+1]});
+            }
+        }
+        if (data.length <= self.audit.pageSize) {
+            auditData.push({left:data[data.length-1], right:null});
+        }
+        return auditData;
+    };
+
+    self.showAuditComparison = function (auditItem) {
         $modal.open({
             templateUrl: "auditComparisonPopup.html",
             controller: "ComparisonPopupController",
@@ -405,10 +422,10 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             size: "lg",
             resolve: {
                 left: function () {
-                    return self.audit.data[index];
+                    return auditItem.left;
                 },
                 right: function () {
-                    return self.audit.data[index + 1];
+                    return auditItem.right;
                 }
             }
         });
@@ -493,7 +510,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             messageService.alert("An error has occurred while restoring your profile.");
         });
     }
-});
+}]);
 
 /**
  * Controller for comparing profiles (to other profiles or to revision history entries)

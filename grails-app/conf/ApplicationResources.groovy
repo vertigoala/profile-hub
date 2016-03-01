@@ -45,6 +45,7 @@ modules = {
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"
+        resource url:"js/angular/services/ProfileComparisonService.js"
         resource url:"js/angular/controllers/CreateProfileController.js"
         resource url:"js/angular/controllers/AttachmentController.js"
         resource url:"js/angular/controllers/OpusController.js"

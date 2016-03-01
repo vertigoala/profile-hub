@@ -12,11 +12,11 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="audit in profileCtrl.audit.data">
-                            <td>{{audit.date | date:'dd/MM/yyyy h:mm a'}}</td>
-                            <td>{{audit.userDisplayName | default:'Unknown'}}</td>
+                            <td>{{audit.left.date | date:'dd/MM/yyyy h:mm a'}}</td>
+                            <td>{{audit.left.userDisplayName | default:'Unknown'}}</td>
                             <td><button class="btn btn-link pull-right"
-                                        ng-click="profileCtrl.showAuditComparison($index)"
-                                        ng-show="!$last">Compare with previous revision</button></td>
+                                        ng-click="profileCtrl.showAuditComparison(audit)"
+                                        ng-show="audit.right">Compare with previous revision</button></td>
                         </tr>
                         </tbody>
                     </table>
