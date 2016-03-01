@@ -5,7 +5,7 @@ jdk:
 branches:
   only:
   - master
-  - search
+  - dev
 before_install:
 - export TZ=Australia/Canberra
 - date
