@@ -1,4 +1,5 @@
 <div class="padding-top-1" ng-controller="BrowseController as browseCtrl" ng-init="browseCtrl.getTaxonLevels()" ng-cloak>
+    <a name="browseTop"></a>
     <div class="col-lg-3 col-md-4 col-xs-12">
         <!-- Side menu -->
         <div class="side-menu">
@@ -65,7 +66,7 @@
                         </div>
 
                         <div ng-repeat="(name, count) in browseCtrl.taxonResults[taxon.key]" class="accordion-item">
-                            <a ng-href=""
+                            <a ng-href="" du-smooth-scroll="browseTop"
                                ng-click="browseCtrl.searchByTaxon(taxon.key, name, count)">{{name | capitalize}} ({{count}})</a>
                             <a ng-href=""
                                ng-if="$index >= browseCtrl.MAX_FACET_ITEMS - 1 && $last && $index < browseCtrl.taxonLevels[taxon.key] - 1"
