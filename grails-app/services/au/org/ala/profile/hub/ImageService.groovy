@@ -227,26 +227,28 @@ class ImageService {
         String imageUrlPrefix = useInternalPaths ? "file:///data/profile-hub/private-images/${profile.uuid}" : "/opus/${opus.uuid}/profile/${profile.uuid}/image"
 
         images?.findResults {
-            String extension = getExtension(it.originalFileName)
             boolean excluded = isExcluded(opus.approvedImageOption, profile.imageDisplayOptions ?: null, it.imageId)
-
-            Map image = [
-                    imageId         : it.imageId,
-                    thumbnailUrl    : "${imageUrlPrefix}/${it.imageId}${extension}?type=${type}",
-                    largeImageUrl   : "${imageUrlPrefix}/${it.imageId}${extension}?type=${type}",
-                    dataResourceName: opus.title,
-                    metadata        : it,
-                    excluded        : excluded,
-                    displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
-                    primary         : it.imageId == profile.primaryImage,
-                    type            : type
-            ]
 
             // only return images that have not been included, unless we are in the edit view, in which case we
             // need to show all available images in order for the editor to decide which to include/exclude
+            Map image = null
             if (!excluded || !readonlyView) {
-                image
+                String extension = getExtension(it.originalFileName)
+
+                image = [
+                        imageId         : it.imageId,
+                        thumbnailUrl    : "${imageUrlPrefix}/${it.imageId}${extension}?type=${type}",
+                        largeImageUrl   : "${imageUrlPrefix}/${it.imageId}${extension}?type=${type}",
+                        dataResourceName: opus.title,
+                        metadata        : it,
+                        excluded        : excluded,
+                        displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
+                        primary         : it.imageId == profile.primaryImage,
+                        type            : type
+                ]
             }
+
+            image
         }
     }
 

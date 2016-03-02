@@ -287,7 +287,7 @@ class ProfileController extends BaseController {
             badRequest "opusId, profileId and imageSources are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
-            boolean readonlyView = params.readonlyView?.toBoolean()
+            boolean readonlyView = params.getBoolean('readonlyView', true)
 
             def response = imageService.retrieveImages(params.opusId, params.profileId, latest, params.imageSources, params.searchIdentifier, false, readonlyView)
 
