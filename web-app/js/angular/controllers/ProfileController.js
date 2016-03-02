@@ -383,7 +383,9 @@ profileEditor.controller('ProfileController',
     self.toggleAudit = function () {
         self.showProfileAudit = !self.showProfileAudit;
 
-        self.loadAuditData();
+        if (self.showProfileAudit) {
+            self.loadAuditData();
+        }
     };
 
     self.loadAuditData = function() {
