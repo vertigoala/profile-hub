@@ -1,3 +1,5 @@
+import grails.util.Environment
+
 grails.servlet.version = "3.0" // Change depending on target container compliance (2.5 or 3.0)
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
@@ -51,15 +53,9 @@ grails.project.dependency.resolution = {
         runtime "org.springframework:spring-test:4.1.2.RELEASE" // required by the rendering plugin
         runtime 'au.org.ala:image-utils:1.8.2'
 
-        compile('net.sf.jasperreports:jasperreports:6.1.0') {
-            excludes 'antlr', 'commons-logging',
-                    'ant', 'mondrian', 'commons-javaflow', 'barbecue', 'xml-apis-ext', 'xml-apis', 'xalan', 'groovy-all', 'hibernate', 'saaj-api', 'servlet-api',
-                    'xercesImpl', 'xmlParserAPIs', 'spring-core', 'bsh', 'spring-beans', 'jaxen', 'barcode4j', 'batik-svg-dom', 'batik-xml', 'batik-awt-util', 'batik-dom',
-                    'batik-css', 'batik-gvt', 'batik-script', 'batik-svggen', 'batik-util', 'batik-bridge', 'persistence-api', 'jdtcore', 'bcmail-jdk16', 'bcprov-jdk16', 'bctsp-jdk16',
-                    'bcmail-jdk14', 'bcprov-jdk14', 'bctsp-jdk14', 'xmlbeans', 'olap4j'
-        }
-        compile 'net.sf.jasperreports:jasperreports-functions:6.1.0'
-        compile 'net.sf.jasperreports:jasperreports-fonts:6.1.0'
+        compile 'net.sf.jasperreports:jasperreports:6.2.0'
+        compile 'net.sf.jasperreports:jasperreports-functions:6.2.0'
+        compile 'au.org.ala:jasper-liberation-fonts-2.00.1:1.0'
         compile 'net.glxn:qrgen:1.4'
         compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160203.1-ALA'
         compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
@@ -77,9 +73,6 @@ grails.project.dependency.resolution = {
         compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
-        compile(":jasper:1.11.0") {
-            excludes 'jasperreports'
-        }
         compile ":ala-map:1.2"
         runtime(":images-client-plugin:0.6.1") {
             excludes "ala-bootstrap3"

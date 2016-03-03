@@ -1,5 +1,7 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.hub.reports.JasperExportFormat
+import au.org.ala.profile.hub.reports.JasperReportDef
 import au.org.ala.profile.hub.util.HubConstants
 
 import grails.converters.JSON
@@ -9,8 +11,6 @@ import net.glxn.qrgen.image.ImageType
 import net.sf.jasperreports.engine.data.JsonDataSource
 import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
-import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
-import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.context.request.RequestContextHolder
 
@@ -36,7 +36,7 @@ class ExportService {
     EmailService emailService
     NslService nslService
     KeybaseService keybaseService
-    JasperNonTransactionalService jasperNonTransactionalService
+    JasperService jasperService
     def grailsApplication
 
     Map statusRegions = [
@@ -104,7 +104,7 @@ class ExportService {
                 ]
         )
 
-        return jasperNonTransactionalService.generateReport(reportDef).toByteArray()
+        return jasperService.generateReport(reportDef).toByteArray()
     }
 
     /**
