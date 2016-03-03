@@ -107,7 +107,9 @@ profileEditor.controller('ProfileController',
             var nslPromise = profileService.getNslNameDetails(self.profile.nslNameIdentifier);
             nslPromise.then(function (data) {
                 self.nslNameStatus = data.name.status;
-                self.nslProtologue = data.name.primaryInstance[0].citationHtml;
+                if (!_.isUndefined(data.name.primaryInstance) && data.name.primaryInstance && data.name.primaryInstance.length > 0) {
+                    self.nslProtologue = data.name.primaryInstance[0].citationHtml;
+                }
             });
         }
     }
