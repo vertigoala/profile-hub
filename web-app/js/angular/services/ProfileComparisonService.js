@@ -76,9 +76,9 @@ profileEditor.service('profileComparisonService', function ($http, util, $cacheF
         var fields = [];
 
         if (!_.isUndefined(left.attachments) && left.attachments.length > 0) {
-            fields = Object.keys($scope.left.attachments[0]);
+            fields = Object.keys(left.attachments[0]);
         } else if (!_.isUndefined(right.attachments) && right.attachments.length > 0) {
-            fields = Object.keys($scope.right.attachments[0])
+            fields = Object.keys(right.attachments[0])
         }
 
         return fields;
