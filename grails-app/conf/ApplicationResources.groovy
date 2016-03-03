@@ -37,6 +37,8 @@ modules = {
         resource url:"js/angular/directives/nomenclature.js"
         resource url:"js/angular/directives/publication.js"
         resource url:"js/angular/directives/link.js"
+        resource url:"js/angular/directives/saveButton.js"
+        resource url:"js/angular/directives/saveAll.js"
         resource url:"js/angular/directives/taxonomy.js"
         resource url:"js/angular/directives/profileSideBar.js"
         resource url:"js/angular/directives/fallbackDatePicker.js"

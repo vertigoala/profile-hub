@@ -186,6 +186,13 @@
             </div>
         </g:if>
 
+
+        <div class="row margin-top-1" ng-show="!profileCtrl.readonly()">
+            <div class="col-md-12 padding-top-1">
+                <save-all class="pull-right"></save-all>
+            </div>
+        </div>
+
         <div class="row margin-top-1">
             <div class="col-md-12 col-xs-12 col-lg-12 small text-center" ng-cloak>
                 <p><span ng-show="profileCtrl.opus.copyrightText">&copy; {{ profileCtrl.opus.copyrightText }}.</span> <a
@@ -199,6 +206,7 @@
 
         <g:render template="exportPdfPopup"/>
         <g:render template="profileComparisonPopup"/>
+
     </div>
 
 </div>

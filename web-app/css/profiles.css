@@ -800,3 +800,7 @@ ul.breadcrumb li:before {
     padding-left: 0;
     margin: 0;
 }
+
+.std-width-btn {
+    width: 115px;
+}

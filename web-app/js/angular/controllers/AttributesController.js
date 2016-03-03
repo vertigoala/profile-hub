@@ -235,7 +235,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
 
         future.then(function (attribute) {
                 self.attributes[idx].saving = false;
-                messageService.success("Last saved " + new Date());
+                messageService.success(self.attributes[idx].title + " successfully updated.");
 
                 self.attributes[idx].uuid = attribute.attributeId;
                 self.attributes[idx].auditShowing = false;

@@ -256,12 +256,11 @@
         <div class="row">
             <span class="col-md-12">
                 <button class="btn btn-default" ng-click="attrCtrl.deleteAttribute($index)">Delete attribute</button>
-                <button class="btn btn-primary pull-right" ng-click="attrCtrl.saveAttribute($index, AttributeForm)"
-                        ng-disabled="!AttributeForm.$dirty || !attrCtrl.isValid(attribute.title) || !attribute.text">
-                    <span ng-show="!attrCtrl.saving" id="saved"><span
-                            ng-show="AttributeForm.$dirty || !attribute.uuid">*</span> Save</span>
-                    <span ng-show="attrCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="attrCtrl.saveAttribute($index, AttributeForm)"
+                             disabled="!AttributeForm.$dirty || !attrCtrl.isValid(attribute.title) || !attribute.text"
+                             dirty="AttributeForm.$dirty || !attribute.uuid"
+                             form="AttributeForm">
+                </save-button>
             </span>
         </div>
     </div>

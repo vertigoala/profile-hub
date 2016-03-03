@@ -103,10 +103,7 @@
                     <button class="btn btn-default" ng-click="opusCtrl.addImageSource()"><i
                             class="fa fa-plus"></i>  Add image source</button>
                 </div>
-                <button class="btn btn-primary pull-right" ng-click="opusCtrl.saveImageSources(ImageForm)">
-                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="ImageForm.$dirty">*</span> Save</span>
-                    <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="opusCtrl.saveImageSources(ImageForm)" form="ImageForm"></save-button>
             </div>
         </div>
     </div>

@@ -76,7 +76,7 @@ profileEditor.controller('BHLLinksEditor', function (profileService, navService,
             links: self.bhl
         }));
         promise.then(function () {
-                messageService.success("Links successfully updated.");
+                messageService.success("BHL Links successfully updated.");
                 if (form) {
                     form.$setPristine();
                 }

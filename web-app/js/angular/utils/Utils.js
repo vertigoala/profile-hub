@@ -201,22 +201,26 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @return standard promise
      */
     function toStandardPromise(httpPromise) {
-        var defer = $q.defer();
+        if (httpPromise.success) {
+            var defer = $q.defer();
 
-        httpPromise.success(function (data) {
-            defer.resolve(data);
-        });
-        httpPromise.error(function (data, status, context, request) {
-            var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
-            console.log(msg);
-            defer.reject(msg);
-            if (status == 403) {
-                console.log("not authorised");
-                redirect(contextRoot() + "/notAuthorised");
-            }
-        });
+            httpPromise.success(function (data) {
+                defer.resolve(data);
+            });
+            httpPromise.error(function (data, status, context, request) {
+                var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
+                console.log(msg);
+                defer.reject(msg);
+                if (status == 403) {
+                    console.log("not authorised");
+                    redirect(contextRoot() + "/notAuthorised");
+                }
+            });
 
-        return defer.promise;
+            return defer.promise;
+        } else {
+            return httpPromise;
+        }
     }
 
     /**

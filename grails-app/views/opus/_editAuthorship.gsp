@@ -22,10 +22,7 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-primary pull-right" ng-click="opusCtrl.saveOpus(AuthForm)">
-                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="AuthForm.$dirty">*</span> Save</span>
-                    <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="opusCtrl.saveOpus(AuthForm)" form="AuthForm"></save-button>
             </div>
         </div>
     </div>

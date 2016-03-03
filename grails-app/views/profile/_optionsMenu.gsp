@@ -1,13 +1,13 @@
 <div class="btn-group">
     <div class="col-md-6" ng-show="!profileCtrl.readonly()">
         <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}"
-           target="_self" class="btn btn-default"><i
+           target="_self" class="btn btn-default std-width-btn"><i
                 class="fa fa-eye"></i> Public View</a>
     </div>
 
     <div class="btn-group col-md-6">
         <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+            <button class="btn btn-default dropdown-toggle std-width-btn" type="button" id="dropdownMenu1"
                     data-toggle="dropdown" aria-expanded="true">
                 <span class="fa fa-cog"></span>
                 Options
@@ -22,7 +22,8 @@
                        target="_blank"><span class="fa fa-file-text-o"></span>&nbsp;&nbsp;Export as JSON
                     </a>
                 </li>
-                <li role="presentation" ng-controller="ExportController as exportCtrl" ng-hide="profileCtrl.isArchived() || !profileCtrl.readonly()">
+                <li role="presentation" ng-controller="ExportController as exportCtrl"
+                    ng-hide="profileCtrl.isArchived() || !profileCtrl.readonly()">
                     <a href=""
                        ng-click="exportCtrl.exportPdf(profileCtrl.profile.rank, profileCtrl.profile.scientificName)"
                        target="_blank"><span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;Export as PDF

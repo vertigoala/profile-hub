@@ -51,10 +51,7 @@
                     <button class="btn btn-default" ng-click="opusCtrl.addRecordSource()"><i
                             class="fa fa-plus"></i>  Add record source</button>
                 </div>
-                <button class="btn btn-primary pull-right" ng-click="opusCtrl.saveRecordSources(RecordForm)">
-                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="RecordForm.$dirty">*</span> Save</span>
-                    <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="opusCtrl.saveRecordSources(RecordForm)" form="RecordForm"></save-button>
             </div>
         </div>
     </div>

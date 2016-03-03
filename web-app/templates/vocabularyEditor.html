@@ -88,12 +88,7 @@
                         Reset
                     </button>
                 </div>
-                <button class="btn btn-primary pull-right" ng-click="saveVocabulary(VocabForm)">
-                    <span ng-show="!saving" id="saved"><span
-                            ng-show="VocabForm.$dirty">*</span> Save
-                    </span>
-                    <span ng-show="saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="saveVocabulary(VocabForm)" form="VocabForm"></save-button>
             </div>
         </div>
     </div>
