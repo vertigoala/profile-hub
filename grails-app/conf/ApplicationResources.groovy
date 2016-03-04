@@ -73,6 +73,7 @@ modules = {
         resource url:"js/angular/controllers/DoiController.js"
         resource url:"js/angular/controllers/ShareRequestController.js"
         resource url:"js/angular/controllers/UserDetailsController.js"
+        resource url:"js/angular/controllers/AdminController.js"
     }
 
     angular {

@@ -74,6 +74,8 @@ class AdminController extends BaseController {
 
     @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
     def reindex() {
-        webService.doPost("${grailsApplication.config.profile.service.url}/admin/search/reindex", [:])
+        def response = webService.doPost("${grailsApplication.config.profile.service.url}/admin/search/reindex", [:])
+
+        handle (response)
     }
 }
