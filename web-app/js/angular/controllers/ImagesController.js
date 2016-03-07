@@ -1,8 +1,12 @@
+
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function ($browser, profileService, navService, util, messageService, $modal, config) {
+profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal, config) {
     var self = this;
+
+    // Flag to prevent reloading images during the update process.
+    var saving = false;
 
     self.images = [];
     self.primaryImage = null;
@@ -20,7 +24,18 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
                 self.profile = data.profile;
                 self.opus = data.opus;
 
-                self.loadImages()
+                var imagesPromise = self.loadImages();
+                imagesPromise.then(function() {
+
+                    // If the primary image specified for the profile changes then reload the images.
+                    $scope.$watch(function() {
+                        return self.profile && self.profile.primaryImage;
+                    }, function() {
+                        if (!saving) {
+                            self.loadImages();
+                        }
+                    });
+                });
             },
             function () {
                 messageService.alert("An error occurred while retrieving the profile.");
@@ -29,6 +44,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
     };
 
     self.saveProfile = function (form) {
+        saving = true;
         self.profile.imageDisplayOptions = [];
 
         self.profile.primaryImage = null;
@@ -47,11 +63,17 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
                 messageService.info("Updating profile...");
                 self.profile = data;
 
-                self.loadImages();
+                var loadImagesProfile = self.loadImages();
 
                 form.$setPristine();
+
+                loadImagesProfile.finally(function() {
+                    saving = false;
+                });
             },
             function () {
+                saving = false;
+
                 messageService.alert("An error occurred while updating the profile.");
             }
         );
@@ -97,6 +119,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
                 messageService.alert("An error occurred while retrieving the images.");
             }
         );
+        return imagesPromise;
     };
 
     self.changeImageDisplay = function (form) {
