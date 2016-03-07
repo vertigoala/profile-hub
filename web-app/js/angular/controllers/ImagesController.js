@@ -24,18 +24,16 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 self.profile = data.profile;
                 self.opus = data.opus;
 
-                var imagesPromise = self.loadImages();
-                imagesPromise.then(function() {
-
-                    // If the primary image specified for the profile changes then reload the images.
-                    $scope.$watch(function() {
-                        return self.profile && self.profile.primaryImage;
-                    }, function() {
-                        if (!saving) {
-                            self.loadImages();
-                        }
-                    });
+                // If the primary image specified for the profile changes then reload the images.
+                // Note that this function will be called once for initiation which is required to load the images.
+                $scope.$watch(function() {
+                    return self.profile && self.profile.primaryImage;
+                }, function() {
+                    if (!saving) {
+                        self.loadImages();
+                    }
                 });
+
             },
             function () {
                 messageService.alert("An error occurred while retrieving the profile.");

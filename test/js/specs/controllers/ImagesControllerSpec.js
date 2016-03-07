@@ -22,7 +22,7 @@ describe("ImagesController tests", function () {
     var profileService;
     var profileDefer, imageDefer, saveDefer, metadataDefer;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "imageDisplayOptions": [{"imageId": "imageId2", "displayOption": "INCLUDE"}]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "imageDisplayOptions": [{"imageId": "imageId2", "displayOption": "INCLUDE"}], "primaryImage":""}, "opus": {"imageSources": ["source1", "source2"]}}';
     var retrieveImagesResponse = '[{"imageId": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}]';
 
     beforeAll(function () {
