@@ -12,6 +12,12 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
     var currentPromise;
 
     /**
+     * Shared instance of the profile that will be returned by all methods that return a profile object.
+     * This is to support notification of changes between controllers.
+     */
+    var sharedProfile = {};
+
+    /**
      * Chain http requests (recommended for POST, PUT & DELETE) together so they execute sequentially.
      *
      * This is necessary in any case where they may be a race condition on updating data: i.e. if two POSTs update the
@@ -33,15 +39,33 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
     }
 
     return {
-        getProfile: function (opusId, profileId) {
+
+        /**
+         * Loads the profile identified by the supplied opusId and profileId from the server.  If the call succeeds,
+         * the returned promise will resolve with an object of the form {profile:<profile>, opus:<opus>}. The profile
+         * data that is returned will be used to update a single instance of a shared profile object that all
+         * consumers of this service will receive.  This instance is also updated by the updateProfile method.
+         * @param opusId identifies the collection the profile is in.
+         * @param profileId The id of the profile to load.
+         * @returns {promise.promise|*|jQuery.promise|d.promise|promise}
+         */
+        getProfile : function(opusId, profileId) {
             $log.debug("Fetching profile " + profileId);
+            var profileAndOpusFuture = $q.defer();
 
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {cache: true});
-            future.then(function (response) {
-                $log.debug("Profile fetched with response code " + response.status);
-            });
+            future = util.toStandardPromise(future);
+            future.then(function(data) {
+                    // copy the content of the profile into the shared profile object to keep the object reference intact
+                    angular.extend(sharedProfile, data.profile);
+                    data.profile = sharedProfile;
+                    profileAndOpusFuture.resolve(data);
+                },
+                function(data) {
+                    profileAndOpusFuture.reject(data);
+                });
 
-            return util.toStandardPromise(future);
+            return profileAndOpusFuture.promise;
         },
 
         deleteProfile: function (opusId, profileId) {
@@ -107,8 +131,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
                 clearCache();
             });
+            var profileFuture = $q.defer();
 
-            return util.toStandardPromise(future);
+            util.toStandardPromise(future).then(function(data) {
+                // copy the content of the profile into the shared profile object to keep the object reference intact
+                angular.extend(sharedProfile, data);
+                profileFuture.resolve(data);
+            },
+            function(data) {
+                profileFuture.reject(data);
+            });
+            return profileFuture.promise;
         },
 
         checkName: function (opusId, scientificName) {
