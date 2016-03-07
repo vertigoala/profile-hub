@@ -606,6 +606,8 @@ input.form-control:focus + span.input-group-btn > .btn-default {
 }
 
 .cke_button__plusminus_icon,
+.cke_button__times_icon,
+.cke_button__degree_icon,
 .cke_button__endash_icon,
 .cke_button__male_icon,
 .cke_button__female_icon,
@@ -614,6 +616,8 @@ input.form-control:focus + span.input-group-btn > .btn-default {
 }
 
 .cke_button__plusminus:before,
+.cke_button__times:before,
+.cke_button__degree:before,
 .cke_button__endash:before,
 .cke_button__male:before,
 .cke_button__female:before {
@@ -639,6 +643,14 @@ input.form-control:focus + span.input-group-btn > .btn-default {
 
 .cke_button__female:before {
     content: '\2640';
+}
+
+.cke_button__times:before {
+    content: '\00D7';
+}
+
+.cke_button__degree:before {
+    content: '\00B0';
 }
 
 .show-dirty {

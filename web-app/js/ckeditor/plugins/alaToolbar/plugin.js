@@ -50,5 +50,29 @@ CKEDITOR.plugins.add('alaToolbar', {
             command: 'insertEndashSymbol',
             toolbar: 'endash'
         });
+
+        editor.addCommand('insertDegreeSymbol', {
+            exec: function (editor) {
+                editor.insertHtml('\u00B0');
+            }
+        });
+
+        editor.ui.addButton( 'Degree', {
+            label: 'Insert degree symbol',
+            command: 'insertDegreeSymbol',
+            toolbar: 'degree'
+        });
+
+        editor.addCommand('insertTimesSymbol', {
+            exec: function (editor) {
+                editor.insertHtml('\u00D7');
+            }
+        });
+
+        editor.ui.addButton( 'Times', {
+            label: 'Insert times symbol',
+            command: 'insertTimesSymbol',
+            toolbar: 'times'
+        });
     }
 });

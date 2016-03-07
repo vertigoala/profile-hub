@@ -50,7 +50,7 @@ profileEditor.run(function ($rootScope, config) {
             { name: 'clipboard', items: ['PasteText', '-', 'Undo', 'Redo' ] },
             { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent' ] },
             { name: 'links', items: [ 'Link', 'Unlink' ] },
-            { name: 'insert', items: [ 'HorizontalRule', 'Symbol', 'Male', 'Female', 'PlusMinus', 'Endash' ] },
+            { name: 'insert', items: [ 'HorizontalRule', 'Symbol', 'Male', 'Female', 'PlusMinus', 'Times', 'Endash', 'Degree' ] },
             { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
             { name: 'tools', items: [ 'Maximize', '-' ] },
             { name: 'styles', items: [ 'Styles', 'Format' ] }
