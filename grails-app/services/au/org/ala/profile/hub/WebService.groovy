@@ -241,7 +241,7 @@ class WebService {
             conn.setDoOutput(true)
             conn.setRequestMethod(method)
             conn.setRequestProperty("Content-Type", "application/json;charset=${CHAR_ENCODING}");
-
+             conn.setConnectTimeout(getConnectTimeout())
             def user = userService.getUser()
             if (user) {
                 conn.setRequestProperty(grailsApplication.config.app.http.header.userId as String, user.userId as String)
@@ -257,9 +257,10 @@ class WebService {
             writer.write((postBody as JSON).toString())
             writer.flush()
             def resp = conn.inputStream.text
-
-            response = [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
-            log.debug("Response from POST = ${response}")
+             if(resp) {  //otherwise we might mask the connection related errors
+                 response = [resp: JSON.parse(resp ?: "{}"), statusCode: HttpStatus.SC_OK]
+               log.debug("Response from POST = ${response}")
+             }
             // fail over to empty json object if empty response string otherwise JSON.parse fails
         } catch (FileNotFoundException e) {
             response = [error     : "Not Found: URL= ${url}.",
@@ -322,8 +323,5 @@ class WebService {
         response
     }
 
-    private getConnection(String url, Map properties, String method, int connectTimeout = -1, int readTimeout = -1) {
-
-    }
 
 }
