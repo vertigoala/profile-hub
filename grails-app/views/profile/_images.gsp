@@ -16,11 +16,11 @@
                     <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 margin-bottom-2"
                          ng-show="!image.excluded">
                         <div class="imgCon ">
-                            <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.largeImageUrl" title="View details">
-                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'OPEN'"
+                            <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.thumbnailUrl" title="View details">
+                                <img ng-src="{{image.thumbnailUrl}}" ng-if="image.thumbnailUrl && image.type.name == 'OPEN'"
                                      class="thumbnail"/>
-                                <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                     ng-if="image.largeImageUrl && image.type.name != 'OPEN'" class="thumbnail"/>
+                                <img ng-src="${request.contextPath}{{image.thumbnailUrl}}"
+                                     ng-if="image.thumbnailUrl && image.type.name != 'OPEN'" class="thumbnail"/>
                             </a>
 
                             <p class="caption">{{ image.dataResourceName }}</p>
