@@ -76,6 +76,6 @@ class AdminController extends BaseController {
     def reindex() {
         def response = webService.doPost("${grailsApplication.config.profile.service.url}/admin/search/reindex", [:])
 
-        handle (response)
+        handle response
     }
 }

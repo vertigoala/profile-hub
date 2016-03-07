@@ -605,6 +605,7 @@ input.form-control:focus + span.input-group-btn > .btn-default {
     overflow: hidden;
 }
 
+.cke_button__ngimage_icon,
 .cke_button__plusminus_icon,
 .cke_button__times_icon,
 .cke_button__degree_icon,
@@ -615,6 +616,7 @@ input.form-control:focus + span.input-group-btn > .btn-default {
     display: none !important;
 }
 
+.cke_button__ngimage:before,
 .cke_button__plusminus:before,
 .cke_button__times:before,
 .cke_button__degree:before,
@@ -651,6 +653,15 @@ input.form-control:focus + span.input-group-btn > .btn-default {
 
 .cke_button__degree:before {
     content: '\00B0';
+}
+
+.cke_button__ngimage {
+    padding-top: 5px !important;
+}
+
+.cke_button__ngimage:before {
+    content: '\f1c5';
+    font-size: 14px;
 }
 
 .show-dirty {
@@ -815,4 +826,17 @@ ul.breadcrumb li:before {
 
 .std-width-btn {
     width: 115px;
+}
+
+.inline-attribute-image {
+    max-width: 200px;
+    max-height: 200px;
+    float: right;
+}
+
+.cke_editable {
+    background: white;
+    line-height: 1.6;
+    font-size: 13px;
+    margin: 20px;
 }

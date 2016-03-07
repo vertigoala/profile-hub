@@ -199,7 +199,8 @@
         features: {publications: '${grailsApplication.config.feature.publications}',
                    imageUpload:'${grailsApplication.config.feature.feature.imageUpload}'},
         map: {mapId: '${grailsApplication.config.map.id}',
-              accessKey: '${grailsApplication.config.map.access.key}'}
+              accessKey: '${grailsApplication.config.map.access.key}'},
+        mainCssFile: '${resource(dir: "/css", file: "profiles.css")}'
      });
 
 

@@ -1,7 +1,7 @@
 /**
  * Attributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $scope) {
+profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $sce) {
     var self = this;
 
     self.attributes = [];
@@ -17,6 +17,11 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     var capitalize = $filter("capitalize");
     var orderBy = $filter("orderBy");
 
+    self.insertImage = function(callback) {
+        console.log('here')
+        callback("http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/species-octopus-maorum-313.jpg", "test caption");
+    };
+
     self.init = function (edit) {
         self.readonly = edit != 'true';
 
@@ -31,6 +36,9 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.attributes = data.profile.attributes;
 
                 angular.forEach(self.attributes, function(attribute) {
+                    if (self.readonly) {
+                        attribute.text = $sce.trustAsHtml(attribute.text);
+                    }
                     navService.add(attribute.title, util.toKey(attribute.title), 'attribute');
                     attribute.key = util.toKey(attribute.title);
                 });

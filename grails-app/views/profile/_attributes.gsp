@@ -89,7 +89,7 @@
 <script type="text/ng-template" id="readOnlyAttributeBody.html">
 <span ng-show="attrCtrl.showAttribute(attribute)">
     <div ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
-        <div ng-bind-html="attribute.text | sanitizeHtml" class="display-text"></div>
+        <div ng-bind-html="attribute.text" class="display-text"></div>
 
         <div ng-show="attrCtrl.opus.allowFineGrainedAttribution">
             <div class="citation" ng-show="attribute.creators.length > 0">
@@ -284,7 +284,7 @@
             <div class="col-sm-2"><strong>{{attribute.opusTitle}}</strong></div>
 
             <div class="col-sm-10">
-                <div ng-bind-html="attribute.text | sanitizeHtml" class="display-text"></div>
+                <div ng-bind-html="attribute.text" class="display-text"></div>
             </div>
         </div>
     </div>

@@ -351,7 +351,9 @@ class ExportService {
     static String sanitizeHtml(String html) {
         // Note that the FORMATTING pre defined policy allows font tags but does not allow the attributes on them,
         // so font tags are effectively stripped out of the output.
-        FORMATTING.and(STYLES).and(LINKS).and(BLOCKS).and(IMAGES).and(TABLES).sanitize(html)
+        String s = FORMATTING.and(STYLES).and(LINKS).and(BLOCKS).and(IMAGES).and(TABLES).sanitize(html)
+        println s
+        s
     }
 
     /**
