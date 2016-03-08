@@ -1,7 +1,7 @@
 var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate']);
 
 profileEditor.config(function ($logProvider) {
-    $logProvider.debugEnabled(true);
+    $logProvider.debugEnabled(false);
 
 });
 
@@ -50,7 +50,7 @@ profileEditor.run(function ($rootScope, config) {
             { name: 'clipboard', items: ['PasteText', '-', 'Undo', 'Redo' ] },
             { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent' ] },
             { name: 'links', items: [ 'Link', 'Unlink' ] },
-            { name: 'insert', items: [ 'HorizontalRule', 'Symbol', 'Male', 'Female', 'PlusMinus', 'Times', 'Endash', 'Degree' ] },
+            { name: 'insert', items: [ 'Symbol', 'Male', 'Female', 'PlusMinus', 'Times', 'Endash', 'Degree' ] },
             { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
             { name: 'tools', items: [ 'Maximize', '-' ] },
             { name: 'styles', items: [ 'Styles', 'Format' ] }
