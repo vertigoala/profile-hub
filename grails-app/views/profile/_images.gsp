@@ -25,7 +25,7 @@
 
                             <p class="caption">{{ image.dataResourceName }}</p>
 
-                            <p class="caption" ng-if="image.metadata.title">"{{ image.metadata.title }}"
+                            <p class="caption" ng-if="imageCtrl.imageCaption(image)">"{{ imageCtrl.imageCaption(image) }}"
                                 <span class="caption"
                                       ng-if="image.metadata.creator">by {{ image.metadata.creator }}<span
                                         ng-if="image.metadata.dateCreated">, {{ image.metadata.dateCreated | date: 'dd/MM/yyyy' }}</span>
@@ -57,20 +57,26 @@
         <div class="panel-body">
             <div class="col-sm-12">
                 <div class="row section-no-para" ng-if="imageCtrl.images.length > 0">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <h5>Image</h5>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <h5>Display on public view</h5>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <h5>Use as the main image</h5>
                     </div>
 
+                    <div class="col-sm-4">
+                        <h5>Override caption</h5>
+                    </div>
+
+                    <div class="clearfix"></div>
+
                     <div ng-repeat="image in imageCtrl.images" class="row border-bottom margin-bottom-1">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <div class="imgCon">
                                 <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.largeImageUrl" title="View details">
                                     <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'OPEN'"
@@ -97,7 +103,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <div class="small center">
                                 <div class="btn-group">
                                     <label class="btn btn-xs" ng-class="image.displayOption == 'INCLUDE' ? 'btn-success' : 'btn-default'"
@@ -110,7 +116,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <div class="small center">
                                 <div class="btn-group">
                                     <label class="btn btn-xs"
@@ -124,6 +130,13 @@
                                            ng-click="imageCtrl.changePrimaryImage(image.imageId, ImageForm)"
                                            btn-radio="false">No</label>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="sr-only" for="{{image.imageId}}-caption">Caption</label>
+                                <input type="text" class="form-control" id="{{image.imageId}}-caption" ng-model="image.caption" placeholder="Alternative caption">
                             </div>
                         </div>
                     </div>

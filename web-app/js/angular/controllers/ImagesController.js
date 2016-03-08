@@ -43,12 +43,12 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
     self.saveProfile = function (form) {
         saving = true;
-        self.profile.imageDisplayOptions = [];
+        self.profile.imageSettings = [];
 
         self.profile.primaryImage = null;
 
         angular.forEach(self.images, function (image) {
-            self.profile.imageDisplayOptions.push({imageId: image.imageId, displayOption: image.displayOption});
+            self.profile.imageSettings.push({imageId: image.imageId, caption: image.caption, displayOption: image.displayOption});
 
             if (image.primary) {
                 self.profile.primaryImage = image.imageId;
@@ -213,7 +213,14 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 messageService.alert("An error occurred while deleting your staged image.");
             });
         });
-    }
+    };
+
+    self.imageCaption = function (image) {
+        if (image.caption) {
+            return image.caption;
+        }
+        return image.metadata ? image.metadata.title : '';
+    };
 });
 
 /**

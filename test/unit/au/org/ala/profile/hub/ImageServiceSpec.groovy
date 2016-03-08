@@ -283,7 +283,7 @@ class ImageServiceSpec extends Specification {
                 opus: [title: "opus title"],
                 profile: [uuid: "profileId", privateMode: true, stagedImages: [stagedImage1, stagedImage2],
                           privateImages: [], primaryImage: "staged1",
-                          imageDisplayOptions: [
+                          imageSettings: [
                                   [imageId: "staged1", displayOption: "INCLUDE"],
                                   [imageId: "staged2", displayOption: "INCLUDE"]
                           ]
@@ -334,7 +334,7 @@ class ImageServiceSpec extends Specification {
                 opus: [title: "opus title"],
                 profile: [uuid: "profileId", privateMode: true, privateImages: [privateImage1, privateImage2],
                           stagedImages: [], primaryImage: "private1",
-                          imageDisplayOptions: [
+                          imageSettings: [
                                   [imageId: "private1", displayOption: "INCLUDE"],
                                   [imageId: "private2", displayOption: "INCLUDE"]
                           ]
@@ -379,7 +379,7 @@ class ImageServiceSpec extends Specification {
 
     def "retrieveImages should set the display option for biocache images"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", privateImages: [], imageDisplayOptions: [[imageId: "image1", displayOption: "INCLUDE"], [imageId: "image2", displayOption: "INCLUDE"]]], opus: [:]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", privateImages: [], imageSettings: [[imageId: "image1", displayOption: "INCLUDE"], [imageId: "image2", displayOption: "INCLUDE"]]], opus: [:]]
 
         Map image1Metadata = [title: "image 1"]
         Map image2Metadata = [title: "image 2"]

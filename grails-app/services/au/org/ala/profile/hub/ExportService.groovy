@@ -251,6 +251,9 @@ class ExportService {
                         imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}",
                         licenceIcon : nextImage?.metadata?.license ? Utils.getCCLicenceIcon(nextImage?.metadata?.license) : ""
                 ]
+                def replaceTitleWithOptionalCaption = { Map m -> m?.metadata?.title = m?.caption ? m?.caption : m?.metadata?.title }
+                replaceTitleWithOptionalCaption(image)
+                replaceTitleWithOptionalCaption(nextImage)
                 groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
             }
         }

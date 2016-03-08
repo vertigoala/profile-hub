@@ -169,18 +169,18 @@
     </div>
 </div>
 
-<div class="row" ng-if="diff.imageDisplayOptions.changed || showEverything">
+<div class="row" ng-if="diff.imageSettings.changed || showEverything">
     <div class="col-lg-2 col-md-2 col-sm-2">
         <strong>Images</strong>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <div class="comparison-image" ng-repeat="image in left.imageDisplayOptions">
+        <div class="comparison-image" ng-repeat="image in left.imageSettings">
             <img ng-src="{{getImageUrl(left, image.imageId)}}" class="thumbnail">
             {{ image.displayOption | capitalize }}d
         </div>
     </div>
     <div class="col-lg-5 col-md-5 col-sm-5">
-        <div class="comparison-image" ng-repeat="image in right.imageDisplayOptions">
+        <div class="comparison-image" ng-repeat="image in right.imageSettings">
             <img ng-src="{{getImageUrl(right, image.imageId)}}" class="thumbnail">
             {{ image.displayOption | capitalize }}d
         </div>

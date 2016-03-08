@@ -2,6 +2,7 @@ package au.org.ala.profile.hub
 
 import au.org.ala.images.tiling.ImageTiler
 import au.org.ala.images.tiling.ImageTilerConfig
+import net.sf.json.JSONNull
 import org.springframework.web.multipart.MultipartFile
 
 import javax.imageio.ImageIO
@@ -157,7 +158,7 @@ class ImageService {
 
         if (publishedImages && publishedImages.statusCode == SC_OK) {
             List biocacheImages = publishedImages.resp.occurrences.findResults { biocacheImage ->
-                boolean excluded = isExcluded(opus.approvedImageOption, profile.imageDisplayOptions ?: null, biocacheImage.image)
+                boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, biocacheImage.image)
 
                 Map image = [
                         imageId         : biocacheImage.image,
@@ -167,6 +168,7 @@ class ImageService {
                         dataResourceName: biocacheImage.dataResourceName,
                         excluded        : excluded,
                         displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
+                        caption         : profile.imageSettings.find { it.imageId == biocacheImage.image }?.caption ?: '',
                         primary         : biocacheImage.image == profile.primaryImage,
                         metadata        : biocacheImage.imageMetadata && !biocacheImage.imageMetadata.isEmpty() ? biocacheImage.imageMetadata[0] : [:],
                         type            : ImageType.OPEN
@@ -227,7 +229,7 @@ class ImageService {
         String imageUrlPrefix = useInternalPaths ? "file:///data/profile-hub/private-images/${profile.uuid}" : "/opus/${opus.uuid}/profile/${profile.uuid}/image"
 
         images?.findResults {
-            boolean excluded = isExcluded(opus.approvedImageOption, profile.imageDisplayOptions ?: null, it.imageId)
+            boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, it.imageId)
 
             // only return images that have not been included, unless we are in the edit view, in which case we
             // need to show all available images in order for the editor to decide which to include/exclude
@@ -243,6 +245,7 @@ class ImageService {
                         metadata        : it,
                         excluded        : excluded,
                         displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
+                        caption         : profile.imageSettings.find { setting -> setting.imageId == it.imageId }?.caption ?: '',
                         primary         : it.imageId == profile.primaryImage,
                         type            : type
                 ]
@@ -252,14 +255,14 @@ class ImageService {
         }
     }
 
-    private static boolean isExcluded(String defaultOptionStr, List<Map> imageDisplayOptions, String imageId) {
+    private static boolean isExcluded(String defaultOptionStr, List<Map> imageSettings, String imageId) {
         boolean excluded
 
         ImageOption defaultOption = ImageOption.byName(defaultOptionStr, ImageOption.INCLUDE)
         if (defaultOption == ImageOption.EXCLUDE) {
-            excluded = imageDisplayOptions?.find { it.imageId == imageId && ImageOption.byName(it.displayOption) == ImageOption.INCLUDE } == null
+            excluded = imageSettings?.find { it.imageId == imageId && ImageOption.byName(it?.displayOption?.toString()) == ImageOption.INCLUDE } == null
         } else {
-            excluded = imageDisplayOptions?.find { it.imageId == imageId && ImageOption.byName(it.displayOption) == ImageOption.EXCLUDE } != null
+            excluded = imageSettings?.find { it.imageId == imageId && ImageOption.byName(it?.displayOption?.toString()) == ImageOption.EXCLUDE } != null
         }
 
         excluded
@@ -328,7 +331,7 @@ class ImageService {
                 }
 
                 // check for any display options that were set for the local image, and swap the local id for the new permanent id
-                Map imageDisplayOption = profile.imageDisplayOptions?.find { it.imageId == imageId }
+                Map imageDisplayOption = profile.imageSettings?.find { it.imageId == imageId }
                 if (imageDisplayOption) {
                     imageDisplayOption?.imageId = uploadResponse.resp.images[0]
                 }

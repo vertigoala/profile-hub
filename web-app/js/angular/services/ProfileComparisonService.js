@@ -107,7 +107,7 @@ profileEditor.service('profileComparisonService', function ($http, util, $cacheF
                 diff.specimenIds = compare(
                     left.specimenIds ? left.specimenIds.join(", ") : "",
                     right.specimenIds ? right.specimenIds.join(", ") : "");
-                diff.imageDisplayOptions = compareLists(left.imageDisplayOptions, right.imageDisplayOptions, "imageId", ["displayOption"]);
+                diff.imageSettings = compareLists(left.imageSettings, right.imageSettings, "imageId", ["displayOption"]);
                 diff.nslNomenclatureIdentifier = compare(left.nslNomenclatureIdentifier, right.nslNomenclatureIdentifier);
                 diff.scientificName = compare(left.scientificName, right.scientificName);
                 diff.archivedDate = compare(left.archivedDate, right.archivedDate);
