@@ -1,3 +1,4 @@
+<%@ page import="grails.util.Environment" %>
 <!DOCTYPE html>
 <html lang="en" ng-app="profileEditor">
 <head>
@@ -112,7 +113,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-4 col-lg-3 margin-bottom-2 site-logo" id="site-logo">
                     <img class="img-responsive customizable-logo-img"
-                         src="${logoUrl ?: 'http://root.ala.org.au/bdrs-core/files/download.htm?className=au.com.gaiaresources.bdrs.model.theme.Theme&id=217&fileName=processed/images/bdrs/atlasoflivingaust.png'}"
+                         src="${logoUrl ?: 'https://root.ala.org.au/bdrs-core/files/download.htm?className=au.com.gaiaresources.bdrs.model.theme.Theme&id=217&fileName=processed/images/bdrs/atlasoflivingaust.png'}"
                          alt="${logoAlt ?: 'logo'}"/>
                 </div>
 
