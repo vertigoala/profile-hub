@@ -261,6 +261,7 @@ class ExportService {
         if (params.attributes) {
             model.profile.attributes.each { attribute ->
                 attribute.text = convertTagsForJasper(sanitizeHtml(formatAttributeText(attribute.text, attribute.title)))
+                attribute.images = attribute.text.findAll("<img.*/>")?.collect { it.findAll("https?[^\"]*") }?.flatten()?.join("") // todo remove join
             }
         }
 

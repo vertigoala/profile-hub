@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2015-07-23T10:40:37 -->
+<!-- 2016-03-09T15:16:48 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail_attributes" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="5" uuid="052ebf40-2ed2-4f4f-b9ab-676a9ef84df6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="allowFineGrainedAttribution" class="java.lang.Boolean">
@@ -13,6 +13,7 @@
 	<field name="text" class="java.lang.String"/>
 	<field name="creators" class="java.lang.String"/>
 	<field name="editors" class="java.lang.String"/>
+	<field name="images" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -32,11 +33,12 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="48" splitType="Stretch">
+		<band height="50" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="5" width="515" height="13" isRemoveLineWhenBlank="true" uuid="9304f71c-bcb9-450d-adfc-0d6e2d59005e">
+				<reportElement positionType="Float" x="0" y="5" width="515" height="13" isRemoveLineWhenBlank="true" uuid="9304f71c-bcb9-450d-adfc-0d6e2d59005e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement markup="html">
 					<font size="10" isBold="false"/>
@@ -65,6 +67,12 @@
 				</textElement>
 				<textFieldExpression><![CDATA["- Edited by " + $F{editors}]]></textFieldExpression>
 			</textField>
+			<image scaleImage="RealHeight" hAlign="Right" vAlign="Top" isLazy="true">
+				<reportElement positionType="Float" mode="Transparent" x="450" y="2" width="65" height="46" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="cafaa1bf-81ca-45b9-8a16-0c1bf2f6c408">
+					<printWhenExpression><![CDATA[$F{images} != null && !$F{images}.trim().equals("")]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$F{images}]]></imageExpression>
+			</image>
 		</band>
 	</detail>
 	<columnFooter>

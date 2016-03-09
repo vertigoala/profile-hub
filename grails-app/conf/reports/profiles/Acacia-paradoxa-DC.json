@@ -5754,7 +5754,8 @@
           {
             "creators": "P.G. Kodela",
             "title": "Description",
-            "text": "Erect or spreading shrub 1–4 m high; bark finely fissured, brownish grey; branchlets ± terete with low ridges, ± hairy. Stipules spinescent, slender, mostly 5–15 mm long.<img src="http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/species-octopus-maorum-313.jpg" alt="test caption" />",
+            "images": "http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/species-octopus-maorum-313.jpg",
+            "text": "Erect or spreading shrub 1–4 m high; bark finely fissured, brownish grey; branchlets ± terete with low ridges, ± hairy. Stipules spinescent, slender, mostly 5–15 mm long.<img src='http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/species-octopus-maorum-313.jpg' alt='test caption' />",
             "order": -1,
             "source": null,
             "original": null,
