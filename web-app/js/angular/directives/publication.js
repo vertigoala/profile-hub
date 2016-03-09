@@ -12,7 +12,7 @@ profileEditor.directive('publication', function ($browser) {
         },
         templateUrl: $browser.baseHref() + 'static/templates/publication.html',
         controller: ['$scope', 'config', function ($scope, config) {
-            $scope.context = config.profileServiceUrl;
+            $scope.context = config.contextPath;
         }],
         link: function (scope, element, attrs, ctrl) {
 

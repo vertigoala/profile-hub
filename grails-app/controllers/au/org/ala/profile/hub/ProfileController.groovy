@@ -415,7 +415,6 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Analytics
     def retrievePublication() {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
@@ -423,6 +422,19 @@ class ProfileController extends BaseController {
             def response = profileService.getPublications(params.opusId as String, params.profileId as String)
 
             handle response
+        }
+    }
+
+    @Analytics
+    def proxyPublicationDownload() {
+        final pubId = params.publicationId as String
+        if (!pubId) {
+            badRequest "Publication Id must be provided"
+        } else {
+            final opusId = params.opusId as String
+            final profileId = params.profileId as String
+            log.info("Proxying publication download opus $opusId, $profileId, $pubId")
+            profileService.proxyGetPublicationFile(response, opusId, profileId, pubId)
         }
     }
 

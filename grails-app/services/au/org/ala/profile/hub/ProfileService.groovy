@@ -6,6 +6,8 @@ import au.org.ala.web.AuthService
 import org.apache.commons.lang.BooleanUtils
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
+import javax.servlet.http.HttpServletResponse
+
 class ProfileService {
 
     def grailsApplication
@@ -216,6 +218,12 @@ class ProfileService {
         log.debug("Saving publication for profile ${profileId}")
 
         webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/publication", [:], [file])
+    }
+
+    def proxyGetPublicationFile(HttpServletResponse response, String opusId, String profileId, String publicationId) {
+        log.debug("Proxying publication $publicationId")
+
+        webService.proxyGetRequest(response, "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/publication/${enc(publicationId)}/file")
     }
 
     def deletePublication(String opusId, String profileId, String publicationId) {
