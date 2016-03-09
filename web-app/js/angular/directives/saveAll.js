@@ -28,7 +28,6 @@ profileEditor.directive('saveAll', function ($browser, $timeout) {
             };
 
             self.watchForms = function() {
-                console.log("starting");
                 $scope.$apply();
 
                 $scope.$watch(function() {
