@@ -120,7 +120,7 @@ class WebService {
             headers.each { header ->
                 String headerValue = conn.getHeaderField(header)
                 if (headerValue) {
-                    response.setHeader(header, conn.getHeaderField(header))
+                    response.setHeader(header, headerValue)
                 }
             }
             response.status = conn.responseCode
