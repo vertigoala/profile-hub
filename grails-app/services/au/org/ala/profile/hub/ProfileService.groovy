@@ -6,8 +6,6 @@ import au.org.ala.web.AuthService
 import org.apache.commons.lang.BooleanUtils
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
-import javax.servlet.http.HttpServletResponse
-
 class ProfileService {
 
     def grailsApplication
@@ -474,5 +472,9 @@ class ProfileService {
 
     def enc(String value) {
         value ? URLEncoder.encode(value, "UTF-8") : ""
+    }
+
+    boolean hasMatchedName(Map profile) {
+        profile.guid as Boolean
     }
 }

@@ -41,7 +41,8 @@ class ProfileController extends BaseController {
                           glossaryUrl : getGlossaryUrl(model.opus),
                           aboutPageUrl: getAboutUrl(model.opus, model.profile),
                           footerText  : model.opus.footerText,
-                          contact     : model.opus.contact]
+                          contact     : model.opus.contact,
+                          displayMap  : profileService.hasMatchedName(model.profile) ]
                 render view: "show", model: model
             }
         }
@@ -62,7 +63,8 @@ class ProfileController extends BaseController {
                           glossaryUrl : getGlossaryUrl(profile.opus),
                           aboutPageUrl: getAboutUrl(profile.opus, profile.profile),
                           footerText  : profile.opus.footerText,
-                          contact     : profile.opus.contact]
+                          contact     : profile.opus.contact,
+                          displayMap  : profileService.hasMatchedName(model.profile)]
                 render view: "show", model: model
             }
         }

@@ -37,7 +37,7 @@ describe("AttributesController tests", function () {
     var vocabResponse = '{"terms": [{"name": "term1", "order": 2}, {"name": "term2", "order": 1}]}';
     var saveAttributeResponse = '{"attributeId": "newId"}';
     var deleteAttributeResponse = '{}';
-    var showAuditResponse = '[{"userId": "1", "object": {"text":"auditText1", "title":"auditTitle1"}}, {"userId": "2", "object": {"text":"auditText2", "title":"auditTitle2"}}]';
+    var showAuditResponse = '{"items":[{"userId": "1", "object": {"text":"auditText1", "title":"auditTitle1"}}, {"userId": "2", "object": {"text":"auditText2", "title":"auditTitle2"}}], "total":2}';
 
     beforeAll(function () {
         console.log("****** Attributes Controller Tests ******");

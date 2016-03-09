@@ -260,4 +260,22 @@ describe("ImagesController tests", function () {
 
         expect(scope.imageCtrl.imageCaption(image)).toBe('right');
     });
+
+    it("should detect changes to the primary image and respond by reloading the images", function() {
+        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "primaryImage": "imageId2"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        profileDefer.resolve(JSON.parse(getProfileResponse));
+        imageDefer.resolve(JSON.parse(retrieveImagesResponse));
+
+        scope.imageCtrl.init("false");
+        scope.$apply();
+
+        expect(profileService.retrieveImages).toHaveBeenCalledWith('opusId1', 'profileId1', "lsid:guid1", ",source1,source2", true);
+        expect(scope.imageCtrl.profile.primaryImage).toBe("imageId2");
+
+        scope.imageCtrl.profile.primaryImage = "imageId1";
+
+        scope.$apply();
+        expect(profileService.retrieveImages).toHaveBeenCalledWith('opusId1', 'profileId1', "lsid:guid1", ",source1,source2", true);
+
+    });
 });
