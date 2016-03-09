@@ -31,7 +31,15 @@
             </li>
             <li class="font-xxsmall active" ng-if="profileCtrl.profile.classification.length == 0">{{profileCtrl.isArchived() ? profileCtrl.profile.archivedWithName : profileCtrl.profile.scientificName}}</li>
             <span ng-if="profileCtrl.profile.classification.length > 0">
-                <taxonomy data="profileCtrl.profile.classification" current-name="profileCtrl.profile.scientificName" opus-id="profileCtrl.opusId" layout="horizontal" limit="4" show-children="false" show-infraspecific="true"></taxonomy>
+                <taxonomy data="profileCtrl.profile.classification"
+                          current-name="profileCtrl.profile.scientificName"
+                          opus-id="profileCtrl.opusId"
+                          layout="horizontal"
+                          limit="4"
+                          show-children="false"
+                          show-with-profile-only="true"
+                          show-infraspecific="true">
+                </taxonomy>
             </span>
         </ol>
 

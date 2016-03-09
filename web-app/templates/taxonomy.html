@@ -17,7 +17,7 @@
 
 
 <ul ng-if="layout != 'tree'"  class="{{ layout == 'horizontal' ? 'breadcrumb' : layout == 'tree' ? 'tree' : '' }}">
-    <li ng-repeat="taxon in taxonomy" ng-if="taxonomy.length >= limit && (limit < 0 || $index >= taxonomy.length - limit)">
+    <li ng-repeat="taxon in taxonomy" ng-if="limit < 0 || $index >= taxonomy.length - limit">
         <span ng-include src="'taxon.html'"></span>
     </li>
 </ul>

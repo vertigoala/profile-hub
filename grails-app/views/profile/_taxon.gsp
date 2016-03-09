@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <taxonomy data="profileCtrl.profile.classification" opus-id="profileCtrl.opusId"
-                          include-rank="true" show-children="true" show-infraspecific="true"></taxonomy>
+                          include-rank="true" show-children="true" show-infraspecific="true" show-with-profile-only="false"></taxonomy>
             </div>
         </div>
     </div>

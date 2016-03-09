@@ -3,13 +3,14 @@ profileEditor.directive('taxonomy', function ($browser) {
         restrict: 'AE',
         require: [],
         scope: {
-            taxonomy: '=data',
+            data: '=data',
             currentName: "@",
             opusId: '=',
             layout: '@',
             includeRank: '@',
             showChildren: '@',
             showInfraspecific: '@',
+            showWithProfileOnly: '@',
             limit: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/taxonomy.html',
@@ -17,6 +18,7 @@ profileEditor.directive('taxonomy', function ($browser) {
             $scope.contextPath = config.contextPath;
             $scope.showChildren = false;
             $scope.showInfraspecific = false;
+            $scope.showWithProfileOnly = false;
             $scope.includeRank = false;
             $scope.limit = -1;
             $scope.pageSize = 15;
@@ -167,9 +169,24 @@ profileEditor.directive('taxonomy', function ($browser) {
                     });
                     $scope.hierarchy = [tmp[0]];
                 }
-            }
+            };
+
+            $scope.removeRanksWithNoProfile = function() {
+                var tmp = angular.copy($scope.taxonomy);
+                $scope.taxonomy = [];
+                angular.forEach(tmp, function(taxon) {
+                    if (taxon.profileId) {
+                        $scope.taxonomy.push(taxon);
+                    }
+                });
+            };
         }],
         link: function (scope) {
+            scope.$watch("data", function(newValue) {
+                if (!_.isUndefined(newValue)) {
+                    scope.taxonomy = angular.copy(newValue);
+                }
+            });
             scope.$watch("includeRank", function(newValue) {
                 if (!_.isUndefined(newValue)) {
                     scope.includeRank = isTruthy(newValue);
@@ -183,6 +200,14 @@ profileEditor.directive('taxonomy', function ($browser) {
             scope.$watch("showInfraspecific", function(newValue) {
                 if (!_.isUndefined(newValue)) {
                     scope.showInfraspecific = isTruthy(newValue);
+                }
+            });
+            scope.$watch("showWithProfileOnly", function(newValue) {
+                if (!_.isUndefined(newValue)) {
+                    scope.showWithProfileOnly = isTruthy(newValue);
+                    if (scope.showWithProfileOnly && !_.isUndefined(scope.taxonomy)) {
+                        scope.removeRanksWithNoProfile();
+                    }
                 }
             });
 
