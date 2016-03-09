@@ -141,6 +141,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     self.showAudit = function (idx) {
         var future = profileService.getAuditHistory(self.attributes[idx].uuid);
         future.then(function (audit) {
+                audit = audit.items; // return value includes items and total to support pagination.
                 var d = new diff_match_patch();
 
                 for (var i = 0; i < audit.length - 1; i++) {
