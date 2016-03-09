@@ -38,7 +38,7 @@
 
             <div>
                 <a class="btn btn-primary"
-                       ng-href="${grailsApplication.config.profile.service.url}/opus/{{doiCtrl.opusId}}/profile/{{doiCtrl.profileId}}/publication/{{doiCtrl.selectedPublication.uuid}}/file"
+                       ng-href="${request.contextPath}/opus/{{doiCtrl.opus.shortName || doiCtrl.opus.uuid }}/profile/{{doiCtrl.profileId}}/publication/{{doiCtrl.selectedPublication.uuid}}/file"
                        target="_blank"><span class="glyphicon glyphicon-download"></span> Download PDF</a>
                 <a class="btn btn-default"
                        href="${request.contextPath}/opus/{{doiCtrl.opus.shortName ? doiCtrl.opus.shortName : doiCtrl.opus.uuid}}/profile/{{doiCtrl.profile.scientificName}}" target="_blank">View Profile</a>

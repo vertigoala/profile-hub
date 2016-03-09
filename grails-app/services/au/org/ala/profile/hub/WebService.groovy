@@ -14,6 +14,9 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletResponse
 
 import static groovyx.net.http.Method.POST
+import static org.codehaus.groovy.grails.web.servlet.HttpHeaders.CONNECTION
+import static org.codehaus.groovy.grails.web.servlet.HttpHeaders.CONTENT_DISPOSITION
+import static org.codehaus.groovy.grails.web.servlet.HttpHeaders.TRANSFER_ENCODING
 
 //TODO We should be using an existing REST client like Groovy Http Builder instead of this service -> https://github.com/jgritman/httpbuilder
 class WebService {
@@ -102,25 +105,31 @@ class WebService {
      */
     def proxyGetRequest(HttpServletResponse response, String url) {
 
-        HttpURLConnection conn = configureConnection(url, true)
-        conn.setConnectTimeout(grailsApplication.config.webservice.connectTimeout as int)
-        conn.setReadTimeout(readTimeout)
+        HttpURLConnection conn = (HttpURLConnection) configureConnection(url, true)
+        conn.useCaches = false
 
-        def user = userService.getUser()
-        if (user) {
-            conn.setRequestProperty(grailsApplication.config.app.http.header.userId as String, user.userId as String)
-            conn.setRequestProperty("Cookie", "ALA-Auth=${URLEncoder.encode(user.userName, CHAR_ENCODING)}")
+        try {
+            conn.setRequestProperty(CONNECTION, 'close') // disable Keep Alive
+
+            conn.connect()
+
+            response.setContentType(conn.getContentType())
+            response.setContentLength(conn.getContentLength())
+
+            def headers = [CONTENT_DISPOSITION, TRANSFER_ENCODING]
+            headers.each { header ->
+                String headerValue = conn.getHeaderField(header)
+                if (headerValue) {
+                    response.setHeader(header, conn.getHeaderField(header))
+                }
+            }
+            response.status = conn.responseCode
+            conn.inputStream.withCloseable { InputStream is ->
+                response.outputStream << is
+            }
+        } finally {
+            conn.disconnect()
         }
-
-        def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.TRANSFER_ENCODING]
-        response.setContentType(conn.getContentType())
-        response.setContentLength(conn.getContentLength())
-
-        headers.each { header ->
-            response.setHeader(header, conn.getHeaderField(header))
-        }
-        response.status = conn.responseCode
-        response.outputStream << conn.inputStream
 
     }
 
@@ -151,7 +160,7 @@ class WebService {
         wr.flush()
         wr.close()
 
-        def headers = [HttpHeaders.CONTENT_DISPOSITION, HttpHeaders.TRANSFER_ENCODING]
+        def headers = [CONTENT_DISPOSITION, TRANSFER_ENCODING]
         response.setContentType(conn.getContentType())
         response.setContentLength(conn.getContentLength())
 

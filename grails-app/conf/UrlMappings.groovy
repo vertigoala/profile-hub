@@ -41,6 +41,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/lists" controller: "speciesList", action: [GET: "retrieveLists"]
         "/opus/$opusId/profile/$profileId/publication" controller: "profile", action: [GET: "retrievePublication"]
         "/opus/$opusId/profile/$profileId/publication/create" controller: "profile", action: [PUT: "savePublication"]
+        "/opus/$opusId/profile/$profileId/publication/$publicationId/file" controller: "profile", action: [GET: "proxyPublicationDownload"]
         "/opus/$opusId/profile/$profileId/publication/$publicationId/update" controller: "profile", action: [POST: "savePublication"]
         "/opus/$opusId/profile/$profileId/speciesProfile" controller: "profile", action: [GET: "retrieveSpeciesProfile"]
         "/opus/$opusId/profile/$profileId/featureList" controller: "profile", action: [GET: "getFeatureLists"]
