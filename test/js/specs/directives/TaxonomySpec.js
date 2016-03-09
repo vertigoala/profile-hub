@@ -13,7 +13,7 @@ describe('Directive: Taxonomy (Tree Layout)', function () {
     var validTreeTemplate = '<taxonomy data="profileCtrl.profile.classification" opus-id="opusId" include-rank="true" show-children="true" layout="tree"></taxonomy>';
 
     var util, profileService;
-    var childrenDefer;
+    var childrenDefer, subordinatesDefer;
 
     beforeAll(function () {
         console.log("****** Taxonomy Directive (Tree Layout) Tests ******");
@@ -34,8 +34,10 @@ describe('Directive: Taxonomy (Tree Layout)', function () {
             profileService = _profileService_;
 
             childrenDefer = $q.defer();
+            subordinatesDefer = $q.defer();
 
             spyOn(profileService, "profileSearchGetImmediateChildren").and.returnValue(childrenDefer.promise);
+            spyOn(profileService, "profileSearchByTaxonLevelAndName").and.returnValue(subordinatesDefer.promise);
 
 
             var element = angular.element(validTreeTemplate);
@@ -46,6 +48,17 @@ describe('Directive: Taxonomy (Tree Layout)', function () {
         });
 
         scope.$digest();
+    });
+
+    it("should retrieve subordinate taxa and add them to the 'children' attribute of the taxon when showAllSubordinateTaxaList is invoked", function() {
+        scope.opusId = "opus1";
+        var taxon = {rank: "species", name: "Acacia dealbata"};
+        subordinatesDefer.resolve([{rank: "subspecies", scientificName: "sub1"}, {rank: "subspecies", scientificName: "sub1"}]);
+        scope.showAllSubordinateTaxaList(taxon);
+        scope.$apply();
+
+        expect(profileService.profileSearchByTaxonLevelAndName).toHaveBeenCalledWith("opus1", "species", "Acacia dealbata", 15, 0);
+        expect(taxon.children.length).toBe(2);
     });
 
     it("should collapse the section when loadSubordinateTaxa is invoked with openCloseSection = true", function() {

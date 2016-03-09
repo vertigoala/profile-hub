@@ -722,6 +722,18 @@ ul.breadcrumb li:before {
     content: "/\00a0";
 }
 
+span.breadcrumb-dropdown {
+    vertical-align: inherit;
+}
+
+.breadcrumb-dropdown a {
+    padding-left: 10px;
+}
+
+.breadcrumb-dropdown li:before {
+    content: none !important;
+}
+
 .breadcrumb>li+li:before {
     padding-left: 10px;
     padding-right: 5px;

@@ -37,10 +37,23 @@
             <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name }}
         </span>
 
-        <span ng-if="showChildren && taxon.childCount > 0" class="padding-left-1">
+        <span ng-if="showChildren && layout != 'horizontal' && taxon.childCount > 0" class="padding-left-1">
             <a href="" class="fa fa-list-ul"
                title="Show members {{ taxon.childCount }} of {{ taxon.rank }} {{ taxon.name }}"
-               ng-click="fetchChildren(taxon.rank, taxon.name, taxon.childCount)"></a>
+               ng-click="showAllSubordinateTaxaPopup(taxon.rank, taxon.name, taxon.childCount)"></a>
+        </span>
+
+        <span ng-if="taxon.rank == 'species' && showInfraspecific && layout == 'horizontal' && $last && taxon.childCount > 0" class="btn-group breadcrumb-dropdown" dropdown>
+            <a href="" class="fa fa-list-ul dropdown-toggle" dropdown-toggle ng-click="showAllSubordinateTaxaList(taxon)"
+               title="Show members {{ taxon.childCount }} of {{ taxon.rank }} {{ taxon.name }}"></a>
+
+            <ul class="dropdown-menu" role="menu">
+                <span class="fa fa-spin fa-spinner" ng-show="taxon.loading"></span>
+                <li ng-repeat="profile in taxon.children">
+                    <a href="{{contextPath}}/opus/{{ opusId }}/profile/{{ profile.scientificName }}"
+                       target="_self">{{profile.scientificName}}</a>
+                </li>
+            </ul>
         </span>
     </span>
 

@@ -9,17 +9,43 @@ profileEditor.directive('taxonomy', function ($browser) {
             layout: '@',
             includeRank: '@',
             showChildren: '@',
+            showInfraspecific: '@',
             limit: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/taxonomy.html',
         controller: ['$scope', 'config', '$modal', 'messageService', 'profileService', function ($scope, config, $modal, messageService, profileService) {
             $scope.contextPath = config.contextPath;
             $scope.showChildren = false;
+            $scope.showInfraspecific = false;
             $scope.includeRank = false;
             $scope.limit = -1;
             $scope.pageSize = 15;
 
-            $scope.fetchChildren = function (level, scientificName, childCount) {
+            /**
+             * Fetch all subordinate taxa (of any rank, not just the immediate children) and populate the 'children'
+             * property of the taxon. This is used to display a drown-down list of subordinate taxa.
+             */
+            $scope.showAllSubordinateTaxaList = function(taxon) {
+                if (_.isUndefined(taxon.subordinateTaxa) || !taxon.subordinateTaxa) {
+                    taxon.loading = true;
+                    var results = profileService.profileSearchByTaxonLevelAndName($scope.opusId, taxon.rank, taxon.name, $scope.pageSize, 0);
+                    results.then(function (data) {
+                            taxon.children = data;
+                            taxon.loading = false;
+                        },
+                        function () {
+                            taxon.loading = false;
+                            messageService.alert("Failed to perform search for '" + taxon.rank + " " + taxon.name + "'.");
+                        }
+                    );
+                }
+            };
+
+            /**
+             * Fetch all subordinate taxa (of any rank, not just the immediate children) and display a modal dialog with
+             * pagination.
+             */
+            $scope.showAllSubordinateTaxaPopup = function (level, scientificName, childCount) {
                 $modal.open({
                     templateUrl: "showTaxonChildren.html",
                     controller: function (profileService, messageService, $modalInstance, taxon, contextPath, opusId) {
@@ -67,6 +93,10 @@ profileEditor.directive('taxonomy', function ($browser) {
                 });
             };
 
+            /**
+             * Fetch only the immediate children of the specified taxon (e.g. if taxon is a genus, then only get the
+             * species, not the subspecies)
+             */
             $scope.loadSubordinateTaxa = function (offset, taxon, openCloseSection) {
                 if (openCloseSection) {
                     taxon.expanded = !taxon.expanded || false;
@@ -148,6 +178,11 @@ profileEditor.directive('taxonomy', function ($browser) {
             scope.$watch("showChildren", function(newValue) {
                 if (!_.isUndefined(newValue)) {
                     scope.showChildren = isTruthy(newValue);
+                }
+            });
+            scope.$watch("showInfraspecific", function(newValue) {
+                if (!_.isUndefined(newValue)) {
+                    scope.showInfraspecific = isTruthy(newValue);
                 }
             });
 
