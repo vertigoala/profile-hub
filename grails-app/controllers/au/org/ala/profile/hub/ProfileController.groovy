@@ -42,7 +42,7 @@ class ProfileController extends BaseController {
                           aboutPageUrl: getAboutUrl(model.opus, model.profile),
                           footerText  : model.opus.footerText,
                           contact     : model.opus.contact,
-                          displayMap  : profileService.hasMatchedName(model.profile) ]
+                          displayMap  : profileService.hasMatchedName(model.profile)]
                 render view: "show", model: model
             }
         }
@@ -358,11 +358,11 @@ class ProfileController extends BaseController {
         } else {
             try {
                 ImageType type = params.type as ImageType
-
+                //NB this imageId param already has the file extension on it, really the file name on disk
                 if (type == ImageType.STAGED) {
                     downloadFile("${grailsApplication.config.image.staging.dir}/${params.profileId}", params.imageId)
                 } else if (type == ImageType.PRIVATE) {
-                    downloadFile("${grailsApplication.config.image.private.dir}/${params.profileId}", params.imageId)
+                    downloadFile("${grailsApplication.config.image.private.dir}/", params.opusId, params.profileId, params.imageId)
                 }
             } catch (IllegalArgumentException e) {
                 log.warn(e)
@@ -374,6 +374,28 @@ class ProfileController extends BaseController {
     @PrivateCollectionSecurityExempt
     def downloadTempFile() {
         downloadFile("${grailsApplication.config.temp.file.location}", params.fileId)
+    }
+
+    //In the sense that the private images are fetched from disk for display on the profile page
+    //note we are supporting 2 possible file locations for backwards compatibility
+    private downloadFile(String path, String collectionId, String profileId, String filename) {
+        if (!filename) {
+            badRequest "fileId is a required parameter"
+        } else {
+            String imageId = filename.substring(0, filename.size() - 4)
+            File file = new File("${path}/${collectionId}/${profileId}/$imageId/${filename}")
+            if (!file.exists()) {
+                file = new File("${path}/${profileId}/${filename}")
+            }
+
+            if (!file.exists()) {
+                notFound "The requested file could not be found"
+            } else {
+                response.setHeader("Content-disposition", "attachment;filename=${filename}")
+                response.setContentType(getContentType(file))
+                response.outputStream << file.newInputStream()
+            }
+        }
     }
 
     private downloadFile(String path, String filename) {
@@ -470,7 +492,7 @@ class ProfileController extends BaseController {
 
     @Secured(role = ROLE_PROFILE_EDITOR)
     def savePublication() {
-        if(!enabled("publications")) {
+        if (!enabled("publications")) {
             badRequest "The publications feature has been disabled"
         } else if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"

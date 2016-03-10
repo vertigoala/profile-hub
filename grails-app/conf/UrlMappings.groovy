@@ -141,5 +141,6 @@ class UrlMappings {
         "/ws/getImageInfo/$imageId" controller: "image", action: [GET: "getImageInfo"]
         "/image/proxyImage/$imageId" controller: "image", action: [GET: "downloadImage"]
         "/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
+        "/opus/$opusId/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
     }
 }
