@@ -44,6 +44,19 @@ profileEditor.directive('taxonomy', function ($browser) {
             };
 
             /**
+             * Executes showAllSubordinateTaxa when the directive is loaded and the last rank in hierarchy is Species.
+             * This lets us display the infraspecific taxa on the page at page load, rather than on a click event
+             */
+            $scope.initialiseAllSubordinateTaxaList = function() {
+                if ($scope.layout != "tree" && !_.isUndefined($scope.taxonomy) && $scope.showInfraspecific) {
+                    var lastTaxon = $scope.taxonomy[$scope.taxonomy.length - 1];
+                    if (!_.isUndefined(lastTaxon) && lastTaxon.rank == "species") {
+                        $scope.showAllSubordinateTaxaList(lastTaxon);
+                    }
+                }
+            };
+
+            /**
              * Fetch all subordinate taxa (of any rank, not just the immediate children) and display a modal dialog with
              * pagination.
              */
@@ -186,12 +199,7 @@ profileEditor.directive('taxonomy', function ($browser) {
                 if (!_.isUndefined(newValue)) {
                     scope.taxonomy = angular.copy(newValue);
 
-                    if (scope.layout != "tree" && !_.isUndefined(scope.taxonomy) && scope.showInfraspecific) {
-                        var lastTaxon = scope.taxonomy[scope.taxonomy.length - 1];
-                        if (!_.isUndefined(lastTaxon) && lastTaxon.rank == "species") {
-                            scope.showAllSubordinateTaxaList(lastTaxon);
-                        }
-                    }
+                    scope.initialiseAllSubordinateTaxaList();
                 }
             });
             scope.$watch("includeRank", function(newValue) {
@@ -208,12 +216,7 @@ profileEditor.directive('taxonomy', function ($browser) {
                 if (!_.isUndefined(newValue)) {
                     scope.showInfraspecific = isTruthy(newValue);
 
-                    if (scope.layout != "tree" && !_.isUndefined(scope.taxonomy) && scope.showInfraspecific) {
-                        var lastTaxon = scope.taxonomy[scope.taxonomy.length - 1];
-                        if (!_.isUndefined(lastTaxon) && lastTaxon.rank == "species") {
-                            scope.showAllSubordinateTaxaList(lastTaxon);
-                        }
-                    }
+                    scope.initialiseAllSubordinateTaxaList();
                 }
             });
             scope.$watch("showWithProfileOnly", function(newValue) {
