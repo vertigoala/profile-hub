@@ -113,8 +113,11 @@ class WebService {
 
             conn.connect()
 
-            response.setContentType(conn.getContentType())
-            response.setContentLength(conn.getContentLength())
+            response.contentType = conn.contentType
+            final contentLength = conn.contentLength
+            if (contentLength != -1) {
+                response.contentLength = contentLength
+            }
 
             def headers = [CONTENT_DISPOSITION, TRANSFER_ENCODING]
             headers.each { header ->
