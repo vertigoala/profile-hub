@@ -127,9 +127,7 @@ class WebService {
                 }
             }
             response.status = conn.responseCode
-            conn.inputStream.withCloseable { InputStream is ->
-                response.outputStream << is
-            }
+            conn.inputStream.withStream { response.outputStream << it }
         } finally {
             conn.disconnect()
         }
