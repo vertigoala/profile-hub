@@ -28,7 +28,7 @@ profileEditor.directive('taxonomy', function ($browser) {
              * property of the taxon. This is used to display a drown-down list of subordinate taxa.
              */
             $scope.showAllSubordinateTaxaList = function(taxon) {
-                if (_.isUndefined(taxon.subordinateTaxa) || !taxon.subordinateTaxa) {
+                if (_.isUndefined(taxon.children) || !taxon.children) {
                     taxon.loading = true;
                     var results = profileService.profileSearchByTaxonLevelAndName($scope.opusId, taxon.rank, taxon.name, $scope.pageSize, 0);
                     results.then(function (data) {
@@ -185,6 +185,13 @@ profileEditor.directive('taxonomy', function ($browser) {
             scope.$watch("data", function(newValue) {
                 if (!_.isUndefined(newValue)) {
                     scope.taxonomy = angular.copy(newValue);
+
+                    if (scope.layout != "tree" && !_.isUndefined(scope.taxonomy) && scope.showInfraspecific) {
+                        var lastTaxon = scope.taxonomy[scope.taxonomy.length - 1];
+                        if (!_.isUndefined(lastTaxon) && lastTaxon.rank == "species") {
+                            scope.showAllSubordinateTaxaList(lastTaxon);
+                        }
+                    }
                 }
             });
             scope.$watch("includeRank", function(newValue) {
@@ -200,6 +207,13 @@ profileEditor.directive('taxonomy', function ($browser) {
             scope.$watch("showInfraspecific", function(newValue) {
                 if (!_.isUndefined(newValue)) {
                     scope.showInfraspecific = isTruthy(newValue);
+
+                    if (scope.layout != "tree" && !_.isUndefined(scope.taxonomy) && scope.showInfraspecific) {
+                        var lastTaxon = scope.taxonomy[scope.taxonomy.length - 1];
+                        if (!_.isUndefined(lastTaxon) && lastTaxon.rank == "species") {
+                            scope.showAllSubordinateTaxaList(lastTaxon);
+                        }
+                    }
                 }
             });
             scope.$watch("showWithProfileOnly", function(newValue) {
