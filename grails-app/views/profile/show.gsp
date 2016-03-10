@@ -25,9 +25,8 @@
 
     <div class="col-md-11 col-sm-11 col-xs-11">
         <ol class="breadcrumb" ng-cloak>
-            <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-            <li><a class="font-xxsmall"
-                   href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}">{{profileCtrl.opus.title}}</a>
+            <li><a class="fa fa-home"
+                   href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}" title="{{profileCtrl.opus.title}}"></a>
             </li>
             <li class="font-xxsmall active" ng-if="profileCtrl.profile.classification.length == 0">{{profileCtrl.isArchived() ? profileCtrl.profile.archivedWithName : profileCtrl.profile.scientificName}}</li>
             <span ng-if="profileCtrl.profile.classification.length > 0">

@@ -72,8 +72,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand">${pageTitle}</span>
-
+            <g:if test="${opus}">
+                <span class="navbar-brand">
+                    <a href="${request.contextPath}/opus/${opus.shortName ?: opus.uuid}" title="${opus.title}">${opus.title}</a>
+                </span>
+            </g:if>
+            <g:else>
+                <span class="navbar-brand">${pageTitle}</span>
+            </g:else>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
