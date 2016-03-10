@@ -84,8 +84,8 @@
                             ng-show="profileCtrl.nslNameStatus">[{{profileCtrl.nslNameStatus}}]</span></a>
                 </div>
 
-                <button class="btn btn-link fa fa-edit" ng-click="profileCtrl.editName()"
-                        ng-show="!profileCtrl.readonly()">&nbsp;Edit name</button>
+                <a href="" ng-click="profileCtrl.editName()" class="padding-left-1 small"
+                   ng-show="!profileCtrl.readonly()"><span class="fa fa-edit">&nbsp;</span>Edit name</a>
             </div>
 
             <div class="col-md-3 text-right" ng-cloak>
