@@ -26,6 +26,8 @@ profileEditor.controller('ProfileController',
         page:1
     };
 
+    self.acknowledgementsSectionTitle = config.readonly ? 'Acknowledgements' : 'Authors and Acknowledgements';
+
     var orderBy = $filter("orderBy");
 
     self.readonly = function () {
@@ -77,7 +79,7 @@ profileEditor.controller('ProfileController',
                         }
                     });
                     if (!self.readonly() || self.authorshipCount > 1) {
-                        navService.add("Acknowledgements", "authorship");
+                        navService.add(self.acknowledgementsSectionTitle, "authorship");
                     }
 
                     if (!self.readonly()) {
