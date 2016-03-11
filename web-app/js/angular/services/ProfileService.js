@@ -15,7 +15,36 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
      * Shared instance of the profile that will be returned by all methods that return a profile object.
      * This is to support notification of changes between controllers.
      */
-    var sharedProfile = {};
+    var sharedProfile = function() {
+
+        var nameRegex = /name/i;
+        var otherNames = [];
+
+        function isName(title) {
+            return title.match(nameRegex);
+        }
+
+        function updateNames(attributes) {
+            otherNames.splice(0, otherNames.length);
+            angular.forEach(attributes, function (attribute) {
+                if (isName(attribute.title)) {
+                    otherNames.push(attribute.plainText);
+                    attribute.matchedAsName = true;
+                }
+            });
+        }
+
+        return {
+            otherNames:otherNames,
+            update:function(profileData) {
+                if (profileData) {
+                    angular.extend(this, profileData);
+                    updateNames(profileData.attributes);
+                }
+            }
+        }
+
+    }();
 
     /**
      * Chain http requests (recommended for POST, PUT & DELETE) together so they execute sequentially.
@@ -51,21 +80,18 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
          */
         getProfile : function(opusId, profileId) {
             $log.debug("Fetching profile " + profileId);
-            var profileAndOpusFuture = $q.defer();
 
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {cache: true});
             future = util.toStandardPromise(future);
             future.then(function(data) {
                     // copy the content of the profile into the shared profile object to keep the object reference intact
-                    angular.extend(sharedProfile, data.profile);
+                    sharedProfile.update(data.profile);
                     data.profile = sharedProfile;
-                    profileAndOpusFuture.resolve(data);
-                },
-                function(data) {
-                    profileAndOpusFuture.reject(data);
-                });
+                console.log(data.profile);
+                console.log(sharedProfile);
 
-            return profileAndOpusFuture.promise;
+                });
+            return future;
         },
 
         deleteProfile: function (opusId, profileId) {
@@ -127,21 +153,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
 
             future.then(function (response) {
-                $log.debug("Profile updated with response code " + response.status);
-
                 clearCache();
+                // copy the content of the profile into the shared profile object then return the shared profile
+                // instance to it is passed to the next in the promise chain.
+                sharedProfile.update(response);
+                return sharedProfile;
             });
-            var profileFuture = $q.defer();
-
-            util.toStandardPromise(future).then(function(data) {
-                // copy the content of the profile into the shared profile object to keep the object reference intact
-                angular.extend(sharedProfile, data);
-                profileFuture.resolve(data);
-            },
-            function(data) {
-                profileFuture.reject(data);
-            });
-            return profileFuture.promise;
+            return future;
         },
 
         checkName: function (opusId, scientificName) {
@@ -383,6 +401,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
         deleteAttribute: function (opusId, profileId, attributeId) {
             $log.debug("Deleting attribute " + attributeId);
+            var self = this;
             var future = enqueue(function () {
                 return $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/attribute/" + attributeId + "/delete");
             });
@@ -390,6 +409,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 $log.debug("Attribute deleted with response code " + response.status);
 
                 clearCache();
+
+                // Refresh the shared profile to include the changes to the attributes - this will allow the
+                // page name section to update to reflect the changes to any attributes reflecting a name.
+                self.getProfile(opusId, profileId);
             });
             return util.toStandardPromise(future);
         },
@@ -397,6 +420,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         saveAttribute: function (opusId, profileId, attributeId, data) {
             $log.debug("Saving attribute " + attributeId);
             var future = null;
+            var self = this;
 
             if (attributeId) {
                 future = enqueue(function () {
@@ -414,6 +438,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 $log.debug("Attribute saved with response code " + response.status);
 
                 clearCache();
+
+                // Refresh the shared profile to include the changes to the attributes - this will allow the
+                // page name section to update to reflect the changes to any attributes reflecting a name.
+                self.getProfile(opusId, profileId);
             });
             return util.toStandardPromise(future);
         },

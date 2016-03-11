@@ -89,7 +89,6 @@ profileEditor.controller('ProfileController',
                         navService.add("Taxonomy", "taxon");
                     }
 
-                    findCommonName();
                     loadVocabulary();
                     loadNslNameDetails();
 
@@ -138,17 +137,6 @@ profileEditor.controller('ProfileController',
                 });
             });
         }
-    }
-
-    function findCommonName() {
-        self.commonNames = [];
-
-        angular.forEach(self.profile.attributes, function (attribute) {
-            var title = attribute.title.toLowerCase();
-            if (title === "common name" || title === "common names" || title === "commonname" || title === "common-name") {
-                self.commonNames.push(attribute.plainText);
-            }
-        });
     }
 
     self.deleteProfile = function () {

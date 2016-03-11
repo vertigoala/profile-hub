@@ -52,7 +52,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     };
 
     self.showAttribute = function (attribute) {
-        return (self.readonly &&
+        return (self.readonly && !attribute.matchedAsName && 
             (!attribute.fromCollection ||
             (attribute.fromCollection && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
             || (!self.readonly &&

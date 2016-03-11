@@ -107,9 +107,9 @@
             </div>
         </div>
 
-        <div class="row margin-bottom-1" ng-show="profileCtrl.commonNames.length > 0" ng-cloak>
+        <div class="row margin-bottom-1" ng-show="profileCtrl.profile.otherNames.length > 0" ng-cloak>
             <div class="col-md-12">
-                <h4 class="zero-margin">{{profileCtrl.commonNames.join(', ')}}</h4>
+                <h4 class="zero-margin">{{profileCtrl.profile.otherNames.join(', ')}}</h4>
             </div>
         </div>
 
