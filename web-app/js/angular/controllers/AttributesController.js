@@ -1,7 +1,7 @@
 /**
  * Attributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $sce) {
+profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $sce, $compile, $scope, $location) {
     var self = this;
 
     self.attributes = [];
@@ -17,9 +17,28 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     var capitalize = $filter("capitalize");
     var orderBy = $filter("orderBy");
 
+    function getBaseHref(withContext) {
+        return $location.protocol() + "://" + location.host + (withContext ? util.contextRoot() : "");
+    }
+
     self.insertImage = function(callback) {
-        console.log('here')
-        callback("http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/species-octopus-maorum-313.jpg", "test caption");
+        var popup = $modal.open({
+            templateUrl: getBaseHref(true) + "/static/templates/imageUpload.html",
+            controller: "ImageUploadController",
+            controllerAs: "imageUploadCtrl",
+            size: "md",
+            resolve: {
+                opus: function () {
+                    return self.opus;
+                }
+            }
+        });
+
+        popup.result.then(function (imageMetadata) {
+            var imageElement = "<img ng-src='" + getBaseHref(false) + imageMetadata.imageUrl + "' class='thumbnail inline-attribute-image' alt='" + imageMetadata.title + "'/>";
+            var compiledElement = $compile(imageElement)($scope);
+            callback(compiledElement[0], imageMetadata.title);
+        });
     };
 
     self.init = function (edit) {
@@ -36,9 +55,6 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.attributes = data.profile.attributes;
 
                 angular.forEach(self.attributes, function(attribute) {
-                    if (self.readonly) {
-                        attribute.text = $sce.trustAsHtml(attribute.text);
-                    }
                     navService.add(attribute.title, util.toKey(attribute.title), 'attribute');
                     attribute.key = util.toKey(attribute.title);
                 });

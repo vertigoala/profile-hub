@@ -56,7 +56,7 @@ class ImageService {
         new File("${baseDir}/${profileId}/${imageId}_tiles/${zoom}/${x}/${y}.png")
     }
 
-    def uploadImage(String opusId, String profileId, String dataResourceId, Map metadata, MultipartFile file) {
+    def uploadImage(String contextPath, String opusId, String profileId, String dataResourceId, Map metadata, MultipartFile file) {
         def profile = profileService.getProfile(opusId, profileId, true)
 
         metadata.scientificName = profile.profile.scientificName
@@ -78,6 +78,10 @@ class ImageService {
         } else {
             // if the profile is not in draft mode, upload the image to the biocache immediately
             response = biocacheService.uploadImage(opusId, profile.profile.uuid, dataResourceId, file, metadata)
+        }
+
+        if (response.statusCode == SC_OK) {
+            response.resp = getImageDetails(metadata.imageId, contextPath)
         }
 
         response

@@ -49,7 +49,7 @@ class ImageServiceSpec extends Specification {
         profileService.getProfile(_, _, _) >> [profile: [privateMode: false], opus:[]]
 
         when:
-        imageService.uploadImage("opusId", "profileId", "dataResourceId", [:], dummyFile)
+        imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFile)
 
         then:
         1 * biocacheService.uploadImage(_, _, _, _, _)
@@ -60,7 +60,7 @@ class ImageServiceSpec extends Specification {
         profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", privateMode: true], opus: [:]]
 
         when:
-        imageService.uploadImage("opusId", "profileId", "dataResourceId", [:], dummyFile)
+        imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFile)
 
         then:
         1 * dummyFile.transferTo(_) // the actual destination file is randomly named, so we can't check the path

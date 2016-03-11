@@ -1,8 +1,16 @@
-var profileEditor = angular.module('profileEditor', ['app.config', 'ui.bootstrap', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate']);
+var profileEditor = angular.module('profileEditor', ['app.config', 'ngSanitize', 'ui.bootstrap', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate']);
 
-profileEditor.config(function ($logProvider) {
+profileEditor.config(function ($logProvider, $sceDelegateProvider) {
     $logProvider.debugEnabled(false);
-
+console.log("here3")
+    $sceDelegateProvider.resourceUrlWhitelist([
+        "self",
+        "http://www.ala.org.au/**",
+        "http://ala.org.au/**",
+        "https://www.ala.org.au/**",
+        "https://ala.org.au/**",
+        "http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/species-octopus-maorum-313.jpg"
+    ])
 });
 
 profileEditor.config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
@@ -59,7 +67,7 @@ profileEditor.run(function ($rootScope, config) {
             { name: 'image', items: [ 'ngImage' ] },
             { name: 'insert', items: [ 'HorizontalRule', 'Symbol', 'Male', 'Female', 'PlusMinus', 'Times', 'Endash', 'Degree' ] },
             { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-            { name: 'tools', items: [ 'Maximize', '-' ] },
+            { name: 'tools', items: [ 'Maximize', 'Sourcedialog' ] },
             { name: 'styles', items: [ 'Styles', 'Format' ] }
         ]
     };

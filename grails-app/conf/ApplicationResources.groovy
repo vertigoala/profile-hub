@@ -44,10 +44,12 @@ modules = {
         resource url:"js/angular/directives/fallbackDatePicker.js"
         resource url:"js/angular/directives/delegatedSearch.js"
         resource url:"js/angular/directives/missingImage.js"
+        resource url:"js/angular/directives/markupText.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"
         resource url:"js/angular/services/ProfileComparisonService.js"
+        resource url:"js/angular/controllers/ImageUploadController.js"
         resource url:"js/angular/controllers/CreateProfileController.js"
         resource url:"js/angular/controllers/AttachmentController.js"
         resource url:"js/angular/controllers/OpusController.js"
@@ -78,6 +80,7 @@ modules = {
 
     angular {
         resource url:"thirdparty/angular/angular-1.3.13.min.js"
+        resource url:"thirdparty/angular/angular-sanitize-1.3.13.min.js"
         resource url:"thirdparty/angular/ui-bootstrap-tpls-0.12.0.js"
         dependsOn 'bootstrap3'
     }

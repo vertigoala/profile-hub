@@ -6,11 +6,17 @@ CKEDITOR.plugins.add('ngImage', {
         editor.addCommand('insertImage', {
             exec: function (editor) {
 
-                var callback = function(imageUrl, imageCaption) {
-                    var html = "<img src='" + imageUrl + "' alt='" + imageCaption + "' class='thumbnail inline-attribute-image'>";
-console.log(html)
-                    var element = CKEDITOR.dom.element.createFromHtml(html);
+                var callback = function(imageElement, imageCaption) {
+console.log(imageElement)
+
+                    //CREATE THE ANGULAR MODAL, CONSTRUCT AND COMPILE THE IMG TAG THERE THEN RETURN...SEE IF THAT FIXES THE UNTRUSTED RESOURCE PROBLEM
+
+console.log("here7") // TODO remove me!!
+                    //var element = CKEDITOR.dom.element.createFromHtml(imageElement);
+                    var element = new CKEDITOR.dom.element(imageElement);
+                    console.log(element) // TODO remove me!!
                     editor.insertElement(element);
+                    //editor.insertHtml(imageElement);
                 };
 
                 angular.element($('#attributeContent')).scope().attrCtrl.insertImage(callback);
