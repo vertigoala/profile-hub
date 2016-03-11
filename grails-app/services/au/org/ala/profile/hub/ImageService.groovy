@@ -199,7 +199,7 @@ class ImageService {
         List images = []
 
         if (publishedImages && publishedImages.statusCode == SC_OK) {
-            List biocacheImages = publishedImages.resp.occurrences.findResults { biocacheImage ->
+            List biocacheImages = publishedImages.resp?.occurrences?.findResults { biocacheImage ->
                 boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, biocacheImage.image)
 
                 Map image = [
