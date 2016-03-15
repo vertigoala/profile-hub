@@ -45,12 +45,12 @@ profileEditor.filter("groupAttributes", function() {
     }
 });
 
-profileEditor.filter("sanitizeHtml", function($sce) {
+profileEditor.filter("sanitizeHtml", function() {
     return function(htmlCode){
         if (angular.isArray(htmlCode)) {
             htmlCode = htmlCode.join(", ");
         }
-        return $sce.trustAsHtml(htmlCode);
+        return htmlCode;
     }
 });
 

@@ -20,11 +20,14 @@
         </div>
     </div>
 
-    <!-- view screen -->
-    <ng-include src="'showReadOnlyAttributeList.html'" ng-show="attrCtrl.readonly"></ng-include>
-
-    <!-- edit screen -->
-    <ng-include src="'showEditableAttributeList.html'" ng-show="!attrCtrl.readonly"></ng-include>
+    <g:if test="${edit}">
+        <!-- edit screen -->
+        <ng-include src="'showEditableAttributeList.html'" ng-show="!attrCtrl.readonly"></ng-include>
+    </g:if>
+    <g:else>
+        <!-- view screen -->
+        <ng-include src="'showReadOnlyAttributeList.html'" ng-show="attrCtrl.readonly"></ng-include>
+    </g:else>
 </div>
 
 <!-- template for the editable view of an attribute list -->
@@ -156,7 +159,7 @@
                type="danger">You must select a value from the list of approved titles.</alert>
 
         <label for="attributeContent" class="screen-reader-label">Content</label>
-        {{attribute.text}}
+
         <textarea id="attributeContent" ng-model="attribute.text" name="attribute" ckeditor="richTextFullToolbar" required="required"></textarea>
 
         <div class="row"

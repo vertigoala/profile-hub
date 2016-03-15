@@ -1,16 +1,7 @@
 var profileEditor = angular.module('profileEditor', ['app.config', 'ngSanitize', 'ui.bootstrap', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate']);
 
-profileEditor.config(function ($logProvider, $sceDelegateProvider) {
+profileEditor.config(function ($logProvider) {
     $logProvider.debugEnabled(false);
-console.log("here3")
-    $sceDelegateProvider.resourceUrlWhitelist([
-        "self",
-        "http://www.ala.org.au/**",
-        "http://ala.org.au/**",
-        "https://www.ala.org.au/**",
-        "https://ala.org.au/**",
-        "http://www.ala.org.au/wp-content/themes/ala-wordpress-theme/img/species-octopus-maorum-313.jpg"
-    ])
 });
 
 profileEditor.config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
@@ -31,6 +22,16 @@ profileEditor.run(function ($rootScope, config) {
     CKEDITOR.config.coreStyles_bold = { element: 'b', overrides: 'strong' };
     CKEDITOR.config.coreStyles_italic = { element: 'i', overrides: 'em' };
     CKEDITOR.config.coreStyles_strike = { element: 'strike', overrides: 's' };
+
+    // CKEditor uses 'Allowed Content Filtering' (ACF), which defines what html elements are allowed in the text, and
+    // what attributes and classes those elements can have. The 'extraAllowedContent' config item lets you add extra
+    // allowed elements on top of the defaults.
+    // Any element, class or attribute not explicitly listed will be removed by the editor.
+    // The format is tag(css classes comma-separated)[attributes].
+    //
+    // Image tags are not allowed unless the images ckeditor plugin in included, but we don't want to use that because
+    // we need to use our own angular controllers/directives to manage images for the whole profile.
+    CKEDITOR.config.extraAllowedContent = 'img(thumbnail,inline-attribute-image,float-left,float-right)[src,class,alt]';
 
     $rootScope.richTextSmall = {
         language: 'en-au',

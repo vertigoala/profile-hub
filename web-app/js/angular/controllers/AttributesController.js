@@ -1,7 +1,7 @@
 /**
  * Attributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $sce, $compile, $scope, $location) {
+profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $compile, $scope, $location) {
     var self = this;
 
     self.attributes = [];
@@ -35,9 +35,8 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
         });
 
         popup.result.then(function (imageMetadata) {
-            var imageElement = "<img ng-src='" + getBaseHref(false) + imageMetadata.imageUrl + "' class='thumbnail inline-attribute-image' alt='" + imageMetadata.title + "'/>";
-            var compiledElement = $compile(imageElement)($scope);
-            callback(compiledElement[0], imageMetadata.title);
+            var imageElement = "<img src='" + getBaseHref(false) + imageMetadata.imageUrl + "' class='thumbnail inline-attribute-image' alt='" + imageMetadata.title + "'/>";
+            callback(imageElement);
         });
     };
 
