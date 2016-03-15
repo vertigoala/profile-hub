@@ -87,9 +87,6 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                     // copy the content of the profile into the shared profile object to keep the object reference intact
                     sharedProfile.update(data.profile);
                     data.profile = sharedProfile;
-                console.log(data.profile);
-                console.log(sharedProfile);
-
                 });
             return future;
         },
@@ -424,12 +421,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
             if (attributeId) {
                 future = enqueue(function () {
-                    console.log("saving attribute");
                     return $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/attribute/" + attributeId + "/update", data);
                 });
             } else {
                 future = enqueue(function () {
-                    console.log("saving attribute");
                     return $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/attribute/create", data);
                 });
             }
