@@ -1,7 +1,10 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.images.thumb.ImageThumbnailer
+import au.org.ala.images.thumb.ThumbDefinition
 import au.org.ala.images.tiling.ImageTiler
 import au.org.ala.images.tiling.ImageTilerConfig
+import org.apache.commons.io.FileUtils
 import org.springframework.web.multipart.MultipartFile
 
 import javax.imageio.ImageIO
@@ -109,13 +112,19 @@ class ImageService {
         if (profile.profile.privateMode && !profile.opus.keepImagesPrivate) {
             // if the collection is public and the profile is in draft mode, then stage the image: it will be
             // uploaded to the biocache when the profile's draft is released
-            storeLocalImage(profile, metadata, file, "${grailsApplication.config.image.staging.dir}")
-
+            try {
+                storeLocalImage(profile, metadata, file, "${grailsApplication.config.image.staging.dir}")
+            } catch (IOException exception) {
+                log.error("Error saving local staged image ", exception)
+            }
             response = profileService.recordStagedImage(opusId, profileId, metadata)
         } else if (profile.opus.keepImagesPrivate) {
             // if the admin has elected not to publish images, then store the image in the local image dir
-            storeLocalImage(profile, metadata, file, "${grailsApplication.config.image.private.dir}")
-
+            try {
+                storeLocalImage(profile, metadata, file, "${grailsApplication.config.image.private.dir}")
+            } catch (IOException exception) {
+                log.error("Error saving local private image ", exception)
+            }
             response = profileService.recordPrivateImage(opusId, profileId, metadata)
         } else {
             // if the profile is not in draft mode, upload the image to the biocache immediately
@@ -125,7 +134,7 @@ class ImageService {
         response
     }
 
-    private static storeLocalImage(Map profile, Map metadata, MultipartFile file, String directory) {
+    private static storeLocalImage(Map profile, Map metadata, MultipartFile file, String directory) throws IOException {
         String extension = getExtension(file.originalFilename)
         metadata.imageId = UUID.randomUUID().toString()
         metadata.action = "add"
@@ -141,10 +150,22 @@ class ImageService {
         tileDir.mkdir()
         ImageTiler tiler = new ImageTiler(new ImageTilerConfig())
         tiler.tileImage(imageFile, tileDir)
-        //        ImageThumbnailer imageThumbnailer = new ImageThumbnailer()
 
-//        imageThumbnailer.generateThumbnails()
+        List<ThumbDefinition> thumbDefinitionList = new ArrayList<ThumbDefinition>(1)
+        thumbDefinitionList.add(new ThumbDefinition(300, false, null, "${metadata.imageId}_thumbnail${extension}"))
+        makeThumbNails(localDir, "${metadata.imageId}_thumbnails", imageFile, thumbDefinitionList)
 
+    }
+
+    private
+    static makeThumbNails(File parentDirectory, String thumbDir, File imageFile, List<ThumbDefinition> definitionList) throws IOException {
+        File thumbnailDirectory = new File(parentDirectory, thumbDir)
+        if (!thumbnailDirectory.exists()) {
+            thumbnailDirectory.mkdir()
+        }
+        ImageThumbnailer imageThumbnailer = new ImageThumbnailer()
+        byte[] imageBytes = FileUtils.readFileToByteArray(imageFile)
+        imageThumbnailer.generateThumbnails(imageBytes, thumbnailDirectory, definitionList)
     }
 
     private
