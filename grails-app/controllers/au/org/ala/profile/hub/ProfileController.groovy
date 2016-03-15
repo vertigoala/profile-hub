@@ -360,7 +360,7 @@ class ProfileController extends BaseController {
                 ImageType type = params.type as ImageType
                 //NB this imageId param already has the file extension on it, really the file name on disk
                 if (type == ImageType.STAGED) {
-                    downloadFile("${grailsApplication.config.image.staging.dir}/${params.profileId}", params.imageId)
+                    downloadFile("${grailsApplication.config.image.staging.dir}/", params.opusId, params.profileId, params.imageId)
                 } else if (type == ImageType.PRIVATE) {
                     downloadFile("${grailsApplication.config.image.private.dir}/", params.opusId, params.profileId, params.imageId)
                 }
@@ -376,7 +376,7 @@ class ProfileController extends BaseController {
         downloadFile("${grailsApplication.config.temp.file.location}", params.fileId)
     }
 
-    //In the sense that the private images are fetched from disk for display on the profile page
+    //In the sense that the private or staged images are fetched from disk for display on the profile page
     //note we are supporting 2 possible file locations for backwards compatibility
     private downloadFile(String path, String collectionId, String profileId, String filename) {
         if (!filename) {

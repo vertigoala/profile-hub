@@ -107,7 +107,7 @@ class ImageService {
         def response
 
         if (profile.profile.privateMode && !profile.opus.keepImagesPrivate) {
-            // if the collection is public and the profile is in draft (private) mode, then stage the image: it will be
+            // if the collection is public and the profile is in draft mode, then stage the image: it will be
             // uploaded to the biocache when the profile's draft is released
             storeLocalImage(profile, metadata, file, "${grailsApplication.config.image.staging.dir}")
 
@@ -158,7 +158,7 @@ class ImageService {
         def profile = profileService.getProfile(opusId, profileId, true)
 
         if (profile && profile.profile.stagedImages) {
-            deleted = deleteLocalImage(profile.profile.stagedImages, imageId, "${grailsApplication.config.image.staging.dir}/${profile.profile.uuid}/")
+            deleted = deleteLocalImage(profile.profile.stagedImages, opusId, profile.profile.uuid, imageId, "${grailsApplication.config.image.staging.dir}")
 
             if (deleted) {
                 profileService.recordStagedImage(opusId, profileId, [imageId: imageId, action: "delete"])
@@ -247,32 +247,19 @@ class ImageService {
 
     private
     static boolean deleteLocalImage(List images, String collectionId, String profileId, String imageId, String directory) {
-        def image = images.find { it.imageId == imageId }
-        String extension = getExtension(image.originalFileName)
         String pathToFile = buildFilePath(directory, collectionId, profileId, imageId)
         File localDir = new File(pathToFile)
         if (localDir.exists()) {
-            File file = new File(localDir, "${imageId}${extension}")
-            deleteFileAndDirIfEmpty(imageId, file, localDir)
+            deleteDirectoryAndContents(localDir)
         } else {
             deleteLocalImage(images, imageId, directory + separator + profileId)
         }
     }
 
-    private static deleteFileAndDirIfEmpty(String imageId, File file, File localDir) {
-        boolean deleted = file.delete()
-
-        File tileDir = new File(localDir, "${imageId}_tiles")
-        if (tileDir.exists()) {
-            deleted &= tileDir.deleteDir()
-        }
-
-        if (localDir.listFiles()?.length == 0) {
-            localDir.delete()
-        }
-
-        deleted
+    private static boolean deleteDirectoryAndContents(File directoryToDelete) {
+        directoryToDelete.deleteDir()
     }
+
     //RetrieveImages() calls this method and is itself called by ImageService (this class) and ExportService. The
     //latter needs to know the disk location of the images and will send useInternalPaths with a value of true
     private
@@ -369,11 +356,36 @@ class ImageService {
 
     private def publishImages(Map opus, Map profile, Map images, boolean staged) {
         Map profileUpdates = [:]
-
+        def imageDirectories = []
+        def imageFiles = []
         String localDirPath = staged ? grailsApplication.config.image.staging.dir : grailsApplication.config.image.private.dir
-
+        //Check in old file directory structure
         File localDir = new File("${localDirPath}/${profile.uuid}")
-        for (def it : localDir.listFiles()) {
+        if (localDir.exists()) {
+            for (def it : localDir.listFiles()) {
+                imageFiles << it
+            }
+        }
+        //Now check new directory structure
+        File profileDir = new File("${localDirPath}/${opus.uuid}/${profile.uuid}/")
+        if (profileDir.exists()) {
+            imageDirectories = profileDir.listFiles()
+
+            if (imageDirectories.size() > 0) {
+                //when we get to the profile directory it will contain 1 directory for each image, go into
+                //these directories and take the image files without going into the subdirectories containing
+                //tiled images and thumbnails
+                imageDirectories.each { file ->
+                    file.traverse(maxDepth: 1) {
+                        if (it.file) {
+                            imageFiles << it
+                        }
+                    }
+                }
+            }
+        }
+
+        for (def it : imageFiles) {
             String imageId = imageIdFromFile(it)
             Map localImage = images[imageId]
 
@@ -446,6 +458,23 @@ class ImageService {
         deleteFileAndDirIfEmpty(imageId, file, localDir)
     }
 
+    @Deprecated
+    private static deleteFileAndDirIfEmpty(String imageId, File file, File localDir) {
+        boolean deleted = file.delete()
+
+        File tileDir = new File(localDir, "${imageId}_tiles")
+        if (tileDir.exists()) {
+            deleted &= tileDir.deleteDir()
+        }
+
+        if (localDir.listFiles()?.length == 0) {
+            localDir.delete()
+        }
+
+        deleted
+    }
+
+
     private static String imageIdFromFile(File file) {
         file.name.substring(0, file.name.indexOf("."))
     }
@@ -454,8 +483,8 @@ class ImageService {
         fileName.substring(fileName.lastIndexOf("."))
     }
 
-    private static String buildFilePath(String parentDir, String collectionId, String profileId, String ImageId) {
-        parentDir + separator + collectionId + separator + profileId + separator + ImageId
+    private static String buildFilePath(String parentDir, String collectionId, String profileId, String imageId) {
+        parentDir + separator + collectionId + separator + profileId + separator + imageId
     }
 
 }
