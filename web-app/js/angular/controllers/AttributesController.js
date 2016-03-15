@@ -29,6 +29,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.profile = data.profile;
                 self.opus = data.opus;
                 self.attributes = data.profile.attributes;
+                self.showSupportingData = data.profile.showLinkedOpusAttributes;
 
                 angular.forEach(self.attributes, function(attribute) {
                     navService.add(attribute.title, util.toKey(attribute.title), 'attribute');
@@ -52,7 +53,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     };
 
     self.showAttribute = function (attribute) {
-        return (self.readonly && !attribute.matchedAsName && 
+        return (self.readonly && !attribute.matchedAsName &&
             (!attribute.fromCollection ||
             (attribute.fromCollection && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
             || (!self.readonly &&
@@ -324,7 +325,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
         });
     };
 
-    self.toggleShowSupportingData = function() {
+    self.toggleShowSupportingData = function(supportingAttributesForm) {
         angular.forEach(self.supportingAttributeTitles, function(title) {
             if (self.showSupportingData) {
                 navService.add(title, util.toKey(title));
@@ -332,6 +333,13 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 navService.remove(util.toKey(title));
             }
         });
+        profileService.updateProfile(self.opusId, self.profileId, {showLinkedOpusAttributes:self.showSupportingData}).then(
+            function() {
+                supportingAttributesForm.$setPristine();
+            },
+            function() {
+                messageService.alert("An error has occurred while updating the 'Show information from supporting collections' setting.");
+            });
     };
 
     self.parseInt = function(number) {

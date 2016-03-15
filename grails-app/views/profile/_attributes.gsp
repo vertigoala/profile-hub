@@ -6,14 +6,14 @@
             </button>
 
             <div class="small pull-right ignore-save-warning"
-                 ng-show="(attrCtrl.readonly && attrCtrl.opus.showLinkedOpusAttributes) || (!attrCtrl.readonly && attrCtrl.opus.allowCopyFromLinkedOpus)">
+                 ng-form="ShowSupportingAttributesForm" ng-show="(!attrCtrl.readonly && (attrCtrl.opus.showLinkedOpusAttributes || attrCtrl.opus.allowCopyFromLinkedOpus))">
                 Show information from supporting collections:
                 <div class="btn-group">
                     <label class="btn btn-xs" ng-class="attrCtrl.showSupportingData ? 'btn-success' : 'btn-default'"
-                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData()"
+                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData(ShowSupportingAttributesForm)"
                            btn-radio="true">On</label>
                     <label class="btn btn-xs" ng-class="attrCtrl.showSupportingData ? 'btn-default' : 'btn-danger'"
-                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData()"
+                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData(ShowSupportingAttributesForm)"
                            btn-radio="false">Off</label>
                 </div>
             </div>

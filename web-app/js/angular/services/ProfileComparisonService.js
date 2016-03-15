@@ -118,7 +118,7 @@ profileEditor.service('profileComparisonService', function ($http, util, $cacheF
                 var imageFields = ["license", "originalFileName", "rights", "rightsHolder", "title", "description"];
                 diff.privateImages = compareLists(left.privateImages, right.privateImages, "imageId", imageFields);
                 diff.stagedImages = compareLists(left.stagedImages, right.stagedImages, "imageId", imageFields);
-
+                diff.showLinkedOpusAttributes = compare(left.showLinkedOpusAttributes?"On":"Off", right.showLinkedOpusAttributes?"On":"Off");
             }
 
             for (var prop in diff) {
