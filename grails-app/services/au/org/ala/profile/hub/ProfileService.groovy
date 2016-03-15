@@ -438,6 +438,12 @@ class ProfileService {
 
                 resp = webService.get(url)
                 break;
+            case ReportType.RECENT_COMMENTS:
+                range = utilService.getDateRange(dates.period, dates.from, dates.to)
+                String url = "${urlPrefix}?opusId=${enc(opusId)}&to=${enc(range['to'])}&from=${enc(range['from'])}&offset=${offset}&max=${pageSize}"
+                url += "&countOnly=" + BooleanUtils.toString(countOnly, "true", "false")
+                resp = webService.get(url)
+                break
         }
 
         resp

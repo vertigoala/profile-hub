@@ -12,7 +12,8 @@ profileEditor.controller('ReportController', function (profileService, util, con
         {id: "mismatchedNames", name: "Mismatched Names"},
         {id: "draftProfiles", name: "Draft Profiles"},
         {id: "recentChanges", name: "Recent Updates"},
-        {id: "archivedProfiles", name: "Archived Profiles"}
+        {id: "recentComments", name: "Recent Comments" },
+        {id: "archivedProfiles", name: "Archived Profiles" }
      ];
 
     self.selectedReport = null;

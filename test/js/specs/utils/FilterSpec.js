@@ -47,3 +47,26 @@ describe("'default' filter tests", function () {
         expect(filter(null, "hello world")).toBe("hello world");
     });
 });
+
+describe("'plainText' filter test", function() {
+    var filter;
+
+    beforeAll(function () {
+        console.log("****** Default Filter Tests ******")
+    });
+    afterAll(function () {
+        console.log("----------------------------");
+    });
+
+    beforeEach(module("profileEditor"));
+
+    beforeEach(inject(function ($filter) {
+        filter = $filter("plainText");
+    }));
+
+    it("should strip HTML from text", function () {
+        expect(filter("<p>hello world</p>")).toBe("hello world");
+        expect(filter("<span>hello <hr attribute att2=\"value\"><br />world</span>")).toBe("hello world");
+    });
+
+});
