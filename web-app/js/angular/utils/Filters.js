@@ -54,6 +54,18 @@ profileEditor.filter("sanitizeHtml", function($sce) {
     }
 });
 
+/**
+ * Turns HTML into plain text
+ *
+ * Usage: {{ someHtmlAttribute | plainText }}
+ *
+ */
+profileEditor.filter('plainText', function() {
+    return function(text) {
+        return text ? String(text).replace(/<[^>]+>/gm, '') : '';
+    }
+});
+
 profileEditor.filter("formatProfileName", function(util) {
     return function(name) {
         return util.formatScientificName(name.scientificName, name.nameAuthor, name.fullName);
