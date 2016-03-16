@@ -31,8 +31,10 @@ class ImageService {
 
             // additional metadata about the physical image, required by the image client plugin
             imageDetails = [
+                    imageId       : imageId,
                     success       : true,
                     imageUrl      : "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}",
+                    thumbnailUrl  : "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}",
                     width         : image.getWidth(),
                     height        : image.getHeight(),
                     tileZoomLevels: new File("${dir}/${imageProperties.profileId}/${imageId}_tiles/").listFiles().size(),

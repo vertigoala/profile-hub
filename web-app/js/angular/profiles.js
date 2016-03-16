@@ -16,7 +16,7 @@ profileEditor.run(function ($rootScope, config) {
     CKEDITOR.plugins.addExternal('ngImage', config.contextPath + '/static/js/ckeditor/plugins/ngImage/');
 
     // override the default ckeditor stylesheet with ours
-    CKEDITOR.config.contentsCss = config.mainCssFile;
+    CKEDITOR.config.contentsCss = [config.mainCssFile, config.bootstrapCssFile];
 
     // use HTML4 elements for Jasper compatibility.
     CKEDITOR.config.coreStyles_bold = { element: 'b', overrides: 'strong' };
@@ -31,7 +31,7 @@ profileEditor.run(function ($rootScope, config) {
     //
     // Image tags are not allowed unless the images ckeditor plugin in included, but we don't want to use that because
     // we need to use our own angular controllers/directives to manage images for the whole profile.
-    CKEDITOR.config.extraAllowedContent = 'img(thumbnail,inline-attribute-image,float-left,float-right)[src,class,alt]';
+    CKEDITOR.config.extraAllowedContent = 'img(thumbnail,inline-attribute-image,small,medium,large,pull-left,pull-right)[src,class,alt]';
 
     $rootScope.richTextSmall = {
         language: 'en-au',
@@ -68,7 +68,7 @@ profileEditor.run(function ($rootScope, config) {
             { name: 'image', items: [ 'ngImage' ] },
             { name: 'insert', items: [ 'HorizontalRule', 'Symbol', 'Male', 'Female', 'PlusMinus', 'Times', 'Endash', 'Degree' ] },
             { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-            { name: 'tools', items: [ 'Maximize', 'Sourcedialog' ] },
+            { name: 'tools', items: [ 'Maximize' ] },
             { name: 'styles', items: [ 'Styles', 'Format' ] }
         ]
     };

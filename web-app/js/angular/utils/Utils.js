@@ -4,7 +4,8 @@
 profileEditor.factory('util', function ($location, $q, config, $modal, $window) {
 
     var KEYWORDS = ["create", "update", "delete", "search"];
-    var UUID_REGEX_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    var UUID_REGEX_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+    var UUID_ONLY_REGEX = new RegExp("^" + UUID_REGEX_PATTERN + "$", "i");
     var LAST = "last";
     var FIRST = "first";
     var RANK = {
@@ -184,6 +185,19 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Take the current URL and return the hostname, port and (optionally) the context root.
+     *
+     * e.g. for a URL of http://hostname.com/contextPath/bla/bla, this method will return 'http://hostname.com/'
+     * when withContext = false, and 'http://hostname.com/contextPath' when withContext = true
+     *
+     * @param withContext True to include the context path in the return value
+     * @returns {string} the hostname, port and (optionally) the context root
+     */
+    function getBaseHref(withContext) {
+        return $location.protocol() + "://" + location.host + (withContext ? contextRoot() : "");
+    }
+
+    /**
      * Retrieve the current user's name
      * @returns {*}
      */
@@ -225,7 +239,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
 
     /**
      * Checks if the provided identifier matches the regex pattern for a UUID.
-     * @see UUID_REGEX_PATTERN
+     * @see UUID_ONLY_REGEX
      *
      * @param id the id to check
      * @returns {Array|{index: number, input: string}|*}
@@ -234,7 +248,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         var uuid = false;
 
         if (id && id != null && typeof id !== "undefined") {
-            var match = id.match(UUID_REGEX_PATTERN);
+            var match = id.match(UUID_ONLY_REGEX);
             uuid = match != null && match.length > 0;
         }
 
@@ -342,6 +356,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      */
     return {
         contextRoot: contextRoot,
+        getBaseHref: getBaseHref,
         getPathItem: getPathItem,
         getPathItemFromUrl: getPathItemFromUrl,
         toStandardPromise: toStandardPromise,

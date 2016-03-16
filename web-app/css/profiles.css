@@ -97,6 +97,10 @@ input[type=file] {
     display: inline-block;
 }
 
+input[type=checkbox], input[type=radio] {
+    margin: 2px 0 0;
+}
+
 .small, .small * {
     font-size: 12px !important;
 }
@@ -264,7 +268,7 @@ hr.comment-divider {
 /* ---- */
 
 /* Gallery styling */
-.imgCon, .imgConLarge, .imgConSmall {
+.imgCon, .imgConLarge, .imgConSmall. .imgConCarousel {
     display: inline-block;
     margin: 2px 4px 2px 0;
     width: 100%;
@@ -272,6 +276,12 @@ hr.comment-divider {
 
 .imgConLarge {
      max-height: 500px;
+     overflow-y: scroll;
+ }
+
+.imgConCarousel {
+     max-height: 350px;
+     min-height: 350px;
      overflow-y: scroll;
  }
 
@@ -288,6 +298,13 @@ hr.comment-divider {
 .imgConLarge img {
     max-width: 100%;
     min-width: 300px !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.imgConCarousel img {
+    max-height: 350px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -828,10 +845,19 @@ ul.breadcrumb li:before {
     width: 115px;
 }
 
-.inline-attribute-image {
+.inline-attribute-image.small {
     max-width: 200px;
     max-height: 200px;
-    float: right;
+}
+
+.inline-attribute-image.medium {
+    max-width: 350px;
+    max-height: 350px;
+}
+
+.inline-attribute-image.large {
+    max-width: 500px;
+    max-height: 500px;
 }
 
 .cke_editable {
@@ -839,4 +865,43 @@ ul.breadcrumb li:before {
     line-height: 1.6;
     font-size: 13px;
     margin: 20px;
+}
+
+.center-div {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.image-selection-list {
+    width: 100%;
+    max-height: 400px;
+    min-height: 400px;
+    overflow: scroll;
+    border: 1px solid #eeeeee;
+    padding: 5px 5px 5px 0;
+    margin: 5px;
+}
+
+.carousel-indicators {
+    left: 0;
+    bottom: -50px;
+    width: 100%;
+    margin-left: 0;
+}
+
+.image-selection-list img {
+    cursor: pointer;
+}
+
+.image-selection-list .selected img {
+    border: solid #28bcff 3px;
+}
+
+.carousel-indicators li {
+    border-color: #28bcff;;
+}
+
+.carousel-indicators .active {
+    border-color: #28bcff;;
+    background-color: #28bcff;
 }

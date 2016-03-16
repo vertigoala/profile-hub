@@ -113,7 +113,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
 
     self.uploadImage = function () {
         var popup = $modal.open({
-            templateUrl: $browser.baseHref() + "static/templates/imageUpload.html",
+            templateUrl: $browser.baseHref() + "static/templates/imageUploadModal.html",
             controller: "ImageUploadController",
             controllerAs: "imageUploadCtrl",
             size: "md",
@@ -129,7 +129,30 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
         });
     };
 
-    self.showMetadata = function (image) {
+    /**
+     * Display the image viewer popup
+     * @param image May be either a string (the image id) or an object (the image)
+     */
+    self.showMetadata = function (image, local) {
+        if (_.isString(image)) {
+            if (angular.isDefined(self.images) && self.images.length > 0) {
+                image = _.find(self.images, function(image) { return image.imageId == image; });
+            } else {
+                var future = profileService.getImageMetadata(image, local);
+                future.then(function (imageDetails) {
+                    imageDetails.imageId = image;
+                    showMetadataPopup(imageDetails);
+                }, function() {
+                    messageService.alert("An error occurred while retrieving the image details");
+                });
+            }
+        } else {
+            showMetadataPopup(image);
+        }
+
+    };
+
+    function showMetadataPopup(image) {
         var popup = $modal.open({
             templateUrl: $browser.baseHref() + "static/templates/imageMetadata.html",
             controller: "ImageMetadataController",
@@ -150,7 +173,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
             });
 
             imgvwr.viewImage('#imageViewer', image.imageId, {
-                imageServiceBaseUrl: image.type.name == 'OPEN' ? config.imageServiceUrl : util.contextRoot(),
+                imageServiceBaseUrl: _.isUndefined(image.type) || image.type.name == 'OPEN' ? config.imageServiceUrl : util.contextRoot(),
                 addDrawer: false,
                 addSubImageToggle: false,
                 addCalibration: false,
@@ -162,7 +185,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
         popup.result.then(function () {
             self.loadImages();
         });
-    };
+    }
 
     self.publishPrivateImage = function(imageId) {
         var confirm = util.confirm("Are you sure you wish to make this image available to other Atlas of Living Australia applications?");

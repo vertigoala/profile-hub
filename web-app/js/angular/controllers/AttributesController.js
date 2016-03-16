@@ -1,7 +1,7 @@
 /**
  * Attributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $compile, $scope, $location) {
+profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal) {
     var self = this;
 
     self.attributes = [];
@@ -17,25 +17,24 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     var capitalize = $filter("capitalize");
     var orderBy = $filter("orderBy");
 
-    function getBaseHref(withContext) {
-        return $location.protocol() + "://" + location.host + (withContext ? util.contextRoot() : "");
-    }
-
     self.insertImage = function(callback) {
         var popup = $modal.open({
-            templateUrl: getBaseHref(true) + "/static/templates/imageUpload.html",
-            controller: "ImageUploadController",
-            controllerAs: "imageUploadCtrl",
+            templateUrl: util.getBaseHref(true) + "/static/templates/attributeImage.html",
+            controller: "AttributeImageController",
+            controllerAs: "attrImgCtrl",
             size: "md",
             resolve: {
                 opus: function () {
                     return self.opus;
+                },
+                profile: function () {
+                    return self.profile;
                 }
             }
         });
 
         popup.result.then(function (imageMetadata) {
-            var imageElement = "<img src='" + getBaseHref(false) + imageMetadata.imageUrl + "' class='thumbnail inline-attribute-image' alt='" + imageMetadata.title + "'/>";
+            var imageElement = "<img src='" + imageMetadata.thumbnailUrl + "' class='thumbnail inline-attribute-image " + imageMetadata.size + " "  + imageMetadata.position + "' alt='" + imageMetadata.title + "'/>";
             callback(imageElement);
         });
     };
