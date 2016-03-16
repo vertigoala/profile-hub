@@ -52,7 +52,7 @@ class ImageServiceSpec extends Specification {
         imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFile)
 
         then:
-        1 * biocacheService.uploadImage(_, _, _, _, _)
+        1 * biocacheService.uploadImage(_, _, _, _, _) >> [:]
     }
 
     def "uploadImage should move the image to the staging directory and invoke profileService.recordStagedImage if the profile is in draft mode"() {
