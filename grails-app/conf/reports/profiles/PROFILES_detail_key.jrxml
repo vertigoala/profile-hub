@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2016-03-10T15:30:30 -->
+<!-- 2016-03-16T15:04:53 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail_key" language="groovy" pageWidth="515" pageHeight="842" columnWidth="515" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="5" uuid="f97b364d-c40b-4aa1-9acd-0cc7df1842dc">
 	<parameter name="Parameter1" class="java.lang.String"/>
 	<queryString>

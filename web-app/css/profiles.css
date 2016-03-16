@@ -845,19 +845,27 @@ ul.breadcrumb li:before {
     width: 115px;
 }
 
+.inline-attribute-image.pull-left {
+    margin-right: 5px;
+}
+
+.inline-attribute-image.pull-right {
+    margin-left: 5px;
+}
+
 .inline-attribute-image.small {
     max-width: 200px;
     max-height: 200px;
 }
 
 .inline-attribute-image.medium {
-    max-width: 350px;
-    max-height: 350px;
+    max-width: 275px;
+    max-height: 275px;
 }
 
 .inline-attribute-image.large {
-    max-width: 500px;
-    max-height: 500px;
+    max-width: 350px;
+    max-height: 350px;
 }
 
 .cke_editable {
