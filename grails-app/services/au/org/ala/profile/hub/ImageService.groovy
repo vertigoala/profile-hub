@@ -52,49 +52,49 @@ class ImageService {
             Map imageProperties = response.resp as Map
             String dir = imageProperties.type as ImageType == ImageType.PRIVATE ? "${grailsApplication.config.image.private.dir}" : "${grailsApplication.config.image.staging.dir}"
             String extension = getExtension(imageProperties.originalFileName)
-            String imageUrl = ""
-            int tileZoomLevels = 0
-            String tileUrlPattern = ""
+            String imageUrl
+            String thumbnailUrl
+            int tileZoomLevels
+            String tileUrlPattern
 
             File file = getLocalImageFile(dir, imageProperties.opusId, imageProperties.profileId, imageId, extension)
 
             if (file.exists()) {
                 String tileLocation = buildFilePath(dir, imageProperties.opusId, imageProperties.profileId, imageId) + separator + imageId + '_tiles/'
                 imageUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
+                thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
                 tileZoomLevels = new File(tileLocation)?.listFiles()?.size()
                 tileUrlPattern = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
 
             } else {  //provide support for previously used file directory structure
                 file = getLocalImageFile(dir, imageProperties.profileId, imageId, extension)
                 imageUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
+                thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
                 tileZoomLevels = new File("${dir}/${imageProperties.profileId}/${imageId}_tiles/")?.listFiles()?.size()
                 tileUrlPattern = "${contextPath}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
             }
-            BufferedImage image = ImageIO.read(file)
+            BufferedImage bufferedImage = ImageIO.read(file)
             // additional metadata about the physical image, required by the image client plugin
-            imageDetails = prepareImageDetailsForImageClientPlugin(image, imageUrl, tileZoomLevels, tileUrlPattern)
+            imageDetails = [
+                    imageId       : imageId,
+                    success       : true,
+                    imageUrl      : imageUrl,
+                    thumbnailUrl  : thumbnailUrl,
+                    width         : bufferedImage.getWidth(),
+                    height        : bufferedImage.getHeight(),
+                    tileZoomLevels: tileZoomLevels,
+                    tileUrlPattern: tileUrlPattern
+            ]
             imageDetails.putAll(imageProperties)
 
             if (includeFile) {
-                imageDetails.bufferedImage = image
+                imageDetails.bufferedImage = bufferedImage
                 imageDetails.file = file
             }
         }
 
         imageDetails
     }
-//It might be a good idea to convert this to a transient object for re-usability and tidier code
-    Map prepareImageDetailsForImageClientPlugin(BufferedImage bufferedImage, String imageUrl, int tileZoomLevels, String tileUrlPattern) {
-        [
-                success       : true,
-                imageUrl      : imageUrl,
-                width         : bufferedImage.getWidth(),
-                height        : bufferedImage.getHeight(),
-                tileZoomLevels: tileZoomLevels,
-                tileUrlPattern: tileUrlPattern
-        ]
-    }
-
 
     File getTile(String collectionId, String profileId, String imageId, String type, int zoom, int x, int y) {
         String baseDir = type as ImageType == ImageType.PRIVATE ? "${grailsApplication.config.image.private.dir}" : "${grailsApplication.config.image.staging.dir}"

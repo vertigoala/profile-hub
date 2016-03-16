@@ -235,6 +235,7 @@ class ExportService {
         model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, imageSources.join(","), searchIdentifier, true)?.resp
         List<Map> images = model.profile.images
 
+        def replaceTitleWithOptionalCaption = { Map m -> m?.metadata?.title = m?.caption ? m?.caption : m?.metadata?.title }
         images?.each {
             replaceTitleWithOptionalCaption(it)
         }
@@ -243,8 +244,6 @@ class ExportService {
         if (params.attributes) {
             model.profile.attributes.each { attribute ->
                 attribute.text = convertTagsForJasper(sanitizeHtml(formatAttributeText(attribute.text, attribute.title)))
-                List<Map> attributeImageGroups = []
-
                 List<Map> attributeImages = extractImagesFromAttributeText(attribute.text, images)
 
                 Map pairs = groupImagesIntoPairs(model.profile.scientificName, attributeImages, figureNumber)

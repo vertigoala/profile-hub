@@ -19,7 +19,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
         <g:if test="${edit}">
             <!-- edit screen -->
