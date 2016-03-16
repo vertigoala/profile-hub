@@ -382,7 +382,7 @@ class ProfileController extends BaseController {
         if (!fileName) {
             badRequest "fileId is a required parameter"
         } else {
-            String imageId = fileName.substring(0, fileName.size() - 4)
+            String imageId = fileName.substring(0, fileName.lastIndexOf("."))
             String thumbnailName = makeThumbnailName(fileName)
             File file = new File("${path}/${collectionId}/${profileId}/${imageId}/${imageId}_thumbnails/${thumbnailName}")
             if (!file.exists()) {  //use the image if there is no thumbnail
