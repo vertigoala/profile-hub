@@ -396,7 +396,7 @@ class ProfileController extends BaseController {
             } else {
                 response.setHeader("Content-disposition", "attachment;filename=${fileName}")
                 response.setContentType(getContentType(file))
-                response.outputStream << file.newInputStream()
+                file.withInputStream { response.outputStream << it }
             }
         }
     }
@@ -412,7 +412,7 @@ class ProfileController extends BaseController {
             } else {
                 response.setHeader("Content-disposition", "attachment;filename=${filename}")
                 response.setContentType(getContentType(file))
-                response.outputStream << file.newInputStream()
+                file.withInputStream { response.outputStream << it }
             }
         }
     }
