@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2016-02-17T18:01:11 -->
+<!-- 2016-03-16T15:11:22 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_detail_images" language="groovy" printOrder="Horizontal" pageWidth="515" pageHeight="842" columnWidth="515" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="5" uuid="052ebf40-2ed2-4f4f-b9ab-676a9ef84df6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -13,6 +13,9 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="showTitle" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
 	<queryString language="json">
 		<![CDATA[]]>
 	</queryString>
@@ -42,6 +45,7 @@
 				<reportElement positionType="Float" x="0" y="0" width="515" height="17" isRemoveLineWhenBlank="true" uuid="d5c74560-6485-46d6-a0cc-4b08cd53546f">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{showTitle}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
 					<font size="14" isBold="true"/>
@@ -61,10 +65,10 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="225" splitType="Stretch">
+		<band height="217" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<frame>
-				<reportElement x="10" y="0" width="240" height="219" uuid="b43f3a75-20c3-4730-b4db-4a5a322ad9a8"/>
+				<reportElement x="10" y="0" width="240" height="210" uuid="b43f3a75-20c3-4730-b4db-4a5a322ad9a8"/>
 				<image scaleImage="RetainShape" hAlign="Left" vAlign="Bottom" isLazy="true" hyperlinkType="Reference" hyperlinkTarget="Blank">
 					<reportElement positionType="Float" x="10" y="10" width="210" height="174" isPrintWhenDetailOverflows="true" uuid="4c317da7-e602-44c3-843d-7f8fb3a6d7a1"/>
 					<graphicElement fill="Solid"/>
@@ -79,13 +83,15 @@
 					<textFieldExpression><![CDATA["<b>Fig. ${$F{leftImage.imageNumber}}</b>" + ($F{leftImage.metadata.title} ? "<b>:</b> '<i>${$F{leftImage.metadata.title}}</i>'" : "") + ($F{leftImage.metadata.title} ? new String($F{leftImage.metadata.creator}.asBoolean() ? " by ${$F{leftImage.metadata.creator}}" : "") : "") + ($F{leftImage.metadata.rightsHolder} ? new String($F{leftImage.metadata.rightsHolder}.asBoolean() ? " (&copy; ${$F{leftImage.metadata.rightsHolder}})" : "") : "")]]></textFieldExpression>
 				</textField>
 				<image scaleImage="RetainShape" hAlign="Left" vAlign="Bottom" isUsingCache="true" onErrorType="Blank" hyperlinkType="Reference" hyperlinkTarget="Blank">
-					<reportElement positionType="Float" x="9" y="196" width="60" height="10" isPrintWhenDetailOverflows="true" uuid="ec028ba5-b5a4-4f53-87ad-4e4b4e1e40b8"/>
+					<reportElement positionType="Float" x="9" y="196" width="60" height="10" isPrintWhenDetailOverflows="true" uuid="ec028ba5-b5a4-4f53-87ad-4e4b4e1e40b8">
+						<printWhenExpression><![CDATA[new Boolean($F{leftImage.largeImageUrl}.asBoolean())]]></printWhenExpression>
+					</reportElement>
 					<graphicElement fill="Solid"/>
 					<imageExpression><![CDATA[$F{leftImage.licenceIcon}]]></imageExpression>
 				</image>
 			</frame>
 			<frame>
-				<reportElement x="258" y="0" width="240" height="219" uuid="ef9ab1f2-3b00-4a3b-9a0b-2ce395fb9bd7"/>
+				<reportElement x="258" y="0" width="240" height="210" uuid="ef9ab1f2-3b00-4a3b-9a0b-2ce395fb9bd7"/>
 				<image scaleImage="RetainShape" hAlign="Left" vAlign="Bottom" isLazy="true" hyperlinkType="Reference" hyperlinkTarget="Blank">
 					<reportElement positionType="Float" x="10" y="10" width="210" height="174" isPrintWhenDetailOverflows="true" uuid="617c397d-7b11-4280-876e-634a881841c7"/>
 					<graphicElement fill="Solid"/>
@@ -102,7 +108,9 @@
 					<textFieldExpression><![CDATA["<b>Fig. ${$F{rightImage.imageNumber}}</b>" + ($F{rightImage.metadata.title} ? "<b>:</b> '<i>${$F{rightImage.metadata.title}}</i>'" : "") + ($F{rightImage.metadata.title} ? new String($F{rightImage.metadata.creator}.asBoolean() ? " by ${$F{rightImage.metadata.creator}}" : "") : "") + ($F{rightImage.metadata.rightsHolder} ? new String($F{rightImage.metadata.rightsHolder}.asBoolean() ? " (&copy; ${$F{rightImage.metadata.rightsHolder}})" : "") : "")]]></textFieldExpression>
 				</textField>
 				<image scaleImage="RetainShape" hAlign="Left" vAlign="Bottom" isUsingCache="true" onErrorType="Blank" hyperlinkType="Reference" hyperlinkTarget="Blank">
-					<reportElement positionType="Float" x="10" y="196" width="60" height="10" isPrintWhenDetailOverflows="true" uuid="03eceea8-4b07-401e-bb05-4ce78f88e77e"/>
+					<reportElement positionType="Float" x="10" y="196" width="60" height="10" isPrintWhenDetailOverflows="true" uuid="03eceea8-4b07-401e-bb05-4ce78f88e77e">
+						<printWhenExpression><![CDATA[new Boolean($F{rightImage.largeImageUrl}.asBoolean())]]></printWhenExpression>
+					</reportElement>
 					<graphicElement fill="Solid"/>
 					<imageExpression><![CDATA[$F{rightImage.licenceIcon}]]></imageExpression>
 				</image>

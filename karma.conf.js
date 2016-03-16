@@ -50,6 +50,7 @@ module.exports = function (config) {
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/Map.js',
             'web-app/thirdparty/modernizr/modernizer.js',
             'web-app/thirdparty/angular/angular-1.3.13.min.js',
+            'web-app/thirdparty/angular/angular-sanitize-1.3.13.min.js',
             'test/js/thirdparty/angular-mocks-1.3.13.js',
             'web-app/thirdparty/angular/ui-bootstrap-tpls-0.12.0.js',
             'web-app/thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js',

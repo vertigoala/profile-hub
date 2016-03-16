@@ -134,7 +134,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
     self.uploadImage = function () {
         var popup = $modal.open({
-            templateUrl: "imageUpload.html",
+            templateUrl: $browser.baseHref() + "static/templates/imageUploadModal.html",
             controller: "ImageUploadController",
             controllerAs: "imageUploadCtrl",
             size: "md",
@@ -150,7 +150,30 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
         });
     };
 
-    self.showMetadata = function (image) {
+    /**
+     * Display the image viewer popup
+     * @param image May be either a string (the image id) or an object (the image)
+     */
+    self.showMetadata = function (image, local) {
+        if (_.isString(image)) {
+            if (angular.isDefined(self.images) && self.images.length > 0) {
+                image = _.find(self.images, function(image) { return image.imageId == image; });
+            } else {
+                var future = profileService.getImageMetadata(image, local);
+                future.then(function (imageDetails) {
+                    imageDetails.imageId = image;
+                    showMetadataPopup(imageDetails);
+                }, function() {
+                    messageService.alert("An error occurred while retrieving the image details");
+                });
+            }
+        } else {
+            showMetadataPopup(image);
+        }
+
+    };
+
+    function showMetadataPopup(image) {
         var popup = $modal.open({
             templateUrl: $browser.baseHref() + "static/templates/imageMetadata.html",
             controller: "ImageMetadataController",
@@ -171,7 +194,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
             });
 
             imgvwr.viewImage('#imageViewer', image.imageId, {
-                imageServiceBaseUrl: image.type.name == 'OPEN' ? config.imageServiceUrl : util.contextRoot(),
+                imageServiceBaseUrl: _.isUndefined(image.type) || image.type.name == 'OPEN' ? config.imageServiceUrl : util.contextRoot(),
                 addDrawer: false,
                 addSubImageToggle: false,
                 addCalibration: false,
@@ -183,7 +206,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
         popup.result.then(function () {
             self.loadImages();
         });
-    };
+    }
 
     self.publishPrivateImage = function(imageId) {
         var confirm = util.confirm("Are you sure you wish to make this image available to other Atlas of Living Australia applications?");
@@ -223,48 +246,6 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
     };
 });
 
-/**
- * Upload image modal dialog controller
- */
-profileEditor.controller("ImageUploadController", function (profileService, util, config, $modalInstance, Upload, $cacheFactory, opus, $filter) {
-    var self = this;
-
-    self.metadata = {rightsHolder: opus.title};
-    self.files = null;
-    self.error = null;
-    self.opus = opus;
-
-    self.licences = null;
-
-    var orderBy = $filter("orderBy");
-
-    profileService.getLicences().then(function (data) {
-        self.licences = orderBy(data, "name");
-        self.metadata.licence = self.licences[0];
-    });
-
-    self.ok = function () {
-        self.metadata.dataResourceId = self.opus.dataResourceUid;
-        self.metadata.licence = self.metadata.licence.name;
-
-        Upload.upload({
-            url: util.contextRoot() + "/opus/" + util.getEntityId("opus") + "/profile/" + util.getEntityId("profile") + "/image/upload",
-            fields: self.metadata,
-            file: self.files[0]
-        }).success(function () {
-            self.image = {};
-            self.file = null;
-            $modalInstance.close();
-            $cacheFactory.get('$http').removeAll();
-        }).error(function () {
-            self.error = "An error occurred while uploading your image."
-        });
-    };
-
-    self.cancel = function () {
-        $modalInstance.dismiss("cancel");
-    };
-});
 
 /**
  * Image metadata modal dialog controller

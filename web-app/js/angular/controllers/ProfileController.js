@@ -109,6 +109,7 @@ profileEditor.controller('ProfileController',
             nslPromise.then(function (data) {
                 self.nslNameStatus = data.name.status;
                 if (!_.isUndefined(data.name.primaryInstance) && data.name.primaryInstance && data.name.primaryInstance.length > 0) {
+
                     self.nslProtologue = data.name.primaryInstance[0].citationHtml;
                 }
             });

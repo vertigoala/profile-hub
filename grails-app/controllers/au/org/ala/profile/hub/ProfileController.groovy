@@ -320,7 +320,7 @@ class ProfileController extends BaseController {
             ]
             Map metadata = [multimedia: multimedia]
 
-            def response = imageService.uploadImage(params.opusId, params.profileId, request.getParameter("dataResourceId"), metadata, file)
+            def response = imageService.uploadImage(request.contextPath, params.opusId, params.profileId, request.getParameter("dataResourceId"), metadata, file)
 
             handle response
         } else {

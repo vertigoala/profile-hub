@@ -1,9 +1,10 @@
 <div ng-controller="AttributeEditor as attrCtrl" ng-init="attrCtrl.init('${edit}')">
-    <div class="row">
-        <div class="col-md-12 padding-bottom-1" ng-cloak>
-            <button ng-show="!attrCtrl.readonly" ng-click="attrCtrl.addAttribute()" class="btn btn-default"><i
-                    class="fa fa-plus"></i>&nbsp;Add attribute
-            </button>
+    <div ng-controller="ImagesController as imageCtrl">
+        <div class="row">
+            <div class="col-md-12 padding-bottom-1" ng-cloak>
+                <button ng-show="!attrCtrl.readonly" ng-click="attrCtrl.addAttribute()" class="btn btn-default"><i
+                        class="fa fa-plus"></i>&nbsp;Add attribute
+                </button>
 
             <div class="small pull-right"
                  ng-form="ShowSupportingAttributesForm" ng-show="(!attrCtrl.readonly && (attrCtrl.opus.showLinkedOpusAttributes || attrCtrl.opus.allowCopyFromLinkedOpus))">
@@ -20,11 +21,15 @@
         </div>
     </div>
 
-    <!-- view screen -->
-    <ng-include src="'showReadOnlyAttributeList.html'" ng-show="attrCtrl.readonly"></ng-include>
-
-    <!-- edit screen -->
-    <ng-include src="'showEditableAttributeList.html'" ng-show="!attrCtrl.readonly"></ng-include>
+        <g:if test="${edit}">
+            <!-- edit screen -->
+            <ng-include src="'showEditableAttributeList.html'" ng-show="!attrCtrl.readonly"></ng-include>
+        </g:if>
+        <g:else>
+            <!-- view screen -->
+            <ng-include src="'showReadOnlyAttributeList.html'" ng-show="attrCtrl.readonly"></ng-include>
+        </g:else>
+    </div>
 </div>
 
 <!-- template for the editable view of an attribute list -->
@@ -87,11 +92,13 @@
 
 <!-- template for the content of a single read-only attribute, to be displayed either on the view or the edit page -->
 <script type="text/ng-template" id="readOnlyAttributeBody.html">
-<span ng-show="attrCtrl.showAttribute(attribute)">
-    <div ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
-        <div ng-bind-html="attribute.text | sanitizeHtml" class="display-text"></div>
+<div ng-show="attrCtrl.showAttribute(attribute)">
+    <div class="row" ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
+        <div class="col-md-12">
+            <div markup-text="attribute.text" class="display-text"></div>
+        </div>
 
-        <div ng-show="attrCtrl.opus.allowFineGrainedAttribution">
+        <div class="col-md-12" ng-show="attrCtrl.opus.allowFineGrainedAttribution">
             <div class="citation" ng-show="attribute.creators.length > 0">
                 Contributed by {{ attribute.creators.join(', ') }}
             </div>
@@ -102,7 +109,7 @@
         </div>
     </div>
 
-    <div class="annotation" ng-show="(attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.fromCollection || attribute.source || attribute.original">
+    <div class="row annotation padding-top-1" ng-show="(attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.fromCollection || attribute.source || attribute.original">
         <div class="col-md-6" ng-if="attribute.source || (attribute.original && !attribute.source)">
             <span ng-if="attribute.source">
                 Source: {{attribute.source}}
@@ -121,14 +128,14 @@
                 </span>
             </span>
         </div>
-        <span class="col-md-6 pull-right" ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
-            <span class="pull-right">
+        <div class="col-md-6 pull-right" ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
+            <div class="pull-right">
                 <a href=""
                    ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</a>
-            </span>
-        </span>
+            </div>
+        </div>
     </div>
-</span>
+</div>
 </script>
 
 <!-- Template for the editable view of a single attribute -->
@@ -154,6 +161,7 @@
                type="danger">You must select a value from the list of approved titles.</alert>
 
         <label for="attributeContent" class="screen-reader-label">Content</label>
+
         <textarea id="attributeContent" ng-model="attribute.text" name="attribute" ckeditor="richTextFullToolbar" required="required"></textarea>
 
         <div class="row"
@@ -284,7 +292,7 @@
             <div class="col-sm-2"><strong>{{attribute.opusTitle}}</strong></div>
 
             <div class="col-sm-10">
-                <div ng-bind-html="attribute.text | sanitizeHtml" class="display-text"></div>
+                <div ng-bind-html="attribute.text" class="display-text"></div>
             </div>
         </div>
     </div>

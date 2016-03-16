@@ -229,43 +229,33 @@ class ExportService {
         List<String> imageSources = opus.imageSources ?: []
         imageSources << opus.dataResourceUid
 
+        // incrementing number to be displayed against all images in the report (e.g. Fig 1,...)
+        int figureNumber = 1
+
         model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, imageSources.join(","), searchIdentifier, true)?.resp
+        List<Map> images = model.profile.images
 
-        List<Map> groupedImagesInPairs = []
-        def images = model.profile.images
-        images.eachWithIndex { image, i ->
-            if (model.profile.primaryImage == image.imageId) {
-                model.profile.primaryImage = image.largeImageUrl
-            }
-            if (i % 2 == 0) {
-                image << [
-                        imageNumber    : i + 1,
-                        scientificName : model.profile.scientificName,
-                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${image.imageId}",
-                        licenceIcon : image?.metadata?.license ? Utils.getCCLicenceIcon(image?.metadata?.license) : ""
-                ]
-                Map nextImage = (i + 1 < images.size()) ? images[i + 1] : [:]
-                nextImage << [
-                        imageNumber    : i + 2,
-                        scientificName : model.profile.scientificName,
-                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}",
-                        licenceIcon : nextImage?.metadata?.license ? Utils.getCCLicenceIcon(nextImage?.metadata?.license) : ""
-                ]
-                def replaceTitleWithOptionalCaption = { Map m -> m?.metadata?.title = m?.caption ? m?.caption : m?.metadata?.title }
-                replaceTitleWithOptionalCaption(image)
-                replaceTitleWithOptionalCaption(nextImage)
-                groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
-            }
+        images?.each {
+            replaceTitleWithOptionalCaption(it)
         }
-
-        model.profile.images = groupedImagesInPairs
 
         // Format profile attributes text
         if (params.attributes) {
             model.profile.attributes.each { attribute ->
                 attribute.text = convertTagsForJasper(sanitizeHtml(formatAttributeText(attribute.text, attribute.title)))
+                List<Map> attributeImageGroups = []
+
+                List<Map> attributeImages = extractImagesFromAttributeText(attribute.text, images)
+
+                Map pairs = groupImagesIntoPairs(model.profile.scientificName, attributeImages, figureNumber)
+                attribute.images = pairs.imagePairs
+                figureNumber = pairs.figureNumber
             }
         }
+
+        model.profile.primaryImage = images.find { it.imageId == model.profile.primaryImage }
+
+        model.profile.images = groupImagesIntoPairs(model.profile.scientificName, images, figureNumber).imagePairs
 
         // Retrieve and format profile statuses
         if (params.status) {
@@ -444,6 +434,62 @@ class ExportService {
 
         return colour;
     };
+
+    List<Map> extractImagesFromAttributeText(String text, List<Map> images) {
+        List attributeImages = []
+
+        List<String> imageUrls = text.findAll("<img.*/>")?.collect { it.findAll("https?[^\"]*") }?.flatten()
+        imageUrls.each { url ->
+            String imageId
+
+            String remoteImageIdPrefix = "imageId"
+
+            if (url.contains(remoteImageIdPrefix)) {
+                imageId = url.find(Utils.UUID_REGEX_PATTERN)
+            } else {
+                // url must be in the form http://.../opus/id/profile/id/image/id.ext
+                int imageIdIndex = 9
+                String[] urlParts = url.split("/")
+                imageId = urlParts[imageIdIndex].substring(0, urlParts[imageIdIndex].indexOf("."))
+            }
+
+            Map image = images.find { it.imageId == imageId }
+
+            if (image) {
+                attributeImages << image
+            }
+        }
+
+        attributeImages
+    }
+
+    Map groupImagesIntoPairs(String profileName, List<Map> images, int figureNumber) {
+        List<Map> imagePairs = []
+
+        images.eachWithIndex { image, i ->
+            if (i % 2 == 0) {
+                Map left = [:]
+                left.putAll(image)
+                left << [
+                        imageNumber    : figureNumber++,
+                        scientificName : profileName,
+                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${left.imageId}",
+                        licenceIcon    : Utils.getCCLicenceIcon(left?.metadata?.licence)
+                ]
+                Map right = [:]
+                right.putAll((i + 1 < images.size()) ? images[i + 1] : [:])
+                right << [
+                        imageNumber    : figureNumber++,
+                        scientificName : profileName,
+                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${right.imageId}",
+                        licenceIcon    : Utils.getCCLicenceIcon(right?.metadata?.licence)
+                ]
+                imagePairs << ["leftImage": left, "rightImage": right]
+            }
+        }
+
+        [imagePairs: imagePairs, figureNumber: figureNumber]
+    }
 
     /**
      * Removes all XML/HTML tags that are semantic and not for text formatting

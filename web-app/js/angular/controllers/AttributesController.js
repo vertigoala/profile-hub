@@ -1,7 +1,7 @@
 /**
  * Attributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $scope) {
+profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal) {
     var self = this;
 
     self.attributes = [];
@@ -16,6 +16,28 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
 
     var capitalize = $filter("capitalize");
     var orderBy = $filter("orderBy");
+
+    self.insertImage = function(callback) {
+        var popup = $modal.open({
+            templateUrl: util.getBaseHref(true) + "/static/templates/attributeImage.html",
+            controller: "AttributeImageController",
+            controllerAs: "attrImgCtrl",
+            size: "md",
+            resolve: {
+                opus: function () {
+                    return self.opus;
+                },
+                profile: function () {
+                    return self.profile;
+                }
+            }
+        });
+
+        popup.result.then(function (imageMetadata) {
+            var imageElement = "<img src='" + imageMetadata.thumbnailUrl + "' class='thumbnail inline-attribute-image " + imageMetadata.size + " "  + imageMetadata.position + "' alt='" + imageMetadata.title + "'/>";
+            callback(imageElement);
+        });
+    };
 
     self.init = function (edit) {
         self.readonly = edit != 'true';

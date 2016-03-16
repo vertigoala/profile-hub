@@ -455,8 +455,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        getImageMetadata: function (imageId) {
-            var future = $http.get(config.imageServiceUrl + "/ws/image/" + imageId, {cache: true});
+        getImageMetadata: function (imageId, local) {
+            var future = null;
+            if (_.isBoolean(local) && local) {
+                future = $http.get(util.contextRoot() + "/ws/getImageInfo/" + imageId, {cache: true});
+            } else {
+                future = $http.get(config.imageServiceUrl + "/ws/image/" + imageId, {cache: true});
+            }
             return util.toStandardPromise(future);
         },
 
