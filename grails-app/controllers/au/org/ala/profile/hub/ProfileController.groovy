@@ -378,20 +378,23 @@ class ProfileController extends BaseController {
 
     //In the sense that the private or staged images are fetched from disk for display on the profile page
     //note we are supporting 2 possible file locations for backwards compatibility
-    private downloadFile(String path, String collectionId, String profileId, String filename) {
-        if (!filename) {
+    private downloadFile(String path, String collectionId, String profileId, String fileName) {
+        if (!fileName) {
             badRequest "fileId is a required parameter"
         } else {
-            String imageId = filename.substring(0, filename.size() - 4)
-            File file = new File("${path}/${collectionId}/${profileId}/$imageId/${filename}")
-            if (!file.exists()) {
-                file = new File("${path}/${profileId}/${filename}")
+            String imageId = fileName.substring(0, fileName.size() - 4)
+            String thumbnailName = makeThumbnailName(fileName)
+            File file = new File("${path}/${collectionId}/${profileId}/${imageId}/${imageId}_thumbnails/${thumbnailName}")
+            if (!file.exists()) {  //use the image if there is no thumbnail
+                 file = new File("${path}/${collectionId}/${profileId}/${imageId}/${fileName}")
             }
-
+            if (!file.exists()) {  //support for version 1 file locations
+                file = new File("${path}/${profileId}/${fileName}")
+            }
             if (!file.exists()) {
                 notFound "The requested file could not be found"
             } else {
-                response.setHeader("Content-disposition", "attachment;filename=${filename}")
+                response.setHeader("Content-disposition", "attachment;filename=${fileName}")
                 response.setContentType(getContentType(file))
                 response.outputStream << file.newInputStream()
             }
@@ -425,6 +428,12 @@ class ProfileController extends BaseController {
         } else {
             ""
         }
+    }
+
+    private String makeThumbnailName(String fileName)  {
+        String extension = fileName.substring(fileName.lastIndexOf("."))
+        String imageId = fileName.substring(0, fileName.size() - 4)
+        String thumbnailName = "${imageId}_thumbnail${extension}"
     }
 
     def retrieveSpeciesProfile() {

@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils
 import org.springframework.web.multipart.MultipartFile
 
 import javax.imageio.ImageIO
+import java.awt.Color
 import java.awt.image.BufferedImage
 
 import static org.apache.http.HttpStatus.SC_OK
@@ -152,7 +153,7 @@ class ImageService {
         tiler.tileImage(imageFile, tileDir)
 
         List<ThumbDefinition> thumbDefinitionList = new ArrayList<ThumbDefinition>(1)
-        thumbDefinitionList.add(new ThumbDefinition(300, false, null, "${metadata.imageId}_thumbnail${extension}"))
+        thumbDefinitionList.add(new ThumbDefinition(300, false,Color.white , "${metadata.imageId}_thumbnail${extension}"))
         makeThumbNails(localDir, "${metadata.imageId}_thumbnails", imageFile, thumbDefinitionList)
 
     }
