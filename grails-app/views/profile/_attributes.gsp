@@ -18,16 +18,16 @@
                            btn-radio="false">Off</label>
                 </div>
             </div>
-        </div>
 
-        <g:if test="${edit}">
-            <!-- edit screen -->
-            <ng-include src="'showEditableAttributeList.html'" ng-show="!attrCtrl.readonly"></ng-include>
-        </g:if>
-        <g:else>
-            <!-- view screen -->
-            <ng-include src="'showReadOnlyAttributeList.html'" ng-show="attrCtrl.readonly"></ng-include>
-        </g:else>
+            <g:if test="${edit}">
+                <!-- edit screen -->
+                <ng-include src="'showEditableAttributeList.html'" ng-show="!attrCtrl.readonly"></ng-include>
+            </g:if>
+            <g:else>
+                <!-- view screen -->
+                <ng-include src="'showReadOnlyAttributeList.html'" ng-show="attrCtrl.readonly"></ng-include>
+            </g:else>
+        </div>
     </div>
 </div>
 
