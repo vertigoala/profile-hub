@@ -8,8 +8,9 @@ import org.apache.commons.io.FileUtils
 import org.springframework.web.multipart.MultipartFile
 
 import javax.imageio.ImageIO
-import java.awt.Color
+import java.awt.*
 import java.awt.image.BufferedImage
+import java.util.List
 
 import static org.apache.http.HttpStatus.SC_OK
 
@@ -35,6 +36,7 @@ class ImageService {
     def grailsApplication
 
     static final String separator = File.separator
+    static final Integer THUMBNAIL_MAX_SIZE = 300
 
     /**
      * When you click on an image in the UI, this method retrieves the image
@@ -157,7 +159,7 @@ class ImageService {
         tiler.tileImage(imageFile, tileDir)
 
         List<ThumbDefinition> thumbDefinitionList = new ArrayList<ThumbDefinition>(1)
-        thumbDefinitionList.add(new ThumbDefinition(300, false,Color.white , "${metadata.imageId}_thumbnail${extension}"))
+        thumbDefinitionList.add(new ThumbDefinition(THUMBNAIL_MAX_SIZE, false, Color.white, "${metadata.imageId}_thumbnail${extension}"))
         makeThumbNails(localDir, "${metadata.imageId}_thumbnails", imageFile, thumbDefinitionList)
 
     }
@@ -382,15 +384,13 @@ class ImageService {
 
     private def publishImages(Map opus, Map profile, Map images, boolean staged) {
         Map profileUpdates = [:]
-        def imageDirectories = []
-        def imageFiles = []
+        List<File> imageDirectories = []
+        List<File> imageFiles = []
         String localDirPath = staged ? grailsApplication.config.image.staging.dir : grailsApplication.config.image.private.dir
         //Check in old file directory structure
         File localDir = new File("${localDirPath}/${profile.uuid}")
         if (localDir.exists()) {
-            for (def it : localDir.listFiles()) {
-                imageFiles << it
-            }
+            imageFiles = localDir.listFiles().collect()
         }
         //Now check new directory structure
         File profileDir = new File("${localDirPath}/${opus.uuid}/${profile.uuid}/")
@@ -411,7 +411,7 @@ class ImageService {
             }
         }
 
-        for (def it : imageFiles) {
+        imageFiles.each {
             String imageId = imageIdFromFile(it)
             Map localImage = images[imageId]
 
@@ -419,43 +419,43 @@ class ImageService {
                 log.error("Skipping publishing $it with id $imageId because it is missing image metadata.")
                 // Clean up staged / private file
                 deleteFileAndDirIfEmpty(imageId, it, localDir)
-                continue;
-            }
-
-            List<Map> multimedia = localImage ? [
-                    [
-                            creator         : localImage.creator ?: "",
-                            rights          : localImage.rights ?: "",
-                            rightsHolder    : localImage.rightsHolder ?: "",
-                            license         : localImage.licence ?: "",
-                            title           : localImage.title ?: "",
-                            description     : localImage.description ?: "",
-                            dateCreated     : localImage.dateCreated ?: "",
-                            originalFilename: localImage.originalFilename,
-                            contentType     : localImage.contentType
-                    ]
-            ] : []
-            Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
-
-            def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
-
-            if (uploadResponse?.resp) {
-                // check if the local image was set as the primary, and swap the local id for the new permanent id
-                if (profile.primaryImage == imageId) {
-                    profileUpdates.primaryImage = uploadResponse.resp.images[0]
-                }
-
-                // check for any display options that were set for the local image, and swap the local id for the new permanent id
-                Map imageDisplayOption = profile.imageSettings?.find { it.imageId == imageId }
-                if (imageDisplayOption) {
-                    imageDisplayOption?.imageId = uploadResponse.resp.images[0]
-                }
-            }
-
-            if (staged) {
-                deleteStagedImage(opus.uuid, profile.uuid, imageId)
             } else {
-                deletePrivateImage(opus.uuid, profile.uuid, imageId)
+
+                List<Map> multimedia = localImage ? [
+                        [
+                                creator         : localImage.creator ?: "",
+                                rights          : localImage.rights ?: "",
+                                rightsHolder    : localImage.rightsHolder ?: "",
+                                license         : localImage.licence ?: "",
+                                title           : localImage.title ?: "",
+                                description     : localImage.description ?: "",
+                                dateCreated     : localImage.dateCreated ?: "",
+                                originalFilename: localImage.originalFilename,
+                                contentType     : localImage.contentType
+                        ]
+                ] : []
+                Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
+
+                def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
+
+                if (uploadResponse?.resp) {
+                    // check if the local image was set as the primary, and swap the local id for the new permanent id
+                    if (profile.primaryImage == imageId) {
+                        profileUpdates.primaryImage = uploadResponse.resp.images[0]
+                    }
+
+                    // check for any display options that were set for the local image, and swap the local id for the new permanent id
+                    Map imageDisplayOption = profile.imageSettings?.find { it.imageId == imageId }
+                    if (imageDisplayOption) {
+                        imageDisplayOption?.imageId = uploadResponse.resp.images[0]
+                    }
+                }
+
+                if (staged) {
+                    deleteStagedImage(opus.uuid, profile.uuid, imageId)
+                } else {
+                    deletePrivateImage(opus.uuid, profile.uuid, imageId)
+                }
             }
         }
 
@@ -464,17 +464,20 @@ class ImageService {
         }
     }
 
+    //Changed directory structure, supporting existing files stored in old structure, use updated method - same name
     @Deprecated
     File getTile(String profileId, String imageId, String type, int zoom, int x, int y) {
         String baseDir = type as ImageType == ImageType.PRIVATE ? "${grailsApplication.config.image.private.dir}" : "${grailsApplication.config.image.staging.dir}"
         new File("${baseDir}/${profileId}/${imageId}_tiles/${zoom}/${x}/${y}.png")
     }
 
+    //Changed directory structure, supporting existing files stored in old structure, use updated method - same name
     @Deprecated
     private static File getLocalImageFile(String directory, String profileId, String imageId, String extension) {
         new File("${directory}/${profileId}/${imageId}${extension}")
     }
 
+    //Changed directory structure, supporting existing files stored in old structure, use updated method - same name
     @Deprecated
     private static boolean deleteLocalImage(List images, String imageId, String directory) {
         def image = images.find { it.imageId == imageId }
@@ -484,6 +487,7 @@ class ImageService {
         deleteFileAndDirIfEmpty(imageId, file, localDir)
     }
 
+    //Changed directory structure, supporting existing files stored in old structure, use deleteDirectoryAndContents()
     @Deprecated
     private static deleteFileAndDirIfEmpty(String imageId, File file, File localDir) {
         boolean deleted = file.delete()
