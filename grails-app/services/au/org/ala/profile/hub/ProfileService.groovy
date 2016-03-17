@@ -1,6 +1,5 @@
 package au.org.ala.profile.hub
 
-import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
 import org.apache.commons.lang.BooleanUtils
@@ -8,8 +7,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.servlet.http.HttpServletResponse
 
-import static au.org.ala.profile.hub.util.HubConstants.getDEFAULT_OPUS_BANNER_HEIGHT_PX
-import static au.org.ala.profile.hub.util.HubConstants.getDEFAULT_OPUS_BANNER_URL
+import static au.org.ala.profile.hub.util.HubConstants.*
 
 class ProfileService {
 
@@ -120,10 +118,10 @@ class ProfileService {
             result = [
                     opus         : opus,
                     profile      : profile,
-                    logoUrl      : opus.brandingConfig?.logoUrl ?: HubConstants.DEFAULT_OPUS_LOGO_URL,
+                    logoUrl      : opus.brandingConfig?.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
                     bannerUrl    : opus.brandingConfig?.profileBannerUrl ?: opus.brandingConfig?.opusBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     bannerHeight: opus.brandingConfig?.profileBannerHeight ?: opus.brandingConfig?.opusBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                    pageTitle    : opus.title ?: HubConstants.DEFAULT_OPUS_TITLE
+                    pageTitle    : opus.title ?: DEFAULT_OPUS_TITLE
             ]
 
         } catch (FileNotFoundException e) {
