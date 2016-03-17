@@ -287,17 +287,14 @@ hr.comment-divider {
 
 .imgCon img {
     height: 200px !important;
-    min-width: 180px !important;
 }
 
 .imgConSmall img {
     max-width: 150px !important;
-    min-width: 150px !important;
 }
 
 .imgConLarge img {
     max-width: 100%;
-    min-width: 300px !important;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -320,7 +317,7 @@ hr.comment-divider {
 
 .primary-image div img {
     height: 300px;
-    min-width: 250px;
+    max-height: 300px;
 }
 
 .primary-image p {
