@@ -233,22 +233,27 @@
     </div>
     <div class="table-responsive">
         <table class="table table-striped" ng-show="reportCtrl.reportData.records.length > 0">
+            <colgroup>
+                <col span="3">
+                <col class="width-40">
+            </colgroup>
             <thead>
-            <tr><th style="width:40%">Comment</th><th>Scientific Name</th><th>Date</th><th>Author</th></tr>
+                <tr><th>Scientific Name</th><th>Author</th><th>Date</th><th>Comment</th></tr>
             </thead>
             <tbody>
             <tr ng-repeat="record in reportCtrl.reportData.records">
-                %{--<td ng-bind-html="record.comment"></td>--}%
-                <td>{{ record.comment | plainText | words:20:ignoreSpaces }}</td>
                 <td>
                     <a href="${request.contextPath}/opus/{{ reportCtrl.opusId }}/profile/{{ record.scientificName }}"
                        target="_blank" class="scientific-name">{{ record.scientificName }}</a>
                 </td>
                 <td>
+                    {{ record.editor | default:'Unknown' }}
+                </td>
+                <td>
                     {{ record.lastUpdated | date:'dd/MM/yyyy h:mm a' }}
                 </td>
                 <td>
-                    {{ record.editor | default:'Unknown' }}
+                    {{ record.plainComment | words:20:ignoreSpaces }}
                 </td>
             </tr>
             </tbody>

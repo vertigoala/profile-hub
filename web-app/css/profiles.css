@@ -854,6 +854,7 @@ span.breadcrumb-dropdown {
     width: 115px;
 }
 
+<<<<<<< Updated upstream
 .inline-attribute-image.pull-left {
     margin-right: 5px;
 }
@@ -926,4 +927,8 @@ span.breadcrumb-dropdown {
 .profile-contributor-text {
     font-weight: 500;
     color: #0087BE;
+}
+
+.width-40 {
+    width: 40%
 }
