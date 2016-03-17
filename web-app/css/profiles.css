@@ -927,3 +927,7 @@ span.breadcrumb-dropdown {
     font-weight: 500;
     color: #0087BE;
 }
+
+.width-40 {
+    width: 40%
+}
