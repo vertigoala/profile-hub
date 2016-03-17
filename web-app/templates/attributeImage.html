@@ -41,7 +41,7 @@
         </div>
 
         <div ng-show="attrImgCtrl.mode == 'upload'">
-            <image-upload opus="attrImgCtrl.opus" on-upload-complete="attrImgCtrl.uploadImage"
+            <image-upload opus="attrImgCtrl.opus" on-upload-complete="attrImgCtrl.uploadImage" url="{{ attrImgCtrl.uploadUrl }}"
                           upload-on-event="performUpload"></image-upload>
         </div>
 

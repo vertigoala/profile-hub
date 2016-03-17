@@ -25,4 +25,21 @@ class Utils {
 
         icon
     }
+
+    static String getContentType(File file) {
+        String extension = file.getName().substring(file.getName().lastIndexOf("."))
+
+        List images = ["jpg", "jpeg", "gif", "tiff", "png", "bmp"]
+        if (images.contains(extension)) {
+            "image/*"
+        } else if (extension == "pdf") {
+            "application/pdf"
+        } else {
+            ""
+        }
+    }
+
+    static String getExtension(String fileName) {
+        fileName.substring(fileName.lastIndexOf("."))
+    }
 }

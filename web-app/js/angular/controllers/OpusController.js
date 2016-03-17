@@ -30,6 +30,15 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.ranks = util.RANK;
     self.shortNameTipVisible = false;
 
+    self.showUpload = {
+        opusBanner: false,
+        profileBanner: false,
+        thumbnail: false,
+        logo: false
+    };
+
+    self.imageUploadUrl = util.contextRoot() + "/opus/" + util.getEntityId("opus") + "/image?purpose=";
+
     loadResources();
     loadOpusList();
     loadKeybaseProjects();
@@ -46,7 +55,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
 
         messageService.info("Loading opus data...");
         promise.then(function (data) {
-                console.log("Retrieved " + data.title);
                 self.opus = data;
 
                 angular.forEach(self.opus.authorities, function (auth) {
@@ -376,7 +384,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         form.$setDirty();
     };
 
-    self.opusResourceChanged = function ($item, $model, $label) {
+    self.opusResourceChanged = function ($item) {
         self.opus.dataResourceUid = $item.id;
 
         loadDataResource(self.opus.dataResourceUid);
@@ -397,6 +405,34 @@ profileEditor.controller('OpusController', function (profileService, util, messa
 
     self.showShortNameTip = function() {
         self.shortNameTipVisible = true;
+    };
+
+    self.opusBannerUploaded = function(result) {
+        self.opus.brandingConfig.opusBannerUrl = util.getBaseHref() + result.imageUrl;
+        self.toggleUploadPanel('opusBanner');
+        self.StyleForm.$setDirty();
+    };
+
+    self.profileBannerUploaded = function(result) {
+        self.opus.brandingConfig.profileBannerUrl = util.getBaseHref() + result.imageUrl;
+        self.toggleUploadPanel('profileBanner');
+        self.StyleForm.$setDirty();
+    };
+
+    self.logoUploaded = function(result) {
+        self.opus.brandingConfig.logoUrl = util.getBaseHref() + result.imageUrl;
+        self.toggleUploadPanel('logo');
+        self.StyleForm.$setDirty();
+    };
+
+    self.thumbnailUploaded = function(result) {
+        self.opus.brandingConfig.thumbnailUrl = util.getBaseHref() + result.imageUrl;
+        self.toggleUploadPanel('thumbnail');
+        self.StyleForm.$setDirty();
+    };
+
+    self.toggleUploadPanel = function(section) {
+        self.showUpload[section] = !self.showUpload[section];
     };
 
     function loadKeybaseProjects() {

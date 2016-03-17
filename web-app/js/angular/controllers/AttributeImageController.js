@@ -20,6 +20,8 @@ profileEditor.controller('AttributeImageController', function ($scope, profileSe
     self.contextPath = util.contextRoot();
     self.uploadContentTemplate = util.contextRoot() + '/static/templates/imageUpload.html';
 
+    self.uploadUrl = util.contextRoot() + "/opus/" + util.getEntityId("opus") + "/profile/" + util.getEntityId("profile") + "/image/upload";
+
     self.loadImages = function(forceReload) {
         if (self.images.length == 0 || forceReload) {
             var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : "";

@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import static au.org.ala.profile.hub.Utils.*
 import au.org.ala.images.thumb.ImageThumbnailer
 import au.org.ala.images.thumb.ThumbDefinition
 import au.org.ala.images.tiling.ImageTiler
@@ -504,13 +505,8 @@ class ImageService {
         deleted
     }
 
-
     private static String imageIdFromFile(File file) {
         file.name.substring(0, file.name.indexOf("."))
-    }
-
-    private static String getExtension(String fileName) {
-        fileName.substring(fileName.lastIndexOf("."))
     }
 
     private static String buildFilePath(String parentDir, String collectionId, String profileId, String imageId) {

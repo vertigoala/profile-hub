@@ -301,9 +301,7 @@ class ProfileController extends BaseController {
     def uploadImage() {
         if (!params.opusId || !params.profileId || !params.dataResourceId || !params.title) {
             badRequest "opusId, dataResourceId, title and profileId are mandatory fields"
-        }
-
-        if (request instanceof DefaultMultipartHttpServletRequest) {
+        } else if (request instanceof DefaultMultipartHttpServletRequest) {
             MultipartFile file = ((DefaultMultipartHttpServletRequest) request).getFile("file")
 
             List<Map> multimedia = [
@@ -395,7 +393,7 @@ class ProfileController extends BaseController {
                 notFound "The requested file could not be found"
             } else {
                 response.setHeader("Content-disposition", "attachment;filename=${fileName}")
-                response.setContentType(getContentType(file))
+                response.setContentType(Utils.getContentType(file))
                 file.withInputStream { response.outputStream << it }
             }
         }
@@ -411,29 +409,17 @@ class ProfileController extends BaseController {
                 notFound "The requested file could not be found"
             } else {
                 response.setHeader("Content-disposition", "attachment;filename=${filename}")
-                response.setContentType(getContentType(file))
+                response.setContentType(Utils.getContentType(file))
                 file.withInputStream { response.outputStream << it }
             }
-        }
-    }
-
-    private getContentType(File file) {
-        String extension = file.getName().substring(file.getName().lastIndexOf("."))
-
-        List images = ["jpg", "jpeg", "gif", "tiff", "png", "bmp"]
-        if (images.contains(extension)) {
-            "image/*"
-        } else if (extension == "pdf") {
-            "application/pdf"
-        } else {
-            ""
         }
     }
 
     private String makeThumbnailName(String fileName)  {
         String extension = fileName.substring(fileName.lastIndexOf("."))
         String imageId = fileName.substring(0, fileName.size() - 4)
-        String thumbnailName = "${imageId}_thumbnail${extension}"
+
+        "${imageId}_thumbnail${extension}"
     }
 
     def retrieveSpeciesProfile() {

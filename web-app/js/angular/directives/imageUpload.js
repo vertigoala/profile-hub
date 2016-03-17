@@ -5,13 +5,16 @@ profileEditor.directive('imageUpload', function ($browser) {
         scope: {
             opus: '=',
             callbackFn: '&onUploadComplete', // function to be invoked when the upload is complete - takes a single parameter: the image metadata object
-            uploadOnEvent: '@' // name of the event to be $broadcast by the parent scope to trigger the upload (e.g. when embedding the upload form in a larger form with a single OK button)
+            uploadOnEvent: '@', // name of the event to be $broadcast by the parent scope to trigger the upload (e.g. when embedding the upload form in a larger form with a single OK button)
+            showMetadata: '@', // true to ask for metadata fields, false to just ask for the file
+            url: '@' // the url to post the file to
         },
         templateUrl: $browser.baseHref() + 'static/templates/imageUpload.html',
         controller: ['$scope', 'profileService', 'util', 'Upload', '$cacheFactory', '$filter', function ($scope, profileService, util, Upload, $cacheFactory, $filter) {
             $scope.metadata = {rightsHolder: $scope.opus.title};
             $scope.files = null;
             $scope.error = null;
+            $scope.showMetadata = true;
 
             $scope.callbackHandler = $scope.callbackFn();
 
@@ -32,7 +35,7 @@ profileEditor.directive('imageUpload', function ($browser) {
                     $scope.metadata.licence = $scope.metadata.licence.name;
 
                     Upload.upload({
-                        url: util.contextRoot() + "/opus/" + util.getEntityId("opus") + "/profile/" + util.getEntityId("profile") + "/image/upload",
+                        url: $scope.url,
                         fields: $scope.metadata,
                         file: $scope.files[0]
                     }).success(function (imageMetadata) {
@@ -52,6 +55,17 @@ profileEditor.directive('imageUpload', function ($browser) {
             };
 
             $scope.$on($scope.uploadOnEvent, $scope.doUpload);
-        }]
+        }],
+        link: function(scope) {
+            scope.$watch ("showMetadata", function(newValue) {
+                if (angular.isDefined(newValue)) {
+                    scope.showMetadata = isTruthy(newValue);
+                }
+            });
+        }
     };
+
+    function isTruthy(str) {
+        return str == true || str === "true"
+    }
 });

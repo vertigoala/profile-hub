@@ -1,10 +1,12 @@
 /**
  * Upload image modal dialog controller - just provides a modal wrapper around the image-upload directive
  */
-profileEditor.controller("ImageUploadController", function ($scope, opus, $modalInstance) {
+profileEditor.controller("ImageUploadController", function ($scope, opus, $modalInstance, util) {
     var self = this;
 
     self.opus = opus;
+
+    self.uploadUrl = util.contextRoot() + "/opus/" + util.getEntityId("opus") + "/profile/" + util.getEntityId("profile") + "/image/upload";
 
     self.ok = function () {
         $scope.$broadcast("performUpload");

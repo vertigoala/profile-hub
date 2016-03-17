@@ -5,7 +5,12 @@
 
     <div class="modal-body">
         <alert class="alert-danger" ng-show="imageUploadCtrl.error">{{ imageUploadCtrl.error }}</alert>
-        <image-upload opus="imageUploadCtrl.opus" on-upload-complete="imageUploadCtrl.uploadComplete" upload-on-event="performUpload"></image-upload>
+        <image-upload
+                opus="imageUploadCtrl.opus"
+                on-upload-complete="imageUploadCtrl.uploadComplete"
+                upload-on-event="performUpload"
+                url="{{imageUploadCtrl.uploadUrl}}">
+        </image-upload>
     </div>
 
     <div class="modal-footer">
