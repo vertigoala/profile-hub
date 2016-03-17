@@ -132,7 +132,7 @@ class ImageService {
             response = biocacheService.uploadImage(opusId, profile.profile.uuid, dataResourceId, file, metadata)
         }
 
-        if (response.statusCode == SC_OK) {
+        if (response?.statusCode == SC_OK) {
             response.resp = getImageDetails(metadata.imageId, contextPath)
         }
 
@@ -152,7 +152,7 @@ class ImageService {
 
         // create tiles
         File tileDir = new File(localDir, "${metadata.imageId}_tiles")
-        tileDir.mkdir()
+        tileDir.mkdirs()
         ImageTiler tiler = new ImageTiler(new ImageTilerConfig())
         tiler.tileImage(imageFile, tileDir)
 

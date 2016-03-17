@@ -57,7 +57,7 @@ class ImageServiceSpec extends Specification {
 
     def "uploadImage should move the image to the staging directory and invoke profileService.recordStagedImage if the profile is in draft mode"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", privateMode: true], opus: [:]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", privateMode: true], opus: [uuid: "opus1"]]
 
         when:
         imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFile)
