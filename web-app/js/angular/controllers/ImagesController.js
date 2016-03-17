@@ -194,7 +194,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
             });
 
             imgvwr.viewImage('#imageViewer', image.imageId, {
-                imageServiceBaseUrl: _.isUndefined(image.type) || image.type.name == 'OPEN' ? config.imageServiceUrl : util.contextRoot(),
+                imageServiceBaseUrl: _.isUndefined(image.type) || image.type.name == 'OPEN' ? config.imageServiceUrl : util.getBaseHref(true),
                 addDrawer: false,
                 addSubImageToggle: false,
                 addCalibration: false,
