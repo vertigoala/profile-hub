@@ -112,6 +112,9 @@ profileEditor.controller('ProfileController',
                 if (!_.isUndefined(data.name.primaryInstance) && data.name.primaryInstance && data.name.primaryInstance.length > 0) {
 
                     self.nslProtologue = data.name.primaryInstance[0].citationHtml;
+                    if (data.name.primaryInstance[0].page) {
+                        self.nslProtologue += " " + data.name.primaryInstance[0].page;
+                    }
                 }
             });
         }
