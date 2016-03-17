@@ -925,3 +925,8 @@ span.breadcrumb-dropdown {
     border-color: #28bcff;;
     background-color: #28bcff;
 }
+
+.profile-contributor-text {
+    font-weight: 500;
+    color: #0087BE;
+}

@@ -78,7 +78,8 @@ profileEditor.controller('ProfileController',
                             self.authorshipCount++;
                         }
                     });
-                    if (!self.readonly() || self.authorshipCount > 1) {
+
+                    if (!self.readonly() || self.authorshipCount > 0) {
                         navService.add(self.acknowledgementsSectionTitle, "authorship");
                     }
 

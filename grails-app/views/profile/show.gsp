@@ -113,13 +113,6 @@
             </div>
         </div>
 
-        <div class="row margin-bottom-1"
-             ng-repeat="author in profileCtrl.profile.authorship | filter:{category: 'Author'}:true" ng-cloak>
-            <div class="col-md-12">
-                {{author.text}}
-            </div>
-        </div>
-
         <g:if test="${!profile.archivedDate}">
             <g:include controller="profile" action="editNamePanel" params="[opusId: params.opusId]"/>
 
@@ -167,8 +160,10 @@
                                     </g:if>
                                     <g:include controller="profile" action="publicationsPanel"
                                                params="[opusId: params.opusId]"/>
-                                    <g:include controller="profile" action="authorPanel"
-                                               params="[opusId: params.opusId]"/>
+                                    <g:if test="${edit}">
+                                        <g:include controller="profile" action="authorPanel"
+                                                   params="[opusId: params.opusId]"/>
+                                    </g:if>
                                     <g:if test="${params.isOpusReviewer}">
                                         <g:include controller="profile" action="commentsPanel"
                                                    params="[opusId: params.opusId]"/>
@@ -207,6 +202,15 @@
                         target="_blank">Copyright Notice</a>.</p>
             </div>
         </div>
+
+        <g:if test="${!edit}">
+            <div class="row margin-top-1" ng-cloak ng-show="profileCtrl.profile.authorship.length > 0">
+                <a name="view_authorship"></a>
+                <div class="col-md-12 profile-contributor-text">
+                    Profile contributors: <span ng-repeat="contrib in profileCtrl.profile.authorship" ng-show="contrib.text">{{contrib.category | capitalize}}<span ng-show="contrib.category == 'Author'">(s)</span> - {{contrib.text}}<span ng-show="!$last">;</span></span>
+                </div>
+            </div>
+        </g:if>
 
         <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span
                 class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
