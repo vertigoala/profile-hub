@@ -24,7 +24,7 @@
     </div>
 
     <div class="col-md-11 col-sm-11 col-xs-11">
-        <ol class="breadcrumb" ng-cloak>
+        <ol class="breadcrumb" ng-cloak ng-show="profileCtrl.opus">
             <li><a class="fa fa-home"
                    href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}" title="{{profileCtrl.opus.title}}"></a>
             </li>

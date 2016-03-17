@@ -1,4 +1,4 @@
-<div class="btn-group">
+<div class="btn-group" ng-show="profileCtrl.opus">
     <div class="col-md-6" ng-show="!profileCtrl.readonly()">
         <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}"
            target="_self" class="btn btn-default std-width-btn"><i
