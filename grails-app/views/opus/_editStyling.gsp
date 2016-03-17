@@ -44,8 +44,8 @@
                             Short
                         </label>
                     </div>
-                    <div class="small">This image will be displayed on the profile view and edit pages..
-                    If left blank, the banner image collection pages will be used.
+                    <div class="small">This image will be displayed on the profile view and edit pages.
+                    If left blank, the banner image for collection pages will be used.
                     If both fields are left blank then a system default image will be used.</div>
                     <div class="small">Recommended size is at least 1000px wide by {{ opusCtrl.opus.brandingConfig.profileBannerHeight }}px high.</div>
                 </div>
