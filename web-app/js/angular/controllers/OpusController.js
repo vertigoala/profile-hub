@@ -476,7 +476,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
                 self.opusList.push({
                     uuid: opus.uuid,
                     title: opus.title,
-                    thumbnailUrl: opus.thumbnailUrl,
+                    thumbnailUrl: opus.brandingConfig.thumbnailUrl,
                     shortName: opus.shortName,
                     pubDescription: opus.pubDescription
                 })

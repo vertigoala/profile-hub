@@ -21,6 +21,7 @@
     <style type="text/css">
     #banner-image {
         background-image: url(${bannerUrl ?: grailsApplication.config.images.service.url + '/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original'});
+        min-height: ${bannerHeight ?: 100}px;
     }
     </style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->

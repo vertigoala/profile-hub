@@ -9,20 +9,56 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label>Banner image</label>
-                    <input type="text" class="form-control" name="bannerUrl" ng-model="opusCtrl.opus.bannerUrl"/><br/>
-                    <span class="small">Recommended size is at least 1000px wide by 100px high.</span>
+                    <label>Banner image for collection pages</label>
+                    <input type="text" class="form-control" name="bannerUrl" ng-model="opusCtrl.opus.brandingConfig.opusBannerUrl"/>
+                    <div class="radio">
+                        <label for="opusBannerHeightTall" class="inline-label padding-right-1">
+                            <input id="opusBannerHeightTall" type="radio" name="opusBannerHeight" ng-value="300"
+                                   ng-model="opusCtrl.opus.brandingConfig.opusBannerHeight">
+                            Tall
+                        </label>
+                        <label for="opusBannerHeightShort" class="inline-label">
+                            <input id="opusBannerHeightShort" type="radio" name="opusBannerHeight" ng-value="100" class="padding-left-1"
+                                   ng-model="opusCtrl.opus.brandingConfig.opusBannerHeight">
+                            Short
+                        </label>
+                    </div>
+                    <div class="small">This image will be displayed on all pages <em>except</em> the profile view and edit pages.
+                    If left blank, the banner image for profile pages will be used.
+                    If both fields are left blank then a system default image will be used.</div>
+                    <div class="small">Recommended size is at least 1000px wide by {{ opusCtrl.opus.brandingConfig.opusBannerHeight }}px high.</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Banner image for profile pages</label>
+                    <input type="text" class="form-control" name="bannerUrl" ng-model="opusCtrl.opus.brandingConfig.profileBannerUrl"/>
+                    <div class="radio">
+                        <label for="profileBannerHeightTall" class="inline-label padding-right-1">
+                            <input id="profileBannerHeightTall" type="radio" name="profileBannerHeight" ng-value="300"
+                                   ng-model="opusCtrl.opus.brandingConfig.profileBannerHeight">
+                            Tall
+                        </label>
+                        <label for="profileBannerHeightShort" class="inline-label">
+                            <input id="profileBannerHeightShort" type="radio" name="profileBannerHeight" ng-value="100"
+                                   ng-model="opusCtrl.opus.brandingConfig.profileBannerHeight">
+                            Short
+                        </label>
+                    </div>
+                    <div class="small">This image will be displayed on the profile view and edit pages..
+                    If left blank, the banner image collection pages will be used.
+                    If both fields are left blank then a system default image will be used.</div>
+                    <div class="small">Recommended size is at least 1000px wide by {{ opusCtrl.opus.brandingConfig.profileBannerHeight }}px high.</div>
                 </div>
 
                 <div class="form-group">
                     <label>Logo</label>
-                    <input type="text" class="form-control" name="logoUrl" ng-model="opusCtrl.opus.logoUrl"/><br/>
+                    <input type="text" class="form-control" name="logoUrl" ng-model="opusCtrl.opus.brandingConfig.logoUrl"/><br/>
                     <span class="small">Recommended maximum width is 275px. There is no height limit.</span>
                 </div>
 
                 <div class="form-group">
                     <label>Thumbnail</label>
-                    <input type="text" class="form-control" name="thumbnailUrl" ng-model="opusCtrl.opus.thumbnailUrl"/><br/>
+                    <input type="text" class="form-control" name="thumbnailUrl" ng-model="opusCtrl.opus.brandingConfig.thumbnailUrl"/><br/>
                     <span class="small">Recommended size 160px by 100px.</span>
                 </div>
 
