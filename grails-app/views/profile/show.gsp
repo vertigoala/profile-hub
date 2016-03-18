@@ -68,7 +68,11 @@
                 </div>
             </p>
                 <p>
-                    Archived profiles will not appear in search results. Use the following URL to create a direct link to this profile:
+                    Archived profiles will only appear in the general search results if the 'Include archived profiles' option is selected.
+                    Archived profiles will NOT appear in the Browse, Quick Find, Taxonomic Tree or Subordinate Taxa lists.
+                </p>
+                <p>
+                    Use the following URL to create a direct link to this profile:
                     <br/>
                     ${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.uuid}}/profile/{{profileCtrl.profile.uuid}}
                 </p>

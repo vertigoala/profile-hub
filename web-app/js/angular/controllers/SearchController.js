@@ -6,9 +6,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
     self.opusId = util.getEntityId("opus");
 
-    self.showSearchOptions = false;
     self.searchOptions = {
-        nameOnly: false
+        includeArchived: false
     };
     self.searchResults = {};
 
@@ -50,7 +49,12 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
     self.retrieveCachedOrDelegatedSearch = function() {
         if ($sessionStorage.delegatedSearches && $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'] != null) {
-            self.searchTerm = $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'];
+            var delegatedSearch = $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'];
+            self.searchTerm = delegatedSearch.term;
+            self.searchOptions = delegatedSearch.searchOptions ? delegatedSearch.searchOptions : {
+                includeArchived: false
+            };
+
             delete $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'];
 
             self.search();
@@ -60,7 +64,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
                 self.searchResults = cachedResult.result;
                 self.searchTerm = cachedResult.term;
                 self.searchOptions = cachedResult.options ? cachedResult.options : {
-                    nameOnly: false
+                    includeArchived: false
                 };
             }
         }
@@ -87,14 +91,6 @@ profileEditor.controller('SearchController', function (profileService, util, mes
                 profile.image.status = 'checked';
             });
         }
-    };
-
-    self.toggleSearchOptions = function () {
-        self.showSearchOptions = !self.showSearchOptions;
-    };
-
-    self.setSearchOption = function (option) {
-        self.searchOptions.nameOnly = option == 'name'
     };
 
     self.retrieveCachedOrDelegatedSearch();

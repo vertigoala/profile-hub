@@ -931,3 +931,22 @@ span.breadcrumb-dropdown {
 .width-40 {
     width: 40%
 }
+
+.btn-link:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    margin-right: 5px;
+    content: '\f103 ';
+}
+
+.btn-link.active:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    font-size: 14px;
+    margin-right: 5px;
+    content: '\f102'
+}

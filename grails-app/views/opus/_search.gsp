@@ -16,6 +16,16 @@
                 <button class="btn btn-default btn-lg" type="button" ng-click="searchCtrl.clearSearch()" title="Clear search"><span class="fa fa-trash"></span></button>
             </span>
         </div>
+        <button class="btn btn-link ignore-save-warning" ng-model="searchCtrl.showOptions" btn-checkbox>Options</button>
+        <div ng-show="searchCtrl.showOptions" class="well">
+            <div class="checkbox">
+                <label for="includeArchived" class="inline-label">
+                    <input id="includeArchived" type="checkbox" name="showLinked" class="ignore-save-warning"
+                           ng-model="searchCtrl.searchOptions.includeArchived" ng-false-value="false">
+                    Include archived profiles
+                </label>
+            </div>
+        </div>
     </div>
 
     <div ng-show="searchCtrl.searchResults.items.length == 0">
@@ -31,7 +41,7 @@
 
         <div class="col-md-12 padding-top-1" ng-repeat="profile in searchCtrl.searchResults.items" ng-cloak>
             <div class="col-md-2 col-sm-12 col-xs-12">
-                <a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.scientificName | enc }}"
+                <a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.archivedDate ? profile.uuid : profile.scientificName | enc }}"
                    target="_self">
                     <div class="imgConSmall" in-view="searchCtrl.loadImageForProfile(profile.uuid)" in-view-options="{ debounce: 100 }">
                         <div ng-show="profile.image.url">
@@ -51,7 +61,7 @@
             </div>
 
             <div ng-class="searchCtrl.opusId ? 'col-md-10 col-sm-12 col-xs-12' : 'col-md-8 col-sm-12 col-xs-12'">
-                <h4 class="inline-block"><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.scientificName | enc }}"
+                <h4 class="inline-block"><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.archivedDate ? profile.uuid : profile.scientificName | enc }}"
                        target="_self">{{ profile.scientificName }}</a></h4>
                 <div class="inline-block padding-left-1" ng-show="profile.rank">({{profile.rank | capitalize}})</div>
 

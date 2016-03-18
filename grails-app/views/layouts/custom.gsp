@@ -243,12 +243,12 @@
 
             // handle CKE Text editors: the input field is a hidden textarea, followed by a number of divs and an iframe
             // with the rendered content. We need to highlight the nested div with the class 'cke_contents'
-            if ($field.is("textarea") && $field.next().hasClass("cke")) {
+            if (!$field.hasClass("ignore-save-warning") && $field.is("textarea") && $field.next().hasClass("cke")) {
                 $field.next().find(".cke_contents").addClass("show-dirty");
                 dirty = true;
             }
 
-            if ($field.attr("type") == "checkbox" || $field.attr("type") == "radio") {
+            if (!$field.hasClass("ignore-save-warning") && ($field.attr("type") == "checkbox" || $field.attr("type") == "radio")) {
                 $field.parent().addClass("show-dirty");
                 dirty = true;
             }

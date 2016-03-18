@@ -314,7 +314,7 @@ class ExportService {
         // Calculate version number
         if (params.printVersion) {
             model.profile.version = model.profile.publications?.size() > 0 ? model.profile.publications.collect {
-                it.version as Integer
+                (it.version ?: 1) as Integer
             }.max() + 1 : 1
         }
 

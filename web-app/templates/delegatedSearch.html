@@ -15,4 +15,16 @@
                         class="fa fa-search"></span></button>
             </span>
     </div>
+    <div ng-show="delSearchCtrl.layout == 'large'">
+        <button class="btn btn-link ignore-save-warning" ng-model="delSearchCtrl.showOptions" btn-checkbox>Options</button>
+        <div ng-show="delSearchCtrl.showOptions" class="well">
+            <div class="checkbox">
+                <label for="includeArchived" class="inline-label">
+                    <input id="includeArchived" type="checkbox" name="showLinked" class="ignore-save-warning"
+                           ng-model="delSearchCtrl.searchOptions.includeArchived" ng-false-value="false">
+                    Include archived profiles
+                </label>
+            </div>
+        </div>
+    </div>
 </div>
