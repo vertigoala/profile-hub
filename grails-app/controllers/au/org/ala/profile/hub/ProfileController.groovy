@@ -416,9 +416,8 @@ class ProfileController extends BaseController {
     }
 
     private String makeThumbnailName(String fileName)  {
-        String extension = fileName.substring(fileName.lastIndexOf("."))
-        String imageId = fileName.substring(0, fileName.size() - 4)
-
+        String extension = Utils.getExtension(fileName)
+        String imageId = fileName.substring(0, fileName.lastIndexOf('.'))
         "${imageId}_thumbnail${extension}"
     }
 
