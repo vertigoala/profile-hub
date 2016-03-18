@@ -81,8 +81,8 @@
                                 <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.largeImageUrl" title="View details">
                                     <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'OPEN'"
                                          class="thumbnail"/>
-                                    <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                         ng-if="image.largeImageUrl && image.type.name != 'OPEN'" class="thumbnail"/>
+                                    <img ng-src="${request.contextPath}{{image.thumbnailUrl}}"
+                                         ng-if="image.thumbnailUrl && image.type.name != 'OPEN'" class="thumbnail"/>
                                 </a>
                                 <span class="pill"
                                       ng-class="image.type.name == 'OPEN' ? 'pill-blue' : image.type.name == 'PRIVATE' ? 'pill-green' : 'pill-yellow'"
