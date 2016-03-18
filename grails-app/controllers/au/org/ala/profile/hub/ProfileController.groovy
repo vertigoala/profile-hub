@@ -1,8 +1,8 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.profile.analytics.Analytics
-import au.org.ala.profile.security.Secured
 import au.org.ala.profile.security.PrivateCollectionSecurityExempt
+import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
 import groovy.json.JsonSlurper
@@ -350,6 +350,25 @@ class ProfileController extends BaseController {
         }
     }
 
+    def retrieveLocalThumbnailImage() {
+        if (!params.type) {
+            badRequest "type is a required parameter"
+        } else {
+            try {
+                ImageType type = params.type as ImageType
+                //NB this imageId param already has the file extension on it, really the file name on disk
+                if (type == ImageType.STAGED) {
+                    displayLocalImage("${grailsApplication.config.image.staging.dir}/", params.opusId, params.profileId, params.imageId, true)
+                } else if (type == ImageType.PRIVATE) {
+                    displayLocalImage("${grailsApplication.config.image.private.dir}/", params.opusId, params.profileId, params.imageId, true)
+                }
+            } catch (IllegalArgumentException e) {
+                log.warn(e)
+                badRequest "Invalid image type ${params.type}"
+            }
+        }
+    }
+    //We want the full size image
     def getLocalImage() {
         if (!params.type) {
             badRequest "type is a required parameter"
@@ -358,9 +377,9 @@ class ProfileController extends BaseController {
                 ImageType type = params.type as ImageType
                 //NB this imageId param already has the file extension on it, really the file name on disk
                 if (type == ImageType.STAGED) {
-                    downloadFile("${grailsApplication.config.image.staging.dir}/", params.opusId, params.profileId, params.imageId)
+                    displayLocalImage("${grailsApplication.config.image.staging.dir}/", params.opusId, params.profileId, params.imageId, false)
                 } else if (type == ImageType.PRIVATE) {
-                    downloadFile("${grailsApplication.config.image.private.dir}/", params.opusId, params.profileId, params.imageId)
+                    displayLocalImage("${grailsApplication.config.image.private.dir}/", params.opusId, params.profileId, params.imageId, false)
                 }
             } catch (IllegalArgumentException e) {
                 log.warn(e)
@@ -376,16 +395,22 @@ class ProfileController extends BaseController {
 
     //In the sense that the private or staged images are fetched from disk for display on the profile page
     //note we are supporting 2 possible file locations for backwards compatibility
-    private downloadFile(String path, String collectionId, String profileId, String fileName) {
+    private displayLocalImage(String path, String collectionId, String profileId, String fileName, Boolean thumbnail) {
         if (!fileName) {
             badRequest "fileId is a required parameter"
         } else {
+            File file
             String imageId = fileName.substring(0, fileName.lastIndexOf("."))
-            String thumbnailName = makeThumbnailName(fileName)
-            File file = new File("${path}/${collectionId}/${profileId}/${imageId}/${imageId}_thumbnails/${thumbnailName}")
-            if (!file.exists()) {  //use the image if there is no thumbnail
-                 file = new File("${path}/${collectionId}/${profileId}/${imageId}/${fileName}")
+            if (thumbnail) {
+                String thumbnailName = makeThumbnailName(fileName)
+                file = new File("${path}/${collectionId}/${profileId}/${imageId}/${imageId}_thumbnails/${thumbnailName}")
+                if (!file.exists()) {  //use the image if there is no thumbnail
+                    file = new File("${path}/${collectionId}/${profileId}/${imageId}/${fileName}")
+                }
+            } else {
+                file = new File("${path}/${collectionId}/${profileId}/${imageId}/${fileName}")
             }
+
             if (!file.exists()) {  //support for version 1 file locations
                 file = new File("${path}/${profileId}/${fileName}")
             }
@@ -415,7 +440,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    private String makeThumbnailName(String fileName)  {
+    private String makeThumbnailName(String fileName) {
         String extension = Utils.getExtension(fileName)
         String imageId = fileName.substring(0, fileName.lastIndexOf('.'))
         "${imageId}_thumbnail${extension}"

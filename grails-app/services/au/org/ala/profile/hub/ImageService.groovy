@@ -311,7 +311,7 @@ class ImageService {
                 }
                 image = [
                         imageId         : it.imageId,
-                        thumbnailUrl    : "${prefix}/${it.imageId}${extension}?type=${type}",
+                        thumbnailUrl    : "${prefix}/thumbnail/${it.imageId}${extension}?type=${type}",
                         largeImageUrl   : "${prefix}/${it.imageId}${extension}?type=${type}",
                         dataResourceName: opus.title,
                         metadata        : it,

@@ -195,13 +195,13 @@ class ImageServiceSpec extends Specification {
         result.resp[2].imageId == "staged1"
         result.resp[2].dataResourceName == "opus title"
         result.resp[2].largeImageUrl == "/opus/opusId/profile/profileId/image/staged1.jpg?type=STAGED"
-        result.resp[2].thumbnailUrl == "/opus/opusId/profile/profileId/image/staged1.jpg?type=STAGED"
+        result.resp[2].thumbnailUrl == "/opus/opusId/profile/profileId/image/thumbnail/staged1.jpg?type=STAGED"
         result.resp[2].metadata == stagedImage1
         result.resp[2].type == ImageType.STAGED
         result.resp[3].imageId == "staged2"
         result.resp[3].dataResourceName == "opus title"
         result.resp[3].largeImageUrl == "/opus/opusId/profile/profileId/image/staged2.jpg?type=STAGED"
-        result.resp[3].thumbnailUrl == "/opus/opusId/profile/profileId/image/staged2.jpg?type=STAGED"
+        result.resp[3].thumbnailUrl == "/opus/opusId/profile/profileId/image/thumbnail/staged2.jpg?type=STAGED"
         result.resp[3].metadata == stagedImage2
         result.resp[3].type == ImageType.STAGED
     }
@@ -353,7 +353,7 @@ class ImageServiceSpec extends Specification {
         result.resp[1].imageId == "private2"
         result.resp[1].displayOption == "INCLUDE"
     }
-    
+
     def "retrieveImages should set the primary flag for biocache images"() {
         setup:
         profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", privateImages: []], opus: [:]]
