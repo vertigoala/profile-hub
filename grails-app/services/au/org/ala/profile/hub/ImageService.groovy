@@ -1,5 +1,7 @@
 package au.org.ala.profile.hub
 
+import grails.converters.JSON
+
 import static au.org.ala.profile.hub.Utils.*
 import au.org.ala.images.thumb.ImageThumbnailer
 import au.org.ala.images.thumb.ThumbDefinition
@@ -133,6 +135,7 @@ class ImageService {
         } else {
             // if the profile is not in draft mode, upload the image to the biocache immediately
             response = biocacheService.uploadImage(opusId, profile.profile.uuid, dataResourceId, file, metadata)
+            metadata.imageId = response?.resp?.images ? response.resp.images[0] : null
         }
 
         if (response?.statusCode == SC_OK) {
