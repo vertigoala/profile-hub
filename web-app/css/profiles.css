@@ -932,7 +932,7 @@ span.breadcrumb-dropdown {
     width: 40%
 }
 
-.btn-link:before {
+.toggle-link:before {
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
@@ -941,7 +941,7 @@ span.breadcrumb-dropdown {
     content: '\f103 ';
 }
 
-.btn-link.active:before {
+.toggle-link.active:before {
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;

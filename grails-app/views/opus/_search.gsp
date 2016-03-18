@@ -16,7 +16,7 @@
                 <button class="btn btn-default btn-lg" type="button" ng-click="searchCtrl.clearSearch()" title="Clear search"><span class="fa fa-trash"></span></button>
             </span>
         </div>
-        <button class="btn btn-link ignore-save-warning" ng-model="searchCtrl.showOptions" btn-checkbox>Options</button>
+        <button class="btn btn-link toggle-link ignore-save-warning" ng-model="searchCtrl.showOptions" btn-checkbox>Options</button>
         <div ng-show="searchCtrl.showOptions" class="well">
             <div class="checkbox">
                 <label for="includeArchived" class="inline-label">
