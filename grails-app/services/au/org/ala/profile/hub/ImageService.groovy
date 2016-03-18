@@ -65,7 +65,7 @@ class ImageService {
             if (file.exists()) {
                 String tileLocation = buildFilePath(dir, imageProperties.opusId, imageProperties.profileId, imageId) + separator + imageId + '_tiles/'
                 imageUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
-                thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
+                thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/thumbnail/${imageId}${extension}?type=${imageProperties.type}"
                 tileZoomLevels = new File(tileLocation)?.listFiles()?.size()
                 tileUrlPattern = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
 

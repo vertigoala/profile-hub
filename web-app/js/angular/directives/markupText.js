@@ -14,7 +14,7 @@ profileEditor.directive('markupText', function ($compile, util) {
     // matches elements like <img src="http://images.ala.org.au/image/proxyImageThumbnail?imageId&#61;8ee9969f-3122-43f1-a624-dc423e9b94bb" />
     var remoteImageRegex = new RegExp("<img(.*?)src=(.*?)\?imageId(=|(&#61;))(" + util.UUID_REGEX_PATTERN + ")(.*?)>", "gi");
     
-    var localImageReplacementPattern = "<a href=\"\" ng-click=\"imageCtrl.showMetadata(\'$3\', true)\" title=\"View details\"><img$1src=$2/image/$3$4$5></a>";
+    var localImageReplacementPattern = "<a href=\"\" ng-click=\"imageCtrl.showMetadata(\'$3\', true)\" title=\"View details\"><img$1src=$2/image/thumbnail/$3$4$5></a>";
     var remoteImageReplacementPattern = "<a href=\"\" ng-click=\"imageCtrl.showMetadata(\'$5\', false)\" title=\"View details\"><img$1src=$2imageId$3$5$6></a>";
 
     return function (scope, element, attrs) {
