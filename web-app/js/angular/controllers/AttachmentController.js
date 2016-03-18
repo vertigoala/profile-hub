@@ -24,7 +24,7 @@ profileEditor.controller('AttachmentController', function (profileService, messa
         );
     };
 
-    self.deleteAttachment = function(attachmentId) {
+    self.deleteAttachment = function (attachmentId) {
         var deleteConf = util.confirm("Are you sure you wish to delete this attachment? This operation cannot be undone.");
         deleteConf.then(function () {
             var future = profileService.deleteAttachment(self.opusId, self.profileId, attachmentId);
@@ -45,7 +45,7 @@ profileEditor.controller('AttachmentController', function (profileService, messa
             controllerAs: "attachmentUploadCtrl",
             size: "md",
             resolve: {
-                attachment: function() {
+                attachment: function () {
                     return {};
                 }
             }
@@ -63,7 +63,7 @@ profileEditor.controller('AttachmentController', function (profileService, messa
             controllerAs: "attachmentUploadCtrl",
             size: "md",
             resolve: {
-                attachment: function() {
+                attachment: function () {
                     return attachment;
                 }
             }
@@ -87,9 +87,14 @@ profileEditor.controller("AttachmentUploadController", function (profileService,
     self.opusId = util.getEntityId("opus");
     self.profileId = util.getEntityId("profile");
 
-    self.metadata = attachment || {};
+    var urlType = {key: "URL", title: "External URL"};
+    var pdfType = {key: "PDF", title: "PDF Document"};
+    self.types = [pdfType, urlType];
+
+    self.metadata = angular.isDefined(attachment) ? _.clone(attachment) : {};
     self.files = null;
     self.error = null;
+    self.type = angular.isDefined(attachment.url) && attachment.url ? urlType.key : pdfType.key;
 
     self.licences = null;
 
@@ -97,12 +102,12 @@ profileEditor.controller("AttachmentUploadController", function (profileService,
 
     profileService.getLicences().then(function (data) {
         self.licences = orderBy(data, "name");
-        self.metadata.licence = self.licences[0];
+        if (self.type != urlType.key) {
+            self.metadata.licence = self.licences[0].name;
+        }
     });
 
     self.ok = function () {
-        self.metadata.licence = self.metadata.licence.name;
-
         var url = "";
         if (self.profileId) {
             url = util.contextRoot() + "/opus/" + self.opusId + "/profile/" + self.profileId + "/attachment";
@@ -112,7 +117,7 @@ profileEditor.controller("AttachmentUploadController", function (profileService,
 
         Upload.upload({
             url: url,
-            file: self.metadata.uuid ? null : self.files[0],
+            file: self.metadata.uuid || self.type == urlType.key ? null : self.files[0],
             data: self.metadata
         }).success(function () {
             self.metadata = {};
@@ -126,5 +131,10 @@ profileEditor.controller("AttachmentUploadController", function (profileService,
 
     self.cancel = function () {
         $modalInstance.dismiss("cancel");
+    };
+
+    // reset the metadata when the attachment type changes to ensure we don't carry irrelevant metadata fields across types
+    self.typeChanged = function() {
+        self.metadata = angular.isDefined(attachment) ? _.clone(attachment) : {};
     };
 });

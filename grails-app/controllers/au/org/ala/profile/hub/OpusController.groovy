@@ -337,7 +337,7 @@ class OpusController extends BaseController {
             } else {
                 Map attachment = new JsonSlurper().parseText(request.getParameter("data"))
 
-                if (!attachment.uuid) {
+                if (!attachment.uuid && !attachment.url) {
                     attachment.filename = request.getFile("file").originalFilename
                 }
 
