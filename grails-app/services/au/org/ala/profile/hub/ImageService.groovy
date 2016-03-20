@@ -1,7 +1,5 @@
 package au.org.ala.profile.hub
 
-import grails.converters.JSON
-
 import static au.org.ala.profile.hub.Utils.*
 import au.org.ala.images.thumb.ImageThumbnailer
 import au.org.ala.images.thumb.ThumbDefinition
@@ -41,6 +39,10 @@ class ImageService {
     static final String separator = File.separator
     static final Integer THUMBNAIL_MAX_SIZE = 300
 
+    private getMetadataFromAlaImageService(String imageId) {
+        webService.get("${grailsApplication.config.images.service.url}/ws/image/${imageId}")
+    }
+
     /**
      * When you click on an image in the UI, this method retrieves the image
      * @param imageId
@@ -48,10 +50,10 @@ class ImageService {
      * @param includeFile
      * @return details required by ALA image plugin
      */
-    Map getImageDetails(String imageId, String contextPath, boolean includeFile = false) {
+    Map getImageDetails(String imageId, String contextPath, boolean localImage = true, boolean includeFile = false) {
         Map imageDetails = [:]
 
-        Map response = profileService.getImageMetadata(imageId)
+        Map response = localImage ? profileService.getImageMetadata(imageId) : getMetadataFromAlaImageService(imageId)
 
         if (response.statusCode == SC_OK) {
             Map imageProperties = response.resp as Map
@@ -115,6 +117,7 @@ class ImageService {
 
         def response
 
+        boolean imageIsStoredLocally
         if (profile.profile.privateMode && !profile.opus.keepImagesPrivate) {
             // if the collection is public and the profile is in draft mode, then stage the image: it will be
             // uploaded to the biocache when the profile's draft is released
@@ -124,6 +127,7 @@ class ImageService {
                 log.error("Error saving local staged image ", exception)
             }
             response = profileService.recordStagedImage(opusId, profileId, metadata)
+            imageIsStoredLocally = true
         } else if (profile.opus.keepImagesPrivate) {
             // if the admin has elected not to publish images, then store the image in the local image dir
             try {
@@ -132,14 +136,16 @@ class ImageService {
                 log.error("Error saving local private image ", exception)
             }
             response = profileService.recordPrivateImage(opusId, profileId, metadata)
+            imageIsStoredLocally = true
         } else {
             // if the profile is not in draft mode, upload the image to the biocache immediately
             response = biocacheService.uploadImage(opusId, profile.profile.uuid, dataResourceId, file, metadata)
             metadata.imageId = response?.resp?.images ? response.resp.images[0] : null
+            imageIsStoredLocally = false
         }
 
         if (response?.statusCode == SC_OK) {
-            response.resp = getImageDetails(metadata.imageId, contextPath)
+            response.resp = getImageDetails(metadata.imageId, contextPath, imageIsStoredLocally)
         }
 
         response

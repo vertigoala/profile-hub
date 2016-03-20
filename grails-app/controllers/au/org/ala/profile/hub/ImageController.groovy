@@ -17,7 +17,7 @@ class ImageController extends BaseController {
         if (!params.imageId) {
             badRequest "imageId is a required parameter"
         } else {
-            Map imageDetails = imageService.getImageDetails(params.imageId, request.contextPath)
+            Map imageDetails = imageService.getImageDetails(params.imageId, request.contextPath, true)
 
             if (imageDetails) {
                 if (params.callback) {
@@ -36,7 +36,7 @@ class ImageController extends BaseController {
         if (!params.imageId) {
             badRequest "imageId is a required parameter"
         } else {
-            Map imageDetails = imageService.getImageDetails(params.imageId, request.contextPath, true)
+            Map imageDetails = imageService.getImageDetails(params.imageId, request.contextPath, true, true)
             File file = imageDetails.file
 
             if (file) {

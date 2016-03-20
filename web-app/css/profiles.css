@@ -268,7 +268,7 @@ hr.comment-divider {
 /* ---- */
 
 /* Gallery styling */
-.imgCon, .imgConLarge, .imgConSmall. .imgConCarousel {
+.imgCon, .imgConLarge, .imgConSmall .imgConCarousel {
     display: inline-block;
     margin: 2px 4px 2px 0;
     width: 100%;
