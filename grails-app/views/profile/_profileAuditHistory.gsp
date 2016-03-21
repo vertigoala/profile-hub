@@ -43,6 +43,7 @@
 <script type="text/ng-template" id="auditComparisonPopup.html">
 <div class="modal-header">
     <h4 class="modal-title">Comparison</h4>
+    <close-modal close="compareCtrl.close()"></close-modal>
 </div>
 
 <div class="modal-body">

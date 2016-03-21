@@ -45,6 +45,7 @@
     <div ng-form="UploadForm">
         <div class="modal-header">
             <h4 class="modal-title">Add an attachment</h4>
+            <close-modal close="attachmentUploadCtrl.cancel()"></close-modal>
         </div>
 
         <div class="modal-body">

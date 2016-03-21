@@ -46,6 +46,7 @@ modules = {
         resource url:"js/angular/directives/missingImage.js"
         resource url:"js/angular/directives/markupText.js"
         resource url:"js/angular/directives/imageUpload.js"
+        resource url:"js/angular/directives/closeModal.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"

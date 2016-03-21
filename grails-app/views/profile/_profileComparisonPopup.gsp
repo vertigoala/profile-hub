@@ -1,6 +1,7 @@
 <script type="text/ng-template" id="profileComparisonPopup.html">
 <div class="modal-header">
     <h4 class="modal-title">Comparison</h4>
+    <close-modal close="compareCtrl.close()"></close-modal>
 </div>
 
 <div class="modal-body">

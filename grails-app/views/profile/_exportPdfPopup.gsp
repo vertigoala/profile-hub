@@ -3,6 +3,7 @@
 <div ng-form="PDFForm">
     <div class="modal-header">
         <h4 class="modal-title">Export as PDF</h4>
+        <close-modal close="pdfCtrl.cancel()"></close-modal>
     </div>
 
     <div class="modal-body">

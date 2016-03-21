@@ -96,6 +96,7 @@
     <script type="text/ng-template" id="editTermPopup.html">
         <div class="modal-header">
             <h4 class="modal-title">Edit vocabulary term</h4>
+            <close-modal close="vocabModalCtrl.cancel()"></close-modal>
         </div>
 
         <div class="modal-body">
@@ -120,6 +121,7 @@
     <script type="text/ng-template" id="removeTermPopup.html">
         <div class="modal-header">
             <h4 class="modal-title">Remove vocabulary term</h4>
+            <close-modal close="removeTermCtrl.cancel()"></close-modal>
         </div>
 
         <div class="modal-body">

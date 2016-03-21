@@ -3,6 +3,7 @@
 <div ng-form="ArchiveForm">
     <div class="modal-header">
         <h4 class="modal-title">Archive Profile</h4>
+        <close-modal close="archiveCtrl.cancel()"></close-modal>
     </div>
 
     <div class="modal-body">
@@ -44,6 +45,7 @@
 <div ng-form="RestoreForm">
     <div class="modal-header">
         <h4 class="modal-title">Restore Profile</h4>
+        <close-modal close="restoreCtrl.cancel()"></close-modal>
     </div>
 
     <div class="modal-body">

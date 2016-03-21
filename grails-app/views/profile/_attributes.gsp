@@ -280,6 +280,7 @@
 <script type="text/ng-template" id="supportingCollections.html">
 <div class="modal-header">
     <h4 class="modal-title">Usages in other collections</h4>
+    <close-modal close="attrModalCtrl.close()"></close-modal>
 </div>
 
 <div class="modal-body">

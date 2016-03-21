@@ -375,6 +375,10 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     background-position: center center;
 }
 
+.modal-title {
+    display: inline-block;
+}
+
 .side-menu .navbar-header {
     border: none;
 }

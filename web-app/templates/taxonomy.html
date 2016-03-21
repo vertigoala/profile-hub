@@ -119,6 +119,7 @@
 <script type="text/ng-template" id="showTaxonChildren.html">
     <div class="modal-header">
         <h4 class="modal-title">{{taxonChildrenCtrl.taxon.rank | capitalize}}: {{taxonChildrenCtrl.taxon.name | capitalize}}</h4>
+        <close-modal close="taxonChildrenCtrl.cancel()"></close-modal>
     </div>
 
     <div class="modal-body">
