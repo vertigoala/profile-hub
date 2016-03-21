@@ -157,16 +157,37 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
     self.showMetadata = function (image, local) {
         if (_.isString(image)) {
             if (angular.isDefined(self.images) && self.images.length > 0) {
-                image = _.find(self.images, function(image) { return image.imageId == image; });
+                image = _.find(self.images, function (image) {
+                    return image.imageId == image;
+                });
             } else {
                 var future = profileService.getImageMetadata(image, local);
                 future.then(function (imageDetails) {
                     imageDetails.imageId = image;
+                    // extract the metadata from the image service response and place it in a 'metadata' map so we have the
+                    // same format as for local images
+                    imageDetails.metadata = {};
+                    imageDetails.metadata.rightsHolder = imageDetails.rightsHolder;
+                    imageDetails.metadata.dateTaken = imageDetails.dateTaken;
+                    imageDetails.metadata.creator = imageDetails.creator;
+                    imageDetails.metadata.license = imageDetails.license;
+                    imageDetails.metadata.description = imageDetails.description;
+                    imageDetails.metadata.title = imageDetails.title;
+                    imageDetails.metadata.rights = imageDetails.rights;
+
                     showMetadataPopup(imageDetails);
-                }, function() {
+                }, function () {
                     messageService.alert("An error occurred while retrieving the image details");
                 });
             }
+        } else if (_.isUndefined(image.metadata)) {
+            var future = profileService.getImageMetadata(image.imageId, local);
+            future.then(function (imageDetails) {
+                imageDetails.imageId = image;
+                showMetadataPopup(imageDetails);
+            }, function() {
+                messageService.alert("An error occurred while retrieving the image details");
+            });
         } else {
             showMetadataPopup(image);
         }

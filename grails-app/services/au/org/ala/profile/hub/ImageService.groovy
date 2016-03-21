@@ -102,8 +102,22 @@ class ImageService {
                 imageProperties << [thumbnailUrl: imageProperties.imageUrl.replace("/original", "/thumbnail")]
             }
 
+            if (!imageProperties.metadata) {
+                // extract the metadata from the image service response and place it in a 'metadata' map so we have the
+                // same format as for local images
+                Map metadata = [:]
+                metadata.rightsHolder = imageProperties.rightsHolder
+                metadata.dateTaken = imageProperties.dateTaken
+                metadata.creator = imageProperties.creator
+                metadata.license = imageProperties.license
+                metadata.description = imageProperties.description
+                metadata.title = imageProperties.title
+                metadata.rights = imageProperties.rights
+                imageProperties.metadata = metadata
+            }
+
             imageDetails.putAll(imageProperties)
-            imageDetails << [imageId: imageId]
+            imageDetails.imageId = imageId
         }
 
         imageDetails
