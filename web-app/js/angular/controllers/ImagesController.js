@@ -2,7 +2,7 @@
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal) {
+profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal, config) {
     var self = this;
 
     // Flag to prevent reloading images during the update process.
@@ -193,8 +193,21 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 sleep: false
             });
 
+            var baseUrl = null;
+            if (_.isUndefined(image.type) || image.type.name == 'OPEN') {
+                if (angular.isDefined(image.thumbnailUrl)) {
+                    baseUrl = util.getBaseUrl(image.thumbnailUrl);
+                } else if (angular.isDefined(image.imageUrl)) {
+                    baseUrl = util.getBaseUrl(image.imageUrl);
+                } else {
+                    baseUrl = config.imageServiceUrl;
+                }
+            } else {
+                baseUrl = util.getBaseHref(true);
+            }
+
             imgvwr.viewImage('#imageViewer', image.imageId, {
-                imageServiceBaseUrl: _.isUndefined(image.type) || image.type.name == 'OPEN' ? util.getBaseUrl(image.imageUrl) : util.getBaseHref(true),
+                imageServiceBaseUrl: baseUrl,
                 addDrawer: false,
                 addSubImageToggle: false,
                 addCalibration: false,
