@@ -403,7 +403,7 @@ class ExportService {
                 outlineColour: 0x000000,
                 dpi          : 300,
                 scale        : "on",
-                baselayer    : "world",
+                baselayer    : "aus1",
                 fileName     : "occurrencemap.jpg",
                 format       : "jpg",
                 outline      : true,
