@@ -1,8 +1,7 @@
 import grails.util.Environment
-import grails.util.GrailsUtil
+import groovy.xml.StreamingMarkupBuilder
 import org.apache.catalina.connector.Connector
 import org.apache.catalina.startup.Tomcat
-import org.apache.coyote.ajp.AjpNioProtocol
 
 def ant = new AntBuilder()
 
@@ -51,5 +50,18 @@ eventConfigureTomcat = { Tomcat tomcat ->
         println ajpConnector.toString()
 
         println "### Ending enabling AJP connector"
+    }
+}
+
+eventWebXmlEnd = { tempFile ->
+    println "### Setting HTTP session timeout to 4 hours in ${webXmlFile}"
+    def root = new XmlSlurper().parse(webXmlFile)
+    root.appendNode {
+        'session-config' { 'session-timeout' (240) }
+    }
+
+    webXmlFile.text = new StreamingMarkupBuilder().bind {
+        mkp.declareNamespace("": "http://java.sun.com/xml/ns/javaee")
+        mkp.yield(root)
     }
 }
