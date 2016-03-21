@@ -82,7 +82,7 @@ class WebService {
         conn.setReadTimeout(readTimeout)
         def user = userService.getUser()
 
-        if (user) {
+        if (user && includeUserId) {
             conn.setRequestProperty(grailsApplication.config.app.http.header.userId as String, user.userId as String)
             conn.setRequestProperty("Cookie", "ALA-Auth=${URLEncoder.encode(user.userName, CHAR_ENCODING)}")
         }

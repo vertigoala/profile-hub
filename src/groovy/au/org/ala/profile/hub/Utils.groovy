@@ -40,6 +40,6 @@ class Utils {
     }
 
     static String getExtension(String fileName) {
-        fileName.substring(fileName.lastIndexOf("."))
+        fileName ? fileName.substring(fileName.lastIndexOf(".")) : ""
     }
 }

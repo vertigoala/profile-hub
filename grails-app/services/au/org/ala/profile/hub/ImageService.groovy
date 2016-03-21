@@ -40,7 +40,7 @@ class ImageService {
     static final Integer THUMBNAIL_MAX_SIZE = 300
 
     private getMetadataFromAlaImageService(String imageId) {
-        webService.get("${grailsApplication.config.images.service.url}/ws/image/${imageId}")
+        webService.get("${grailsApplication.config.uploaded.images.url}/ws/image/${imageId}", false, true)
     }
 
     /**
@@ -57,47 +57,53 @@ class ImageService {
 
         if (response.statusCode == SC_OK) {
             Map imageProperties = response.resp as Map
-            String dir = imageProperties.type as ImageType == ImageType.PRIVATE ? "${grailsApplication.config.image.private.dir}" : "${grailsApplication.config.image.staging.dir}"
-            String extension = getExtension(imageProperties.originalFileName)
-            String imageUrl
-            String thumbnailUrl
-            int tileZoomLevels
-            String tileUrlPattern
 
-            File file = getLocalImageFile(dir, imageProperties.opusId, imageProperties.profileId, imageId, extension)
+            if (localImage) {
+                String dir = imageProperties.type as ImageType == ImageType.PRIVATE ? "${grailsApplication.config.image.private.dir}" : "${grailsApplication.config.image.staging.dir}"
+                String extension = getExtension(imageProperties.originalFileName)
+                String imageUrl
+                String thumbnailUrl
+                int tileZoomLevels
+                String tileUrlPattern
 
-            if (file.exists()) {
-                String tileLocation = buildFilePath(dir, imageProperties.opusId, imageProperties.profileId, imageId) + separator + imageId + '_tiles/'
-                imageUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
-                thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/thumbnail/${imageId}${extension}?type=${imageProperties.type}"
-                tileZoomLevels = new File(tileLocation)?.listFiles()?.size()
-                tileUrlPattern = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
+                File file = getLocalImageFile(dir, imageProperties.opusId, imageProperties.profileId, imageId, extension)
 
-            } else {  //provide support for previously used file directory structure
-                file = getLocalImageFile(dir, imageProperties.profileId, imageId, extension)
-                imageUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
-                thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
-                tileZoomLevels = new File("${dir}/${imageProperties.profileId}/${imageId}_tiles/")?.listFiles()?.size()
-                tileUrlPattern = "${contextPath}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
+                if (file?.exists()) {
+                    String tileLocation = buildFilePath(dir, imageProperties.opusId, imageProperties.profileId, imageId) + separator + imageId + '_tiles/'
+                    imageUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
+                    thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/thumbnail/${imageId}${extension}?type=${imageProperties.type}"
+                    tileZoomLevels = new File(tileLocation)?.listFiles()?.size()
+                    tileUrlPattern = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
+
+                } else {  //provide support for previously used file directory structure
+                    file = getLocalImageFile(dir, imageProperties.profileId, imageId, extension)
+                    imageUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
+                    thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
+                    tileZoomLevels = new File("${dir}/${imageProperties.profileId}/${imageId}_tiles/")?.listFiles()?.size()
+                    tileUrlPattern = "${contextPath}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
+                }
+                BufferedImage bufferedImage = ImageIO.read(file)
+                // additional metadata about the physical image, required by the image client plugin
+                imageDetails = [
+                        success       : true,
+                        imageUrl      : imageUrl,
+                        thumbnailUrl  : thumbnailUrl,
+                        width         : bufferedImage.getWidth(),
+                        height        : bufferedImage.getHeight(),
+                        tileZoomLevels: tileZoomLevels,
+                        tileUrlPattern: tileUrlPattern
+                ]
+
+                if (includeFile) {
+                    imageDetails.bufferedImage = bufferedImage
+                    imageDetails.file = file
+                }
+            } else {
+                imageProperties << [thumbnailUrl: imageProperties.imageUrl.replace("/original", "/thumbnail")]
             }
-            BufferedImage bufferedImage = ImageIO.read(file)
-            // additional metadata about the physical image, required by the image client plugin
-            imageDetails = [
-                    imageId       : imageId,
-                    success       : true,
-                    imageUrl      : imageUrl,
-                    thumbnailUrl  : thumbnailUrl,
-                    width         : bufferedImage.getWidth(),
-                    height        : bufferedImage.getHeight(),
-                    tileZoomLevels: tileZoomLevels,
-                    tileUrlPattern: tileUrlPattern
-            ]
+
             imageDetails.putAll(imageProperties)
-
-            if (includeFile) {
-                imageDetails.bufferedImage = bufferedImage
-                imageDetails.file = file
-            }
+            imageDetails << [imageId: imageId]
         }
 
         imageDetails
