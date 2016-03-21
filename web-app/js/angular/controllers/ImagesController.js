@@ -202,6 +202,11 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 } else {
                     baseUrl = config.imageServiceUrl;
                 }
+
+                // make sure we're calling the httpS version of images.ala.org.au
+                if (baseUrl.indexOf("images.ala.org.au") != 0) {
+                    baseUrl = config.imageServiceUrl;
+                }
             } else {
                 baseUrl = util.getBaseHref(true);
             }
