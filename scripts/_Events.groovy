@@ -56,7 +56,7 @@ eventConfigureTomcat = { Tomcat tomcat ->
 eventWebXmlEnd = { tempFile ->
     println "### Setting HTTP session timeout to 4 hours in ${webXmlFile}"
     def root = new XmlSlurper().parse(webXmlFile)
-    root.appendNode {
+    root.'session-config'.replaceNode {
         'session-config' { 'session-timeout' (240) }
     }
 
