@@ -2,7 +2,7 @@
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal, config) {
+profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal) {
     var self = this;
 
     // Flag to prevent reloading images during the update process.
@@ -194,7 +194,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
             });
 
             imgvwr.viewImage('#imageViewer', image.imageId, {
-                imageServiceBaseUrl: _.isUndefined(image.type) || image.type.name == 'OPEN' ? config.imageServiceUrl : util.getBaseHref(true),
+                imageServiceBaseUrl: _.isUndefined(image.type) || image.type.name == 'OPEN' ? util.getBaseUrl(image.imageUrl) : util.getBaseHref(true),
                 addDrawer: false,
                 addSubImageToggle: false,
                 addCalibration: false,

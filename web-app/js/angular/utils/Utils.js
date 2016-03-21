@@ -198,6 +198,22 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Extract the base from the provided url. E.g. given https://blabla.com/foo, return https://blabla.com/
+     *
+     * @param url The full url to parse
+     * @returns {*} The base url (protocol, host, port) with a trailing slash if there is more to the url than just the base
+     */
+    function getBaseUrl(url) {
+        var baseUrl = null;
+
+        if (url.indexOf("http") == 0) {
+            baseUrl = url.replace(new RegExp("http(s?):\/\/(.*?)\/(.*)$", "ig"), "http$1://$2/");
+        }
+
+        return baseUrl;
+    }
+
+    /**
      * Retrieve the current user's name
      * @returns {*}
      */
@@ -357,6 +373,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     return {
         contextRoot: contextRoot,
         getBaseHref: getBaseHref,
+        getBaseUrl: getBaseUrl,
         getPathItem: getPathItem,
         getPathItemFromUrl: getPathItemFromUrl,
         toStandardPromise: toStandardPromise,
