@@ -43,7 +43,7 @@ class ProfileController extends BaseController {
                           footerText  : model.opus.footerText,
                           contact     : model.opus.contact,
                           displayMap  : profileService.hasMatchedName(model.profile)]
-                render view: "show", model: model
+                render view: "edit", model: model
             }
         }
     }
