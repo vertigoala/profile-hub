@@ -446,8 +446,8 @@ class ExportService {
             if (url.contains(remoteImageIdPrefix)) {
                 imageId = url.find(Utils.UUID_REGEX_PATTERN)
             } else {
-                // url must be in the form http://.../opus/id/profile/id/image/id.ext
-                int imageIdIndex = 9
+                // url must be in the form http://.../opus/id/profile/id/image/thumbnail/id.ext
+                int imageIdIndex = 10
                 String[] urlParts = url.split("/")
                 imageId = urlParts[imageIdIndex].substring(0, urlParts[imageIdIndex].indexOf("."))
             }
