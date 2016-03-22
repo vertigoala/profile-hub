@@ -84,10 +84,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {cache: true});
             future = util.toStandardPromise(future);
             future.then(function(data) {
+                // Only cache the profile data from the profie being viewed.  Profiles from supporting collections
+                // can also be loaded if the configuration allows.
+                if (util.getEntityId("opus") == opusId && util.getEntityId("profile") == profileId) {
                     // copy the content of the profile into the shared profile object to keep the object reference intact
                     sharedProfile.update(data.profile);
                     data.profile = sharedProfile;
-                });
+                }
+            });
             return future;
         },
 

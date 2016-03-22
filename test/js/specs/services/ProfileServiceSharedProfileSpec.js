@@ -12,14 +12,17 @@ describe("ProfileService shared profile tests", function () {
 
     beforeEach(module("profileEditor"));
 
-    beforeEach(inject(function (_profileService_, _$httpBackend_) {
+    beforeEach(inject(function (_profileService_, _$httpBackend_, $location) {
         service = _profileService_;
         http = _$httpBackend_;
+
+        $location.path("/opus/opusId1/profile/profileId1");
     }));
 
     var profile = {
         profileId:'p1',
         uuid:'u1',
+        opusId:'opusId1',
         attributes: [{
             title:'Common name',
             plainText:'a common name'
@@ -98,6 +101,23 @@ describe("ProfileService shared profile tests", function () {
         http.flush();
         http.verifyNoOutstandingExpectation();
         http.verifyNoOutstandingRequest();
+
+    });
+
+    it("should not cache profile data from supporting collections", function() {
+        var sharedProfile;
+        var otherProfile;
+        http.when("GET", "/path/opus/opusId1/profile/profileId1/json").respond({profile:profile});
+        service.getProfile("opusId1", "profileId1").then(function(data) {sharedProfile = data.profile;});
+
+
+        http.when("GET", "/path/opus/opusId2/profile/profileId1/json").respond({profile:{opusId:"opusId2", profileId:'profileId1'}, opus:{}});
+        service.getProfile("opusId2", "profileId1").then(function(data) {otherProfile = data.profile;});
+
+        http.flush();
+
+        expect(otherProfile.opusId).toEqual("opusId2");
+        expect(sharedProfile.opusId).toEqual("opusId1");
 
     });
 
