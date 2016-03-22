@@ -1,7 +1,7 @@
 /**
  * Angular service for interacting with the profile service application
  */
-profileEditor.service('profileService', function ($http, util, $cacheFactory, config, $log, $q) {
+profileEditor.service('profileService', function ($http, util, $cacheFactory, config, $log) {
 
     function clearCache() {
         $log.debug("Clearing $http cache");
@@ -17,19 +17,20 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
      */
     var sharedProfile = function() {
 
-        var nameRegex = /name/i;
         var otherNames = [];
 
-        function isName(title) {
-            return title.match(nameRegex);
+        function isName(attribute) {
+            return util.isNameAttribute(attribute);
         }
 
         function updateNames(attributes) {
             otherNames.splice(0, otherNames.length);
             angular.forEach(attributes, function (attribute) {
-                if (isName(attribute.title)) {
+                if (isName(attribute)) {
                     otherNames.push(attribute.plainText);
                     attribute.matchedAsName = true;
+                } else {
+                    attribute.matchedAsName = false;
                 }
             });
         }

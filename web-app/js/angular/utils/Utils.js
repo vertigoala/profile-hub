@@ -368,6 +368,18 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Determine if the provided attribute is considered to be a name attribute (e.g. common name, vernacular name, etc)
+     * @param attribute the attribute to test
+     * @returns {*} true if the attribute is to be treated as a name
+     */
+    function isNameAttribute(attribute) {
+        var nameRegex = /name/i;
+
+        var match = attribute.title.match(nameRegex);
+        return match != null && match.length > 0;
+    }
+
+    /**
      * Public API
      */
     return {
@@ -385,6 +397,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         currentUser: currentUser,
         toKey: toKey,
         formatScientificName: formatScientificName,
+        isNameAttribute: isNameAttribute,
 
         LAST: LAST,
         FIRST: FIRST,

@@ -144,7 +144,7 @@
 <div class="panel panel-default" id="browse_attributes_edit">
     <div class="panel-body">
         <label for="attributeTitle" class="screen-reader-label">Title</label>
-        <select id="attributeTitle" ng-show="attrCtrl.vocabularyStrict"
+        <select id="attributeTitle" ng-show="attrCtrl.vocabularyStrict" ng-change="attrCtrl.isName(attribute)"
                 ng-model="attribute.title" class="form-control attribute-header-input margin-bottom-1">
             <option value="">--- Select one ---</option>
             <option ng-repeat="(key, value) in attrCtrl.allowedVocabulary | orderBy:'toString()'" value="{{value}}"
@@ -153,6 +153,7 @@
         <input type="text"
                autocomplete="off"
                required
+               ng-change="attrCtrl.isName(attribute)"
                typeahead="attributeTitle for attributeTitle in attrCtrl.allowedVocabulary | filter: $viewValue"
                class="form-control attribute-header-input margin-bottom-1" ng-model="attribute.title" name="title"
                value="title" placeholder="Title..."
@@ -162,6 +163,7 @@
 
         <label for="attributeContent" class="screen-reader-label">Content</label>
 
+        <div ng-show="attribute.matchedAsName" class="small padding-bottom-1"><i class="fa fa-info-circle">&nbsp;</i>This attribute will be displayed below the profile name. Any formatting, images, links, etc will be ignored.</div>
         <textarea id="attributeContent" ng-model="attribute.text" name="attribute" ckeditor="richTextFullToolbar" required="required"></textarea>
 
         <div class="row"

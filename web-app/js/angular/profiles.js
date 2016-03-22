@@ -33,6 +33,13 @@ profileEditor.run(function ($rootScope, config) {
     // we need to use our own angular controllers/directives to manage images for the whole profile.
     CKEDITOR.config.extraAllowedContent = 'img(thumbnail,inline-attribute-image,small,medium,large,pull-left,pull-right)[src,class,alt]';
 
+    $rootScope.richTextNoFormatting = {
+        language: 'en-au',
+        'skin': 'moono',
+        removeButtons: '',
+        removePlugins: 'toolbar',
+        height: 50
+    };
     $rootScope.richTextSmall = {
         language: 'en-au',
         'skin': 'moono',

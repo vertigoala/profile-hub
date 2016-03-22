@@ -82,6 +82,10 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
             attribute.fromCollection && self.opus.allowCopyFromLinkedOpus && self.showSupportingData)
     };
 
+    self.isName = function(attribute) {
+        attribute.matchedAsName = util.isNameAttribute(attribute);
+    };
+
     self.showTitleGroup = function (title) {
         var show = false;
 
