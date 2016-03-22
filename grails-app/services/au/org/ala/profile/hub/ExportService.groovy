@@ -28,6 +28,7 @@ class ExportService {
 
     private static final int THREAD_COUNT = 10
     static transactional = false
+    static final String LOCAL_IMAGE_THUMBNAIL_REGEX = "http.*?/image/thumbnail/(${Utils.UUID_REGEX_PATTERN}).*"
 
     ProfileService profileService
     BiocacheService biocacheService
@@ -447,9 +448,9 @@ class ExportService {
                 imageId = url.find(Utils.UUID_REGEX_PATTERN)
             } else {
                 // url must be in the form http://.../opus/id/profile/id/image/thumbnail/id.ext
-                int imageIdIndex = 10
-                String[] urlParts = url.split("/")
-                imageId = urlParts[imageIdIndex].substring(0, urlParts[imageIdIndex].indexOf("."))
+                if (url =~ LOCAL_IMAGE_THUMBNAIL_REGEX) {
+                    imageId = url.replaceAll(LOCAL_IMAGE_THUMBNAIL_REGEX, '$1')
+                }
             }
 
             Map image = images.find { it.imageId == imageId }
@@ -477,12 +478,14 @@ class ExportService {
                 ]
                 Map right = [:]
                 right.putAll((i + 1 < images.size()) ? images[i + 1] : [:])
-                right << [
-                        imageNumber    : figureNumber++,
-                        scientificName : profileName,
-                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${right.imageId}",
-                        licenceIcon    : Utils.getCCLicenceIcon(right?.metadata?.licence)
-                ]
+                if (right) {
+                    right << [
+                            imageNumber    : figureNumber++,
+                            scientificName : profileName,
+                            imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${right.imageId}",
+                            licenceIcon    : Utils.getCCLicenceIcon(right?.metadata?.licence)
+                    ]
+                }
                 imagePairs << ["leftImage": left, "rightImage": right]
             }
         }
