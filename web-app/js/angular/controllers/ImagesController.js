@@ -165,15 +165,17 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 future.then(function (imageDetails) {
                     imageDetails.imageId = image;
                     // extract the metadata from the image service response and place it in a 'metadata' map so we have the
-                    // same format as for local images
-                    imageDetails.metadata = {};
-                    imageDetails.metadata.rightsHolder = imageDetails.rightsHolder;
-                    imageDetails.metadata.dateTaken = imageDetails.dateTaken;
-                    imageDetails.metadata.creator = imageDetails.creator;
-                    imageDetails.metadata.license = imageDetails.license;
-                    imageDetails.metadata.description = imageDetails.description;
-                    imageDetails.metadata.title = imageDetails.title;
-                    imageDetails.metadata.rights = imageDetails.rights;
+                    // same format as for local images, if it is not present
+                    if (_.isUndefined(imageDetails.metadata)) {
+                        imageDetails.metadata = {};
+                        imageDetails.metadata.rightsHolder = imageDetails.rightsHolder;
+                        imageDetails.metadata.dateTaken = imageDetails.dateTaken;
+                        imageDetails.metadata.creator = imageDetails.creator;
+                        imageDetails.metadata.license = imageDetails.license;
+                        imageDetails.metadata.description = imageDetails.description;
+                        imageDetails.metadata.title = imageDetails.title;
+                        imageDetails.metadata.rights = imageDetails.rights;
+                    }
 
                     showMetadataPopup(imageDetails);
                 }, function () {
