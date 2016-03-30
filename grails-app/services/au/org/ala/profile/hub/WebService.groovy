@@ -96,7 +96,7 @@ class WebService {
      * @param response The HttpServletResponse of the calling request: the response from the proxied request will be written to this object
      * @param url The URL of the service to proxy to
      */
-    Map proxyGetRequest(HttpServletResponse response, String url) {
+    void proxyGetRequest(HttpServletResponse response, String url) {
         HttpURLConnection conn = (HttpURLConnection) configureConnection(url, true)
         conn.useCaches = false
 
