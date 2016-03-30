@@ -33,8 +33,6 @@ class WebService {
      * @return [statusCode: int, resp: [:]] on success, or [statusCode: int, error: string] on error
      */
     Map get(String url) {
-        log.debug("Fetching data from ${url}")
-
         send(GET, url)
     }
 
@@ -127,7 +125,7 @@ class WebService {
     }
 
     private Map send(Method method, String url, Map data = null, List files = null) {
-        log.debug("${method} request to ${url}...")
+        log.debug("${method} request to ${url}")
 
         Map result = [:]
 
