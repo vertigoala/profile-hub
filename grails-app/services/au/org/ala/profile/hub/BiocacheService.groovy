@@ -60,7 +60,7 @@ class BiocacheService {
             dataResourceId = drIdMapping[dataResourceId]
         }
 
-        webService.doPost("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
+        webService.post("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
     }
 
     private static enc(String str) {

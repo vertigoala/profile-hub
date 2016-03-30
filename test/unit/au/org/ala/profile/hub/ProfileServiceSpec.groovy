@@ -45,7 +45,7 @@ class ProfileServiceSpec extends Specification {
         service.updateLinks("opusid", "profileId", "linkdata")
 
         then:
-        1 * webService.doPost(expectedUrl, [profileId: "profileId", links: "linkdata", userId: "user1", userDisplayName: "fred smith"])
+        1 * webService.post(expectedUrl, [profileId: "profileId", links: "linkdata", userId: "user1", userDisplayName: "fred smith"])
     }
 
     def "updateAuthorship() should construct the correct Profile Service URL"() {
@@ -56,7 +56,7 @@ class ProfileServiceSpec extends Specification {
         service.updateAuthorship("opusid", "profileId", [category: "author", text: "fred"])
 
         then:
-        1 * webService.doPost(expectedUrl, [category: "author", text: "fred"])
+        1 * webService.post(expectedUrl, [category: "author", text: "fred"])
     }
 
 
