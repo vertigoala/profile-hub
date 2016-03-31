@@ -1,6 +1,7 @@
 <div>
     <div class="modal-header">
         <h4 class="modal-title">Image details</h4>
+        <close-modal close="imageMetadataCtrl.cancel()"></close-modal>
     </div>
 
     <div class="modal-body" ng-cloak>
@@ -11,13 +12,6 @@
             </div>
         </div>
 
-        <!--<div class="row margin-bottom-1">-->
-            <!--<div class="col-sm-12">-->
-                <!--<div class="imgConLarge">-->
-                    <!--<img ng-src="{{ imageMetadataCtrl.image.type.name != 'OPEN' ? config.contextPath : '' }}{{ imageMetadataCtrl.image.largeImageUrl }}" class="thumbnail">-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
         <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.title">
             <div class="col-md-3">
                 <span class="output-label">Title</span>
@@ -95,7 +89,7 @@
                    href="{{config.biocacheRecordUrl}}{{imageMetadataCtrl.image.occurrenceId}}"
                    target="_blank" ng-if="imageMetadataCtrl.image.type.name == 'OPEN'">View the record in the ALA&nbsp;<span class="fa fa-external-link superscript small"></span></a>
             </div>
-                <button class="btn btn-default" ng-click="imageMetadataCtrl.cancel()">Cancel</button>
+                <button class="btn btn-default" ng-click="imageMetadataCtrl.cancel()">Close</button>
         </div>
     </div>
 </div>

@@ -34,6 +34,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/images" controller: "profile", action: [GET: "retrieveImages"]
         "/opus/$opusId/profile/$profileId/primaryImage" controller: "profile", action: [GET: "getPrimaryImage"]
         "/opus/$opusId/profile/$profileId/image/$imageId" controller: "profile", action: [GET: "getLocalImage"]
+        "/opus/$opusId/profile/$profileId/image/thumbnail/$imageId" controller: "profile", action: [GET: "retrieveLocalThumbnailImage"]
         "/opus/$opusId/profile/$profileId/image/$imageId/delete" controller: "profile", action: [DELETE: "deleteLocalImage"]
         "/opus/$opusId/profile/$profileId/image/$imageId/publish" controller: "profile", action: [POST: "publishPrivateImage"]
         "/opus/$opusId/profile/$profileId/file/$fileId" controller: "profile", action: [GET: "downloadTempFile"]
@@ -41,6 +42,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/lists" controller: "speciesList", action: [GET: "retrieveLists"]
         "/opus/$opusId/profile/$profileId/publication" controller: "profile", action: [GET: "retrievePublication"]
         "/opus/$opusId/profile/$profileId/publication/create" controller: "profile", action: [PUT: "savePublication"]
+        "/opus/$opusId/profile/$profileId/publication/$publicationId/file" controller: "profile", action: [GET: "proxyPublicationDownload"]
         "/opus/$opusId/profile/$profileId/publication/$publicationId/update" controller: "profile", action: [POST: "savePublication"]
         "/opus/$opusId/profile/$profileId/speciesProfile" controller: "profile", action: [GET: "retrieveSpeciesProfile"]
         "/opus/$opusId/profile/$profileId/featureList" controller: "profile", action: [GET: "getFeatureLists"]
@@ -88,6 +90,8 @@ class UrlMappings {
         "/opus/$opusId/report/$reportId" controller: "report", action: [GET: "loadReport"]
 
         "/opus/$opusId/statistics" controller: "statistics", action: [GET: "index"]
+        "/opus/$opusId/image/$filename" controller: "opus", action: [GET: "downloadImage", DELETE: "deleteImage"]
+        "/opus/$opusId/image" controller: "opus", action: [POST: "uploadImage", PUT: "uploadImage"]
 
         "/opus/$opusId/update" controller: "opus", action: [GET: "edit", POST: "updateOpus"]
         "/opus/$opusId/json" controller: "opus", action: [GET: "getJson"]
@@ -140,5 +144,6 @@ class UrlMappings {
         "/ws/getImageInfo/$imageId" controller: "image", action: [GET: "getImageInfo"]
         "/image/proxyImage/$imageId" controller: "image", action: [GET: "downloadImage"]
         "/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
+        "/opus/$opusId/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
     }
 }

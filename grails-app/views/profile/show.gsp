@@ -13,10 +13,6 @@
 <div class="row" ng-controller="ProfileController as profileCtrl"
      ng-init="profileCtrl.loadProfile()">
 
-    <g:if test="${edit}">
-        <keepalive></keepalive>
-    </g:if>
-
     <a name="top"></a>
 
     <div class="col-md-1 col-sm-1 col-xs-1 min-col">
@@ -24,14 +20,21 @@
     </div>
 
     <div class="col-md-11 col-sm-11 col-xs-11">
-        <ol class="breadcrumb" ng-cloak>
-            <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-            <li><a class="font-xxsmall"
-                   href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}">{{profileCtrl.opus.title}}</a>
+        <ol class="breadcrumb" ng-cloak ng-show="profileCtrl.opus">
+            <li><a class="fa fa-home"
+                   href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}" title="{{profileCtrl.opus.title}}"></a>
             </li>
             <li class="font-xxsmall active" ng-if="profileCtrl.profile.classification.length == 0">{{profileCtrl.isArchived() ? profileCtrl.profile.archivedWithName : profileCtrl.profile.scientificName}}</li>
             <span ng-if="profileCtrl.profile.classification.length > 0">
-                <taxonomy data="profileCtrl.profile.classification" current-name="profileCtrl.profile.scientificName" opus-id="profileCtrl.opusId" layout="horizontal" limit="4"></taxonomy>
+                <taxonomy data="profileCtrl.profile.classification"
+                          current-name="profileCtrl.profile.scientificName"
+                          opus-id="profileCtrl.opusId"
+                          layout="horizontal"
+                          limit="4"
+                          show-children="false"
+                          show-with-profile-only="true"
+                          show-infraspecific="true">
+                </taxonomy>
             </span>
         </ol>
 
@@ -61,7 +64,11 @@
                 </div>
             </p>
                 <p>
-                    Archived profiles will not appear in search results. Use the following URL to create a direct link to this profile:
+                    Archived profiles will only appear in the general search results if the 'Include archived profiles' option is selected.
+                    Archived profiles will NOT appear in the Browse, Quick Find, Taxonomic Tree or Subordinate Taxa lists.
+                </p>
+                <p>
+                    Use the following URL to create a direct link to this profile:
                     <br/>
                     ${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.uuid}}/profile/{{profileCtrl.profile.uuid}}
                 </p>
@@ -77,15 +84,15 @@
                     <a href="${grailsApplication.config.bie.base.url}/species/{{ profileCtrl.profile.guid }}"
                        ng-show="profileCtrl.profile.guid" title="View this taxon in the Atlas of Living Australia"
                        class="padding-left-1" target="_blank"><span class="fa fa-search">&nbsp;</span>ALA</a>
-                    <a href="${grailsApplication.config.nsl.service.url.prefix}/{{ profileCtrl.profile.nslNameIdentifier }}"
+                    <a href="${grailsApplication.config.nsl.base.url}services/apni-format/display/{{ profileCtrl.profile.nslNameIdentifier }}"
                        ng-show="profileCtrl.profile.nslNameIdentifier"
                        title="View this name in the National Species List" class="padding-left-1" target="_blank"><span
                             class="fa fa-search">&nbsp;</span>NSL <span
                             ng-show="profileCtrl.nslNameStatus">[{{profileCtrl.nslNameStatus}}]</span></a>
                 </div>
 
-                <button class="btn btn-link fa fa-edit" ng-click="profileCtrl.editName()"
-                        ng-show="!profileCtrl.readonly()">&nbsp;Edit name</button>
+                <a href="" ng-click="profileCtrl.editName()" class="padding-left-1 small"
+                   ng-show="!profileCtrl.readonly()"><span class="fa fa-edit">&nbsp;</span>Edit name</a>
             </div>
 
             <div class="col-md-3 text-right" ng-cloak>
@@ -100,16 +107,9 @@
             </div>
         </div>
 
-        <div class="row margin-bottom-1" ng-show="profileCtrl.commonNames.length > 0" ng-cloak>
+        <div class="row margin-bottom-1" ng-show="profileCtrl.profile.otherNames.length > 0" ng-cloak>
             <div class="col-md-12">
-                <h4 class="zero-margin">{{profileCtrl.commonNames.join(', ')}}</h4>
-            </div>
-        </div>
-
-        <div class="row margin-bottom-1"
-             ng-repeat="author in profileCtrl.profile.authorship | filter:{category: 'Author'}:true" ng-cloak>
-            <div class="col-md-12">
-                {{author.text}}
+                <h4 class="zero-margin">{{profileCtrl.profile.otherNames.join(', ')}}</h4>
             </div>
         </div>
 
@@ -160,8 +160,10 @@
                                     </g:if>
                                     <g:include controller="profile" action="publicationsPanel"
                                                params="[opusId: params.opusId]"/>
-                                    <g:include controller="profile" action="authorPanel"
-                                               params="[opusId: params.opusId]"/>
+                                    <g:if test="${edit}">
+                                        <g:include controller="profile" action="authorPanel"
+                                                   params="[opusId: params.opusId]"/>
+                                    </g:if>
                                     <g:if test="${params.isOpusReviewer}">
                                         <g:include controller="profile" action="commentsPanel"
                                                    params="[opusId: params.opusId]"/>
@@ -186,6 +188,13 @@
             </div>
         </g:if>
 
+
+        <div class="row margin-top-1" ng-show="!profileCtrl.readonly()">
+            <div class="col-md-12 padding-top-1">
+                <save-all class="pull-right"></save-all>
+            </div>
+        </div>
+
         <div class="row margin-top-1">
             <div class="col-md-12 col-xs-12 col-lg-12 small text-center" ng-cloak>
                 <p><span ng-show="profileCtrl.opus.copyrightText">&copy; {{ profileCtrl.opus.copyrightText }}.</span> <a
@@ -194,11 +203,21 @@
             </div>
         </div>
 
+        <g:if test="${!edit}">
+            <div class="row margin-top-1" ng-cloak ng-show="profileCtrl.profile.authorship.length > 0">
+                <a name="view_authorship"></a>
+                <div class="col-md-12 profile-contributor-text">
+                    Profile contributors: <span ng-repeat="contrib in profileCtrl.profile.authorship" ng-show="contrib.text">{{contrib.category | capitalize}}<span ng-show="contrib.category == 'Author'">(s)</span> - {{contrib.text}}<span ng-show="!$last">;&nbsp;</span></span>
+                </div>
+            </div>
+        </g:if>
+
         <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span
                 class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
 
         <g:render template="exportPdfPopup"/>
         <g:render template="profileComparisonPopup"/>
+
     </div>
 
 </div>

@@ -17,11 +17,21 @@
 
 
 <ul ng-if="layout != 'tree'"  class="{{ layout == 'horizontal' ? 'breadcrumb' : layout == 'tree' ? 'tree' : '' }}">
-    <li ng-repeat="taxon in taxonomy" ng-if="taxonomy.length >= limit && (limit < 0 || $index >= taxonomy.length - limit)">
+    <li ng-repeat="taxon in taxonomy" ng-if="limit < 0 || $index >= taxonomy.length - limit">
         <span ng-include src="'taxon.html'"></span>
     </li>
 </ul>
 
+
+<div ng-if="taxonomy[taxonomy.length - 1].rank == 'species' && showInfraspecific && layout != 'horizontal' && layout != 'tree' && taxonomy[taxonomy.length - 1].children.length > 0" class="padding-top-1">
+    <h4>Infraspecific taxa</h4>
+    <ul>
+        <li ng-repeat="profile in taxonomy[taxonomy.length - 1].children">
+            <a href="{{contextPath}}/opus/{{ opusId }}/profile/{{ profile.scientificName }}"
+               target="_self">{{profile.scientificName}}</a>
+        </li>
+    </ul>
+</div>
 
 <!-- template for each list item -->
 <script type="text/ng-template" id="taxon.html">
@@ -37,10 +47,23 @@
             <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name }}
         </span>
 
-        <span ng-if="showChildren && taxon.childCount > 0" class="padding-left-1">
+        <span ng-if="showChildren && layout != 'horizontal' && taxon.childCount > 0" class="padding-left-1">
             <a href="" class="fa fa-list-ul"
                title="Show members {{ taxon.childCount }} of {{ taxon.rank }} {{ taxon.name }}"
-               ng-click="fetchChildren(taxon.rank, taxon.name, taxon.childCount)"></a>
+               ng-click="showAllSubordinateTaxaPopup(taxon.rank, taxon.name, taxon.childCount)"></a>
+        </span>
+
+        <span ng-if="taxon.rank == 'species' && showInfraspecific && layout == 'horizontal' && $last && taxon.childCount > 0" class="btn-group breadcrumb-dropdown" dropdown>
+            <a href="" class="fa fa-list-ul dropdown-toggle" dropdown-toggle ng-click="showAllSubordinateTaxaList(taxon)"
+               title="Show members {{ taxon.childCount }} of {{ taxon.rank }} {{ taxon.name }}"></a>
+
+            <ul class="dropdown-menu" role="menu">
+                <span class="fa fa-spin fa-spinner" ng-show="taxon.loading"></span>
+                <li ng-repeat="profile in taxon.children">
+                    <a href="{{contextPath}}/opus/{{ opusId }}/profile/{{ profile.scientificName }}"
+                       target="_self">{{profile.scientificName}}</a>
+                </li>
+            </ul>
         </span>
     </span>
 
@@ -63,10 +86,10 @@
         </span>
 
         <div class="form-group" ng-form="filterForm" ng-if="!taxon.showingCurrentProfileOnly && (taxon.children.length >= pageSize || taxon.filter) && taxon.expanded">
-            <label for="filter" class="screen-reader-label">Filter by name starting with...</label>
+            <label for="filter" class="screen-reader-label">Filter by name containing...</label>
             <input id="filter" type="text"
                    class="form-control input-sm ignore-save-warning tree-input"
-                   placeholder="Name starting with..."
+                   placeholder="Name containing..."
                    ng-enter="loadSubordinateTaxa(taxon.offset, taxon, false)"
                    ng-change="filterChanged(taxon)"
                    name="filter"
@@ -96,6 +119,7 @@
 <script type="text/ng-template" id="showTaxonChildren.html">
     <div class="modal-header">
         <h4 class="modal-title">{{taxonChildrenCtrl.taxon.rank | capitalize}}: {{taxonChildrenCtrl.taxon.name | capitalize}}</h4>
+        <close-modal close="taxonChildrenCtrl.cancel()"></close-modal>
     </div>
 
     <div class="modal-body">

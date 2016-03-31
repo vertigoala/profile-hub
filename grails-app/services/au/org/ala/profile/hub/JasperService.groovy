@@ -16,16 +16,15 @@
 
  package au.org.ala.profile.hub
 
+import au.org.ala.profile.hub.reports.JasperExportFormat
+import au.org.ala.profile.hub.reports.JasperReportDef
 import groovy.sql.Sql
 import net.sf.jasperreports.engine.*
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource
-import net.sf.jasperreports.engine.data.JsonDataSource
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter
 import net.sf.jasperreports.engine.export.JRTextExporterParameter
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter
 import net.sf.jasperreports.engine.util.JRProperties
-import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
-import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 import org.springframework.core.io.Resource
 
 import java.lang.reflect.Field
@@ -34,10 +33,15 @@ import java.sql.Connection
 /**
  * Generates Jasper reports. Call one of the three generateReport methods to
  * get a ByteArrayOutputStream with the generated report.
+ *
+ * This is directly imported from the old Jasper plugin
+ *
+ * TODO Replace/remove all deprecated and unused code
+ *
  * @author Sebastian Hohns
  */
 
-class JasperNonTransactionalService {
+class JasperService {
 
     def dataSource
     def transactional = false

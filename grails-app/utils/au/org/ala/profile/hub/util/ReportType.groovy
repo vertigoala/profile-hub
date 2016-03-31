@@ -4,7 +4,8 @@ enum ReportType {
     MISMATCHED_NAME("mismatchedNames"),
     DRAFT_PROFILE("draftProfiles"),
     ARCHIVED_PROFILE("archivedProfiles"),
-    RECENT_CHANGE("recentChanges")
+    RECENT_CHANGE("recentChanges"),
+    RECENT_COMMENTS("recentComments")
 
     String id
 

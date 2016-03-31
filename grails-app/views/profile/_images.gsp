@@ -16,16 +16,16 @@
                     <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 margin-bottom-2"
                          ng-show="!image.excluded">
                         <div class="imgCon ">
-                            <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.largeImageUrl" title="View details">
-                                <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'OPEN'"
+                            <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.thumbnailUrl" title="View details">
+                                <img ng-src="{{image.thumbnailUrl}}" ng-if="image.thumbnailUrl && image.type.name == 'OPEN'"
                                      class="thumbnail"/>
-                                <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                     ng-if="image.largeImageUrl && image.type.name != 'OPEN'" class="thumbnail"/>
+                                <img ng-src="${request.contextPath}{{image.thumbnailUrl}}"
+                                     ng-if="image.thumbnailUrl && image.type.name != 'OPEN'" class="thumbnail"/>
                             </a>
 
                             <p class="caption">{{ image.dataResourceName }}</p>
 
-                            <p class="caption" ng-if="image.metadata.title">"{{ image.metadata.title }}"
+                            <p class="caption" ng-if="imageCtrl.imageCaption(image)">"{{ imageCtrl.imageCaption(image) }}"
                                 <span class="caption"
                                       ng-if="image.metadata.creator">by {{ image.metadata.creator }}<span
                                         ng-if="image.metadata.dateCreated">, {{ image.metadata.dateCreated | date: 'dd/MM/yyyy' }}</span>
@@ -57,26 +57,32 @@
         <div class="panel-body">
             <div class="col-sm-12">
                 <div class="row section-no-para" ng-if="imageCtrl.images.length > 0">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <h5>Image</h5>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <h5>Display on public view</h5>
                     </div>
 
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <h5>Use as the main image</h5>
                     </div>
 
+                    <div class="col-sm-4">
+                        <h5>Override caption</h5>
+                    </div>
+
+                    <div class="clearfix"></div>
+
                     <div ng-repeat="image in imageCtrl.images" class="row border-bottom margin-bottom-1">
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <div class="imgCon">
                                 <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.largeImageUrl" title="View details">
                                     <img ng-src="{{image.largeImageUrl}}" ng-if="image.largeImageUrl && image.type.name == 'OPEN'"
                                          class="thumbnail"/>
-                                    <img ng-src="${request.contextPath}{{image.largeImageUrl}}"
-                                         ng-if="image.largeImageUrl && image.type.name != 'OPEN'" class="thumbnail"/>
+                                    <img ng-src="${request.contextPath}{{image.thumbnailUrl}}"
+                                         ng-if="image.thumbnailUrl && image.type.name != 'OPEN'" class="thumbnail"/>
                                 </a>
                                 <span class="pill"
                                       ng-class="image.type.name == 'OPEN' ? 'pill-blue' : image.type.name == 'PRIVATE' ? 'pill-green' : 'pill-yellow'"
@@ -97,7 +103,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <div class="small center">
                                 <div class="btn-group">
                                     <label class="btn btn-xs" ng-class="image.displayOption == 'INCLUDE' ? 'btn-success' : 'btn-default'"
@@ -110,7 +116,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <div class="small center">
                                 <div class="btn-group">
                                     <label class="btn btn-xs"
@@ -124,6 +130,13 @@
                                            ng-click="imageCtrl.changePrimaryImage(image.imageId, ImageForm)"
                                            btn-radio="false">No</label>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="sr-only" for="{{image.imageId}}-caption">Caption</label>
+                                <input type="text" class="form-control" id="{{image.imageId}}-caption" ng-model="image.caption" placeholder="Alternative caption">
                             </div>
                         </div>
                     </div>
@@ -153,135 +166,14 @@
                     <g:elseif test="${grailsApplication.config.deployment_env.toLowerCase() != 'prod' && grailsApplication.config.deployment_env.toLowerCase() != 'production'}">
                         <span class="small">Image uploads are not available in ${grailsApplication.config.deployment_env}</span>
                     </g:elseif>
-                    <button class="btn btn-primary pull-right" ng-click="imageCtrl.saveProfile(ImageForm)" ng-disabled="!ImageForm.$dirty"><span
-                            ng-show="ImageForm.$dirty">*</span> Save</button>
+
+                    <save-button ng-click="imageCtrl.saveProfile(ImageForm)" form="ImageForm"></save-button>
                 </div>
             </div>
         </div>
 
         <script type="text/ng-template" id="imageUpload.html">
-        <div ng-form="UploadForm">
-            <div class="modal-header">
-                <h4 class="modal-title">Upload image</h4>
-            </div>
 
-            <div class="modal-body">
-                <alert class="alert-danger" ng-show="imageUploadCtrl.error">{{ imageUploadCtrl.error }}</alert>
-
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="file" class="col-sm-3 control-label">Image *</label>
-
-                        <div class="col-sm-9">
-                            <input id="file" type="file" ngf-select="" ng-model="imageUploadCtrl.files" name="file"
-                                   accept="image/*" alt="preview" title="Image preview" required="true"
-                                   ng-required="true">
-                        </div>
-                    </div>
-
-                    <div class="form-group" ng-show="imageUploadCtrl.files[0] != null">
-                        <label class="col-sm-3 control-label">Preview</label>
-
-                        <div class="col-sm-9">
-                            <div class="upload-image-preview">
-                                <img ngf-src="imageUploadCtrl.files[0]" class="thumbnail">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="title" class="col-sm-3 control-label">Title *</label>
-
-                        <div class="col-sm-9">
-                            <input id="title" type="text" ng-model="imageUploadCtrl.metadata.title" class="form-control"
-                                   required ng-required="true"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="dateCreated" class="col-sm-3 control-label">Date Taken</label>
-
-                        <div class="col-sm-9">
-                            <fallback-date-picker field-id="dateCreated" ng-model="imageUploadCtrl.metadata.dateCreated" />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="description" class="col-sm-3 control-label">Description</label>
-
-                        <div class="col-sm-9">
-                            <textarea id="description" ng-model="imageUploadCtrl.metadata.description"
-                                      class="form-control" rows="3" maxlength="500" ng-maxlength="500"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="owner" class="col-sm-3 control-label" required>Owner</label>
-
-                        <div class="col-sm-9">
-                            <input id="owner" type="text" ng-model="imageUploadCtrl.metadata.creator"
-                                   class="form-control"
-                                   placeholder="Photographer/illustrator"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="rights" class="col-sm-3 control-label" required>Rights</label>
-
-                        <div class="col-sm-9">
-                            <input id="rights" type="text" ng-model="imageUploadCtrl.metadata.rights"
-                                   class="form-control"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="rightsHolder" class="col-sm-3 control-label" required>Rights Holder</label>
-
-                        <div class="col-sm-9">
-                            <input id="rightsHolder" type="text" ng-model="imageUploadCtrl.metadata.rightsHolder"
-                                   class="form-control" placeholder="e.g. {{imageUploadCtrl.opus.title}}"/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label for="licence" class="col-sm-3 control-label" required>Licence *</label>
-
-                        <div class="col-sm-9">
-                            <select id="licence"
-                                    ng-options="licence.name for licence in imageUploadCtrl.licences | orderBy:'name'"
-                                    ng-model="imageUploadCtrl.metadata.licence" class="form-control" ng-required="true">
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <p class="small pull-right">
-                        Fields marked with an asterisk (*) are mandatory.
-                    </p>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="imageUploadCtrl.ok()"
-                        ng-disabled="UploadForm.$invalid">OK</button>
-                <button class="btn btn-default" ng-click="imageUploadCtrl.cancel()">Cancel</button>
-            </div>
-        </div>
         </script>
     </div>
 </div>

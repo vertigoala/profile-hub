@@ -5,7 +5,7 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
-                <h4 class="section-panel-heading">Acknowledgements</h4>
+                <h4 class="section-panel-heading">{{profileCtrl.acknowledgementsSectionTitle}}</h4>
             </div>
         </div>
     </div>
@@ -68,8 +68,7 @@
             <div class="col-md-12">
                 <button class="btn btn-default" ng-click="profileCtrl.addAuthorship(AuthorForm)"><i
                         class="fa fa-plus"></i> Add section</button>
-                <button class="btn btn-primary pull-right" ng-click="profileCtrl.saveAuthorship(AuthorForm)" ng-disabled="!AuthorForm.$dirty">
-                    <span ng-show="AuthorForm.$dirty">*</span> Save</button>
+                <save-button ng-click="profileCtrl.saveAuthorship(AuthorForm)" form="AuthorForm"></save-button>
             </div>
         </div>
     </div>

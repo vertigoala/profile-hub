@@ -51,14 +51,14 @@ describe("SearchController tests", function () {
         scope.searchCtrl.searchTerm = "test";
         scope.searchCtrl.search();
 
-        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", {offset: 0, pageSize: 25, nameOnly: false});
+        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", {includeArchived: false, offset: 0, pageSize: 25});
     });
 
     it("should use the provided offset and page size when search is invoked with values", function () {
         scope.searchCtrl.searchTerm = "test";
         scope.searchCtrl.search(6, 66);
 
-        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", {offset: 66, pageSize: 6, nameOnly: false});
+        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", {includeArchived: false, offset: 66, pageSize: 6});
     });
 
     it("should raise an alert message if the call to search fails", function () {
@@ -210,7 +210,7 @@ describe("SearchController tests", function () {
             }, {name: "item2", image: {status: "not-checked", type: {}}}]
         });
         expect(sessionStorage.searches.all.term).toEqual("test");
-        expect(sessionStorage.searches.all.options).toEqual({nameOnly: false, offset: 0, pageSize: 25});
+        expect(sessionStorage.searches.all.options).toEqual({includeArchived: false, offset: 0, pageSize: 25});
     });
 
     it("it should cache results against the opusId when there is an opus", function () {
@@ -230,7 +230,7 @@ describe("SearchController tests", function () {
             }, {name: "item2", image: {status: "not-checked", type: {}}}]
         });
         expect(sessionStorage.searches.opus1.term).toEqual("test");
-        expect(sessionStorage.searches.opus1.options).toEqual({nameOnly: false, offset: 0, pageSize: 25});
+        expect(sessionStorage.searches.opus1.options).toEqual({includeArchived: false, offset: 0, pageSize: 25});
     });
 
     it("should populate the search results from the cache when retrieveCachedOrDelegatedSearch is invoked (no opus)", function () {
@@ -318,36 +318,36 @@ describe("SearchController tests", function () {
     it("should invoke profileService.search with the delegated search term if a delegated Search exists when retrieveCachedOrDelegatedSearch is invoked (no opus)", function () {
         scope.searchCtrl.opusId = null;
 
-        sessionStorage.delegatedSearches = {all: "allSearch", opus1: "opusSearch"};
+        sessionStorage.delegatedSearches = {all: {term: "allSearch"}, opus1: {term: "opusSearch"}};
 
         scope.searchCtrl.retrieveCachedOrDelegatedSearch();
         scope.$apply();
 
         expect(profileService.search).toHaveBeenCalledWith(null, "allSearch", {
-            nameOnly: false,
+            includeArchived: false,
             offset: 0,
             pageSize: 25
         });
 
         // the delegated search should be deleted
-        expect(sessionStorage.delegatedSearches).toEqual({opus1: "opusSearch"});
+        expect(sessionStorage.delegatedSearches).toEqual({opus1: {term: "opusSearch"}});
     });
 
     it("should invoke profileService.search with the delegated search term if a delegated Search exists when retrieveCachedOrDelegatedSearch is invoked (no opus)", function () {
         scope.searchCtrl.opusId = "opus1";
 
-        sessionStorage.delegatedSearches = {all: "allSearch", opus1: "opusSearch"};
+        sessionStorage.delegatedSearches = {all: {term: "allSearch"}, opus1: {term: "opusSearch"}};
 
         scope.searchCtrl.retrieveCachedOrDelegatedSearch();
         scope.$apply();
 
         expect(profileService.search).toHaveBeenCalledWith("opus1", "opusSearch", {
-            nameOnly: false,
+            includeArchived: false,
             offset: 0,
             pageSize: 25
         });
 
         // the delegated search should be deleted
-        expect(sessionStorage.delegatedSearches).toEqual({all: "allSearch"});
+        expect(sessionStorage.delegatedSearches).toEqual({all: {term: "allSearch"}});
     });
 });

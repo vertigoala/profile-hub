@@ -58,6 +58,7 @@
     <script type="text/ng-template" id="createProfile.html">
     <div class="modal-header">
         <h4 class="modal-title">Create a new profile</h4>
+        <close-modal close="createProfileCtrl.cancel()"></close-modal>
     </div>
 
     <div class="modal-body">

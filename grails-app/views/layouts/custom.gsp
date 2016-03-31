@@ -1,3 +1,4 @@
+<%@ page import="grails.util.Environment" %>
 <!DOCTYPE html>
 <html lang="en" ng-app="profileEditor">
 <head>
@@ -20,6 +21,7 @@
     <style type="text/css">
     #banner-image {
         background-image: url(${bannerUrl ?: grailsApplication.config.images.service.url + '/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original'});
+        min-height: ${bannerHeight ?: 100}px;
     }
     </style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -71,8 +73,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <span class="navbar-brand">${pageTitle}</span>
-
+            <g:if test="${opus}">
+                <span class="navbar-brand">
+                    <a href="${request.contextPath}/opus/${opus.shortName ?: opus.uuid}" title="${opus.title}">${opus.title}</a>
+                </span>
+            </g:if>
+            <g:else>
+                <span class="navbar-brand">${pageTitle}</span>
+            </g:else>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -112,7 +120,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-4 col-lg-3 margin-bottom-2 site-logo" id="site-logo">
                     <img class="img-responsive customizable-logo-img"
-                         src="${logoUrl ?: 'http://root.ala.org.au/bdrs-core/files/download.htm?className=au.com.gaiaresources.bdrs.model.theme.Theme&id=217&fileName=processed/images/bdrs/atlasoflivingaust.png'}"
+                         src="${logoUrl ?: resource(dir: "images", file: "atlasoflivingaust.png")}"
                          alt="${logoAlt ?: 'logo'}"/>
                 </div>
 
@@ -199,7 +207,9 @@
         features: {publications: '${grailsApplication.config.feature.publications}',
                    imageUpload:'${grailsApplication.config.feature.feature.imageUpload}'},
         map: {mapId: '${grailsApplication.config.map.id}',
-              accessKey: '${grailsApplication.config.map.access.key}'}
+              accessKey: '${grailsApplication.config.map.access.key}'},
+        mainCssFile: '${resource(dir: "/css", file: "profiles.css")}',
+        bootstrapCssFile: '${resource(dir: "/thirdparty/bootstrap/css", file: "bootstrap3.3.4.min.css")}'
      });
 
 
@@ -233,12 +243,12 @@
 
             // handle CKE Text editors: the input field is a hidden textarea, followed by a number of divs and an iframe
             // with the rendered content. We need to highlight the nested div with the class 'cke_contents'
-            if ($field.is("textarea") && $field.next().hasClass("cke")) {
+            if (!$field.hasClass("ignore-save-warning") && $field.is("textarea") && $field.next().hasClass("cke")) {
                 $field.next().find(".cke_contents").addClass("show-dirty");
                 dirty = true;
             }
 
-            if ($field.attr("type") == "checkbox" || $field.attr("type") == "radio") {
+            if (!$field.hasClass("ignore-save-warning") && ($field.attr("type") == "checkbox" || $field.attr("type") == "radio")) {
                 $field.parent().addClass("show-dirty");
                 dirty = true;
             }

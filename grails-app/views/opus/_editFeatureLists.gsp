@@ -65,11 +65,7 @@
                     <button class="btn btn-default" ng-click="opusCtrl.addFeatureList()"><i
                             class="fa fa-plus"></i>  Add list</button>
                 </div>
-                <button class="btn btn-primary pull-right" ng-click="opusCtrl.saveFeatureLists(FeatureFrom)">
-                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="FeatureFrom.$dirty">*</span> Save
-                    </span>
-                    <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="opusCtrl.saveFeatureLists(FeatureFrom)" form="FeatureForm"></save-button>
             </div>
         </div>
     </div>

@@ -1,30 +1,35 @@
 <div ng-controller="AttributeEditor as attrCtrl" ng-init="attrCtrl.init('${edit}')">
-    <div class="row">
-        <div class="col-md-12 padding-bottom-1" ng-cloak>
-            <button ng-show="!attrCtrl.readonly" ng-click="attrCtrl.addAttribute()" class="btn btn-default"><i
-                    class="fa fa-plus"></i>&nbsp;Add attribute
-            </button>
+    <div ng-controller="ImagesController as imageCtrl">
+        <div class="row">
+            <div class="col-md-12 padding-bottom-1" ng-cloak>
+                <button ng-show="!attrCtrl.readonly" ng-click="attrCtrl.addAttribute()" class="btn btn-default"><i
+                        class="fa fa-plus"></i>&nbsp;Add attribute
+                </button>
 
-            <div class="small pull-right ignore-save-warning"
-                 ng-show="(attrCtrl.readonly && attrCtrl.opus.showLinkedOpusAttributes) || (!attrCtrl.readonly && attrCtrl.opus.allowCopyFromLinkedOpus)">
-                Show information from supporting collections:
-                <div class="btn-group">
-                    <label class="btn btn-xs" ng-class="attrCtrl.showSupportingData ? 'btn-success' : 'btn-default'"
-                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData()"
-                           btn-radio="true">On</label>
-                    <label class="btn btn-xs" ng-class="attrCtrl.showSupportingData ? 'btn-default' : 'btn-danger'"
-                           ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData()"
-                           btn-radio="false">Off</label>
+                <div class="small pull-right"
+                     ng-form="ShowSupportingAttributesForm" ng-show="(!attrCtrl.readonly && (attrCtrl.opus.showLinkedOpusAttributes || attrCtrl.opus.allowCopyFromLinkedOpus))">
+                    Show information from supporting collections:
+                    <div class="btn-group">
+                        <label class="btn btn-xs" ng-class="attrCtrl.showSupportingData ? 'btn-success' : 'btn-default'"
+                               ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData(ShowSupportingAttributesForm)"
+                               btn-radio="true">On</label>
+                        <label class="btn btn-xs" ng-class="attrCtrl.showSupportingData ? 'btn-default' : 'btn-danger'"
+                               ng-model="attrCtrl.showSupportingData" ng-change="attrCtrl.toggleShowSupportingData(ShowSupportingAttributesForm)"
+                               btn-radio="false">Off</label>
+                    </div>
                 </div>
+
+                <g:if test="${edit}">
+                    <!-- edit screen -->
+                    <ng-include src="'showEditableAttributeList.html'" ng-show="!attrCtrl.readonly"></ng-include>
+                </g:if>
+                <g:else>
+                    <!-- view screen -->
+                    <ng-include src="'showReadOnlyAttributeList.html'" ng-show="attrCtrl.readonly"></ng-include>
+                </g:else>
             </div>
         </div>
     </div>
-
-    <!-- view screen -->
-    <ng-include src="'showReadOnlyAttributeList.html'" ng-show="attrCtrl.readonly"></ng-include>
-
-    <!-- edit screen -->
-    <ng-include src="'showEditableAttributeList.html'" ng-show="!attrCtrl.readonly"></ng-include>
 </div>
 
 <!-- template for the editable view of an attribute list -->
@@ -87,11 +92,13 @@
 
 <!-- template for the content of a single read-only attribute, to be displayed either on the view or the edit page -->
 <script type="text/ng-template" id="readOnlyAttributeBody.html">
-<span ng-show="attrCtrl.showAttribute(attribute)">
-    <div ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
-        <div ng-bind-html="attribute.text | sanitizeHtml" class="display-text"></div>
+<div ng-show="attrCtrl.showAttribute(attribute)">
+    <div class="row" ng-class="(!$first && attrCtrl.readonly) ? 'padding-top-1' : ''">
+        <div class="col-md-12">
+            <div markup-text="attribute.text" class="display-text"></div>
+        </div>
 
-        <div ng-show="attrCtrl.opus.allowFineGrainedAttribution">
+        <div class="col-md-12" ng-show="attrCtrl.opus.allowFineGrainedAttribution">
             <div class="citation" ng-show="attribute.creators.length > 0">
                 Contributed by {{ attribute.creators.join(', ') }}
             </div>
@@ -102,7 +109,7 @@
         </div>
     </div>
 
-    <div class="annotation" ng-show="(attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.fromCollection || attribute.source || attribute.original">
+    <div class="row annotation padding-top-1" ng-show="(attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last) || attribute.fromCollection || attribute.source || attribute.original">
         <div class="col-md-6" ng-if="attribute.source || (attribute.original && !attribute.source)">
             <span ng-if="attribute.source">
                 Source: {{attribute.source}}
@@ -121,14 +128,14 @@
                 </span>
             </span>
         </div>
-        <span class="col-md-6 pull-right" ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
-            <span class="pull-right">
+        <div class="col-md-6 pull-right" ng-show="attrCtrl.readonly && !attribute.fromCollection && attrCtrl.opus.showLinkedOpusAttributes && $last">
+            <div class="pull-right">
                 <a href=""
                    ng-click="attrCtrl.viewInOtherCollections(attribute.title)">Show {{attribute.title}} in other collections</a>
-            </span>
-        </span>
+            </div>
+        </div>
     </div>
-</span>
+</div>
 </script>
 
 <!-- Template for the editable view of a single attribute -->
@@ -137,7 +144,7 @@
 <div class="panel panel-default" id="browse_attributes_edit">
     <div class="panel-body">
         <label for="attributeTitle" class="screen-reader-label">Title</label>
-        <select id="attributeTitle" ng-show="attrCtrl.vocabularyStrict"
+        <select id="attributeTitle" ng-show="attrCtrl.vocabularyStrict" ng-change="attrCtrl.isName(attribute)"
                 ng-model="attribute.title" class="form-control attribute-header-input margin-bottom-1">
             <option value="">--- Select one ---</option>
             <option ng-repeat="(key, value) in attrCtrl.allowedVocabulary | orderBy:'toString()'" value="{{value}}"
@@ -146,6 +153,7 @@
         <input type="text"
                autocomplete="off"
                required
+               ng-change="attrCtrl.isName(attribute)"
                typeahead="attributeTitle for attributeTitle in attrCtrl.allowedVocabulary | filter: $viewValue"
                class="form-control attribute-header-input margin-bottom-1" ng-model="attribute.title" name="title"
                value="title" placeholder="Title..."
@@ -154,6 +162,8 @@
                type="danger">You must select a value from the list of approved titles.</alert>
 
         <label for="attributeContent" class="screen-reader-label">Content</label>
+
+        <div ng-show="attribute.matchedAsName" class="small padding-bottom-1"><i class="fa fa-info-circle">&nbsp;</i>This attribute will be displayed below the profile name. Any formatting, images, links, etc will be ignored.</div>
         <textarea id="attributeContent" ng-model="attribute.text" name="attribute" ckeditor="richTextFullToolbar" required="required"></textarea>
 
         <div class="row"
@@ -256,12 +266,11 @@
         <div class="row">
             <span class="col-md-12">
                 <button class="btn btn-default" ng-click="attrCtrl.deleteAttribute($index)">Delete attribute</button>
-                <button class="btn btn-primary pull-right" ng-click="attrCtrl.saveAttribute($index, AttributeForm)"
-                        ng-disabled="!AttributeForm.$dirty || !attrCtrl.isValid(attribute.title) || !attribute.text">
-                    <span ng-show="!attrCtrl.saving" id="saved"><span
-                            ng-show="AttributeForm.$dirty || !attribute.uuid">*</span> Save</span>
-                    <span ng-show="attrCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="attrCtrl.saveAttribute($index, AttributeForm)"
+                             disabled="!AttributeForm.$dirty || !attrCtrl.isValid(attribute.title) || !attribute.text"
+                             dirty="AttributeForm.$dirty || !attribute.uuid"
+                             form="AttributeForm">
+                </save-button>
             </span>
         </div>
     </div>
@@ -273,6 +282,7 @@
 <script type="text/ng-template" id="supportingCollections.html">
 <div class="modal-header">
     <h4 class="modal-title">Usages in other collections</h4>
+    <close-modal close="attrModalCtrl.close()"></close-modal>
 </div>
 
 <div class="modal-body">
@@ -285,7 +295,7 @@
             <div class="col-sm-2"><strong>{{attribute.opusTitle}}</strong></div>
 
             <div class="col-sm-10">
-                <div ng-bind-html="attribute.text | sanitizeHtml" class="display-text"></div>
+                <div ng-bind-html="attribute.text" class="display-text"></div>
             </div>
         </div>
     </div>

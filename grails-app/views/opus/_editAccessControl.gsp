@@ -120,10 +120,7 @@
                             class="fa fa-plus"></i>  Add user</button>
                     <button class="btn btn-default" ng-click="userCtrl.reset(UserForm)">Reset</button>
                 </div>
-                <button class="btn btn-primary pull-right" ng-click="userCtrl.save(UserForm)">
-                    <span ng-show="!userCtrl.saving" id="saved"><span ng-show="UserForm.$dirty">*</span> Save</span>
-                    <span ng-show="userCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="userCtrl.save(UserForm)" form="UserForm"></save-button>
             </div>
 
             <div class="col-md-12" ng-show="userCtrl.accessControlTab == 'service'">
@@ -139,7 +136,8 @@
 
     <script type="text/ng-template" id="addEditUserPopup.html">
     <div class="modal-header">
-        <h4>{{addUserCtrl.isNewUser ? 'Add User' : 'Edit User'}}</h4>
+        <h4 class="modal-title">{{addUserCtrl.isNewUser ? 'Add User' : 'Edit User'}}</h4>
+        <close-modal close="addUserCtrl.cancel()"></close-modal>
     </div>
 
     <div class="modal-body" ng-form="UserForm">

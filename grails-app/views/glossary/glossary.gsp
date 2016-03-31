@@ -66,6 +66,7 @@
     <script type="text/ng-template" id="editItemPopup.html">
     <div class="modal-header">
         <h4 class="modal-title">Glossary Item</h4>
+        <close-modal close="glossaryModalCtrl.cancel()"></close-modal>
     </div>
 
     <div class="modal-body">

@@ -4,7 +4,8 @@
 profileEditor.factory('util', function ($location, $q, config, $modal, $window) {
 
     var KEYWORDS = ["create", "update", "delete", "search"];
-    var UUID_REGEX_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    var UUID_REGEX_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
+    var UUID_ONLY_REGEX = new RegExp("^" + UUID_REGEX_PATTERN + "$", "i");
     var LAST = "last";
     var FIRST = "first";
     var RANK = {
@@ -184,6 +185,35 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Take the current URL and return the hostname, port and (optionally) the context root.
+     *
+     * e.g. for a URL of http://hostname.com/contextPath/bla/bla, this method will return 'http://hostname.com/'
+     * when withContext = false, and 'http://hostname.com/contextPath' when withContext = true
+     *
+     * @param withContext True to include the context path in the return value
+     * @returns {string} the hostname, port and (optionally) the context root
+     */
+    function getBaseHref(withContext) {
+        return $location.protocol() + "://" + location.host + (withContext ? contextRoot() : "");
+    }
+
+    /**
+     * Extract the base from the provided url. E.g. given https://blabla.com/foo, return https://blabla.com/
+     *
+     * @param url The full url to parse
+     * @returns {*} The base url (protocol, host, port) with a trailing slash if there is more to the url than just the base
+     */
+    function getBaseUrl(url) {
+        var baseUrl = null;
+
+        if (url.indexOf("http") == 0) {
+            baseUrl = url.replace(new RegExp("http(s?):\/\/(.*?)\/(.*)$", "ig"), "http$1://$2/");
+        }
+
+        return baseUrl;
+    }
+
+    /**
      * Retrieve the current user's name
      * @returns {*}
      */
@@ -201,27 +231,31 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @return standard promise
      */
     function toStandardPromise(httpPromise) {
-        var defer = $q.defer();
+        if (httpPromise.success) {
+            var defer = $q.defer();
 
-        httpPromise.success(function (data) {
-            defer.resolve(data);
-        });
-        httpPromise.error(function (data, status, context, request) {
-            var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
-            console.log(msg);
-            defer.reject(msg);
-            if (status == 403) {
-                console.log("not authorised");
-                redirect(contextRoot() + "/notAuthorised");
-            }
-        });
+            httpPromise.success(function (data) {
+                defer.resolve(data);
+            });
+            httpPromise.error(function (data, status, context, request) {
+                var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
+                console.log(msg);
+                defer.reject(msg);
+                if (status == 403) {
+                    console.log("not authorised");
+                    redirect(contextRoot() + "/notAuthorised");
+                }
+            });
 
-        return defer.promise;
+            return defer.promise;
+        } else {
+            return httpPromise;
+        }
     }
 
     /**
      * Checks if the provided identifier matches the regex pattern for a UUID.
-     * @see UUID_REGEX_PATTERN
+     * @see UUID_ONLY_REGEX
      *
      * @param id the id to check
      * @returns {Array|{index: number, input: string}|*}
@@ -230,7 +264,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         var uuid = false;
 
         if (id && id != null && typeof id !== "undefined") {
-            var match = id.match(UUID_REGEX_PATTERN);
+            var match = id.match(UUID_ONLY_REGEX);
             uuid = match != null && match.length > 0;
         }
 
@@ -334,10 +368,24 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Determine if the provided attribute is considered to be a name attribute (e.g. common name, vernacular name, etc)
+     * @param attribute the attribute to test
+     * @returns {*} true if the attribute is to be treated as a name
+     */
+    function isNameAttribute(attribute) {
+        var nameRegex = /name/i;
+
+        var match = attribute.title.match(nameRegex);
+        return match != null && match.length > 0;
+    }
+
+    /**
      * Public API
      */
     return {
         contextRoot: contextRoot,
+        getBaseHref: getBaseHref,
+        getBaseUrl: getBaseUrl,
         getPathItem: getPathItem,
         getPathItemFromUrl: getPathItemFromUrl,
         toStandardPromise: toStandardPromise,
@@ -349,6 +397,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         currentUser: currentUser,
         toKey: toKey,
         formatScientificName: formatScientificName,
+        isNameAttribute: isNameAttribute,
 
         LAST: LAST,
         FIRST: FIRST,

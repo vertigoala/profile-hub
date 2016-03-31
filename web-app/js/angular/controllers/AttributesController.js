@@ -1,7 +1,7 @@
 /**
  * Attributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal, $scope) {
+profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal) {
     var self = this;
 
     self.attributes = [];
@@ -17,6 +17,28 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     var capitalize = $filter("capitalize");
     var orderBy = $filter("orderBy");
 
+    self.insertImage = function(callback) {
+        var popup = $modal.open({
+            templateUrl: util.getBaseHref(true) + "/static/templates/attributeImage.html",
+            controller: "AttributeImageController",
+            controllerAs: "attrImgCtrl",
+            size: "md",
+            resolve: {
+                opus: function () {
+                    return self.opus;
+                },
+                profile: function () {
+                    return self.profile;
+                }
+            }
+        });
+
+        popup.result.then(function (imageMetadata) {
+            var imageElement = "<img src='" + imageMetadata.thumbnailUrl + "' class='thumbnail inline-attribute-image " + imageMetadata.size + " "  + imageMetadata.position + "' alt='" + imageMetadata.title + "'/>";
+            callback(imageElement);
+        });
+    };
+
     self.init = function (edit) {
         self.readonly = edit != 'true';
 
@@ -29,6 +51,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.profile = data.profile;
                 self.opus = data.opus;
                 self.attributes = data.profile.attributes;
+                self.showSupportingData = data.profile.showLinkedOpusAttributes;
 
                 angular.forEach(self.attributes, function(attribute) {
                     navService.add(attribute.title, util.toKey(attribute.title), 'attribute');
@@ -52,11 +75,15 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     };
 
     self.showAttribute = function (attribute) {
-        return (self.readonly &&
+        return (self.readonly && !attribute.matchedAsName &&
             (!attribute.fromCollection ||
             (attribute.fromCollection && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
             || (!self.readonly &&
             attribute.fromCollection && self.opus.allowCopyFromLinkedOpus && self.showSupportingData)
+    };
+
+    self.isName = function(attribute) {
+        attribute.matchedAsName = util.isNameAttribute(attribute);
     };
 
     self.showTitleGroup = function (title) {
@@ -141,6 +168,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     self.showAudit = function (idx) {
         var future = profileService.getAuditHistory(self.attributes[idx].uuid);
         future.then(function (audit) {
+                audit = audit.items; // return value includes items and total to support pagination.
                 var d = new diff_match_patch();
 
                 for (var i = 0; i < audit.length - 1; i++) {
@@ -235,7 +263,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
 
         future.then(function (attribute) {
                 self.attributes[idx].saving = false;
-                messageService.success("Last saved " + new Date());
+                messageService.success(self.attributes[idx].title + " successfully updated.");
 
                 self.attributes[idx].uuid = attribute.attributeId;
                 self.attributes[idx].auditShowing = false;
@@ -323,7 +351,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
         });
     };
 
-    self.toggleShowSupportingData = function() {
+    self.toggleShowSupportingData = function(supportingAttributesForm) {
         angular.forEach(self.supportingAttributeTitles, function(title) {
             if (self.showSupportingData) {
                 navService.add(title, util.toKey(title));
@@ -331,6 +359,13 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 navService.remove(util.toKey(title));
             }
         });
+        profileService.updateProfile(self.opusId, self.profileId, {showLinkedOpusAttributes:self.showSupportingData}).then(
+            function() {
+                supportingAttributesForm.$setPristine();
+            },
+            function() {
+                messageService.alert("An error has occurred while updating the 'Show information from supporting collections' setting.");
+            });
     };
 
     self.parseInt = function(number) {

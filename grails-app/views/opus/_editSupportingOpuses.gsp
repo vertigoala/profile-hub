@@ -110,10 +110,7 @@
                     <button class="btn btn-default" ng-click="opusCtrl.addSupportingOpus()"><i
                             class="fa fa-plus"></i>  Add collection</button>
                 </div>
-                <button class="btn btn-primary pull-right" ng-click="opusCtrl.saveSupportingOpuses(OpusForm)">
-                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="OpusForm.$dirty">*</span> Save</span>
-                    <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="opusCtrl.saveSupportingOpuses(OpusForm)" form="OpusForm"></save-button>
             </div>
         </div>
     </div>

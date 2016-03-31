@@ -75,10 +75,7 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-primary pull-right" ng-click="opusCtrl.saveOpus(MapForm)">
-                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="MapForm.$dirty">*</span> Save</span>
-                    <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="opusCtrl.saveOpus(MapForm)" form="MapForm"></save-button>
             </div>
         </div>
     </div>

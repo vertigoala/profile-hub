@@ -1,3 +1,8 @@
+import grails.util.Environment
+import groovy.xml.StreamingMarkupBuilder
+import org.apache.catalina.connector.Connector
+import org.apache.catalina.startup.Tomcat
+
 def ant = new AntBuilder()
 
 eventCompileEnd = {
@@ -25,5 +30,38 @@ eventCompileEnd = {
 eventCreateWarStart = { warName, stagingDir ->
     ant.propertyfile(file: "${stagingDir}/WEB-INF/classes/application.properties") {
         entry(key:"app.build", value: new Date().format("dd/MM/yyyy HH:mm:ss"))
+    }
+}
+
+eventConfigureTomcat = { Tomcat tomcat ->
+    if (Environment.current == Environment.DEVELOPMENT) {
+        println "### Enabling AJP/1.3 connector"
+
+        def ajpConnector = new Connector("org.apache.coyote.ajp.AjpProtocol")
+        ajpConnector.port = 8009
+        ajpConnector.protocol = 'AJP/1.3'
+        ajpConnector.redirectPort = 8443
+        ajpConnector.enableLookups = false
+        ajpConnector.setProperty('redirectPort', '8443')
+        ajpConnector.setProperty('protocol', 'AJP/1.3')
+        ajpConnector.setProperty('enableLookups', 'false')
+        tomcat.service.addConnector ajpConnector
+
+        println ajpConnector.toString()
+
+        println "### Ending enabling AJP connector"
+    }
+}
+
+eventWebXmlEnd = { tempFile ->
+    println "### Setting HTTP session timeout to 4 hours in ${webXmlFile}"
+    def root = new XmlSlurper().parse(webXmlFile)
+    root.'session-config'.replaceNode {
+        'session-config' { 'session-timeout' (240) }
+    }
+
+    webXmlFile.text = new StreamingMarkupBuilder().bind {
+        mkp.declareNamespace("": "http://java.sun.com/xml/ns/javaee")
+        mkp.yield(root)
     }
 }

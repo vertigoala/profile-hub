@@ -33,10 +33,7 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-primary pull-right" ng-click="aboutCtrl.saveAboutHtml(AboutForm)"
-                        ng-disabled="AboutForm.$invalid">
-                    <span ng-show="AboutForm.$dirty">*</span> Save
-                </button>
+                <save-button ng-click="aboutCtrl.saveAboutHtml(AboutForm)" form="AboutForm"></save-button>
             </div>
         </div>
     </div>

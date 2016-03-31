@@ -1,7 +1,9 @@
 /**
  * Profile controller
  */
-profileEditor.controller('ProfileController', function (profileService, util, messageService, navService, config, $modal, $window, $filter, $sce, $location) {
+profileEditor.controller('ProfileController',
+    ['profileService', 'profileComparisonService', 'util', 'messageService', 'navService', 'config', '$modal', '$window', '$filter', '$sce', '$location',
+        function (profileService, profileComparisonService, util, messageService, navService, config, $modal, $window, $filter, $sce, $location) {
     var self = this;
 
     self.profile = null;
@@ -16,6 +18,15 @@ profileEditor.controller('ProfileController', function (profileService, util, me
 
     self.showNameEditControls = false;
     self.manuallyMatchedGuid = "";
+
+    self.audit = {
+        pageSize: 20,
+        data: [],
+        total: 0,
+        page:1
+    };
+
+    self.acknowledgementsSectionTitle = config.readonly ? 'Acknowledgements' : 'Authors and Acknowledgements';
 
     var orderBy = $filter("orderBy");
 
@@ -67,8 +78,9 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                             self.authorshipCount++;
                         }
                     });
-                    if (!self.readonly() || self.authorshipCount > 1) {
-                        navService.add("Acknowledgements", "authorship");
+
+                    if (!self.readonly() || self.authorshipCount > 0) {
+                        navService.add(self.acknowledgementsSectionTitle, "authorship");
                     }
 
                     if (!self.readonly()) {
@@ -78,7 +90,6 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                         navService.add("Taxonomy", "taxon");
                     }
 
-                    findCommonName();
                     loadVocabulary();
                     loadNslNameDetails();
 
@@ -98,7 +109,13 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             var nslPromise = profileService.getNslNameDetails(self.profile.nslNameIdentifier);
             nslPromise.then(function (data) {
                 self.nslNameStatus = data.name.status;
-                self.nslProtologue = data.name.primaryInstance[0].citationHtml;
+                if (!_.isUndefined(data.name.primaryInstance) && data.name.primaryInstance && data.name.primaryInstance.length > 0) {
+
+                    self.nslProtologue = data.name.primaryInstance[0].citationHtml;
+                    if (data.name.primaryInstance[0].page) {
+                        self.nslProtologue += " " + data.name.primaryInstance[0].page;
+                    }
+                }
             });
         }
     }
@@ -125,17 +142,6 @@ profileEditor.controller('ProfileController', function (profileService, util, me
                 });
             });
         }
-    }
-
-    function findCommonName() {
-        self.commonNames = [];
-
-        angular.forEach(self.profile.attributes, function (attribute) {
-            var title = attribute.title.toLowerCase();
-            if (title === "common name" || title === "common names" || title === "commonname" || title === "common-name") {
-                self.commonNames.push(attribute.plainText);
-            }
-        });
     }
 
     self.deleteProfile = function () {
@@ -374,20 +380,40 @@ profileEditor.controller('ProfileController', function (profileService, util, me
     self.toggleAudit = function () {
         self.showProfileAudit = !self.showProfileAudit;
 
-        if (self.showProfileAudit && !self.profileAudit) {
-            self.loading = true;
-            var future = profileService.getAuditHistory(self.profileId);
-
-            future.then(function (data) {
-                self.audit = data;
-                self.loading = false;
-            }, function () {
-                messageService.alert("An error occurred while retrieving the audit history");
-            })
+        if (self.showProfileAudit) {
+            self.loadAuditData();
         }
     };
 
-    self.showAuditComparison = function (index) {
+    self.loadAuditData = function() {
+        self.loading = true;
+        // Always get one more profile than the page size so the last comparison can be performed.
+        var future = profileService.getAuditHistory(self.profileId, self.audit.pageSize * (self.audit.page-1), self.audit.pageSize+1);
+        future.then(function (data) {
+            self.audit.total = data.total;
+            self.audit.data = self.filterAuditData(data.items);
+            self.loading = false;
+        }, function () {
+            messageService.alert("An error occurred while retrieving the audit history");
+        });
+    };
+
+    self.filterAuditData = function(data) {
+        var auditData = [];
+
+        for (var i=0; i<data.length-1; i++) {
+            var diff = profileComparisonService.compareProfiles(data[i].object, data[i+1].object);
+            if (diff.changed) {
+                auditData.push({left:data[i], right:data[i+1]});
+            }
+        }
+        if (data.length <= self.audit.pageSize) {
+            auditData.push({left:data[data.length-1], right:null});
+        }
+        return auditData;
+    };
+
+    self.showAuditComparison = function (auditItem) {
         $modal.open({
             templateUrl: "auditComparisonPopup.html",
             controller: "ComparisonPopupController",
@@ -395,10 +421,10 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             size: "lg",
             resolve: {
                 left: function () {
-                    return self.audit[index];
+                    return auditItem.left;
                 },
                 right: function () {
-                    return self.audit[index + 1];
+                    return auditItem.right;
                 }
             }
         });
@@ -483,7 +509,7 @@ profileEditor.controller('ProfileController', function (profileService, util, me
             messageService.alert("An error has occurred while restoring your profile.");
         });
     }
-});
+}]);
 
 /**
  * Controller for comparing profiles (to other profiles or to revision history entries)

@@ -34,6 +34,8 @@
                         ng-if="reportCtrl.selectedReport.id == 'archivedProfiles'"></ng-include>
             <ng-include src="'recentChanges.html'"
                         ng-if="reportCtrl.selectedReport.id == 'recentChanges'"></ng-include>
+            <ng-include src="'recentComments.html'"
+                        ng-if="reportCtrl.selectedReport.id == 'recentComments'"></ng-include>
         </div>
     </div>
 
@@ -178,6 +180,80 @@
                 </td>
                 <td>
                     {{ profile.editor | default:'Unknown' }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <pagination total-items="reportCtrl.reportData.recordCount"
+                    ng-change="reportCtrl.loadReport(reportCtrl.selectedReport.id, (reportCtrl.page - 1) * reportCtrl.pageSize)"
+                    ng-model="reportCtrl.page" max-size="10" class="pagination-sm"
+                    items-per-page="reportCtrl.pageSize"
+                    previous-text="Prev" boundary-links="true"
+                    ng-show="reportCtrl.reportData.recordCount > reportCtrl.pageSize"></pagination>
+    </div>
+    </script>
+
+    <script type="text/ng-template" id="recentComments.html">
+    <div class="">
+        <label class="control-label">Show comments from:</label>
+
+        <div class="btn-group" role="group" aria-label="List the most recent comments with the following options.">
+            <button type="button" class="btn btn-default btn-sm" ng-repeat="period in reportCtrl.periods"
+                    ng-click="reportCtrl.setPeriod(period)"
+                    ng-class="{active: reportCtrl.selectedPeriod.id == period.id}">{{ period.name }}</button>
+        </div>
+    </div>
+
+    <div class="margin-top-1" ng-show="reportCtrl.selectedPeriod.id == 'custom'">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label class="control-label" for="inputFromDate">Find comments made between</label>
+
+                        <fallback-date-picker field-id="inputFromDate" ng-required="true" ng-model="reportCtrl.dates.from" format="dd-MMMM-yyyy" fallback-options="reportCtrl.datePickerOptions" size="small" ></fallback-date-picker>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="inputToDate">and</label>
+
+                        <fallback-date-picker field-id="inputToDate" ng-required="true" ng-model="reportCtrl.dates.to" format="dd-MMMM-yyyy" fallback-options="reportCtrl.datePickerOptions" size="small" ></fallback-date-picker>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default btn-sm"
+                                ng-disabled="!reportCtrl.checkFormValid()"
+                                ng-click="reportCtrl.loadCustomDateReport()">
+                            <i class="glyphicon glyphicon-search"></i> Run report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped" ng-show="reportCtrl.reportData.records.length > 0">
+            <colgroup>
+                <col span="3">
+                <col class="width-40">
+            </colgroup>
+            <thead>
+                <tr><th>Scientific Name</th><th>Author</th><th>Date</th><th>Comment</th></tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="record in reportCtrl.reportData.records">
+                <td>
+                    <a href="${request.contextPath}/opus/{{ reportCtrl.opusId }}/profile/{{ record.scientificName }}"
+                       target="_blank" class="scientific-name">{{ record.scientificName }}</a>
+                </td>
+                <td>
+                    {{ record.editor | default:'Unknown' }}
+                </td>
+                <td>
+                    {{ record.lastUpdated | date:'dd/MM/yyyy h:mm a' }}
+                </td>
+                <td>
+                    {{ record.plainComment | words:20:ignoreSpaces }}
                 </td>
             </tr>
             </tbody>

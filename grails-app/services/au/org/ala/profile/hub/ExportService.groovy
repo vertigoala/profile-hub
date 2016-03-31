@@ -1,5 +1,7 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.hub.reports.JasperExportFormat
+import au.org.ala.profile.hub.reports.JasperReportDef
 import au.org.ala.profile.hub.util.HubConstants
 
 import grails.converters.JSON
@@ -9,8 +11,6 @@ import net.glxn.qrgen.image.ImageType
 import net.sf.jasperreports.engine.data.JsonDataSource
 import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
-import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
-import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.context.request.RequestContextHolder
 
@@ -28,6 +28,7 @@ class ExportService {
 
     private static final int THREAD_COUNT = 10
     static transactional = false
+    static final String LOCAL_IMAGE_THUMBNAIL_REGEX = "http.*?/image/thumbnail/(${Utils.UUID_REGEX_PATTERN}).*"
 
     ProfileService profileService
     BiocacheService biocacheService
@@ -36,7 +37,7 @@ class ExportService {
     EmailService emailService
     NslService nslService
     KeybaseService keybaseService
-    JasperNonTransactionalService jasperNonTransactionalService
+    JasperService jasperService
     def grailsApplication
 
     Map statusRegions = [
@@ -104,7 +105,7 @@ class ExportService {
                 ]
         )
 
-        return jasperNonTransactionalService.generateReport(reportDef).toByteArray()
+        return jasperService.generateReport(reportDef).toByteArray()
     }
 
     /**
@@ -225,40 +226,36 @@ class ExportService {
 
         // Retrieve image and get primary image. This has to be done always, regardless of the user choosing to display the images section or not
         String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-        model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, opus.imageSources.toArray().join(","), searchIdentifier, true)?.resp
 
-        List<Map> groupedImagesInPairs = []
-        def images = model.profile.images
-        images.eachWithIndex { image, i ->
-            if (model.profile.primaryImage == image.imageId) {
-                model.profile.primaryImage = image.largeImageUrl
-            }
-            if (i % 2 == 0) {
-                image << [
-                        imageNumber    : i + 1,
-                        scientificName : model.profile.scientificName,
-                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${image.imageId}",
-                        licenceIcon : image?.metadata?.license ? Utils.getCCLicenceIcon(image?.metadata?.license) : ""
-                ]
-                Map nextImage = (i + 1 < images.size()) ? images[i + 1] : [:]
-                nextImage << [
-                        imageNumber    : i + 2,
-                        scientificName : model.profile.scientificName,
-                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${nextImage.imageId}",
-                        licenceIcon : nextImage?.metadata?.license ? Utils.getCCLicenceIcon(nextImage?.metadata?.license) : ""
-                ]
-                groupedImagesInPairs << ["leftImage": image, "rightImage": nextImage]
-            }
+        List<String> imageSources = opus.imageSources ?: []
+        imageSources << opus.dataResourceUid
+
+        // incrementing number to be displayed against all images in the report (e.g. Fig 1,...)
+        int figureNumber = 1
+
+        model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, imageSources.join(","), searchIdentifier, true)?.resp
+        List<Map> images = model.profile.images
+
+        def replaceTitleWithOptionalCaption = { Map m -> m?.metadata?.title = m?.caption ? m?.caption : m?.metadata?.title }
+        images?.each {
+            replaceTitleWithOptionalCaption(it)
         }
-
-        model.profile.images = groupedImagesInPairs
 
         // Format profile attributes text
         if (params.attributes) {
             model.profile.attributes.each { attribute ->
                 attribute.text = convertTagsForJasper(sanitizeHtml(formatAttributeText(attribute.text, attribute.title)))
+                List<Map> attributeImages = extractImagesFromAttributeText(attribute.text, images)
+
+                Map pairs = groupImagesIntoPairs(model.profile.scientificName, attributeImages, figureNumber)
+                attribute.images = pairs.imagePairs
+                figureNumber = pairs.figureNumber
             }
         }
+
+        model.profile.primaryImage = images.find { it.imageId == model.profile.primaryImage }
+
+        model.profile.images = groupImagesIntoPairs(model.profile.scientificName, images, figureNumber).imagePairs
 
         // Retrieve and format profile statuses
         if (params.status) {
@@ -318,7 +315,7 @@ class ExportService {
         // Calculate version number
         if (params.printVersion) {
             model.profile.version = model.profile.publications?.size() > 0 ? model.profile.publications.collect {
-                it.version as Integer
+                (it.version ?: 1) as Integer
             }.max() + 1 : 1
         }
 
@@ -407,7 +404,7 @@ class ExportService {
                 outlineColour: 0x000000,
                 dpi          : 300,
                 scale        : "on",
-                baselayer    : "world",
+                baselayer    : "aus1",
                 fileName     : "occurrencemap.jpg",
                 format       : "jpg",
                 outline      : true,
@@ -437,6 +434,64 @@ class ExportService {
 
         return colour;
     };
+
+    List<Map> extractImagesFromAttributeText(String text, List<Map> images) {
+        List attributeImages = []
+
+        List<String> imageUrls = text.findAll("<img.*/>")?.collect { it.findAll("https?[^\"]*") }?.flatten()
+        imageUrls.each { url ->
+            String imageId
+
+            String remoteImageIdPrefix = "imageId"
+
+            if (url.contains(remoteImageIdPrefix)) {
+                imageId = url.find(Utils.UUID_REGEX_PATTERN)
+            } else {
+                // url must be in the form http://.../opus/id/profile/id/image/thumbnail/id.ext
+                if (url =~ LOCAL_IMAGE_THUMBNAIL_REGEX) {
+                    imageId = url.replaceAll(LOCAL_IMAGE_THUMBNAIL_REGEX, '$1')
+                }
+            }
+
+            Map image = images.find { it.imageId == imageId }
+
+            if (image) {
+                attributeImages << image
+            }
+        }
+
+        attributeImages
+    }
+
+    Map groupImagesIntoPairs(String profileName, List<Map> images, int figureNumber) {
+        List<Map> imagePairs = []
+
+        images.eachWithIndex { image, i ->
+            if (i % 2 == 0) {
+                Map left = [:]
+                left.putAll(image)
+                left << [
+                        imageNumber    : figureNumber++,
+                        scientificName : profileName,
+                        imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${left.imageId}",
+                        licenceIcon    : Utils.getCCLicenceIcon(left?.metadata?.licence)
+                ]
+                Map right = [:]
+                right.putAll((i + 1 < images.size()) ? images[i + 1] : [:])
+                if (right) {
+                    right << [
+                            imageNumber    : figureNumber++,
+                            scientificName : profileName,
+                            imageDetailsUrl: "${grailsApplication.config.images.service.url}/image/details?imageId=${right.imageId}",
+                            licenceIcon    : Utils.getCCLicenceIcon(right?.metadata?.licence)
+                    ]
+                }
+                imagePairs << ["leftImage": left, "rightImage": right]
+            }
+        }
+
+        [imagePairs: imagePairs, figureNumber: figureNumber]
+    }
 
     /**
      * Removes all XML/HTML tags that are semantic and not for text formatting

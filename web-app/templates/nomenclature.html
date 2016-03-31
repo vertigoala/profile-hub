@@ -28,8 +28,7 @@
 
     <!-- readonly view -->
     <div class="col-md-12 nomenclature" ng-show="selectedReference && readonly">
-        <a href="" class="btn btn-link btn-sm fa" ng-click="toggleSynonomy()"
-           ng-class="showSynonomy ? 'fa-angle-double-up' : 'fa-angle-double-down'">&nbsp;
+        <a href="" class="btn btn-link btn-sm" ng-click="toggleSynonomy()"><span class="fa" ng-class="showSynonomy ? 'fa-angle-double-up' : 'fa-angle-double-down'"></span>&nbsp;
             <div class="concept" data-ng-bind-html="selectedReference.formattedName | sanitizeHtml"></div>
         </a>
 

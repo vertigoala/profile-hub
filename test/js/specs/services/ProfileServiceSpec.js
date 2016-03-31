@@ -211,9 +211,15 @@ describe("ProfileService tests", function () {
     });
 
     it("should invoke the taxon level search service on the context root when profileSearchByTaxonLevel is invoked", function() {
-        service.profileSearchByTaxonLevel("opusId", "taxonName", 10, 5);
+        service.profileSearchByTaxonLevel("opusId", "taxonName", undefined, 10, 5);
 
         http.expectGET("/someContext/profile/search/taxon/level?opusId=opusId&taxon=taxonName&max=10&offset=5").respond("bla");
+    });
+
+    it("should invoke the taxon level search service on the context root with the provided filter term when profileSearchByTaxonLevel is invoked", function() {
+        service.profileSearchByTaxonLevel("opusId", "taxonName", "something", 10, 5);
+
+        http.expectGET("/someContext/profile/search/taxon/level?opusId=opusId&taxon=taxonName&max=10&offset=5&filter=something").respond("bla");
     });
 
     it("should invoke the taxon level and name search service on the context root when profileSearchByTaxonLevelAndName is invoked", function() {

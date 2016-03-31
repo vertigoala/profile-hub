@@ -5,8 +5,8 @@
             <span class="status small" ng-class="profileCtrl.profile.nslNameIdentifier ? 'green' : 'red'"title="The name has{{ profileCtrl.profile.nslNameIdentifier ? '' : ' not' }} been matched against the NSL">NSL</span>
         </div>
         <div class="pull-right">
-            <button class="btn btn-link fa fa-close" ng-click="profileCtrl.editName()"
-                    ng-show="!profileCtrl.readonly()">&nbsp;Close</button>
+            <a href="" class="" ng-click="profileCtrl.editName()"
+                    ng-show="!profileCtrl.readonly()"><span class="fa fa-close">&nbsp;</span>Close</a>
         </div>
     </div>
 

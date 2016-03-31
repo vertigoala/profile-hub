@@ -1,8 +1,8 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.profile.analytics.Analytics
-import au.org.ala.profile.security.Secured
 import au.org.ala.profile.security.PrivateCollectionSecurityExempt
+import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
 import groovy.json.JsonSlurper
@@ -41,7 +41,8 @@ class ProfileController extends BaseController {
                           glossaryUrl : getGlossaryUrl(model.opus),
                           aboutPageUrl: getAboutUrl(model.opus, model.profile),
                           footerText  : model.opus.footerText,
-                          contact     : model.opus.contact]
+                          contact     : model.opus.contact,
+                          displayMap  : profileService.hasMatchedName(model.profile)]
                 render view: "show", model: model
             }
         }
@@ -62,7 +63,8 @@ class ProfileController extends BaseController {
                           glossaryUrl : getGlossaryUrl(profile.opus),
                           aboutPageUrl: getAboutUrl(profile.opus, profile.profile),
                           footerText  : profile.opus.footerText,
-                          contact     : profile.opus.contact]
+                          contact     : profile.opus.contact,
+                          displayMap  : profileService.hasMatchedName(model.profile)]
                 render view: "show", model: model
             }
         }
@@ -287,7 +289,7 @@ class ProfileController extends BaseController {
             badRequest "opusId, profileId and imageSources are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
-            boolean readonlyView = params.readonlyView?.toBoolean()
+            boolean readonlyView = params.getBoolean('readonlyView', true)
 
             def response = imageService.retrieveImages(params.opusId, params.profileId, latest, params.imageSources, params.searchIdentifier, false, readonlyView)
 
@@ -299,9 +301,7 @@ class ProfileController extends BaseController {
     def uploadImage() {
         if (!params.opusId || !params.profileId || !params.dataResourceId || !params.title) {
             badRequest "opusId, dataResourceId, title and profileId are mandatory fields"
-        }
-
-        if (request instanceof DefaultMultipartHttpServletRequest) {
+        } else if (request instanceof DefaultMultipartHttpServletRequest) {
             MultipartFile file = ((DefaultMultipartHttpServletRequest) request).getFile("file")
 
             List<Map> multimedia = [
@@ -318,7 +318,7 @@ class ProfileController extends BaseController {
             ]
             Map metadata = [multimedia: multimedia]
 
-            def response = imageService.uploadImage(params.opusId, params.profileId, request.getParameter("dataResourceId"), metadata, file)
+            def response = imageService.uploadImage(request.contextPath, params.opusId, params.profileId, request.getParameter("dataResourceId"), metadata, file)
 
             handle response
         } else {
@@ -350,17 +350,36 @@ class ProfileController extends BaseController {
         }
     }
 
+    def retrieveLocalThumbnailImage() {
+        if (!params.type) {
+            badRequest "type is a required parameter"
+        } else {
+            try {
+                ImageType type = params.type as ImageType
+                //NB this imageId param already has the file extension on it, really the file name on disk
+                if (type == ImageType.STAGED) {
+                    displayLocalImage("${grailsApplication.config.image.staging.dir}/", params.opusId, params.profileId, params.imageId, true)
+                } else if (type == ImageType.PRIVATE) {
+                    displayLocalImage("${grailsApplication.config.image.private.dir}/", params.opusId, params.profileId, params.imageId, true)
+                }
+            } catch (IllegalArgumentException e) {
+                log.warn(e)
+                badRequest "Invalid image type ${params.type}"
+            }
+        }
+    }
+    //We want the full size image
     def getLocalImage() {
         if (!params.type) {
             badRequest "type is a required parameter"
         } else {
             try {
                 ImageType type = params.type as ImageType
-
+                //NB this imageId param already has the file extension on it, really the file name on disk
                 if (type == ImageType.STAGED) {
-                    downloadFile("${grailsApplication.config.image.staging.dir}/${params.profileId}", params.imageId)
+                    displayLocalImage("${grailsApplication.config.image.staging.dir}/", params.opusId, params.profileId, params.imageId, false)
                 } else if (type == ImageType.PRIVATE) {
-                    downloadFile("${grailsApplication.config.image.private.dir}/${params.profileId}", params.imageId)
+                    displayLocalImage("${grailsApplication.config.image.private.dir}/", params.opusId, params.profileId, params.imageId, false)
                 }
             } catch (IllegalArgumentException e) {
                 log.warn(e)
@@ -374,6 +393,37 @@ class ProfileController extends BaseController {
         downloadFile("${grailsApplication.config.temp.file.location}", params.fileId)
     }
 
+    //In the sense that the private or staged images are fetched from disk for display on the profile page
+    //note we are supporting 2 possible file locations for backwards compatibility
+    private displayLocalImage(String path, String collectionId, String profileId, String fileName, Boolean thumbnail) {
+        if (!fileName) {
+            badRequest "fileId is a required parameter"
+        } else {
+            File file
+            String imageId = fileName.substring(0, fileName.lastIndexOf("."))
+            if (thumbnail) {
+                String thumbnailName = makeThumbnailName(fileName)
+                file = new File("${path}/${collectionId}/${profileId}/${imageId}/${imageId}_thumbnails/${thumbnailName}")
+                if (!file.exists()) {  //use the image if there is no thumbnail
+                    file = new File("${path}/${collectionId}/${profileId}/${imageId}/${fileName}")
+                }
+            } else {
+                file = new File("${path}/${collectionId}/${profileId}/${imageId}/${fileName}")
+            }
+
+            if (!file.exists()) {  //support for version 1 file locations
+                file = new File("${path}/${profileId}/${fileName}")
+            }
+            if (!file.exists()) {
+                notFound "The requested file could not be found"
+            } else {
+                response.setHeader("Content-disposition", "attachment;filename=${fileName}")
+                response.setContentType(Utils.getContentType(file))
+                file.withInputStream { response.outputStream << it }
+            }
+        }
+    }
+
     private downloadFile(String path, String filename) {
         if (!filename) {
             badRequest "fileId is a required parameter"
@@ -384,23 +434,16 @@ class ProfileController extends BaseController {
                 notFound "The requested file could not be found"
             } else {
                 response.setHeader("Content-disposition", "attachment;filename=${filename}")
-                response.setContentType(getContentType(file))
-                response.outputStream << file.newInputStream()
+                response.setContentType(Utils.getContentType(file))
+                file.withInputStream { response.outputStream << it }
             }
         }
     }
 
-    private getContentType(File file) {
-        String extension = file.getName().substring(file.getName().lastIndexOf("."))
-
-        List images = ["jpg", "jpeg", "gif", "tiff", "png", "bmp"]
-        if (images.contains(extension)) {
-            "image/*"
-        } else if (extension == "pdf") {
-            "application/pdf"
-        } else {
-            ""
-        }
+    private String makeThumbnailName(String fileName) {
+        String extension = Utils.getExtension(fileName)
+        String imageId = fileName.substring(0, fileName.lastIndexOf('.'))
+        "${imageId}_thumbnail${extension}"
     }
 
     def retrieveSpeciesProfile() {
@@ -413,7 +456,6 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Analytics
     def retrievePublication() {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
@@ -424,17 +466,30 @@ class ProfileController extends BaseController {
         }
     }
 
+    @Analytics
+    def proxyPublicationDownload() {
+        final pubId = params.publicationId as String
+        if (!pubId) {
+            badRequest "Publication Id must be provided"
+        } else {
+            final opusId = params.opusId as String
+            final profileId = params.profileId as String
+            log.info("Proxying publication download opus $opusId, $profileId, $pubId")
+            profileService.proxyGetPublicationFile(response, opusId, profileId, pubId)
+        }
+    }
+
     def getPublication() {
         def pubId = params.pubId;
         if (!pubId) {
             badRequest "Publication Id must be provided";
         } else {
-            def pubJson = profileService.getPublications(pubId)?.resp;
+            def pubJson = profileService.getPublications(pubId)
             if (!pubJson) {
                 notFound()
             } else {
-                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin;
-                def profile = profileService.getProfile(pubJson.opusId, pubJson.profileId, latest);
+                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+                def profile = profileService.getProfile(pubJson.opusId, pubJson.profileId, latest)
 
                 if (!profile) {
                     notFound()
@@ -456,7 +511,7 @@ class ProfileController extends BaseController {
 
     @Secured(role = ROLE_PROFILE_EDITOR)
     def savePublication() {
-        if(!enabled("publications")) {
+        if (!enabled("publications")) {
             badRequest "The publications feature has been disabled"
         } else if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
@@ -550,7 +605,7 @@ class ProfileController extends BaseController {
             } else {
                 Map attachment = new JsonSlurper().parseText(request.getParameter("data"))
 
-                if (!attachment.uuid) {
+                if (!attachment.uuid && !attachment.url) {
                     attachment.filename = request.getFile("file").originalFilename
                 }
 

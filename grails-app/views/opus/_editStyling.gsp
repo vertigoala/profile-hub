@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-form="StyleForm" ng-cloak>
+<div class="panel panel-default" ng-form="opusCtrl.StyleForm" ng-cloak>
     <div class="panel-heading">
         <a name="branding">
             <h4 class="section-panel-heading">Branding</h4>
@@ -9,21 +9,80 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label>Banner image</label>
-                    <input type="text" class="form-control" name="bannerUrl" ng-model="opusCtrl.opus.bannerUrl"/><br/>
-                    <span class="small">Recommended size is at least 1000px wide by 100px high.</span>
+                    <label>Banner image for collection pages</label>
+                    <input type="text" class="form-control" name="bannerUrl" ng-model="opusCtrl.opus.brandingConfig.opusBannerUrl"/>
+                    <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.opusBanner" btn-checkbox >Upload a file</button>
+                    <div ng-if="opusCtrl.showUpload.opusBanner" class="clearfix">
+                        <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.opusBannerUploaded"
+                                url="{{opusCtrl.imageUploadUrl + 'opusBanner'}}" show-metadata="false"></image-upload>
+                    </div>
+                    <div class="radio">
+                        <label for="opusBannerHeightTall" class="inline-label padding-right-1">Banner height</label>
+                        <label for="opusBannerHeightTall" class="inline-label padding-right-1">
+                            <input id="opusBannerHeightTall" type="radio" name="opusBannerHeight" ng-value="300"
+                                   ng-model="opusCtrl.opus.brandingConfig.opusBannerHeight">
+                            Tall
+                        </label>
+                        <label for="opusBannerHeightShort" class="inline-label">
+                            <input id="opusBannerHeightShort" type="radio" name="opusBannerHeight" ng-value="100" class="padding-left-1"
+                                   ng-model="opusCtrl.opus.brandingConfig.opusBannerHeight">
+                            Short
+                        </label>
+                    </div>
+
+                    <div class="small">This image will be displayed on all pages <em>except</em> the profile view and edit pages.
+                    If left blank, the banner image for profile pages will be used.
+                    If both fields are left blank then a system default image will be used.</div>
+                    <div class="small">Recommended size is at least 1000px wide by {{ opusCtrl.opus.brandingConfig.opusBannerHeight }}px high.</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Banner image for profile pages</label>
+                    <input type="text" class="form-control" name="bannerUrl" ng-model="opusCtrl.opus.brandingConfig.profileBannerUrl"/>
+                    <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.profileBanner" btn-checkbox >Upload a file</button>
+                    <div ng-if="opusCtrl.showUpload.profileBanner" class="clearfix">
+                        <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.profileBannerUploaded"
+                                      url="{{opusCtrl.imageUploadUrl + 'profileBanner'}}" show-metadata="false"></image-upload>
+                    </div>
+                    <div class="radio">
+                        <label for="profileBannerHeightTall" class="inline-label padding-right-1">Banner height</label>
+                        <label for="profileBannerHeightTall" class="inline-label padding-right-1">
+                            <input id="profileBannerHeightTall" type="radio" name="profileBannerHeight" ng-value="300"
+                                   ng-model="opusCtrl.opus.brandingConfig.profileBannerHeight">
+                            Tall
+                        </label>
+                        <label for="profileBannerHeightShort" class="inline-label">
+                            <input id="profileBannerHeightShort" type="radio" name="profileBannerHeight" ng-value="100"
+                                   ng-model="opusCtrl.opus.brandingConfig.profileBannerHeight">
+                            Short
+                        </label>
+                    </div>
+                    <div class="small">This image will be displayed on the profile view and edit pages.
+                    If left blank, the banner image for collection pages will be used.
+                    If both fields are left blank then a system default image will be used.</div>
+                    <div class="small">Recommended size is at least 1000px wide by {{ opusCtrl.opus.brandingConfig.profileBannerHeight }}px high.</div>
                 </div>
 
                 <div class="form-group">
                     <label>Logo</label>
-                    <input type="text" class="form-control" name="logoUrl" ng-model="opusCtrl.opus.logoUrl"/><br/>
-                    <span class="small">Recommended maximum width is 275px. There is no height limit.</span>
+                    <input type="text" class="form-control" name="logoUrl" ng-model="opusCtrl.opus.brandingConfig.logoUrl"/>
+                    <button class="btn btn-sm btn-default margin-top-1 margin-bottom-1 ignore-save-warning" ng-model="opusCtrl.showUpload.logo" btn-checkbox >Upload a file</button>
+                    <div ng-if="opusCtrl.showUpload.logo" class="clearfix">
+                        <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.logoUploaded"
+                                      url="{{opusCtrl.imageUploadUrl + 'logo'}}" show-metadata="false"></image-upload>
+                    </div>
+                    <div class="small">Recommended maximum width is 275px. There is no height limit.</div>
                 </div>
 
                 <div class="form-group">
                     <label>Thumbnail</label>
-                    <input type="text" class="form-control" name="thumbnailUrl" ng-model="opusCtrl.opus.thumbnailUrl"/><br/>
-                    <span class="small">Recommended size 160px by 100px.</span>
+                    <input type="text" class="form-control" name="thumbnailUrl" ng-model="opusCtrl.opus.brandingConfig.thumbnailUrl"/>
+                    <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.thumbnail" btn-checkbox >Upload a file</button>
+                    <div ng-if="opusCtrl.showUpload.thumbnail" class="clearfix">
+                        <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.thumbnailUploaded"
+                                      url="{{opusCtrl.imageUploadUrl + 'thumbnail'}}" show-metadata="false"></image-upload>
+                    </div>
+                    <div class="small">Recommended size 160px by 100px.</div>
                 </div>
 
                 <div class="form-group">
@@ -81,11 +140,7 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-md-12">
-                <button class="btn btn-primary pull-right" ng-click="opusCtrl.saveOpus(StyleForm)">
-                    <span ng-show="!opusCtrl.saving" id="saved"><span ng-show="StyleForm.$dirty">*</span> Save
-                    </span>
-                    <span ng-show="opusCtrl.saving" id="saving">Saving....</span>
-                </button>
+                <save-button ng-click="opusCtrl.saveOpus(opusCtrl.StyleForm)" form="opusCtrl.StyleForm"></save-button>
             </div>
         </div>
     </div>

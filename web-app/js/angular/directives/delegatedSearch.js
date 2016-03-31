@@ -20,6 +20,9 @@ profileEditor.directive('delegatedSearch', function ($browser) {
             var self = this;
             self.layout = $scope.layout || 'small';
 
+            self.searchOptions = {
+                includeArchived: false
+            };
             self.searchTerm = null;
             self.contextPath = $browser.baseHref();
 
@@ -32,7 +35,10 @@ profileEditor.directive('delegatedSearch', function ($browser) {
                 if (!$sessionStorage.delegatedSearches || _.isUndefined($sessionStorage.delegatedSearches)) {
                     $sessionStorage.delegatedSearches = {};
                 }
-                $sessionStorage.delegatedSearches[opusId ? opusId : 'all'] = self.searchTerm;
+                $sessionStorage.delegatedSearches[opusId ? opusId : 'all'] = {
+                    term: self.searchTerm,
+                    searchOptions: self.searchOptions
+                };
 
                 if (_.isUndefined(opusId) || opusId == null || !opusId) {
                     util.redirect(util.contextRoot() + "/opus/search");

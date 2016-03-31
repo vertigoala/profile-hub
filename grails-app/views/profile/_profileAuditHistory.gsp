@@ -1,4 +1,4 @@
-<div class="row" ng-cloak>
+<div class="row profile-audit" ng-cloak>
     <div class="col-md-12">
         <div class="panel panel-default" ng-show="profileCtrl.showProfileAudit" ng-cloak>
             <div class="panel-body">
@@ -11,21 +11,27 @@
                         <th></th>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="audit in profileCtrl.audit">
-                            <td>{{audit.date | date:'dd/MM/yyyy h:mm a'}}</td>
-                            <td>{{audit.userDisplayName | default:'Unknown'}}</td>
+                        <tr ng-repeat="audit in profileCtrl.audit.data">
+                            <td>{{audit.left.date | date:'dd/MM/yyyy h:mm a'}}</td>
+                            <td>{{audit.left.userDisplayName | default:'Unknown'}}</td>
                             <td><button class="btn btn-link pull-right"
-                                        ng-click="profileCtrl.showAuditComparison($index)"
-                                        ng-show="!$last">Compare with previous revision</button></td>
+                                        ng-click="profileCtrl.showAuditComparison(audit)"
+                                        ng-show="audit.right">Compare with previous revision</button></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-md-12">
+                        <pagination total-items="profileCtrl.audit.total"
+                                    ng-change="profileCtrl.loadAuditData()"
+                                    ng-model="profileCtrl.audit.page" max-size="10"
+                                    items-per-page="profileCtrl.audit.pageSize"
+                                    previous-text="Prev" boundary-links="true"
+                                    ng-show="profileCtrl.audit.total > profileCtrl.audit.pageSize && !profileCtrl.loading"
+                        ></pagination>
                         <button class="btn btn-default pull-right" ng-click="profileCtrl.toggleAudit()">Hide revision history</button>
                     </div>
                 </div>
@@ -37,6 +43,7 @@
 <script type="text/ng-template" id="auditComparisonPopup.html">
 <div class="modal-header">
     <h4 class="modal-title">Comparison</h4>
+    <close-modal close="compareCtrl.close()"></close-modal>
 </div>
 
 <div class="modal-body">

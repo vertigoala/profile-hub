@@ -17,7 +17,7 @@ class ImageController extends BaseController {
         if (!params.imageId) {
             badRequest "imageId is a required parameter"
         } else {
-            Map imageDetails = imageService.getImageDetails(params.imageId, request.contextPath)
+            Map imageDetails = imageService.getImageDetails(params.imageId, request.contextPath, true)
 
             if (imageDetails) {
                 if (params.callback) {
@@ -36,7 +36,7 @@ class ImageController extends BaseController {
         if (!params.imageId) {
             badRequest "imageId is a required parameter"
         } else {
-            Map imageDetails = imageService.getImageDetails(params.imageId, request.contextPath, true)
+            Map imageDetails = imageService.getImageDetails(params.imageId, request.contextPath, true, true)
             File file = imageDetails.file
 
             if (file) {
@@ -54,8 +54,13 @@ class ImageController extends BaseController {
         if (!params.profileId || !params.imageId || !params.zoom || !params.x || !params.y || !params.type) {
             badRequest "profileId, imageId, zoom, x, y and type are required parameters"
         } else {
-            File tile = imageService.getTile(params.profileId, params.imageId, params.type, params.zoom as int, params.x as int, params.y as int)
+            File tile
+            if (params.opusId) {
+                tile = imageService.getTile(params.opusId, params.profileId, params.imageId, params.type, params.zoom as int, params.x as int, params.y as int)
+            } else {
+                tile = imageService.getTile(params.profileId, params.imageId, params.type, params.zoom as int, params.x as int, params.y as int)
 
+            }
             if (tile.exists()) {
                 response.outputStream << tile.newInputStream()
                 response.outputStream.flush()

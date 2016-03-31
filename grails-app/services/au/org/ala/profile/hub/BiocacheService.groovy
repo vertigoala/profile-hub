@@ -5,6 +5,8 @@ import org.springframework.web.multipart.MultipartFile
 
 class BiocacheService {
 
+    static final int DEFAULT_BIOCACHE_PAGE_SIZE = 50 // the biocache default is only 10, we want more than that
+
     WebService webService
     def grailsApplication
 
@@ -21,7 +23,7 @@ class BiocacheService {
 
         log.debug("Image query = ${imagesQuery}")
 
-        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true")
+        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${DEFAULT_BIOCACHE_PAGE_SIZE}")
     }
 
     def uploadImage(String opusId, String profileId, String dataResourceId, file, Map metadata) {
@@ -58,7 +60,7 @@ class BiocacheService {
             dataResourceId = drIdMapping[dataResourceId]
         }
 
-        webService.doPost("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
+        webService.post("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
     }
 
     private static enc(String str) {

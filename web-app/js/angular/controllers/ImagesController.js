@@ -1,8 +1,12 @@
+
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function ($browser, profileService, navService, util, messageService, $modal, config) {
+profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal, config) {
     var self = this;
+
+    // Flag to prevent reloading images during the update process.
+    var saving = false;
 
     self.images = [];
     self.primaryImage = null;
@@ -20,7 +24,16 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
                 self.profile = data.profile;
                 self.opus = data.opus;
 
-                self.loadImages()
+                // If the primary image specified for the profile changes then reload the images.
+                // Note that this function will be called once for initiation which is required to load the images.
+                $scope.$watch(function() {
+                    return self.profile && self.profile.primaryImage;
+                }, function() {
+                    if (!saving) {
+                        self.loadImages();
+                    }
+                });
+
             },
             function () {
                 messageService.alert("An error occurred while retrieving the profile.");
@@ -29,12 +42,13 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
     };
 
     self.saveProfile = function (form) {
-        self.profile.imageDisplayOptions = [];
+        saving = true;
+        self.profile.imageSettings = [];
 
         self.profile.primaryImage = null;
 
         angular.forEach(self.images, function (image) {
-            self.profile.imageDisplayOptions.push({imageId: image.imageId, displayOption: image.displayOption});
+            self.profile.imageSettings.push({imageId: image.imageId, caption: image.caption, displayOption: image.displayOption});
 
             if (image.primary) {
                 self.profile.primaryImage = image.imageId;
@@ -47,11 +61,17 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
                 messageService.info("Updating profile...");
                 self.profile = data;
 
-                self.loadImages();
+                var loadImagesProfile = self.loadImages();
 
                 form.$setPristine();
+
+                loadImagesProfile.finally(function() {
+                    saving = false;
+                });
             },
             function () {
+                saving = false;
+
                 messageService.alert("An error occurred while updating the profile.");
             }
         );
@@ -97,6 +117,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
                 messageService.alert("An error occurred while retrieving the images.");
             }
         );
+        return imagesPromise;
     };
 
     self.changeImageDisplay = function (form) {
@@ -113,7 +134,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
 
     self.uploadImage = function () {
         var popup = $modal.open({
-            templateUrl: "imageUpload.html",
+            templateUrl: $browser.baseHref() + "static/templates/imageUploadModal.html",
             controller: "ImageUploadController",
             controllerAs: "imageUploadCtrl",
             size: "md",
@@ -129,7 +150,53 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
         });
     };
 
-    self.showMetadata = function (image) {
+    /**
+     * Display the image viewer popup
+     * @param image May be either a string (the image id) or an object (the image)
+     */
+    self.showMetadata = function (image, local) {
+        if (_.isString(image)) {
+            if (angular.isDefined(self.images) && self.images.length > 0) {
+                image = _.find(self.images, function (image) {
+                    return image.imageId == image;
+                });
+            } else {
+                var future = profileService.getImageMetadata(image, local);
+                future.then(function (imageDetails) {
+                    imageDetails.imageId = image;
+                    // extract the metadata from the image service response and place it in a 'metadata' map so we have the
+                    // same format as for local images, if it is not present
+                    if (_.isUndefined(imageDetails.metadata)) {
+                        imageDetails.metadata = {};
+                        imageDetails.metadata.rightsHolder = imageDetails.rightsHolder;
+                        imageDetails.metadata.dateTaken = imageDetails.dateTaken;
+                        imageDetails.metadata.creator = imageDetails.creator;
+                        imageDetails.metadata.license = imageDetails.license;
+                        imageDetails.metadata.description = imageDetails.description;
+                        imageDetails.metadata.title = imageDetails.title;
+                        imageDetails.metadata.rights = imageDetails.rights;
+                    }
+
+                    showMetadataPopup(imageDetails);
+                }, function () {
+                    messageService.alert("An error occurred while retrieving the image details");
+                });
+            }
+        } else if (_.isUndefined(image.metadata)) {
+            var future = profileService.getImageMetadata(image.imageId, local);
+            future.then(function (imageDetails) {
+                imageDetails.imageId = image;
+                showMetadataPopup(imageDetails);
+            }, function() {
+                messageService.alert("An error occurred while retrieving the image details");
+            });
+        } else {
+            showMetadataPopup(image);
+        }
+
+    };
+
+    function showMetadataPopup(image) {
         var popup = $modal.open({
             templateUrl: $browser.baseHref() + "static/templates/imageMetadata.html",
             controller: "ImageMetadataController",
@@ -149,8 +216,26 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
                 sleep: false
             });
 
+            var baseUrl = null;
+            if (_.isUndefined(image.type) || image.type.name == 'OPEN') {
+                if (angular.isDefined(image.thumbnailUrl)) {
+                    baseUrl = util.getBaseUrl(image.thumbnailUrl);
+                } else if (angular.isDefined(image.imageUrl)) {
+                    baseUrl = util.getBaseUrl(image.imageUrl);
+                } else {
+                    baseUrl = config.imageServiceUrl;
+                }
+
+                // make sure we're calling the httpS version of images.ala.org.au
+                if (baseUrl.indexOf("images.ala.org.au") != -1) {
+                    baseUrl = config.imageServiceUrl;
+                }
+            } else {
+                baseUrl = util.getBaseHref(true);
+            }
+
             imgvwr.viewImage('#imageViewer', image.imageId, {
-                imageServiceBaseUrl: image.type.name == 'OPEN' ? config.imageServiceUrl : util.contextRoot(),
+                imageServiceBaseUrl: baseUrl,
                 addDrawer: false,
                 addSubImageToggle: false,
                 addCalibration: false,
@@ -162,7 +247,7 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
         popup.result.then(function () {
             self.loadImages();
         });
-    };
+    }
 
     self.publishPrivateImage = function(imageId) {
         var confirm = util.confirm("Are you sure you wish to make this image available to other Atlas of Living Australia applications?");
@@ -192,51 +277,16 @@ profileEditor.controller('ImagesController', function ($browser, profileService,
                 messageService.alert("An error occurred while deleting your staged image.");
             });
         });
-    }
-});
-
-/**
- * Upload image modal dialog controller
- */
-profileEditor.controller("ImageUploadController", function (profileService, util, config, $modalInstance, Upload, $cacheFactory, opus, $filter) {
-    var self = this;
-
-    self.metadata = {rightsHolder: opus.title};
-    self.files = null;
-    self.error = null;
-    self.opus = opus;
-
-    self.licences = null;
-
-    var orderBy = $filter("orderBy");
-
-    profileService.getLicences().then(function (data) {
-        self.licences = orderBy(data, "name");
-        self.metadata.licence = self.licences[0];
-    });
-
-    self.ok = function () {
-        self.metadata.dataResourceId = self.opus.dataResourceUid;
-        self.metadata.licence = self.metadata.licence.name;
-
-        Upload.upload({
-            url: util.contextRoot() + "/opus/" + util.getEntityId("opus") + "/profile/" + util.getEntityId("profile") + "/image/upload",
-            fields: self.metadata,
-            file: self.files[0]
-        }).success(function () {
-            self.image = {};
-            self.file = null;
-            $modalInstance.close();
-            $cacheFactory.get('$http').removeAll();
-        }).error(function () {
-            self.error = "An error occurred while uploading your image."
-        });
     };
 
-    self.cancel = function () {
-        $modalInstance.dismiss("cancel");
+    self.imageCaption = function (image) {
+        if (image.caption) {
+            return image.caption;
+        }
+        return image.metadata ? image.metadata.title : '';
     };
 });
+
 
 /**
  * Image metadata modal dialog controller

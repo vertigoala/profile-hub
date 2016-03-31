@@ -22,7 +22,8 @@ describe("ImagesController tests", function () {
     var profileService;
     var profileDefer, imageDefer, saveDefer, metadataDefer;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "imageDisplayOptions": [{"imageId": "imageId2", "displayOption": "INCLUDE"}]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "imageSettings": [{"imageId": "imageId2", "caption": "", "displayOption": "INCLUDE"}], "primaryImage": ""}, "opus": {"imageSources": ["source1", "source2"]}}';
+
     var retrieveImagesResponse = '[{"imageId": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}]';
 
     beforeAll(function () {
@@ -208,11 +209,11 @@ describe("ImagesController tests", function () {
 
     it("should add all image display options to the profile's imageDisplayOption list on save", function() {
         scope.imageCtrl.profile = {uuid: "profile1"};
-        scope.imageCtrl.images = [{imageId: "image1", displayOption: "INCLUDE"}, {imageId: "image2", displayOption: "EXCLUDE"}, {imageId: "image3", displayOption: "INCLUDE"}];
+        scope.imageCtrl.images = [{imageId: "image1", caption: '', displayOption: "INCLUDE"}, {imageId: "image2", caption: 'hello',displayOption: "EXCLUDE"}, {imageId: "image3", caption: 'world',displayOption: "INCLUDE"}];
         scope.imageCtrl.opusId = "opusId";
         scope.imageCtrl.profileId = "profileId";
 
-        var expectedProfile = {uuid: "profile1", imageDisplayOptions: [{imageId: "image1", displayOption: "INCLUDE"}, {imageId: "image2", displayOption: "EXCLUDE"}, {imageId: "image3", displayOption: "INCLUDE"}], primaryImage: null};
+        var expectedProfile = {uuid: "profile1", imageSettings: [{imageId: "image1", caption: '', displayOption: "INCLUDE"}, {imageId: "image2", caption: 'hello', displayOption: "EXCLUDE"}, {imageId: "image3", caption: 'world', displayOption: "INCLUDE"}], primaryImage: null};
 
         scope.imageCtrl.saveProfile(form);
 
@@ -221,14 +222,60 @@ describe("ImagesController tests", function () {
 
     it("should set the primary image attribute of the profile on save", function() {
         scope.imageCtrl.profile = {uuid: "profile1"};
-        scope.imageCtrl.images = [{imageId: "image1", displayOption: "INCLUDE"}, {imageId: "image2", displayOption: "INCLUDE", primary: true}];
+        scope.imageCtrl.images = [{imageId: "image1", caption: '', displayOption: "INCLUDE"}, {imageId: "image2", caption: '', displayOption: "INCLUDE", primary: true}];
         scope.imageCtrl.opusId = "opusId";
         scope.imageCtrl.profileId = "profileId";
 
-        var expectedProfile = {uuid: "profile1", primaryImage: "image2", imageDisplayOptions: [{imageId: "image1", displayOption: "INCLUDE"}, {imageId: "image2", displayOption: "INCLUDE"}]};
+        var expectedProfile = {uuid: "profile1", primaryImage: "image2", imageSettings: [{imageId: "image1", caption: '', displayOption: "INCLUDE"}, {imageId: "image2", caption: '', displayOption: "INCLUDE"}]};
 
         scope.imageCtrl.saveProfile(form);
 
         expect(profileService.updateProfile).toHaveBeenCalledWith("opusId", "profileId", expectedProfile);
+    });
+
+    it("should show the caption when the caption is set", function() {
+        scope.imageCtrl.profile = {uuid: 'profile1'};
+        var image = {imageId: 'image1', caption: 'test', displayOption: "INCLUDE", metadata: {title: 'wrong'}};
+        scope.imageCtrl.images = [image];
+        scope.imageCtrl.opusId = "opusId";
+        scope.imageCtrl.profileId = "profileId";
+        scope.imageCtrl.readOnly = true;
+
+        scope.imageCtrl.init("false");
+        scope.$apply();
+
+        expect(scope.imageCtrl.imageCaption(image)).toBe('test');
+    });
+
+    it("should show the original title when the caption is not set", function() {
+        scope.imageCtrl.profile = {uuid: 'profile1'};
+        var image = {imageId: 'image1', caption: '', displayOption: "INCLUDE", metadata: {title: 'right'}};
+        scope.imageCtrl.images = [image];
+        scope.imageCtrl.opusId = "opusId";
+        scope.imageCtrl.profileId = "profileId";
+        scope.imageCtrl.readOnly = true;
+
+        scope.imageCtrl.init("false");
+        scope.$apply();
+
+        expect(scope.imageCtrl.imageCaption(image)).toBe('right');
+    });
+
+    it("should detect changes to the primary image and respond by reloading the images", function() {
+        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "primaryImage": "imageId2"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        profileDefer.resolve(JSON.parse(getProfileResponse));
+        imageDefer.resolve(JSON.parse(retrieveImagesResponse));
+
+        scope.imageCtrl.init("false");
+        scope.$apply();
+
+        expect(profileService.retrieveImages).toHaveBeenCalledWith('opusId1', 'profileId1', "lsid:guid1", ",source1,source2", true);
+        expect(scope.imageCtrl.profile.primaryImage).toBe("imageId2");
+
+        scope.imageCtrl.profile.primaryImage = "imageId1";
+
+        scope.$apply();
+        expect(profileService.retrieveImages).toHaveBeenCalledWith('opusId1', 'profileId1', "lsid:guid1", ",source1,source2", true);
+
     });
 });

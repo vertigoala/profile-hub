@@ -1,6 +1,8 @@
 package au.org.ala.profile.hub
 
 class Utils {
+    static final String UUID_REGEX_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
+
     static String getCCLicenceIcon(String ccLicence) {
         String icon
 
@@ -22,5 +24,22 @@ class Utils {
         }
 
         icon
+    }
+
+    static String getContentType(File file) {
+        String extension = file.getName().substring(file.getName().lastIndexOf("."))
+
+        List images = ["jpg", "jpeg", "gif", "tiff", "png", "bmp"]
+        if (images.contains(extension)) {
+            "image/*"
+        } else if (extension == "pdf") {
+            "application/pdf"
+        } else {
+            ""
+        }
+    }
+
+    static String getExtension(String fileName) {
+        fileName ? fileName.substring(fileName.lastIndexOf(".")) : ""
     }
 }

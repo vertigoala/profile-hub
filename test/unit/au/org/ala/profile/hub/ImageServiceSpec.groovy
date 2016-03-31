@@ -49,18 +49,18 @@ class ImageServiceSpec extends Specification {
         profileService.getProfile(_, _, _) >> [profile: [privateMode: false], opus:[]]
 
         when:
-        imageService.uploadImage("opusId", "profileId", "dataResourceId", [:], dummyFile)
+        imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFile)
 
         then:
-        1 * biocacheService.uploadImage(_, _, _, _, _)
+        1 * biocacheService.uploadImage(_, _, _, _, _) >> [:]
     }
 
     def "uploadImage should move the image to the staging directory and invoke profileService.recordStagedImage if the profile is in draft mode"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", privateMode: true], opus: [:]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", privateMode: true], opus: [uuid: "opus1"]]
 
         when:
-        imageService.uploadImage("opusId", "profileId", "dataResourceId", [:], dummyFile)
+        imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFile)
 
         then:
         1 * dummyFile.transferTo(_) // the actual destination file is randomly named, so we can't check the path
@@ -195,13 +195,13 @@ class ImageServiceSpec extends Specification {
         result.resp[2].imageId == "staged1"
         result.resp[2].dataResourceName == "opus title"
         result.resp[2].largeImageUrl == "/opus/opusId/profile/profileId/image/staged1.jpg?type=STAGED"
-        result.resp[2].thumbnailUrl == "/opus/opusId/profile/profileId/image/staged1.jpg?type=STAGED"
+        result.resp[2].thumbnailUrl == "/opus/opusId/profile/profileId/image/thumbnail/staged1.jpg?type=STAGED"
         result.resp[2].metadata == stagedImage1
         result.resp[2].type == ImageType.STAGED
         result.resp[3].imageId == "staged2"
         result.resp[3].dataResourceName == "opus title"
         result.resp[3].largeImageUrl == "/opus/opusId/profile/profileId/image/staged2.jpg?type=STAGED"
-        result.resp[3].thumbnailUrl == "/opus/opusId/profile/profileId/image/staged2.jpg?type=STAGED"
+        result.resp[3].thumbnailUrl == "/opus/opusId/profile/profileId/image/thumbnail/staged2.jpg?type=STAGED"
         result.resp[3].metadata == stagedImage2
         result.resp[3].type == ImageType.STAGED
     }
@@ -283,7 +283,7 @@ class ImageServiceSpec extends Specification {
                 opus: [title: "opus title"],
                 profile: [uuid: "profileId", privateMode: true, stagedImages: [stagedImage1, stagedImage2],
                           privateImages: [], primaryImage: "staged1",
-                          imageDisplayOptions: [
+                          imageSettings: [
                                   [imageId: "staged1", displayOption: "INCLUDE"],
                                   [imageId: "staged2", displayOption: "INCLUDE"]
                           ]
@@ -334,7 +334,7 @@ class ImageServiceSpec extends Specification {
                 opus: [title: "opus title"],
                 profile: [uuid: "profileId", privateMode: true, privateImages: [privateImage1, privateImage2],
                           stagedImages: [], primaryImage: "private1",
-                          imageDisplayOptions: [
+                          imageSettings: [
                                   [imageId: "private1", displayOption: "INCLUDE"],
                                   [imageId: "private2", displayOption: "INCLUDE"]
                           ]
@@ -353,7 +353,7 @@ class ImageServiceSpec extends Specification {
         result.resp[1].imageId == "private2"
         result.resp[1].displayOption == "INCLUDE"
     }
-    
+
     def "retrieveImages should set the primary flag for biocache images"() {
         setup:
         profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", privateImages: []], opus: [:]]
@@ -379,7 +379,7 @@ class ImageServiceSpec extends Specification {
 
     def "retrieveImages should set the display option for biocache images"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", privateImages: [], imageDisplayOptions: [[imageId: "image1", displayOption: "INCLUDE"], [imageId: "image2", displayOption: "INCLUDE"]]], opus: [:]]
+        profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", primaryImage: "image1", privateImages: [], imageSettings: [[imageId: "image1", displayOption: "INCLUDE"], [imageId: "image2", displayOption: "INCLUDE"]]], opus: [:]]
 
         Map image1Metadata = [title: "image 1"]
         Map image2Metadata = [title: "image 2"]

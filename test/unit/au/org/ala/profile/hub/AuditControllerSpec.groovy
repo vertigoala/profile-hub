@@ -23,7 +23,7 @@ class AuditControllerSpec extends Specification {
         controller.object()
 
         then:
-        1 * profileService.getAuditHistory("12345", null) >> [resp: [], statusCode: 200]
+        1 * profileService.getAuditHistory("12345", null, AuditController.DEFAULT_OFFSET, AuditController.DEFAULT_PAGE_SIZE) >> [resp: [], statusCode: 200]
     }
 
     def "object() should return a 400 (BAD_REQUEST) if no id has been provided"() {
@@ -41,7 +41,7 @@ class AuditControllerSpec extends Specification {
         controller.user()
 
         then:
-        1 * profileService.getAuditHistory(null, "12345") >> [resp: [], statusCode: 200]
+        1 * profileService.getAuditHistory(null, "12345", AuditController.DEFAULT_OFFSET, AuditController.DEFAULT_PAGE_SIZE) >> [resp: [], statusCode: 200]
     }
 
     def "user() should return a 400 (BAD_REQUEST) if no id has been provided"() {
@@ -50,5 +50,25 @@ class AuditControllerSpec extends Specification {
 
         then:
         response.status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "default values for pagination parameters should be used if none are supplied"() {
+        when:
+        params.id = "12345"
+        controller.object()
+
+        then:
+        1 * profileService.getAuditHistory("12345", null, AuditController.DEFAULT_OFFSET, AuditController.DEFAULT_PAGE_SIZE) >> [resp: [], statusCode: 200]
+    }
+
+    def "pagination parameters should be used if they are supplied"() {
+        when:
+        params.id = "12345"
+        params.offset = 100
+        params.max = 50
+        controller.object()
+
+        then:
+        1 * profileService.getAuditHistory("12345", null, 100, 50) >> [resp: [], statusCode: 200]
     }
 }

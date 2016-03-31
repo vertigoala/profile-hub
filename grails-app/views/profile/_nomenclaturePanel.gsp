@@ -23,9 +23,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-right">
-                    <button class="btn btn-primary" ng-disabled="NomenclatureForm.$invalid || !NomenclatureForm.$dirty"
-                            ng-click="profileCtrl.saveProfile(NomenclatureForm)">
-                        <span ng-show="NomenclatureForm.$dirty">*</span> Save</button>
+                    <save-button ng-click="profileCtrl.saveProfile(NomenclatureForm)" form="NomenclatureForm"></save-button>
                 </div>
             </div>
         </div>

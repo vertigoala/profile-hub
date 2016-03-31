@@ -41,9 +41,11 @@ class OpusControllerSpec extends Specification {
         controller.index()
 
         then:
-        assert model.size() == 5
+        assert model.size() == 6
         assert model.containsKey("logoUrl")
         assert model.containsKey("bannerUrl")
+        assert model.containsKey("bannerHeight")
+        assert model.containsKey("pageTitle")
         assert model.containsKey("footerText")
         assert model.containsKey("contact")
     }
@@ -67,9 +69,10 @@ class OpusControllerSpec extends Specification {
         controller.edit()
 
         then:
-        assert model.size() == 8
+        assert model.size() == 9
         assert model.containsKey("logoUrl")
         assert model.containsKey("bannerUrl")
+        assert model.containsKey("bannerHeight")
         assert model.containsKey("pageTitle")
         assert model.containsKey("currentUser")
         assert model.containsKey("glossaryUrl")
@@ -97,9 +100,10 @@ class OpusControllerSpec extends Specification {
         controller.show()
 
         then:
-        assert model.size() == 7
+        assert model.size() == 8
         assert model.containsKey("logoUrl")
         assert model.containsKey("bannerUrl")
+        assert model.containsKey("bannerHeight")
         assert model.containsKey("pageTitle")
         assert model.containsKey("glossaryUrl")
         assert model.containsKey("aboutPageUrl")
