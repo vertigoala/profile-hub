@@ -141,6 +141,8 @@ class WebService {
                 } else if (data != null) {
                     contentType = ContentType.APPLICATION_JSON
                     body = data
+                } else {
+                    contentType = ContentType.APPLICATION_JSON
                 }
 
                 response.success = { resp, json ->
