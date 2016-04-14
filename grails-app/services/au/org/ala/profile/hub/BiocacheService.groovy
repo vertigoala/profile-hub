@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.ws.service.WebService
 import groovy.json.JsonSlurper
 import org.springframework.web.multipart.MultipartFile
 

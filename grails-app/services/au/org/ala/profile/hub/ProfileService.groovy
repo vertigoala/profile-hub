@@ -2,6 +2,7 @@ package au.org.ala.profile.hub
 
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
+import au.org.ala.ws.service.WebService
 import org.apache.commons.lang.BooleanUtils
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
@@ -162,9 +163,9 @@ class ProfileService {
         List files = request.getFileNames().collect { request.getFile(it) }
 
         if (profileId) {
-            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attachment?latest=true", metadata, files)
+            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attachment?latest=true", [data: metadata], null, files)
         } else {
-            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/attachment", metadata, files)
+            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/attachment", [data: metadata], null, files)
         }
     }
 
@@ -219,7 +220,7 @@ class ProfileService {
     def savePublication(String opusId, String profileId, file) {
         log.debug("Saving publication for profile ${profileId}")
 
-        webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/publication", [:], [file])
+        webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/publication", [:], null, [file])
     }
 
     def proxyGetPublicationFile(HttpServletResponse response, String opusId, String profileId, String publicationId) {

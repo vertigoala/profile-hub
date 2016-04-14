@@ -1,6 +1,7 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.web.AuthService
+import au.org.ala.ws.service.WebService
 import grails.test.mixin.TestFor
 import org.codehaus.groovy.grails.web.json.JSONObject
 import spock.lang.Specification

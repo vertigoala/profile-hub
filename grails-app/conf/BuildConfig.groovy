@@ -1,5 +1,3 @@
-import grails.util.Environment
-
 grails.servlet.version = "3.0" // Change depending on target container compliance (2.5 or 3.0)
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
@@ -7,8 +5,6 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.project.work.dir = "target/work"
 grails.project.target.level = 1.7
 grails.project.source.level = 1.7
-//grails.project.war.file = "target/${appName}-${appVersion}.war"
-//grails.plugin.location.'ala-web-theme' = "../ala-web-theme"
 
 grails.project.fork = [
         // configure settings for the test-app JVM, uses the daemon by default
@@ -74,6 +70,7 @@ grails.project.dependency.resolution = {
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
         compile ":ala-map:1.2"
+        compile ":ala-ws-plugin:1.0"
         runtime(":images-client-plugin:0.6.1") {
             excludes "ala-bootstrap3"
         }
@@ -85,5 +82,6 @@ grails.project.dependency.resolution = {
         runtime(":ala-auth:1.3.1") {
             excludes "commons-httpclient"
         }
+
     }
 }

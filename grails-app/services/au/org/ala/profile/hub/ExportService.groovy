@@ -3,7 +3,7 @@ package au.org.ala.profile.hub
 import au.org.ala.profile.hub.reports.JasperExportFormat
 import au.org.ala.profile.hub.reports.JasperReportDef
 import au.org.ala.profile.hub.util.HubConstants
-
+import au.org.ala.ws.service.WebService
 import grails.converters.JSON
 import grails.transaction.NotTransactional
 import net.glxn.qrgen.QRCode

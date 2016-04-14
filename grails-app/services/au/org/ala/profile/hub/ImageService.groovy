@@ -1,5 +1,7 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.ws.service.WebService
+
 import static au.org.ala.profile.hub.Utils.*
 import au.org.ala.images.thumb.ImageThumbnailer
 import au.org.ala.images.thumb.ThumbDefinition
