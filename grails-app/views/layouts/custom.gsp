@@ -15,7 +15,7 @@
     <link href="http://www.ala.org.au/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon"
           type="image/x-icon"/>
     <title><g:layoutTitle/></title>
-    <r:require modules="profiles"/>
+    <r:require modules="profiles, ala_admin"/>
     <r:layoutResources/>
     <g:layoutHead/>
     <style type="text/css">
@@ -42,21 +42,7 @@
 
 <body id="${pageProperty(name: 'body.id')}" onload="${pageProperty(name: 'body.onload')}">
 
-<g:if test="${grailsApplication.config.deployment_env && grailsApplication.config.deployment_env?.toLowerCase() != "prod" && grailsApplication.config.deployment_env?.toLowerCase() != "production"}">
-    <div class="padding-top-1" ng-cloak>
-        <alert type="warning admin-message">
-            <span class="admin-message-text">This is a ${grailsApplication.config.deployment_env.toUpperCase()} site.</span>
-        </alert>
-    </div>
-</g:if>
-
-<g:if test="${application.getAttribute("alaAdminMessage")}">
-    <div class="padding-top-1" ng-cloak>
-        <alert type="danger admin-message">
-            <span class="admin-message-text">${application.getAttribute("alaAdminMessage")}</span> &nbsp;&nbsp;(${application.getAttribute("alaAdminMessageTimestamp")})
-        </alert>
-    </div>
-</g:if>
+<ala:systemMessage/>
 
 <div ng-controller="CustomAlertController" id="generalAlert">
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" ng-cloak>{{alert.msg}}</alert>

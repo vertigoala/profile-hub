@@ -129,6 +129,8 @@ class UrlMappings {
         "/admin/reloadConfig" controller: "admin", action: [POST: "reloadConfig"]
         "/admin/reindex" controller: "admin", action: [POST: "reindex"]
         "/admin" controller: "admin", action: [GET: "index"]
+        "/alaAdmin/index" controller: "admin", action: [GET: "index"]
+        "/alaAdmin" controller: "admin", action: [GET: "index"]
 
         "500"(view: "/error")
         "404"(view: "/notFound")

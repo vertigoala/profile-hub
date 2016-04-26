@@ -187,12 +187,9 @@ hr.comment-divider {
     position: fixed;
 }
 
-.admin-message {
-    text-align: center;
-}
-
-.admin-message-text {
+.system-message {
     font-size: 24px;
+    text-align: center;
 }
 
 .customizable-logo-img {
