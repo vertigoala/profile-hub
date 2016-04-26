@@ -113,7 +113,7 @@ profileEditor.controller('ProfileController',
 
                     self.nslProtologue = data.name.primaryInstance[0].citationHtml;
                     if (data.name.primaryInstance[0].page) {
-                        self.nslProtologue += " " + data.name.primaryInstance[0].page;
+                        self.nslProtologue += ": " + data.name.primaryInstance[0].page;
                     }
                 }
             });
