@@ -47,7 +47,7 @@
             <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name }}
         </span>
 
-        <span ng-if="showChildren && layout != 'horizontal' && taxon.childCount > 0" class="padding-left-1">
+        <span ng-if="showChildren && taxon.childCount > 0 && (!showChildrenForLastOnly || $last)" class="padding-left-1">
             <a href="" class="fa fa-list-ul"
                title="Show members {{ taxon.childCount }} of {{ taxon.rank }} {{ taxon.name }}"
                ng-click="showAllSubordinateTaxaPopup(taxon.rank, taxon.name, taxon.childCount)"></a>
