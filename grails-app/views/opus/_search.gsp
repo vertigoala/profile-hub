@@ -18,9 +18,16 @@
         </div>
         <button class="btn btn-link toggle-link ignore-save-warning" ng-model="searchCtrl.showOptions" btn-checkbox>Options</button>
         <div ng-show="searchCtrl.showOptions" class="well">
-            <div class="checkbox">
-                <label for="includeArchived" class="inline-label">
-                    <input id="includeArchived" type="checkbox" name="showLinked" class="ignore-save-warning"
+            <div class="checkbox inline-block padding-right-1">
+                <label for="matchAll" class="inline-label">
+                    <input id="matchAll" type="checkbox" name="matchAll" class="ignore-save-warning"
+                           ng-model="searchCtrl.searchOptions.matchAll" ng-false-value="false">
+                    Must contain all terms
+                </label>
+            </div>
+            <div class="checkbox inline-block">
+                <label for="includeArchivedProfiles" class="inline-label">
+                    <input id="includeArchivedProfiles" type="checkbox" name="includeArchivedProfiles" class="ignore-save-warning"
                            ng-model="searchCtrl.searchOptions.includeArchived" ng-false-value="false">
                     Include archived profiles
                 </label>
