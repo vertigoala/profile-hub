@@ -13,7 +13,7 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-sm-12">
-                    <div ng-repeat="image in imageCtrl.images" class="col-md-6 col-sm-6 margin-bottom-2"
+                    <div ng-repeat-start="image in imageCtrl.images" class="col-md-6 col-sm-6 margin-bottom-2"
                          ng-show="!image.excluded">
                         <div class="imgCon ">
                             <a href="" ng-click="imageCtrl.showMetadata(image)" target="_blank" ng-if="image.thumbnailUrl" title="View details">
@@ -38,6 +38,7 @@
 
                         </div>
                     </div>
+                    <div ng-repeat-end ng-if="$index % 2 == 1" class="clearfix"></div>
                 </div>
             </div>
         </div>
