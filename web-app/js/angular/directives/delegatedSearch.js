@@ -28,6 +28,8 @@ profileEditor.directive('delegatedSearch', function ($browser) {
                 matchAll: true,
                 nameOnly: false
             };
+            self.showOptions = false;
+
             self.searchTerm = null;
             self.contextPath = $browser.baseHref();
 

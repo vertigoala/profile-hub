@@ -27,8 +27,8 @@
             </span>
         </div>
         <button class="btn btn-link toggle-link ignore-save-warning" ng-model="searchCtrl.showOptions" btn-checkbox>Options</button>
-        <div ng-show="searchCtrl.showOptions" class="well" ng-hide="searchCtrl.searchOptions.nameOnly">
-            <div class="checkbox inline-block padding-right-1">
+        <div ng-show="searchCtrl.showOptions" class="well">
+            <div class="checkbox inline-block padding-right-1" ng-hide="searchCtrl.searchOptions.nameOnly">
                 <label for="matchAll" class="inline-label">
                     <input id="matchAll" type="checkbox" name="matchAll" class="ignore-save-warning"
                            ng-model="searchCtrl.searchOptions.matchAll" ng-false-value="false">

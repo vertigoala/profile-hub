@@ -14,6 +14,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     self.searchResults = {};
 
     self.pageSize = 25;
+    self.showOptions = false;
 
     self.search = function (pageSize, offset) {
         self.searchOptions.offset = offset || 0;
