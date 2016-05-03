@@ -53,7 +53,7 @@ class BiocacheService {
 
         // TODO: REMOVE THIS - IT IS FOR TESTING ONLY!!!!
         String hostname = InetAddress.getLocalHost().hostName
-        if ((hostname == "nci-profiles" || hostname == "nci-profiles-dev" || hostname == "maccy-bm")
+        if ((hostname != 'nci-profiles-prod'|| hostname == "nci-profiles" || hostname == "nci-profiles-dev" || hostname == "maccy-bm")
                 && grailsApplication.config.test.collectory.drid.mappings) {
             Map drIdMapping = new JsonSlurper().parseText(grailsApplication.config.test.collectory.drid.mappings)
 
