@@ -410,6 +410,10 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     margin-left: 0;
 }
 
+.margin-top-0 {
+    margin-top: 0;
+}
+
 .margin-top-1 {
     margin-top: 10px;
 }
@@ -787,30 +791,50 @@ span.breadcrumb-dropdown {
     padding-top: 10px;
 }
 
+.button-inside-input, .button-inside-input:hover, .button-inside-input:focus {
+    border: none;
+    background: transparent !important;
+    margin-left: -30px !important;
+    z-index: 99;
+}
+
+.header-control .dropdown-toggle {
+    border-bottom-left-radius: 10px !important;
+    border-top-left-radius: 10px !important;
+    border-color: #66afe9;
+    border-right: none;
+}
+
+.header-control .dropdown-toggle:hover {
+    border-color: #66afe9;
+    border-right: none;
+    background: transparent !important;
+    margin-left: -30px !important;
+    z-index: 99;
+}
+
 .header-control input {
-    border-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+    border-left: none;
     width: 100px !important;
     -webkit-transition: width 1s ease-in-out;
     -moz-transition: width 1s ease-in-out;
     -o-transition: width 1s ease-in-out;
     transition: width 1s ease-in-out;
+    border-color: #66afe9;
 }
 
 .header-control input:focus {
-    border-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+    border-top-right-radius: 10px !important;
     width: 250px !important;
 }
 
-.header-control button {
-    border: none;
-    background: transparent;
-    margin-left: -30px !important;
-    z-index: 99;
-}
 
-.header-control button:focus, .header-control button:hover {
-    background: transparent !important;
-}
+/*.header-control button:focus, .header-control button:hover {*/
+    /*background: transparent !important;*/
+/*}*/
 
 .keybase-logo {
     margin-top: 1em;

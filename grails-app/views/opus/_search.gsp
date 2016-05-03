@@ -1,9 +1,19 @@
 <div ng-controller="SearchController as searchCtrl" ng-cloak>
 
     <div class="col-xs-12 col-sm-12 col-md-12">
-        <h3 class="heading-medium">Search for a profile</h3>
+        <h3 class="heading-medium">Search for profile(s)</h3>
 
         <div class="input-group">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle btn-lg search-type-control" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    {{ searchCtrl.searchOptions.nameOnly ? 'with name' : 'with text' }} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a ng-click="searchCtrl.setSearchOption('name')">with name</a></li>
+                    <li><a ng-click="searchCtrl.setSearchOption('text')">with text</a></li>
+                </ul>
+            </div>
             <input id="searchTerm"
                    ng-model="searchCtrl.searchTerm"
                    ng-enter="searchCtrl.search()"
@@ -17,7 +27,7 @@
             </span>
         </div>
         <button class="btn btn-link toggle-link ignore-save-warning" ng-model="searchCtrl.showOptions" btn-checkbox>Options</button>
-        <div ng-show="searchCtrl.showOptions" class="well">
+        <div ng-show="searchCtrl.showOptions" class="well" ng-hide="searchCtrl.searchOptions.nameOnly">
             <div class="checkbox inline-block padding-right-1">
                 <label for="matchAll" class="inline-label">
                     <input id="matchAll" type="checkbox" name="matchAll" class="ignore-save-warning"

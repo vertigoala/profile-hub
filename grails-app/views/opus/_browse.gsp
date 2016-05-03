@@ -86,7 +86,7 @@
                 Search or browse by category using the navigation bar to the left.
             </p>
             <p ng-if="opusCtrl.opus.keybaseKeyId">
-                Alternatively, you can select the Identify tab and search for a profile using the dichotomous key player.
+                Alternatively, you can select the Search tab and perform a text or name-based search, or select the Identify tab and find the profile using the dichotomous key player.
             </p>
         </div>
 
