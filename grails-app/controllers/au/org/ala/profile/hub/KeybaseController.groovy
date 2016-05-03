@@ -1,11 +1,18 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.ws.service.WebService
 import grails.converters.JSON
 
 class KeybaseController extends BaseController {
 
     ProfileService profileService
     KeybaseService keybaseService
+    WebService webService
+
+    /** Acts as a proxy to the keybase server as it doesn't currently support https  */
+    def keyLookup() {
+        webService.proxyGetRequest(response, "${grailsApplication.config.keybase.key.lookup}?${request.queryString}", false, false)
+    }
 
     def findKey() {
         if (!params.opusId || !params.scientificName) {

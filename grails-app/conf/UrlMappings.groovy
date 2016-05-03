@@ -105,6 +105,8 @@ class UrlMappings {
 
         "/keybase/projects" controller: "opus", action: [GET: "retrieveKeybaseProjects"]
         "/keybase/findKey" controller: "keybase", action: [GET: "findKey"]
+        "/keybase/keyLookup" controller: "keybase", action: [GET: "keyLookup"]
+
 
         "/checkName" controller: "profile", action: [GET: "checkName"]
 

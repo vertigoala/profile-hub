@@ -42,8 +42,8 @@
             <div class="row">
                 <script type="text/ng-template" id="keyplayer.html">
                     <key-player key-id="opusCtrl.opus.keybaseKeyId" style="display: block"
-                        keybase-url="${grailsApplication.config.keybase.key.lookup}"
-                        profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></key-player>
+                        keybase-url="${g.createLink(controller:'keybase', action:'keyLookup', absolute: true)}"
+                        profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></key-player>
                 </script>
                 <ng-include src="opusCtrl.keybaseTemplateUrl"/>
             </div>
