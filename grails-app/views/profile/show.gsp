@@ -172,13 +172,16 @@
                                 </div>
                             </div>
                         </tab>
-                        <tab heading="Key" class="font-xxsmall" ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey">
+                        <tab heading="Key" class="font-xxsmall" ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey" select="profileCtrl.initialiseKeyplayer()">
                             <div class="row">
-                                <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
-                                     opus-id="profileCtrl.opus.uuid"
-                                     keybase-url="${grailsApplication.config.keybase.key.lookup}"
-                                     key-lookup-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
-                                     profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
+                                <script type="text/ng-template" id="keyplayer.html">
+                                    <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
+                                         opus-id="profileCtrl.opus.uuid"
+                                         keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                                         key-lookup-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
+                                         profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
+                                </script>
+                                <ng-include src="profileCtrl.keybaseTemplateUrl"/>
                             </div>
                         </tab>
                         <tab heading="Documents" class="font-xxsmall" ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0">

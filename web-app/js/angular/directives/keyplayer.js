@@ -264,25 +264,14 @@ profileEditor.directive('keyPlayer', function ($browser) {
             scope.$watch("keyId", function (keyId) {
                 if (!_.isUndefined(keyId)) {
                     scope.keyplayer.keyId = keyId;
+                    scope.keyplayer.loadKey(scope.keyplayer.keyId);
                 }
             });
 
             scope.$watch("taxonName", function (taxonName) {
                 if (!_.isUndefined(taxonName)) {
                     scope.keyplayer.taxonName = taxonName;
-                }
-            });
-
-            // Only render the keyplayer if the container is actually visible (otherwise we get 0 width panels on the player)
-            scope.$watch(function () {
-                return !$(element).is(':hidden')
-            }, function () {
-                var visible = !$(element).is(':hidden');
-
-                if (visible && !_.isUndefined(scope.keyplayer.taxonName)) {
                     scope.keyplayer.loadKeyFromName(scope.keyplayer.taxonName);
-                } else if (visible && !_.isUndefined(scope.keyplayer.keyId)) {
-                    scope.keyplayer.loadKey(scope.keyplayer.keyId);
                 }
             });
         }

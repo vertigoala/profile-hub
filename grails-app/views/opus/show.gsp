@@ -38,11 +38,14 @@
         <tab heading="Browse" class="font-xxsmall">
             <g:include controller="opus" action="browsePanel" params="[opusId: params.opusId]"/>
         </tab>
-        <tab heading="Identify" class="font-xxsmall" ng-show="opusCtrl.opus.keybaseKeyId">
+        <tab heading="Identify" class="font-xxsmall" ng-show="opusCtrl.opus.keybaseKeyId" select="opusCtrl.initialiseKeyplayer()">
             <div class="row">
-                <key-player key-id="opusCtrl.opus.keybaseKeyId" style="display: block"
-                     keybase-url="${grailsApplication.config.keybase.key.lookup}"
-                     profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></key-player>
+                <script type="text/ng-template" id="keyplayer.html">
+                    <key-player key-id="opusCtrl.opus.keybaseKeyId" style="display: block"
+                        keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                        profile-url="http://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></key-player>
+                </script>
+                <ng-include src="opusCtrl.keybaseTemplateUrl"/>
             </div>
         </tab>
         <tab heading="Documents" class="font-xxsmall">

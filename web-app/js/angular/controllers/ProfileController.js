@@ -509,6 +509,12 @@ profileEditor.controller('ProfileController',
             messageService.alert("An error has occurred while restoring your profile.");
         });
     }
+
+    // Support for lazy loading the keyplayer.
+    self.keybaseTemplateUrl = undefined;
+    self.initialiseKeyplayer = function() {
+        self.keybaseTemplateUrl = 'keyplayer.html';
+    };
 }]);
 
 /**
