@@ -258,7 +258,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
             future.then(function () {
                 self.loadImages();
 
-                messageService.success("You images has been successfully published to the Atlas of Living Australia image library.");
+                messageService.success("Your images has been successfully published to the Atlas of Living Australia image library.");
             }, function() {
                 messageService.alert("An error occurred while publishing your image.");
             })
