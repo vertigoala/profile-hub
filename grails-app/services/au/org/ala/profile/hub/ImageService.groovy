@@ -488,7 +488,7 @@ class ImageService {
                     imageDisplayOption?.imageId = uploadResponse.resp.images[0]
                 }
             }
-            if ((uploadResponse?.statusCode.toInteger() >= 200) && (uploadResponse?.statusCode.toInteger() <= 299)) {  //don't delete the local images if the upload failed
+            if ((uploadResponse?.statusCode?.toInteger() >= 200) && (uploadResponse?.statusCode?.toInteger() <= 299)) {  //don't delete the local images if the upload failed
                 if (staged) {
                     deleteStagedImage(opus.uuid, profile.uuid, imageId)
                 } else {
