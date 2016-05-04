@@ -4,6 +4,7 @@ import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
 import spock.lang.Ignore
+import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 @TestFor(ImageService)
@@ -413,7 +414,6 @@ class ImageServiceSpec extends Specification {
         0 * profileService.recordStagedImage(_, _, _)
     }
 
-    @Ignore
     def "publishImages should upload images to the biocache and delete the staged files"() {
         setup:
         profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1"], profile: [uuid: "profile1", stagedImages: [
@@ -434,9 +434,9 @@ class ImageServiceSpec extends Specification {
         imageService.publishStagedImages("opusId", "profile1")
 
         then:
+        imageService.biocacheService.uploadImage(_,_,_,_,_) >> [statusCode: 201, resp: ['imageId':'123']]
         2 * profileService.recordStagedImage(_, _, _)
-        2 * biocacheService.uploadImage(_, _, _, _, _)
-        new File("${grailsApplication.config.image.staging.dir}/profile1").exists() == false
+        assertFalse ("Staged images were not removed after upload",new File("${grailsApplication.config.image.staging.dir}/profile1").exists())
     }
 
     def "publishImages should replace the staged id with a permanent id for the primary image if it was a staged image"() {
@@ -467,7 +467,7 @@ class ImageServiceSpec extends Specification {
         1 * profileService.updateProfile(_, _, expectedUpdates, true)
     }
 
-    @Ignore
+
     def "publishImages should not crash if the images do not have any metadata"() {
         setup:
         profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1"], profile: [uuid: "profile1", stagedImages: [
@@ -487,8 +487,8 @@ class ImageServiceSpec extends Specification {
         imageService.publishStagedImages("opusId", "profile1")
 
         then:
-        1 * biocacheService.uploadImage(_, _, _, _, _)
+        imageService.biocacheService.uploadImage(_,_,_,_,_) >> [statusCode: 201, resp: ['imageId':'123']]
         1 * profileService.recordStagedImage(_, _, _)
-        new File("${grailsApplication.config.image.staging.dir}/profile1").exists() == false
-    }
+        assertFalse("Something went wrong when an image has no metadata",new File("${grailsApplication.config.image.staging.dir}/profile1/image2.jpg").exists())
+  }
 }
