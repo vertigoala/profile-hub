@@ -35,7 +35,6 @@ class BiocacheService {
     }
 
 
-
     String copyFileForUpload(String imageId, def file, File tempDir) {
         String filename = ''
         //Images sent directly to central service on upload
@@ -46,7 +45,6 @@ class BiocacheService {
             //Private and staged images are stored relative to this application, and may be sent to central image service later
         } else if (file instanceof File) {
             filename = file.getName()
-//        file.renameTo(new File(tempDir, file.getName()))
             //Make defensive copy in case fails
             File fileCopy = new File(tempDir, "/${filename}")
             Path target = fileCopy.toPath()
@@ -67,10 +65,10 @@ class BiocacheService {
      * @param metadata - information about the image
      * @return Map response from the webservice including statusCode and resp
      */
-    def uploadImage(String opusId, String profileId, String dataResourceId,  file, Map metadata) {
+    def uploadImage(String opusId, String profileId, String dataResourceId, file, Map metadata) {
         String imageId = UUID.randomUUID()
         File tempDir = new File("${grailsApplication.config.temp.file.location}")
-        String filename = copyFileForUpload(imageId,file,tempDir)
+        String filename = copyFileForUpload(imageId, file, tempDir)
 
         metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${enc(opusId)}/profile/${enc(profileId)}/file/${enc(filename)}"
 
@@ -94,8 +92,6 @@ class BiocacheService {
 
         webService.post("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
     }
-
-
 
     private static enc(String str) {
         URLEncoder.encode(str, "utf-8")
