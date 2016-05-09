@@ -4,15 +4,23 @@ profileEditor.directive('imageUpload', function ($browser) {
         require: [],
         scope: {
             opus: '=',
+            image: '=?',
             callbackFn: '&onUploadComplete', // function to be invoked when the upload is complete - takes a single parameter: the image metadata object
             uploadOnEvent: '@', // name of the event to be $broadcast by the parent scope to trigger the upload (e.g. when embedding the upload form in a larger form with a single OK button)
+            updateOnEvent: '@?', // name of the event to be $broadcast by the parent scope to trigger saving metadata
             showMetadata: '@', // true to ask for metadata fields, false to just ask for the file
             url: '@' // the url to post the file to
         },
         templateUrl: $browser.baseHref() + 'static/templates/imageUpload.html',
         controller: ['$scope', 'profileService', 'util', 'Upload', '$cacheFactory', '$filter', function ($scope, profileService, util, Upload, $cacheFactory, $filter) {
-            $scope.metadata = {rightsHolder: $scope.opus.title};
-            $scope.files = null;
+            if ($scope.image) {
+                $scope.updateMode = true;
+                $scope.metadata = $scope.image.metadata;
+            } else {
+                $scope.updateMode = false;
+                $scope.metadata = {rightsHolder: $scope.opus.title};
+            }
+            $scope.files = [];
             $scope.error = null;
             $scope.showMetadata = true;
 
@@ -26,13 +34,19 @@ profileEditor.directive('imageUpload', function ($browser) {
 
             profileService.getLicences().then(function (data) {
                 $scope.licences = orderBy(data, "name");
-                $scope.metadata.licence = $scope.licences[0];
+                if ($scope.metadata.licence) {
+                    var licence = _.findWhere($scope.licences, { name: $scope.metadata.licence });
+                    $scope.metadata.licence = licence || $scope.licences[0];
+                } else {
+                    $scope.metadata.licence = $scope.licences[0];
+                }
             });
 
             $scope.doUpload = function () {
                 if ($scope.files.length > 0) {
                     $scope.metadata.dataResourceId = $scope.opus.dataResourceUid;
                     $scope.metadata.licence = $scope.metadata.licence.name;
+                    $scope.metadata.created = util.formatLocalDate($scope.metadata.created);
 
                     Upload.upload({
                         url: $scope.url,
@@ -50,11 +64,30 @@ profileEditor.directive('imageUpload', function ($browser) {
                         $scope.error = "An error occurred while uploading your image."
                     });
                 } else {
-                    console.error("'performUpload' event broadcase when there are 0 files to be uploaded");
+                    console.error("'performUpload' event broadcast when there are 0 files to be uploaded");
                 }
             };
 
+            $scope.save = function() {
+              if ($scope.image) {
+                  $scope.metadata.licence = $scope.metadata.licence.name;
+                  $scope.metadata.created = util.formatLocalDate($scope.metadata.created);
+                  $cacheFactory.get('$http').removeAll();
+
+                  profileService.saveImageMetadata($scope.image.imageId, $scope.metadata).then(function(data) {
+                      if (angular.isDefined($scope.callbackHandler)) {
+                          $scope.callbackHandler(data);
+                      }
+                  }, function (error) {
+                      $scope.error = "An error occurred while updating your image."
+                  });
+              } else {
+                  console.error("'save' event when there is not existing image")
+              }
+            };
+
             $scope.$on($scope.uploadOnEvent, $scope.doUpload);
+            $scope.$on($scope.updateOnEvent, $scope.save);
         }],
         link: function(scope) {
             scope.$watch ("showMetadata", function(newValue) {

@@ -394,6 +394,10 @@ class ImageService {
         excluded
     }
 
+    def updateLocalImageMetadata(String imageId, Map metadata) {
+        webService.post("${grailsApplication.config.profile.service.url}/image/${enc(imageId)}/metadata", metadata)
+    }
+
     def publishPrivateImage(String opusId, String profileId, String imageId) {
         def model = profileService.getProfile(opusId, profileId, true)
 
@@ -466,7 +470,7 @@ class ImageService {
                             license         : localImage.licence ?: "",
                             title           : localImage.title ?: "",
                             description     : localImage.description ?: "",
-                            dateCreated     : localImage.dateCreated ?: "",
+                            created         : localImage.created ?: "",
                             originalFilename: localImage.originalFileName,
                             contentType     : localImage.contentType
                     ]
@@ -548,6 +552,10 @@ class ImageService {
 
     private static String buildFilePath(String parentDir, String collectionId, String profileId, String imageId) {
         parentDir + separator + collectionId + separator + profileId + separator + imageId
+    }
+
+    def enc(String value) {
+        value ? URLEncoder.encode(value, "UTF-8") : ""
     }
 
 }

@@ -470,6 +470,19 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        saveImageMetadata: function(imageId, data) {
+            $log.debug("Saving image metadata: " + imageId);
+            var future = null;
+            var self = this;
+            if (imageId) {
+                future = enqueue(function() {
+                    return $http.post(util.contextRoot() + "/image/" + imageId + "/metadata", data)
+                });
+            }
+
+            return util.toStandardPromise(future);
+        },
+
         publishPrivateImage: function (opusId, profileId, imageId) {
             var future = enqueue(function () {
                 return $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/image/" + imageId + "/publish");

@@ -255,7 +255,7 @@ class OpusController extends BaseController {
             if (!opus) {
                 notFound()
             } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
+                response.setContentType(CONTENT_TYPE_JSON)
                 render opus as JSON
             }
         }

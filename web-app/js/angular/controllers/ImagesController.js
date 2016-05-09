@@ -141,11 +141,35 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
             resolve: {
                 opus: function () {
                     return self.opus;
+                },
+                image: function() {
+                    return null;
                 }
             }
         });
 
         popup.result.then(function () {
+            self.loadImages();
+        });
+    };
+
+    self.editImage = function(image) {
+        var popup = $modal.open({
+            templateUrl: $browser.baseHref() + "static/templates/imageUploadModal.html",
+            controller: "ImageUploadController",
+            controllerAs: "imageUploadCtrl",
+            size: "md",
+            resolve: {
+                opus: function() {
+                    return self.opus;
+                },
+                image: function() {
+                    return image;
+                }
+            }
+        });
+
+        popup.result.then(function (image) {
             self.loadImages();
         });
     };

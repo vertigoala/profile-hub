@@ -28,7 +28,7 @@
                             <p class="caption" ng-if="imageCtrl.imageCaption(image)">"{{ imageCtrl.imageCaption(image) }}"
                                 <span class="caption"
                                       ng-if="image.metadata.creator">by {{ image.metadata.creator }}<span
-                                        ng-if="image.metadata.dateCreated">, {{ image.metadata.dateCreated | date: 'dd/MM/yyyy' }}</span>
+                                        ng-if="image.metadata.created">, {{ image.metadata.created | date: 'dd/MM/yyyy' }}</span>
                                 </span>
                                 <span ng-if="image.metadata.rightsHolder">(&copy; {{ image.metadata.rightsHolder }})</span>
                             </p>
@@ -58,23 +58,25 @@
         <div class="panel-body">
             <div class="col-sm-12">
                 <div class="row section-no-para" ng-if="imageCtrl.images.length > 0">
-                    <div class="col-sm-4">
-                        <h5>Image</h5>
-                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h5>Image</h5>
+                        </div>
 
-                    <div class="col-sm-2">
-                        <h5>Display on public view</h5>
-                    </div>
+                        <div class="col-sm-2">
+                            <h5>Display on public view</h5>
+                        </div>
 
-                    <div class="col-sm-2">
-                        <h5>Use as the main image</h5>
-                    </div>
+                        <div class="col-sm-2">
+                            <h5>Use as the main image</h5>
+                        </div>
 
-                    <div class="col-sm-4">
-                        <h5>Override caption</h5>
-                    </div>
+                        <div class="col-sm-4">
+                            <h5>Override caption</h5>
+                        </div>
 
-                    <div class="clearfix"></div>
+                    %{--<div class="clearfix"></div>--}%
+                    </div>
 
                     <div ng-repeat="image in imageCtrl.images" class="row border-bottom margin-bottom-1">
                         <div class="col-sm-4">
@@ -90,16 +92,6 @@
                                       title="This image is {{image.type.name == 'OPEN' ? 'available in the Atlas of Living Australia image library' : image.type.name == 'PRIVATE' ? 'only visible within this collection' : 'only visible in draft mode'}}">{{image.type.name}}</span>
 
                                 <div class="meta inline-block">{{ image.dataResourceName }}</div>
-
-                                <div>
-                                    <button class="btn btn-link" ng-click="imageCtrl.deleteLocalImage(image.imageId, image.type.name)"
-                                            ng-show="image.type.name != 'OPEN'"><i
-                                            class="fa fa-trash-o color--red"></i> Delete image</button>
-
-                                    <button class="btn btn-link" ng-click="imageCtrl.publishPrivateImage(image.imageId)"
-                                            ng-show="image.type.name == 'PRIVATE'"><i
-                                            class="fa fa-paper-plane color--green"></i> Push image to open repository</button>
-                                </div>
 
                             </div>
                         </div>
@@ -135,9 +127,32 @@
                         </div>
 
                         <div class="col-sm-4">
-                            <div class="form-group">
+                            <div class="form-group" ng-if="image.type.name == 'OPEN'">
                                 <label class="sr-only" for="{{image.imageId}}-caption">Caption</label>
                                 <input type="text" class="form-control" id="{{image.imageId}}-caption" ng-model="image.caption" placeholder="Alternative caption">
+                            </div>
+                            <div class="form-group" ng-if="image.type.name != 'OPEN'">
+                                <div class="btn-group" role="group" aria-label="Image tools">
+                                    <button type="button" aria-label="Edit image"
+                                            tooltip="Edit '{{image.metadata.title}}'" tooltip-placement="bottom" tooltip-append-to-body="true"
+                                            class="btn btn-sm btn-default"
+                                            ng-click="imageCtrl.editImage(image)">
+                                        <i class="fa fa-edit"></i> Edit
+                                    </button>
+                                    <button type="button" aria-label="Push image to open repository"
+                                            tooltip="Push '{{image.metadata.title}}' to open repository"  tooltip-placement="bottom" tooltip-append-to-body="true"
+                                            class="btn btn-sm btn-success"
+                                            ng-click="imageCtrl.publishPrivateImage(image.imageId)"
+                                            ng-show="image.type.name == 'PRIVATE'">
+                                        <i class="fa fa-paper-plane"></i> Push
+                                    </button>
+                                    <button type="button" aria-label="Delete image"
+                                            tooltip="Delete '{{image.metadata.title}}'" tooltip-placement="bottom" tooltip-append-to-body="true"
+                                            class="btn btn-sm btn-danger"
+                                            ng-click="imageCtrl.deleteLocalImage(image.imageId, image.type.name)">
+                                        <i class="fa fa-trash-o color--red"></i> Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

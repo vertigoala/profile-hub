@@ -21,13 +21,13 @@
             </div>
         </div>
 
-        <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.dateCreated">
+        <div class= "row margin-bottom-1" ng-show="imageMetadataCtrl.image.metadata.created">
             <div class="col-sm-3">
                 <span class="output-label">Date Taken</span>
             </div>
 
             <div class="col-sm-9">
-                <span>{{ imageMetadataCtrl.image.metadata.dateCreated }}</span>
+                <span>{{ imageMetadataCtrl.image.metadata.created | date : 'yyyy-MM-dd'}}</span>
             </div>
         </div>
 

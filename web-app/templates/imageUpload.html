@@ -1,5 +1,5 @@
 <div class="form-horizontal">
-    <div class="form-group">
+    <div class="form-group" ng-show="!updateMode">
         <label for="file" class="col-sm-3 control-label">Image *</label>
 
         <div class="col-sm-9">
@@ -34,10 +34,10 @@
 
     <div class="form-horizontal">
         <div class="form-group">
-            <label for="dateCreated" class="col-sm-3 control-label">Date Taken</label>
+            <label for="created" class="col-sm-3 control-label">Date Taken</label>
 
             <div class="col-sm-9">
-                <fallback-date-picker field-id="dateCreated" ng-model="metadata.dateCreated" />
+                <fallback-date-picker field-id="created" ng-model="metadata.created" />
             </div>
         </div>
     </div>
@@ -108,7 +108,10 @@
 </div>
 
 <div class="col-md-12">
-    <button class="btn btn-primary pull-right" ng-show="!uploadOnEvent" ng-click="doUpload()" ng-disabled="!files || file.length == 0">
+    <button class="btn btn-primary pull-right" ng-if="updateMode" ng-show="!uploadOnEvent" ng-click="doUpdate()">
+        Save
+    </button>
+    <button class="btn btn-primary pull-right" ng-if="!updateMode" ng-show="!uploadOnEvent" ng-click="doUpload()" ng-disabled="!files || file.length == 0">
         Upload
     </button>
 </div>
