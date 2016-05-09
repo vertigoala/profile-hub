@@ -166,7 +166,7 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
         } else {
-            response.setContentType(CONTENT_TYPE_JSON)
+            response.setContentType(CONTEXT_TYPE_JSON)
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
             def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 

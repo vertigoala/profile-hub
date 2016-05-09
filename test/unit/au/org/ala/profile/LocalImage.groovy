@@ -16,5 +16,5 @@ class LocalImage {
     String licence
     String creator
     String contentType
-    String dateCreated
+    String created
 }

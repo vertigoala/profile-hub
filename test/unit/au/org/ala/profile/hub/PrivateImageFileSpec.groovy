@@ -236,7 +236,7 @@ class PrivateImageFileSpec extends Specification {
         privateImage.setDescription('description')
         privateImage.setRightsHolder('FindPuffins')
         privateImage.setCreator('maker')
-        privateImage.setDateCreated(new Date().format('yyyy-MM-dd'))
+        privateImage.setCreated(new Date().format('yyyy-MM-dd'))
         privateImage.setLicence('Creative Commons Attribution')
 
         privateImage
