@@ -1,5 +1,9 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.ws.service.WebService
+
+
+
 import static au.org.ala.profile.hub.Utils.*
 import au.org.ala.images.thumb.ImageThumbnailer
 import au.org.ala.images.thumb.ThumbDefinition
@@ -416,6 +420,7 @@ class ImageService {
         Map profileUpdates = [:]
         List<File> imageDirectories = []
         List<File> imageFiles = []
+        List<File> imagesToPublish = []
         String localDirPath = staged ? grailsApplication.config.image.staging.dir : grailsApplication.config.image.private.dir
         //Check in old file directory structure
         File localDir = new File("${localDirPath}/${profile.uuid}")
@@ -432,7 +437,7 @@ class ImageService {
                 //these directories and take the image files without going into the subdirectories containing
                 //tiled images and thumbnails
                 imageDirectories.each { file ->
-                    file.traverse(maxDepth: 1) {
+                    file.traverse(maxDepth: 0) {
                         if (it.file) {
                             imageFiles << it
                         }
@@ -443,44 +448,47 @@ class ImageService {
 
         imageFiles.each {
             String imageId = imageIdFromFile(it)
-            Map localImage = images[imageId]
+            def image = images[imageId]
+            if (image) {
+                imagesToPublish << it
+            }
+        }
 
-            if (!localImage) {
-                log.error("Skipping publishing $it with id $imageId because it is missing image metadata.")
-                // Clean up staged / private file
-                deleteFileAndDirIfEmpty(imageId, it, localDir)
-            } else {
 
-                List<Map> multimedia = localImage ? [
-                        [
-                                creator         : localImage.creator ?: "",
-                                rights          : localImage.rights ?: "",
-                                rightsHolder    : localImage.rightsHolder ?: "",
-                                license         : localImage.licence ?: "",
-                                title           : localImage.title ?: "",
-                                description     : localImage.description ?: "",
-                                dateCreated     : localImage.dateCreated ?: "",
-                                originalFilename: localImage.originalFilename,
-                                contentType     : localImage.contentType
-                        ]
-                ] : []
-                Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
+        imagesToPublish.each {
+            String imageId = imageIdFromFile(it)
+            List<Map> localImage = [images[imageId]]
+            List<Map> multimedia = localImage ? [
+                    [
+                            creator         : localImage.creator ?: "",
+                            rights          : localImage.rights ?: "",
+                            rightsHolder    : localImage.rightsHolder ?: "",
+                            license         : localImage.licence ?: "",
+                            title           : localImage.title ?: "",
+                            description     : localImage.description ?: "",
+                            dateCreated     : localImage.dateCreated ?: "",
+                            originalFilename: localImage.originalFileName,
+                            contentType     : localImage.contentType
+                    ]
+            ] : []
+            Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
 
-                def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
+            def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
 
-                if (uploadResponse?.resp) {
-                    // check if the local image was set as the primary, and swap the local id for the new permanent id
-                    if (profile.primaryImage == imageId) {
-                        profileUpdates.primaryImage = uploadResponse.resp.images[0]
-                    }
-
-                    // check for any display options that were set for the local image, and swap the local id for the new permanent id
-                    Map imageDisplayOption = profile.imageSettings?.find { it.imageId == imageId }
-                    if (imageDisplayOption) {
-                        imageDisplayOption?.imageId = uploadResponse.resp.images[0]
-                    }
+            if (uploadResponse?.resp) {
+                // check if the local image was set as the primary, and swap the local id for the new permanent id
+                if (profile.primaryImage == imageId) {
+                    profileUpdates.primaryImage = uploadResponse.resp.images[0]
                 }
 
+                // check for any display options that were set for the local image, and swap the local id for the new permanent id
+                //that has been assigned by uploadImage call
+                Map imageDisplayOption = profile.imageSettings?.find { it.imageId == imageId }
+                if (imageDisplayOption) {
+                    imageDisplayOption?.imageId = uploadResponse.resp.images[0]
+                }
+            }
+            if ((uploadResponse?.statusCode?.toInteger() >= 200) && (uploadResponse?.statusCode?.toInteger() <= 299)) {  //don't delete the local images if the upload failed
                 if (staged) {
                     deleteStagedImage(opus.uuid, profile.uuid, imageId)
                 } else {

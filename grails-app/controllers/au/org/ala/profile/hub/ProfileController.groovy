@@ -484,12 +484,12 @@ class ProfileController extends BaseController {
         if (!pubId) {
             badRequest "Publication Id must be provided";
         } else {
-            def pubJson = profileService.getPublications(pubId)?.resp;
+            def pubJson = profileService.getPublications(pubId)
             if (!pubJson) {
                 notFound()
             } else {
-                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin;
-                def profile = profileService.getProfile(pubJson.opusId, pubJson.profileId, latest);
+                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+                def profile = profileService.getProfile(pubJson.opusId, pubJson.profileId, latest)
 
                 if (!profile) {
                     notFound()

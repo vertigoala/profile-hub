@@ -9,37 +9,24 @@
 <body>
 
 <div ng-controller="ALAAdminController as adminCtrl" ng-cloak>
-    <div class="row">
-        <div class="col-md-12">
-            <label for="outageMessage">Message</label>
+    <g:if test="${flash.message}">
+        <div class="alert alert-info">${flash.message}</div>
+    </g:if>
 
-            <div class="input-group">
-                <input id="outageMessage" type="text" ng-model="adminCtrl.message" class="form-control"/>
-                <span class="input-group-btn">
-                    <button class="btn btn-primary " ng-click="adminCtrl.postMessage()">Post message</button>
-                </span>
-            </div>
+    <g:render template="/ala-admin-form" plugin="ala-admin-plugin"/>
 
-        </div>
+    <hr/>
 
-        <hr class="col-md-12"/>
+    <div class="panel-heading">
+        <h3>Search index</h3>
     </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <button class="btn btn-primary" ng-click="adminCtrl.reloadConfig()">Reload external config</button>
-            </div>
-        </div>
+    <div class="panel-body">
+        <g:form controller="alaAdmin" action="reloadConfig">
+            <p>This lets you rebuild the Elastic Search index used for the free-text search feature</p>
+            <button class="btn btn-primary" ng-click="adminCtrl.reindex()">Rebuild search index</button>
+        </g:form>
     </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group">
-                <button class="btn btn-primary" ng-click="adminCtrl.reindex()">Rebuild search index</button>
-            </div>
-        </div>
-    </div>
+    <hr/>
 </div>
 </body>
 </html>

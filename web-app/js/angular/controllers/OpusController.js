@@ -440,6 +440,12 @@ profileEditor.controller('OpusController', function (profileService, util, messa
         self.showUpload[section] = !self.showUpload[section];
     };
 
+    // Support for lazy loading the keyplayer.
+    self.keybaseTemplateUrl = undefined;
+    self.initialiseKeyplayer = function() {
+        self.keybaseTemplateUrl = 'keyplayer.html';
+    };
+
     function loadKeybaseProjects() {
         console.log("loading keybase projects...");
 

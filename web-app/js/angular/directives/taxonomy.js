@@ -9,6 +9,7 @@ profileEditor.directive('taxonomy', function ($browser) {
             layout: '@',
             includeRank: '@',
             showChildren: '@',
+            showChildrenForLastOnly: '@',
             showInfraspecific: '@',
             showWithProfileOnly: '@',
             limit: '@'
@@ -17,6 +18,7 @@ profileEditor.directive('taxonomy', function ($browser) {
         controller: ['$scope', 'config', '$modal', 'messageService', 'profileService', function ($scope, config, $modal, messageService, profileService) {
             $scope.contextPath = config.contextPath;
             $scope.showChildren = false;
+            $scope.showChildrenForLastOnly = false;
             $scope.showInfraspecific = false;
             $scope.showWithProfileOnly = false;
             $scope.includeRank = false;
@@ -210,6 +212,11 @@ profileEditor.directive('taxonomy', function ($browser) {
             scope.$watch("showChildren", function(newValue) {
                 if (!_.isUndefined(newValue)) {
                     scope.showChildren = isTruthy(newValue);
+                }
+            });
+            scope.$watch("showChildrenForLastOnly", function(newValue) {
+                if (!_.isUndefined(newValue)) {
+                    scope.showChildrenForLastOnly = isTruthy(newValue);
                 }
             });
             scope.$watch("showInfraspecific", function(newValue) {

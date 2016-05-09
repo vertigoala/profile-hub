@@ -113,7 +113,7 @@ profileEditor.controller('ProfileController',
 
                     self.nslProtologue = data.name.primaryInstance[0].citationHtml;
                     if (data.name.primaryInstance[0].page) {
-                        self.nslProtologue += " " + data.name.primaryInstance[0].page;
+                        self.nslProtologue += ": " + data.name.primaryInstance[0].page;
                     }
                 }
             });
@@ -509,6 +509,12 @@ profileEditor.controller('ProfileController',
             messageService.alert("An error has occurred while restoring your profile.");
         });
     }
+
+    // Support for lazy loading the keyplayer.
+    self.keybaseTemplateUrl = undefined;
+    self.initialiseKeyplayer = function() {
+        self.keybaseTemplateUrl = 'keyplayer.html';
+    };
 }]);
 
 /**

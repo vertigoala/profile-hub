@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.ws.service.WebService
 import grails.test.mixin.TestFor
 import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin

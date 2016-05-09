@@ -1,6 +1,7 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.web.AuthService
+import au.org.ala.ws.service.WebService
 
 class UserService {
     def grailsApplication
@@ -30,7 +31,7 @@ class UserService {
     }
 
     def findUser(String username) {
-        webService.doPost("${grailsApplication.config.userdetails.service.url}/userDetails/getUserDetails?userName=${username?.encodeAsURL()}", [:])
+        webService.post("${grailsApplication.config.userdetails.service.url}/userDetails/getUserDetails?userName=${username?.encodeAsURL()}", [:])
     }
 
     def userInRole(role) {
@@ -45,7 +46,7 @@ class UserService {
 
     def checkEmailExists(String email) {
         def url = "${grailsApplication.config.userdetails.service.url}/userdetails/userDetails/getUserDetails?userName=${email}"
-        def resp = webService.doPost(url.toString(), [:])
+        def resp = webService.post(url.toString(), [:])
         return resp?.resp?.userId ?: ""
     }
 }

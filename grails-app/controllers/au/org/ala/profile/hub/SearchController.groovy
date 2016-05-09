@@ -2,7 +2,7 @@ package au.org.ala.profile.hub
 
 class SearchController extends BaseController {
 
-    private static final List<String> SEARCH_OPTIONS = ["nameOnly", "offset", "pageSize", "includeArchived"]
+    private static final List<String> SEARCH_OPTIONS = ["nameOnly", "offset", "pageSize", "includeArchived", "matchAll"]
 
     ProfileService profileService
 

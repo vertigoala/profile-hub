@@ -105,6 +105,8 @@ class UrlMappings {
 
         "/keybase/projects" controller: "opus", action: [GET: "retrieveKeybaseProjects"]
         "/keybase/findKey" controller: "keybase", action: [GET: "findKey"]
+        "/keybase/keyLookup" controller: "keybase", action: [GET: "keyLookup"]
+
 
         "/checkName" controller: "profile", action: [GET: "checkName"]
 
@@ -129,6 +131,8 @@ class UrlMappings {
         "/admin/reloadConfig" controller: "admin", action: [POST: "reloadConfig"]
         "/admin/reindex" controller: "admin", action: [POST: "reindex"]
         "/admin" controller: "admin", action: [GET: "index"]
+        "/alaAdmin/index" controller: "admin", action: [GET: "index"]
+        "/alaAdmin" controller: "admin", action: [GET: "index"]
 
         "500"(view: "/error")
         "404"(view: "/notFound")

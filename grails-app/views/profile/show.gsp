@@ -31,9 +31,10 @@
                           opus-id="profileCtrl.opusId"
                           layout="horizontal"
                           limit="4"
-                          show-children="false"
+                          show-children="true"
+                          show-children-for-last-only="false"
                           show-with-profile-only="true"
-                          show-infraspecific="true">
+                          show-infraspecific="false">
                 </taxonomy>
             </span>
         </ol>
