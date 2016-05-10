@@ -5,6 +5,9 @@ profileEditor.controller('MapController', function ($scope, profileService, util
     var self = this;
 
     self.init = function (biocacheWMSUrl, biocacheInfoUrl) {
+        self.loading = true;
+        self.editingMap = false;
+
         self.biocacheInfoUrl = biocacheInfoUrl;
         self.biocacheWMSUrl = biocacheWMSUrl;
 
@@ -17,8 +20,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                 self.profile = data.profile;
                 self.opus = data.opus;
 
-                var occurrenceQuery = self.constructQuery();
-
+                var occurrenceQuery = self.profile.occurrenceQuery;
                 var wmsLayer = biocacheWMSUrl + occurrenceQuery;
 
                 self.map = new ALA.Map("occurrenceMap", {
@@ -45,16 +47,19 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                 self.map.addLayer(layer, {});
 
                 self.map.registerListener("click", self.showOccurrenceDetails);
+
+                self.loading = false;
             },
             function () {
                 messageService.alert("An error occurred while retrieving the map information.");
+                self.loading = false;
             }
         );
     };
 
     self.showOccurrenceDetails = function (clickEvent) {
         var url = self.biocacheInfoUrl
-            + self.constructQuery()
+            + self.profile.occurrenceQuery
             + "&zoom=6"
             + "&lat=" + clickEvent.latlng.lat
             + "&lon=" + clickEvent.latlng.lng
@@ -73,45 +78,84 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         });
     };
 
-    self.constructQuery = function () {
-        var result = "";
-        if (self.profile && self.opus) {
-            var query = constructExcludedRankList() + "q=";
-            if (self.profile.guid && self.profile.guid != "null") {
-                query = query + encodeURIComponent("lsid:" + self.profile.guid);
-            } else {
-                query = query + encodeURIComponent(self.profile.scientificName);
-            }
+    self.saveMapConfiguration = function () {
+        var queryString = self.editableMap.getQueryString();
 
-            var occurrenceQuery = query;
+        if (queryString != self.profile.occurrenceQuery) {
+            self.profile.occurrenceQuery = queryString;
+            var promise = profileService.updateProfile(self.opusId, self.profileId, self.profile);
+            promise.then(function () {
+                messageService.info("Map configuration has been successfully updated.");
 
-            if (self.opus.recordSources) {
-                occurrenceQuery = query + encodeURIComponent(" AND (data_resource_uid:" + self.opus.recordSources.join(" OR data_resource_uid:") + ")")
-            }
-
-            result = occurrenceQuery;
+                self.toggleEditingMap();
+            }, function () {
+                messageService.alert("An error occurred while updating the map configuration.");
+            });
         }
-
-        return result;
     };
 
-    function constructExcludedRankList() {
-        var exclusionList = "";
+    self.resetToDefaultMapConfig = function () {
+        var confirm = util.confirm("This will remove all customisations from the map and return the configuration to the default for this collection. Are you sure you wish to proceed?");
+        confirm.then(function () {
+            // the default map config is just the q= portion of the url
+            var query = self.profile.occurrenceQuery;
 
-        if (self.opus.excludeRanksFromMap && self.opus.excludeRanksFromMap.length > 0) {
-            exclusionList = "fq=-(";
+            query = query.replace(/q=(.*)fq=/g, "q=$1");
 
-            angular.forEach(self.opus.excludeRanksFromMap, function (rank, index) {
-                if (index > 0) {
-                    exclusionList += " OR ";
-                }
-                exclusionList += "rank:" + rank;
-            });
+            self.editableMap.setQueryString(query);
+        });
+    };
 
-            exclusionList += ")&"
+    self.undoAllMapChanges = function () {
+        var confirm = util.confirm("This will remove all customisations you have made since beginning to edit the map configuration. Are you sure you wish to proceed?");
+        confirm.then(function () {
+            self.editableMap.setQueryString(self.profile.occurrenceQuery);
+        });
+        $scope.MapForm.$setPristine();
+    };
+
+    self.toggleEditingMap = function () {
+        if (self.editingMap) {
+            self.editableMap.setQueryString(self.profile.occurrenceQuery);
+            self.editingMap = false;
+            $scope.MapForm.$setPristine();
+        } else {
+            self.editingMap = true;
+            if (_.isUndefined(self.editableMap)) {
+                createEditableMap();
+            }
         }
+    };
 
-        return exclusionList;
+    self.redrawEditableMap = function() {
+        if (self.editingMap && !_.isUndefined(self.editableMap)) {
+            self.editableMap.map.redraw();
+        }
+    };
+
+    function createEditableMap() {
+        if (!config.readonly) {
+            var occurrenceQuery = self.profile.occurrenceQuery;
+
+            self.editableMap = new ALA.OccurrenceMap("editOccurrenceMap",
+                self.opus.biocacheUrl,
+                occurrenceQuery,
+                {
+                    mapOptions: {
+                        zoomToObject: false,
+                        zoom: self.opus.mapZoom,
+                        center: [self.opus.mapDefaultLatitude, self.opus.mapDefaultLongitude]
+                    },
+                    point: {
+                        colour: self.opus.mapPointColour,
+                        mapAttribution: self.opus.mapAttribution
+                    }
+                }
+            );
+
+            self.editableMap.map.subscribe(function () {
+                $scope.MapForm.$setDirty();
+            });
+        }
     }
-
 });
