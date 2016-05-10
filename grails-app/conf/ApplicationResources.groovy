@@ -36,6 +36,7 @@ modules = {
         resource url:"js/angular/directives/profileComparison.js"
         resource url:"js/angular/directives/nomenclature.js"
         resource url:"js/angular/directives/publication.js"
+        resource url:"js/angular/directives/lazyTab.js"
         resource url:"js/angular/directives/link.js"
         resource url:"js/angular/directives/saveButton.js"
         resource url:"js/angular/directives/saveAll.js"
