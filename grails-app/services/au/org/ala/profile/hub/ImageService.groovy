@@ -256,7 +256,7 @@ class ImageService {
      * @param readonlyView
      * @param pageSize - equivalent to rows in SOLR i.e how many records to return
      * @param startIndex - equivalent to start in SOLR i.e. the first record to return
-     * @return JSON response containing image metadata
+     * @return MAP containing image metadata and 'statusCode'
      */
     def retrievePublishedImagesPaged(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, String pageSize, String startIndex) {
         Map response = [:]
@@ -276,25 +276,30 @@ class ImageService {
 
     def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
         Map response = [:]
-
+        List allImages = []
         def model = profileService.getProfile(opusId, profileId, latest)
         def profile = model.profile
         def opus = model.opus
 
         def publishedImages = biocacheService.retrieveImages(searchIdentifier, imageSources)
 
-        List images = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
-
+        //we want to display the images in a specific order - staged, private, published
         if (profile.privateMode && profile.stagedImages) {
-            images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
+            allImages.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
         }
 
         // The collection may now, or may have been at some point, private, so look for any private images that may exist.
         // When a collection is changed from private to public, existing private images are NOT published automatically.
-        images.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
+        if (profile.privateImages) {
+            allImages.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
+        }
+        if (publishedImages?.size() > 0) {
+            List publishedImageList = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
+            allImages.addAll(publishedImageList)
+        }
 
         response.statusCode = SC_OK
-        response.resp = images
+        response.resp = allImages
 
         response
     }
