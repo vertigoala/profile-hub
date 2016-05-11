@@ -42,8 +42,8 @@ class ProfileController extends BaseController {
                           aboutPageUrl: getAboutUrl(model.opus, model.profile),
                           footerText  : model.opus.footerText,
                           contact     : model.opus.contact,
-                          displayMap  : true] // always display the map in Edit mode
-                render view: "show", model: model
+                          displayMap  : true]
+                render view: "edit", model: model
             }
         }
     }

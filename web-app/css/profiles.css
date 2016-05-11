@@ -317,6 +317,11 @@ hr.comment-divider {
     max-height: 300px;
 }
 
+.primary-image.small div img {
+    height: 150px;
+    max-height: 150px;
+}
+
 .primary-image p {
     height: 290px;
     min-width: 250px;

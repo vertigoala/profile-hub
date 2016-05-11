@@ -8,6 +8,11 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     var SUPPORTING_COLLECTION_APPROVED = "APPROVED";
     var SUPPORTING_COLLECTION_REJECTED = "REJECTED";
 
+    self.profilePageLayouts = [
+        {name: "singleTab", displayText: "Show all content on a single page", description: "All Profile content will be displayed on a single tab, with the exception of keys and attachments (if present)"},
+        {name: "tabbed", displayText: "Show content on tabs", description: "Profile content will be split across the following tabs: At a glance, Details, Distribution, Gallery, Literature, Key, Documents"}
+    ];
+
     self.opus = null;
     self.opusId = null;
     self.opusList = [];
