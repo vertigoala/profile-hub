@@ -34,9 +34,6 @@ profileEditor.directive('lazyTab', ['$templateCache', function ($templateCache) 
             scope.lazyTabCtrl = {
                 loading:true,
                 performOriginalOnSelectCallback: function() {
-                    console.log("calling");
-                    console.log(scope.$parent);
-                    console.log(existingOnSelectAttribute);
                     scope.$parent.$eval(existingOnSelectAttribute);
                 },
                 finishedLoading: function() {
