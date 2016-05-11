@@ -3,7 +3,7 @@
         <h2 class="heading-large inline"><span
                 data-ng-bind-html="profileCtrl.formatName() | default:'Loading...' | sanitizeHtml"></span></h2>
 
-        <div class="margin-bottom-1 inline-block small">
+        <div class="margin-bottom-1 inline-block small" ng-show="profileCtrl.opus">
             <a href="${grailsApplication.config.bie.base.url}/species/{{ profileCtrl.profile.guid }}"
                ng-show="profileCtrl.profile.guid" title="View this taxon in the Atlas of Living Australia"
                class="padding-left-1" target="_blank"><span class="fa fa-search">&nbsp;</span>ALA</a>
@@ -54,11 +54,6 @@
                         </div>
                         <div class="col-md-3">
                             <g:render template="primaryImage" model="[size: 'small']"/>
-
-                            <div>
-                                <a target="_self" href="" class="padding-left-1 margin-top-1 inline-block"
-                                   du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}images">View all images</a>
-                            </div>
                         </div>
                     </div>
                     <div class="row">
