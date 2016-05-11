@@ -167,11 +167,11 @@
                                 </div>
                             </div>
                         </tab>
-                        <tab heading="Key" class="font-xxsmall" ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey">
+                        <tab heading="Key" class="font-xxsmall" ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey" lazy-tab>
                             <div class="row">
                                 <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                      opus-id="profileCtrl.opus.uuid"
-                                     keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                                     keybase-url="${g.createLink(controller:'keybase', action:'keyLookup', absolute: true)}"
                                      key-lookup-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
                                      profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
                             </div>

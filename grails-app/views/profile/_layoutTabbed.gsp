@@ -69,7 +69,7 @@
                         </div>
                     </div>
                 </tab>
-                <tab heading="Distribution" class="font-xxsmall" select="doSomething()" lazy-tab>
+                <tab heading="Distribution" class="font-xxsmall" lazy-tab>
                     <div class="row">
                         <div class="col-md-12">
                             <g:render template="map"/>
@@ -101,7 +101,7 @@
                     <div class="row">
                         <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                     opus-id="profileCtrl.opus.uuid"
-                                    keybase-url="${grailsApplication.config.keybase.key.lookup}"
+                                    keybase-url="${g.createLink(controller:'keybase', action:'keyLookup', absolute: true)}"
                                     key-lookup-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
                                     profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
                     </div>
