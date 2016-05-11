@@ -114,7 +114,9 @@ profileEditor.controller('MapController', function ($scope, profileService, util
             // the default map config is just the q= portion of the url
             var query = self.profile.occurrenceQuery;
 
-            query = query.replace(/q=(.*)fq=/g, "q=$1");
+            var queryParams = URI.parseQuery(query);
+
+            query = "q=" + queryParams.q;
 
             self.editableMap.setQueryString(query);
         });
