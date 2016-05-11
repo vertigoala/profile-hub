@@ -57,17 +57,6 @@
                                ng-model="opusCtrl.opus.mapZoom">
                     </div>
                 </div>
-
-                <h4 class="heading-underlined">Ranks to exclude from occurrence maps</h4>
-                <div class="form-inline">
-                    <div class="form-group">
-                        <div class="checkbox col-lg-2 col-md-2 col-sm-12" ng-repeat="(key, rank) in opusCtrl.ranks">
-                            <label>
-                                <input type="checkbox" checklist-model="opusCtrl.opus.excludeRanksFromMap" checklist-value="rank">&nbsp; {{rank | capitalize}}
-                            </label>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
