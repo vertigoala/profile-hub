@@ -515,7 +515,7 @@ class ProfileControllerSpec extends Specification {
         assert response.status == 666
     }
 
-    def "show/edit should not include the map when the profile has no matched name"() {
+    def "show should not include the map when the profile has no matched name"() {
 
         setup:
         profileService.getProfile(_, _, _) >> [profile: [scientificName: "bla", guid:null], opus: [title: "opus"]]
@@ -528,17 +528,24 @@ class ProfileControllerSpec extends Specification {
 
         then:
         model.displayMap == false
+    }
+
+    def "edit should include the map even when the profile has no matched name"() {
+        setup:
+        profileService.getProfile(_, _, _) >> [profile: [scientificName: "bla", guid:null], opus: [title: "opus"]]
+        profileService.hasMatchedName(_) >> false
 
         when:
+        params.opusId = "opus"
+        params.profileId = "bla"
         controller.edit()
 
         then:
-        model.displayMap == false
+        model.displayMap == true
     }
 
 
     def "show/edit should include the map when the profile has a matched name"() {
-
         setup:
         profileService.getProfile(_, _, _) >> [profile: [scientificName: "bla", guid:"1234"], opus: [title: "opus"]]
         profileService.hasMatchedName(_) >> true
