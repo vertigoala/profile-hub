@@ -23,7 +23,7 @@ profileEditor.directive('lazyTab', ['$templateCache', function ($templateCache) 
         // Remove the original tab content from the DOM and save it as a template.  This template will be loaded
         // when the tab select event is fired.
         $templateCache.put(templateName, tElement.html());
-        tElement.children().remove();
+        tElement.contents().remove();
 
         var placeholderElement = angular.element('<div ng-include src="lazyTabCtrl.tabTemplate" onload="lazyTabCtrl.finishedLoading()"></div>');
         var loadingElement = angular.element('<loading state="lazyTabCtrl.loading"></loading>');
@@ -34,6 +34,9 @@ profileEditor.directive('lazyTab', ['$templateCache', function ($templateCache) 
             scope.lazyTabCtrl = {
                 loading:true,
                 performOriginalOnSelectCallback: function() {
+                    console.log("calling");
+                    console.log(scope.$parent);
+                    console.log(existingOnSelectAttribute);
                     scope.$parent.$eval(existingOnSelectAttribute);
                 },
                 finishedLoading: function() {
