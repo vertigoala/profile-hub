@@ -13,7 +13,7 @@
                         </div>
                     </div>
 
-                    <div ng-show="mapCtrl.editingMap" in-view="mapCtrl.redrawEditableMap()">
+                    <div ng-show="mapCtrl.editingMap">
                         <m:occurrenceMap id="editOccurrenceMap"/>
 
                         <div class="row">

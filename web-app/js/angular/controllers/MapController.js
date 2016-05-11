@@ -16,12 +16,11 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
         var future = profileService.getProfile(self.opusId, self.profileId);
 
+        self.wmsLayer = null;
+
         future.then(function (data) {
                 self.profile = data.profile;
                 self.opus = data.opus;
-
-                var occurrenceQuery = self.profile.occurrenceQuery;
-                var wmsLayer = biocacheWMSUrl + occurrenceQuery;
 
                 self.map = new ALA.Map("occurrenceMap", {
                     drawControl: false,
@@ -35,16 +34,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                     center: [self.opus.mapDefaultLatitude, self.opus.mapDefaultLongitude]
                 });
 
-                var layer = L.tileLayer.smartWms(wmsLayer, {
-                    layers: 'ALA:occurrences',
-                    format: 'image/png',
-                    attribution: self.opus.mapAttribution,
-                    outline: "true",
-                    ENV: "color:" + self.opus.mapPointColour + ";name:circle;size:4;opacity:1"
-                });
-                layer.setZIndex(99);
-
-                self.map.addLayer(layer, {});
+                self.updateWMSLayer();
 
                 self.map.registerListener("click", self.showOccurrenceDetails);
 
@@ -55,6 +45,27 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                 self.loading = false;
             }
         );
+    };
+
+    self.updateWMSLayer = function() {
+        if (self.wmsLayer != null) {
+            self.map.removeLayer(self.wmsLayer);
+        }
+
+        var occurrenceQuery = self.profile.occurrenceQuery;
+        var wmsUrl = self.biocacheWMSUrl + occurrenceQuery;
+
+        self.wmsLayer = L.tileLayer.smartWms(wmsUrl, {
+            layers: 'ALA:occurrences',
+            format: 'image/png',
+            attribution: self.opus.mapAttribution,
+            outline: "true",
+            ENV: "color:" + self.opus.mapPointColour + ";name:circle;size:4;opacity:1"
+        });
+        self.wmsLayer.setZIndex(99);
+
+        self.map.addLayer(self.wmsLayer, {});
+        self.map.zoom(self.opus.mapZoom, {lat: self.opus.mapDefaultLatitude, lng: self.opus.mapDefaultLongitude});
     };
 
     self.showOccurrenceDetails = function (clickEvent) {
@@ -83,11 +94,14 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
         if (queryString != self.profile.occurrenceQuery) {
             self.profile.occurrenceQuery = queryString;
+
             var promise = profileService.updateProfile(self.opusId, self.profileId, self.profile);
             promise.then(function () {
                 messageService.info("Map configuration has been successfully updated.");
 
+                self.updateWMSLayer();
                 self.toggleEditingMap();
+                setTimeout(self.map.redraw, 500);
             }, function () {
                 messageService.alert("An error occurred while updating the map configuration.");
             });
@@ -127,12 +141,6 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         }
     };
 
-    self.redrawEditableMap = function() {
-        if (self.editingMap && !_.isUndefined(self.editableMap)) {
-            self.editableMap.map.redraw();
-        }
-    };
-
     function createEditableMap() {
         if (!config.readonly) {
             var occurrenceQuery = self.profile.occurrenceQuery;
@@ -143,7 +151,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                 {
                     mapOptions: {
                         zoomToObject: false,
-                        zoom: self.opus.mapZoom,
+                        zoom: self.opus.mapZoom + 1, // the edit map panel is bigger than the view, so increase the zoom
                         center: [self.opus.mapDefaultLatitude, self.opus.mapDefaultLongitude]
                     },
                     point: {
@@ -156,6 +164,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
             self.editableMap.map.subscribe(function () {
                 $scope.MapForm.$setDirty();
             });
+            setTimeout(self.editableMap.map.redraw, 500);
         }
     }
 });
