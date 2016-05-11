@@ -46,6 +46,7 @@
                     <div class="row">
                         <div class="col-md-9">
                             <g:render template="attributes"/>
+                            <g:render template="specimens"/>
                             <g:if test="${!profile.archivedDate}">
                                 <g:render template="taxon"/>
                             </g:if>
@@ -83,12 +84,12 @@
                         </div>
                     </div>
                 </tab>
-                <tab heading="Other information" class="font-xxsmall" lazy-tab>
+                <tab heading="Literature & Links" class="font-xxsmall" lazy-tab>
                     <div class="row">
                         <div class="col-md-12">
+                            <g:render template="../common/attachments"/>
                             <g:render template="links"/>
                             <g:render template="bhlLinks"/>
-                            <g:render template="specimens"/>
                             <g:render template="bibliography"/>
                             <g:if test="${!profile.archivedDate}">
                                 <g:render template="lists"/>
