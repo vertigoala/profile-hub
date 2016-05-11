@@ -40,7 +40,8 @@
 <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
     <div class="row">
         <div class="col-md-12" ng-cloak>
-            <tabset ng-class="!profileCtrl.readonly() || (profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey) || (profileCtrl.profile.attachments.length > 0) ? '' : 'single-tabbed-panel'">
+            %{--<tabset ng-class="!profileCtrl.readonly() || (profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey) || (profileCtrl.profile.attachments.length > 0) ? '' : 'single-tabbed-panel'">--}%
+            <tabset>
                 <tab heading="At a glance" class="font-xxsmall">
                     <div class="row">
                         <div class="col-md-9">
@@ -68,21 +69,21 @@
                         </div>
                     </div>
                 </tab>
-                <tab heading="Distribution" class="font-xxsmall">
+                <tab heading="Distribution" class="font-xxsmall" select="doSomething()" lazy-tab>
                     <div class="row">
                         <div class="col-md-12">
                             <g:render template="map"/>
                         </div>
                     </div>
                 </tab>
-                <tab heading="Gallery" class="font-xxsmall">
+                <tab heading="Gallery" class="font-xxsmall" lazy-tab>
                     <div class="row">
                         <div class="col-md-12">
                             <g:render template="images"/>
                         </div>
                     </div>
                 </tab>
-                <tab heading="Other information" class="font-xxsmall">
+                <tab heading="Other information" class="font-xxsmall" lazy-tab>
                     <div class="row">
                         <div class="col-md-12">
                             <g:render template="links"/>
@@ -96,7 +97,7 @@
                     </div>
                 </tab>
                 <tab heading="Key" class="font-xxsmall"
-                     ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey">
+                     ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey" lazy-tab>
                     <div class="row">
                         <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                     opus-id="profileCtrl.opus.uuid"
@@ -106,7 +107,7 @@
                     </div>
                 </tab>
                 <tab heading="Documents" class="font-xxsmall"
-                     ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0">
+                     ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0" lazy-tab>
                     <g:render template="../common/attachments"/>
                 </tab>
             </tabset>
