@@ -556,9 +556,10 @@ class ProfileController extends BaseController {
                     printVersion: true
             ]
 
-            byte[] pdf = exportService.createPdf(pdfOptions)
+            ByteArrayOutputStream pdfStream = new ByteArrayOutputStream()
+            exportService.createPdf(pdfOptions, pdfStream)
 
-            def response = profileService.savePublication(params.opusId as String, params.profileId as String, pdf)
+            def response = profileService.savePublication(params.opusId as String, params.profileId as String, pdfStream.toByteArray())
 
             handle response
         }

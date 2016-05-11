@@ -114,11 +114,14 @@
 <div class="row margin-top-1" ng-cloak ng-show="profileCtrl.profile.authorship.length > 0">
     <a name="view_authorship"></a>
 
-    <div class="col-md-12 profile-contributor-text">
+    <div class="col-sm-12 col-md-8 profile-contributor-text">
         Profile contributors: <span ng-repeat="contrib in profileCtrl.profile.authorship"
                                     ng-show="contrib.text">{{contrib.category | capitalize}}<span
                 ng-show="contrib.category == 'Author'">(s)</span> - {{contrib.text}}<span
                 ng-show="!$last">;&nbsp;</span></span>
+    </div>
+    <div class="col-sm-12 col-md-4 last-updated-text">
+        Last updated: <span class="last-updated">{{ (profileCtrl.profile.lastPublished || profileCtrl.profile.lastUpdated) | date : 'MMM d, y h:mm:ss' }}</span>
     </div>
 </div>
 

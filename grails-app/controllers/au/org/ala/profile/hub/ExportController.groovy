@@ -31,16 +31,10 @@ class ExportController extends BaseController {
 
                     render [:] as JSON
                 } else {
-                    byte[] pdfData = exportService.createPdf(extractOptionsFromParams(), latest)
-
-                    if (!pdfData) {
-                        notFound()
-                    } else {
-                        response.contentType = 'application/x-pdf'
-                        response.setHeader 'Content-disposition', "attachment; filename=\"${model.profile.scientificName.replaceAll(/\\W/, '')}.pdf\""
-                        response.outputStream << pdfData
-                        response.outputStream.flush()
-                    }
+                    response.contentType = 'application/pdf'
+                    response.setHeader 'Content-disposition', "attachment; filename=\"${model.profile.scientificName.replaceAll(/\\W/, '')}.pdf\""
+                    exportService.createPdf(extractOptionsFromParams(), response.outputStream, latest)
+                    response.outputStream.flush()
                 }
             }
         }

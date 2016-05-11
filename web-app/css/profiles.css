@@ -958,6 +958,12 @@ span.breadcrumb-dropdown {
     color: #0087BE;
 }
 
+.last-updated-text {
+    color: #0087BE;
+    text-align: right;
+    text-align: end;
+}
+
 .width-40 {
     width: 40%
 }
