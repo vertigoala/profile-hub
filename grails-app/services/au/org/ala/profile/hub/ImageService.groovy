@@ -1,14 +1,10 @@
 package au.org.ala.profile.hub
 
-import au.org.ala.ws.service.WebService
-
-
-
-import static au.org.ala.profile.hub.Utils.*
 import au.org.ala.images.thumb.ImageThumbnailer
 import au.org.ala.images.thumb.ThumbDefinition
 import au.org.ala.images.tiling.ImageTiler
 import au.org.ala.images.tiling.ImageTilerConfig
+import au.org.ala.ws.service.WebService
 import org.apache.commons.io.FileUtils
 import org.springframework.web.multipart.MultipartFile
 
@@ -17,6 +13,7 @@ import java.awt.*
 import java.awt.image.BufferedImage
 import java.util.List
 
+import static au.org.ala.profile.hub.Utils.getExtension
 import static org.apache.http.HttpStatus.SC_OK
 
 /**
@@ -250,16 +247,16 @@ class ImageService {
     }
     /**
      *
-     * @param opusId   - the collection
-     * @param profileId  - the taxon
+     * @param opusId - the collection
+     * @param profileId - the taxon
      * @param latest
      * @param imageSources
      * @param searchIdentifier
      * @param useInternalPaths
      * @param readonlyView
-     * @param pageSize     - equivalent to rows in SOLR i.e how many records to return
-     * @param startIndex   - equivalent to start in SOLR i.e. the first record to return
-     * @return  JSON response containing image metadata
+     * @param pageSize - equivalent to rows in SOLR i.e how many records to return
+     * @param startIndex - equivalent to start in SOLR i.e. the first record to return
+     * @return JSON response containing image metadata
      */
     def retrievePublishedImagesPaged(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, String pageSize, String startIndex) {
         Map response = [:]
@@ -276,7 +273,33 @@ class ImageService {
         response
     }
 
-    List prepareImagesForDisplay(def retrievedImages, def opus, def profile, boolean readonlyView)  {
+
+    def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
+        Map response = [:]
+
+        def model = profileService.getProfile(opusId, profileId, latest)
+        def profile = model.profile
+        def opus = model.opus
+
+        def publishedImages = biocacheService.retrieveImages(searchIdentifier, imageSources)
+
+        List images = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
+
+        if (profile.privateMode && profile.stagedImages) {
+            images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
+        }
+
+        // The collection may now, or may have been at some point, private, so look for any private images that may exist.
+        // When a collection is changed from private to public, existing private images are NOT published automatically.
+        images.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
+
+        response.statusCode = SC_OK
+        response.resp = images
+
+        response
+    }
+
+    List prepareImagesForDisplay(def retrievedImages, def opus, def profile, boolean readonlyView) {
         List images = []
 
         if (retrievedImages && retrievedImages.statusCode == SC_OK) {
@@ -314,63 +337,6 @@ class ImageService {
         images
     }
 
-    def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
-        Map response = [:]
-
-        def model = profileService.getProfile(opusId, profileId, latest)
-        def profile = model.profile
-        def opus = model.opus
-
-        def publishedImages = biocacheService.retrieveImages(searchIdentifier, imageSources)
-
-        List images = []
-
-        if (publishedImages && publishedImages.statusCode == SC_OK) {
-            List biocacheImages = publishedImages.resp?.occurrences?.findResults { biocacheImage ->
-                boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, biocacheImage.image)
-
-                Map image = [
-                        imageId         : biocacheImage.image,
-                        occurrenceId    : biocacheImage.uuid,
-                        largeImageUrl   : biocacheImage.largeImageUrl,
-                        thumbnailUrl    : biocacheImage.thumbnailUrl,
-                        dataResourceName: biocacheImage.dataResourceName,
-                        excluded        : excluded,
-                        displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
-                        caption         : profile.imageSettings.find {
-                            it.imageId == biocacheImage.image
-                        }?.caption ?: '',
-                        primary         : biocacheImage.image == profile.primaryImage,
-                        metadata        : biocacheImage.imageMetadata && !biocacheImage.imageMetadata.isEmpty() ? biocacheImage.imageMetadata[0] : [:],
-                        type            : ImageType.OPEN
-                ]
-
-                // only return images that have not been included, unless we are in the edit view, in which case we
-                // need to show all available images in order for the editor to decide which to include/exclude
-                if (!excluded || !readonlyView) {
-                    image
-                }
-            }
-            if (biocacheImages && biocacheImages.size() > 0) {
-                images.addAll(biocacheImages)
-            }
-        } else {
-            log.error("A HTTP status of ${publishedImages.statusCode} was returned from the biocache image lookup")
-        }
-
-        if (profile.privateMode && profile.stagedImages) {
-            images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
-        }
-
-        // The collection may now, or may have been at some point, private, so look for any private images that may exist.
-        // When a collection is changed from private to public, existing private images are NOT published automatically.
-        images.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
-
-        response.statusCode = SC_OK
-        response.resp = images
-
-        response
-    }
 
     private
     static boolean deleteLocalImage(List images, String collectionId, String profileId, String imageId, String directory) {
@@ -557,7 +523,8 @@ class ImageService {
                     imageDisplayOption?.imageId = uploadResponse.resp.images[0]
                 }
             }
-            if ((uploadResponse?.statusCode?.toInteger() >= 200) && (uploadResponse?.statusCode?.toInteger() <= 299)) {  //don't delete the local images if the upload failed
+            if ((uploadResponse?.statusCode?.toInteger() >= 200) && (uploadResponse?.statusCode?.toInteger() <= 299)) {
+                //don't delete the local images if the upload failed
                 if (staged) {
                     deleteStagedImage(opus.uuid, profile.uuid, imageId)
                 } else {
