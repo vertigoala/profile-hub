@@ -379,7 +379,7 @@ class ExportService {
     }
 
     def createOccurrencesUrl = { opus, occurrenceQuery ->
-        return opus.biocacheUrl ? "${(opus.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?q=${occurrenceQuery}" : ""
+        return opus.biocacheUrl ? "${(opus.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?${occurrenceQuery}" : ""
     }
 
     def createMapImageUrl = { opus, occurrenceQuery ->
@@ -397,7 +397,7 @@ class ExportService {
                 pcolour      : "00ff85"
         ]
 
-        String url = "${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.image.path}${occurrenceQuery}&"
+        String url = "${grailsApplication.config.biocache.base.url}ws/mapping/wms/image?${occurrenceQuery}&"
         p.each { k, v -> url += "${k}=${v}&" }
         if (url.charAt(url.length() - 1) == "&") {
             url = url.substring(0, url.length() - 1)
