@@ -23,7 +23,9 @@ before_script:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
 - npm install karma
+- npm install karma-jquery
 - npm install karma-jasmine
+- npm install karma-jasmine-jquery
 - npm install karma-coverage
 - npm install karma-ng-html2js-preprocessor --save-dev
 - npm install karma-phantomjs-launcher
