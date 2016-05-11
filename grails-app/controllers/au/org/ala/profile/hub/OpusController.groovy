@@ -12,7 +12,6 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 import static au.org.ala.profile.hub.util.HubConstants.*
 import static au.org.ala.profile.security.Role.ROLE_ADMIN
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
-import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
 
 class OpusController extends BaseController {
 
@@ -255,7 +254,7 @@ class OpusController extends BaseController {
             if (!opus) {
                 notFound()
             } else {
-                response.setContentType(CONTEXT_TYPE_JSON)
+                response.setContentType(CONTENT_TYPE_JSON)
                 render opus as JSON
             }
         }

@@ -48,3 +48,23 @@ profileEditor.directive('fallbackDatePicker', function ($browser) {
     }
   };
 });
+/* Add a formatter for date inputs that transforms the input from a string to a Date object */
+profileEditor.directive("input", function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elem, attr, modelCtrl) {
+      if (attr['type'] === 'date'){
+        modelCtrl.$formatters.push(function(modelValue) {
+          if (modelValue instanceof Date) {
+            return modelValue;
+          } else if (modelValue){
+            return new Date(Date.parse(modelValue));
+          } else {
+            return null;
+          }
+        });
+      }
+
+    }
+  };
+});

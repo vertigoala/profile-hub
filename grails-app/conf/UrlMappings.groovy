@@ -32,9 +32,11 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
         "/opus/$opusId/profile/$profileId/pdf" controller: "export", action: [GET: "getPdf"]
         "/opus/$opusId/profile/$profileId/images" controller: "profile", action: [GET: "retrieveImages"]
+        "/opus/$opusId/profile/$profileId/imagesPublished" controller: "profile", action: [GET: "retrievePublishedImagesPaged"]
         "/opus/$opusId/profile/$profileId/primaryImage" controller: "profile", action: [GET: "getPrimaryImage"]
         "/opus/$opusId/profile/$profileId/image/$imageId" controller: "profile", action: [GET: "getLocalImage"]
         "/opus/$opusId/profile/$profileId/image/thumbnail/$imageId" controller: "profile", action: [GET: "retrieveLocalThumbnailImage"]
+        "/opus/$opusId/profile/$profileId/image/$imageId/metadata" controller: "profile", action: [POST: "updateLocalImageMetadata"]
         "/opus/$opusId/profile/$profileId/image/$imageId/delete" controller: "profile", action: [DELETE: "deleteLocalImage"]
         "/opus/$opusId/profile/$profileId/image/$imageId/publish" controller: "profile", action: [POST: "publishPrivateImage"]
         "/opus/$opusId/profile/$profileId/file/$fileId" controller: "profile", action: [GET: "downloadTempFile"]
@@ -122,6 +124,8 @@ class UrlMappings {
 
         "/publication/$pubId" controller: "profile", action: [GET: "getPublication"]
         "/publication/$pubId/json" controller: "profile", action: [GET: "getPublicationJson"]
+
+        "/image/$imageId/metadata" controller: "profile", action: [POST: "updateLocalImageMetadata"]
 
         "/" controller: "opus", action: [GET: "index"]
 

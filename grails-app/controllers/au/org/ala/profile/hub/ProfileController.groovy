@@ -142,6 +142,16 @@ class ProfileController extends BaseController {
     }
 
     @Secured(role = ROLE_PROFILE_EDITOR)
+    def updateLocalImageMetadata() {
+        def metadata = request.getJSON()
+        if (!params.imageId || !metadata) {
+            badRequest "imageId or metadata is required"
+        } else {
+            handle imageService.updateLocalImageMetadata(params.imageId, metadata)
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def discardDraftChanges() {
         if (!params.profileId) {
             badRequest()
@@ -156,7 +166,7 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
         } else {
-            response.setContentType(CONTEXT_TYPE_JSON)
+            response.setContentType(CONTENT_TYPE_JSON)
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
             def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
@@ -284,10 +294,22 @@ class ProfileController extends BaseController {
         }
     }
 
+    def retrievePublishedImagesPaged(){
+        if (!params.opusId || !params.profileId || !params.imageSources || !params.pageSize || !params.startIndex) {
+            badRequest "opusId, profileId, imageSources, pageSize and startIndex are required parameters"
+        } else {
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean readonlyView = params.getBoolean('readonlyView', true)
+              def  response = imageService.retrievePublishedImagesPaged(params.opusId, params.profileId, latest, params.imageSources, params.searchIdentifier, false, readonlyView, params.pageSize, params.startIndex)
+            handle response
+        }
+    }
+
     def retrieveImages() {
         if (!params.opusId || !params.profileId || !params.imageSources) {
             badRequest "opusId, profileId and imageSources are required parameters"
         } else {
+
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
             boolean readonlyView = params.getBoolean('readonlyView', true)
 
@@ -312,7 +334,7 @@ class ProfileController extends BaseController {
                             licence         : params.licence ?: "",
                             title           : params.title ?: "",
                             description     : params.description ?: "",
-                            dateCreated     : params.dateCreated ?: "",
+                            created         : params.created ?: "",
                             originalFilename: file.originalFilename
                     ]
             ]

@@ -419,4 +419,11 @@ describe("ProfileService tests", function () {
 
         http.expectGET("/someContext/opus/opusId/profile/profileId/attachment/attachmentId").respond("bla");
     });
+
+    it("should invoke the updateLocalImageMetadata service on the context root when saveImageMetadata is called", function() {
+        var data = {creator: "one", createdDate: new Date(), rights: "rights", licence: "licence"};
+        service.saveImageMetadata('abcdefghijlkmnop', data);
+
+        http.expectPOST("/someContext/image/abcdefghijlkmnop/metadata", data).respond("bla");
+    });
 });

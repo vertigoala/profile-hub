@@ -317,6 +317,19 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Format a date object as a local date (ignoring the timezone and time components)
+     * @param date The date to format
+     * @returns {string} the formatted date
+     */
+    function formatLocalDate(date) {
+        if (angular.isDate(date)) {
+            return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        } else {
+            return date;
+        }
+    }
+
+    /**
      * Converts the human-readable label to a value suitable for use as a key by removing all spaces and punctuation, and converting to lowercase.
      *
      * @param label the label to convert
@@ -398,6 +411,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         toKey: toKey,
         formatScientificName: formatScientificName,
         isNameAttribute: isNameAttribute,
+        formatLocalDate: formatLocalDate,
 
         LAST: LAST,
         FIRST: FIRST,

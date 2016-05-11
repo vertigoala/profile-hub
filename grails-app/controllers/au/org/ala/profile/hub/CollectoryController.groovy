@@ -17,7 +17,7 @@ class CollectoryController extends BaseController {
     }
 
     def list() {
-        response.setContentType(CONTEXT_TYPE_JSON)
+        response.setContentType(CONTENT_TYPE_JSON)
         def resp = collectoryService.getDataResources()
         render resp as JSON
     }

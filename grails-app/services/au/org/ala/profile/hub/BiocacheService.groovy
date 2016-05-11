@@ -18,6 +18,24 @@ class BiocacheService {
     WebService webService
     def grailsApplication
 
+
+    def retrieveImagesPaged(String searchIdentifier, String imageSources, String pageSize, String startIndex)  {
+        if (!searchIdentifier) {
+            return [:]
+        }
+
+        log.debug("Fetching images for ${searchIdentifier} using sources ${imageSources}")
+        String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
+
+        String imagesQuery = searchIdentifier + " AND (data_resource_uid:" + imageSources.split(",").join(" OR data_resource_uid:") + ")"
+        imagesQuery = imagesQuery.encodeAsURL()
+
+        log.debug("Image query = ${imagesQuery}")
+
+      def numberOfImages =  webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=0")
+      def response =  webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
+        return response
+    }
     def retrieveImages(String searchIdentifier, String imageSources) {
         if (!searchIdentifier) {
             return [:]
