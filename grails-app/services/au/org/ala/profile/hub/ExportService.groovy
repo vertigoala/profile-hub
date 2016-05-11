@@ -272,7 +272,7 @@ class ExportService {
         }
 
         // Retrieve occurrences-map image url
-        String occurrenceQuery = createOccurrenceQuery(model.profile, opus)
+        String occurrenceQuery = model.profile.occurrenceQuery
         model.profile.mapImageUrl = createMapImageUrl(opus, occurrenceQuery)
         model.profile.occurrencesUrl = createOccurrencesUrl(opus, occurrenceQuery)
 
@@ -380,22 +380,6 @@ class ExportService {
 
     def createOccurrencesUrl = { opus, occurrenceQuery ->
         return opus.biocacheUrl ? "${(opus.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?q=${occurrenceQuery}" : ""
-    }
-
-    def createOccurrenceQuery = { profile, opus ->
-        String occurrenceQuery;
-
-        if (profile.guid && profile.guid != "null") {
-            occurrenceQuery = "lsid:" + profile.guid;
-        } else {
-            occurrenceQuery = profile.scientificName;
-        }
-
-        if (opus.recordSources) {
-            occurrenceQuery += " AND (data_resource_uid:" + opus.recordSources.join(" OR data_resource_uid:") + ")"
-        }
-
-        occurrenceQuery.encodeAsURL()
     }
 
     def createMapImageUrl = { opus, occurrenceQuery ->

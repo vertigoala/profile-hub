@@ -20,7 +20,7 @@ describe("MapController tests", function () {
     var http;
     var html = "<div id='occurrenceMap' data-leaflet-img='pathToLeafletImages'/>";
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "links":[{},{}]}, "opus": {"imageSources": ["source1", "source2"], "mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1"}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "occurrenceQuery":"q=lsid%3Aguid1", "links":[{},{}]}, "opus": {"imageSources": ["source1", "source2"], "mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1"}}';
 
     beforeAll(function () {
         console.log("****** Map Controller Tests ******");
@@ -32,8 +32,11 @@ describe("MapController tests", function () {
     beforeEach(module("profileEditor"));
 
     beforeEach(inject(function ($controller, $rootScope, _profileService_, $q, _messageService_, _$httpBackend_) {
-        $('#mapId').remove();
-        $(document.body).html(html);
+        var mapElem = jQuery('#occurrenceMap');
+        if (_.isUndefined(mapElem)) {
+            mapElem.remove();
+        }
+        jQuery(document.body).html(html);
 
         scope = $rootScope.$new();
         profileService = _profileService_;
@@ -97,30 +100,6 @@ describe("MapController tests", function () {
 
         expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?q=lsid%3Aguid1");
         expect(layers[2].options.attribution).toBe("mapAttr1");
-    });
-
-    it("should add the rank exclusion clause to the wms url when there is one excluded rank", function() {
-        profileDefer.resolve({profile: {guid: "guid1"}, opus: {"mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1", excludeRanksFromMap: ["cultivar"]}});
-
-        scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
-        scope.$apply();
-
-        var layers = [];
-        scope.mapCtrl.map.getMapImpl().eachLayer(function (layer) { layers.push(layer) });
-
-        expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar)&q=lsid%3Aguid1");
-    });
-
-    it("should add the rank exclusion clause to the wms url when there are multiple excluded ranks", function() {
-        profileDefer.resolve({profile: {guid: "guid1"}, opus: {"mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1", excludeRanksFromMap: ["cultivar","species"]}});
-        scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
-
-        scope.$apply();
-
-        var layers = [];
-        scope.mapCtrl.map.getMapImpl().eachLayer(function (layer) { layers.push(layer) });
-
-        expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar OR rank:species)&q=lsid%3Aguid1");
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {

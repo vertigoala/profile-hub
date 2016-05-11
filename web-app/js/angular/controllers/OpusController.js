@@ -27,7 +27,6 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     self.initialShortName = null;
     self.keybaseProjects = [];
     self.selectedKeybaseProject = null;
-    self.ranks = util.RANK;
     self.shortNameTipVisible = false;
 
     self.showUpload = {
