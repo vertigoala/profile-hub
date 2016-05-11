@@ -975,3 +975,5 @@ span.breadcrumb-dropdown {
     margin-right: 5px;
     content: '\f102'
 }
+ /*helps angular not destroy bootstrap styling, please see https://angular-ui.github.io/bootstrap/ */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

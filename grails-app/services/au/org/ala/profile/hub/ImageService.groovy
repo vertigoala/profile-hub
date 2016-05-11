@@ -248,6 +248,71 @@ class ImageService {
 
         deleted
     }
+    /**
+     *
+     * @param opusId   - the collection
+     * @param profileId  - the taxon
+     * @param latest
+     * @param imageSources
+     * @param searchIdentifier
+     * @param useInternalPaths
+     * @param readonlyView
+     * @param pageSize     - equivalent to rows in SOLR i.e how many records to return
+     * @param startIndex   - equivalent to start in SOLR i.e. the first record to return
+     * @return  JSON response containing image metadata
+     */
+    def retrievePublishedImagesPaged(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, String pageSize, String startIndex) {
+        Map response = [:]
+
+        def model = profileService.getProfile(opusId, profileId, latest)
+        def profile = model.profile
+        def opus = model.opus
+
+        def publishedImages = biocacheService.retrieveImagesPaged(searchIdentifier, imageSources, pageSize, startIndex)
+        List images = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
+        response.statusCode = SC_OK
+        response.resp = images
+
+        response
+    }
+
+    List prepareImagesForDisplay(def retrievedImages, def opus, def profile, boolean readonlyView)  {
+        List images = []
+
+        if (retrievedImages && retrievedImages.statusCode == SC_OK) {
+            List imagesAsMaps = retrievedImages.resp?.occurrences?.findResults { imageData ->
+                boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageData.image)
+
+                Map image = [
+                        imageId         : imageData.image,
+                        occurrenceId    : imageData.uuid,
+                        largeImageUrl   : imageData.largeImageUrl,
+                        thumbnailUrl    : imageData.thumbnailUrl,
+                        dataResourceName: imageData.dataResourceName,
+                        excluded        : excluded,
+                        displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
+                        caption         : profile.imageSettings.find {
+                            it.imageId == imageData.image
+                        }?.caption ?: '',
+                        primary         : imageData.image == profile.primaryImage,
+                        metadata        : imageData.imageMetadata && !imageData.imageMetadata.isEmpty() ? imageData.imageMetadata[0] : [:],
+                        type            : ImageType.OPEN
+                ]
+
+                // only return images that have not been included, unless we are in the edit view, in which case we
+                // need to show all available images in order for the editor to decide which to include/exclude
+                if (!excluded || !readonlyView) {
+                    image
+                }
+            }
+            if (imagesAsMaps && imagesAsMaps.size() > 0) {
+                images.addAll(imagesAsMaps)
+            }
+        } else {
+            log.error("A HTTP status of ${retrievedImages.statusCode} was returned from the biocache image lookup")
+        }
+        images
+    }
 
     def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
         Map response = [:]

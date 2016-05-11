@@ -294,10 +294,22 @@ class ProfileController extends BaseController {
         }
     }
 
+    def retrievePublishedImagesPaged(){
+        if (!params.opusId || !params.profileId || !params.imageSources || !params.pageSize || !params.startIndex) {
+            badRequest "opusId, profileId, imageSources, pageSize and startIndex are required parameters"
+        } else {
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean readonlyView = params.getBoolean('readonlyView', true)
+              def  response = imageService.retrievePublishedImagesPaged(params.opusId, params.profileId, latest, params.imageSources, params.searchIdentifier, false, readonlyView, params.pageSize, params.startIndex)
+            handle response
+        }
+    }
+
     def retrieveImages() {
         if (!params.opusId || !params.profileId || !params.imageSources) {
             badRequest "opusId, profileId and imageSources are required parameters"
         } else {
+
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
             boolean readonlyView = params.getBoolean('readonlyView', true)
 
