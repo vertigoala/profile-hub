@@ -28,7 +28,7 @@ describe("OpusController tests", function () {
     var profileService;
     var opusDefer, getResourceDefer, listResourcesDefer, saveOpusDefer, listOpusDefer, getListsDefer, keysDefer, supportingCollectionDefer;
 
-    var getOpusResponse = '{"title": "OpusName", "dataResourceUid":"dataUid1", "imageSources": ["source1", "source2", "source3"], "recordSources": ["source1", "source2", "source3"], "mapPointColour": "12345", "supportingOpuses": []}';
+    var getOpusResponse = '{"title": "OpusName", "dataResourceUid":"dataUid1", "mapConfig": {"mapPointColour": "12345"}, "imageSources": ["source1", "source2", "source3"], "recordSources": ["source1", "source2", "source3"], "supportingOpuses": []}';
     var getResourceResponse = '{"pubDescription":"resource description"}';
     var listResourceResponse = '{"dr776":" Insect and spider wetland indicator species list","dr774":" Toothed whales found in Australian waters"}';
     var getAllListsResponse = '{lists: [{"dataResourceUid": "id4", "listName": "list4"}, {"dataResourceUid": "id2", "listName": "list2"}, {"dataResourceUid": "id3", "listName": "list3"}, {"dataResourceUid": "id1", "listName": "list1"}]}';
@@ -349,7 +349,9 @@ describe("OpusController tests", function () {
             dataResourceUid: "dataUid1",
             imageSources: ["source1", "source2", "source3", "newId1"], // new id added here
             recordSources: ["source1", "source2", "source3"],
-            mapPointColour: "12345",
+            mapConfig: {
+                mapPointColour: '12345'
+            },
             supportingOpuses: [],
             keybaseProjectId: "",
             keybaseKeyId: ""
@@ -382,7 +384,7 @@ describe("OpusController tests", function () {
         var expectedOpus = {
             title: "OpusName",
             dataResourceUid: "dataUid1",
-            mapPointColour: "12345",
+            mapConfig: {mapPointColour: '12345'},
             imageSources: ["source1", "source3"], // existing source (index 1) removed
             recordSources: ["source1", "source2", "source3"],
             supportingOpuses: [],
@@ -407,7 +409,7 @@ describe("OpusController tests", function () {
             dataResourceUid: "dataUid1",
             imageSources: ["source1", "source2", "source3"],
             recordSources: ["source1", "source2", "source3", "newId1"], // new id added here
-            mapPointColour: "12345",
+            mapConfig: {mapPointColour: '12345'},
             supportingOpuses: [],
             keybaseProjectId: "",
             keybaseKeyId: ""
@@ -440,7 +442,7 @@ describe("OpusController tests", function () {
         var expectedOpus = {
             title: "OpusName",
             dataResourceUid: "dataUid1",
-            mapPointColour: "12345",
+            mapConfig: {mapPointColour: '12345'},
             imageSources: ["source1", "source2", "source3"],
             recordSources: ["source1", "source3"], // existing source (index 1) removed
             supportingOpuses: [],

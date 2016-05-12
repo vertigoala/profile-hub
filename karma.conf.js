@@ -51,6 +51,7 @@ module.exports = function (config) {
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/layers/SmartWmsLayer.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/web-app/js/Map.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/web-app/js/OccurrenceMap.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/vendor/urijs-1.18.0/URI.js',
             'web-app/thirdparty/modernizr/modernizer.js',
             'web-app/thirdparty/angular/angular-1.3.13.min.js',
             'web-app/thirdparty/angular/angular-sanitize-1.3.13.min.js',

@@ -467,7 +467,7 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     }
 
     function toggleMapPointerColourHash(shouldExist) {
-        if (self.opus.mapConfig.mapPointColour) {
+        if (self.opus.mapConfig && self.opus.mapConfig.mapPointColour) {
             if (!shouldExist && self.opus.mapConfig.mapPointColour.indexOf("#") > -1) {
                 self.opus.mapConfig.mapPointColour = self.opus.mapConfig.mapPointColour.substr(1);
             } else if (shouldExist && self.opus.mapConfig.mapPointColour.indexOf("#") == -1) {

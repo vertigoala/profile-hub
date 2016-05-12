@@ -20,7 +20,7 @@ describe("MapController tests", function () {
     var http;
     var html = "<div id='occurrenceMap' data-leaflet-img='pathToLeafletImages'/>";
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "occurrenceQuery":"q=lsid%3Aguid1", "links":[{},{}]}, "opus": {"imageSources": ["source1", "source2"], "mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1"}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "occurrenceQuery":"q=lsid%3Aguid1", "links":[{},{}]}, "opus": {"imageSources": ["source1", "source2"],  "mapConfig": {"mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1"}}}';
 
     beforeAll(function () {
         console.log("****** Map Controller Tests ******");
