@@ -431,6 +431,10 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     margin-bottom: 150px;
 }
 
+.margin-right-2 {
+    margin-right: 20px;
+}
+
 .dropdown-menu {
     z-index: 9999;
 }

@@ -9,6 +9,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
     var biocacheBoundsUrl = config.biocacheServiceUrl + "ws/mapping/bounds.json?";
 
     self.autoZoom = false;
+    self.showingEditorView = true;
 
     self.init = function () {
 
@@ -41,7 +42,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                     center: [self.opus.mapConfig.mapDefaultLatitude, self.opus.mapConfig.mapDefaultLongitude]
                 });
 
-                self.updateWMSLayer();
+                self.updateWMSLayer(self.profile.occurrenceQuery);
 
                 self.map.registerListener("click", self.showOccurrenceDetails);
 
@@ -54,12 +55,11 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         );
     };
 
-    self.updateWMSLayer = function () {
+    self.updateWMSLayer = function (occurrenceQuery) {
         if (self.wmsLayer != null) {
             self.map.removeLayer(self.wmsLayer);
         }
 
-        var occurrenceQuery = self.profile.occurrenceQuery;
         var wmsUrl = biocacheWMSUrl + occurrenceQuery;
 
         self.map.addWmsLayer(undefined, {
@@ -101,6 +101,25 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         });
     };
 
+    self.hasEditorCustomisations = function() {
+        var hasCustomisations = false;
+        if (!_.isUndefined(self.profile)) {
+            var baseQuery = extractBaseQuery(self.profile.occurrenceQuery);
+            hasCustomisations = baseQuery != self.profile.occurrenceQuery;
+        }
+        return hasCustomisations;
+    };
+
+    self.toggleEditorCustomisations = function() {
+        if (self.showingEditorView) {
+            self.updateWMSLayer(extractBaseQuery(self.profile.occurrenceQuery));
+            self.showingEditorView = false;
+        } else {
+            self.updateWMSLayer(self.profile.occurrenceQuery);
+            self.showingEditorView = true;
+        }
+    };
+
     self.saveMapConfiguration = function () {
         var queryString = self.editableMap.getQueryString();
 
@@ -111,7 +130,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
             promise.then(function () {
                 messageService.info("Map configuration has been successfully updated.");
 
-                self.updateWMSLayer();
+                self.updateWMSLayer(self.profile.occurrenceQuery);
                 self.toggleEditingMap();
                 setTimeout(self.map.redraw, 500);
             }, function () {
@@ -124,13 +143,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         var confirm = util.confirm("This will remove all customisations from the map and return the configuration to the default for this collection. Are you sure you wish to proceed?");
         confirm.then(function () {
             // the default map config is just the q= portion of the url
-            var query = self.profile.occurrenceQuery;
-
-            var queryParams = URI.parseQuery(query);
-
-            query = "q=" + queryParams.q;
-
-            self.editableMap.setQueryString(query);
+            self.editableMap.setQueryString(extractBaseQuery(self.profile.occurrenceQuery));
         });
     };
 
@@ -154,6 +167,17 @@ profileEditor.controller('MapController', function ($scope, profileService, util
             }
         }
     };
+
+    // Removes everything other than the q= portion of the biocache query
+    function extractBaseQuery(queryString) {
+        if (_.isUndefined(queryString)) {
+            return null;
+        }
+
+        var queryParams = URI.parseQuery(queryString);
+
+        return "q=" + queryParams.q;
+    }
 
     function createEditableMap() {
         if (!config.readonly) {
