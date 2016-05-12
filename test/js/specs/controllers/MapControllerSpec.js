@@ -52,7 +52,7 @@ describe("MapController tests", function () {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
-            config: {map: {mapId: "123", token: "123"}},
+            config: {map: {mapId: "123", token: "123"}, biocacheServiceUrl: "http://biocacheWmsUrl/"},
             messageService: messageService
         });
 
@@ -77,16 +77,6 @@ describe("MapController tests", function () {
         expect(scope.mapCtrl.opus).toBeDefined();
     });
 
-    it("should set the biocache urls to the provided values when init is called", function () {
-        profileDefer.resolve(JSON.parse(getProfileResponse));
-
-        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
-        scope.$apply();
-
-        expect(scope.mapCtrl.biocacheInfoUrl).toBe("biocacheInfoUrl");
-        expect(scope.mapCtrl.biocacheWMSUrl).toBe("biocacheWmsUrl");
-    });
-
     it("should specify the overlay layer for the profile when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
@@ -98,7 +88,7 @@ describe("MapController tests", function () {
 
         expect(layers.length).toBe(3); // 2 base layers plus the occurrence layer
 
-        expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?q=lsid%3Aguid1");
+        expect(layers[2]._url).toBe("http://biocacheWmsUrl/ws/mapping/wms/reflect?q=lsid%3Aguid1");
         expect(layers[2].options.attribution).toBe("mapAttr1");
     });
 
