@@ -30,6 +30,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
                 self.map = new ALA.Map("occurrenceMap", {
                     zoomToObject: self.autoZoom,
+                    maxAutoZoom: self.opus.mapConfig.maxAutoZoom,
                     drawControl: false,
                     singleMarker: false,
                     useMyLocation: false,
