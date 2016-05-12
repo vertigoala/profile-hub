@@ -542,6 +542,18 @@ ul.dropdown-menu[datepicker-popup-wrap] {
     color: black;
 }
 
+.form-inline .form-control {
+    margin-right: 10px;
+}
+
+.input-xs {
+    height: 30px;
+    padding: 5px 10px;
+    width: 75px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
 input.form-control:focus + ul.dropdown-menu + span.input-group-btn > .btn-default,
 input.form-control:focus + span.input-group-btn > .btn-default {
     border-color: #66AFE9;

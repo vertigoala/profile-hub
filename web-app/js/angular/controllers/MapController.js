@@ -4,12 +4,16 @@
 profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http) {
     var self = this;
 
-    self.init = function (biocacheWMSUrl, biocacheInfoUrl) {
+    var biocacheWMSUrl = config.biocacheServiceUrl + "ws/mapping/wms/reflect?";
+    var biocacheInfoUrl = config.biocacheServiceUrl + "ws/occurrences/info?";
+    var biocacheBoundsUrl = config.biocacheServiceUrl + "ws/mapping/bounds.json?";
+
+    self.autoZoom = false;
+
+    self.init = function () {
+
         self.loading = true;
         self.editingMap = false;
-
-        self.biocacheInfoUrl = biocacheInfoUrl;
-        self.biocacheWMSUrl = biocacheWMSUrl;
 
         self.opusId = util.getEntityId("opus");
         self.profileId = util.getEntityId("profile");
@@ -21,17 +25,20 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         future.then(function (data) {
                 self.profile = data.profile;
                 self.opus = data.opus;
+                self.autoZoom = self.opus.mapConfig.autoZoom;
 
                 self.map = new ALA.Map("occurrenceMap", {
+                    zoomToObject: self.autoZoom,
                     drawControl: false,
                     singleMarker: false,
                     useMyLocation: false,
+                    showFitBoundsToggle: true,
                     allowSearchLocationByAddress: false,
                     allowSearchRegionByAddress: false,
                     draggableMarkers: false,
                     showReset: false,
-                    zoom: self.opus.mapZoom,
-                    center: [self.opus.mapDefaultLatitude, self.opus.mapDefaultLongitude]
+                    zoom: self.opus.mapConfig.mapZoom,
+                    center: [self.opus.mapConfig.mapDefaultLatitude, self.opus.mapConfig.mapDefaultLongitude]
                 });
 
                 self.updateWMSLayer();
@@ -47,29 +54,34 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         );
     };
 
-    self.updateWMSLayer = function() {
+    self.updateWMSLayer = function () {
         if (self.wmsLayer != null) {
             self.map.removeLayer(self.wmsLayer);
         }
 
         var occurrenceQuery = self.profile.occurrenceQuery;
-        var wmsUrl = self.biocacheWMSUrl + occurrenceQuery;
+        var wmsUrl = biocacheWMSUrl + occurrenceQuery;
 
-        self.wmsLayer = L.tileLayer.smartWms(wmsUrl, {
+        self.map.addWmsLayer(undefined, {
+            wmsLayerUrl: wmsUrl,
             layers: 'ALA:occurrences',
             format: 'image/png',
-            attribution: self.opus.mapAttribution,
+            attribution: self.opus.mapConfig.mapAttribution,
             outline: "true",
-            ENV: "color:" + self.opus.mapPointColour + ";name:circle;size:4;opacity:1"
+            transparent: false,
+            opacity: 1,
+            ENV: "color:" + self.opus.mapConfig.mapPointColour + ";name:circle;size:4;opacity:1",
+            boundsUrl: biocacheBoundsUrl + occurrenceQuery,
+            callback: self.setBounds
         });
-        self.wmsLayer.setZIndex(99);
+    };
 
-        self.map.addLayer(self.wmsLayer, {});
-        self.map.zoom(self.opus.mapZoom, {lat: self.opus.mapDefaultLatitude, lng: self.opus.mapDefaultLongitude});
+    self.setBounds = function () {
+        self.map.fitBounds();
     };
 
     self.showOccurrenceDetails = function (clickEvent) {
-        var url = self.biocacheInfoUrl
+        var url = biocacheInfoUrl
             + self.profile.occurrenceQuery
             + "&zoom=6"
             + "&lat=" + clickEvent.latlng.lat
@@ -148,17 +160,18 @@ profileEditor.controller('MapController', function ($scope, profileService, util
             var occurrenceQuery = self.profile.occurrenceQuery;
 
             self.editableMap = new ALA.OccurrenceMap("editOccurrenceMap",
-                self.opus.biocacheUrl,
+                config.biocacheServiceUrl,
                 occurrenceQuery,
                 {
                     mapOptions: {
                         zoomToObject: false,
-                        zoom: self.opus.mapZoom + 1, // the edit map panel is bigger than the view, so increase the zoom
-                        center: [self.opus.mapDefaultLatitude, self.opus.mapDefaultLongitude]
+                        showFitBoundsToggle: true,
+                        zoom: self.opus.mapConfig.mapZoom + 1, // the edit map panel is bigger than the view, so increase the zoom
+                        center: [self.opus.mapConfig.mapDefaultLatitude, self.opus.mapConfig.mapDefaultLongitude]
                     },
                     point: {
-                        colour: self.opus.mapPointColour,
-                        mapAttribution: self.opus.mapAttribution
+                        colour: self.opus.mapConfig.mapPointColour,
+                        mapAttribution: self.opus.mapConfig.mapAttribution
                     }
                 }
             );

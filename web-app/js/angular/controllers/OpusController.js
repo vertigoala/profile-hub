@@ -467,18 +467,18 @@ profileEditor.controller('OpusController', function (profileService, util, messa
     }
 
     function toggleMapPointerColourHash(shouldExist) {
-        if (self.opus.mapPointColour) {
-            if (!shouldExist && self.opus.mapPointColour.indexOf("#") > -1) {
-                self.opus.mapPointColour = self.opus.mapPointColour.substr(1);
-            } else if (shouldExist && self.opus.mapPointColour.indexOf("#") == -1) {
-                self.opus.mapPointColour = "#" + self.opus.mapPointColour;
+        if (self.opus.mapConfig.mapPointColour) {
+            if (!shouldExist && self.opus.mapConfig.mapPointColour.indexOf("#") > -1) {
+                self.opus.mapConfig.mapPointColour = self.opus.mapConfig.mapPointColour.substr(1);
+            } else if (shouldExist && self.opus.mapConfig.mapPointColour.indexOf("#") == -1) {
+                self.opus.mapConfig.mapPointColour = "#" + self.opus.mapConfig.mapPointColour;
             }
         }
     }
 
     function loadResources() {
         var promise = profileService.listResources();
-        console.log("Loading data resources...");
+
         promise.then(function (data) {
                 self.dataResources = data;
 

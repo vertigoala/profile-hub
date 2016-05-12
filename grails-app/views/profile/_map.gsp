@@ -1,7 +1,7 @@
 <g:if test="${displayMap}">
     <div ng-controller="MapController as mapCtrl"
          ng-cloak ng-form="MapForm" ng-class="mapCtrl.editingMap ? 'col-md-12' : 'col-md-6 col-sm-12'"
-         ng-init="mapCtrl.init('${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.wms.path}', '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.info.path}')">
+         ng-init="mapCtrl.init()">
         <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}map"></a>
 
         <div class="row">
@@ -50,12 +50,13 @@
                             ng-click="mapCtrl.toggleEditingMap()">Edit map configuration</button>
                 </g:if>
                 <div>
-                    <a href="{{profileCtrl.opus.biocacheUrl}}/occurrences/search?{{mapCtrl.profile.occurrenceQuery}}"
-                       ng-if="profileCtrl.opus.biocacheUrl" target="_blank"
-                       class="padding-left-1 margin-top-1 inline-block">View in {{profileCtrl.opus.biocacheName}}</a>
+                    <a href="{{profileCtrl.opus.mapConfig.biocacheUrl}}/occurrences/search?{{mapCtrl.profile.occurrenceQuery}}"
+                       ng-if="profileCtrl.opus.mapConfig.biocacheUrl" target="_blank"
+                       class="padding-left-1 margin-top-1 inline-block">View in {{profileCtrl.opus.mapConfig.biocacheName}}</a>
                 </div>
             </div>
         </div>
+
         <div class="padding-bottom-2" ng-show="mapCtrl.editingMap"></div>
     </div>
 </g:if>

@@ -461,7 +461,6 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
         retrieveImages: function (opusId, profileId, searchIdentifier, imageSources, readonlyView) {
             $log.debug("Retrieving images for " + searchIdentifier);
-            $log.info("Retrieve Images url: "+util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/images?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources + "&readonlyView=" + readonlyView);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/images?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources + "&readonlyView=" + readonlyView, {cache: true});
             future.then(function (response) {
                 $log.debug("Images retrieved with response code " + response.status)

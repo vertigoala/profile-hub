@@ -394,7 +394,7 @@ class ExportService {
     }
 
     def createOccurrencesUrl = { opus, occurrenceQuery ->
-        return opus.biocacheUrl ? "${(opus.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?${occurrenceQuery}" : ""
+        return opus.mapConfig?.biocacheUrl ? "${(opus.mapConfig.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?${occurrenceQuery}" : ""
     }
 
     def createMapImageUrl = { opus, occurrenceQuery ->
