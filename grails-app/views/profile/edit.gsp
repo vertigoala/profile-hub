@@ -124,7 +124,9 @@
 
             <div class="row margin-bottom-1">
                 <g:include controller="profile" action="mapPanel" params="[opusId: params.opusId]"/>
-                <g:render template="primaryImage" params="[opusId: params.opusId]"/>
+                <div class="top col-md-6 col-sm-12">
+                    <g:render template="primaryImage" params="[opusId: params.opusId]"/>
+                </div>
             </div>
         </g:if>
 
