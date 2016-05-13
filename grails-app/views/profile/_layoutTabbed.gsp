@@ -40,7 +40,6 @@
 <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
     <div class="row">
         <div class="col-md-12" ng-cloak>
-            %{--<tabset ng-class="!profileCtrl.readonly() || (profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey) || (profileCtrl.profile.attachments.length > 0) ? '' : 'single-tabbed-panel'">--}%
             <tabset>
                 <tab heading="At a glance" class="font-xxsmall">
                     <div class="row">
@@ -50,10 +49,9 @@
                             <g:if test="${!profile.archivedDate}">
                                 <g:render template="taxon"/>
                             </g:if>
-                            <g:render template="publications"/>
                         </div>
-                        <div class="col-md-3">
-                            <g:render template="primaryImage" model="[size: 'small']"/>
+                        <div class="side col-md-3">
+                            <g:render template="primaryImage" model="[size: 'small', hideViewAll:true]"/>
                         </div>
                     </div>
                     <div class="row">
@@ -85,6 +83,7 @@
                             <g:render template="../common/attachments"/>
                             <g:render template="links"/>
                             <g:render template="bhlLinks"/>
+                            <g:render template="publications"/>
                             <g:render template="bibliography"/>
                             <g:if test="${!profile.archivedDate}">
                                 <g:render template="lists"/>

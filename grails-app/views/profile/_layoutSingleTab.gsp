@@ -38,12 +38,8 @@
 
     <div class="row margin-bottom-1">
         <g:render template="map"/>
-        <div class="col-md-6 col-sm-12">
+        <div class="top col-md-6 col-sm-12">
             <g:render template="primaryImage"/>
-            <div>
-                <a target="_self" href="" class="padding-left-1 margin-top-1 inline-block"
-                   du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}images">View all images</a>
-            </div>
         </div>
     </div>
 </g:if>
