@@ -91,10 +91,8 @@
                         </div>
 
                         <div class="col-sm-4">
-                            <h5>Override caption</h5>
+                            <h5>Options</h5>
                         </div>
-
-                        %{--<div class="clearfix"></div>--}%
                     </div>
 
                     <div ng-repeat="image in imageCtrl.images" class="row border-bottom margin-bottom-1">
@@ -157,30 +155,28 @@
                             </div>
 
                             <div class="form-group" ng-if="image.type.name != 'OPEN'">
-                                <div class="btn-group" role="group" aria-label="Image tools">
-                                    <button type="button" aria-label="Edit image"
-                                            tooltip="Edit '{{image.metadata.title}}'" tooltip-placement="bottom"
-                                            tooltip-append-to-body="true"
-                                            class="btn btn-sm btn-default"
-                                            ng-click="imageCtrl.editImage(image)">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </button>
-                                    <button type="button" aria-label="Push image to open repository"
-                                            tooltip="Push '{{image.metadata.title}}' to open repository"
-                                            tooltip-placement="bottom" tooltip-append-to-body="true"
-                                            class="btn btn-sm btn-success"
-                                            ng-click="imageCtrl.publishPrivateImage(image.imageId)"
-                                            ng-show="image.type.name == 'PRIVATE'">
-                                        <i class="fa fa-paper-plane"></i> Push
-                                    </button>
-                                    <button type="button" aria-label="Delete image"
-                                            tooltip="Delete '{{image.metadata.title}}'" tooltip-placement="bottom"
-                                            tooltip-append-to-body="true"
-                                            class="btn btn-sm btn-danger"
-                                            ng-click="imageCtrl.deleteLocalImage(image.imageId, image.type.name)">
-                                        <i class="fa fa-trash-o color--red"></i> Delete
-                                    </button>
-                                </div>
+                                <button type="button" aria-label="Edit image"
+                                        tooltip="Edit '{{image.metadata.title}}'" tooltip-placement="bottom"
+                                        tooltip-append-to-body="true"
+                                        class="btn btn-sm btn-default"
+                                        ng-click="imageCtrl.editImage(image)">
+                                    <i class="fa fa-edit"></i> Edit
+                                </button>
+                                <button type="button" aria-label="Push image to open repository"
+                                        tooltip="Push '{{image.metadata.title}}' to open repository"
+                                        tooltip-placement="bottom" tooltip-append-to-body="true"
+                                        class="btn btn-sm btn-success"
+                                        ng-click="imageCtrl.publishPrivateImage(image.imageId)"
+                                        ng-show="image.type.name == 'PRIVATE'">
+                                    <i class="fa fa-paper-plane"></i> Push
+                                </button>
+                                <button type="button" aria-label="Delete image"
+                                        tooltip="Delete '{{image.metadata.title}}'" tooltip-placement="bottom"
+                                        tooltip-append-to-body="true"
+                                        class="btn btn-sm btn-danger"
+                                        ng-click="imageCtrl.deleteLocalImage(image.imageId, image.type.name)">
+                                    <i class="fa fa-trash-o"></i> Delete
+                                </button>
                             </div>
                         </div>
                     </div>
