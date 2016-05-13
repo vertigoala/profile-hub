@@ -274,14 +274,14 @@ class ImageService {
     }
 
 
-    def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
+    def retrieveImages(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
         Map response = [:]
         List allImages = []
         def model = profileService.getProfile(opusId, profileId, latest)
         def profile = model.profile
         def opus = model.opus
 
-        def publishedImages = biocacheService.retrieveImages(searchIdentifier, imageSources)
+        def publishedImages = biocacheService.retrieveImages(searchIdentifier, opus)
 
         //we want to display the images in a specific order - staged, private, published
         if (profile.privateMode && profile.stagedImages) {

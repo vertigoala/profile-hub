@@ -25,6 +25,7 @@ modules = {
         dependsOn "modernizr3"
         dependsOn "keybase"
         dependsOn "keybase_overrides"
+        dependsOn "dual_multiselect"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -182,4 +183,11 @@ modules = {
         resource url: [plugin: "images-client-plugin", dir: 'js/img-gallery/lib/slider-pro/js', file: 'jquery.sliderPro.custom.js']
         resource url: [plugin: "images-client-plugin", dir: 'js/img-gallery/js', file: 'img-gallery.js']
     }
+
+    dual_multiselect {
+        dependsOn "angular"
+        resource url:"thirdparty/dualMultiselect/dualmultiselect.css"
+        resource url:"thirdparty/dualMultiselect/dualmultiselect.min.js"
+    }
+
 }

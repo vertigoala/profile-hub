@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-form="RecordForm" ng-cloak>
+<div class="panel panel-default dirty-check-container" ng-form="RecordForm" ng-cloak>
     <div class="panel-heading">
         <a name="recordSources">
             <h4 class="section-panel-heading">Approved Specimen/Observation sources</h4>
@@ -8,38 +8,55 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-12">
-                <p>Configure the record sources to be included in your profile pages. This will set what data is used on maps.
-                These are data resources accessible via Atlas API's.
+                <p>
+                    Configure the record sources to be included in your profile pages. This controls the data that will be retrieved from the Atlas of Living Australia to be used on maps and in data lookups.
                 </p>
 
-                <ul>
-                    <li ng-repeat="recordSource in opusCtrl.opus.recordSources">
-                        <a href="${grailsApplication.config.collectory.base.url}/public/show/{{recordSource}}">{{opusCtrl.dataResources[recordSource] | default:'Loading...'}}</a>
-                        <button class="btn btn-mini btn-link" title="Remove this resource"
-                                ng-click="opusCtrl.removeRecordSource($index, 'existing', RecordForm)">
-                            <i class="fa fa-trash-o color--red"></i>
-                        </button>
-                    </li>
+                <p>
+                    Use the options below to select which data resources to use.
+                </p>
 
-                    <li ng-repeat="recordSource in opusCtrl.newRecordSources">
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <input placeholder="Record source name..."
-                                       ng-model="recordSource.dataResource"
-                                       autocomplete="off"
-                                       size="70"
-                                       class="form-control"
-                                       typeahead="source as source.name for source in opusCtrl.dataResourceList | filter:$viewValue | limitTo:10"/>
-                                <span class="fa fa-ban color--red"
-                                      ng-if="recordSource.dataResource && !recordSource.dataResource.id"></span>
-                                <button class="btn btn-mini btn-link" title="Remove this resource"
-                                        ng-click="opusCtrl.removeRecordSource($index, 'new', RecordForm)">
-                                    <i class="fa fa-trash-o color--red"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                 <div class="radio">
+                    <label ng-repeat="(key, value) in opusCtrl.collectoryResourceOptions | orderBy: 'value'" class="inline-label padding-right-1">
+                        <input type="radio" name="{{key}}" ng-value="key" ng-model="opusCtrl.opus.dataResourceConfig.recordResourceOption" ng-change="opusCtrl.recordSourceOptionChanged()">
+                        {{value}}
+                    </label>
+                </div>
+
+                <div ng-show="opusCtrl.opus.dataResourceConfig.recordResourceOption == 'ALL'">
+                    <p>
+                        <span class="fa fa-info-circle padding-left-1">&nbsp;</span>This option will retrieve records from all available data resources in the Atlas of Living Australia.
+                    </p>
+                </div>
+
+                <div ng-show="opusCtrl.opus.dataResourceConfig.recordResourceOption == 'NONE'">
+                    <p class="padding-left-1">
+                        <span class="fa fa-info-circle">&nbsp;</span>Every collection has its own data resource in the Atlas of Living Australia. This option will limit records to that resource only.
+                    </p>
+                    <p class="padding-left-1">
+                        The name of your collection's data resource is <a href="${grailsApplication.config.collectory.base.url}/public/show/{{opusCtrl.dataResource.uid}}" target="_blank" title="Click to visit your collection resource's page in the Atlas of Living Australia">{{opusCtrl.dataResource.name}}</a>.
+                    </p>
+                </div>
+
+                <div ng-show="opusCtrl.opus.dataResourceConfig.recordResourceOption == 'HUBS'">
+                    <div ng-show="opusCtrl.recordHubMultiSelectOptions.loading">
+                        <span class="fa fa-spin fa-spinner">&nbsp;&nbsp;</span>Loading...
+                    </div>
+                    <div ng-hide="opusCtrl.recordHubMultiSelectOptions.loading">
+                        <dualmultiselect options="opusCtrl.recordHubMultiSelectOptions"></dualmultiselect>
+                        <alert class="alert-danger" ng-hide="opusCtrl.isRecordSourceSelectionValid()">You must select at least 1 resource</alert>
+                    </div>
+                </div>
+
+                <div ng-show="opusCtrl.opus.dataResourceConfig.recordResourceOption == 'RESOURCES'">
+                    <div ng-show="opusCtrl.recordResourceMultiSelectOptions.loading">
+                        <span class="fa fa-spin fa-spinner">&nbsp;&nbsp;</span>Loading...
+                    </div>
+                    <div ng-hide="opusCtrl.recordResourceMultiSelectOptions.loading">
+                        <dualmultiselect options="opusCtrl.recordResourceMultiSelectOptions"></dualmultiselect>
+                        <alert class="alert-danger" ng-hide="opusCtrl.isRecordSourceSelectionValid()">You must select at least 1 resource</alert>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -48,10 +65,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="btn-group">
-                    <button class="btn btn-default" ng-click="opusCtrl.addRecordSource()"><i
-                            class="fa fa-plus"></i>  Add record source</button>
+                    <button class="btn btn-default" ng-click="opusCtrl.resetRecordSources()">Reset</button>
                 </div>
-                <save-button ng-click="opusCtrl.saveRecordSources(RecordForm)" form="RecordForm"></save-button>
+                <save-button ng-click="opusCtrl.saveOpus(RecordForm)" disabled="!opusCtrl.isRecordSourceSelectionValid()" form="RecordForm"></save-button>
             </div>
         </div>
     </div>

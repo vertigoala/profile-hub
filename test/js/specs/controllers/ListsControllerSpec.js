@@ -18,7 +18,7 @@ describe("ListsController tests", function () {
     var profileService;
     var profileDefer, listsDefer, speciesProfileDefer, getFeatureDefer;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
     var listsResponse = '[{},{}]';
 
     beforeAll(function () {
@@ -138,7 +138,7 @@ describe("ListsController tests", function () {
     });
 
     it("should not attempt to load lists if the profile.guid attribute is not present", function () {
-        var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
         profileDefer.resolve(JSON.parse(getProfileResponse));
         listsDefer.resolve(JSON.parse(listsResponse));
 

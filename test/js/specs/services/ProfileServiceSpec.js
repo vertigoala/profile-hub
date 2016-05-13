@@ -78,14 +78,14 @@ describe("ProfileService tests", function () {
     });
 
     it("should invoke the update opus as json service on the context root when saveOpus is called", function () {
-        var data = {opusId: "opusId", imageSources: ["one", "two"]};
+        var data = {opusId: "opusId", dataResourceConfig:{imageSources: ["one", "two"], imageResourceOption: "RESOURCES"}};
         service.saveOpus("opusId", data);
 
         http.expectPOST("/someContext/opus/opusId/update", data).respond("bla");
     });
 
     it("should invoke the create opus service on the context root when saveOpus is called with no opusid", function () {
-        var data = {imageSources: ["one", "two"]};
+        var data = {dataResourceConfig: {imageSources: ["one", "two"], imageResourceOption: "RESOURCES"}};
         service.saveOpus(null, data);
 
         http.expectPUT("/someContext/opus/create", data).respond("bla");

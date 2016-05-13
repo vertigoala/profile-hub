@@ -42,4 +42,8 @@ class Utils {
     static String getExtension(String fileName) {
         fileName ? fileName.substring(fileName.lastIndexOf(".")) : ""
     }
+
+    static String enc(String value) {
+        value ? URLEncoder.encode(value, "UTF-8") : ""
+    }
 }

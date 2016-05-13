@@ -93,7 +93,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
         var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : "";
 
-        var sources = angular.copy(self.opus.imageSources);
+        var sources = angular.copy(self.opus.dataResourceConfig.imageSources);
         sources.unshift(self.opus.dataResourceUid);
 
         var imagesPromise = profileService.retrieveImages(self.opusId, self.profileId, searchIdentifier, sources.join(), self.readonly);

@@ -122,22 +122,18 @@ profileEditor.controller('MapController', function ($scope, profileService, util
     };
 
     self.saveMapConfiguration = function () {
-        var queryString = self.editableMap.getQueryString();
+        self.profile.occurrenceQuery = self.editableMap.getQueryString();
 
-        if (queryString != self.profile.occurrenceQuery) {
-            self.profile.occurrenceQuery = queryString;
+        var promise = profileService.updateProfile(self.opusId, self.profileId, self.profile);
+        promise.then(function () {
+            messageService.info("Map configuration has been successfully updated.");
 
-            var promise = profileService.updateProfile(self.opusId, self.profileId, self.profile);
-            promise.then(function () {
-                messageService.info("Map configuration has been successfully updated.");
-
-                self.updateWMSLayer(self.profile.occurrenceQuery);
-                self.toggleEditingMap();
-                setTimeout(self.map.redraw, 500);
-            }, function () {
-                messageService.alert("An error occurred while updating the map configuration.");
-            });
-        }
+            self.updateWMSLayer(self.profile.occurrenceQuery);
+            self.toggleEditingMap();
+            setTimeout(self.map.redraw, 500);
+        }, function () {
+            messageService.alert("An error occurred while updating the map configuration.");
+        });
     };
 
     self.resetToDefaultMapConfig = function () {

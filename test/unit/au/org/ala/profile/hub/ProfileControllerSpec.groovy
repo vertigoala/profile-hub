@@ -468,7 +468,7 @@ class ProfileControllerSpec extends Specification {
 
     def "retrieveImages should return an empty map with there are no visible images"() {
         setup:
-        imageService.retrieveImages(_, _, _, _, _) >> [resp: [resp: "bla"], statusCode: 200]
+        imageService.retrieveImages(_, _, _, _) >> [resp: [resp: "bla"], statusCode: 200]
 
         when:
         params.searchIdentifier = "blabla"

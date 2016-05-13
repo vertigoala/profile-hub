@@ -26,7 +26,7 @@ profileEditor.controller('AttributeImageController', function ($scope, profileSe
         if (self.images.length == 0 || forceReload) {
             var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : "";
 
-            var sources = angular.copy(self.opus.imageSources);
+            var sources = angular.copy(self.opus.dataResourceConfig.imageSources);
             sources.unshift(self.opus.dataResourceUid);
 
             self.loading = true;

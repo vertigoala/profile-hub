@@ -22,7 +22,7 @@ describe("ImagesController tests", function () {
     var profileService;
     var profileDefer, imageDefer, saveDefer, metadataDefer;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "imageSettings": [{"imageId": "imageId2", "caption": "", "displayOption": "INCLUDE"}], "primaryImage": ""}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "imageSettings": [{"imageId": "imageId2", "caption": "", "displayOption": "INCLUDE"}], "primaryImage": ""}, "opus": {"dataResourceConfig": {"imageSources": ["source1", "source2"]}}}';
 
     var retrieveImagesResponse = '[{"imageId": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}]';
 
@@ -124,7 +124,7 @@ describe("ImagesController tests", function () {
     });
 
     it("should set the primaryImage to the image identified by the primaryImage attribute of the profile if present", function () {
-        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "primaryImage": "imageId2"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "primaryImage": "imageId2"}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 
@@ -171,7 +171,7 @@ describe("ImagesController tests", function () {
     it("should not use the scientificName to retrieve images if the profile.guid attribute is not present", function () {
         scope.imageCtrl.opusId = "opusId1";
         scope.imageCtrl.profileId = "profileId1";
-        var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"dataResourceUid": "drId", "imageSources": ["source1", "source2"]}}';
+        var getProfileResponse = '{"profile": {"guid": "", "scientificName":"profileName"}, "opus": {"dataResourceUid": "drId", "dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
 
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
@@ -185,7 +185,7 @@ describe("ImagesController tests", function () {
     it("should use the profile.guid attribute prefixed with 'lsid:' to retrieve images if it is present", function () {
         scope.imageCtrl.opusId = "opusId1";
         scope.imageCtrl.profileId = "profileId1";
-        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"dataResourceUid": "drId", "imageSources": ["source1", "source2"]}}';
+        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName"}, "opus": {"dataResourceUid": "drId", "dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
 
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
@@ -262,7 +262,7 @@ describe("ImagesController tests", function () {
     });
 
     it("should detect changes to the primary image and respond by reloading the images", function() {
-        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "primaryImage": "imageId2"}, "opus": {"imageSources": ["source1", "source2"]}}';
+        var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "primaryImage": "imageId2"}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imageDefer.resolve(JSON.parse(retrieveImagesResponse));
 

@@ -69,7 +69,7 @@ grails.project.dependency.resolution = {
         compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
-        compile ":ala-map:2.0-SNAPSHOT"
+//        compile ":ala-map:2.0-SNAPSHOT"
         compile ":ala-ws-plugin:1.2-SNAPSHOT"
         compile ":ala-admin-plugin:1.2"
         runtime(":images-client-plugin:0.6.1") {
@@ -83,6 +83,6 @@ grails.project.dependency.resolution = {
         runtime(":ala-auth:1.3.1") {
             excludes "commons-httpclient"
         }
-
     }
 }
+grails.plugin.location."ala-map" = "../ala-map-plugin"

@@ -102,7 +102,9 @@ class UrlMappings {
         "/opus" controller: "opus", action: [GET: "index"]
 
         "/dataResource/$dataResourceUid" controller: "collectory", action: [GET: "getResource"]
-        "/dataResource/" controller: "collectory", action: [GET: "list"]
+        "/dataResource/" controller: "collectory", action: [GET: "listResources"]
+        "/dataHub/$dataHubUid" controller: "collectory", action: [GET: "getHub"]
+        "/dataHub/" controller: "collectory", action: [GET: "listHubs"]
         "/licences/" controller: "collectory", action: [GET: "licences"]
 
         "/keybase/projects" controller: "opus", action: [GET: "retrieveKeybaseProjects"]

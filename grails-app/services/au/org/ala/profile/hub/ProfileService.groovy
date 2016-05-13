@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import static au.org.ala.profile.hub.Utils.enc
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
 import au.org.ala.ws.service.WebService
@@ -485,10 +486,6 @@ class ProfileService {
         }
 
         result
-    }
-
-    def enc(String value) {
-        value ? URLEncoder.encode(value, "UTF-8") : ""
     }
 
     boolean hasMatchedName(Map profile) {

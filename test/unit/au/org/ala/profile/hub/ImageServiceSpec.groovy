@@ -136,7 +136,7 @@ class ImageServiceSpec extends Specification {
         ], privateImages                                                                         : []]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 2
@@ -174,7 +174,7 @@ class ImageServiceSpec extends Specification {
         ]]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 4
@@ -225,7 +225,7 @@ class ImageServiceSpec extends Specification {
         ]]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 2
@@ -245,7 +245,7 @@ class ImageServiceSpec extends Specification {
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 2
@@ -265,7 +265,7 @@ class ImageServiceSpec extends Specification {
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 2
@@ -294,7 +294,7 @@ class ImageServiceSpec extends Specification {
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 2
@@ -316,7 +316,7 @@ class ImageServiceSpec extends Specification {
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 2
@@ -345,7 +345,7 @@ class ImageServiceSpec extends Specification {
         biocacheService.retrieveImages(_, _) >> [statusCode: HttpStatus.SC_OK, resp: [occurrences: []]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 2
@@ -368,7 +368,7 @@ class ImageServiceSpec extends Specification {
         ], privateImages                                                                         : []]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 2
@@ -391,7 +391,7 @@ class ImageServiceSpec extends Specification {
         ], privateImages                                                                         : []]]
 
         when:
-        Map result = imageService.retrieveImages("opusId", "profileId", true, "sources", "search string")
+        Map result = imageService.retrieveImages("opusId", "profileId", true, "search string")
 
         then:
         result.resp.size() == 2

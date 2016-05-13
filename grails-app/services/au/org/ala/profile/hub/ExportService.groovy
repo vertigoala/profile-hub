@@ -242,13 +242,10 @@ class ExportService {
         // Retrieve image and get primary image. This has to be done always, regardless of the user choosing to display the images section or not
         String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
 
-        List<String> imageSources = opus.imageSources ?: []
-        imageSources << opus.dataResourceUid
-
         // incrementing number to be displayed against all images in the report (e.g. Fig 1,...)
         int figureNumber = 1
 
-        model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, imageSources.join(","), searchIdentifier, true)?.resp
+        model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, searchIdentifier, true)?.resp
         List<Map> images = model.profile.images
 
         def replaceTitleWithOptionalCaption = { Map m -> m?.metadata?.title = m?.caption ? m?.caption : m?.metadata?.title }

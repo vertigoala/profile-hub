@@ -150,7 +150,7 @@ describe("AttributesController tests", function () {
 
     it("should set the attributeTitles array on the scope.attrCtrl with the results from the getOpusVocabulary call if the opus has attributeVocabUuid", function () {
         var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":["attr1", "attr2"]}, ' +
-            '"opus": {"imageSources": ["source1", "source2"], "attributeVocabUuid": "1234"}}';
+            '"opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}, "attributeVocabUuid": "1234"}}';
         profileDefer.resolve(JSON.parse(getProfileResponse));
         vocabDefer.resolve(JSON.parse(vocabResponse));
 

@@ -8,23 +8,41 @@ class CollectoryService {
     WebService webService
 
     Map<String, String> getDataResources() {
-        def dataResources = [:]
+        Map dataResources = [:]
 
         try {
-            def resources = webService.get("${grailsApplication.config.collectory.base.url}ws/dataResource")
-            resources?.resp.each {
+            Map resources = webService.get("${grailsApplication.config.collectory.base.url}ws/dataResource")
+            resources?.resp?.each {
                 dataResources.put(it.uid, it.name)
             }
         } catch (Exception e) {
-            dataResources = null
             log.error("Unable to retrieve data resources", e)
         }
 
         dataResources
     }
 
-    def getDataResource(dataResourceUid) {
+    Map<String, String> getDataHubs() {
+        Map dataHubs = [:]
+
+        try {
+            Map hubs = webService.get("${grailsApplication.config.collectory.base.url}ws/dataHub")
+            hubs?.resp?.each {
+                dataHubs.put(it.uid, it.name)
+            }
+        } catch (Exception e) {
+            log.error("Unable to retrieve data hubs", e)
+        }
+
+        dataHubs
+    }
+
+    def getDataResource(String dataResourceUid) {
         webService.get("${grailsApplication.config.collectory.base.url}ws/dataResource/${dataResourceUid}")
+    }
+
+    def getDataHub(String dataHubUid) {
+        webService.get("${grailsApplication.config.collectory.base.url}ws/dataHub/${dataHubUid}")
     }
 
     def getLicences() {

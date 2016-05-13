@@ -754,6 +754,28 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        listHubs: function () {
+            $log.debug("Fetching all hubs");
+
+            var future = $http.get(util.contextRoot() + "/dataHub");
+            future.then(function (response) {
+                $log.debug("Hubs fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        getHub: function (dataHubId) {
+            $log.debug("Fetching hub " + dataHubId);
+
+            var future = $http.get(util.contextRoot() + "/dataHub/" + dataHubId);
+            future.then(function (response) {
+                $log.debug("Hub fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         userSearch: function (email) {
             $log.debug("Searching for user " + email);
 

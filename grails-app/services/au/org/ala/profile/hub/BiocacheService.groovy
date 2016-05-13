@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import static au.org.ala.profile.hub.Utils.enc
 import au.org.ala.ws.service.WebService
 import groovy.json.JsonSlurper
 import org.springframework.web.multipart.MultipartFile
@@ -19,39 +20,62 @@ class BiocacheService {
     def grailsApplication
 
 
-    def retrieveImagesPaged(String searchIdentifier, String imageSources, String pageSize, String startIndex)  {
+    def retrieveImagesPaged(String searchIdentifier, Map opus, String pageSize, String startIndex) {
         if (!searchIdentifier) {
             return [:]
         }
 
-        log.debug("Fetching images for ${searchIdentifier} using sources ${imageSources}")
+        String imagesQuery = constructQueryString(searchIdentifier, opus)
+        log.debug("Fetching images for ${searchIdentifier} using query ${imagesQuery}")
         String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
 
-        String imagesQuery = searchIdentifier + " AND (data_resource_uid:" + imageSources.split(",").join(" OR data_resource_uid:") + ")"
-        imagesQuery = imagesQuery.encodeAsURL()
-
-        log.debug("Image query = ${imagesQuery}")
-
-      def numberOfImages =  webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=0")
-      def response =  webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
+        def numberOfImages = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=0")
+        def response = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
         return response
     }
-    def retrieveImages(String searchIdentifier, String imageSources) {
+
+    def retrieveImages(String searchIdentifier, Map opus) {
         if (!searchIdentifier) {
             return [:]
         }
 
-        log.debug("Fetching images for ${searchIdentifier} using sources ${imageSources}")
+        String imagesQuery = constructQueryString(searchIdentifier, opus)
+        log.debug("Fetching images for ${searchIdentifier} using query ${imagesQuery}")
         String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
-
-        String imagesQuery = searchIdentifier + " AND (data_resource_uid:" + imageSources.split(",").join(" OR data_resource_uid:") + ")"
-        imagesQuery = imagesQuery.encodeAsURL()
 
         log.debug("Image query = ${imagesQuery}")
 
         webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${DEFAULT_BIOCACHE_PAGE_SIZE}")
     }
 
+    String constructQueryString(String searchIdentifier, Map opus) {
+        String query
+        if (opus?.dataResourceConfig?.imageResourceOption) {
+            Map config = opus.dataResourceConfig
+            switch (config.imageResourceOption as DataResourceOption) {
+                case DataResourceOption.ALL:
+                    query = "${searchIdentifier}"
+                    break
+                case DataResourceOption.NONE:
+                    query = "${searchIdentifier} AND data_resource_uid:${opus.dataResourceUid}"
+                    break
+                case DataResourceOption.HUBS:
+                    query = "${searchIdentifier} AND (data_resource_uid:${opus.dataResourceUid} OR data_hub_uid:${config.imageSources?.join(" OR data_hub_uid:")})"
+                    break
+                case DataResourceOption.RESOURCES:
+                    query = "${searchIdentifier} AND (data_resource_uid:${opus.dataResourceUid} OR data_resource_uid:${config.imageSources?.join(" OR data_resource_uid:")})"
+                    break
+                default:
+                    query = "${searchIdentifier}"
+            }
+        } else if (opus?.dataResourceUid) {
+            query = "${searchIdentifier} AND data_resource_uid:${opus.dataResourceUid}"
+        } else {
+            query = "${searchIdentifier}"
+        }
+
+        enc(query)
+    }
 
     String copyFileForUpload(String imageId, def file, File tempDir) {
         String filename = ''
@@ -109,10 +133,6 @@ class BiocacheService {
         }
 
         webService.post("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
-    }
-
-    private static enc(String str) {
-        URLEncoder.encode(str, "utf-8")
     }
 
     def lookupSpecimen(String specimenId) {

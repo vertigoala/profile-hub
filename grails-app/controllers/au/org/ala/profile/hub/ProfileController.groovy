@@ -286,7 +286,7 @@ class ProfileController extends BaseController {
             String primaryImageId = model.profile.primaryImage
 
             String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-            List images = imageService.retrieveImages(params.opusId, params.profileId, latest, model.opus.imageSources.toArray().join(","), searchIdentifier)?.resp
+            List images = imageService.retrieveImages(params.opusId, params.profileId, latest, searchIdentifier)?.resp
 
             Map primaryImage = images.find { it.imageId == primaryImageId } ?: images[0] ?: [:]
 
@@ -313,7 +313,7 @@ class ProfileController extends BaseController {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
             boolean readonlyView = params.getBoolean('readonlyView', true)
 
-            def response = imageService.retrieveImages(params.opusId, params.profileId, latest, params.imageSources, params.searchIdentifier, false, readonlyView)
+            def response = imageService.retrieveImages(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView)
 
             handle response
         }

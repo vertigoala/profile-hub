@@ -222,7 +222,7 @@
         $(":not(form).ng-dirty").each(function (index, field) {
             var $field = $(field);
 
-            if (!$field.hasClass("ignore-save-warning") && !$field.is("div") && !$field.is("ul")) {
+            if (!$field.hasClass("ignore-save-warning") && (!$field.is("div") || ($field.is("div") && $field.hasClass("dirty-check-container"))) && !$field.is("ul") && !$field.closest(".dualmultiselect")) {
                 $field.addClass("show-dirty");
                 dirty = true;
             }

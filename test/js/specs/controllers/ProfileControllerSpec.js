@@ -13,7 +13,7 @@ describe("ProfileController tests", function () {
         open: function() {}
     };
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":[{"title": "attr1"}, {"title": "attr2"}]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":[{"title": "attr1"}, {"title": "attr2"}]}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
 
     beforeAll(function () {
         console.log("****** Profile Controller Tests ******");
