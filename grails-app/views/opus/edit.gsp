@@ -72,6 +72,7 @@
                     <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Image options</a></li>
                     <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
                     <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
+                    <li><a href="#profileEditing" du-smooth-scroll target="_self" class="font-xxsmall">Profile Editing Options</a></li>
                     <li><a href="#profileLayout" du-smooth-scroll target="_self" class="font-xxsmall">Profile Page Layout</a></li>
                     <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
                     <li><a href="#supportingCollections" du-smooth-scroll
@@ -87,6 +88,8 @@
                 <g:include controller="opus" action="editAccessControlPanel" params="[opusId: params.opusId]"/>
 
                 <g:include controller="opus" action="editStylingPanel" params="[opusId: params.opusId]"/>
+
+                <g:render template="editProfileEditingOptions" model="[opusId: params.opusId]"/>
 
                 <g:render template="editProfileLayout" model="[opusId: params.opusId]"/>
 
