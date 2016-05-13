@@ -117,7 +117,7 @@
                 ng-show="!$last">;&nbsp;</span></span>
     </div>
     <div class="col-sm-12 col-md-4 last-updated-text">
-        Last updated: <span class="last-updated">{{ (profileCtrl.profile.lastPublished || profileCtrl.profile.lastUpdated) | date : 'MMM d, y h:mm' }}</span>
+        Last updated: <span class="last-updated">{{ profileCtrl.profile.lastPublished | date : 'MMM d, y h:mm' }}</span>
     </div>
 </div>
 
