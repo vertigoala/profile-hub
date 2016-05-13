@@ -36,7 +36,6 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/primaryImage" controller: "profile", action: [GET: "getPrimaryImage"]
         "/opus/$opusId/profile/$profileId/image/$imageId" controller: "profile", action: [GET: "getLocalImage"]
         "/opus/$opusId/profile/$profileId/image/thumbnail/$imageId" controller: "profile", action: [GET: "retrieveLocalThumbnailImage"]
-        "/opus/$opusId/profile/$profileId/image/$imageId/metadata" controller: "profile", action: [POST: "updateLocalImageMetadata"]
         "/opus/$opusId/profile/$profileId/image/$imageId/delete" controller: "profile", action: [DELETE: "deleteLocalImage"]
         "/opus/$opusId/profile/$profileId/image/$imageId/publish" controller: "profile", action: [POST: "publishPrivateImage"]
         "/opus/$opusId/profile/$profileId/file/$fileId" controller: "profile", action: [GET: "downloadTempFile"]

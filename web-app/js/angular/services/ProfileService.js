@@ -493,7 +493,6 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         saveImageMetadata: function(imageId, data) {
             $log.debug("Saving image metadata: " + imageId);
             var future = null;
-            var self = this;
             if (imageId) {
                 future = enqueue(function() {
                     return $http.post(util.contextRoot() + "/image/" + imageId + "/metadata", data)
