@@ -93,7 +93,7 @@
 
             <div class="col-sm-9">
                 <select id="licence"
-                        ng-options="licence.name for licence in licences | orderBy:'name'"
+                        ng-options="licence for licence in licences track by licence"
                         ng-model="metadata.licence" class="form-control" ng-required="true">
                 </select>
             </div>

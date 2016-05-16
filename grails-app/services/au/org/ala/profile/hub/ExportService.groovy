@@ -29,7 +29,7 @@ class ExportService {
     private static final int THREAD_COUNT = 10
     static transactional = false
     static final String LOCAL_IMAGE_THUMBNAIL_REGEX = "http.*?/image/thumbnail/(${Utils.UUID_REGEX_PATTERN}).*"
-    public static final String ISO_8601_DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ssX"
+    public static final String ISO_8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX"
 
     ProfileService profileService
     BiocacheService biocacheService

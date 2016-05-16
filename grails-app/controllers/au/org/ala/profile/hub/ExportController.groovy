@@ -33,7 +33,7 @@ class ExportController extends BaseController {
                 } else {
                     response.contentType = 'application/pdf'
                     response.setHeader 'Content-disposition', "attachment; filename=\"${model.profile.scientificName.replaceAll(/\\W/, '')}.pdf\""
-                    exportService.createPdf(extractOptionsFromParams(), response.outputStream, latest)
+                    exportService.createPdf(extractOptionsFromParams(), { response.outputStream }, latest)
                     response.outputStream.flush()
                 }
             }
