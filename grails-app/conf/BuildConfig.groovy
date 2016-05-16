@@ -55,6 +55,7 @@ grails.project.dependency.resolution = {
         compile 'net.glxn:qrgen:1.4'
         compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160203.1-ALA'
         compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+
     }
 
     plugins {
@@ -68,7 +69,7 @@ grails.project.dependency.resolution = {
         compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
-        compile ":ala-map:2.0-SNAPSHOT"
+//        compile ":ala-map:2.0-SNAPSHOT"
         compile ":ala-ws-plugin:1.2-SNAPSHOT"
         compile ":ala-admin-plugin:1.2"
         runtime(":images-client-plugin:0.6.1") {
@@ -84,3 +85,4 @@ grails.project.dependency.resolution = {
         }
     }
 }
+grails.plugin.location."ala-map" = "../ala-map-plugin"
