@@ -258,17 +258,36 @@ class ImageService {
      * @param startIndex - equivalent to start in SOLR i.e. the first record to return
      * @return MAP containing image metadata and 'statusCode'
      */
-    def retrievePublishedImagesPaged(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, String pageSize, String startIndex) {
+    def retrieveImagesPaged(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, String pageSize, String startIndex) {
         Map response = [:]
-
+        List allImages = []
+        Integer numberOfLocalImages = 0
         def model = profileService.getProfile(opusId, profileId, latest)
         def profile = model.profile
         def opus = model.opus
+        Map numberOfPublishedImages = biocacheService.imageCount(searchIdentifier, opus)
+        Map publishedImages = biocacheService.retrieveImagesPaged(searchIdentifier, opus, pageSize, startIndex)
+        //we want to display the images in a specific order - staged, private, published
+        if (profile.privateMode && profile.stagedImages) {
+            allImages.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
+            numberOfLocalImages = allImages.size()
+        }
 
-        def publishedImages = biocacheService.retrieveImagesPaged(searchIdentifier, imageSources, pageSize, startIndex)
-        List images = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
+        // The collection may now, or may have been at some point, private, so look for any private images that may exist.
+        // When a collection is changed from private to public, existing private images are NOT published automatically.
+        if (profile.privateImages) {
+            allImages.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
+            numberOfLocalImages = allImages.size()
+        }
+        if (publishedImages?.size() > 0) {
+            List publishedImageList = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
+            allImages.addAll(publishedImageList)
+        }
         response.statusCode = SC_OK
-        response.resp = images
+        //we don't have support for JSON objects or serialization so this is a workaround
+        response.resp = [:]
+        response.resp.images = allImages
+        response.resp.count = numberOfPublishedImages?.resp?.totalRecords + numberOfLocalImages
 
         response
     }
@@ -282,6 +301,10 @@ class ImageService {
         def opus = model.opus
 
         def publishedImages = biocacheService.retrieveImages(searchIdentifier, opus)
+        if (publishedImages?.size() > 0) {
+            List publishedImageList = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
+            allImages.addAll(publishedImageList)
+        }
 
         //we want to display the images in a specific order - staged, private, published
         if (profile.privateMode && profile.stagedImages) {
@@ -292,10 +315,6 @@ class ImageService {
         // When a collection is changed from private to public, existing private images are NOT published automatically.
         if (profile.privateImages) {
             allImages.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
-        }
-        if (publishedImages?.size() > 0) {
-            List publishedImageList = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
-            allImages.addAll(publishedImageList)
         }
 
         response.statusCode = SC_OK
