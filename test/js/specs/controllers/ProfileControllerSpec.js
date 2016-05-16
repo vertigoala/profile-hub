@@ -88,7 +88,7 @@ describe("ProfileController tests", function () {
         scope.profileCtrl.loadProfile();
         scope.$apply();
 
-        expect(profileService.getProfile).not.toHaveBeenCalled();
+        expect(profileService.getProfile).toHaveBeenCalled();
         expect(scope.profileCtrl.profile).toBeDefined();
     });
 
