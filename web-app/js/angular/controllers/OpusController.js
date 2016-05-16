@@ -94,6 +94,8 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
 
     var orderBy = $filter("orderBy");
 
+    loadOpusList();
+
     self.loadOpus = function () {
         self.opusId = util.getEntityId("opus");
 
@@ -132,7 +134,6 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                 self.imageSourceOptionChanged();
 
                 loadSpeciesLists();
-                loadOpusList();
                 loadKeybaseProjects();
 
                 toggleMapPointerColourHash(true);
@@ -586,13 +587,15 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
     }
 
     function watchForChanges(expression, form) {
-        $scope.$watch(expression, function (newVal, oldVal) {
-            if (_.isEqual(newVal, oldVal)) {
-                form.$setPristine();
-            } else {
-                form.$setDirty();
-            }
-        }, true)
+        if (!_.isUndefined(form)) {
+            $scope.$watch(expression, function (newVal, oldVal) {
+                if (_.isEqual(newVal, oldVal)) {
+                    form.$setPristine();
+                } else {
+                    form.$setDirty();
+                }
+            }, true)
+        }
     }
 
     function loadRecordResources() {

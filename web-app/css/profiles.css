@@ -815,7 +815,7 @@ span.breadcrumb-dropdown {
 .button-inside-input, .button-inside-input:hover, .button-inside-input:focus {
     border: none;
     background: transparent !important;
-    margin-left: -30px !important;
+    margin-left: -35px !important;
     z-index: 99;
 }
 
@@ -1004,3 +1004,7 @@ span.breadcrumb-dropdown {
 }
  /*helps angular not destroy bootstrap styling, please see https://angular-ui.github.io/bootstrap/ */
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.legend-container-short {
+    max-height: 200px !important;
+}

@@ -1066,7 +1066,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
             var future = $http.get(url, {cache: true});
             future.then(function (response) {
-                $log.debug("Attachment metadatd retrieved with response code " + response.status);
+                $log.debug("Attachment metadata retrieved with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        getBiocacheLegend: function(occurrenceQuery, colourBy) {
+            var future = $http.get(config.biocacheServiceUrl + "/occurrence/legend?type=application/json&" + occurrenceQuery + "&cm=" + colourBy);
+            future.then(function (response) {
+                $log.debug("Occurrence Query legend retrieved with response code " + response.status);
             });
 
             return util.toStandardPromise(future);
