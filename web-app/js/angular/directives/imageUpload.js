@@ -33,19 +33,12 @@ profileEditor.directive('imageUpload', function ($browser) {
             var orderBy = $filter("orderBy");
 
             profileService.getLicences().then(function (data) {
-                $scope.licences = orderBy(data, "name");
-                if ($scope.metadata.licence) {
-                    var licence = _.findWhere($scope.licences, { name: $scope.metadata.licence });
-                    $scope.metadata.licence = licence || $scope.licences[0];
-                } else {
-                    $scope.metadata.licence = $scope.licences[0];
-                }
+                $scope.licences = _.pluck(data, "name").sort();
             });
 
             $scope.doUpload = function () {
                 if ($scope.files.length > 0) {
                     $scope.metadata.dataResourceId = $scope.opus.dataResourceUid;
-                    $scope.metadata.licence = $scope.metadata.licence.name;
                     $scope.metadata.created = util.formatLocalDate($scope.metadata.created);
 
                     Upload.upload({
@@ -70,7 +63,6 @@ profileEditor.directive('imageUpload', function ($browser) {
 
             $scope.save = function() {
               if ($scope.image) {
-                  $scope.metadata.licence = $scope.metadata.licence.name;
                   $scope.metadata.created = util.formatLocalDate($scope.metadata.created);
                   $cacheFactory.get('$http').removeAll();
 
