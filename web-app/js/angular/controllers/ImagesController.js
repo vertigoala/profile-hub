@@ -3,7 +3,7 @@
  */
 profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal, config) {
     var self = this;
-    self.defaultPageSize = 10;
+    self.defaultPageSize = 12;
 
     // Flag to prevent reloading images during the update process.
     var saving = false;
@@ -93,16 +93,14 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
         var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : "";
 
-        var sources = angular.copy(self.opus.dataResourceConfig.imageSources);
-        sources.unshift(self.opus.dataResourceUid);
+        //var sources = angular.copy(self.opus.dataResourceConfig.imageSources);
+        //sources.unshift(self.opus.dataResourceUid);
 
-        var imagesPromise = profileService.retrieveImages(self.opusId, self.profileId, searchIdentifier, sources.join(), self.readonly);
-        //var imagesPromise = profileService.retrieveImagesPaged(self.opusId, self.profileId, searchIdentifier, sources.join(), self.readonly, offset, itemsPerPage);
+        var imagesPromise = profileService.retrieveImagesPaged(self.opusId, self.profileId, searchIdentifier, self.readonly, offset, itemsPerPage);
 
         imagesPromise.then(function (data) {
                 self.images = [];
-
-                angular.forEach(data, function (image) {
+                angular.forEach(data.images, function (image) {
                     if (!self.readonly || !image.excluded) {
                         self.images.push(image);
 
@@ -123,21 +121,32 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 if (self.images.length > 0 || !self.readonly) {
                     navService.add("Images", "images");
                 }
-                //data for pagination
-                $scope.totalItems = self.images.length;
-                $scope.itemsPerPage = itemsPerPage;
-                $scope.paginate = ($scope.totalItems > $scope.itemsPerPage);
-                //@TODO:this is for client side pagination, remove once server side pagination works
-                self.images = self.images.slice(offset, offset + itemsPerPage);
-            },
 
+                var totalNumberOfImages = data.count;
+
+                if (totalNumberOfImages <= itemsPerPage) {
+                    itemsPerPage = totalNumberOfImages
+                }
+
+                //@TODO what to do if we have zillions of images?
+
+                   //data for pagination
+                    $scope.totalItems = totalNumberOfImages;
+                    $scope.itemsPerPage = itemsPerPage;
+                    $scope.paginate = ($scope.totalItems > $scope.itemsPerPage);
+                //}
+            },
 
             function () {
                 messageService.alert("An error occurred while retrieving the images.");
             }
         );
         return imagesPromise;
-    };
+    }; //end of loadImages
+
+    function isOdd(num) {
+        return num % 2;
+    }
 
     self.changeImageDisplay = function (form) {
         form.$setDirty();
@@ -161,7 +170,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 opus: function () {
                     return self.opus;
                 },
-                image: function() {
+                image: function () {
                     return null;
                 }
             }
@@ -172,17 +181,17 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
         });
     };
 
-    self.editImage = function(image) {
+    self.editImage = function (image) {
         var popup = $modal.open({
             templateUrl: $browser.baseHref() + "static/templates/imageUploadModal.html",
             controller: "ImageUploadController",
             controllerAs: "imageUploadCtrl",
             size: "md",
             resolve: {
-                opus: function() {
+                opus: function () {
                     return self.opus;
                 },
-                image: function() {
+                image: function () {
                     return image;
                 }
             }

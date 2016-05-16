@@ -451,13 +451,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        retrieveImageCount: function(opusId, profileId, searchIdentifier, imageSources, readonlyView){
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/images?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources + "&readonlyView=" + readonlyView, {cache: true});
-            future.then(function (response) {
-                $log.debug("Images retrieved with response code " + response.status)
-            });
-            return util.toStandardPromise(future);
-        },
+
 
         retrieveImages: function (opusId, profileId, searchIdentifier, imageSources, readonlyView) {
             $log.debug("Retrieving images for " + searchIdentifier);
@@ -468,11 +462,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        //For the biocache webservice: pageSize is similar to rows in SOLR and startIndex is similar to start in SOLR
-        retrieveImagesPaged: function (opusId, profileId, searchIdentifier, imageSources, readonlyView, nextPageNumber, numberToRetrieve) {
+        //For the biocache webservice: 'pageSize' is same as 'rows' and 'startIndex' is same as 'start' in SOLR
+        retrieveImagesPaged: function (opusId, profileId, searchIdentifier, readonlyView, nextPageNumber, numberToRetrieve) {
             $log.debug("Retrieving images for " + searchIdentifier);
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/imagesPublished?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources + "&readonlyView=" + readonlyView+"&pageSize="+numberToRetrieve+"&startIndex="+nextPageNumber, {cache: true});
-            $log.info("Retrieve Paged Images url: "+util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/imagesPublished?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources + "&readonlyView=" + readonlyView+"&pageSize="+numberToRetrieve+"&startIndex="+nextPageNumber);
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/images/paged?searchIdentifier=" + searchIdentifier + "&readonlyView=" + readonlyView+"&pageSize="+numberToRetrieve+"&startIndex="+nextPageNumber, {cache: true});
             future.then(function (response) {
                 $log.debug("Images retrieved with response code " + response.status)
             });

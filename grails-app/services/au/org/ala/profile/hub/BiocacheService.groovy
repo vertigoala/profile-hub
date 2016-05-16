@@ -1,6 +1,5 @@
 package au.org.ala.profile.hub
 
-import static au.org.ala.profile.hub.Utils.enc
 import au.org.ala.ws.service.WebService
 import groovy.json.JsonSlurper
 import org.springframework.web.multipart.MultipartFile
@@ -19,6 +18,21 @@ class BiocacheService {
     WebService webService
     def grailsApplication
 
+    /**
+     * The total number of published images for a profile
+     * @param searchIdentifier - the taxon
+     * @param imageSources - the drd resources
+     * @return Map conforming to ALA response structure containing image count and http status code
+     */
+    Map imageCount(String searchIdentifier, Map opus) {
+        String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
+        String imagesQuery = constructQueryString(searchIdentifier, opus)
+        Map biocacheResult = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&facets=multimedia&flimit=0&foffset=0&fq=multimedia:Image&pageSize=0")
+        def resp = [:]
+        resp.statusCode = biocacheResult?.statusCode
+        resp.resp = ['totalRecords': biocacheResult?.resp?.totalRecords]
+        return resp
+    }
 
     def retrieveImagesPaged(String searchIdentifier, Map opus, String pageSize, String startIndex) {
         if (!searchIdentifier) {
@@ -29,7 +43,6 @@ class BiocacheService {
         log.debug("Fetching images for ${searchIdentifier} using query ${imagesQuery}")
         String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
 
-        def numberOfImages = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=0")
         def response = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
         return response
     }
@@ -133,6 +146,10 @@ class BiocacheService {
         }
 
         webService.post("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
+    }
+
+    private static enc(String str) {
+        URLEncoder.encode(str, "utf-8")
     }
 
     def lookupSpecimen(String specimenId) {
