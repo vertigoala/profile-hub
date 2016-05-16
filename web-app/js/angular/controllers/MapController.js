@@ -43,14 +43,18 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                     center: [self.opus.mapConfig.mapDefaultLatitude, self.opus.mapConfig.mapDefaultLongitude]
                 });
 
-                self.legend = new L.Control.Legend({
-                    id: "legend",
-                    position: "bottomright",
-                    items: [],
-                    collapse: true,
-                    legendListClass: "legend-container-short"
-                });
-                self.map.addControl(self.legend);
+                var colourBy = URI.parseQuery(occurrenceQuery).colourBy;
+
+                if (!_.isUndefined(colourBy) && !_.isEmpty(colourBy)) {
+                    self.legend = new L.Control.Legend({
+                        id: "legend",
+                        position: "bottomright",
+                        items: [],
+                        collapse: true,
+                        legendListClass: "legend-container-short"
+                    });
+                    self.map.addControl(self.legend);
+                }
 
                 self.updateWMSLayer(self.profile.occurrenceQuery);
                 self.updateLegend(self.profile.occurrenceQuery);
@@ -95,6 +99,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
     self.updateLegend = function(occurrenceQuery) {
         var colourBy = URI.parseQuery(occurrenceQuery).colourBy;
+
         if (!_.isUndefined(colourBy) && !_.isEmpty(colourBy)) {
             var promise = profileService.getBiocacheLegend(occurrenceQuery, colourBy);
             promise.then(function(legendItems) {
