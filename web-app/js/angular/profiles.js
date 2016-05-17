@@ -1,7 +1,12 @@
 var profileEditor = angular.module('profileEditor', ['app.config', 'ngSanitize', 'ui.bootstrap', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate', 'dualmultiselect']);
 
-profileEditor.config(function ($logProvider) {
+profileEditor.config(function ($logProvider, $rootScopeProvider) {
     $logProvider.debugEnabled(false);
+    // The digest ttl has been bumped to 20 because the taxonomy directive in the sidebar renders
+    // the taxonomy tree which uses ng-include to render the taxon nodes.  The number of compile/digest cycles
+    // this triggers pushes the count over 10 on the initial display of the component.  Alternatively, inlining
+    // one of the ng-includes in taxonomy.html (the 'taxonName.html' template) will bring it back under 10.
+    $rootScopeProvider.digestTtl(20);
 });
 
 profileEditor.config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
