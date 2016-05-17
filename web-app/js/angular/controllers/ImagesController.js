@@ -93,9 +93,6 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
         var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : "";
 
-        //var sources = angular.copy(self.opus.dataResourceConfig.imageSources);
-        //sources.unshift(self.opus.dataResourceUid);
-
         var imagesPromise = profileService.retrieveImagesPaged(self.opusId, self.profileId, searchIdentifier, self.readonly, offset, itemsPerPage);
 
         imagesPromise.then(function (data) {
@@ -130,11 +127,11 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
                 //@TODO what to do if we have zillions of images?
 
-                   //data for pagination
-                    self.totalItems = totalNumberOfImages;
-                    self.itemsPerPage = itemsPerPage;
-                    self.paginate = (self.totalItems > self.itemsPerPage);
-                //}
+                //data for pagination
+                self.totalItems = totalNumberOfImages;
+                self.itemsPerPage = itemsPerPage;
+                self.paginate = (self.totalItems > self.itemsPerPage);
+
             },
 
             function () {

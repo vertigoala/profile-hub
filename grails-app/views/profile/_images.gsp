@@ -5,7 +5,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="section-panel-heading">Images</h4>
+                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span></h4>
                 </div>
             </div>
         </div>
@@ -46,19 +46,14 @@
                 </div>
             </div>
             %{--End of image repeat div--}%
-            %{--Start of pagination div--}%
+            %{--Start of pagination div in VIEW mode--}%
             <div>
                 %{-- The pagination tag is how you instantiate ui-bootstrap-tpls PaginationController (third party angular javascript 'module')
                     ng-model can contain any name you like and the tag will populate it with the current or selected page number,
                     which can then be used in ng-change; I mention this here because it is not in the module's documentation --}%
-                <pagination ng-show="paginate" total-items="totalItems" items-per-page="itemsPerPage"
-                            ng-model="imageCtrl.page"
-                            ng-change="imageCtrl.loadImages((imageCtrl.page - 1) * itemsPerPage, itemsPerPage)"></pagination>
-
-                <p>
-                    Total items: {{totalItems}}<br/>
-                    Items per page: {{itemsPerPage}}<br/>
-                </p>
+            <pagination ng-show="imageCtrl.paginate" total-items="imageCtrl.totalItems" items-per-page="imageCtrl.itemsPerPage"
+                        ng-model="imageCtrl.page"  max-size="10"  boundary-links="true"
+                        ng-change="imageCtrl.loadImages((imageCtrl.page - 1) * imageCtrl.itemsPerPage, imageCtrl.itemsPerPage)"></pagination>
             </div>
         </div>
     </div>
@@ -69,7 +64,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="section-panel-heading">Images</h4>
+                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span></h4>
                 </div>
             </div>
         </div>
@@ -80,6 +75,7 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <h5>Image</h5>
+                        </p>
                         </div>
 
                         <div class="col-sm-2">
@@ -183,20 +179,15 @@
 
 
                 </div>
-                %{--Start of pagination div when in edit mode--}%
+                %{--Start of pagination div when in EDIT mode--}%
                 <div>
                     %{-- The pagination tag is how you instantiate ui-bootstrap-tpls PaginationController (third party angular javascript 'module')
                         ng-model can contain any name you like and the tag will populate it with the current or selected page number,
                         which can then be used in ng-change; I mention this here because it is not in the module's documentation --}%
                     <pagination ng-show="imageCtrl.paginate" total-items="imageCtrl.totalItems" items-per-page="imageCtrl.itemsPerPage"
-                                ng-model="imageCtrl.page"
+                                ng-model="imageCtrl.page"  max-size="10" boundary-links="true"
                                 ng-change="imageCtrl.loadImages((imageCtrl.page - 1) * imageCtrl.itemsPerPage, imageCtrl.itemsPerPage)"></pagination>
-
-                    <p>
-                        Total items: {{imageCtrl.totalItems}}<br/>
-                        Items per page: {{imageCtrl.itemsPerPage}}<br/>
-                    </p>
-                </div>
+             </div>
                 <div class="small margin-top-1 well" ng-show="!imageCtrl.readonly">
                     <i class="fa fa-info-circle color--medium-blue margin-bottom-1"></i>
 
