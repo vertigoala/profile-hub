@@ -3,7 +3,7 @@
  */
 profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal, config) {
     var self = this;
-    self.defaultPageSize = 12;
+    self.defaultPageSize = 50;
 
     // Flag to prevent reloading images during the update process.
     var saving = false;
@@ -131,9 +131,9 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 //@TODO what to do if we have zillions of images?
 
                    //data for pagination
-                    $scope.totalItems = totalNumberOfImages;
-                    $scope.itemsPerPage = itemsPerPage;
-                    $scope.paginate = ($scope.totalItems > $scope.itemsPerPage);
+                    self.totalItems = totalNumberOfImages;
+                    self.itemsPerPage = itemsPerPage;
+                    self.paginate = (self.totalItems > self.itemsPerPage);
                 //}
             },
 
