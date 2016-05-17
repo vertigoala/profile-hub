@@ -451,8 +451,6 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-
-
         retrieveImages: function (opusId, profileId, searchIdentifier, imageSources, readonlyView) {
             $log.debug("Retrieving images for " + searchIdentifier);
             var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/images?searchIdentifier=" + searchIdentifier + "&imageSources=" + imageSources + "&readonlyView=" + readonlyView, {cache: true});
@@ -471,7 +469,6 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
             return util.toStandardPromise(future);
         },
-
 
         getImageMetadata: function (imageId, local) {
             var future = null;

@@ -51,18 +51,29 @@ describe("SearchController tests", function () {
         scope.searchCtrl.searchTerm = "test";
         scope.searchCtrl.search();
 
-        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", {includeArchived: false, matchAll: true, nameOnly: false, offset: 0, pageSize: 25});
+        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", {includeArchived: false, matchAll: true, nameOnly: false, includeNameAttributes: true, searchAla: true, searchNsl: true, offset: 0, pageSize: 25});
     });
 
     it("should use the provided offset and page size when search is invoked with values", function () {
         scope.searchCtrl.searchTerm = "test";
         scope.searchCtrl.search(6, 66);
 
-        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", {includeArchived: false, matchAll: true, nameOnly: false, offset: 66, pageSize: 6});
+        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", {includeArchived: false, matchAll: true, nameOnly: false, includeNameAttributes: true, searchAla: true, searchNsl: true, offset: 66, pageSize: 6});
+    });
+
+    it("should do nothing if search() is invoked but self.searchTerm is null", function() {
+        var results = {items: [{name: "item1"}, {name: "item2"}]};
+        searchDefer.resolve(results);
+
+        scope.searchCtrl.search();
+        scope.$apply();
+
+        expect(profileService.search).not.toHaveBeenCalled();
     });
 
     it("should raise an alert message if the call to search fails", function () {
         searchDefer.reject();
+        scope.searchCtrl.searchTerm = "term";
         scope.searchCtrl.search();
         scope.$apply();
 
@@ -73,6 +84,7 @@ describe("SearchController tests", function () {
         var results = {items: [{name: "item1"}, {name: "item2"}]};
         searchDefer.resolve(results);
 
+        scope.searchCtrl.searchTerm = "term";
         scope.searchCtrl.search();
         scope.$apply();
 
@@ -210,7 +222,7 @@ describe("SearchController tests", function () {
             }, {name: "item2", image: {status: "not-checked", type: {}}}]
         });
         expect(sessionStorage.searches.all.term).toEqual("test");
-        expect(sessionStorage.searches.all.options).toEqual({includeArchived: false, matchAll: true, nameOnly: false, offset: 0, pageSize: 25});
+        expect(sessionStorage.searches.all.options).toEqual({includeArchived: false, matchAll: true, nameOnly: false, includeNameAttributes: true, searchAla: true, searchNsl: true, offset: 0, pageSize: 25});
     });
 
     it("it should cache results against the opusId when there is an opus", function () {
@@ -230,7 +242,7 @@ describe("SearchController tests", function () {
             }, {name: "item2", image: {status: "not-checked", type: {}}}]
         });
         expect(sessionStorage.searches.opus1.term).toEqual("test");
-        expect(sessionStorage.searches.opus1.options).toEqual({includeArchived: false, matchAll: true, nameOnly: false, offset: 0, pageSize: 25});
+        expect(sessionStorage.searches.opus1.options).toEqual({includeArchived: false, matchAll: true, nameOnly: false, includeNameAttributes: true, searchAla: true, searchNsl: true, offset: 0, pageSize: 25});
     });
 
     it("should populate the search results from the cache when retrieveCachedOrDelegatedSearch is invoked (no opus)", function () {
@@ -327,6 +339,9 @@ describe("SearchController tests", function () {
             includeArchived: false,
             matchAll: true,
             nameOnly: false,
+            includeNameAttributes: true,
+            searchAla: true,
+            searchNsl: true,
             offset: 0,
             pageSize: 25
         });
@@ -347,6 +362,9 @@ describe("SearchController tests", function () {
             includeArchived: false,
             matchAll: true,
             nameOnly: false,
+            includeNameAttributes: true,
+            searchAla: true,
+            searchNsl: true,
             offset: 0,
             pageSize: 25
         });

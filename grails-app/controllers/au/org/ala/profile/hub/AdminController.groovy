@@ -17,6 +17,11 @@ class AdminController extends BaseController {
     }
 
     @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def alaIndex() {
+        render view: "alaAdmin.gsp"
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
     def reindex() {
         def response = webService.post("${grailsApplication.config.profile.service.url}/admin/search/reindex", [:])
 

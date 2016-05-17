@@ -9,7 +9,10 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     self.searchOptions = {
         matchAll: true,
         includeArchived: false,
-        nameOnly: false
+        nameOnly: false,
+        includeNameAttributes: true,
+        searchAla: true,
+        searchNsl: true
     };
     self.searchResults = {};
 
@@ -20,22 +23,25 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         self.searchOptions.offset = offset || 0;
         self.searchOptions.pageSize = pageSize || self.pageSize;
 
-        var searchResult = profileService.search(self.opusId, self.searchTerm, self.searchOptions);
-        searchResult.then(function (data) {
-                self.searchResults = data;
+        if (!_.isUndefined(self.searchTerm) && !_.isEmpty(self.searchTerm)) {
+            var searchResult = profileService.search(self.opusId, self.searchTerm, self.searchOptions);
+            searchResult.then(function (data) {
+                    self.searchResults = data;
 
-                angular.forEach(self.searchResults.items, function (profile) {
-                    profile.image = {
-                        status: 'not-checked',
-                        type: {}
-                    };
-                });
+                    angular.forEach(self.searchResults.items, function (profile) {
+                        profile.image = {
+                            status: 'not-checked',
+                            type: {}
+                        };
+                    });
 
-                cacheSearchResult(self.searchResults);
-            },
-            function () {
-                messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
-            });
+                    cacheSearchResult(self.searchResults);
+                },
+                function () {
+                    messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
+                }
+            );
+        }
     };
 
     function cacheSearchResult(result) {
@@ -74,6 +80,21 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         self.searchTerm = "";
 
         $sessionStorage.searches[self.opusId ? self.opusId : 'all'] = {};
+
+        self.resetSearchOptions();
+    };
+
+    self.resetSearchOptions = function() {
+        // don't reset the nameOnly option so the user remains on the search type they selected
+        var selectedSearchType = self.searchOptions.nameOnly;
+        self.searchOptions = {
+            matchAll: true,
+            includeArchived: false,
+            includeNameAttributes: true,
+            searchAla: true,
+            searchNsl: true,
+            nameOnly: selectedSearchType
+        };
     };
 
     self.loadImageForProfile = function (profileId) {
