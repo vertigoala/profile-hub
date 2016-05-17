@@ -815,7 +815,7 @@ span.breadcrumb-dropdown {
 .button-inside-input, .button-inside-input:hover, .button-inside-input:focus {
     border: none;
     background: transparent !important;
-    margin-left: -35px !important;
+    margin-left: -40px !important;
     z-index: 99;
 }
 

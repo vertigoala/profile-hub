@@ -43,7 +43,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                     center: [self.opus.mapConfig.mapDefaultLatitude, self.opus.mapConfig.mapDefaultLongitude]
                 });
 
-                var colourBy = URI.parseQuery(occurrenceQuery).colourBy;
+                var colourBy = URI.parseQuery(self.profile.occurrenceQuery).colourBy;
 
                 if (!_.isUndefined(colourBy) && !_.isEmpty(colourBy)) {
                     self.legend = new L.Control.Legend({
@@ -145,6 +145,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         var hasCustomisations = false;
         if (!_.isUndefined(self.profile)) {
             var baseQuery = extractBaseQuery(self.profile.occurrenceQuery);
+
             hasCustomisations = baseQuery != self.profile.occurrenceQuery;
         }
         return hasCustomisations;
@@ -212,7 +213,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
         var queryParams = URI.parseQuery(queryString);
 
-        return "q=" + queryParams.q;
+        return URI.encodeReserved("q=" + queryParams.q);
     }
 
     function createEditableMap() {
