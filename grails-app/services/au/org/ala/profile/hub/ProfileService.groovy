@@ -76,6 +76,10 @@ class ProfileService {
         webService.put("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/", json)
     }
 
+    def duplicateProfile(String opusId, String profileId, Map json) {
+        webService.put("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${profileId}/duplicate", json)
+    }
+
     def updateProfile(String opusId, String profileId, json, boolean latest = false) {
         webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}?latest=${latest}", json)
     }

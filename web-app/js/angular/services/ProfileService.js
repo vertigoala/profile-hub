@@ -148,6 +148,21 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        duplicateProfile: function (opusId, profileIdToCopy, scientificName, manuallyMatchedGuid) {
+            $log.debug("Duplicating profile " + profileIdToCopy + " for " + scientificName + " in opus " + opusId);
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileIdToCopy + "/duplicate", {
+                opusId: opusId,
+                scientificName: scientificName,
+                manuallyMatchedGuid: manuallyMatchedGuid
+            });
+
+            future.then(function (response) {
+                $log.debug("Profile duplicated with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         updateProfile: function (opusId, profileId, data) {
             $log.debug("Updating profile " + profileId);
             var future = enqueue(function () {

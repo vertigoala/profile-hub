@@ -6,12 +6,14 @@ profileEditor.directive('profileName', function ($browser) {
             name: '=',
             valid: '=',
             currentProfileId: '=',
-            manuallyMatchedGuid: '='
+            manuallyMatchedGuid: '=',
+            focus: '='
         },
         templateUrl: $browser.baseHref() + 'static/templates/profileNameCheck.html',
         controller: ['$scope', 'profileService', 'util', 'config', '$http', '$filter', function ($scope, profileService, util, config, $http, $filter) {
             $scope.nameCheck = null;
             $scope.opusId = util.getEntityId("opus");
+            //$scope.focus = true;
 
             var orderBy = $filter("orderBy");
 
