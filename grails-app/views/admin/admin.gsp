@@ -13,7 +13,12 @@
         <div class="alert alert-info">${flash.message}</div>
     </g:if>
 
-    %{--<g:render template="/ala-admin-form" plugin="ala-admin-plugin"/>--}%
+    <div class="panel-heading">
+        <h3>General admin</h3>
+    </div>
+    <div class="panel-body">
+        <a href="${request.contextPath}/alaAdmin" class="btn btn-primary">Go to ALA admin page</a>
+    </div>
 
     <hr/>
 
