@@ -26,7 +26,10 @@ profileEditor.directive('delegatedSearch', function ($browser) {
             self.searchOptions = {
                 includeArchived: false,
                 matchAll: true,
-                nameOnly: false
+                nameOnly: false,
+                includeNameAttributes: true,
+                searchAla: true,
+                searchNsl: true
             };
             self.showOptions = false;
 
