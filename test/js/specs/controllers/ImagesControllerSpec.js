@@ -20,11 +20,12 @@ describe("ImagesController tests", function () {
     };
     var messageService;
     var profileService;
-    var profileDefer, imageDefer, saveDefer, metadataDefer;
+    var profileDefer, imageDefer, saveDefer, metadataDefer, imagesPagedDefer;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "imageSettings": [{"imageId": "imageId2", "caption": "", "displayOption": "INCLUDE"}], "primaryImage": ""}, "opus": {"dataResourceConfig": {"imageSources": ["source1", "source2"]}}}';
 
     var retrieveImagesResponse = '[{"imageId": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}]';
+
 
     beforeAll(function () {
         console.log("****** Images Controller Tests ******");
@@ -41,11 +42,13 @@ describe("ImagesController tests", function () {
 
         profileDefer = $q.defer();
         imageDefer = $q.defer();
+        imagesPagedDefer = $q.defer();
         saveDefer = $q.defer();
         metadataDefer = $q.defer();
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
         spyOn(profileService, "retrieveImages").and.returnValue(imageDefer.promise);
+        spyOn(profileService, "retrieveImagesPaged").and.returnValue(imagesPagedDefer.promise);
         spyOn(profileService, "updateProfile").and.returnValue(saveDefer.promise);
         spyOn(profileService, "getImageMetadata").and.returnValue(metadataDefer.promise);
 
