@@ -20,11 +20,9 @@ describe("ImagesController tests", function () {
     };
     var messageService;
     var profileService;
-    var profileDefer, imageDefer, saveDefer, metadataDefer, imagesPagedDefer;
+    var profileDefer, saveDefer, metadataDefer, imagesPagedDefer;
 
     var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "imageSettings": [{"imageId": "imageId2", "caption": "", "displayOption": "INCLUDE"}], "primaryImage": ""}, "opus": {"dataResourceConfig": {"imageSources": ["source1", "source2"]}}}';
-
-    var retrieveImagesResponse =  '{"images":[{"imageId": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}],"count":5}';
 
     var retrieveImagesPagedResponse =     '{"images":[{"imageId": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}],"count":5}';
 
@@ -43,13 +41,11 @@ describe("ImagesController tests", function () {
         profileService = _profileService_;
 
         profileDefer = $q.defer();
-        imageDefer = $q.defer();
         imagesPagedDefer = $q.defer();
         saveDefer = $q.defer();
         metadataDefer = $q.defer();
 
         spyOn(profileService, "getProfile").and.returnValue(profileDefer.promise);
-        //spyOn(profileService, "retrieveImages").and.returnValue(imageDefer.promise);
         spyOn(profileService, "retrieveImagesPaged").and.returnValue(imagesPagedDefer.promise);
         spyOn(profileService, "updateProfile").and.returnValue(saveDefer.promise);
         spyOn(profileService, "getImageMetadata").and.returnValue(metadataDefer.promise);
@@ -69,7 +65,7 @@ describe("ImagesController tests", function () {
 
     it("should set the profile attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
-        imageDefer.resolve(JSON.parse(retrieveImagesResponse));
+        imagesPagedDefer.resolve(JSON.parse(retrieveImagesPagedResponse));
 
         scope.imageCtrl.init("false");
         scope.$apply();
@@ -79,7 +75,7 @@ describe("ImagesController tests", function () {
 
     it("should set the opus attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
-        imageDefer.resolve(JSON.parse(retrieveImagesResponse));
+        imagesPagedDefer.resolve(JSON.parse(retrieveImagesPagedResponse));
 
         scope.imageCtrl.init("false");
         scope.$apply();
