@@ -1,6 +1,7 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.ws.service.WebService
+import com.sun.javaws.exceptions.InvalidArgumentException
 import groovy.json.JsonSlurper
 import org.springframework.web.multipart.MultipartFile
 
@@ -79,7 +80,7 @@ class BiocacheService {
                     query = "${searchIdentifier} AND (data_resource_uid:${opus.dataResourceUid} OR data_resource_uid:${config.imageSources?.join(" OR data_resource_uid:")})"
                     break
                 default:
-                    query = "${searchIdentifier}"
+                    throw new InvalidArgumentException("${config.imageResourceOption} is not a recognized DataResourceOption")
             }
         } else if (opus?.dataResourceUid) {
             query = "${searchIdentifier} AND data_resource_uid:${opus.dataResourceUid}"
