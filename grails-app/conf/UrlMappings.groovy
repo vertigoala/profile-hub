@@ -22,6 +22,7 @@ class UrlMappings {
         "/profile/search/children" controller: "search", action: "getImmediateChildren"
 
         "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
+        "/opus/$opusId/profile/$profileId/duplicate" controller: "profile", action: [PUT: "duplicateProfile"]
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
         "/opus/$opusId/profile/$profileId/update" controller: "profile", action: [GET: "edit", POST: "updateProfile"]
         "/opus/$opusId/profile/$profileId/rename" controller: "profile", action: [POST: "renameProfile"]

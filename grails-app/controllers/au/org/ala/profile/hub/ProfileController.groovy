@@ -84,6 +84,19 @@ class ProfileController extends BaseController {
     }
 
     @Secured(role = ROLE_PROFILE_EDITOR)
+    def duplicateProfile() {
+        def jsonRequest = request.getJSON();
+
+        if (!params.profileId || !jsonRequest) {
+            badRequest "An existing profileId and a json body must be provided"
+        } else {
+            def response = profileService.duplicateProfile(params.opusId as String, params.profileId as String, jsonRequest)
+
+            handle response
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateProfile() {
         def json = request.getJSON()
 
