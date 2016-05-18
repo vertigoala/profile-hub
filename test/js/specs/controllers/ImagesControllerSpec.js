@@ -180,7 +180,7 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImagesPaged).toHaveBeenCalledWith("opusId1", "profileId1", "", true, 0, 50);
+        expect(profileService.retrieveImagesPaged).toHaveBeenCalledWith("opusId1", "profileId1", "", true, 0, 20);
     });
 
     it("should use the profile.guid attribute prefixed with 'lsid:' to retrieve images if it is present", function () {
@@ -194,7 +194,7 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImagesPaged).toHaveBeenCalledWith("opusId1", "profileId1", "lsid:guid1", true, 0, 50);
+        expect(profileService.retrieveImagesPaged).toHaveBeenCalledWith("opusId1", "profileId1", "lsid:guid1", true, 0, 20);
     });
 
     it("should ensure only 1 image is primary when changePrimaryImage is invoked", function() {
@@ -270,13 +270,13 @@ describe("ImagesController tests", function () {
         scope.imageCtrl.init("false");
         scope.$apply();
 
-        expect(profileService.retrieveImagesPaged).toHaveBeenCalledWith('opusId1', 'profileId1', "lsid:guid1", true, 0, 50);
+        expect(profileService.retrieveImagesPaged).toHaveBeenCalledWith('opusId1', 'profileId1', "lsid:guid1", true, 0, 20);
         expect(scope.imageCtrl.profile.primaryImage).toBe("imageId2");
 
         scope.imageCtrl.profile.primaryImage = "imageId1";
 
         scope.$apply();
-        expect(profileService.retrieveImagesPaged).toHaveBeenCalledWith('opusId1', 'profileId1', "lsid:guid1", true, 0, 50);
+        expect(profileService.retrieveImagesPaged).toHaveBeenCalledWith('opusId1', 'profileId1', "lsid:guid1", true, 0, 20);
 
     });
 });
