@@ -52,7 +52,7 @@
                     ng-model can contain any name you like and the tag will populate it with the current or selected page number,
                     which can then be used in ng-change; I mention this here because it is not in the module's documentation --}%
             <pagination ng-show="imageCtrl.paginate" total-items="imageCtrl.totalItems" items-per-page="imageCtrl.itemsPerPage"
-                        ng-model="imageCtrl.page"  max-size="10"  boundary-links="true"
+                        ng-model="imageCtrl.page"  max-size="10"  boundary-links="true"  class="pagination-sm" previous-text="Prev" rotate="true"
                         ng-change="imageCtrl.loadImages((imageCtrl.page - 1) * imageCtrl.itemsPerPage, imageCtrl.itemsPerPage)"></pagination>
             </div>
         </div>
@@ -185,7 +185,7 @@
                         ng-model can contain any name you like and the tag will populate it with the current or selected page number,
                         which can then be used in ng-change; I mention this here because it is not in the module's documentation --}%
                     <pagination ng-show="imageCtrl.paginate" total-items="imageCtrl.totalItems" items-per-page="imageCtrl.itemsPerPage"
-                                ng-model="imageCtrl.page"  max-size="10" boundary-links="true"
+                                ng-model="imageCtrl.page"  max-size="10" boundary-links="true" class="pagination-sm" previous-text="Prev" rotate="true"
                                 ng-change="imageCtrl.loadImages((imageCtrl.page - 1) * imageCtrl.itemsPerPage, imageCtrl.itemsPerPage)"></pagination>
              </div>
                 <div class="small margin-top-1 well" ng-show="!imageCtrl.readonly">
