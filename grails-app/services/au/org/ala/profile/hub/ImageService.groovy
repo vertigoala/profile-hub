@@ -245,12 +245,12 @@ class ImageService {
 
         deleted
     }
+
     /**
      *
      * @param opusId - the collection
      * @param profileId - the taxon
      * @param latest
-     * @param imageSources
      * @param searchIdentifier
      * @param useInternalPaths
      * @param readonlyView
@@ -275,6 +275,7 @@ class ImageService {
 
         // The collection may now, or may have been at some point, private, so look for any private images that may exist.
         // When a collection is changed from private to public, existing private images are NOT published automatically.
+        //A public collection can also can have private images depending on the settings of "Image Visibility" in the Image Options section of the collection admin page
         if (profile.privateImages) {
             allImages.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
             numberOfLocalImages = allImages.size()
