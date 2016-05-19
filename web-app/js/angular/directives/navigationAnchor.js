@@ -22,11 +22,11 @@ profileEditor.directive('navigationAnchor', ['navService', function (navService)
             category:'@?',
             onDisplay:'&?'
         },
+        replace:true,
         bindToController:true,
         controllerAs:'navPointCtrl',
         controller: function($scope) {
             var self = this;
-
             self.getTab = function() {
 
                 if (!self.managedTab) { // Requiring the managedTab directive isn't working, I believe due to the way the tabset transclusion works. We can require tabset but not tab or managedTab

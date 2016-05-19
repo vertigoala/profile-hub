@@ -67,11 +67,11 @@ profileEditor.factory('navService', ['$filter', '$rootScope', '$document', funct
      * @param key a unique key for the anchor, must match the anchor name.
      * @param category
      * @param tab the tab the anchor is displayed on.
-     * @param onDisplayed a callback to be invoked the first time the navigation item is visible.  Used to
+     * @param onDisplay a callback to be invoked the first time the navigation item is visible.  Used to
      * defer initialisation of contents on tab that need to be visible / have a sensible size when initialised.
      * (e.g maps and the key player)
      */
-    function add(label, key, category, tab, onDisplayed) {
+    function add(label, key, category, tab, onDisplay) {
 
         if (!getItem(key)) {
             var item = {label: label, key: key, category: category, tab:tab};
@@ -83,11 +83,11 @@ profileEditor.factory('navService', ['$filter', '$rootScope', '$document', funct
 
             // If the item is not on a tab, it is already displayed.  Otherwise save the callback until the tab is
             // displayed.
-            if (onDisplayed && !tab) {
-                onDisplayed();
+            if (onDisplay && !tab) {
+                onDisplay();
             }
             else {
-                item.onDisplayed = onDisplayed;
+                item.onDisplay = onDisplay;
             }
 
         }
@@ -148,9 +148,9 @@ profileEditor.factory('navService', ['$filter', '$rootScope', '$document', funct
      */
     function tabSelected(tabName) {
         angular.forEach($rootScope.nav, function(item) {
-            if (item.tab == tabName && item.onDisplayed) {
-                item.onDisplayed();
-                delete item.onDisplayed;
+            if (item.tab == tabName && item.onDisplay) {
+                item.onDisplay();
+                delete item.onDisplay;
             }
         });
     }
