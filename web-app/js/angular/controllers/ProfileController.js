@@ -139,7 +139,7 @@ profileEditor.controller('ProfileController',
         });
     };
 
-    self.createProfile = function (opusId) {
+    self.createProfile = function (opusId, duplicateExisting) {
         var popup = $modal.open({
             templateUrl: "createProfile.html",
             controller: "CreateProfileController",
@@ -148,6 +148,9 @@ profileEditor.controller('ProfileController',
             resolve: {
                 opusId: function () {
                     return opusId;
+                },
+                duplicateExisting: function() {
+                    return duplicateExisting;
                 }
             }
         });

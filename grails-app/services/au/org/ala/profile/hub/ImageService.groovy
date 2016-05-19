@@ -245,12 +245,12 @@ class ImageService {
 
         deleted
     }
+
     /**
      *
      * @param opusId - the collection
      * @param profileId - the taxon
      * @param latest
-     * @param imageSources
      * @param searchIdentifier
      * @param useInternalPaths
      * @param readonlyView
@@ -265,29 +265,32 @@ class ImageService {
         def model = profileService.getProfile(opusId, profileId, latest)
         def profile = model.profile
         def opus = model.opus
-        Map numberOfPublishedImages = biocacheService.imageCount(searchIdentifier, opus)
-        Map publishedImages = biocacheService.retrieveImagesPaged(searchIdentifier, opus, pageSize, startIndex)
+        Map numberOfPublishedImagesMap = biocacheService.imageCount(searchIdentifier, opus)
+        Map publishedImagesMap = biocacheService.retrieveImagesPaged(searchIdentifier, opus, pageSize, startIndex)
         //we want to display the images in a specific order - staged, private, published
         if (profile.privateMode && profile.stagedImages) {
-            allImages.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
+            allImages.addAll(convertLocalImages(profile.stagedImages?:[], opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
             numberOfLocalImages = allImages.size()
         }
 
         // The collection may now, or may have been at some point, private, so look for any private images that may exist.
         // When a collection is changed from private to public, existing private images are NOT published automatically.
+        //A public collection can also can have private images depending on the settings of "Image Visibility" in the Image Options section of the collection admin page
         if (profile.privateImages) {
             allImages.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
             numberOfLocalImages = allImages.size()
         }
-        if (publishedImages?.size() > 0) {
-            List publishedImageList = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
-            allImages.addAll(publishedImageList)
+        if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
+            List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
+            if (publishedImageList && publishedImageList.size() > 0) {
+                allImages.addAll(publishedImageList)
+            }
         }
         response.statusCode = SC_OK
         //we don't have support for JSON objects or serialization so this is a workaround
         response.resp = [:]
         response.resp.images = allImages
-        response.resp.count = numberOfPublishedImages?.resp?.totalRecords + numberOfLocalImages
+        response.resp.count = numberOfPublishedImagesMap?.resp?.totalRecords + numberOfLocalImages
 
         response
     }
@@ -300,9 +303,9 @@ class ImageService {
         def profile = model.profile
         def opus = model.opus
 
-        def publishedImages = biocacheService.retrieveImages(searchIdentifier, opus)
-        if (publishedImages?.size() > 0) {
-            List publishedImageList = prepareImagesForDisplay(publishedImages, opus, profile, readonlyView)
+        def publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus)
+        if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
+            List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
             allImages.addAll(publishedImageList)
         }
 
