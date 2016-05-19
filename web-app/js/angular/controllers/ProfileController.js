@@ -28,6 +28,8 @@ profileEditor.controller('ProfileController',
 
     self.acknowledgementsSectionTitle = config.readonly ? 'Acknowledgements' : 'Authors and Acknowledgements';
 
+    self.manualHierarchy = null;
+
     var orderBy = $filter("orderBy");
 
     self.readonly = function () {
@@ -96,11 +98,50 @@ profileEditor.controller('ProfileController',
                     if (self.profile.matchedName) {
                         self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.matchedName.nameAuthor, self.profile.matchedName.fullName);
                     }
+
+                    self.constructManualHierarchyForNameDirective();
                 },
                 function () {
                     messageService.alert("An error occurred while loading the profile.");
                 }
             );
+        }
+    };
+
+    self.constructManualHierarchyForNameDirective = function() {
+        if (!self.readonly() && self.profile.manualClassification) {
+            self.manualHierarchy = [];
+
+            // The name check directive deals with the hierarchy from the BOTTOM UP, but we store it TOP DOWN, so reverse it
+            var tempClassification = _.clone(self.profile.classification);
+            tempClassification.reverse();
+
+            var firstKnownEntityFound = false;
+            tempClassification.forEach(function (item, index) {
+                // we want the first item, then all items up to and including the FIRST one with a guid or profileId
+                var doesNotHaveId = !item.guid && !item.profileId;
+                if ((doesNotHaveId && !firstKnownEntityFound) || !firstKnownEntityFound || index == 0) {
+                    self.manualHierarchy.push({
+                        name: item.profileName || item.name,
+                        guid: item.profileId || item.guid,
+                        rank: item.rank,
+                        checked: true
+                    });
+                }
+
+                if (index > 0 && !firstKnownEntityFound && !doesNotHaveId) {
+                    firstKnownEntityFound = true;
+                }
+            });
+
+            // only 1 item in the hierarchy can have a guid, as that indicates a match to a known entity (either a profile
+            // or a Name) which will have a defined classification: meaning that the user can define a custom classification
+            // UP TO the point where they join a known tree - they cannot change anything above that point.
+            // So, if we leave the first item (i.e. the current profile) with a guid (profileId), then user will not be able
+            // to modify the hierarchy.
+            self.manualHierarchy[0].guid = null;
+        } else {
+            self.manualHierarchy = undefined;
         }
     };
 
@@ -347,7 +388,8 @@ profileEditor.controller('ProfileController',
             var future = profileService.renameProfile(self.opusId, self.profileId, {
                 newName: self.newName,
                 manuallyMatchedGuid: self.manuallyMatchedGuid,
-                clearMatch: false
+                clearMatch: false,
+                manualHierarchy: self.manualHierarchy
             });
 
             future.then(function (profile) {

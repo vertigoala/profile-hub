@@ -133,12 +133,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        createProfile: function (opusId, scientificName, manuallyMatchedGuid) {
+        createProfile: function (opusId, scientificName, manuallyMatchedGuid, manualHierarchy) {
             $log.debug("Creating profile for " + scientificName + " in opus " + opusId);
             var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/create", {
                 opusId: opusId,
                 scientificName: scientificName,
-                manuallyMatchedGuid: manuallyMatchedGuid
+                manuallyMatchedGuid: manuallyMatchedGuid,
+                manualHierarchy: manualHierarchy
             });
 
             future.then(function (response) {
@@ -148,12 +149,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        duplicateProfile: function (opusId, profileIdToCopy, scientificName, manuallyMatchedGuid) {
+        duplicateProfile: function (opusId, profileIdToCopy, scientificName, manuallyMatchedGuid, manualHierarchy) {
             $log.debug("Duplicating profile " + profileIdToCopy + " for " + scientificName + " in opus " + opusId);
             var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileIdToCopy + "/duplicate", {
                 opusId: opusId,
                 scientificName: scientificName,
-                manuallyMatchedGuid: manuallyMatchedGuid
+                manuallyMatchedGuid: manuallyMatchedGuid,
+                manualHierarchy: manualHierarchy
             });
 
             future.then(function (response) {
@@ -1084,6 +1086,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
 
             return util.toStandardPromise(future);
+        },
+
+        autocompleteName: function(prefix) {
+            return $http.jsonp(config.bieServiceUrl + "/ws/search/auto.json?idxType=TAXON&callback=JSON_CALLBACK&q=" + prefix);
         }
     }
 });

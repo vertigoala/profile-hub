@@ -1,11 +1,11 @@
-<div  ng-show="profileCtrl.showNameEditControls" ng-cloak>
+<div  ng-show="profileCtrl.showNameEditControls" class="padding-top-1" ng-cloak>
     <div class="row">
         <div class="pull-left padding-left-1">
             <span class="status small" ng-class="profileCtrl.profile.matchedName ? 'green' : 'red'" title="The name has{{ profileCtrl.profile.matchedName ? '' : ' not' }} been matched against the ALA">ALA</span>
             <span class="status small" ng-class="profileCtrl.profile.nslNameIdentifier ? 'green' : 'red'"title="The name has{{ profileCtrl.profile.nslNameIdentifier ? '' : ' not' }} been matched against the NSL">NSL</span>
         </div>
         <div class="pull-right">
-            <a href="" class="" ng-click="profileCtrl.editName()"
+            <a href="" class="close-edit-name" ng-click="profileCtrl.editName()"
                     ng-show="!profileCtrl.readonly()"><span class="fa fa-close">&nbsp;</span>Close</a>
         </div>
     </div>
@@ -25,6 +25,8 @@
                     <profile-name name="profileCtrl.newName"
                                   valid="profileCtrl.nameIsValid"
                                   current-profile-id="profileCtrl.profile.uuid"
+                                  manual-hierarchy="profileCtrl.manualHierarchy"
+                                  edit-mode="true"
                                   manually-matched-guid="profileCtrl.manuallyMatchedGuid"></profile-name>
                 </div>
             </div>

@@ -9,6 +9,7 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
     self.error = null;
     self.manuallyMatchedGuid = "";
     self.validName = false;
+    self.manualHierarchy = [];
 
     self.duplicateExisting = duplicateExisting;
     self.profileToCopy = null;
@@ -22,9 +23,9 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
         var future;
 
         if (self.duplicateExisting && self.validExistingProfileSelection()) {
-            future = profileService.duplicateProfile(self.opusId, self.profileToCopy.profileId, self.scientificName, self.manuallyMatchedGuid);
+            future = profileService.duplicateProfile(self.opusId, self.profileToCopy.profileId, self.scientificName, self.manuallyMatchedGuid, self.manualHierarchy);
         } else if (!self.duplicateExisting) {
-            future = profileService.createProfile(self.opusId, self.scientificName, self.manuallyMatchedGuid);
+            future = profileService.createProfile(self.opusId, self.scientificName, self.manuallyMatchedGuid, self.manualHierarchy);
         } else {
             return;
         }

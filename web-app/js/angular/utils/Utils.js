@@ -17,9 +17,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         FAMILY: "family",
         GENUS: "genus",
         SPECIES: "species",
-        SUBSPECIES: "subspecies",
-        CULTIVAR: "cultivar",
-        VARIETY: "variety"
+        SUBSPECIES: "subspecies"
     };
 
     /**

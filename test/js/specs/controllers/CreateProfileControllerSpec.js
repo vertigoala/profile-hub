@@ -87,7 +87,7 @@ describe("CreateProfileController tests", function () {
 
         scope.profileCtrl.ok();
 
-        expect(profileService.createProfile).toHaveBeenCalledWith("1234", "new profile", "9876");
+        expect(profileService.createProfile).toHaveBeenCalledWith("1234", "new profile", "9876", []);
         expect(profileService.duplicateProfile).not.toHaveBeenCalled();
     });
 
@@ -101,7 +101,42 @@ describe("CreateProfileController tests", function () {
         scope.profileCtrl.ok();
 
         expect(profileService.createProfile).not.toHaveBeenCalled();
-        expect(profileService.duplicateProfile).toHaveBeenCalledWith("1234", "existing1", "copy profile", "9876");
+        expect(profileService.duplicateProfile).toHaveBeenCalledWith("1234", "existing1", "copy profile", "9876", []);
+    });
+
+    it("should pass the manually constructed hierarchy to ProfileService.duplicateProfile if present", function() {
+        scope.profileCtrl.duplicateExisting = true;
+        scope.profileCtrl.opusId = "1234";
+        scope.profileCtrl.scientificName = "copy profile";
+        scope.profileCtrl.manuallyMatchedGuid = "9876";
+        scope.profileCtrl.profileToCopy = {profileId: "existing1", scientificName: "existing profile"};
+
+        var hierarchy = [
+            {name: "name1", guid: "g1", rank: "r1"},
+            {name: "name3", guid: "g3", rank: "r3"}
+        ];
+        scope.profileCtrl.manualHierarchy = hierarchy;
+
+        scope.profileCtrl.ok();
+
+        expect(profileService.duplicateProfile).toHaveBeenCalledWith("1234", "existing1", "copy profile", "9876", hierarchy);
+    });
+
+    it("should pass the manually constructed hierarchy to ProfileService.createProfile if present", function() {
+        scope.profileCtrl.duplicateExisting = false;
+        scope.profileCtrl.opusId = "1234";
+        scope.profileCtrl.scientificName = "profile";
+        scope.profileCtrl.manuallyMatchedGuid = "9876";
+
+        var hierarchy = [
+            {name: "name1", guid: "g1", rank: "r1"},
+            {name: "name3", guid: "g3", rank: "r3"}
+        ];
+        scope.profileCtrl.manualHierarchy = hierarchy;
+
+        scope.profileCtrl.ok();
+
+        expect(profileService.createProfile).toHaveBeenCalledWith("1234", "profile", "9876", hierarchy);
     });
 
     it("should do nothing if OK is clicked when duplicateExisting = true, but the existing profile is invalid", function() {

@@ -23,7 +23,7 @@
         <g:if test="${params.isOpusEditor}">
             <div class="btn-group" ng-controller="ProfileController as profileCtrl" >
                 <button id="addProfile" class="btn btn-default" ng-click="profileCtrl.createProfile(opusCtrl.opusId, false)">
-                    <span class="fa fa-plus padding-right-1"></span>Add a new profile
+                    <span class="fa fa-plus">&nbsp;</span>Add a new profile
                 </button>
                 <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" target="_self">
                     <span class="caret"></span>
@@ -31,7 +31,7 @@
                 <ul class="dropdown-menu">
                     <li>
                         <a target="_self" id="duplicateProfile" ng-click="profileCtrl.createProfile(opusCtrl.opusId, true)">
-                            <span class="fa fa-copy padding-right-1"></span>Copy an existing profile
+                            <span class="fa fa-copy">&nbsp;</span>Copy an existing profile
                         </a>
                     </li>
                 </ul>
@@ -97,8 +97,8 @@
             <profile-name name="createProfileCtrl.scientificName"
                           valid="createProfileCtrl.validName"
                           manually-matched-guid="createProfileCtrl.manuallyMatchedGuid"
-                          focus="!createProfileCtrl.duplicateExisting"
-                          mode="create"></profile-name>
+                          manual-hierarchy="createProfileCtrl.manualHierarchy"
+                          focus="!createProfileCtrl.duplicateExisting"></profile-name>
             </div>
 
         <div class="modal-footer">
