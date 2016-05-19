@@ -1,7 +1,7 @@
 /**
  * Profile Publication controller
  */
-profileEditor.controller('PublicationController', function (profileService, navService, util, config, messageService, $filter) {
+profileEditor.controller('PublicationController', function (profileService, util, config, messageService, $filter) {
     var self = this;
 
     self.publications = [];
@@ -43,10 +43,6 @@ profileEditor.controller('PublicationController', function (profileService, navS
                 self.publications = data;
 
                 self.publications = orderBy(self.publications, "publicationDate", true);
-
-                if (self.publications.length > 0 || !self.readonly()) {
-                    navService.add("Versions", "publications");
-                }
             },
             function () {
                 messageService.alert("An error occurred while retrieving publications.")

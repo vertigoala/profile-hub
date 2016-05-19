@@ -48,7 +48,7 @@
     <div class="row">
         <div class="col-md-12" ng-cloak>
             <tabset ng-class="!profileCtrl.readonly() || (profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey) || (profileCtrl.profile.attachments.length > 0) ? '' : 'single-tabbed-panel'">
-                <tab heading="Details" class="font-xxsmall">
+                <tab heading="Details" class="font-xxsmall" managed-tab>
                     <div class="row">
                         <div class="col-md-12">
                             <g:include controller="profile" action="attributesPanel"
@@ -80,7 +80,7 @@
                         </div>
                     </div>
                 </tab>
-                <tab lazy-tab heading="Key" class="font-xxsmall"
+                <tab managed-tab heading="Key" class="font-xxsmall" select-to-initialise="true"
                      ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey">
                     <div class="row">
                         <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
@@ -90,7 +90,7 @@
                                     profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
                     </div>
                 </tab>
-                <tab lazy-tab heading="Documents" class="font-xxsmall"
+                <tab managed-tab heading="Documents" class="font-xxsmall"
                      ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0">
                     <g:render template="../common/attachments"/>
                 </tab>
@@ -108,7 +108,7 @@
 </div>
 
 <div class="row margin-top-1" ng-cloak ng-show="profileCtrl.profile.authorship.length > 0">
-    <a name="view_authorship"></a>
+    <navigation-anchor name="view_authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="profileCtrl.profile.authorship.length > 0"></navigation-anchor>
 
     <div class="col-sm-12 col-md-8 profile-contributor-text">
         Profile contributors: <span ng-repeat="contrib in profileCtrl.profile.authorship"

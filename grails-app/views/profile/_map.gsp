@@ -1,8 +1,8 @@
 <g:if test="${displayMap}">
     <div ng-controller="MapController as mapCtrl"
          ng-cloak ng-form="MapForm" ng-class="mapCtrl.editingMap ? 'col-md-12' : 'col-md-6 col-sm-12'"
-         ng-init="mapCtrl.init()">
-        <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}map"></a>
+         >
+        <navigation-anchor name="map" title="Map" on-display="mapCtrl.init()"></navigation-anchor>
 
         <div class="row">
             <g:if test="${edit}">

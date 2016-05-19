@@ -1,7 +1,7 @@
 /**
  * Map controller
  */
-profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http) {
+profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http, navService) {
     var self = this;
 
     var biocacheWMSUrl = config.biocacheServiceUrl + "ws/mapping/wms/reflect?";

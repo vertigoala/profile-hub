@@ -2,8 +2,8 @@
  * Profile controller
  */
 profileEditor.controller('ProfileController',
-    ['profileService', 'profileComparisonService', 'util', 'messageService', 'navService', 'config', '$modal', '$window', '$filter', '$sce', '$location',
-        function (profileService, profileComparisonService, util, messageService, navService, config, $modal, $window, $filter, $sce, $location) {
+    ['profileService', 'profileComparisonService', 'util', 'messageService', 'navService', 'config', '$modal', '$window', '$filter', '$sce', '$location', '$scope', '$timeout',
+        function (profileService, profileComparisonService, util, messageService, navService, config, $modal, $window, $filter, $sce, $location, $scope, $timeout) {
     var self = this;
 
     self.profile = null;
@@ -46,30 +46,17 @@ profileEditor.controller('ProfileController',
 
                     $window.document.title = self.profile.scientificName + " | " + self.opus.title;
 
-                    if (self.profile.specimenIds && self.profile.specimenIds.length > 0 || !self.readonly()) {
-                        navService.add("Specimens", "specimens");
-                    }
 
                     if (self.opus.keybaseProjectId) {
                         var keyPromise = profileService.findKeybaseKeyForName(self.opus.uuid, self.profile.scientificName);
                         keyPromise.then(function (data) {
                             if (data && data.keyId) {
                                 self.hasKeybaseKey = true;
-                                navService.add("Key", "key", "pdf");
+                                // The key player needs to be manually registered with the navigation service as
+                                // it needs to be lazily loaded.
+                                navService.add("Key", "key", undefined, 'Key');
                             }
                         });
-                    }
-
-                    if (self.profile.bibliography && self.profile.bibliography.length > 0 || !self.readonly()) {
-                        navService.add("Bibliography", "bibliography");
-                    }
-
-                    if (self.profile.guid) {
-                        navService.add("Map", "map");
-                    }
-
-                    if (self.profile.nslNomenclatureIdentifier) {
-                        navService.add("Nomenclature", "nomenclature");
                     }
 
                     self.authorshipCount = 0;
@@ -79,23 +66,18 @@ profileEditor.controller('ProfileController',
                         }
                     });
 
-                    if (!self.readonly() || self.authorshipCount > 0) {
-                        navService.add(self.acknowledgementsSectionTitle, "authorship");
-                    }
-
-                    if (!self.readonly()) {
-                        navService.add("Nomenclature", "nomenclature");
-                    }
-                    if (self.profile.classification) {
-                        navService.add("Taxonomy", "taxon");
-                    }
-
                     loadVocabulary();
                     loadNslNameDetails();
 
                     if (self.profile.matchedName) {
                         self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.matchedName.nameAuthor, self.profile.matchedName.fullName);
                     }
+
+                    // Load the other tabs content in the background.  If we leave them fully lazy loaded then
+                    // registering them with the navigation service needs to be done manually.
+                    $timeout(function() {
+                        navService.initialiseTabs();
+                    }, 0);
                 },
                 function () {
                     messageService.alert("An error occurred while loading the profile.");

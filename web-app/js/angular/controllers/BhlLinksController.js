@@ -1,7 +1,7 @@
 /**
  * BHL Links controller
  */
-profileEditor.controller('BHLLinksEditor', function (profileService, navService, util, messageService) {
+profileEditor.controller('BHLLinksEditor', function (profileService, util, messageService) {
     var self = this;
     
     self.bhl = [];
@@ -19,9 +19,6 @@ profileEditor.controller('BHLLinksEditor', function (profileService, navService,
             self.opus = data.opus;
             self.bhl = data.profile.bhl;
 
-            if ((self.bhl && self.bhl.length > 0) || !self.readonly) {
-                navService.add("Biodiversity Heritage Library references", "bhllinks");
-            }
             console.log("Fetched " + self.bhl.length + " BHL links");
         },
         function () {

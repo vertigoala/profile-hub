@@ -1,7 +1,7 @@
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal, config) {
+profileEditor.controller('ImagesController', function ($browser, $scope, profileService, util, messageService, $modal, config) {
     var self = this;
     self.defaultPageSize = 50;
 
@@ -116,10 +116,6 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                             self.primaryImage = image;
                         }
                     });
-                }
-
-                if (self.images.length > 0 || !self.readonly) {
-                    navService.add("Images", "images");
                 }
 
                 var totalNumberOfImages = data.count;
