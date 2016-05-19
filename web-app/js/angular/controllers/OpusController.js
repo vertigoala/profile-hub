@@ -58,11 +58,9 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
     };
 
     var defaultMultiSelectOptions = {
-        //title: 'Select the data sources for your collection',
         filterPlaceHolder: 'Start typing to filter the list below.',
         labelAll: 'Available data sources',
         labelSelected: 'Selected data sources',
-        //helpMessage: ' Click items to transfer them between fields.',
         orderProperty: 'name'
     };
     self.recordHubMultiSelectOptions = {
