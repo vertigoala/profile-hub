@@ -69,8 +69,8 @@ grails.project.dependency.resolution = {
         compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
-        compile ":ala-map:2.0-SNAPSHOT"
-        compile ":ala-ws-plugin:1.2-SNAPSHOT"
+        compile ":ala-map:2.0.1"
+        compile ":ala-ws-plugin:1.2"
         compile ":ala-admin-plugin:1.2"
         runtime(":images-client-plugin:0.6.1") {
             excludes "ala-bootstrap3"
