@@ -10,11 +10,11 @@
             </ala-link>
         </div>
 
-        <g:if test="${!hideViewAll}">
-            <div class="col-md-12" ng-show="imageCtrl.primaryImage">
+
+            <div class="col-md-12" ng-show="imageCtrl.primaryImage" ng-controller="NavigationController as navCtrl">
                 <a target="_self" href="" class="padding-left-1 margin-top-1 inline-block"
-                   du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}images">View all images</a>
+                   ng-click="navCtrl.navigateTo((imageCtrl.readonly ? 'view_': 'edit_') + 'images')">View all images</a>
             </div>
-        </g:if>
+
 
 </div>

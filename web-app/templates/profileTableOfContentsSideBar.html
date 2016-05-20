@@ -1,8 +1,7 @@
 <h4>Table of contents</h4>
 
-<ul class="nav nav-stacked" ng-cloak>
+<ul ng-controller="NavigationController as navCtrl" class="nav nav-stacked" ng-cloak>
     <li ng-repeat="item in nav | orderBy:'label'" ng-show="item.category != 'pdf'">
-        <a du-smooth-scroll="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}{{item.key}}"
-           target="_self" class="font-xxsmall" ng-click="sidebar.close()">{{item.label}}</a>
+        <a target="_self" class="font-xxsmall" ng-click="navCtrl.navigateTo(item.key); sidebar.close()">{{item.label}}</a>
     </li>
 </ul>

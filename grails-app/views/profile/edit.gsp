@@ -170,7 +170,7 @@
                                 </div>
                             </div>
                         </tab>
-                        <tab heading="Key" class="font-xxsmall" ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey" lazy-tab>
+                        <tab heading="Key" class="font-xxsmall" ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey" managed-tab select-to-initialise="true">
                             <div class="row">
                                 <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                      opus-id="profileCtrl.opus.uuid"

@@ -41,16 +41,16 @@
     <div class="row">
         <div class="col-md-12" ng-cloak>
             <tabset>
-                <tab heading="At a glance" class="font-xxsmall">
+                <tab heading="At a glance" class="font-xxsmall" ng-show="managedTabCtrl.hasContent()" managed-tab>
                     <div class="row">
-                        <div class="col-md-9">
+                        <div ng-class="{'col-md-9':profileCtrl.profile.primaryImage, 'col-md-12':!profileCtrl.profile.primaryImage}">
                             <g:render template="attributes"/>
                             <g:render template="specimens"/>
                             <g:if test="${!profile.archivedDate}">
                                 <g:render template="taxon"/>
                             </g:if>
                         </div>
-                        <div class="side col-md-3">
+                        <div class="side col-md-3" ng-if="profileCtrl.profile.primaryImage">
                             <g:render template="primaryImage" model="[size: 'small', hideViewAll:true]"/>
                         </div>
                     </div>
@@ -63,21 +63,21 @@
                         </div>
                     </div>
                 </tab>
-                <tab heading="Distribution" class="font-xxsmall" lazy-tab>
+                <tab heading="Distribution" class="font-xxsmall" managed-tab ng-show="managedTabCtrl.hasContent()">
                     <div class="row">
                         <div class="col-md-12">
                             <g:render template="map"/>
                         </div>
                     </div>
                 </tab>
-                <tab heading="Gallery" class="font-xxsmall" lazy-tab>
+                <tab heading="Gallery" class="font-xxsmall" managed-tab ng-show="managedTabCtrl.hasContent()">
                     <div class="row">
                         <div class="col-md-12">
                             <g:render template="images"/>
                         </div>
                     </div>
                 </tab>
-                <tab heading="Literature & Links" class="font-xxsmall" lazy-tab>
+                <tab heading="Literature & Links" class="font-xxsmall" managed-tab ng-show="managedTabCtrl.hasContent()">
                     <div class="row">
                         <div class="col-md-12">
                             <g:render template="../common/attachments"/>
@@ -92,7 +92,7 @@
                     </div>
                 </tab>
                 <tab heading="Key" class="font-xxsmall"
-                     ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey" lazy-tab>
+                     ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey" managed-tab select-to-initialise="true">
                     <div class="row">
                         <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                     opus-id="profileCtrl.opus.uuid"
@@ -102,7 +102,7 @@
                     </div>
                 </tab>
                 <tab heading="Documents" class="font-xxsmall"
-                     ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0" lazy-tab>
+                     ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0" managed-tab>
                     <g:render template="../common/attachments"/>
                 </tab>
             </tabset>
@@ -119,7 +119,7 @@
 </div>
 
 <div class="row margin-top-1" ng-cloak ng-show="profileCtrl.profile.authorship.length > 0">
-    <a name="view_authorship"></a>
+    <navigation-anchor name="view_authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="profileCtrl.profile.authorship.length > 0"></navigation-anchor>
 
     <div class="col-sm-12 col-md-8 profile-contributor-text">
         Profile contributors: <span ng-repeat="contrib in profileCtrl.profile.authorship"

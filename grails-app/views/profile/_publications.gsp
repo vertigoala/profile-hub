@@ -2,7 +2,7 @@
      ng-cloak id="browse_lists"
      ng-show="pubCtrl.publications.length > 0 || !pubCtrl.readonly()"
      ng-form="PubForm">
-    <a name="{{pubCtrl.readonly() ? 'view_' : 'edit_'}}publications"></a>
+    <navigation-anchor name="{{pubCtrl.readonly() ? 'view_' : 'edit_'}}publications" title="Versions" condition="pubCtrl.publications.length > 0 || !pubCtrl.readonly()"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">

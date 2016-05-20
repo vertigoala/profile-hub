@@ -35,7 +35,7 @@
 <!-- template for the editable view of an attribute list -->
 <script type="text/ng-template" id="showEditableAttributeList.html">
 <div ng-repeat="attribute in attrCtrl.attributes" ng-form="AttributeForm" ng-show="!attrCtrl.readonly" ng-cloak>
-    <a name="edit_{{attribute.key}}"></a>
+    <navigation-anchor name="edit_{{attribute.key}}" title="{{attribute.title}}" category="attribute"></navigation-anchor>
     <ng-include src="'showEditableAttribute.html'" ng-if="!attribute.fromCollection"></ng-include>
 
     <div ng-if="attrCtrl.showAttribute(attribute)">
@@ -68,7 +68,7 @@
 <!-- template for the read-only view of an attribute list -->
 <script type="text/ng-template" id="showReadOnlyAttributeList.html">
 <div ng-repeat="title in attrCtrl.attributeTitles" ng-cloak>
-    <a name="view_{{title.key}}"></a>
+    <navigation-anchor name="view_{{title.key}}" title="{{title.name}}" category="attribute" condition="attrCtrl.showTitleGroup(title.name)"></navigation-anchor>
     <div class="panel panel-default" ng-if="attrCtrl.showTitleGroup(title.name)">
         <div class="panel-heading">
             <div class="row">

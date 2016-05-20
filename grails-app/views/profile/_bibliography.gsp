@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-controller="ProfileController as profileCtrl" ng-cloak ng-form="BiblioForm"
      ng-init="profileCtrl.loadProfile()"
      ng-show="profileCtrl.profile.bibliography.length > 0 || !profileCtrl.readonly()">
-    <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}bibliography"></a>
+    <navigation-anchor name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}bibliography" title="Bibliography" condition="profileCtrl.profile.bibliography && profileCtrl.profile.bibliography.length > 0 || !profileCtrl.readonly()"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">

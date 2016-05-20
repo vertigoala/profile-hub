@@ -1,4 +1,4 @@
-describe('Directive: LazyTab', function() {
+describe('Directive: ManagedTab', function() {
     var $compile,
         $rootScope,
         $templateCache;
@@ -12,72 +12,72 @@ describe('Directive: LazyTab', function() {
         $templateCache = _$templateCache_;
     }));
 
-    it('will save content nested in a lazy-tab to the template cache', function() {
-        var lazyTabContent = '<span>This is the tab contents</span>';
+    it('will save content nested in a managed-tab to the template cache', function() {
+        var managedTabContent = '<span>This is the tab contents</span>';
         // Compile a piece of HTML containing the directive
-        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab lazy-tab>"+lazyTabContent+"</tab></tabset>")($rootScope);
+        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab managed-tab>"+managedTabContent+"</tab></tabset>")($rootScope);
 
-        expect($templateCache.get('lazy-tab-template-1')).toEqual(lazyTabContent);
+        expect($templateCache.get('managed-tab-template-1')).toEqual(managedTabContent);
     });
 
     it('will replace the tab contents with an ng-include and a loading indicator', function() {
-        var lazyTabContent = 'This is the tab contents';
+        var managedTabContent = 'This is the tab contents';
         // Compile a piece of HTML containing the directive.  Note that the first tab will be made active during
         // the digest cycle so we have to use the second tab for our test.
-        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab lazy-tab><span>"+lazyTabContent+"</span></tab></tabset>")($rootScope);
+        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab managed-tab><span>"+managedTabContent+"</span></tab></tabset>")($rootScope);
 
         $rootScope.$digest();
 
         // The tabset / tab directive template will create tabs with the classes below. The lazy tab is the second
         // tab in this case.
-        var lazyTabContentNode = element.find(".tab-content .tab-pane")[1];
+        var managedTabContentNode = element.find(".tab-content .tab-pane")[1];
 
-        expect(lazyTabContentNode.innerHTML).toContain('<span class="fa fa-spin fa-spinner"></span>');
-        expect(lazyTabContentNode.innerHTML).not.toContain(lazyTabContent);
+        expect(managedTabContentNode.innerHTML).toContain('<span class="fa fa-spin fa-spinner"></span>');
+        expect(managedTabContentNode.innerHTML).not.toContain(managedTabContent);
     });
 
     it('will replace text content with an ng-include and a loading indicator', function() {
-        var lazyTabContent = 'This is the tab contents';
+        var managedTabContent = 'This is the tab contents';
         // Compile a piece of HTML containing the directive.  Note that the first tab will be made active during
         // the digest cycle so we have to use the second tab for our test.
-        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab lazy-tab>"+lazyTabContent+"</tab></tabset>")($rootScope);
+        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab managed-tab>"+managedTabContent+"</tab></tabset>")($rootScope);
 
-        expect($templateCache.get('lazy-tab-template-1')).toEqual(lazyTabContent);
+        expect($templateCache.get('managed-tab-template-1')).toEqual(managedTabContent);
 
         $rootScope.$digest();
 
         // The tabset / tab directive template will create tabs with the classes below. The lazy tab is the second
         // tab in this case.
-        var lazyTabContentNode = element.find(".tab-content .tab-pane")[1];
+        var managedTabContentNode = element.find(".tab-content .tab-pane")[1];
 
-        expect(lazyTabContentNode.innerHTML).toContain('<span class="fa fa-spin fa-spinner"></span>');
-        expect(lazyTabContentNode.innerHTML).not.toContain(lazyTabContent);
+        expect(managedTabContentNode.innerHTML).toContain('<span class="fa fa-spin fa-spinner"></span>');
+        expect(managedTabContentNode.innerHTML).not.toContain(managedTabContent);
     });
 
     it('will load the tab contents when the tab is made active', function() {
 
-        var lazyTabContent = 'This is the tab contents';
+        var managedTabContent = 'This is the tab contents';
         // Compile a piece of HTML containing the directive.  Note that the first tab will be made active during
         // the digest cycle so we have to use the second tab for our test.
-        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab lazy-tab><span>"+lazyTabContent+"</span></tab></tabset>")($rootScope);
+        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab managed-tab><span>"+managedTabContent+"</span></tab></tabset>")($rootScope);
 
         $rootScope.$digest();
 
         // The tabset / tab directive template will create tabs with the classes below. The lazy tab is the second
         // tab in this case.
-        var lazyTabContentNode = element.find(".tab-content .tab-pane")[1];
+        var managedTabContentNode = element.find(".tab-content .tab-pane")[1];
 
-        expect(lazyTabContentNode.innerHTML).toContain('<span class="fa fa-spin fa-spinner"></span>');
-        expect(lazyTabContentNode.innerHTML).not.toContain(lazyTabContent);
+        expect(managedTabContentNode.innerHTML).toContain('<span class="fa fa-spin fa-spinner"></span>');
+        expect(managedTabContentNode.innerHTML).not.toContain(managedTabContent);
 
         // Now activate the tab
         element.find('.nav-tabs a')[1].click();
         $rootScope.$digest();
 
-        lazyTabContentNode = element.find(".tab-content .tab-pane")[1];
+        managedTabContentNode = element.find(".tab-content .tab-pane")[1];
 
-        expect(lazyTabContentNode.innerHTML).toContain(lazyTabContent);
-        expect(lazyTabContentNode.innerHTML).not.toContain('<span class="fa fa-spin fa-spinner"></span>');
+        expect(managedTabContentNode.innerHTML).toContain(managedTabContent);
+        expect(managedTabContentNode.innerHTML).not.toContain('<span class="fa fa-spin fa-spinner"></span>');
 
     });
 
@@ -86,10 +86,10 @@ describe('Directive: LazyTab', function() {
         var scope = $rootScope.$new();
         scope.select = jasmine.createSpy();
 
-        var lazyTabContent = 'This is the tab contents';
+        var managedTabContent = 'This is the tab contents';
         // Compile a piece of HTML containing the directive.  Note that the first tab will be made active during
         // the digest cycle so we have to use the second tab for our test.
-        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab lazy-tab select='select()'><span>"+lazyTabContent+"</span></tab></tabset>")(scope);
+        var element = $compile("<tabset><tab>The first tab is active by default</tab><tab managed-tab select='select()'><span>"+managedTabContent+"</span></tab></tabset>")(scope);
 
         $rootScope.$digest();
 

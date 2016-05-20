@@ -1,7 +1,7 @@
 /**
  *  Links controller
  */
-profileEditor.controller('LinksEditor', function (profileService, navService, util, messageService) {
+profileEditor.controller('LinksEditor', function (profileService, util, messageService) {
     var self = this;
     
     self.links = [];
@@ -21,9 +21,6 @@ profileEditor.controller('LinksEditor', function (profileService, navService, ut
                 self.profile = data.profile;
                 self.opus = data.opus;
                 self.links = data.profile.links;
-                if (self.links && self.links.length > 0 || !self.readonly) {
-                    navService.add("Links", "links");
-                }
             },
             function () {
                 messageService.alert("An error occurred while retrieving the links.");
