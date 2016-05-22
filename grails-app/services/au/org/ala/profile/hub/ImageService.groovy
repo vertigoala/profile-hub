@@ -139,6 +139,7 @@ class ImageService {
         def response
 
         boolean imageIsStoredLocally
+
         if (profile.profile.privateMode && !profile.opus.keepImagesPrivate) {
             // if the collection is public and the profile is in draft mode, then stage the image: it will be
             // uploaded to the biocache when the profile's draft is released
@@ -260,39 +261,83 @@ class ImageService {
      */
     def retrieveImagesPaged(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, String pageSize, String startIndex) {
         Map response = [:]
-        List allImages = []
+        List combinedImages = []
         Integer numberOfLocalImages = 0
-        def model = profileService.getProfile(opusId, profileId, latest)
-        def profile = model.profile
-        def opus = model.opus
+        Integer numberOfPublishedImages = 0
+        Map model = profileService.getProfile(opusId, profileId, latest)
+        Map profile = model.profile
+        Map opus = model.opus
         Map numberOfPublishedImagesMap = biocacheService.imageCount(searchIdentifier, opus)
-        Map publishedImagesMap = biocacheService.retrieveImagesPaged(searchIdentifier, opus, pageSize, startIndex)
-        //we want to display the images in a specific order - staged, private, published
-        if (profile.privateMode && profile.stagedImages) {
-            allImages.addAll(convertLocalImages(profile.stagedImages?:[], opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
-            numberOfLocalImages = allImages.size()
+        if (numberOfPublishedImagesMap && numberOfPublishedImagesMap?.resp && numberOfPublishedImagesMap?.resp?.totalRecords > 0) {
+            numberOfPublishedImages = numberOfPublishedImagesMap?.resp?.totalRecords
         }
 
+        //1.PRIVATE IMAGES
         // The collection may now, or may have been at some point, private, so look for any private images that may exist.
         // When a collection is changed from private to public, existing private images are NOT published automatically.
-        //A public collection can also can have private images depending on the settings of "Image Visibility" in the Image Options section of the collection admin page
+        // A public collection can also have private images depending on the settings of "Image Visibility" in the Image Options section of the collection admin page
         if (profile.privateImages) {
-            allImages.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
-            numberOfLocalImages = allImages.size()
+            if (profile.privateImages?.size() > 0) {
+                numberOfLocalImages = profile.privateImages.size()
+            }
+            List privateImagesPaged = pageImages(profile.privateImages, startIndex.toInteger(), pageSize.toInteger())
+            if (privateImagesPaged && privateImagesPaged.size() > 0) {
+                combinedImages.addAll(convertLocalImages(privateImagesPaged, opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
+            }
         }
-        if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
-            List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
-            if (publishedImageList && publishedImageList.size() > 0) {
-                allImages.addAll(publishedImageList)
+
+        //2.STAGED IMAGES
+        //we want to display the images in a specific order - private, staged, published
+        if (profile.privateMode && profile.stagedImages) {
+            numberOfLocalImages += profile.stagedImages.size()
+            if (combinedImages.size() < Integer.valueOf(pageSize) && profile.stagedImages.size() > 0) {
+                Integer newPageSize = Integer.valueOf(pageSize) - combinedImages.size() //partial page of private images
+                Integer newStartIndex = Integer.valueOf(startIndex) - profile.privateImages.size() + combinedImages.size()
+                List stagedImagesPaged = pageImages(profile.stagedImages, newStartIndex, newPageSize)
+                if (stagedImagesPaged && stagedImagesPaged.size() > 0) {
+                    combinedImages.addAll(convertLocalImages(stagedImagesPaged, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
+                }
+            }
+
+        }
+
+        //3.PUBLISHED IMAGES
+        if (combinedImages.size() < Integer.valueOf(pageSize) && numberOfPublishedImagesMap && numberOfPublishedImagesMap?.size() > 0) {
+            Integer newPageSize = Integer.valueOf(pageSize) - combinedImages.size() //partial page of private images
+            Integer newStartIndex = Integer.valueOf(startIndex) - numberOfLocalImages + combinedImages.size()
+            Map publishedImagesMap = biocacheService.retrieveImagesPaged(searchIdentifier, opus, String.valueOf(newPageSize), String.valueOf(newStartIndex))
+
+            if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
+                List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
+                if (publishedImageList && publishedImageList.size() > 0) {
+                    combinedImages.addAll(publishedImageList)
+                }
             }
         }
         response.statusCode = SC_OK
         //we don't have support for JSON objects or serialization so this is a workaround
         response.resp = [:]
-        response.resp.images = allImages
-        response.resp.count = numberOfPublishedImagesMap?.resp?.totalRecords + numberOfLocalImages
+        response.resp.images = combinedImages
+        response.resp.count = numberOfPublishedImages + numberOfLocalImages
 
         response
+    }
+
+    List pageImages(List privateImages, Integer offset, Integer pageSize) {
+        List imagesPage = []
+        Integer totalNumberOfImages = privateImages.size()
+        if (offset < totalNumberOfImages) {
+            Integer start = offset
+            if (start >= totalNumberOfImages) {
+                start = totalNumberOfImages - 1
+            }
+            Integer end = pageSize + offset - 1
+            if (end >= totalNumberOfImages) {
+                end = totalNumberOfImages - 1
+            }
+            imagesPage = privateImages[start..end]
+        }
+        imagesPage
     }
 
 
@@ -382,8 +427,9 @@ class ImageService {
 
     //RetrieveImages() calls this method and is itself called by ImageService (this class) and ExportService. The
     //latter needs to know the disk location of the images and will send useInternalPaths with a value of true
-    private
-    static convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false, boolean readonlyView = true) {
+
+    List convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false, boolean readonlyView = true) {
+        List convertedImages = []
         String imageUrlPrefix = "/opus/${opus.uuid}/profile/${profile.uuid}/image"
         //this is the default, NOT for ExportService
 
@@ -414,8 +460,9 @@ class ImageService {
                 ]
             }
 
-            image
+            convertedImages.add(image)
         }
+        convertedImages
     }
 
     static boolean isCurrentFileStructure(String collectionId, String profileId, String imageId) {
