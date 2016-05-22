@@ -13,6 +13,7 @@ class TransferrableSpec extends Specification {
     def "A URL transferrable should be able to get an image filename"() {
         given:
         def connection = Stub(HttpURLConnection)
+        connection.responseCode >> 200
         connection.contentType >> contentType
         connection.getHeaderField(CONTENT_DISPOSITION) >> contentDisposition
         def url = new URL(null, urlString, new StubURLStreamHandler(urlConnection: connection))

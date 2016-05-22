@@ -102,7 +102,7 @@ class UrlTransferrableAdapter implements Transferrable, Closeable, AutoCloseable
         if (!connection) {
             connection = openConnection()
             connection.connect()
-            if (connection instanceof HttpURLConnection && !(connection.responseCode in 200.299)) {
+            if (connection instanceof HttpURLConnection && !(connection.responseCode in 200..299)) {
                 throw new IOException("HTTP request to $url was not successful")
             }
         }
