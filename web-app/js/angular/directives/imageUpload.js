@@ -22,8 +22,8 @@ profileEditor.directive('imageUpload', function ($browser, $http, config) {
                 $scope.updateMode = false;
                 $scope.metadata = {rightsHolder: $scope.opus.title};
             }
-            self.files = $scope.files = [];
-            self.url = $scope.url = '';
+            self.files = [];
+            self.url = '';
             $scope.error = null;
             $scope.showMetadata = true;
 
