@@ -195,7 +195,8 @@
         map: {mapId: '${grailsApplication.config.map.id}',
               accessKey: '${grailsApplication.config.map.access.key}'},
         mainCssFile: '${resource(dir: "/css", file: "profiles.css")}',
-        bootstrapCssFile: '${resource(dir: "/thirdparty/bootstrap/css", file: "bootstrap3.3.4.min.css")}'
+        bootstrapCssFile: '${resource(dir: "/thirdparty/bootstrap/css", file: "bootstrap3.3.4.min.css")}',
+        imageLoadErrorUrl: '${resource(dir: "/images", file: "not-available.png")}'
      });
 
 

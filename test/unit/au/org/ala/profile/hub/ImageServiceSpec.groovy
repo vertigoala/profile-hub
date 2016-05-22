@@ -3,8 +3,6 @@ package au.org.ala.profile.hub
 import grails.test.mixin.TestFor
 import org.apache.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
-import spock.lang.Ignore
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 @TestFor(ImageService)
@@ -14,6 +12,7 @@ class ImageServiceSpec extends Specification {
     BiocacheService biocacheService
     ProfileService profileService
     MultipartFile dummyFile
+    MultipartFileTransferrableAdapter dummyFileTransferrable
 
     String testId = UUID.randomUUID().toString()
 
@@ -37,6 +36,7 @@ class ImageServiceSpec extends Specification {
         dummyFile = Mock(MultipartFile)
         dummyFile.getName() >> "image.jpg"
         dummyFile.getOriginalFilename() >> "image.jpg"
+        dummyFileTransferrable = new MultipartFileTransferrableAdapter(multipartFile: dummyFile)
     }
 
     def cleanup() {
@@ -50,7 +50,7 @@ class ImageServiceSpec extends Specification {
         profileService.getProfile(_, _, _) >> [profile: [privateMode: false], opus: []]
 
         when:
-        imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFile)
+        imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFileTransferrable)
 
         then:
         1 * biocacheService.uploadImage(_, _, _, _, _) >> [:]
@@ -61,7 +61,7 @@ class ImageServiceSpec extends Specification {
         profileService.getProfile(_, _, _) >> [profile: [uuid: "profile1", privateMode: true], opus: [uuid: "opus1"]]
 
         when:
-        imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFile)
+        imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFileTransferrable)
 
         then:
         1 * dummyFile.transferTo(_) // the actual destination file is randomly named, so we can't check the path

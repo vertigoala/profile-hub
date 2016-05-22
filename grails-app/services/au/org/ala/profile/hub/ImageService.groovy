@@ -130,7 +130,7 @@ class ImageService {
         new File(fileLocation + "/${imageId}_tiles/${zoom}/${x}/${y}.png")
     }
 
-    def uploadImage(String contextPath, String opusId, String profileId, String dataResourceId, Map metadata, MultipartFile file) {
+    def uploadImage(String contextPath, String opusId, String profileId, String dataResourceId, Map metadata, Transferrable file) {
         def profile = profileService.getProfile(opusId, profileId, true)
 
         metadata.scientificName = profile.profile.scientificName
@@ -173,8 +173,8 @@ class ImageService {
         response
     }
 
-    private static storeLocalImage(Map profile, Map metadata, MultipartFile file, String directory) throws IOException {
-        String extension = getExtension(file.originalFilename)
+    private static storeLocalImage(Map profile, Map metadata, Transferrable file, String directory) throws IOException {
+        String extension = file.fileExtension
         metadata.imageId = UUID.randomUUID().toString()
         metadata.action = "add"
         String fileLocation = buildFilePath(directory, profile.opus.uuid, profile.profile.uuid, metadata.imageId)
@@ -182,7 +182,7 @@ class ImageService {
         localDir.mkdirs()
 
         File imageFile = new File(localDir, "${metadata.imageId}${extension}")
-        file.transferTo(imageFile)
+        file.to(imageFile)
 
         // create tiles
         File tileDir = new File(localDir, "${metadata.imageId}_tiles")

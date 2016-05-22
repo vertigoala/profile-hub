@@ -220,9 +220,5 @@
                 </div>
             </div>
         </div>
-
-        <script type="text/ng-template" id="imageUpload.html">
-
-        </script>
     </div>
 </div>

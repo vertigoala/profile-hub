@@ -1,4 +1,4 @@
-profileEditor.directive('imageUpload', function ($browser) {
+profileEditor.directive('imageUpload', function ($browser, $http, config) {
     return {
         restrict: 'AE',
         require: [],
@@ -9,10 +9,12 @@ profileEditor.directive('imageUpload', function ($browser) {
             uploadOnEvent: '@', // name of the event to be $broadcast by the parent scope to trigger the upload (e.g. when embedding the upload form in a larger form with a single OK button)
             updateOnEvent: '@?', // name of the event to be $broadcast by the parent scope to trigger saving metadata
             showMetadata: '@', // true to ask for metadata fields, false to just ask for the file
-            url: '@' // the url to post the file to
+            uploadUrl: '@url' // the url to post the file to
         },
         templateUrl: $browser.baseHref() + 'static/templates/imageUpload.html',
+        controllerAs: 'imageUpload',
         controller: ['$scope', 'profileService', 'util', 'Upload', '$cacheFactory', '$filter', function ($scope, profileService, util, Upload, $cacheFactory, $filter) {
+            var self = this;
             if ($scope.image) {
                 $scope.updateMode = true;
                 $scope.metadata = $scope.image.metadata;
@@ -20,7 +22,8 @@ profileEditor.directive('imageUpload', function ($browser) {
                 $scope.updateMode = false;
                 $scope.metadata = {rightsHolder: $scope.opus.title};
             }
-            $scope.files = [];
+            self.files = $scope.files = [];
+            self.url = $scope.url = '';
             $scope.error = null;
             $scope.showMetadata = true;
 
@@ -34,32 +37,55 @@ profileEditor.directive('imageUpload', function ($browser) {
 
             profileService.getLicences().then(function (data) {
                 $scope.licences = _.pluck(data, "name").sort();
+                if (!$scope.metadata.licence && $scope.licences) {
+                    $scope.metadata.licence = $scope.licences[0];
+                }
             });
 
+            self.clearFiles = function() {
+                self.files.length = 0;
+            };
+
+            self.clearUrl = function() {
+                self.url = '';
+            };
+
             $scope.doUpload = function () {
-                if ($scope.files.length > 0) {
-                    $scope.metadata.dataResourceId = $scope.opus.dataResourceUid;
-                    $scope.metadata.created = util.formatLocalDate($scope.metadata.created);
-
+                $scope.metadata.dataResourceId = $scope.opus.dataResourceUid;
+                $scope.metadata.created = util.formatLocalDate($scope.metadata.created);
+                if (self.files.length > 0) {
                     Upload.upload({
-                        url: $scope.url,
+                        url: $scope.uploadUrl,
                         fields: $scope.metadata,
-                        file: $scope.files[0]
-                    }).success(function (imageMetadata) {
-                        $scope.image = {};
-                        $scope.file = null;
-                        $cacheFactory.get('$http').removeAll();
-
-                        if (angular.isDefined($scope.callbackHandler)) {
-                            $scope.callbackHandler(imageMetadata);
-                        }
-                    }).error(function () {
-                        $scope.error = "An error occurred while uploading your image."
+                        file: self.files[0]
+                    }).success(handleUploadSuccess).error(function () {
+                        $scope.error = "An error occurred while uploading your image.";
+                    });
+                } else if (self.url) {
+                    var data = angular.copy($scope.metadata);
+                    data['url'] = self.url;
+                    $http({
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        url: $scope.uploadUrl,
+                        data: $.param(data)  // TODO replace this with $httpParamSerializer in angular 1.4+
+                    }).then(function(result) { return result.data; }).then(handleUploadSuccess, function() {
+                        $scope.error = "An error occured while uploading your image.";
                     });
                 } else {
                     console.error("'performUpload' event broadcast when there are 0 files to be uploaded");
                 }
             };
+
+            function handleUploadSuccess(imageMetadata) {
+                $scope.image = {};
+                self.files = null;
+                $cacheFactory.get('$http').removeAll();
+
+                if (angular.isDefined($scope.callbackHandler)) {
+                    $scope.callbackHandler(imageMetadata);
+                }
+            }
 
             $scope.save = function() {
               if ($scope.image) {
@@ -77,6 +103,8 @@ profileEditor.directive('imageUpload', function ($browser) {
                   console.error("'save' event when there is not existing image")
               }
             };
+
+            self.imageLoadErrorUrl = config.imageLoadErrorUrl;
 
             $scope.$on($scope.uploadOnEvent, $scope.doUpload);
             $scope.$on($scope.updateOnEvent, $scope.save);

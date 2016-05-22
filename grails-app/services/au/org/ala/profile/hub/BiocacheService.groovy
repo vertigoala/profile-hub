@@ -93,15 +93,19 @@ class BiocacheService {
     String copyFileForUpload(String imageId, def file, File tempDir) {
         String filename = ''
         //Images sent directly to central service on upload
-        if (file instanceof MultipartFile) {
+        if (file instanceof Transferrable) {
+            filename = "$imageId${file.fileExtension}"
+            file.to(new File(tempDir, filename))
+        }
+        else if (file instanceof MultipartFile) {
             String extension = file.originalFilename.substring(file.originalFilename.lastIndexOf("."))
             filename = "${imageId}${extension}"
-            file.transferTo(new File(tempDir, "/${filename}"))
+            file.transferTo(new File(tempDir, filename))
             //Private and staged images are stored relative to this application, and may be sent to central image service later
         } else if (file instanceof File) {
             filename = file.getName()
             //Make defensive copy in case fails
-            File fileCopy = new File(tempDir, "/${filename}")
+            File fileCopy = new File(tempDir, filename)
             Path target = fileCopy.toPath()
             Path source = file.toPath()
             Files.copy(source, target, REPLACE_EXISTING, COPY_ATTRIBUTES)

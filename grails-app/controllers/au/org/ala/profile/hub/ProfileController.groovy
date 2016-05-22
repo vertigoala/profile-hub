@@ -338,27 +338,33 @@ class ProfileController extends BaseController {
             badRequest "opusId, dataResourceId, title and profileId are mandatory fields"
         } else if (request instanceof DefaultMultipartHttpServletRequest) {
             MultipartFile file = ((DefaultMultipartHttpServletRequest) request).getFile("file")
-
-            List<Map> multimedia = [
-                    [
-                            creator         : params.creator ?: "",
-                            rights          : params.rights ?: "",
-                            rightsHolder    : params.rightsHolder ?: "",
-                            licence         : params.licence ?: "",
-                            title           : params.title ?: "",
-                            description     : params.description ?: "",
-                            created         : params.created ?: "",
-                            originalFilename: file.originalFilename
-                    ]
-            ]
-            Map metadata = [multimedia: multimedia]
-
-            def response = imageService.uploadImage(request.contextPath, params.opusId, params.profileId, request.getParameter("dataResourceId"), metadata, file)
-
-            handle response
+            doUpload(new MultipartFileTransferrableAdapter(multipartFile: file))
+        } else if (params.url) {
+            final ut = new UrlTransferrableAdapter(url: params.url.toURL())
+            ut.withCloseable { doUpload(ut)  }
         } else {
-            badRequest()
+            badRequest "a file or url is required"
         }
+    }
+
+    private def doUpload(Transferrable transferrable) {
+        List<Map> multimedia = [
+                [
+                        creator         : params.creator ?: "",
+                        rights          : params.rights ?: "",
+                        rightsHolder    : params.rightsHolder ?: "",
+                        licence         : params.licence ?: "",
+                        title           : params.title ?: "",
+                        description     : params.description ?: "",
+                        created         : params.created ?: "",
+                        originalFilename: transferrable.originalFilename
+                ]
+        ]
+        Map metadata = [multimedia: multimedia]
+
+        def response = imageService.uploadImage(request.contextPath, params.opusId, params.profileId, request.getParameter("dataResourceId"), metadata, transferrable)
+
+        handle response
     }
 
     @Secured(role = ROLE_PROFILE_EDITOR)

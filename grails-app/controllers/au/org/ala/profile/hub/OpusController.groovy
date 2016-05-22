@@ -414,29 +414,36 @@ class OpusController extends BaseController {
             badRequest "opusId and purpose are mandatory fields"
         } else if (request instanceof DefaultMultipartHttpServletRequest) {
             MultipartFile file = ((DefaultMultipartHttpServletRequest) request).getFile("file")
-
-            Map opus = profileService.getOpus(params.opusId)
-
-            if (opus) {
-                File imageDir = new File("${grailsApplication.config.image.private.dir}/${opus.uuid}")
-                if (!imageDir.exists()) {
-                    imageDir.mkdirs()
-                }
-
-                File imageFile = new File(imageDir, "${params.purpose}${Utils.getExtension(file.originalFilename)}")
-                if (imageFile.exists()) {
-                    log.warn("${imageFile.getAbsolutePath()} already exists. Overwriting.")
-                    imageFile.delete()
-                }
-
-                file.transferTo(imageFile)
-
-                render ([imageUrl: "${request.contextPath}/opus/${opus.uuid}/image/${imageFile.getName()}"] as JSON)
-            } else {
-                notFound "No collection was found for id ${params.opus}"
-            }
+            uploadTransferrable(new MultipartFileTransferrableAdapter(multipartFile: file))
+        } else if (params.url) {
+            final url = new UrlTransferrableAdapter(url: params.url.toURL())
+            url.withCloseable { uploadTransferrable(url) }
         } else {
-            badRequest()
+            badRequest "file or url is required"
+        }
+    }
+
+    private def uploadTransferrable(Transferrable transferrable) {
+
+        Map opus = profileService.getOpus(params.opusId)
+
+        if (opus) {
+            File imageDir = new File("${grailsApplication.config.image.private.dir}/${opus.uuid}")
+            if (!imageDir.exists()) {
+                imageDir.mkdirs()
+            }
+
+            File imageFile = new File(imageDir, "${params.purpose}${transferrable.fileExtension}")
+            if (imageFile.exists()) {
+                log.warn("${imageFile.getAbsolutePath()} already exists. Overwriting.")
+                imageFile.delete()
+            }
+
+            transferrable.to(imageFile)
+
+            render ([imageUrl: "${request.contextPath}/opus/${opus.uuid}/image/${imageFile.getName()}"] as JSON)
+        } else {
+            notFound "No collection was found for id ${params.opus}"
         }
     }
 
