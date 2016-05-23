@@ -61,7 +61,7 @@
             </div>
         </tab>
         <tab heading="Documents" class="font-xxsmall">
-            <g:render template="../common/attachments"/>
+            <g:render template="../common/attachments" model="[hideHeading: true]"/>
         </tab>
         <g:if test="${params.isOpusEditor}">
             <tab heading="Reports" class="font-xxsmall">

@@ -80,7 +80,7 @@
                 <tab heading="Literature & Links" class="font-xxsmall" managed-tab ng-show="managedTabCtrl.hasContent()">
                     <div class="row">
                         <div class="col-md-12">
-                            <g:render template="../common/attachments"/>
+                            <g:render template="../common/attachments" model="[hideHeading: false]"/>
                             <g:render template="links"/>
                             <g:render template="bhlLinks"/>
                             <g:render template="publications"/>
@@ -100,10 +100,6 @@
                                     key-lookup-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
                                     profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
                     </div>
-                </tab>
-                <tab heading="Documents" class="font-xxsmall"
-                     ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0" managed-tab>
-                    <g:render template="../common/attachments"/>
                 </tab>
             </tabset>
         </div>
