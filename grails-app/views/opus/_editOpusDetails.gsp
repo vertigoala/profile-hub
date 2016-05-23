@@ -27,7 +27,7 @@
                            ng-required="true"
                            typeahead-editable="false"
                            typeahead-on-select="opusCtrl.opusResourceChanged($item, $model, $label)"
-                           typeahead="source as source.name for source in opusCtrl.dataResourceList | filter:$viewValue | limitTo:10"/>
+                           typeahead="source as source.name for source in opusCtrl.opusDataResourceList | filter:$viewValue | limitTo:10"/>
                     <span class="small">This allows data from Atlas of Living Australia (such as occurrence maps) to be included in your profiles.</span>
                     <alert type="danger"
                            ng-show="!opusCtrl.opus.dataResource">You must select a value from the list.</alert>

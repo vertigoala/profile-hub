@@ -83,7 +83,7 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
     };
     _.defaults(self.imageResourceMultiSelectOptions, defaultMultiSelectOptions);
     _.defaults(self.imageHubMultiSelectOptions, defaultMultiSelectOptions);
-
+    self.opusDataResourceList = [];
 
     self.originalRecordResourceOption = null;
     self.originalImageResourceOption = null;
@@ -98,6 +98,8 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         self.opusId = util.getEntityId("opus");
 
         if (!self.opusId) {
+            loadOpusDataResourceList();
+
             return;
         }
         var promise = profileService.getOpus(self.opusId);
@@ -203,6 +205,10 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         } else {
             self.opus.keybaseProjectId = "";
             self.opus.keybaseKeyId = "";
+        }
+
+        if (!self.opus.dataResourceConfig) {
+            self.opus.dataResourceConfig = {};
         }
 
         populateRecordResources();
@@ -594,6 +600,16 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                 }
             }, true)
         }
+    }
+
+    function loadOpusDataResourceList() {
+        self.opusDataResourceList = [];
+        var resources = profileService.listResources();
+        resources.then(function(data) {
+            angular.forEach(data, function (key, value) {
+                self.opusDataResourceList.push({id: value, name: key.trim()});
+            });
+        });
     }
 
     function loadRecordResources() {
