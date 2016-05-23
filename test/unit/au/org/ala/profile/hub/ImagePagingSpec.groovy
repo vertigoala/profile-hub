@@ -48,8 +48,10 @@ class ImagePagingSpec extends Specification {
         biocacheServiceMockNoImages.imageCount(*_) >> [resp: [totalRecords: 0]]
         biocacheServiceMockImages = Mock(BiocacheService)
         biocacheServiceMockImages.retrieveImagesPaged(_, _, '3', '0') >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"]]]]
+        biocacheServiceMockImages.retrieveImagesPaged(_, _, '4', '0') >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"], [image: "published4"]]]]
         biocacheServiceMockImages.retrieveImagesPaged(_, _, '5', '3') >> [statusCode: 200, resp: [occurrences: [[image: "published4"], [image: "published5"], [image: "published6"], [image: "published7"], [image: "published8"]]]]
         biocacheServiceMockImages.retrieveImagesPaged(_, _, '5', '8') >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
+        biocacheServiceMockImages.retrieveImagesPaged(_, _, '5', '15') >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
         biocacheServiceMockImages.imageCount(*_) >> [resp: [totalRecords: 11]]
 
     }
@@ -204,7 +206,7 @@ class ImagePagingSpec extends Specification {
         [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex, privateImages: []], opus: [uuid: 'collection1']] || 'staged1' | biocacheServiceMockNoImages | "Staged images only"
     }
 
-    def "Two types of images paging"() {
+    def "Combinations of images of different types paging"() {
         given: "a profile containing private and published images"
         profileService = Mock(ProfileService)
         profileService.getProfile(_, _, _) >> profileResponse
@@ -237,6 +239,7 @@ class ImagePagingSpec extends Specification {
         [profile: [scientificName: 'Olympia', uuid: 'profile1', privateImages: privateImagesComplex], opus: [keepImagesPrivate: true, uuid: 'collection1']]                              || 'imageId11' | 'published3' | 3 | biocacheServiceMockImages | "Private and published images"
         [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex, privateImages: []], opus: [uuid: 'collection1']]                   || 'staged11' | 'published3' | 3 | biocacheServiceMockImages | "Staged and published images"
         [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex, privateImages: privateImagesComplex], opus: [uuid: 'collection1']] || 'imageId11' | 'staged3' | 4 | biocacheServiceMockNoImages | "Private and staged images"
+        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex[0..5], privateImages: privateImagesComplex[0..5]], opus: [uuid: 'collection1']] || 'staged5' | 'published3' | 3 | biocacheServiceMockImages | "Private, staged and published images"
     }
 
 }
