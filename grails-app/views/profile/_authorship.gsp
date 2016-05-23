@@ -1,6 +1,6 @@
 <div class="panel panel-default" ng-controller="ProfileController as profileCtrl" ng-init="profileCtrl.loadProfile()"
      ng-form="AuthorForm" ng-cloak ng-if="!profileCtrl.readonly() || profileCtrl.authorshipCount > 1">
-    <navigation-anchor name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="!profileCtrl.readonly() || profileCtrl.authorshipCount > 0"></navigation-anchor>
+    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="!profileCtrl.readonly() || profileCtrl.authorshipCount > 0"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">

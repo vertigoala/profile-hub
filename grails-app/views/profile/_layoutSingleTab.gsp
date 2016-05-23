@@ -38,7 +38,7 @@
 
     <div class="row margin-bottom-1">
         <g:render template="map"/>
-        <div class="top col-md-6 col-sm-12">
+        <div class="top col-md-6 col-sm-12" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
             <g:render template="primaryImage"/>
         </div>
     </div>
@@ -108,7 +108,7 @@
 </div>
 
 <div class="row margin-top-1" ng-cloak ng-show="profileCtrl.profile.authorship.length > 0">
-    <navigation-anchor name="view_authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="profileCtrl.profile.authorship.length > 0"></navigation-anchor>
+    <navigation-anchor anchor-name="view_authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="profileCtrl.profile.authorship.length > 0"></navigation-anchor>
 
     <div class="col-sm-12 col-md-8 profile-contributor-text">
         Profile contributors: <span ng-repeat="contrib in profileCtrl.profile.authorship"

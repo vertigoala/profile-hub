@@ -124,7 +124,7 @@
 
             <div class="row margin-bottom-1">
                 <g:include controller="profile" action="mapPanel" params="[opusId: params.opusId]"/>
-                <div class="top col-md-6 col-sm-12">
+                <div class="top col-md-6 col-sm-12" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
                     <g:render template="primaryImage" params="[opusId: params.opusId]"/>
                 </div>
             </div>
@@ -134,7 +134,7 @@
             <div class="row">
                 <div class="col-md-12" ng-cloak>
                     <tabset ng-class="!profileCtrl.readonly() || (profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey) || (profileCtrl.profile.attachments.length > 0) ? '' : 'single-tabbed-panel'">
-                        <tab heading="Details" class="font-xxsmall">
+                        <tab heading="Details" class="font-xxsmall" managed-tab>
                             <div class="row">
                                 <div class="col-md-12">
                                     <g:include controller="profile" action="attributesPanel"
@@ -179,7 +179,7 @@
                                      profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
                             </div>
                         </tab>
-                        <tab heading="Documents" class="font-xxsmall" ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0">
+                        <tab heading="Documents" class="font-xxsmall" ng-show="!profileCtrl.readonly() || profileCtrl.profile.attachments.length > 0" managed-tab>
                             <g:render template="../common/attachments" model="[hideHeading: true]"/>
                         </tab>
                     </tabset>

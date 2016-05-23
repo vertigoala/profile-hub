@@ -17,7 +17,7 @@ profileEditor.directive('navigationAnchor', ['navService', function (navService)
         require: '^^?managedTab',
         scope: {
             condition:'&?',
-            name:'@',
+            anchorName:'@',
             title:'@',
             category:'@?',
             onDisplay:'&?'
@@ -27,6 +27,7 @@ profileEditor.directive('navigationAnchor', ['navService', function (navService)
         controllerAs:'navPointCtrl',
         controller: function($scope) {
             var self = this;
+
             self.getTab = function() {
 
                 if (!self.managedTab) { // Requiring the managedTab directive isn't working, I believe due to the way the tabset transclusion works. We can require tabset but not tab or managedTab
@@ -41,16 +42,23 @@ profileEditor.directive('navigationAnchor', ['navService', function (navService)
                 return self.tab;
             };
 
+            function keyFromAnchor(anchor) {
+                if (anchor.startsWith('view_') || anchor.startsWith('edit_')) {
+                    return anchor.substring(5);
+                }
+                return anchor;
+            }
+
             $scope.$watch(self.condition, function() {
                 if (_.isUndefined(self.condition()) || self.condition()) {
-                    navService.add(self.title, self.name, self.category, self.getTab(), self.onDisplay);
+                    navService.add(self.title, keyFromAnchor(self.anchorName), self.anchorName, self.category, self.getTab(), self.onDisplay);
                 }
                 else {
-                    navService.remove(self.title, self.name);
+                    navService.remove(self.title, self.anchorName);
                 }
             });
 
         },
-        template:'<a name="{{name}}"></a>'
+        template:'<a name="{{navPointCtrl.anchorName}}"></a>'
     }
 }]);
