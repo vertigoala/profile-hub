@@ -42,15 +42,15 @@
         <div class="col-md-12" ng-cloak>
             <tabset>
                 <tab heading="At a glance" class="font-xxsmall" ng-show="managedTabCtrl.hasContent()" managed-tab>
-                    <div class="row">
-                        <div ng-class="{'col-md-9':profileCtrl.profile.primaryImage, 'col-md-12':!profileCtrl.profile.primaryImage}">
+                    <div class="row" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
+                        <div ng-class="imageCtrl.primaryImage ? 'col-md-9' : 'col-md-12'">
                             <g:render template="attributes"/>
                             <g:render template="specimens"/>
                             <g:if test="${!profile.archivedDate}">
                                 <g:render template="taxon"/>
                             </g:if>
                         </div>
-                        <div class="side col-md-3" ng-if="profileCtrl.profile.primaryImage">
+                        <div class="side col-md-3" ng-if="imageCtrl.primaryImage">
                             <g:render template="primaryImage" model="[size: 'small', hideViewAll:true]"/>
                         </div>
                     </div>
@@ -115,7 +115,7 @@
 </div>
 
 <div class="row margin-top-1" ng-cloak ng-show="profileCtrl.profile.authorship.length > 0">
-    <navigation-anchor name="view_authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="profileCtrl.profile.authorship.length > 0"></navigation-anchor>
+    <navigation-anchor anchor-name="view_authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="profileCtrl.profile.authorship.length > 0"></navigation-anchor>
 
     <div class="col-sm-12 col-md-8 profile-contributor-text">
         Profile contributors: <span ng-repeat="contrib in profileCtrl.profile.authorship"

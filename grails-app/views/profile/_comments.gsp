@@ -1,6 +1,6 @@
 <hr/>
 <div ng-controller="CommentController as commentCtrl" class="comments-panel">
-    <navigation-anchor name="{{commentCtrl.readonly() ? 'view_' : 'edit_'}}comments" title="Comments"></navigation-anchor>
+    <navigation-anchor anchor-name="{{commentCtrl.readonly() ? 'view_' : 'edit_'}}comments" title="Comments"></navigation-anchor>
 
     <div class="panel panel-default" ng-cloak>
         <div class="panel-heading">

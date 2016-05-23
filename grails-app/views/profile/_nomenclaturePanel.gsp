@@ -1,5 +1,5 @@
 <div class="panel panel-default" ng-cloak ng-form="NomenclatureForm" ng-show="!profileCtrl.readonly()">
-    <navigation-anchor name="edit_nomenclature" title="Nomenclature" condition="!profileCtrl.readonly()"></navigation-anchor>
+    <navigation-anchor anchor-name="edit_nomenclature" title="Nomenclature" condition="!profileCtrl.readonly()"></navigation-anchor>
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
@@ -32,7 +32,7 @@
 
 
 <div class="row padding-bottom-1" ng-if="profileCtrl.readonly()">
-    <navigation-anchor name="view_nomenclature" title="Nomenclature" condition="profileCtrl.profile.nslNomenclatureIdentifier"></navigation-anchor>
+    <navigation-anchor anchor-name="view_nomenclature" title="Nomenclature" condition="profileCtrl.profile.nslNomenclatureIdentifier"></navigation-anchor>
     <nomenclature nsl-name-id="profileCtrl.profile.nslNameIdentifier"
                   nsl-nomenclature-id="profileCtrl.profile.nslNomenclatureIdentifier"
                   readonly="{{profileCtrl.readonly()}}"

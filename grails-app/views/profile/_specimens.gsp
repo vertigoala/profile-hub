@@ -1,6 +1,6 @@
 <div class="panel panel-default" ng-controller="SpecimenController as specCtrl" ng-cloak ng-form="SpecimenForm"
      ng-show="specCtrl.specimens.length > 0 || !specCtrl.readonly()">
-    <navigation-anchor name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}specimens" title="Specimens" condition="profileCtrl.profile.specimenIds && profileCtrl.profile.specimenIds.length > 0 || !profileCtrl.readonly()"></navigation-anchor>
+    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}specimens" title="Specimens" condition="profileCtrl.profile.specimenIds && profileCtrl.profile.specimenIds.length > 0 || !profileCtrl.readonly()"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">

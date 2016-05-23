@@ -1,6 +1,6 @@
 <div class="panel panel-default" ng-controller="LinksEditor as linkCtrl" ng-init="linkCtrl.init('${edit}')" ng-cloak
      ng-show="!linkCtrl.readonly || linkCtrl.links.length > 0" ng-form="LinkForm">
-    <navigation-anchor name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}links" title="Links" condition="!linkCtrl.readonly || linkCtrl.links.length > 0"></navigation-anchor>
+    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}links" title="Links" condition="!linkCtrl.readonly || linkCtrl.links.length > 0"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">

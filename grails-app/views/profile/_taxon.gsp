@@ -1,5 +1,5 @@
 <div class="panel panel-default" ng-cloak ng-show="profileCtrl.profile.classification.length > 0">
-    <navigation-anchor name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}taxon" title="Taxonomy" condition="profileCtrl.profile.classification.length > 0"></navigation-anchor>
+    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}taxon" title="Taxonomy" condition="profileCtrl.profile.classification.length > 0"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">

@@ -71,10 +71,10 @@ profileEditor.factory('navService', ['$filter', '$rootScope', '$document', funct
      * defer initialisation of contents on tab that need to be visible / have a sensible size when initialised.
      * (e.g maps and the key player)
      */
-    function add(label, key, category, tab, onDisplay) {
+    function add(label, key, anchor, category, tab, onDisplay) {
 
         if (!getItem(key)) {
-            var item = {label: label, key: key, category: category, tab:tab};
+            var item = {label: label, key: key, anchor: anchor, category: category, tab:tab};
             if (key == 'images') {
                 item.tab = 'tab-3';
             }
@@ -121,17 +121,17 @@ profileEditor.factory('navService', ['$filter', '$rootScope', '$document', funct
 
             if (item.tab && tabs[item.tab]) {
                 tabs[item.tab].select().then(function() {
-                    scrollTo(key);
+                    scrollTo(item.anchor);
                 });
             }
             else {
-                scrollTo(key);
+                scrollTo(item.anchor);
             }
         }
     }
 
-    function scrollTo(key) {
-        var target = document.getElementById(key) || document.getElementsByName(key)[0];
+    function scrollTo(anchor) {
+        var target = document.getElementById(anchor) || document.getElementsByName(anchor)[0];
         if(target && target.getBoundingClientRect) {
             setTimeout(function() {
                 var offset = 30;
