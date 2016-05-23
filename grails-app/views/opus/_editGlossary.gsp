@@ -24,8 +24,12 @@
                     <div class="form-group">
                         <label for="file">.CSV file input</label>
                         <br/>
-                        <input type="file" name="csvFile" id="file" ng-model="na"
-                               onchange="angular.element(this).scope().glossaryCtrl.setFileToUpload(this)" required/>
+                        <span class="btn btn-default btn-file">
+                            Choose file
+                            <input type="file" name="csvFile" id="file" ng-model="glossaryCtrl.newFile"
+                                   ngf-select="" required/> <!-- onchange="angular.element(this).scope().glossaryCtrl.setFileToUpload(this)" -->
+                        </span>
+                        <span class="font-xsmall">{{ glossaryCtrl.newFile[0].name }}</span>
                     </div>
                 </div>
             </div>

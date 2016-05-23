@@ -99,9 +99,13 @@
                     <label for="file" class="col-sm-3 control-label">Document (pdf) *</label>
 
                     <div class="col-sm-9" ng-show="!attachmentUploadCtrl.metadata.uuid">
-                        <input id="file" type="file" ngf-select="" ng-model="attachmentUploadCtrl.files" name="file"
-                               accept="application/pdf" required="{{!attachmentUploadCtrl.metadata.uuid}}"
-                               ng-required="!attachmentUploadCtrl.metadata.uuid && attachmentUploadCtrl.type != 'URL'">
+                        <span class="btn btn-default btn-file">
+                            Choose file
+                            <input id="file" type="file" ngf-select="" ng-model="attachmentUploadCtrl.files" name="file"
+                                   accept="application/pdf" required="{{!attachmentUploadCtrl.metadata.uuid}}"
+                                   ng-required="!attachmentUploadCtrl.metadata.uuid && attachmentUploadCtrl.type != 'URL'">
+                        </span>
+                        <span class="font-xsmall">{{ attachmentUploadCtrl.files[0].name }}</span>
                     </div>
 
                     <div class="col-sm-9 margin-top-1" ng-show="attachmentUploadCtrl.metadata.uuid">

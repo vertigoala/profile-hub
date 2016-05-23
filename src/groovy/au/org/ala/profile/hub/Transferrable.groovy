@@ -1,6 +1,5 @@
 package au.org.ala.profile.hub
 
-import org.apache.tika.config.TikaConfig
 import org.springframework.web.multipart.MultipartFile
 
 import javax.annotation.concurrent.NotThreadSafe
@@ -19,22 +18,18 @@ trait Transferrable {
     abstract String getOriginalFilename()
 
     String getFileExtension() {
-        try {
-            TikaConfig.defaultConfig.mimeRepository.forName(contentType).extension
-        } catch (MimeTypeException) {
-            ''
-        }
+        Utils.getExtension(originalFilename) ?: Utils.getExtensionFromContentType(contentType)
     }
 
-    void to(OutputStream os) throws IOException {
+    void transferTo(OutputStream os) throws IOException {
         inputStream.withStream { is ->
             os << is
         }
     }
 
-    void to(File file) throws IOException, IllegalStateException {
+    void transferTo(File file) throws IOException, IllegalStateException {
         file.withOutputStream { os ->
-            to(os)
+            transferTo(os)
         }
     }
 }
@@ -44,13 +39,10 @@ class MultipartFileTransferrableAdapter implements Transferrable {
     @Delegate MultipartFile multipartFile
 
     @Override
-    String getFileExtension() {
-        Utils.getExtension(this.originalFilename) ?: Transferrable.super.fileExtension
-    }
-
-    @Override
-    void to(File file) {
-        this.transferTo(file)
+    void transferTo(File file) throws IOException, IllegalStateException {
+        // the trait method would take precedence over the delegate
+        // so explicitly use the mutlipartFile.transferTo(file) method.
+        multipartFile.transferTo(file)
     }
 }
 
@@ -82,7 +74,7 @@ class UrlTransferrableAdapter implements Transferrable, Closeable, AutoCloseable
                     String pathPart = path.substring(idx + 1)
                     if (pathPart) {
                         if (Utils.getExtension(pathPart) == '') {
-                            pathPart += fileExtension
+                            pathPart += Utils.getExtensionFromContentType(contentType)
                         }
                         filename = pathPart
                     }
@@ -90,7 +82,7 @@ class UrlTransferrableAdapter implements Transferrable, Closeable, AutoCloseable
             }
 
             if (!filename) {
-                filename = 'image' + fileExtension
+                filename = 'image' + Utils.getExtensionFromContentType(contentType)
             }
             _filename = filename
         }

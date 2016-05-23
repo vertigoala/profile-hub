@@ -7,7 +7,11 @@
         </p>
         <br/>
         <div>
-            <input type="file" id="taxaUploadFile" name="taxaUploadFile" />
+            <span class="btn btn-default btn-file">
+                Choose file
+                <input type="file" id="taxaUploadFile" name="taxaUploadFile" ngf-select="" ng-model="taxaFile"/>
+            </span>
+            <span class="font-xsmall">{{ taxaFile[0].name }}</span>
         </div>
         <br/>
         <button class="btn" ng-click="taxaUpload()"><i class="icon-upload"></i> Upload taxa</button>

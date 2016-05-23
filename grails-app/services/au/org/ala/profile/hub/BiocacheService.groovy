@@ -95,7 +95,7 @@ class BiocacheService {
         //Images sent directly to central service on upload
         if (file instanceof Transferrable) {
             filename = "$imageId${file.fileExtension}"
-            file.to(new File(tempDir, filename))
+            file.transferTo(new File(tempDir, filename))
         }
         else if (file instanceof MultipartFile) {
             String extension = file.originalFilename.substring(file.originalFilename.lastIndexOf("."))

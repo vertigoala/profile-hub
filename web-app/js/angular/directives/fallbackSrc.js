@@ -3,7 +3,6 @@ profileEditor.directive('fallbackSrc', function ($log) {
     restrict: 'A',
     link: function postLink(scope, element, attrs) {
       element.bind('error', function (e) {
-        $log.debug(e);
         angular.element(this).attr("src", attrs.fallbackSrc);
       });
     }

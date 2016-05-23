@@ -1,5 +1,8 @@
 package au.org.ala.profile.hub
 
+import org.apache.tika.config.TikaConfig
+import org.apache.tika.mime.MimeTypeException
+
 import java.nio.file.Files
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -42,6 +45,14 @@ class Utils {
         }
         final idx = fileName.lastIndexOf(".")
         return idx == -1 ? '' : fileName.substring(idx)
+    }
+
+    static String getExtensionFromContentType(String contentType) {
+        try {
+            TikaConfig.defaultConfig.mimeRepository.forName(contentType).extension
+        } catch (MimeTypeException e) {
+            ''
+        }
     }
 
     static String enc(String value) {

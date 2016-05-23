@@ -439,7 +439,7 @@ class OpusController extends BaseController {
                 imageFile.delete()
             }
 
-            transferrable.to(imageFile)
+            transferrable.transferTo(imageFile)
 
             render ([imageUrl: "${request.contextPath}/opus/${opus.uuid}/image/${imageFile.getName()}"] as JSON)
         } else {

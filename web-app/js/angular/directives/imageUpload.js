@@ -9,6 +9,7 @@ profileEditor.directive('imageUpload', function ($browser, $http, config) {
             uploadOnEvent: '@', // name of the event to be $broadcast by the parent scope to trigger the upload (e.g. when embedding the upload form in a larger form with a single OK button)
             updateOnEvent: '@?', // name of the event to be $broadcast by the parent scope to trigger saving metadata
             showMetadata: '@', // true to ask for metadata fields, false to just ask for the file
+            disableSource: '=?', // true to disable source selection and only offer the default (file upload)
             uploadUrl: '@url' // the url to post the file to
         },
         templateUrl: $browser.baseHref() + 'static/templates/imageUpload.html',
@@ -22,8 +23,10 @@ profileEditor.directive('imageUpload', function ($browser, $http, config) {
                 $scope.updateMode = false;
                 $scope.metadata = {rightsHolder: $scope.opus.title};
             }
+            $scope.disableSource = angular.isDefined($scope.disableSource) ? $scope.disableSource : false;
             self.files = [];
             self.url = '';
+            self.source = 'file';
             $scope.error = null;
             $scope.showMetadata = true;
 

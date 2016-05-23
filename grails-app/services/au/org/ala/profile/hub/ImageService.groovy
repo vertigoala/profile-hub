@@ -6,7 +6,6 @@ import au.org.ala.images.tiling.ImageTiler
 import au.org.ala.images.tiling.ImageTilerConfig
 import au.org.ala.ws.service.WebService
 import org.apache.commons.io.FileUtils
-import org.springframework.web.multipart.MultipartFile
 
 import javax.imageio.ImageIO
 import java.awt.*
@@ -182,7 +181,7 @@ class ImageService {
         localDir.mkdirs()
 
         File imageFile = new File(localDir, "${metadata.imageId}${extension}")
-        file.to(imageFile)
+        file.transferTo(imageFile)
 
         // create tiles
         File tileDir = new File(localDir, "${metadata.imageId}_tiles")
