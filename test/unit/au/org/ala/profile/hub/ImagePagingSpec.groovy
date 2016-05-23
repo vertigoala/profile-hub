@@ -21,6 +21,8 @@ class ImagePagingSpec extends Specification {
     @Shared
     BiocacheService biocacheServiceMockImages
     @Shared
+    BiocacheService biocacheServiceMockMoreImages
+    @Shared
     ProfileService profileService
     @Shared
     ImageService imageService
@@ -47,12 +49,20 @@ class ImagePagingSpec extends Specification {
         biocacheServiceMockNoImages.retrieveImagesPaged(_, _, _, _) >> [:]
         biocacheServiceMockNoImages.imageCount(*_) >> [resp: [totalRecords: 0]]
         biocacheServiceMockImages = Mock(BiocacheService)
+        biocacheServiceMockMoreImages = Mock(BiocacheService)
         biocacheServiceMockImages.retrieveImagesPaged(_, _, '3', '0') >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"]]]]
         biocacheServiceMockImages.retrieveImagesPaged(_, _, '4', '0') >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"], [image: "published4"]]]]
         biocacheServiceMockImages.retrieveImagesPaged(_, _, '5', '3') >> [statusCode: 200, resp: [occurrences: [[image: "published4"], [image: "published5"], [image: "published6"], [image: "published7"], [image: "published8"]]]]
         biocacheServiceMockImages.retrieveImagesPaged(_, _, '5', '8') >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
         biocacheServiceMockImages.retrieveImagesPaged(_, _, '5', '15') >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
         biocacheServiceMockImages.imageCount(*_) >> [resp: [totalRecords: 11]]
+
+        biocacheServiceMockMoreImages = Mock(BiocacheService)
+        biocacheServiceMockMoreImages.imageCount(*_) >> [resp: [totalRecords: 11]]
+        biocacheServiceMockMoreImages.retrieveImagesPaged(_, _, '5', '0') >> [statusCode: 200, resp: [occurrences: publishedImages[0..4]]]
+        biocacheServiceMockMoreImages.retrieveImagesPaged(_, _, '5', '5') >> [statusCode: 200, resp: [occurrences: publishedImages[5..9]]]
+        biocacheServiceMockMoreImages.retrieveImagesPaged(_, _, '5', '10') >> [statusCode: 200, resp: [occurrences: publishedImages[10..10]]]
+        biocacheServiceMockMoreImages.retrieveImagesPaged(_, _, '5', '15') >> [statusCode: 200, resp: [occurrences: [:]]]
 
     }
 
@@ -157,8 +167,7 @@ class ImagePagingSpec extends Specification {
 
     }
 
-
-    def "Image Paging - multiple pages when there are no published images, only Private or only Staged "() {
+    def "Image Paging - multiple pages when there are is only 1 type of image: published, private or staged "() {
         given: "a profile containing images"
         profileService = Mock(ProfileService)
         profileService.getProfile(_, _, _) >> profileResponse
@@ -168,10 +177,6 @@ class ImagePagingSpec extends Specification {
         Integer offset2 = pageSize * 1
         Integer offset3 = pageSize * 2
         Integer offset4 = pageSize * 3
-        Integer totalNumberOfImages = profileResponse.profile.privateImages.size()
-        if (totalNumberOfImages == 0) {
-            totalNumberOfImages = profileResponse.profile.stagedImages.size()
-        }
         when: "we request pages of all images sequentially"
         def alaResponse = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize.toString(), String.valueOf(offset))
         List imagesPage1 = alaResponse.resp.images
@@ -189,7 +194,7 @@ class ImagePagingSpec extends Specification {
         and: "the second page has the correct number of images"
         assertTrue(test_description + ' - page 2 does NOT have the correct number of images', imagesPage2.size() == pageSize)
         and: "the third page has the correct number of images"
-        assertTrue(test_description + ' - page 3 does NOT have the correct number of images', imagesPage3.size() == totalNumberOfImages - offset3)
+        assertTrue(test_description + ' - page 3 does NOT have the correct number of images', imagesPage3.size() == page3Size)
         and: "there is no fourth page"
         assertTrue(test_description + ' - page 4 does NOT have the correct number of images', imagesPage4.size() == 0)
         and: "the first image on the second page is the image immediately after the last image on the first page"
@@ -201,9 +206,10 @@ class ImagePagingSpec extends Specification {
         and: "all images are accounted for"
         assertTrue(test_description + ' - not all images were accounted for', count == (imagesPage1.size() + imagesPage2.size() + imagesPage3.size() + imagesPage4.size()))
         where: "combinations of image types are"
-        profileResponse                                                                                                                                                || image1Id | biocacheService | test_description
-        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateImages: privateImagesComplex], opus: [keepImagesPrivate: true, uuid: 'collection1']]            || 'imageId1' | biocacheServiceMockNoImages | "Private images only"
-        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex, privateImages: []], opus: [uuid: 'collection1']] || 'staged1' | biocacheServiceMockNoImages | "Staged images only"
+        profileResponse                                                                                                                                                || image1Id | page3Size | totalNumberOfImages | biocacheService | test_description
+        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateImages: privateImagesComplex], opus: [keepImagesPrivate: true, uuid: 'collection1']]            || 'imageId1' | 2 | 12 | biocacheServiceMockNoImages | "Private images only"
+        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex, privateImages: []], opus: [uuid: 'collection1']] || 'staged1' | 2 | 12 | biocacheServiceMockNoImages | "Staged images only"
+        [profile: [scientificName: 'Olympia', uuid: 'profile1', stagedImages: [], privateImages: []], opus: [uuid: 'collection1']]                                     || 'published1' | 1 | 11 | biocacheServiceMockMoreImages | "Published images only"
     }
 
     def "Combinations of images of different types paging"() {
@@ -235,10 +241,10 @@ class ImagePagingSpec extends Specification {
         and: "all images are accounted for"
         assert (count == (imagesPage3.size() + imagesPage4.size()) + imagesPage5.size() + 10) //10 is the first 2 pages which we aren't using in this test
         where: "combinations of image types are"
-        profileResponse                                                                                                                                                                  || image1Id | image2Id | lastPageSize | biocacheService | test_description
-        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateImages: privateImagesComplex], opus: [keepImagesPrivate: true, uuid: 'collection1']]                              || 'imageId11' | 'published3' | 3 | biocacheServiceMockImages | "Private and published images"
-        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex, privateImages: []], opus: [uuid: 'collection1']]                   || 'staged11' | 'published3' | 3 | biocacheServiceMockImages | "Staged and published images"
-        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex, privateImages: privateImagesComplex], opus: [uuid: 'collection1']] || 'imageId11' | 'staged3' | 4 | biocacheServiceMockNoImages | "Private and staged images"
+        profileResponse                                                                                                                                                                              || image1Id | image2Id | lastPageSize | biocacheService | test_description
+        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateImages: privateImagesComplex], opus: [keepImagesPrivate: true, uuid: 'collection1']]                                          || 'imageId11' | 'published3' | 3 | biocacheServiceMockImages | "Private and published images"
+        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex, privateImages: []], opus: [uuid: 'collection1']]                               || 'staged11' | 'published3' | 3 | biocacheServiceMockImages | "Staged and published images"
+        [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex, privateImages: privateImagesComplex], opus: [uuid: 'collection1']]             || 'imageId11' | 'staged3' | 4 | biocacheServiceMockNoImages | "Private and staged images"
         [profile: [scientificName: 'Olympia', uuid: 'profile1', privateMode: true, stagedImages: stagedImagesComplex[0..5], privateImages: privateImagesComplex[0..5]], opus: [uuid: 'collection1']] || 'staged5' | 'published3' | 3 | biocacheServiceMockImages | "Private, staged and published images"
     }
 
