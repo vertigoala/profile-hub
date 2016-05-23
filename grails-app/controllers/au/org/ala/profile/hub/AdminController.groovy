@@ -27,4 +27,11 @@ class AdminController extends BaseController {
 
         handle response
     }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def rematchNames() {
+        def response = webService.post("${grailsApplication.config.profile.service.url}/admin/rematchNames", [opusIds: request.getJSON()?.opusIds?.split(",")])
+
+        handle response
+    }
 }

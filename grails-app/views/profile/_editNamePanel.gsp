@@ -16,6 +16,7 @@
                 <div class="col-md-12">
                     <p>
                         Current matched name: <span data-ng-bind-html="profileCtrl.profile.matchedName.formattedName | default: 'Not matched' | sanitizeHtml"></span>
+                        <span ng-show="profileCtrl.profile.manuallyMatchedName">(manually matched by the editor)</span>
                     </p>
                 </div>
             </div>

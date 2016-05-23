@@ -53,7 +53,10 @@
             <tr ng-repeat="profile in reportCtrl.reportData.records">
                 <td>
                     <a href="${request.contextPath}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.profileName.scientificName }}"
-                       target="_blank"><span data-ng-bind-html="profile.profileName | formatProfileName | sanitizeHtml"></span></a>
+                       target="_blank">
+                        <span data-ng-bind-html="profile.profileName | formatProfileName | sanitizeHtml"></span>
+                        <span ng-show="profile.manuallyMatchedName">&nbsp;*</span>
+                    </a>
                 </td>
                 <td>
                     <span data-ng-bind-html="profile.matchedName | formatProfileName | default:'Not matched' | sanitizeHtml"></span>
@@ -68,6 +71,7 @@
             </tr>
             </tbody>
         </table>
+        <div class="pull-right small">Names marked with an asterisk * have been explicitly matched to the Matched Name by the editor</div>
         <pagination total-items="reportCtrl.reportData.recordCount"
                     ng-change="reportCtrl.loadReport(reportCtrl.selectedReport.id, (reportCtrl.page - 1) * reportCtrl.pageSize)"
                     ng-model="reportCtrl.page" max-size="10" class="pagination-sm"
