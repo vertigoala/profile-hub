@@ -7,7 +7,7 @@ import org.apache.http.entity.ContentType
 
 class AsynchPDFJob {
     static triggers = {
-        simple repeatInterval: 5000L // execute job once in 5 seconds
+        simple repeatInterval: 60000L // execute job once in 60 seconds
     }
 
     def grailsApplication
@@ -15,6 +15,7 @@ class AsynchPDFJob {
     EmailService emailService
     WebService webService
 
+    // Make sure only 1 job executes at a time to avoid overloading heap usage with multiple large pdfs
     def concurrent = false
 
     def execute() {
@@ -32,7 +33,7 @@ class AsynchPDFJob {
                     log.error("Exception occurred during attempt ${pdf.attempt} of PDF Job ${pdf.jobId}", e)
                     pdf.attempt = pdf.attempt + 1
                     pdf.error = e.message
-                    webService.post("${grailsApplication.config.profile.service.url}/job/${pdf.jobType}/${pdf.jobId}", pdf, [:], ContentType.APPLICATION_JSON, true, false)
+                    webService.post("${grailsApplication.config.profile.service.url}/job/${pdf.jobType.name}/${pdf.jobId}", pdf, [:], ContentType.APPLICATION_JSON, true, false)
                 }
             } else {
                 sendMaxAttemptsFailedEmail(pdf)
