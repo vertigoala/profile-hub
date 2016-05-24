@@ -137,6 +137,8 @@ class UrlMappings {
         "/admin/reloadConfig" controller: "admin", action: [POST: "reloadConfig"]
         "/admin/reindex" controller: "admin", action: [POST: "reindex"]
         "/admin/rematchNames" controller: "admin", action: [POST: "rematchNames"]
+        "/admin/job/$jobType/$jobId" controller: "admin", action: [DELETE: "deleteJob"]
+        "/admin/job/" controller: "admin", action: [GET: "listPendingJobs"]
         "/admin" controller: "admin", action: [GET: "index"]
         "/alaAdmin/index" controller: "admin", action: [GET: "alaIndex"]
         "/alaAdmin" controller: "admin", action: [GET: "alaIndex"]

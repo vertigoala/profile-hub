@@ -11,7 +11,6 @@ import net.glxn.qrgen.image.ImageType
 import net.sf.jasperreports.engine.data.JsonDataSource
 import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
-import org.springframework.scheduling.annotation.Async
 import org.springframework.web.context.request.RequestContextHolder
 
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -56,26 +55,25 @@ class ExportService {
     ]
 
 
-    @Async
     void createPdfAsych(Map params, boolean latest = false) {
-        try {
-            String filename = UUID.randomUUID()
-            File f = new File("${grailsApplication.config.temp.file.location}/${filename}.pdf")
-            f.withOutputStream { fileStream ->
-                createPdf(params, fileStream, latest)
-            }
+        profileService.createPDFJob(params, latest)
+    }
 
-            String url = "${grailsApplication.config.grails.serverURL}/opus/${params.opusId}/profile/${params.profileId}/file/${filename}.pdf"
-            emailService.sendEmail(params.email, "${params.opusTitle}<no-reply@ala.org.au>", "Your file is ready to download",
-                    """<html><body>
-                        <p>The PDF you requested from ${params.opusTitle} can now be downloaded from <a href='${url}'>this url</a>.</p>
-                        <p>Please note that this file will only remain on the server for a few days.</p>
-                        <p>This is an automated email. Please do not reply.</p>
-                        </body></html>""")
-        } catch (Exception e) {
-            log.error("Failed to generated PDF", e)
-            emailService.sendEmail(params.email, "${params.opusTitle}<no-reply@ala.org.au>", "PDF generation failed", "We are sorry to inform you that an error occurred while generating the PDF you requested. Please try again.")
+    @NotTransactional
+    void createAndEmailPDF(Map params, boolean latest = false) {
+        String filename = UUID.randomUUID()
+        File f = new File("${grailsApplication.config.temp.file.location}/${filename}.pdf")
+        f.withOutputStream { fileStream ->
+            createPdf(params, fileStream, latest)
         }
+
+        String url = "${grailsApplication.config.grails.serverURL}/opus/${params.opusId}/profile/${params.profileId}/file/${filename}.pdf"
+        emailService.sendEmail(params.email, "${params.opusTitle}<no-reply@ala.org.au>", "Your file is ready to download",
+                """<html><body>
+                    <p>The PDF you requested from ${params.opusTitle} can now be downloaded from <a href='${url}'>this url</a>.</p>
+                    <p>Please note that this file will only remain on the server for a few days.</p>
+                    <p>This is an automated email. Please do not reply.</p>
+                    </body></html>""")
     }
 
     @NotTransactional

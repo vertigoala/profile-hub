@@ -14,6 +14,7 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
     };
 
     loadOpusList();
+    loadPendingJobs();
 
     self.reindex = function () {
         var promise = $http.post(util.contextRoot() + "/admin/reindex");
@@ -48,6 +49,19 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
         }
     };
 
+    self.deleteJob = function(jobType, jobId) {
+        var confirm = util.confirm("Are you sure you want to delete this job?");
+        confirm.then(function() {
+            var promise = $http.delete(util.contextRoot() + "/admin/job/" + jobType + "/" + jobId);
+            promise.then(function() {
+                messageService.success("Job deleted");
+                loadPendingJobs();
+            }, function() {
+                messageService.alert("Failed to delete the job");
+            });
+        });
+    };
+
     function loadOpusList() {
         self.collectionMultiSelectOptions.items.length = 0;
 
@@ -58,6 +72,17 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
                     name: opus.title
                 });
             });
+        });
+    }
+
+    function loadPendingJobs() {
+        self.loadingPendingJobs = true;
+        var promise = $http.get(util.contextRoot() + "/admin/job/");
+        promise.then(function (response) {
+            self.jobs = response.data.jobs;
+            self.loadingPendingJobs = false;
+        }, function() {
+            self.loadingPendingJobs = false;
         });
     }
 });

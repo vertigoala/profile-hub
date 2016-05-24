@@ -7,9 +7,12 @@ import grails.converters.JSON
 import grails.util.Environment
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
+import javax.validation.constraints.NotNull
+
 class AdminController extends BaseController {
 
     WebService webService
+    ProfileService profileService
 
     @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
     def index() {
@@ -31,6 +34,20 @@ class AdminController extends BaseController {
     @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
     def rematchNames() {
         def response = webService.post("${grailsApplication.config.profile.service.url}/admin/rematchNames", [opusIds: request.getJSON()?.opusIds?.split(",")])
+
+        handle response
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def listPendingJobs() {
+        def response = webService.get("${grailsApplication.config.profile.service.url}/job")
+
+        handle response
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def deleteJob(@NotNull String jobType, @NotNull String jobId) {
+        def response = webService.delete("${grailsApplication.config.profile.service.url}/job/${jobType}/${jobId}")
 
         handle response
     }

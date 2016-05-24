@@ -1,5 +1,7 @@
 package au.org.ala.profile.hub
 
+import org.apache.http.entity.ContentType
+
 import static au.org.ala.profile.hub.Utils.enc
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
@@ -459,7 +461,8 @@ class ProfileService {
 
     def getStatistics(String opusId) {
         def urlPrefix = "${grailsApplication.config.profile.service.url}/statistics"
-        return webService.get("${urlPrefix}?opusId=${enc(opusId)}")
+
+        webService.get("${urlPrefix}?opusId=${enc(opusId)}")
     }
 
     def getFeatureLists(String opusId, String profileId) {
@@ -478,7 +481,20 @@ class ProfileService {
         result
     }
 
-    def getProfileKVP(String profileId, String drid) {
+    Map getNextPendingPDFJob() {
+        webService.get("${grailsApplication.config.profile.service.url}/job/pdf/next", [:], ContentType.APPLICATION_JSON, true, false)
+    }
+
+    void createPDFJob(Map params, boolean latest) {
+        params.latest = latest;
+        webService.put("${grailsApplication.config.profile.service.url}/job/pdf/", [params: params])
+    }
+
+    void updatePDFJob(String jobId, Map params) {
+        webService.post("${grailsApplication.config.profile.service.url}/job/pdf/${jobId}", params)
+    }
+
+    private def getProfileKVP(String profileId, String drid) {
         List result = []
         def list = getListItems(drid);
         if (list) {
