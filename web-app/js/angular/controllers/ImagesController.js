@@ -320,6 +320,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
     };
 
     self.imageCaption = function (image) {
+        if (!image) return '';
         if (image.caption) {
             return image.caption;
         }
