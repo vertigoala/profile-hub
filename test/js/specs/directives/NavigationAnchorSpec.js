@@ -75,7 +75,7 @@ describe('Directive: NavigationAnchor', function() {
 
 
     it("will strip anchor prefixes of edit_ to make a more predicable key for explicit registration but still have descriptive anchors", function() {
-        content = '<navigation-anchor anchor-name="edit_key" title="Label"></navigation-anchor>';
+        var content = '<navigation-anchor anchor-name="edit_key" title="Label"></navigation-anchor>';
         // Compile a piece of HTML containing the directive
         var element = $compile(content)($rootScope);
         $rootScope.$apply();
