@@ -75,9 +75,7 @@ profileEditor.factory('navService', ['$filter', '$rootScope', '$document', funct
 
         if (!getItem(key)) {
             var item = {label: label, key: key, anchor: anchor, category: category, tab:tab};
-            if (key == 'images') {
-                item.tab = 'tab-3';
-            }
+
             $rootScope.nav.push(item);
             $rootScope.nav = orderBy($rootScope.nav, 'label');
 
