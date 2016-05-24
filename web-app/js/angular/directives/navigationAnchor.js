@@ -42,19 +42,19 @@ profileEditor.directive('navigationAnchor', ['navService', function (navService)
                 return self.tab;
             };
 
-            self.keyFromAnchor = function(anchor) {
-                if (anchor.startsWith('view_') || anchor.startsWith('edit_')) {
-                    return anchor.substring(5);
-                }
-                return anchor;
-            };
+            self.key = self.anchorName;
+            // Strip a view_ or edit_ prefix to allow keys to be referenced in code more easily but leave the
+            // more descriptive form as the html anchor.
+            if (self.key.indexOf('view_') == 0 || self.key.indexOf('edit_') == 0) {
+                self.key = self.key.substring(5);
+            }
 
             $scope.$watch(self.condition, function() {
                 if (_.isUndefined(self.condition()) || self.condition()) {
-                    navService.add(self.title, self.keyFromAnchor(self.anchorName), self.anchorName, self.category, self.getTab(), self.onDisplay);
+                    navService.add(self.title, self.key, self.anchorName, self.category, self.getTab(), self.onDisplay);
                 }
                 else {
-                    navService.remove(self.title, self.anchorName);
+                    navService.remove(self.title, self.key);
                 }
             });
 
