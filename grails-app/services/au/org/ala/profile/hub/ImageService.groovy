@@ -339,13 +339,9 @@ class ImageService {
         imagesPage
     }
 
-
-    def retrieveImages(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
+    def retrieveImages(Map opus, Map profile, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
         Map response = [:]
         List allImages = []
-        def model = profileService.getProfile(opusId, profileId, latest)
-        def profile = model.profile
-        def opus = model.opus
 
         def publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus)
         if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
@@ -368,6 +364,14 @@ class ImageService {
         response.resp = allImages
 
         response
+    }
+
+    def retrieveImages(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
+        def model = profileService.getProfile(opusId, profileId, latest)
+        def profile = model.profile
+        def opus = model.opus
+
+        retrieveImages(opus, profile, searchIdentifier, useInternalPaths, readonlyView)
     }
 
     List prepareImagesForDisplay(def retrievedImages, def opus, def profile, boolean readonlyView) {

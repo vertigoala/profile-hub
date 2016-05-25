@@ -63,6 +63,7 @@
                         <th>User</th>
                         <th>Job Type</th>
                         <th>Attempts</th>
+                        <th>Started</th>
                         <th>Created</th>
                         <th></th>
                         </thead>
@@ -72,6 +73,7 @@
                             <td>{{ job.userEmail }}</td>
                             <td>{{ job.jobType.name }}</td>
                             <td>{{ job.attempts }} <span ng-show="job.error">Last error: {{ job.error }}, {{ job.lastUpdated }}</span></td>
+                            <td>{{ job.startDate }}</td>
                             <td>{{ job.dateCreated }}</td>
                             <td>
                                 <button class="btn btn-sm btn-link" ng-click="adminCtrl.deleteJob(job.jobType.name, job.jobId)"><span class="fa fa-trash-o color--red"></span></button>

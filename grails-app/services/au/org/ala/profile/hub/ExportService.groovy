@@ -8,7 +8,9 @@ import grails.converters.JSON
 import grails.transaction.NotTransactional
 import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
+import net.sf.jasperreports.engine.JRParameter
 import net.sf.jasperreports.engine.data.JsonDataSource
+import net.sf.jasperreports.engine.fill.JRFileVirtualizer
 import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
 import org.springframework.web.context.request.RequestContextHolder
@@ -90,7 +92,7 @@ class ExportService {
     @NotTransactional
     void createPdf(Map params, Closure<OutputStream> outputStreamSupplier, boolean latest = false) {
         // Create curated report model
-        Map curatedModel = getCurateReportModel(params, latest)
+        Map curatedModel = getCurateReportModel(params)
 
         // Transform curated model to JSON format input stream
         InputStream inputStream = IOUtils.toInputStream((curatedModel as JSON).toString(), "UTF-8")
@@ -116,8 +118,13 @@ class ExportService {
                         'QR_CODE'                : qrCodeInputStream
                 ]
         )
-
-        jasperService.generateReport(reportDef, outputStreamSupplier)
+        JRFileVirtualizer virtualizer = new JRFileVirtualizer(20, System.getProperty("java.io.tmpdir"))
+        reportDef.addParameter(JRParameter.REPORT_VIRTUALIZER, virtualizer)
+        try {
+            jasperService.generateReport(reportDef, outputStreamSupplier)
+        } finally {
+            virtualizer.cleanup()
+        }
     }
 
     /**
@@ -126,14 +133,14 @@ class ExportService {
      * @param latest (optional) = defaults to false
      * @return
      */
-    private Map getCurateReportModel(Map params, boolean latest = false) {
+    private Map getCurateReportModel(Map params) {
         def curatedModel = [
                 options : params,
                 profiles: [] as ConcurrentLinkedQueue
         ]
 
-        def opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
-        curatedModel.profiles << loadProfileData(params.profileId as String, opus, params, latest)
+        Map opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
+        curatedModel.profiles << loadProfileData(params.profileId as String, opus, params)
 
         if (params.children && curatedModel.profiles[0].profile.rank) {
             def children = profileService.findByNameAndTaxonLevel(params.opusId, curatedModel.profiles[0].profile.rank, curatedModel.profiles[0].profile.scientificName, "99999", "0", "taxonomy", false)?.resp
@@ -147,7 +154,7 @@ class ExportService {
             withPool(THREAD_COUNT) {
                 children.eachParallel {
                     if (it.profileId != params.profileId && it.scientificName != params.profileId) {
-                        Map profile = loadProfileData(it.profileId, opus, params, latest)
+                        Map profile = loadProfileData(it.profileId, opus, params)
                         profile.taxonomicOrder = it.taxonomicOrder
                         curatedModel.profiles << profile
                     }
@@ -200,12 +207,11 @@ class ExportService {
      * @param profileId
      * @param opus
      * @param params
-     * @param latest (optional) = defaults to false
      * @return
      */
-    private Map loadProfileData(String profileId, opus, Map params, boolean latest = false) {
+    private Map loadProfileData(String profileId, Map opus, Map params) {
 
-        Map model = [:]
+        Map<String, Map> model = [:]
         model.profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${opus.uuid}/profile/${URLEncoder.encode(profileId, "UTF-8")}?latest=${false}")?.resp
 
         if (params.taxonomy || params.conservation) {
@@ -216,7 +222,7 @@ class ExportService {
                 it.regionAbbrev = statusRegions[it.region]
             }
 
-            model.profile.classifications = profileService.getClassification(opus.uuid, params.profileId, model.profile.guid)?.resp
+            model.profile.classifications = model.profile.classification.collect { [rank: it.rank, scientificName: it.name] }
             if (model.profile.classifications && model.profile.taxonomyTree) {
                 model.profile.classifications.add(0, [rank: "Source", scientificName: model.profile.taxonomyTree])
             }
@@ -243,7 +249,7 @@ class ExportService {
         // incrementing number to be displayed against all images in the report (e.g. Fig 1,...)
         int figureNumber = 1
 
-        model.profile.images = imageService.retrieveImages(opus.uuid, profileId, latest, searchIdentifier, true)?.resp
+        model.profile.images = imageService.retrieveImages(opus, model.profile, searchIdentifier, true)?.resp
         List<Map> images = model.profile.images
 
         def replaceTitleWithOptionalCaption = { Map m -> m?.metadata?.title = m?.caption ? m?.caption : m?.metadata?.title }

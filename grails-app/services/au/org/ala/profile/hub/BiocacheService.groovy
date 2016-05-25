@@ -13,7 +13,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 class BiocacheService {
 
-    static final int DEFAULT_BIOCACHE_PAGE_SIZE = 50 // the biocache default is only 10, we want more than that
+    static final int DEFAULT_BIOCACHE_PAGE_SIZE = 20 // used when NOT paging the images. The biocache default is only 10
 
     WebService webService
     def grailsApplication
@@ -47,7 +47,7 @@ class BiocacheService {
         return response
     }
 
-    def retrieveImages(String searchIdentifier, Map opus) {
+    def retrieveImages(String searchIdentifier, Map opus, int pageSize = DEFAULT_BIOCACHE_PAGE_SIZE, int startIndex = 0) {
         if (!searchIdentifier) {
             return [:]
         }
@@ -58,7 +58,7 @@ class BiocacheService {
 
         log.debug("Image query = ${imagesQuery}")
 
-        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${DEFAULT_BIOCACHE_PAGE_SIZE}")
+        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
     }
 
     String constructQueryString(String searchIdentifier, Map opus) {
