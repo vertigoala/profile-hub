@@ -28,37 +28,23 @@ class BiocacheService {
         String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
         String imagesQuery = constructQueryString(searchIdentifier, opus)
         Map biocacheResult = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&facets=multimedia&flimit=0&foffset=0&fq=multimedia:Image&pageSize=0")
-        def resp = [:]
-        resp.statusCode = biocacheResult?.statusCode
-        resp.resp = ['totalRecords': biocacheResult?.resp?.totalRecords]
-        return resp
-    }
 
-    def retrieveImagesPaged(String searchIdentifier, Map opus, String pageSize, String startIndex) {
-        if (!searchIdentifier) {
-            return [:]
-        }
-
-        String imagesQuery = constructQueryString(searchIdentifier, opus)
-        log.debug("Fetching images for ${searchIdentifier} using query ${imagesQuery}")
-        String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
-
-        def response = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
-        return response
+        [statusCode: biocacheResult?.statusCode, resp: [totalRecords: biocacheResult?.resp?.totalRecords]]
     }
 
     def retrieveImages(String searchIdentifier, Map opus, int pageSize = DEFAULT_BIOCACHE_PAGE_SIZE, int startIndex = 0) {
-        if (!searchIdentifier) {
-            return [:]
+        Map result = [:]
+        if (searchIdentifier) {
+            String imagesQuery = constructQueryString(searchIdentifier, opus)
+            log.debug("Fetching images for ${searchIdentifier} using query ${imagesQuery}")
+            String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
+
+            log.debug("Image query = ${imagesQuery}")
+
+            result = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
         }
 
-        String imagesQuery = constructQueryString(searchIdentifier, opus)
-        log.debug("Fetching images for ${searchIdentifier} using query ${imagesQuery}")
-        String biocacheImageSearchUrl = "${grailsApplication.config.image.search.url}${grailsApplication.config.biocache.occurrence.search.path}"
-
-        log.debug("Image query = ${imagesQuery}")
-
-        webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
+        result
     }
 
     String constructQueryString(String searchIdentifier, Map opus) {

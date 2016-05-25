@@ -46,23 +46,23 @@ class ImagePagingSpec extends Specification {
         profileService.getProfile(_, _, _) >> [profile: [scientificName: 'Olympia', uuid: 'profile1', privateImages: privateImages], opus: [keepImagesPrivate: true, uuid: 'collection1', title: 'FindPuffins']]
         imageService.setProfileService(profileService)
         biocacheServiceMockNoImages = Mock(BiocacheService)
-        biocacheServiceMockNoImages.retrieveImagesPaged(_, _, _, _) >> [:]
+        biocacheServiceMockNoImages.retrieveImages(_, _, _, _) >> [:]
         biocacheServiceMockNoImages.imageCount(*_) >> [resp: [totalRecords: 0]]
         biocacheServiceMockImages = Mock(BiocacheService)
         biocacheServiceMockMoreImages = Mock(BiocacheService)
-        biocacheServiceMockImages.retrieveImagesPaged(_, _, '3', '0') >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"]]]]
-        biocacheServiceMockImages.retrieveImagesPaged(_, _, '4', '0') >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"], [image: "published4"]]]]
-        biocacheServiceMockImages.retrieveImagesPaged(_, _, '5', '3') >> [statusCode: 200, resp: [occurrences: [[image: "published4"], [image: "published5"], [image: "published6"], [image: "published7"], [image: "published8"]]]]
-        biocacheServiceMockImages.retrieveImagesPaged(_, _, '5', '8') >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
-        biocacheServiceMockImages.retrieveImagesPaged(_, _, '5', '15') >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 3, 0) >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"]]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 4, 0) >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"], [image: "published4"]]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 5, 3) >> [statusCode: 200, resp: [occurrences: [[image: "published4"], [image: "published5"], [image: "published6"], [image: "published7"], [image: "published8"]]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 5, 8) >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 5, 15) >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
         biocacheServiceMockImages.imageCount(*_) >> [resp: [totalRecords: 11]]
 
         biocacheServiceMockMoreImages = Mock(BiocacheService)
         biocacheServiceMockMoreImages.imageCount(*_) >> [resp: [totalRecords: 11]]
-        biocacheServiceMockMoreImages.retrieveImagesPaged(_, _, '5', '0') >> [statusCode: 200, resp: [occurrences: publishedImages[0..4]]]
-        biocacheServiceMockMoreImages.retrieveImagesPaged(_, _, '5', '5') >> [statusCode: 200, resp: [occurrences: publishedImages[5..9]]]
-        biocacheServiceMockMoreImages.retrieveImagesPaged(_, _, '5', '10') >> [statusCode: 200, resp: [occurrences: publishedImages[10..10]]]
-        biocacheServiceMockMoreImages.retrieveImagesPaged(_, _, '5', '15') >> [statusCode: 200, resp: [occurrences: [:]]]
+        biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 0) >> [statusCode: 200, resp: [occurrences: publishedImages[0..4]]]
+        biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 5) >> [statusCode: 200, resp: [occurrences: publishedImages[5..9]]]
+        biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 10) >> [statusCode: 200, resp: [occurrences: publishedImages[10..10]]]
+        biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 15) >> [statusCode: 200, resp: [occurrences: [:]]]
 
     }
 
@@ -178,13 +178,13 @@ class ImagePagingSpec extends Specification {
         Integer offset3 = pageSize * 2
         Integer offset4 = pageSize * 3
         when: "we request pages of all images sequentially"
-        def alaResponse = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize.toString(), String.valueOf(offset))
+        def alaResponse = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize, offset)
         List imagesPage1 = alaResponse.resp.images
-        def alaResponse2 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize.toString(), String.valueOf(offset2))
+        def alaResponse2 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize, offset2)
         List imagesPage2 = alaResponse2.resp.images
-        def alaResponse3 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize.toString(), String.valueOf(offset3))
+        def alaResponse3 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize, offset3)
         List imagesPage3 = alaResponse3.resp.images
-        def alaResponse4 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize.toString(), String.valueOf(offset4))
+        def alaResponse4 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize, offset4)
         List imagesPage4 = alaResponse4.resp.images
         Integer count = alaResponse.resp.count
         then: "the first page has the correct number of images"
@@ -222,11 +222,11 @@ class ImagePagingSpec extends Specification {
         Integer offset4 = pageSize * 3
         Integer offset5 = pageSize * 4
         when: "we request pages of all images sequentially"
-        def alaResponse3 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize.toString(), String.valueOf(offset3))
+        def alaResponse3 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize, offset3)
         List imagesPage3 = alaResponse3.resp.images
-        def alaResponse4 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize.toString(), String.valueOf(offset4))
+        def alaResponse4 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize, offset4)
         List imagesPage4 = alaResponse4.resp.images
-        def alaResponse5 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize.toString(), String.valueOf(offset5))
+        def alaResponse5 = imageService.retrieveImagesPaged('collection1', 'profile1', true, '', false, true, pageSize, offset5)
         List imagesPage5 = alaResponse5.resp.images
         Integer count = alaResponse3.resp.count
         then: "the third page has the correct number of images"

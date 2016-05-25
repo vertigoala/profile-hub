@@ -246,19 +246,7 @@ class ImageService {
         deleted
     }
 
-    /**
-     *
-     * @param opusId - the collection
-     * @param profileId - the taxon
-     * @param latest
-     * @param searchIdentifier
-     * @param useInternalPaths
-     * @param readonlyView
-     * @param pageSize - equivalent to rows in SOLR i.e how many records to return
-     * @param startIndex - equivalent to start in SOLR i.e. the first record to return
-     * @return MAP containing image metadata and 'statusCode'
-     */
-    def retrieveImagesPaged(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, String pageSize, String startIndex) {
+    def retrieveImagesPaged(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, int pageSize, int startIndex) {
         Map response = [:]
         List combinedImages = []
         Integer numberOfLocalImages = 0
@@ -279,7 +267,7 @@ class ImageService {
             if (profile.privateImages?.size() > 0) {
                 numberOfLocalImages = profile.privateImages.size()
             }
-            List privateImagesPaged = pageImages(profile.privateImages, startIndex.toInteger(), pageSize.toInteger())
+            List privateImagesPaged = pageImages(profile.privateImages, startIndex, pageSize)
             if (privateImagesPaged && privateImagesPaged.size() > 0) {
                 combinedImages.addAll(convertLocalImages(privateImagesPaged, opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
             }
@@ -289,9 +277,9 @@ class ImageService {
         //we want to display the images in a specific order - private, staged, published
         if (profile.privateMode && profile.stagedImages) {
             numberOfLocalImages += profile.stagedImages.size()
-            if (combinedImages.size() < Integer.valueOf(pageSize) && profile.stagedImages.size() > 0) {
-                Integer newPageSize = Integer.valueOf(pageSize) - combinedImages.size() //partial page of private images
-                Integer newStartIndex = Integer.valueOf(startIndex) - profile.privateImages.size() + combinedImages.size()
+            if (combinedImages.size() < pageSize && profile.stagedImages.size() > 0) {
+                Integer newPageSize = pageSize - combinedImages.size() //partial page of private images
+                Integer newStartIndex = startIndex - profile.privateImages.size() + combinedImages.size()
                 List stagedImagesPaged = pageImages(profile.stagedImages, newStartIndex, newPageSize)
                 if (stagedImagesPaged && stagedImagesPaged.size() > 0) {
                     combinedImages.addAll(convertLocalImages(stagedImagesPaged, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
@@ -304,7 +292,7 @@ class ImageService {
         if (combinedImages.size() < Integer.valueOf(pageSize) && numberOfPublishedImagesMap && numberOfPublishedImagesMap?.size() > 0) {
             Integer newPageSize = Integer.valueOf(pageSize) - combinedImages.size() //partial page of private images
             Integer newStartIndex = Integer.valueOf(startIndex) - numberOfLocalImages + combinedImages.size()
-            Map publishedImagesMap = biocacheService.retrieveImagesPaged(searchIdentifier, opus, String.valueOf(newPageSize), String.valueOf(newStartIndex))
+            Map publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus, newPageSize, newStartIndex)
 
             if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
                 List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)

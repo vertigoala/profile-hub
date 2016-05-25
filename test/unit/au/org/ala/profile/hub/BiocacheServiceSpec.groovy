@@ -30,7 +30,7 @@ class BiocacheServiceSpec extends Specification {
 
     def "retrieveImages() should construct the correct Biocache Occurrance Search URL"() {
         setup:
-        String expectedUrl = "http://biocache.base/occurrence/search.json?q=searchId+AND+%28data_resource_uid%3Aid1+OR+data_resource_uid%3Aid2+OR+data_resource_uid%3Aid3%29&fq=multimedia:Image&format=json&im=true&pageSize=${BiocacheService.DEFAULT_BIOCACHE_PAGE_SIZE}"
+        String expectedUrl = "http://biocache.base/occurrence/search.json?q=searchId+AND+%28data_resource_uid%3Aid1+OR+data_resource_uid%3Aid2+OR+data_resource_uid%3Aid3%29&fq=multimedia:Image&format=json&im=true&pageSize=${BiocacheService.DEFAULT_BIOCACHE_PAGE_SIZE}&startIndex=0"
 
         when:
         service.retrieveImages("searchId", [dataResourceUid: "id1", dataResourceConfig: [imageSources: ["id2", "id3"], imageResourceOption: DataResourceOption.RESOURCES.name()]])
