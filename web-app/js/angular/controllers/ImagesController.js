@@ -89,6 +89,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
         if (_.isUndefined(itemsPerPage)) {
             itemsPerPage = self.defaultPageSize;
         }
+
         messageService.info("Loading images...");
 
         var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : "";
@@ -122,6 +123,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 }
 
                 //data for pagination
+                self.offset = offset;
                 self.totalItems = totalNumberOfImages;
                 self.itemsPerPage = itemsPerPage;
                 self.paginate = (self.totalItems > self.itemsPerPage);
@@ -169,7 +171,11 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
         });
     };
 
-    self.editImage = function (image) {
+    self.editImage = function (image, offset, pageNumber) {
+        if (_.isUndefined(pageNumber)) {
+            pageNumber = 1;
+        }
+
         var popup = $modal.open({
             templateUrl: $browser.baseHref() + "static/templates/imageUploadModal.html",
             controller: "ImageUploadController",
@@ -186,7 +192,9 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
         });
 
         popup.result.then(function (image) {
-            self.loadImages();
+            self.page = pageNumber;
+            self.offset = offset;
+            self.loadImages(offset);
         });
     };
 

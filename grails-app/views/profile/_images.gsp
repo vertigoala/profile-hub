@@ -1,11 +1,13 @@
 <div class="panel panel-default" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
     <div ng-if="imageCtrl.images.length > 0 && imageCtrl.readonly" ng-cloak>
-        <navigation-anchor anchor-name="view_images" title="Images" condition="imageCtrl.images.length > 0"></navigation-anchor>
+        <navigation-anchor anchor-name="view_images" title="Images"
+                           condition="imageCtrl.images.length > 0"></navigation-anchor>
 
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span></h4>
+                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span>
+                    </h4>
                 </div>
             </div>
         </div>
@@ -51,9 +53,11 @@
                 %{-- The pagination tag is how you instantiate ui-bootstrap-tpls PaginationController (third party angular javascript 'module')
                     ng-model can contain any name you like and the tag will populate it with the current or selected page number,
                     which can then be used in ng-change; I mention this here because it is not in the module's documentation --}%
-            <pagination ng-show="imageCtrl.paginate" total-items="imageCtrl.totalItems" items-per-page="imageCtrl.itemsPerPage"
-                        ng-model="imageCtrl.page"  max-size="10"  boundary-links="true"  class="pagination-sm" previous-text="Prev" rotate="true"
-                        ng-change="imageCtrl.loadImages((imageCtrl.page - 1) * imageCtrl.itemsPerPage, imageCtrl.itemsPerPage)"></pagination>
+                <pagination ng-show="imageCtrl.paginate" total-items="imageCtrl.totalItems"
+                            items-per-page="imageCtrl.itemsPerPage"
+                            ng-model="imageCtrl.page" max-size="10" boundary-links="true" class="pagination-sm"
+                            previous-text="Prev" rotate="true"
+                            ng-change="imageCtrl.loadImages((imageCtrl.page - 1) * imageCtrl.itemsPerPage, imageCtrl.itemsPerPage)"></pagination>
             </div>
         </div>
     </div>
@@ -64,7 +68,8 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span></h4>
+                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span>
+                    </h4>
                 </div>
             </div>
         </div>
@@ -155,7 +160,7 @@
                                         tooltip="Edit '{{image.metadata.title}}'" tooltip-placement="bottom"
                                         tooltip-append-to-body="true"
                                         class="btn btn-sm btn-default"
-                                        ng-click="imageCtrl.editImage(image)">
+                                        ng-click="imageCtrl.editImage(image, imageCtrl.offset, imageCtrl.page)">
                                     <i class="fa fa-edit"></i> Edit
                                 </button>
                                 <button type="button" aria-label="Push image to open repository"
@@ -177,17 +182,19 @@
                         </div>
                     </div>
 
-
                 </div>
                 %{--Start of pagination div when in EDIT mode--}%
                 <div>
                     %{-- The pagination tag is how you instantiate ui-bootstrap-tpls PaginationController (third party angular javascript 'module')
                         ng-model can contain any name you like and the tag will populate it with the current or selected page number,
                         which can then be used in ng-change; I mention this here because it is not in the module's documentation --}%
-                    <pagination ng-show="imageCtrl.paginate" total-items="imageCtrl.totalItems" items-per-page="imageCtrl.itemsPerPage"
-                                ng-model="imageCtrl.page"  max-size="10" boundary-links="true" class="pagination-sm" previous-text="Prev" rotate="true"
+                    <pagination ng-show="imageCtrl.paginate" total-items="imageCtrl.totalItems"
+                                items-per-page="imageCtrl.itemsPerPage"
+                                ng-model="imageCtrl.page" max-size="10" boundary-links="true" class="pagination-sm"
+                                previous-text="Prev" rotate="true"
                                 ng-change="imageCtrl.loadImages((imageCtrl.page - 1) * imageCtrl.itemsPerPage, imageCtrl.itemsPerPage)"></pagination>
-             </div>
+                </div>
+
                 <div class="small margin-top-1 well" ng-show="!imageCtrl.readonly">
                     <i class="fa fa-info-circle color--medium-blue margin-bottom-1"></i>
 
