@@ -80,6 +80,17 @@
                         </label>
                     </div>
                 </div>
+
+                <h4 class="heading-underlined">Snapshot images</h4>
+                <div class="form-inline">
+                    <div class="checkbox padding-bottom-1">
+                        <label for="allowSnapshots" class="inline-label">
+                            <input id="allowSnapshots" type="checkbox" name="allowSnapshots"
+                                   ng-model="opusCtrl.opus.mapConfig.allowSnapshots" ng-false-value="false">
+                            Allow editors to create static snapshots images of distribution maps.
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

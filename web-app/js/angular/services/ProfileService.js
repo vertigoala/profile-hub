@@ -233,6 +233,22 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        createMapSnapshot: function(opusId, profileId, occurrenceQuery, extents) {
+            var future = enqueue(function () {
+                return $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/map/snapshot", {occurrenceQuery: occurrenceQuery, extents: extents});
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        deleteMapSnapshot: function(opusId, profileId) {
+            var future = enqueue(function () {
+                return $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/map/snapshot");
+            });
+
+            return util.toStandardPromise(future);
+        },
+
         getOpus: function (opusId) {
             $log.debug("Fetching opus " + opusId);
 

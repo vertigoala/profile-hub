@@ -327,10 +327,36 @@ hr.comment-divider {
 .imgCon.thumbnail {
 }
 
+.map-snapshot {
+    display: inline-block;
+    width: 100%
+}
+
+.map-snapshot {
+    display: inline-block;
+    width: 100%;
+}
+
+.top .map-snapshot img {
+    height: 300px;
+    max-height: 300px;
+}
+
+.side .map-snapshot div img {
+    width:100%;
+    max-width:100%;
+    height:auto;
+}
+
+.top .map-snapshot p {
+    min-width: 250px;
+}
+
 .primary-image {
     display: inline-block;
     width: 100%;
 }
+
 .top .primary-image div img {
     height: 300px;
     max-height: 300px;
@@ -1044,4 +1070,8 @@ span.breadcrumb-dropdown {
     margin-top: 20px;
     margin-right: 15px;
     display: inline-block;
+}
+
+.full-width {
+    width: 100%;
 }

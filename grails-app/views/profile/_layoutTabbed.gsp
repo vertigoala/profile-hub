@@ -41,7 +41,7 @@
     <div class="row">
         <div class="col-md-12" ng-cloak>
             <tabset>
-                <tab heading="At a glance" class="font-xxsmall" ng-show="managedTabCtrl.hasContent()" managed-tab>
+                <tab heading="Profile" class="font-xxsmall" ng-show="managedTabCtrl.hasContent()" managed-tab>
                     <div class="row" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
                         <div ng-class="imageCtrl.primaryImage ? 'col-md-9' : 'col-md-12'">
                             <g:render template="attributes"/>
@@ -51,6 +51,7 @@
                             </g:if>
                         </div>
                         <div class="side col-md-3" ng-if="imageCtrl.primaryImage">
+                            <g:render template="mapSnapshot" model="[size: 'small']"/>
                             <g:render template="primaryImage" model="[size: 'small', hideViewAll:true]"/>
                         </div>
                     </div>
@@ -65,8 +66,8 @@
                 </tab>
                 <tab heading="Distribution" class="font-xxsmall" managed-tab ng-show="managedTabCtrl.hasContent()">
                     <div class="row">
-                        <div class="col-md-12">
-                            <g:render template="map"/>
+                        <div class="col-md-12 padding-bottom-2">
+                            <g:render template="map" model="[allowStaticImage: false, width: '100%', height: '900px', fullWidth: true]"/>
                         </div>
                     </div>
                 </tab>

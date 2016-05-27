@@ -13,7 +13,7 @@ profileEditor.directive('saveButton', function ($browser) {
             form: "=",
             show: "=ngShow",
             hide: "=ngHide",
-            class: "@",
+            btnClass: "@",
             label: "@"
         }
     };

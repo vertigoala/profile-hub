@@ -36,9 +36,9 @@
 <g:if test="${!profile.archivedDate}">
     <g:include controller="profile" action="nomenclaturePanel" params="[opusId: params.opusId]"/>
 
-    <div class="row margin-bottom-1">
-        <g:render template="map"/>
-        <div class="top col-md-6 col-sm-12" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
+    <div class="top row margin-bottom-1">
+        <g:render template="map" model="[allowStaticImage: true]"/>
+        <div class="col-md-6 col-sm-12" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
             <g:render template="primaryImage"/>
         </div>
     </div>

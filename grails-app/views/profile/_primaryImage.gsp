@@ -24,8 +24,10 @@
         </span>
     </p>
 
-    <div class="col-md-12" ng-show="imageCtrl.primaryImage" ng-controller="NavigationController as navCtrl">
-        <a target="_self" href="" class="padding-left-1 margin-top-1 inline-block"
-           ng-click="navCtrl.navigateTo('images')">View all images</a>
+    <div class="row">
+        <div class="col-md-12" ng-show="imageCtrl.primaryImage" ng-controller="NavigationController as navCtrl">
+            <a target="_self" href="" class="margin-top-1 inline-block"
+               ng-click="navCtrl.navigateTo('images')">View all images</a>
+        </div>
     </div>
 </div>

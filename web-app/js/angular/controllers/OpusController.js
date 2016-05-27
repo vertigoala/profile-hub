@@ -17,7 +17,7 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         {
             name: "tabbed",
             displayText: "Show content on tabs",
-            description: "Profile content will be split across the following tabs: At a glance, Details, Distribution, Gallery, Literature, Key, Documents"
+            description: "Profile content will be split across the following tabs: Profile, Distribution, Gallery, Literature & Links, Key"
         }
     ];
 

@@ -40,6 +40,7 @@ class ExportService {
     NslService nslService
     KeybaseService keybaseService
     JasperService jasperService
+    MapService mapService
     def grailsApplication
 
     Map statusRegions = [
@@ -289,7 +290,11 @@ class ExportService {
 
         // Retrieve occurrences-map image url
         String occurrenceQuery = model.profile.occurrenceQuery
-        model.profile.mapImageUrl = createMapImageUrl(opus, occurrenceQuery)
+        if (mapService.snapshotImageExists(opus.uuid, model.profile.uuid) && opus.mapConfig.allowSnapshots) {
+            model.profile.mapImageUrl = "${grailsApplication.config.grails.serverURL}${mapService.getSnapshotImageUrl("", opus.uuid, model.profile.uuid)}"
+        } else {
+            model.profile.mapImageUrl = mapService.constructMapImageUrl(occurrenceQuery)
+        }
         model.profile.occurrencesUrl = createOccurrencesUrl(opus, occurrenceQuery)
 
         // Don't make them a String if you want the groovy truth to work (Check Bootstrap.groovy for null values workaround)
@@ -396,29 +401,6 @@ class ExportService {
 
     def createOccurrencesUrl = { opus, occurrenceQuery ->
         return opus.mapConfig?.biocacheUrl ? "${(opus.mapConfig.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?${occurrenceQuery}" : ""
-    }
-
-    def createMapImageUrl = { opus, occurrenceQuery ->
-        Map p = [
-                extents      : "96.173828125,-47.11468820158343,169.826171875,-2.5694811631203973",
-                outlineColour: 0x000000,
-                dpi          : 300,
-                scale        : "on",
-                baselayer    : "aus1",
-                fileName     : "occurrencemap.jpg",
-                format       : "jpg",
-                outline      : true,
-                popacity     : 1,
-                pradiuspx    : 5,
-                pcolour      : "00ff85"
-        ]
-
-        String url = "${grailsApplication.config.biocache.base.url}ws/mapping/wms/image?${occurrenceQuery}&"
-        p.each { k, v -> url += "${k}=${v}&" }
-        if (url.charAt(url.length() - 1) == "&") {
-            url = url.substring(0, url.length() - 1)
-        }
-        url
     }
 
     def getColourForStatus(status) {

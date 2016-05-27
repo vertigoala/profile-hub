@@ -6,6 +6,7 @@ import au.org.ala.images.tiling.ImageTiler
 import au.org.ala.images.tiling.ImageTilerConfig
 import au.org.ala.ws.service.WebService
 import org.apache.commons.io.FileUtils
+import org.apache.http.entity.ContentType
 
 import javax.imageio.ImageIO
 import java.awt.*
@@ -40,7 +41,27 @@ class ImageService {
     static final Integer THUMBNAIL_MAX_SIZE = 300
 
     private getMetadataFromAlaImageService(String imageId) {
-        webService.get("${grailsApplication.config.uploaded.images.url}/ws/image/${imageId}", false, true)
+        webService.get("${grailsApplication.config.uploaded.images.url}/ws/image/${imageId}", [:], ContentType.APPLICATION_JSON, false, true)
+    }
+
+    String constructImageUrl(String contextPath, String opusId, String profileId, String imageId, String extension, String imageType, ImageUrlType urlType) {
+        String url =  "${contextPath}/opus/${opusId}/profile/${profileId}/image/"
+
+        switch (urlType) {
+            case ImageUrlType.FULL:
+                url += "${imageId}${extension}"
+                break
+            case ImageUrlType.THUMBNAIL:
+                url += "thumbnail/${imageId}${extension}"
+                break
+            case ImageUrlType.TILE:
+                url += "${imageId}/tile/{z}/{x}/{y}"
+                break
+        }
+
+        url += "?type=${imageType}"
+
+        url
     }
 
     /**
@@ -56,7 +77,7 @@ class ImageService {
         Map response = localImage ? profileService.getImageMetadata(imageId) : getMetadataFromAlaImageService(imageId)
 
         if (response.statusCode == SC_OK) {
-            Map imageProperties = response.resp as Map
+            Map<String, String> imageProperties = response.resp as Map
 
             if (localImage) {
                 String dir = imageProperties.type as ImageType == ImageType.PRIVATE ? "${grailsApplication.config.image.private.dir}" : "${grailsApplication.config.image.staging.dir}"
@@ -70,10 +91,10 @@ class ImageService {
 
                 if (file?.exists()) {
                     String tileLocation = buildFilePath(dir, imageProperties.opusId, imageProperties.profileId, imageId) + separator + imageId + '_tiles/'
-                    imageUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
-                    thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/thumbnail/${imageId}${extension}?type=${imageProperties.type}"
+                    imageUrl = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.FULL)
+                    thumbnailUrl = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.T)
                     tileZoomLevels = new File(tileLocation)?.listFiles()?.size()
-                    tileUrlPattern = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
+                    tileUrlPattern = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.TILE)
 
                 } else {  //provide support for previously used file directory structure
                     file = getLocalImageFile(dir, imageProperties.profileId, imageId, extension)
@@ -130,29 +151,29 @@ class ImageService {
     }
 
     def uploadImage(String contextPath, String opusId, String profileId, String dataResourceId, Map metadata, Transferrable file) {
-        def profile = profileService.getProfile(opusId, profileId, true)
+        Map profileAndOpus = profileService.getProfile(opusId, profileId, true)
 
-        metadata.scientificName = profile.profile.scientificName
+        metadata.scientificName = profileAndOpus.profile.scientificName
         metadata.contentType = file.contentType
 
         def response
 
         boolean imageIsStoredLocally
 
-        if (profile.profile.privateMode && !profile.opus.keepImagesPrivate) {
+        if (profileAndOpus.profile.privateMode && !profileAndOpus.opus.keepImagesPrivate) {
             // if the collection is public and the profile is in draft mode, then stage the image: it will be
             // uploaded to the biocache when the profile's draft is released
             try {
-                storeLocalImage(profile, metadata, file, "${grailsApplication.config.image.staging.dir}")
+                storeLocalImage(profileAndOpus.opus, profileAndOpus.profile, metadata, file, "${grailsApplication.config.image.staging.dir}")
             } catch (IOException exception) {
                 log.error("Error saving local staged image ", exception)
             }
             response = profileService.recordStagedImage(opusId, profileId, metadata)
             imageIsStoredLocally = true
-        } else if (profile.opus.keepImagesPrivate) {
+        } else if (profileAndOpus.opus.keepImagesPrivate) {
             // if the admin has elected not to publish images, then store the image in the local image dir
             try {
-                storeLocalImage(profile, metadata, file, "${grailsApplication.config.image.private.dir}")
+                storeLocalImage(profileAndOpus.opus, profileAndOpus.profile, metadata, file, "${grailsApplication.config.image.private.dir}")
             } catch (IOException exception) {
                 log.error("Error saving local private image ", exception)
             }
@@ -160,7 +181,7 @@ class ImageService {
             imageIsStoredLocally = true
         } else {
             // if the profile is not in draft mode, upload the image to the biocache immediately
-            response = biocacheService.uploadImage(opusId, profile.profile.uuid, dataResourceId, file, metadata)
+            response = biocacheService.uploadImage(opusId, profileAndOpus.profile.uuid, dataResourceId, file, metadata)
             metadata.imageId = response?.resp?.images ? response.resp.images[0] : null
             imageIsStoredLocally = false
         }
@@ -172,11 +193,11 @@ class ImageService {
         response
     }
 
-    private static storeLocalImage(Map profile, Map metadata, Transferrable file, String directory) throws IOException {
-        String extension = file.fileExtension
-        metadata.imageId = UUID.randomUUID().toString()
+    void storeLocalImage(Map opus, Map profile, Map metadata, Transferrable file, String directory) throws IOException {
+        String extension = file.fileExtension ?: metadata.extension
+        metadata.imageId = metadata.imageId ?: UUID.randomUUID().toString()
         metadata.action = "add"
-        String fileLocation = buildFilePath(directory, profile.opus.uuid, profile.profile.uuid, metadata.imageId)
+        String fileLocation = buildFilePath(directory, opus.uuid, profile.uuid, metadata.imageId)
         File localDir = new File(fileLocation)
         localDir.mkdirs()
 
@@ -206,8 +227,7 @@ class ImageService {
         imageThumbnailer.generateThumbnails(imageBytes, thumbnailDirectory, definitionList)
     }
 
-    private
-    static File getLocalImageFile(String directory, String collectionId, String profileId, String imageId, String extension) {
+    File getLocalImageFile(String directory, String collectionId, String profileId, String imageId, String extension) {
         new File("${directory}/$collectionId/${profileId}/${imageId}/${imageId}${extension}")
     }
 
@@ -612,7 +632,7 @@ class ImageService {
 
     //Changed directory structure, supporting existing files stored in old structure, use updated method - same name
     @Deprecated
-    private static File getLocalImageFile(String directory, String profileId, String imageId, String extension) {
+    File getLocalImageFile(String directory, String profileId, String imageId, String extension) {
         new File("${directory}/${profileId}/${imageId}${extension}")
     }
 

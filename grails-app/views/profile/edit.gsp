@@ -122,8 +122,8 @@
                 <g:include controller="profile" action="nomenclaturePanel" params="[opusId: params.opusId]"/>
             </g:if>
 
-            <div class="row margin-bottom-1">
-                <g:include controller="profile" action="mapPanel" params="[opusId: params.opusId]"/>
+            <div class="row margin-bottom-1 top">
+                <g:render template="map" model="[allowStaticImage: true]"/>
                 <div class="top col-md-6 col-sm-12" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
                     <g:render template="primaryImage" params="[opusId: params.opusId]"/>
                 </div>

@@ -1,7 +1,7 @@
 /**
  * Map controller
  */
-profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http, navService) {
+profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http, $timeout) {
     var self = this;
 
     var biocacheWMSUrl = config.biocacheServiceUrl + "ws/mapping/wms/reflect?";
@@ -10,6 +10,8 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
     self.autoZoom = false;
     self.showingEditorView = true;
+    self.showStaticImage = true;
+    self.readonly = config.readonly;
 
     self.init = function () {
 
@@ -42,6 +44,10 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                     zoom: self.opus.mapConfig.mapZoom,
                     center: [self.opus.mapConfig.mapDefaultLatitude, self.opus.mapConfig.mapDefaultLongitude]
                 });
+
+                if (_.isUndefined(self.profile.mapSnapshot) || _.isEmpty(self.profile.mapSnapshot)) {
+                    self.showStaticImage = false;
+                }
 
                 var colourBy = URI.parseQuery(self.profile.occurrenceQuery).colourBy;
 
@@ -202,6 +208,36 @@ profileEditor.controller('MapController', function ($scope, profileService, util
             if (_.isUndefined(self.editableMap)) {
                 createEditableMap();
             }
+        }
+    };
+
+    self.deleteMapSnapshot = function() {
+        var confirm = util.confirm("This will remove the map snapshot, so that only the live map data will be displayed. Are you sure you wish to proceed?");
+        confirm.then(function () {
+            profileService.deleteMapSnapshot(self.opusId, self.profileId).then(function() {
+                messageService.success("Map snapshot successfully deleted");
+                self.profile.mapSnapshot = null;
+            });
+        });
+    };
+
+    self.createMapSnapshot = function() {
+        var confirm = util.confirm("This will create a static image of the map using the currently selected configuration (except 'colour by') and zoom level. This image will be displayed instead of the live map, and the user will need to click a link to toggle the view to the live map. Are you sure you wish to proceed?");
+        confirm.then(function () {
+            var bounds = self.editableMap.map.getMapImpl().getBounds();
+            var extents = bounds._southWest.lng + "," + bounds._southWest.lat + "," + bounds._northEast.lng + "," + bounds._northEast.lat;
+            profileService.createMapSnapshot(self.opusId, self.profileId, self.editableMap.getQueryString(), extents).then(function(data) {
+                self.profile.mapSnapshot = data.mapSnapshotUrl;
+
+                messageService.success("Map snapshot successfully created");
+            });
+        });
+    };
+
+    self.toggleStaticImage = function() {
+        self.showStaticImage = !self.showStaticImage;
+        if (!self.showStaticImage) {
+            $timeout(self.map.redraw, 100);
         }
     };
 

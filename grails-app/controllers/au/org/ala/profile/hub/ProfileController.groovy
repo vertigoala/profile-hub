@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
+import javax.validation.constraints.NotNull
+
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
 
 class ProfileController extends BaseController {
@@ -19,6 +21,7 @@ class ProfileController extends BaseController {
     BiocacheService biocacheService
     ExportService exportService
     ImageService imageService
+    MapService mapService
 
     def index() {}
 
@@ -28,7 +31,7 @@ class ProfileController extends BaseController {
             badRequest "opusId and profileId are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
-            def model = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
+            Map model = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!model || !model.profile) {
                 notFound()
@@ -36,6 +39,7 @@ class ProfileController extends BaseController {
                 // archived profiles cannot be edited by anyone
                 notAuthorised()
             } else {
+                model.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, params.opusId, params.profileId)
                 model << [edit        : true,
                           currentUser : authService.getDisplayName(),
                           glossaryUrl : getGlossaryUrl(model.opus),
@@ -53,17 +57,18 @@ class ProfileController extends BaseController {
             badRequest "profileId is a required parameter"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
-            def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
+            Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
-            if (!profile) {
+            if (!profileAndOpus) {
                 notFound()
             } else {
-                Map model = profile
+                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
+                Map model = profileAndOpus
                 model << [edit        : false,
-                          glossaryUrl : getGlossaryUrl(profile.opus),
-                          aboutPageUrl: getAboutUrl(profile.opus, profile.profile),
-                          footerText  : profile.opus.footerText,
-                          contact     : profile.opus.contact,
+                          glossaryUrl : getGlossaryUrl(profileAndOpus.opus),
+                          aboutPageUrl: getAboutUrl(profileAndOpus.opus, profileAndOpus.profile),
+                          footerText  : profileAndOpus.opus.footerText,
+                          contact     : profileAndOpus.opus.contact,
                           displayMap  : profileService.hasMatchedName(model.profile)]
                 render view: "show", model: model
             }
@@ -181,12 +186,13 @@ class ProfileController extends BaseController {
         } else {
             response.setContentType(CONTENT_TYPE_JSON)
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
-            def profile = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
+            Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
-            if (!profile) {
+            if (!profileAndOpus) {
                 notFound()
             } else {
-                render profile as JSON
+                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
+                render profileAndOpus as JSON
             }
         }
     }
@@ -669,6 +675,26 @@ class ProfileController extends BaseController {
 
             handle result
         }
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def createMapSnapshot(@NotNull String opusId, @NotNull String profileId) {
+        Map json = request.getJSON()
+        String occurrenceQuery = json?.occurrenceQuery
+        String extents = json?.extents
+        if (!occurrenceQuery) {
+            badRequest "A json body with an occurrenceQuery property are required"
+        } else {
+            mapService.createMapSnapshot(opusId, profileId, occurrenceQuery, extents)
+        }
+
+        success([mapSnapshotUrl: mapService.getSnapshotImageUrl(request.contextPath, opusId, profileId)])
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def deleteMapSnapshot(@NotNull String opusId, @NotNull String profileId) {
+        mapService.deleteMapSnapshot(opusId, profileId)
+        success([:])
     }
 
     private getGlossaryUrl(opus) {

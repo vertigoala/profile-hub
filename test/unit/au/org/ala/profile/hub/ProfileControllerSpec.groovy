@@ -13,6 +13,7 @@ class ProfileControllerSpec extends Specification {
     AuthService authService
     BiocacheService biocacheService
     ImageService imageService
+    MapService mapService
 
     def setup() {
         controller = new ProfileController()
@@ -21,10 +22,12 @@ class ProfileControllerSpec extends Specification {
         authService = Mock(AuthService)
         biocacheService = Mock(BiocacheService)
         imageService = Mock(ImageService)
+        mapService = Mock(MapService)
         controller.profileService = profileService
         controller.authService = authService
         controller.biocacheService = biocacheService
         controller.imageService = imageService
+        controller.mapService = mapService
 
         authService.getDisplayName() >> "Fred Bloggs"
     }
@@ -135,7 +138,7 @@ class ProfileControllerSpec extends Specification {
 
     def "getJson should return the profile added to the model"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: "bla"]
+        profileService.getProfile(_, _, _) >> [profile: [:], opus: [:]]
 
         when:
         params.profileId = "bla"
