@@ -45,6 +45,9 @@ describe("SearchController tests", function () {
             $sessionStorage: sessionStorage
         });
 
+        // search is called when the controller is created if there are no existing results, which affects the call
+        // counts for tests that are checking specific function calls below, so we reset the number here.
+        profileService.search.calls.reset();
     }));
 
     it("should default the offset and page size when search is invoked with no values", function () {
@@ -61,14 +64,14 @@ describe("SearchController tests", function () {
         expect(profileService.search).toHaveBeenCalledWith("opus1", "test", {includeArchived: false, matchAll: true, nameOnly: false, includeNameAttributes: true, searchAla: true, searchNsl: true, offset: 66, pageSize: 6});
     });
 
-    it("should do nothing if search() is invoked but self.searchTerm is null", function() {
+    it("should do invoke the search service with an empty search time if self.searchTerm is null", function() {
         var results = {items: [{name: "item1"}, {name: "item2"}]};
         searchDefer.resolve(results);
 
         scope.searchCtrl.search();
         scope.$apply();
 
-        expect(profileService.search).not.toHaveBeenCalled();
+        expect(profileService.search).toHaveBeenCalledWith("opus1", "", {includeArchived: false, matchAll: true, nameOnly: false, includeNameAttributes: true, searchAla: true, searchNsl: true, offset: 0, pageSize: 25});
     });
 
     it("should raise an alert message if the call to search fails", function () {
@@ -286,7 +289,7 @@ describe("SearchController tests", function () {
         expect(profileService.search).not.toHaveBeenCalled();
     });
 
-    it("should populate the search results from the cache when retrieveCachedOrDelegatedSearch is invoked (no opus)", function () {
+    it("should populate the search results from the cache when retrieveCachedOrDelegatedSearch is invoked (with opus)", function () {
         scope.searchCtrl.opusId = "opus1";
 
         sessionStorage.searches = {

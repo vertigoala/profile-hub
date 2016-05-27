@@ -18,30 +18,29 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
     self.pageSize = 25;
     self.showOptions = false;
+    self.searchTerm = "";
 
     self.search = function (pageSize, offset) {
         self.searchOptions.offset = offset || 0;
         self.searchOptions.pageSize = pageSize || self.pageSize;
 
-        if (!_.isUndefined(self.searchTerm) && !_.isEmpty(self.searchTerm)) {
-            var searchResult = profileService.search(self.opusId, self.searchTerm, self.searchOptions);
-            searchResult.then(function (data) {
-                    self.searchResults = data;
+        var searchResult = profileService.search(self.opusId, self.searchTerm, self.searchOptions);
+        searchResult.then(function (data) {
+                self.searchResults = data;
 
-                    angular.forEach(self.searchResults.items, function (profile) {
-                        profile.image = {
-                            status: 'not-checked',
-                            type: {}
-                        };
-                    });
+                angular.forEach(self.searchResults.items, function (profile) {
+                    profile.image = {
+                        status: 'not-checked',
+                        type: {}
+                    };
+                });
 
-                    cacheSearchResult(self.searchResults);
-                },
-                function () {
-                    messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
-                }
-            );
-        }
+                cacheSearchResult(self.searchResults);
+            },
+            function () {
+                messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
+            }
+        );
     };
 
     function cacheSearchResult(result) {
@@ -59,7 +58,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     self.retrieveCachedOrDelegatedSearch = function() {
         if ($sessionStorage.delegatedSearches && $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'] != null) {
             var delegatedSearch = $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'];
-            self.searchTerm = delegatedSearch.term;
+            self.searchTerm = delegatedSearch.term || "";
             self.searchOptions = delegatedSearch.searchOptions ? delegatedSearch.searchOptions : _.clone(self.searchOptions);
 
             delete $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'];
@@ -69,7 +68,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
             var cachedResult = $sessionStorage.searches ? $sessionStorage.searches[self.opusId ? self.opusId : 'all'] : {};
             if (cachedResult) {
                 self.searchResults = cachedResult.result;
-                self.searchTerm = cachedResult.term;
+                self.searchTerm = cachedResult.term || "";
                 self.searchOptions = cachedResult.options ? cachedResult.options : _.clone(self.searchOptions);
             }
         }
@@ -119,4 +118,7 @@ profileEditor.controller('SearchController', function (profileService, util, mes
 
     self.retrieveCachedOrDelegatedSearch();
 
+    if (!self.searchResults) {
+        self.search();
+    }
 });
