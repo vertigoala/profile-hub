@@ -94,6 +94,19 @@ modules = {
         dependsOn 'bootstrap3'
     }
 
+    attachDocuments {
+        //defaultBundle 'profiles'
+        resource url: 'js/preview/document.js'
+    }
+
+    knockout {
+        resource url: 'vendor/knockoutjs/3.4.0/knockout-3.4.0.min.js'
+        resource url: 'vendor/knockoutjs/knockout.mapping-latest.js'
+        resource url: 'js/preview/knockout-extenders.js'
+    }
+
+
+
     bootstrap3 {
         resource url:"thirdparty/bootstrap/css/bootstrap3.3.4.min.css"
         resource url:"thirdparty/bootstrap/js/bootstrap.min.js"

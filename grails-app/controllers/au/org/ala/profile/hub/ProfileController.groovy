@@ -725,6 +725,10 @@ class ProfileController extends BaseController {
         render template: "images"
     }
 
+    def multimediaPanel = {
+        render template: "multimedia"
+    }
+
     def mapPanel = {
         render template: "map"
     }
