@@ -94,6 +94,8 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
 
     loadOpusList();
 
+    loadTags();
+
     self.loadOpus = function () {
         self.opusId = util.getEntityId("opus");
 
@@ -114,6 +116,13 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                         imageResourceOption: "NONE",
                         imgeSources: []
                     };
+                }
+
+                if (self.opus.tags) {
+                    self.opus.tags.forEach (function (tag) {
+                        var t = _.find(self.tags, function (t) { return t.uuid == tag.uuid });
+                        self.tags.splice(self.tags.indexOf(t), 1);
+                    });
                 }
 
                 self.originalRecordResourceOption = self.opus.dataResourceConfig.recordResourceOption;
@@ -562,6 +571,19 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         return valid;
     };
 
+    self.tagSelected = function(form) {
+        self.opus.tags.push(self.selectedTag);
+        self.tags.splice(self.tags.indexOf(self.selectedTag), 1);
+        self.selectedTag = null;
+        form.$setDirty();
+    };
+
+    self.removeTag = function(tag, form) {
+        self.tags.push(tag);
+        self.opus.tags.splice(self.opus.tags.indexOf(tag), 1);
+        form.$setDirty();
+    };
+
     function loadKeybaseProjects() {
         profileService.retrieveKeybaseProjects().then(function (data) {
             self.keybaseProjects = data;
@@ -755,5 +777,11 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                 })
             });
         })
+    }
+
+    function loadTags() {
+        profileService.getTags().then(function(data) {
+            self.tags = data.tags;
+        });
     }
 });

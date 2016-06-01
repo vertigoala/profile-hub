@@ -4,6 +4,8 @@ class UrlMappings {
 
         "/ping" controller: "ping", action: "ping"
 
+        "/tags" controller: "opus", action: "getTags"
+
         "/speciesList/" controller: "speciesList", action: [GET: "getAllLists"]
 
         "/user/search" controller: "user", action: [GET: "findUser"]
@@ -140,6 +142,7 @@ class UrlMappings {
         "/admin/rematchNames" controller: "admin", action: [POST: "rematchNames"]
         "/admin/job/$jobType/$jobId" controller: "admin", action: [DELETE: "deleteJob"]
         "/admin/job/" controller: "admin", action: [GET: "listPendingJobs"]
+        "/admin/tag/$tagId?" controller: "admin", action: [GET: "getTag", PUT: "createTag", POST: "updateTag", DELETE: "deleteTag"]
         "/admin" controller: "admin", action: [GET: "index"]
         "/alaAdmin/index" controller: "admin", action: [GET: "alaIndex"]
         "/alaAdmin" controller: "admin", action: [GET: "alaIndex"]

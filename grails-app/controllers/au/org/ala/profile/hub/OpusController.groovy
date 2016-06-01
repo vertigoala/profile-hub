@@ -423,6 +423,12 @@ class OpusController extends BaseController {
         }
     }
 
+    def getTags() {
+        Map response = profileService.getTags()
+
+        handle response
+    }
+
     private def uploadTransferrable(Transferrable transferrable) {
 
         Map opus = profileService.getOpus(params.opusId)

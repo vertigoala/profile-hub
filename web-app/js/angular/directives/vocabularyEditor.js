@@ -7,7 +7,8 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             vocabName: '@',
             allowReordering: '@',
             allowMandatory: '@',
-            allMandatory: '@'
+            allMandatory: '@',
+            allowCategories: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/vocabularyEditor.html',
         controller: ['$scope', 'profileService', 'util', 'messageService', '$modal', '$filter', function ($scope, profileService, util, messageService, $modal, $filter) {
@@ -19,6 +20,7 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             $scope.replacements = [];
             $scope.allowReordering = true;
             $scope.allowMandatory = true; // allow the user to choose whether a term is mandatory or optional
+            $scope.allowCategories = true; // allow the user to categorise terms as Name, Summary, etc
             $scope.allMandatory = false; // force all terms to be mandatory
 
             var capitalize = $filter("capitalize");
@@ -176,6 +178,14 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
                 );
             };
 
+            $scope.summaryChanged = function(selectedIndex) {
+                $scope.vocabulary.terms.forEach(function (term, index) {
+                    if (index != selectedIndex) {
+                        term.summary = false;
+                    }
+                });
+            };
+
             $scope.moveTermUp = function(index, form) {
                 if (index > 0) {
                     $scope.vocabulary.terms[index].order = $scope.vocabulary.terms[index].order - 1;
@@ -196,11 +206,6 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
 
                     form.$setDirty();
                 }
-            };
-
-            $scope.toggleRequired = function(index, form) {
-                $scope.vocabulary.terms[index].required = !$scope.vocabulary.terms[index].required;
-                form.$setDirty();
             };
 
             function sortVocabTerms() {
@@ -231,6 +236,9 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             });
             scope.$watch("allowMandatory", function(newValue) {
                 scope.allowMandatory = isTruthy(newValue);
+            });
+            scope.$watch("allowCategories", function(newValue) {
+                scope.allowCategories = isTruthy(newValue);
             });
             scope.$watch("allowReordering", function(newValue) {
                 scope.allowReordering = isTruthy(newValue);

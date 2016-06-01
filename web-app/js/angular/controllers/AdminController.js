@@ -13,8 +13,11 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
         items: []
     };
 
+    self.tags = [];
+
     loadOpusList();
     loadPendingJobs();
+    loadTags();
 
     self.reindex = function () {
         var promise = $http.post(util.contextRoot() + "/admin/reindex");
@@ -62,6 +65,43 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
         });
     };
 
+    self.deleteTag = function(index) {
+        var tag = self.tags[index];
+        if (tag.uuid) {
+            var confirm = util.confirm("Are you sure you want to delete this tag?");
+            confirm.then(function () {
+                var promise = $http.delete(util.contextRoot() + "/admin/tag/" + tag.uuid);
+                promise.then(function () {
+                    messageService.success("Job deleted");
+                    self.tags.splice(index, 1);
+                }, function () {
+                    messageService.alert("Failed to delete the job");
+                });
+            });
+        } else {
+            self.tags.splice(index, 1);
+        }
+    };
+
+    self.saveTag = function(index) {
+        var tag = self.tags[index];
+        var promise;
+        if (tag.uuid) {
+            promise = $http.post(util.contextRoot() + "/admin/tag/" + tag.uuid, tag);
+        } else {
+            promise = $http.put(util.contextRoot() + "/admin/tag/", tag);
+        }
+
+        promise.then(function(response) {
+            self.tags[index] = response.data;
+            messageService.success("Tag saved");
+        })
+    };
+
+    self.addTag = function() {
+        self.tags.push({uuid: null, colour: null, name: "", abbrev: ""});
+    };
+
     function loadOpusList() {
         self.collectionMultiSelectOptions.items.length = 0;
 
@@ -83,6 +123,17 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
             self.loadingPendingJobs = false;
         }, function() {
             self.loadingPendingJobs = false;
+        });
+    }
+
+    function loadTags() {
+        self.loadingTags = true;
+        var promise = $http.get(util.contextRoot() + "/admin/tag/");
+        promise.then(function (response) {
+            self.tags = response.data || [];
+            self.loadingTags = false;
+        }, function() {
+            self.loadingTags = false;
         });
     }
 });

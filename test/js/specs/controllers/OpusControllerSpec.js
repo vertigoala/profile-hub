@@ -26,7 +26,7 @@ describe("OpusController tests", function () {
     var form;
     var messageService;
     var profileService;
-    var opusDefer, getResourceDefer, saveOpusDefer, listOpusDefer, getListsDefer, keysDefer, supportingCollectionDefer, hubsDefer, resourcesDefer;
+    var opusDefer, getResourceDefer, saveOpusDefer, listOpusDefer, getListsDefer, keysDefer, supportingCollectionDefer, hubsDefer, resourcesDefer, tagsDefer;
 
     var getOpusResponse = '{"title": "OpusName", "dataResourceUid":"dataUid1", "mapConfig": {"mapPointColour": "12345"}, "dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2", "source3"]}, "recordSources": ["source1", "source2", "source3"], "supportingOpuses": []}';
     var getResourceResponse = '{"pubDescription":"resource description"}';
@@ -55,7 +55,9 @@ describe("OpusController tests", function () {
         supportingCollectionDefer = $q.defer();
         hubsDefer = $q.defer();
         resourcesDefer = $q.defer();
+        tagsDefer = $q.defer();
 
+        spyOn(profileService, "getTags").and.returnValue(tagsDefer.promise);
         spyOn(profileService, "getOpus").and.returnValue(opusDefer.promise);
         spyOn(profileService, "getResource").and.returnValue(getResourceDefer.promise);
         spyOn(profileService, "listResources").and.returnValue(resourcesDefer.promise);
