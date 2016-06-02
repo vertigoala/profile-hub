@@ -31,7 +31,9 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
                     $scope.vocabulary.terms.push({termId: "",
                         name: capitalize($scope.newVocabTerm),
                         order: $scope.vocabulary.terms.length,
-                        required: $scope.allMandatory ? true : false
+                        required: $scope.allMandatory ? true : false,
+                        containsName: false,
+                        summary: false
                     });
                     $scope.newVocabTerm = "";
                     sortVocabTerms();
