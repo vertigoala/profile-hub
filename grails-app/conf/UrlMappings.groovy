@@ -2,6 +2,7 @@ class UrlMappings {
 
     static mappings = {
 
+        "/simple" controller: "profile", action: "simple"
         "/ping" controller: "ping", action: "ping"
 
         "/speciesList/" controller: "speciesList", action: [GET: "getAllLists"]

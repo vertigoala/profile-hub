@@ -94,8 +94,31 @@ modules = {
         dependsOn 'bootstrap3'
     }
 
+    jqueryFileUpload {
+        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-ui.css', disposition: 'head'
+
+        resource url: 'vendor/fileupload-9.0.0/jquery.iframe-transport.js'
+        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload.js'
+
+        resource url: 'vendor/fileupload-9.0.0/load-image.min.js'
+        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-process.js'
+        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-image.js'
+        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-video.js'
+        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-validate.js'
+        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-audio.js'
+
+
+        resource url: 'vendor/fileupload-9.0.0/locale.js'
+        resource url: 'vendor/fileupload-9.0.0/cors/jquery.xdr-transport.js',
+                wrapper: { s -> "<!--[if gte IE 8]>$s<![endif]-->" }
+    }
+
     attachDocuments {
-        //defaultBundle 'profiles'
+        dependsOn 'jquery'
+        dependsOn 'knockout'
+        dependsOn 'bootstrap3'
+        dependsOn 'jqueryFileUpload'
+        dependsOn 'profiles'
         resource url: 'js/preview/document.js'
     }
 

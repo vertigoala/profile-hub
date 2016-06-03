@@ -3,6 +3,6 @@
 
 <h2>Resources</h2>
 <g:render template="/resource/listDocuments"/>
-%{--<g:render template="/resource/attachDocument"/>--}%
+<g:render template="/resource/attachDocument"/>
 <r:layoutResources/>
 

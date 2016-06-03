@@ -768,4 +768,8 @@ class ProfileController extends BaseController {
     def nomenclaturePanel = {
         render template: "nomenclaturePanel"
     }
+
+    def simple() {
+
+    }
 }
