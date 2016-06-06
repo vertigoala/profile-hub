@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="layout" content="${grailsApplication.config.layout}"/>
+    <title>Dependencies Ok Title</title>
+    <r:require modules="knockout,attachDocuments"/>
+</head>
+
 <body>
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -16,8 +24,11 @@
                 <div id="edit-documents" class="pill-pane">
                     <div class="row-fluid">
                         <div class="span10">
-                            <g:render template="/resource/list"
+                            %{--<g:render template="/resource/list"--}%
+                                      %{--model="[useExistingModel: true,editable:true, admin:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>--}%
+                            <g:render template="/resource/listDocuments"
                                       model="[useExistingModel: true,editable:true, admin:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>
+                            <g:render template="/resource/attachDocument"/>
 
                             %{--<g:render template="/shared/editDocuments"--}%
                             %{--model="[useExistingModel: true,editable:true, filterBy: 'all', ignore: '', imageUrl:resource(dir:'/images/filetypes'),containerId:'adminDocumentList']"/>--}%
@@ -29,8 +40,9 @@
         </div>
     </div>
 </div>
-</body>
+
 %{--<r:script disposition="head">--}%
     %{--console.log ('Loading MM');--}%
 %{--</r:script>--}%
 %{--<r:layoutResources/>--}%
+</body>

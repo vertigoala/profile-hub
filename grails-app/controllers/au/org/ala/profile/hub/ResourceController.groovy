@@ -21,7 +21,7 @@ class ResourceController {
 
     def list() {
         Map searchParams = [role:MDA_DOCUMENT_ROLE]
-        Map result = documentResourceService .search(searchParams)
+        Map result = documentResourceService.search(searchParams)
         [documents:modelAsJavascript(result.documents), admin:isUserAdmin()]
     }
 
@@ -50,6 +50,8 @@ class ResourceController {
      * @return the result of the update.
      */
     def documentUpdate(String id) {
+
+        log.debug("documentUpdate for ID: ${id}")
 
         if (request.respondsTo('getFile')) {
             def f = request.getFile('files')
@@ -90,7 +92,8 @@ class ResourceController {
             // displayed by IE8/9 when JSON is returned from an iframe submit.
             Map document = JSON.parse(params.document)
             document.role = MDA_DOCUMENT_ROLE
-            def result = documentResourceService .updateDocument(document)
+            def result = documentResourceService.updateDocument(document)
+
             response.setContentType('text/plain;charset=UTF8')
             def resultAsText = (result as JSON).toString()
             render resultAsText
@@ -102,7 +105,7 @@ class ResourceController {
      * @param id the id of the document to delete.
      * @return the result of the deletion.
      */
-    def deleteDocument(String id) {
+    def documentDelete(String id) {
         def result = documentResourceService .delete(id)
         render status: result.statusCode
     }

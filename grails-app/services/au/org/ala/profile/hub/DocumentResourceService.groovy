@@ -11,7 +11,7 @@ class DocumentResourceService {
     GrailsApplication grailsApplication
 
     def get(String id) {
-        def url = "${grailsApplication.config.profile.service.url}/document/${id}"
+        def url = "${grailsApplication.config.profile.service.url}/document/get/${id}"
         return webService.get(url)
     }
 

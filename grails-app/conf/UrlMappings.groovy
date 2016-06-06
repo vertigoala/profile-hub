@@ -3,6 +3,8 @@ class UrlMappings {
     static mappings = {
 
         "/simple" controller: "profile", action: "simple"
+        "/resource/$action?/$id?(.$format)?" controller: "resource"
+
         "/ping" controller: "ping", action: "ping"
 
         "/speciesList/" controller: "speciesList", action: [GET: "getAllLists"]

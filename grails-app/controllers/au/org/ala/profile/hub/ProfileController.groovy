@@ -6,6 +6,8 @@ import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
 import groovy.json.JsonSlurper
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
@@ -22,6 +24,7 @@ class ProfileController extends BaseController {
     ExportService exportService
     ImageService imageService
     MapService mapService
+    DocumentResourceService documentResourceService
 
     def index() {}
 
@@ -770,6 +773,22 @@ class ProfileController extends BaseController {
     }
 
     def simple() {
+        log.debug("Loading simple page")
+        Map searchParams = [:]
+        Map result = documentResourceService.search(searchParams)
 
+        [documents:modelAsJavascript(result.documents), admin:true, updateController:"resource", updateAction: "documentUpdate", deleteController:"resource",  deleteAction: "documentDelete"]
     }
+
+    private String modelAsJavascript(def model) {
+
+        if (!(model instanceof JSONObject) && !(model instanceof JSONArray)) {
+            model = model as JSON
+
+        }
+        def json = (model?:[:] as JSON)
+        def modelJson = json.toString()
+        modelJson.encodeAsJavaScript()
+    }
+
 }
