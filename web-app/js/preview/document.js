@@ -415,6 +415,9 @@ function showDocumentAttachInModal(uploadUrl, documentViewModel, modalSelector, 
     // Close the modal and tidy up the bindings.
     var closeModal = function() {
         $modal.modal('hide');
+        $modal.removeClass("in");
+        $(".modal-backdrop").remove();
+        $modal.hide();
         $fileUpload.find(previewSelector).empty();
         ko.cleanNode($fileUpload[0]);
     };
@@ -478,7 +481,8 @@ function DocListViewModel(documents, options) {
     var settings = {
         imageLocation:options.imageLocation,
         showSettings:false,
-        roles:  [{id: 'information', name: 'File'}, {id:'embeddedVideo', name:'Embedded Video'}]};
+        roles:  [{id:'embeddedAudio', name:'Embedded Audio'}, {id:'embeddedVideo', name:'Embedded Video'}, {id: 'information', name: 'Attached File'}]};
+
     self.documents($.map(documents, function(doc) { return new DocumentViewModel(doc, '',  settings)} ));
     self.documentTemplate = function(document) {
         var type = ko.utils.unwrapObservable(document.type);
@@ -487,9 +491,9 @@ function DocListViewModel(documents, options) {
         return prefix+suffix;
     };
     self.attachDocument = function() {
-        showDocumentAttachInModal(options.documentUpdateUrl, new DocumentViewModel({role:'mdba'},{key:'systemId', value:'mdba'}, settings), '#attachDocument')
+        showDocumentAttachInModal(options.documentUpdateUrl, new DocumentViewModel({role:'information'},{key:'systemId', value:'profiles'}, settings), '#attachDocument')
             .done(function(result){
-                    window.location.reload();
+                    //window.location.reload();
                 }
             );
     };
@@ -497,7 +501,7 @@ function DocListViewModel(documents, options) {
         var url = options.documentUpdateUrl + "/" + document.documentId;
         showDocumentAttachInModal( url, document, '#attachDocument')
             .done(function(result){
-                window.location.reload(); // The display doesn't update properly otherwise.
+                //window.location.reload(); // The display doesn't update properly otherwise.
             });
     };
     self.deleteDocument = function(document) {

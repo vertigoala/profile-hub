@@ -95,6 +95,12 @@ modules = {
     }
 
     jqueryFileUpload {
+
+        dependsOn 'jquery'
+        dependsOn 'bootstrap3'
+        dependsOn 'jqueryUI'
+
+
         resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-ui.css', disposition: 'head'
 
         resource url: 'vendor/fileupload-9.0.0/jquery.iframe-transport.js'
@@ -111,6 +117,11 @@ modules = {
         resource url: 'vendor/fileupload-9.0.0/locale.js'
         resource url: 'vendor/fileupload-9.0.0/cors/jquery.xdr-transport.js',
                 wrapper: { s -> "<!--[if gte IE 8]>$s<![endif]-->" }
+    }
+
+    jqueryUI {
+        resource url: 'vendor/jquery-ui/jquery-ui-1.11.2-no-autocomplete.js', disposition: 'head'
+        resource url: '/vendor/jquery-ui/themes/smoothness/jquery-ui.css', attrs: [media: 'all'], disposition: 'head'
     }
 
     attachDocuments {
