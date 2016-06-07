@@ -134,7 +134,7 @@ modules = {
     }
 
     knockout {
-        resource url: 'vendor/knockoutjs/3.4.0/knockout-3.4.0.min.js'
+        resource url: 'vendor/knockoutjs/3.4.0/knockout-3.4.0.debug.js'
         resource url: 'vendor/knockoutjs/knockout.mapping-latest.js'
         resource url: 'js/preview/knockout-extenders.js'
     }

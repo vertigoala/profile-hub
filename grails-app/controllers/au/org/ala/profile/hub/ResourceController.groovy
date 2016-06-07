@@ -19,6 +19,11 @@ class ResourceController {
     DocumentResourceService  documentResourceService
     AuthService authService
 
+    def  index() {
+        log.debug("Resource Index")
+     render "It works"
+    }
+
     def list() {
         Map searchParams = [role:MDA_DOCUMENT_ROLE]
         Map result = documentResourceService.search(searchParams)
@@ -51,7 +56,7 @@ class ResourceController {
      */
     def documentUpdate(String id) {
 
-        log.debug("documentUpdate for ID: ${id}")
+        log.debug("In documentUpdate for ID: ${id}")
 
         if (request.respondsTo('getFile')) {
             def f = request.getFile('files')
@@ -94,6 +99,7 @@ class ResourceController {
             document.role = MDA_DOCUMENT_ROLE
             def result = documentResourceService.updateDocument(document)
 
+            log.debug("Result: ${result}")
             response.setContentType('text/plain;charset=UTF8')
             def resultAsText = (result as JSON).toString()
             render resultAsText

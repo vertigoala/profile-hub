@@ -38,6 +38,8 @@ class DocumentResourceService {
         if (resp && !resp.error) {
             return resp.resp
         }
+
+        log.debug("resp ${resp}")
         return resp
     }
 }

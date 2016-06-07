@@ -22,7 +22,8 @@
                         <label class="control-label" for="documentAttribution">Attribution</label>
 
                         <div class="controls">
-                            <input id="documentAttribution" type="text" data-bind="value:attribution"/>
+                            %{--<input id="documentAttribution" type="text" data-bind="value:attribution"/>--}%
+                            <input id="documentAttribution" type="text" />
 
                         </div>
                     </div>
@@ -134,7 +135,7 @@
                 <div class="controls">
                     <button type="button" class="btn btn-success"
                             data-bind="enable:saveEnabled, click:save, visible:!complete(), attr:{'title':saveHelp}">Save</button>
-                    <button class="btn" data-bind="click:cancel, visible:!complete()">Cancel</button>
+                    <button class="btn" data-dismiss="modal" data-bind="click:cancel, visible:!complete()">Cancel</button>
                     <button class="btn" data-bind="click:close, visible:complete()">Close</button>
 
                 </div>
