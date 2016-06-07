@@ -22,9 +22,7 @@
                         <label class="control-label" for="documentAttribution">Attribution</label>
 
                         <div class="controls">
-                            %{--<input id="documentAttribution" type="text" data-bind="value:attribution"/>--}%
-                            <input id="documentAttribution" type="text" />
-
+                            <input id="documentAttribution" type="text" data-bind="value:attribution"/>
                         </div>
                     </div>
 

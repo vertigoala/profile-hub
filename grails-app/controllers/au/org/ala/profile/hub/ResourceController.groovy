@@ -12,8 +12,9 @@ import static org.apache.http.HttpStatus.SC_BAD_REQUEST
 
 class ResourceController {
 
-    static final String ADMIN_ROLE = 'ROLE_MDBA_ADMIN'
-    final String MDA_DOCUMENT_ROLE = 'mdba'
+    static final String ADMIN_ROLE = 'ROLE_ADMIN'
+
+    static final String DOCUMENT_SYSTEM_ID = 'profiles'
 
     GrailsApplication grailsApplication
     DocumentResourceService  documentResourceService
@@ -25,7 +26,9 @@ class ResourceController {
     }
 
     def list() {
-        Map searchParams = [role:MDA_DOCUMENT_ROLE]
+        String parentId = (params.parentId?: '' )
+
+        Map searchParams = [projectId:parentId]
         Map result = documentResourceService.search(searchParams)
         [documents:modelAsJavascript(result.documents), admin:isUserAdmin()]
     }
@@ -65,8 +68,10 @@ class ResourceController {
                 def extension = FilenameUtils.getExtension(originalFilename)?.toLowerCase()
                 if (extension && !grailsApplication.config.upload.extensions.blacklist.contains(extension)){
 
+                    log.debug("Document: ${params.document}")
+
                     Map document = JSON.parse(params.document)
-                    document.role = MDA_DOCUMENT_ROLE
+                    document.systemId = DOCUMENT_SYSTEM_ID
 
                     def result = documentResourceService .updateDocument(document, f)
 
@@ -95,8 +100,12 @@ class ResourceController {
         } else {
             // This is returned to the browswer as a text response due to workaround the warning
             // displayed by IE8/9 when JSON is returned from an iframe submit.
+
+            log.debug("Document: ${params.document}")
+
             Map document = JSON.parse(params.document)
-            document.role = MDA_DOCUMENT_ROLE
+            document.systemId = DOCUMENT_SYSTEM_ID
+
             def result = documentResourceService.updateDocument(document)
 
             log.debug("Result: ${result}")

@@ -19,8 +19,7 @@
                                 </div>
                         </div>
                 </div>
-
-
+                <p/>
                 <div class="well well-small fc-docs-list-well">
                         <!-- ko if: filteredDocuments().length == 0 -->
                         <h4 class="text-center">No documents</h4>
@@ -31,6 +30,7 @@
                                 </li>
                         </ul>
                 </div>
+                <p/>
                 <g:if test="${admin}"><button class="btn btn-default" data-bind="click:attachDocument">New Resource</button></g:if>
         </div>
         <div class="span8">
@@ -83,6 +83,7 @@
             %{--documentDeleteUrl: "${g.createLink(controller:'${deleteController}', action:'${deleteAction}')}",--}%
             documentUpdateUrl: '<g:createLink controller="${updateController}" action="${updateAction}"  />',
             documentDeleteUrl: '<g:createLink controller="${deleteController}" action="${deleteAction}"  />',
+            parentId: '${parentId}',
 
             admin: ${admin || false}
 }

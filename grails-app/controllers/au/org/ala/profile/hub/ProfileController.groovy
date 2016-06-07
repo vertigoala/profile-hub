@@ -774,10 +774,10 @@ class ProfileController extends BaseController {
 
     def simple() {
         log.debug("Loading simple page")
-        Map searchParams = [:]
+        Map searchParams = [parentId: 'Parent']
         Map result = documentResourceService.search(searchParams)
 
-        [documents:modelAsJavascript(result.documents), admin:true, updateController:"resource", updateAction: "documentUpdate", deleteController:"resource",  deleteAction: "documentDelete"]
+        [documents:modelAsJavascript(result.documents), admin:true, parentId: 'Parent',  updateController:"resource", updateAction: "documentUpdate", deleteController:"resource",  deleteAction: "documentDelete"]
     }
 
     private String modelAsJavascript(def model) {

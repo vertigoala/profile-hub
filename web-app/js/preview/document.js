@@ -491,9 +491,12 @@ function DocListViewModel(documents, options) {
         return prefix+suffix;
     };
     self.attachDocument = function() {
-        showDocumentAttachInModal(options.documentUpdateUrl, new DocumentViewModel({role:'information'},{key:'systemId', value:'profiles'}, settings), '#attachDocument')
+        showDocumentAttachInModal(options.documentUpdateUrl, new DocumentViewModel({role:'information'},{key:'parentId', value:options.parentId}, settings), '#attachDocument')
             .done(function(result){
-                    //window.location.reload();
+                var newEntry = new DocumentViewModel(result, '',  settings);
+                self.documents.push(newEntry);
+                //self.documents.valueHasMutated(); // observableArrays don't fire events when contained objects are mutated.
+
                 }
             );
     };
@@ -507,9 +510,7 @@ function DocListViewModel(documents, options) {
     self.deleteDocument = function(document) {
         var url = options.documentDeleteUrl+'/'+document.documentId;
         $.post(url, {}, function() {self.documents.remove(document);});
-
     };
-
 }
 function iconnameFromFilename(filename) {
     if (filename === undefined) { return "_blank.png"; }

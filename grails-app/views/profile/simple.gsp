@@ -13,7 +13,6 @@
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Multimedia</h4>
             </div>
-            <h1>${grailsApplication.config.layout}</h1>
         </div>
     </div>
 

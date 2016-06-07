@@ -3367,8 +3367,8 @@ ko.exportSymbol('bindingProvider', ko.bindingProvider);
     };
 
     ko.applyBindings = function (viewModelOrBindingContext, rootNode) {
-        console.log('Applying bindings called for object id: ' + ((rootNode !== undefined && rootNode !== null)? rootNode.id : ' '));
-        console.log(rootNode);
+        // console.log('Applying bindings called for object id: ' + ((rootNode !== undefined && rootNode !== null)? rootNode.id : ' '));
+        // console.log(rootNode);
         // If jQuery is loaded after Knockout, we won't initially have access to it. So save it here.
         if (!jQueryInstance && window['jQuery']) {
             jQueryInstance = window['jQuery'];
