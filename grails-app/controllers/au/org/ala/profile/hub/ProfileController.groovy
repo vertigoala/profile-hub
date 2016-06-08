@@ -729,11 +729,12 @@ class ProfileController extends BaseController {
     }
 
     def multimediaPanel = {
-        Map searchParams = [parentId: 'Parent']
+        log.debug("ProfileId: ${params.profileId}")
+        Map searchParams = [parentId: params.profileId]
         Map result = documentResourceService.search(searchParams)
 
         def model = [documents       : modelAsJavascript(result.documents),
-         admin           : true, parentId: 'Parent',
+         admin           : true, parentId: params.profileId,
          updateController: "resource",
          updateAction    : "documentUpdate",
          deleteController: "resource",

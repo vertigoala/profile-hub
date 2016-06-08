@@ -16,7 +16,6 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-12">
-                How does this look like?
                 <div id="edit-documents" class="pill-pane">
                     <div class="row-fluid">
                         <div class="span10">
@@ -37,5 +36,4 @@
 <r:layoutResources/>
 </body>
 <r:script> console.log ('Loading multimedia.gsp');   </r:script>
-
 </html>

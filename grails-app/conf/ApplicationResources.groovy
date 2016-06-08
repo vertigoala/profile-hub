@@ -142,8 +142,8 @@ modules = {
 
 
     bootstrap3 {
-        resource url:"thirdparty/bootstrap/css/bootstrap3.3.4.min.css"
-        resource url:"thirdparty/bootstrap/js/bootstrap.min.js"
+        resource url:"thirdparty/bootstrap/css/bootstrap3.3.4.min.css", disposition: 'head'
+        resource url:"thirdparty/bootstrap/js/bootstrap.min.js", disposition: 'head'
     }
 
     angular_bootstrap_colourpicker {
