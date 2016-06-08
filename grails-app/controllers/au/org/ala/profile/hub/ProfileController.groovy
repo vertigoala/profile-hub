@@ -729,7 +729,17 @@ class ProfileController extends BaseController {
     }
 
     def multimediaPanel = {
-        render template: "multimedia"
+        Map searchParams = [parentId: 'Parent']
+        Map result = documentResourceService.search(searchParams)
+
+        def model = [documents       : modelAsJavascript(result.documents),
+         admin           : true, parentId: 'Parent',
+         updateController: "resource",
+         updateAction    : "documentUpdate",
+         deleteController: "resource",
+         deleteAction    : "documentDelete"]
+
+        render (template: "multimedia", model: model)
     }
 
     def mapPanel = {

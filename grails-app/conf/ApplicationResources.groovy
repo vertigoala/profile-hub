@@ -103,8 +103,8 @@ modules = {
 
         resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-ui.css', disposition: 'head'
 
-        resource url: 'vendor/fileupload-9.0.0/jquery.iframe-transport.js'
-        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload.js'
+        resource url: 'vendor/fileupload-9.0.0/jquery.iframe-transport.js', disposition: 'head'
+        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload.js', disposition: 'head'
 
         resource url: 'vendor/fileupload-9.0.0/load-image.min.js'
         resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-process.js'
@@ -126,9 +126,9 @@ modules = {
 
     attachDocuments {
         dependsOn 'jquery'
+        dependsOn 'jqueryFileUpload'
         dependsOn 'knockout'
         dependsOn 'bootstrap3'
-        dependsOn 'jqueryFileUpload'
         dependsOn 'profiles'
         resource url: 'js/preview/document.js'
     }

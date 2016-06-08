@@ -3,12 +3,15 @@
     <parameter name="returnUrlPath" value="${grailsApplication.config.grails.serverURL}"/>
     <r:require modules="knockout,attachDocuments"/>
 </head>
-
 <body>
-<h2>Resources</h2>
-<g:render template="/resource/listDocuments"/>
-<g:render template="/resource/attachDocument"/>
-<r:layoutResources/>
+    <h3>List</h3>
+    <g:render template="/resource/attachDocument"/>
+    %{--<g:render template="/resource/listDocuments"/>--}%
 </body>
+
+<r:script disposition="head">
+    console.log('Loaded list.gsp');
+</r:script>
+
 </html>
 
