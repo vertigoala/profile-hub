@@ -316,14 +316,14 @@ class ProfileController extends BaseController {
         }
     }
 
-    def retrieveImagesPaged(){
-        if (!params.opusId || !params.profileId  || !params.pageSize || !params.startIndex) {
+    def retrieveImagesPaged() {
+        if (!params.opusId || !params.profileId || !params.pageSize || !params.startIndex) {
             badRequest "opusId, profileId, pageSize and startIndex are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
             boolean readonlyView = params.getBoolean('readonlyView', true)
-            def  response = imageService.retrieveImagesPaged(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView, params.pageSize as int, params.startIndex as int)
-            handle (response)
+            def response = imageService.retrieveImagesPaged(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView, params.pageSize as int, params.startIndex as int)
+            handle(response)
         }
     }
 
@@ -350,7 +350,7 @@ class ProfileController extends BaseController {
             doUpload(new MultipartFileTransferrableAdapter(multipartFile: file))
         } else if (params.url) {
             final ut = new UrlTransferrableAdapter(url: params.url.toURL())
-            ut.withCloseable { doUpload(ut)  }
+            ut.withCloseable { doUpload(ut) }
         } else {
             badRequest "a file or url is required"
         }
@@ -730,17 +730,36 @@ class ProfileController extends BaseController {
 
     def multimediaPanel = {
         log.debug("ProfileId: ${params.profileId}")
+        log.debug("Edit: ${params.edit}")
+
         Map searchParams = [parentId: params.profileId]
         Map result = documentResourceService.search(searchParams)
 
-        def model = [documents       : modelAsJavascript(result.documents),
-         admin           : true, parentId: params.profileId,
-         updateController: "resource",
-         updateAction    : "documentUpdate",
-         deleteController: "resource",
-         deleteAction    : "documentDelete"]
+        def g = grailsApplication.mainContext.getBean('org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib')
+        def userShow = g.createLink(controller: 'user', action: 'show')
 
-        render (template: "multimedia", model: model)
+        def model = [
+                imageLocation    : g.resource(dir: '/images', plugin: 'document-preview-plugin'),
+                pdfgenUrl        : g.createLink(controller: 'preview', action: 'pdfUrl'),
+                pdfViewer        : g.createLink(controller: 'preview', action: 'viewer'),
+                imgViewer        : g.createLink(controller: 'preview', action: 'imageviewer'),
+                audioViewer      : g.createLink(controller: 'preview', action: 'audioviewer'),
+                videoViewer      : g.createLink(controller: 'preview', action: 'videoviewer'),
+                errorViewer      : g.createLink(controller: 'preview', action: 'error'),
+                documentUpdateUrl: g.createLink(controller: 'resource', action: 'documentUpdate'),
+                documentDeleteUrl: g.createLink(controller: 'resource', action: 'documentDelete'),
+                parentId         : params.profileId,
+                documents        : result.documents,
+                parentId         : params.profileId,
+                roles            : [
+//                        [id: 'embeddedAudio', name: 'Embedded Audio'],
+                        [id: 'embeddedVideo', name: 'Embedded Video']]
+        ]
+
+        log.debug("Model: ${model}")
+        def modelAsJs = modelAsJavascript(model)
+
+        render(template: "multimedia", model: [model: modelAsJs])
     }
 
     def mapPanel = {
@@ -788,7 +807,7 @@ class ProfileController extends BaseController {
         Map searchParams = [parentId: 'Parent']
         Map result = documentResourceService.search(searchParams)
 
-        [documents:modelAsJavascript(result.documents), admin:true, parentId: 'Parent',  updateController:"resource", updateAction: "documentUpdate", deleteController:"resource",  deleteAction: "documentDelete"]
+        [documents: modelAsJavascript(result.documents), admin: true, parentId: 'Parent', updateController: "resource", updateAction: "documentUpdate", deleteController: "resource", deleteAction: "documentDelete"]
     }
 
     private String modelAsJavascript(def model) {
@@ -797,7 +816,7 @@ class ProfileController extends BaseController {
             model = model as JSON
 
         }
-        def json = (model?:[:] as JSON)
+        def json = (model ?: [:] as JSON)
         def modelJson = json.toString()
         modelJson.encodeAsJavaScript()
     }

@@ -31,7 +31,7 @@
                         </ul>
                 </div>
                 <p/>
-                <g:if test="${admin}"><button class="btn btn-default" data-bind="click:attachDocument">New Resource</button></g:if>
+                <g:if test="${documentResourceAdmin}"><button class="btn btn-default" data-bind="click:attachDocument">New Resource</button></g:if>
         </div>
         <div class="span8">
                 <div class="fc-resource-preview-container" data-bind="{ template: { name: previewTemplate } }">
@@ -65,30 +65,4 @@
 
 <g:render template="/resource/documentTemplate"></g:render>
 
-
-<r:script disposition="head">
-    console.log ('This  listDocuments.gsp Script');
-    var options;
-    $(window).load(function () {
-        console.log ('Loading listDocuments config ');
-
-        options = {
-            imageLocation:"${resource(dir:'/images', plugin: 'document-preview-plugin')}",
-            pdfgenUrl: "${createLink(controller: 'preview', action: 'pdfUrl')}",
-            pdfViewer: "${createLink(controller: 'preview', action: 'viewer')}",
-            imgViewer: "${createLink(controller: 'preview', action: 'imageviewer')}",
-            audioViewer: "${createLink(controller: 'preview', action: 'audioviewer')}",
-            videoViewer: "${createLink(controller: 'preview', action: 'videoviewer')}",
-            errorViewer: "${createLink(controller: 'preview', action: 'error')}",
-            %{--documentUpdateUrl: "${createLink(controller: '${updateController}', action:'${updateAction}')}",--}%
-            %{--documentDeleteUrl: "${g.createLink(controller:'${deleteController}', action:'${deleteAction}')}",--}%
-            documentUpdateUrl: '<g:createLink controller="${updateController}" action="${updateAction}"  />',
-            documentDeleteUrl: '<g:createLink controller="${deleteController}" action="${deleteAction}"  />',
-            parentId: '${parentId}',
-            documents: JSON.parse('${documents.toString()}'),
-            admin: ${admin || false}
-        }
-});
-
-</r:script>
 

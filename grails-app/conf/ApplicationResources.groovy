@@ -70,6 +70,7 @@ modules = {
         resource url:"js/angular/controllers/LinksController.js"
         resource url:"js/angular/controllers/SpecimenController.js"
         resource url:"js/angular/controllers/ImagesController.js"
+        resource url:"js/angular/controllers/MultimediaController.js"
         resource url:"js/angular/controllers/ListsController.js"
         resource url:"js/angular/controllers/MapController.js"
         resource url:"js/angular/controllers/NavigationController.js"
@@ -103,8 +104,8 @@ modules = {
 
         resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-ui.css', disposition: 'head'
 
-        resource url: 'vendor/fileupload-9.0.0/jquery.iframe-transport.js', disposition: 'head'
-        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload.js', disposition: 'head'
+        resource url: 'vendor/fileupload-9.0.0/jquery.iframe-transport.js'
+        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload.js'
 
         resource url: 'vendor/fileupload-9.0.0/load-image.min.js'
         resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-process.js'
@@ -142,8 +143,8 @@ modules = {
 
 
     bootstrap3 {
-        resource url:"thirdparty/bootstrap/css/bootstrap3.3.4.min.css", disposition: 'head'
-        resource url:"thirdparty/bootstrap/js/bootstrap.min.js", disposition: 'head'
+        resource url:"thirdparty/bootstrap/css/bootstrap3.3.4.min.css"
+        resource url:"thirdparty/bootstrap/js/bootstrap.min.js"
     }
 
     angular_bootstrap_colourpicker {
