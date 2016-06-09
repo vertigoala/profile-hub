@@ -24,7 +24,6 @@
             <li><a class="fa fa-home"
                    href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}" title="{{profileCtrl.opus.title}}"></a>
             </li>
-            <h1>${grailsApplication.config.layout}</h1>
             <li class="font-xxsmall active" ng-if="profileCtrl.profile.classification.length == 0">{{profileCtrl.isArchived() ? profileCtrl.profile.archivedWithName : profileCtrl.profile.scientificName}}</li>
             <span ng-if="profileCtrl.profile.classification.length > 0">
                 <taxonomy data="profileCtrl.profile.classification"
@@ -85,10 +84,8 @@
         </g:else>
 
     </div>
-
 </div>
 </body>
-
 </html>
 
 

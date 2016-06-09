@@ -516,6 +516,8 @@ function DocListViewModel(documents, options) {
         $.post(url, {}, function() {self.documents.remove(document);});
     };
 }
+
+
 function iconnameFromFilename(filename) {
     if (filename === undefined) { return "_blank.png"; }
     var ext = filename.split('.').pop(),

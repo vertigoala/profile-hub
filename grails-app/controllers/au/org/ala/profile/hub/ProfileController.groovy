@@ -729,14 +729,10 @@ class ProfileController extends BaseController {
     }
 
     def multimediaPanel = {
-        log.debug("ProfileId: ${params.profileId}")
-        log.debug("Edit: ${params.edit}")
-
         Map searchParams = [parentId: params.profileId]
-        Map result = documentResourceService.search(searchParams)
+        Map profileDocuments = documentResourceService.search(searchParams)
 
         def g = grailsApplication.mainContext.getBean('org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib')
-        def userShow = g.createLink(controller: 'user', action: 'show')
 
         def model = [
                 imageLocation    : g.resource(dir: '/images', plugin: 'document-preview-plugin'),
@@ -749,14 +745,13 @@ class ProfileController extends BaseController {
                 documentUpdateUrl: g.createLink(controller: 'resource', action: 'documentUpdate'),
                 documentDeleteUrl: g.createLink(controller: 'resource', action: 'documentDelete'),
                 parentId         : params.profileId,
-                documents        : result.documents,
+                documents        : profileDocuments.documents,
                 parentId         : params.profileId,
                 roles            : [
 //                        [id: 'embeddedAudio', name: 'Embedded Audio'],
                         [id: 'embeddedVideo', name: 'Embedded Video']]
         ]
 
-        log.debug("Model: ${model}")
         def modelAsJs = modelAsJavascript(model)
 
         render(template: "multimedia", model: [model: modelAsJs])
@@ -802,14 +797,6 @@ class ProfileController extends BaseController {
         render template: "nomenclaturePanel"
     }
 
-    def simple() {
-        log.debug("Loading simple page")
-        Map searchParams = [parentId: 'Parent']
-        Map result = documentResourceService.search(searchParams)
-
-        [documents: modelAsJavascript(result.documents), admin: true, parentId: 'Parent', updateController: "resource", updateAction: "documentUpdate", deleteController: "resource", deleteAction: "documentDelete"]
-    }
-
     private String modelAsJavascript(def model) {
 
         if (!(model instanceof JSONObject) && !(model instanceof JSONArray)) {
@@ -820,5 +807,4 @@ class ProfileController extends BaseController {
         def modelJson = json.toString()
         modelJson.encodeAsJavaScript()
     }
-
 }

@@ -1,5 +1,5 @@
 <%@ page import="grails.converters.JSON" %>
-
+<r:require modules="knockout,attachDocuments"/>
 <div class="row-fluid row-eq-height" id="resourceList">
 
         <div class="span4">
