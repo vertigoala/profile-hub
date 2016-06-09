@@ -28,12 +28,18 @@ profileEditor.controller('ProfileController',
 
     self.acknowledgementsSectionTitle = config.readonly ? 'Acknowledgements' : 'Authors and Acknowledgements';
 
+    self.bibliographyDirty = false;
+
     self.manualHierarchy = null;
 
     var orderBy = $filter("orderBy");
 
     self.readonly = function () {
         return config.readonly
+    };
+
+    self.isDirty = function () {
+        return self.bibliographyDirty;
     };
 
     self.loadProfile = function () {
@@ -206,8 +212,16 @@ profileEditor.controller('ProfileController',
         if (!self.profile.bibliography) {
             self.profile.bibliography = [];
         }
-        self.profile.bibliography.push({text: "", order: self.profile.bibliography.length});
+        self.profile.bibliography.push({text: "", order: self.profile.bibliography.length, edit: true});
 
+        self.bibliographyDirty = true;
+        form.$setDirty();
+    };
+            
+    self.editBibliography = function (index, form) {
+        self.profile.bibliography[index].edit = true;
+
+        self.bibliographyDirty = true;
         form.$setDirty();
     };
 
@@ -221,6 +235,7 @@ profileEditor.controller('ProfileController',
             }
         });
 
+        self.bibliographyDirty = true;
         form.$setDirty();
     };
 
@@ -231,6 +246,7 @@ profileEditor.controller('ProfileController',
 
             self.profile.bibliography = orderBy(self.profile.bibliography, "order");
 
+            self.bibliographyDirty = true;
             form.$setDirty();
         }
     };
@@ -242,6 +258,7 @@ profileEditor.controller('ProfileController',
 
             self.profile.bibliography = orderBy(self.profile.bibliography, "order");
 
+            self.bibliographyDirty = true;
             form.$setDirty();
         }
     };
@@ -304,6 +321,7 @@ profileEditor.controller('ProfileController',
 
             self.profile = data;
 
+            self.bibliographyDirty = false;
             if (form) {
                 form.$setPristine();
             }
