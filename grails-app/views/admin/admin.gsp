@@ -18,7 +18,7 @@
     </div>
 
     <div class="panel-body">
-        <a href="${request.contextPath}/alaAdmin2" class="btn btn-primary">Go to ALA admin page</a>
+        <a href="${request.contextPath}/alaAdmin" class="btn btn-primary">Go to ALA admin page</a>
     </div>
 
     <hr/>

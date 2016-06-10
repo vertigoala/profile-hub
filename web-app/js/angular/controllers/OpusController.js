@@ -101,7 +101,6 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
 
         if (!self.opusId) {
             loadOpusDataResourceList();
-
             return;
         }
         var promise = profileService.getOpus(self.opusId);
@@ -146,6 +145,10 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                 loadKeybaseProjects();
 
                 toggleMapPointerColourHash(true);
+
+                if (!self.readonly) {
+                    loadOpusDataResourceList();
+                }
 
                 loadDataResource(self.opus.dataResourceUid);
 
