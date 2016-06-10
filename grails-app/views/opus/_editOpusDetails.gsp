@@ -38,8 +38,24 @@
                     <textarea id="description" ng-model="opusCtrl.opus.description" rows="4"
                               class="form-control" ng-maxlength="300" maxlength="300"></textarea>
                 </div>
+
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h5>Tags</h5>
+                <label>
+                    Select tags that help to describe your collection
+                </label>
+                <select ng-options="tag.name for tag in opusCtrl.tags | orderBy:'name'" ng-model="opusCtrl.selectedTag" ng-change="opusCtrl.tagSelected(OpusForm)" class="form-control">
+                    <option value="">--- Select one ---</option>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <tag ng-repeat="tag in opusCtrl.opus.tags" tag="tag" locked="false" remove="opusCtrl.removeTag" form="OpusForm"></tag>
+            </div>
+        </div>
+
     </div>
 
     <div class="panel-footer">

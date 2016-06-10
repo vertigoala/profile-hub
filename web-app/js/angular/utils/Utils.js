@@ -384,10 +384,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @returns {*} true if the attribute is to be treated as a name
      */
     function isNameAttribute(attribute) {
-        var nameRegex = /name/i;
-
-        var match = attribute.title.match(nameRegex);
-        return match != null && match.length > 0;
+        return _.isBoolean(attribute.containsName) && attribute.containsName;
     }
 
     /**

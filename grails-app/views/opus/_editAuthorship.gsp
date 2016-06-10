@@ -31,4 +31,4 @@
 
 <a name="authorshipVocab"></a>
 <vocabulary-editor vocab-id="opusCtrl.opus.authorshipVocabUuid" vocab-name="Acknowledgements vocabulary"
-                   all-mandatory="true" allow-mandatory="false" allow-reordering="false"></vocabulary-editor>
+                   all-mandatory="true" allow-mandatory="false" allow-reordering="false" allow-categories="false"></vocabulary-editor>

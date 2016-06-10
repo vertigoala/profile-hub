@@ -760,7 +760,7 @@ input.form-control:focus + span.input-group-btn > .btn-default {
 .pill {
     font-size: 8px;
     height: 20px;
-    width: 40px;
+    min-width: 40px;
     margin: 5px;
     display: inline-block;
     font-weight: bold;
@@ -773,6 +773,15 @@ input.form-control:focus + span.input-group-btn > .btn-default {
     font-variant: small-caps;
     border: 1px solid #3d464c;
     background-color: #fff;
+}
+
+.pill-lg {
+    font-size: 13px;
+    height: 30px;
+    min-width: 60px;
+    line-height: 27px;
+    padding-right: 5px;
+    padding-left: 5px;
 }
 
 .pill-green {

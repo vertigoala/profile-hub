@@ -26,6 +26,7 @@ modules = {
         dependsOn "keybase"
         dependsOn "keybase_overrides"
         dependsOn "dual_multiselect"
+        dependsOn "color"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -52,6 +53,7 @@ modules = {
         resource url:"js/angular/directives/imageUpload.js"
         resource url:"js/angular/directives/closeModal.js"
         resource url:"js/angular/directives/fallbackSrc.js"
+        resource url:"js/angular/directives/tag.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"
@@ -193,5 +195,9 @@ modules = {
         dependsOn "angular"
         resource url:"thirdparty/dualMultiselect/dualmultiselect.css"
         resource url:"thirdparty/dualMultiselect/dualmultiselect.min.js"
+    }
+
+    color {
+        resource url:"thirdparty/colorjs/color.min.js"
     }
 }

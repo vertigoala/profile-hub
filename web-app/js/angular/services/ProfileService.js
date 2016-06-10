@@ -1108,12 +1108,8 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return $http.jsonp(config.bieServiceUrl + "/ws/search/auto.json?idxType=TAXON&callback=JSON_CALLBACK&q=" + prefix);
         },
 
-        getPendingJobs: function() {
-            var future = $http.get(config.biocacheServiceUrl + "/occurrence/legend?type=application/json&" + occurrenceQuery + "&cm=" + colourBy);
-            future.then(function (response) {
-                $log.debug("Occurrence Query legend retrieved with response code " + response.status);
-            });
-
+        getTags: function() {
+            var future = $http.get(util.contextRoot() + "/tags");
             return util.toStandardPromise(future);
         }
     }

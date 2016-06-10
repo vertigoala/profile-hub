@@ -494,6 +494,10 @@ class ProfileService {
         webService.post("${grailsApplication.config.profile.service.url}/job/pdf/${jobId}", params)
     }
 
+    Map getTags() {
+        webService.get("${grailsApplication.config.profile.service.url}/tags/")
+    }
+
     private def getProfileKVP(String profileId, String drid) {
         List result = []
         def list = getListItems(drid);

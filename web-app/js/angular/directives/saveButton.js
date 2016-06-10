@@ -10,7 +10,8 @@ profileEditor.directive('saveButton', function ($browser) {
         replace: true,
         scope: {
             disabled: "=",
-            form: "=",
+            form: "=?",
+            dirty: "=",
             show: "=ngShow",
             hide: "=ngHide",
             btnClass: "@",

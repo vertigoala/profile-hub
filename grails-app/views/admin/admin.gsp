@@ -53,9 +53,12 @@
         <div class="panel-body">
             <p>This lets you view and delete any pending async jobs</p>
 
-            <div ng-show="adminCtrl.loadingPendingJobs"><span class="fa fa-spin fa-spinner">&nbsp;</span>Loading...</div>
+            <div ng-show="adminCtrl.loadingPendingJobs"><span class="fa fa-spin fa-spinner">&nbsp;</span>Loading...
+            </div>
+
             <div ng-show="!adminCtrl.loadingPendingJobs">
                 <div ng-show="adminCtrl.jobs.length == 0">There are no pending jobs.</div>
+
                 <div class="table-responsive" ng-show="adminCtrl.jobs.length > 0">
                     <table class="table table-striped">
                         <thead>
@@ -72,17 +75,60 @@
                             <td>{{ job.jobId }}</td>
                             <td>{{ job.userEmail }}</td>
                             <td>{{ job.jobType.name }}</td>
-                            <td>{{ job.attempts }} <span ng-show="job.error">Last error: {{ job.error }}, {{ job.lastUpdated }}</span></td>
+                            <td>{{ job.attempts }} <span
+                                    ng-show="job.error">Last error: {{ job.error }}, {{ job.lastUpdated }}</span></td>
                             <td>{{ job.startDate }}</td>
                             <td>{{ job.dateCreated }}</td>
                             <td>
-                                <button class="btn btn-sm btn-link" ng-click="adminCtrl.deleteJob(job.jobType.name, job.jobId)"><span class="fa fa-trash-o color--red"></span></button>
+                                <button class="btn btn-sm btn-link"
+                                        ng-click="adminCtrl.deleteJob(job.jobType.name, job.jobId)"><span
+                                        class="fa fa-trash-o color--red"></span></button>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
+        <hr/>
+
+        <div class="panel-heading">
+            <h3>Tags</h3>
+        </div>
+
+        <div class="panel-body">
+            <p>Tags are assigned to collections to allow filtering, and to assist with exporting profile details (e.g. for the BIE).</p>
+            <p>Tags are identified using the abbreviation, so if you change the abbreviation for a tag, any system that uses it (e.g. BIE) may need to be updated.</p>
+
+            <div ng-show="adminCtrl.loadingTags"><span class="fa fa-spin fa-spinner">&nbsp;</span>Loading...</div>
+
+            <div class="row" ng-repeat="tag in adminCtrl.tags" ng-hide="adminCtrl.loadingTags">
+                <div class="col-md-12 form-inline padding-bottom-1">
+                    <div class="form-group">
+                        <label for="abbrev{{$index}}" class="control-label">Abbrev.</label>
+                        <input id="abbrev{{$index}}" class="form-control" ng-model="tag.abbrev">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name{{$index}}" class="control-label">Name.</label>
+                        <input id="name{{$index}}" class="form-control" ng-model="tag.name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="colour{{$index}}" class="control-label">Colour.</label>
+
+                        <div class="input-group">
+                            <input id="colour{{$index}}" class="form-control" ng-model="tag.colour" colorpicker
+                                   colorpicker-close-on-select>
+                            <span class="input-group-addon" ng-style="{background: tag.colour}"></span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" ng-click="adminCtrl.saveTag($index)">Save</button>
+                    <button class="btn btn-danger" ng-click="adminCtrl.deleteTag($index)">Delete</button>
+                </div>
+            </div>
+            <button class="btn btn-default" ng-click="adminCtrl.addTag()">Add tag</button>
+
         </div>
         <hr/>
     </div>

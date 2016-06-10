@@ -51,4 +51,32 @@ class AdminController extends BaseController {
 
         handle response
     }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def createTag() {
+        def response = webService.put("${grailsApplication.config.profile.service.url}/admin/tag/", request.getJSON())
+
+        handle response
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def updateTag(@NotNull String tagId) {
+        def response = webService.post("${grailsApplication.config.profile.service.url}/admin/tag/${tagId}", request.getJSON())
+
+        handle response
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def deleteTag(@NotNull String tagId) {
+        def response = webService.delete("${grailsApplication.config.profile.service.url}/admin/tag/${tagId}")
+
+        handle response
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def getTag(String tagId) {
+        def response = webService.get("${grailsApplication.config.profile.service.url}/admin/tag/${tagId ?: ""}")
+
+        handle response
+    }
 }
