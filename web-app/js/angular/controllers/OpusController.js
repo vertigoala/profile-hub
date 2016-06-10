@@ -575,6 +575,9 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
     };
 
     self.tagSelected = function(form) {
+        if (!self.opus.tags) {
+            self.opus.tags = [];
+        }
         self.opus.tags.push(self.selectedTag);
         self.tags.splice(self.tags.indexOf(self.selectedTag), 1);
         self.selectedTag = null;
