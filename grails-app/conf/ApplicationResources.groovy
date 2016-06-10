@@ -95,53 +95,6 @@ modules = {
         dependsOn 'bootstrap3'
     }
 
-    jqueryFileUpload {
-
-        dependsOn 'jquery'
-        dependsOn 'bootstrap3'
-        dependsOn 'jqueryUI'
-
-
-        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-ui.css', disposition: 'head'
-
-        resource url: 'vendor/fileupload-9.0.0/jquery.iframe-transport.js'
-        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload.js'
-
-        resource url: 'vendor/fileupload-9.0.0/load-image.min.js'
-        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-process.js'
-        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-image.js'
-        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-video.js'
-        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-validate.js'
-        resource url: 'vendor/fileupload-9.0.0/jquery.fileupload-audio.js'
-
-
-        resource url: 'vendor/fileupload-9.0.0/locale.js'
-        resource url: 'vendor/fileupload-9.0.0/cors/jquery.xdr-transport.js',
-                wrapper: { s -> "<!--[if gte IE 8]>$s<![endif]-->" }
-    }
-
-    jqueryUI {
-        resource url: 'vendor/jquery-ui/jquery-ui-1.11.2-no-autocomplete.js', disposition: 'head'
-        resource url: '/vendor/jquery-ui/themes/smoothness/jquery-ui.css', attrs: [media: 'all'], disposition: 'head'
-    }
-
-    attachDocuments {
-        dependsOn 'jquery'
-        dependsOn 'jqueryFileUpload'
-        dependsOn 'knockout'
-        dependsOn 'bootstrap3'
-        dependsOn 'profiles'
-        resource url: 'js/preview/document.js'
-    }
-
-    knockout {
-        resource url: 'vendor/knockoutjs/3.4.0/knockout-3.4.0.debug.js'
-        resource url: 'vendor/knockoutjs/knockout.mapping-latest.js'
-        resource url: 'js/preview/knockout-extenders.js'
-    }
-
-
-
     bootstrap3 {
         resource url:"thirdparty/bootstrap/css/bootstrap3.3.4.min.css"
         resource url:"thirdparty/bootstrap/js/bootstrap.min.js"

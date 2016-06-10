@@ -19,8 +19,8 @@
                     <div id="edit-documents" class="pill-pane">
                         <div class="row-fluid">
                             <div class="span10">
-                                <g:render template="/resource/attachDocument"/>
-                                <g:render template="/resource/listDocuments" model="[documentResourceAdmin: edit]"/>
+                                <g:render plugin="document-preview-plugin" template="/resource/attachDocument"/>
+                                <g:render plugin="document-preview-plugin" template="/resource/listDocuments" model="[documentResourceAdmin: edit]"/>
                             </div>
                         </div>
                     </div>
