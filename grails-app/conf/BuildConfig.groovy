@@ -70,7 +70,7 @@ grails.project.dependency.resolution = {
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
         compile ":ala-map:2.0.1"
-        compile ":ala-ws-plugin:1.3"
+//        compile ":ala-ws-plugin:1.3"
         compile ":ala-admin-plugin:1.2"
         compile ":quartz:1.0.2"
 
@@ -86,3 +86,4 @@ grails.project.dependency.resolution = {
         }
     }
 }
+grails.plugin.location."ala-ws-plugin" = "../ala-ws-plugin"

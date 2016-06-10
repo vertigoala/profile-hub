@@ -293,7 +293,7 @@ class ExportService {
         if (mapService.snapshotImageExists(opus.uuid, model.profile.uuid) && opus.mapConfig.allowSnapshots) {
             model.profile.mapImageUrl = "${grailsApplication.config.grails.serverURL}${mapService.getSnapshotImageUrl("", opus.uuid, model.profile.uuid)}"
         } else {
-            model.profile.mapImageUrl = mapService.constructMapImageUrl(occurrenceQuery)
+            model.profile.mapImageUrl = mapService.constructMapImageUrl(occurrenceQuery, opus.usePrivateRecordData)
         }
         model.profile.occurrencesUrl = createOccurrencesUrl(opus, occurrenceQuery)
 
@@ -400,7 +400,13 @@ class ExportService {
     }
 
     def createOccurrencesUrl = { opus, occurrenceQuery ->
-        return opus.mapConfig?.biocacheUrl ? "${(opus.mapConfig.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?${occurrenceQuery}" : ""
+        String query
+        if (opus.usePrivateRecordData) {
+            query = "${grailsApplication.config.sandbox.base.url}/biocache-service/occurrences/search?${occurrenceQuery}"
+        } else {
+            query = opus.mapConfig?.biocacheUrl ? "${(opus.mapConfig.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?${occurrenceQuery}" : ""
+        }
+        query
     }
 
     def getColourForStatus(status) {

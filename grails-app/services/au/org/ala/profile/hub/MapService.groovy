@@ -12,7 +12,7 @@ class MapService {
     ImageService imageService
     ProfileService profileService
 
-    String constructMapImageUrl(String occurrenceQuery, String pointColor = DEFAULT_POINT_COLOUR, String extents = DEFAULT_EXTENTS) {
+    String constructMapImageUrl(String occurrenceQuery, boolean useSandbox = false, String pointColor = DEFAULT_POINT_COLOUR, String extents = DEFAULT_EXTENTS) {
         Map params = [
                 extents      : extents ?: DEFAULT_EXTENTS,
                 outlineColour: 0x000000,
@@ -27,7 +27,12 @@ class MapService {
                 pcolour      : pointColor ?: DEFAULT_POINT_COLOUR
         ]
 
-        String url = "${grailsApplication.config.biocache.base.url}ws/mapping/wms/image?${occurrenceQuery}&"
+        String url
+        if (useSandbox) {
+            url = "${grailsApplication.config.sandbox.base.url}/biocache-service/mapping/wms/image?${occurrenceQuery}&"
+        } else {
+            url = "${grailsApplication.config.biocache.base.url}ws/mapping/wms/image?${occurrenceQuery}&"
+        }
 
         params.each { k, v -> url += "${k}=${v}&" }
 
@@ -43,7 +48,7 @@ class MapService {
     void createMapSnapshot(String opusId, String profileId, String occurrenceQuery, String extents = DEFAULT_EXTENTS) {
         Map profileAndOpus = profileService.getProfile(opusId, profileId, true)
 
-        String url = constructMapImageUrl(occurrenceQuery, profileAndOpus.opus.mapConfig.mapPointColour, extents)
+        String url = constructMapImageUrl(occurrenceQuery, profileAndOpus.opus.usePrivateRecordData, profileAndOpus.opus.mapConfig.mapPointColour, extents)
 
         deleteMapSnapshot(opusId, profileId)
 

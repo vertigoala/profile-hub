@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import org.apache.http.HttpStatus
 import org.apache.tika.config.TikaConfig
 import org.apache.tika.mime.MimeTypeException
 
@@ -68,5 +69,9 @@ class Utils {
         } catch (IllegalStateException e) {
         }
         return ''
+    }
+
+    static boolean isHttpSuccess(int statusCode) {
+        HttpStatus.SC_OK <= statusCode && 299 >= statusCode
     }
 }

@@ -4,9 +4,9 @@
 profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http, $timeout) {
     var self = this;
 
-    var biocacheWMSUrl = config.biocacheServiceUrl + "ws/mapping/wms/reflect?";
-    var biocacheInfoUrl = config.biocacheServiceUrl + "ws/occurrences/info?";
-    var biocacheBoundsUrl = config.biocacheServiceUrl + "ws/mapping/bounds.json?";
+    var biocacheWMSUrl = config.biocacheServiceUrl + "/ws/mapping/wms/reflect?";
+    var biocacheInfoUrl = config.biocacheServiceUrl + "/ws/occurrences/info?";
+    var biocacheBoundsUrl = config.biocacheServiceUrl + "/ws/mapping/bounds.json?";
 
     self.autoZoom = false;
     self.showingEditorView = true;

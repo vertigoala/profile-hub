@@ -8,6 +8,33 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-12">
+                <h5 class="section-panel-heading padding-bottom-1">Record visibility</h5>
+
+                <div class="col-sm-6">
+                    <div class="radio">
+                        <label for="privateRecordsNo" class="inline-label">
+                            <input id="privateRecordsNo" type="radio" name="usePrivateRecordData" ng-value="false"
+                                   ng-model="opusCtrl.opus.usePrivateRecordData">
+                            Use publically available occurrence data from the Atlas of Living Australia.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="radio">
+                        <label for="privateRecordsYes" class="inline-label">
+                            <input id="privateRecordsYes" type="radio" name="usePrivateRecordData" ng-value="true"
+                                   ng-model="opusCtrl.opus.usePrivateRecordData">
+                            Allow participants to upload their own data, which will only be accessible via this collection.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" ng-hide="opusCtrl.opus.usePrivateRecordData">
+            <div class="col-sm-12">
+                <h5 class="section-panel-heading padding-bottom-1">Record sources</h5>
                 <p>
                     Configure the record sources to be included in your profile pages. This controls the data that will be retrieved from the Atlas of Living Australia to be used on maps and in data lookups.
                 </p>

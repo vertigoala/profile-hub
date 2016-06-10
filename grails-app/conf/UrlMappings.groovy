@@ -64,6 +64,9 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/attachment/" controller: "profile", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
         "/opus/$opusId/profile/$profileId/map/snapshot" controller: "profile", action: [DELETE: "deleteMapSnapshot", POST: "createMapSnapshot"]
         "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
+        "/opus/$opusId/data/" controller: "data", action: [GET: "getDataSets"]
+        "/opus/$opusId/data/upload" controller: "data", action: [GET: "upload"]
+        "/opus/$opusId/data/$dataResourceId/delete" controller: "data", action: [DELETE: "deleteDataSet"]
 
         "/opus/$opusId/vocab/$vocabId/update" controller: "vocab", action: [POST: "update"]
         "/opus/$opusId/vocab/$vocabId/findUsages" controller: "vocab", action: [GET: "findUsagesOfTerm"]
@@ -154,6 +157,26 @@ class UrlMappings {
         "/notAuthorised"(view: "/notAuthorised")
         "/error"(view: "/error")
         "/notFound"(view: "/notFound")
+
+        // The following URLs proxy requests for the Sandbox through Profile Hub.
+        // See the project wiki for more info on the Profiles-Sandbox integration.
+
+        // SANDBOX UPLOAD UI: The URL pattern must match the format used by the Sandbox UI, which is embedded in the
+        // data upload page via web components.
+        "/dataCheck/parseColumns" controller: "sandboxProxy", action: [POST: "parseColumns"]
+        "/dataCheck/parseColumnsWithFirstLineInfo" controller: "sandboxProxy", action: [POST: "parseColumnsWithFirstLineInfo"]
+        "/dataCheck/upload" controller: "sandboxProxy", action: [POST: "upload"]
+        "/dataCheck/processData" controller: "sandboxProxy", action: [POST: "processData"]
+        "/dataCheck/uploadStatus" controller: "sandboxProxy", action: [GET: "uploadStatus"]
+        "/upload/preview" controller: "sandboxProxy", action: [GET: "previewUpload"]
+
+        // BIOCACHE MAPS (used by MapController.js and the ALA.OccurrenceMap.js from the ala-map-plugin)
+        "/ws/mapping/wms/reflect" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/ws/occurrences/info" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/ws/mapping/bounds.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/ws/occurrence/legend" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/ws/occurrences/search.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/ws/search/grouped/facets" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
 
 
         // The following URLs need to match the URLs used by the ala-images-client plugin so that we can view draft

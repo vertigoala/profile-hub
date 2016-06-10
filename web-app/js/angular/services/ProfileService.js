@@ -1111,6 +1111,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         getTags: function() {
             var future = $http.get(util.contextRoot() + "/tags");
             return util.toStandardPromise(future);
+        },
+
+        getDataSets: function(opusId) {
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/data");
+            return util.toStandardPromise(future);
+        },
+
+        deleteDataSet: function(opusId, dataSetId) {
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/data/" + dataSetId + "/delete");
+
+            return util.toStandardPromise(future);
         }
     }
 });

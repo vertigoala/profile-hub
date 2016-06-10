@@ -31,23 +31,24 @@ class ProfileController extends BaseController {
             badRequest "opusId and profileId are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
-            Map model = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
+            Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
-            if (!model || !model.profile) {
+            if (!profileAndOpus || !profileAndOpus.profile) {
                 notFound()
-            } else if (model.profile.archivedDate) {
+            } else if (profileAndOpus.profile.archivedDate) {
                 // archived profiles cannot be edited by anyone
                 notAuthorised()
             } else {
-                model.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, params.opusId, params.profileId)
-                model << [edit        : true,
-                          currentUser : authService.getDisplayName(),
-                          glossaryUrl : getGlossaryUrl(model.opus),
-                          aboutPageUrl: getAboutUrl(model.opus, model.profile),
-                          footerText  : model.opus.footerText,
-                          contact     : model.opus.contact,
-                          displayMap  : true]
-                render view: "edit", model: model
+                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, params.opusId, params.profileId)
+                profileAndOpus << [edit                : true,
+                          currentUser         : authService.getDisplayName(),
+                          glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
+                          aboutPageUrl        : getAboutUrl(profileAndOpus.opus, profileAndOpus.profile),
+                          footerText          : profileAndOpus.opus.footerText,
+                          contact             : profileAndOpus.opus.contact,
+                          usePrivateRecordData: profileAndOpus.opus.usePrivateRecordData,
+                          displayMap          : true]
+                render view: "edit", model: profileAndOpus
             }
         }
     }
@@ -64,12 +65,13 @@ class ProfileController extends BaseController {
             } else {
                 profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 Map model = profileAndOpus
-                model << [edit        : false,
-                          glossaryUrl : getGlossaryUrl(profileAndOpus.opus),
-                          aboutPageUrl: getAboutUrl(profileAndOpus.opus, profileAndOpus.profile),
-                          footerText  : profileAndOpus.opus.footerText,
-                          contact     : profileAndOpus.opus.contact,
-                          displayMap  : profileService.hasMatchedName(model.profile)]
+                model << [edit                : false,
+                          glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
+                          aboutPageUrl        : getAboutUrl(profileAndOpus.opus, profileAndOpus.profile),
+                          footerText          : profileAndOpus.opus.footerText,
+                          contact             : profileAndOpus.opus.contact,
+                          usePrivateRecordData: profileAndOpus.opus.usePrivateRecordData,
+                          displayMap          : profileService.hasMatchedName(model.profile)]
                 render view: "show", model: model
             }
         }
@@ -313,14 +315,14 @@ class ProfileController extends BaseController {
         }
     }
 
-    def retrieveImagesPaged(){
-        if (!params.opusId || !params.profileId  || !params.pageSize || !params.startIndex) {
+    def retrieveImagesPaged() {
+        if (!params.opusId || !params.profileId || !params.pageSize || !params.startIndex) {
             badRequest "opusId, profileId, pageSize and startIndex are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
             boolean readonlyView = params.getBoolean('readonlyView', true)
-            def  response = imageService.retrieveImagesPaged(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView, params.pageSize as int, params.startIndex as int)
-            handle (response)
+            def response = imageService.retrieveImagesPaged(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView, params.pageSize as int, params.startIndex as int)
+            handle(response)
         }
     }
 
@@ -347,7 +349,7 @@ class ProfileController extends BaseController {
             doUpload(new MultipartFileTransferrableAdapter(multipartFile: file))
         } else if (params.url) {
             final ut = new UrlTransferrableAdapter(url: params.url.toURL())
-            ut.withCloseable { doUpload(ut)  }
+            ut.withCloseable { doUpload(ut) }
         } else {
             badRequest "a file or url is required"
         }

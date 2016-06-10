@@ -239,7 +239,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
                 var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
                 console.log(msg);
                 defer.reject(msg);
-                if (status == 403) {
+                if (status == 403 || status == 401) {
                     console.log("not authorised");
                     redirect(contextRoot() + "/notAuthorised");
                 }
