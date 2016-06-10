@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-form="FeatureFrom" ng-cloak>
+<div class="panel panel-default" ng-form="FeatureForm" ng-cloak>
     <div class="panel-heading">
         <a name="featureLists">
             <h4 class="section-panel-heading">Feature Lists</h4>
@@ -31,7 +31,7 @@
                     <li ng-repeat="feature in opusCtrl.opus.featureLists">
                         <a href="${grailsApplication.config.lists.base.url}/speciesListItem/list/{{feature}}">{{(opusCtrl.allSpeciesLists | filter: feature)[0].listName | default:'Loading...'}}</a>
                         <a class="btn btn-mini btn-link" title="Remove this resource"
-                           ng-click="opusCtrl.removeFeatureList($index, 'existing', FeatureFrom)">
+                           ng-click="opusCtrl.removeFeatureList($index, 'existing', FeatureForm)">
                             <i class="fa fa-trash-o color--red"></i>
                         </a>
                     </li>
@@ -47,7 +47,7 @@
                                 <span class="fa fa-ban color--red"
                                       ng-if="feature.list && !feature.list.dataResourceUid"></span>
                                 <button class="btn btn-mini btn-link" title="Remove this resource"
-                                        ng-click="opusCtrl.removeFeatureList($index, 'new', FeatureFrom)">
+                                        ng-click="opusCtrl.removeFeatureList($index, 'new', FeatureForm)">
                                     <i class="fa fa-trash-o color--red"></i>
                                 </button>
                             </div>
@@ -65,7 +65,7 @@
                     <button class="btn btn-default" ng-click="opusCtrl.addFeatureList()"><i
                             class="fa fa-plus"></i>  Add list</button>
                 </div>
-                <save-button ng-click="opusCtrl.saveFeatureLists(FeatureFrom)" form="FeatureForm"></save-button>
+                <save-button ng-click="opusCtrl.saveFeatureLists(FeatureForm)" form="FeatureForm"></save-button>
             </div>
         </div>
     </div>
