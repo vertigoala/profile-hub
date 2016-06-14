@@ -101,7 +101,6 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
 
         if (!self.opusId) {
             loadOpusDataResourceList();
-
             return;
         }
         var promise = profileService.getOpus(self.opusId);
@@ -146,6 +145,10 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                 loadKeybaseProjects();
 
                 toggleMapPointerColourHash(true);
+
+                if (!self.readonly) {
+                    loadOpusDataResourceList();
+                }
 
                 loadDataResource(self.opus.dataResourceUid);
 
@@ -572,6 +575,9 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
     };
 
     self.tagSelected = function(form) {
+        if (!self.opus.tags) {
+            self.opus.tags = [];
+        }
         self.opus.tags.push(self.selectedTag);
         self.tags.splice(self.tags.indexOf(self.selectedTag), 1);
         self.selectedTag = null;

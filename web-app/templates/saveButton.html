@@ -1,7 +1,7 @@
 <button class="save-button {{ btn-class ? btn-class : 'btn btn-primary pull-right' }}"
-        ng-class="dirty || (form && form.$dirty) ? 'dirty-form' : ''"
+        ng-class="isDirty() ? 'dirty-form' : ''"
         ng-cloak
-        ng-disabled="disabled || !dirty || (form && (form.$invalid || form.$pristine))">
-    <span ng-show="(form && form.$dirty) || dirty">* </span>
+        ng-disabled="isDisabled()">
+    <span ng-show="isDirty()">* </span>
     <span>{{ label | default: 'Save' }}</span>
 </button>
