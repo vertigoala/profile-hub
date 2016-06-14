@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        <div class="panel-body">
+        <div id="multimediaPanelBody" class="panel-body">
             <div class="row">
                 <div class="col-sm-12">
                     <div id="edit-documents" class="pill-pane">
