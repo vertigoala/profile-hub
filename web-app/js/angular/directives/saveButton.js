@@ -16,6 +16,21 @@ profileEditor.directive('saveButton', function ($browser) {
             hide: "=ngHide",
             btnClass: "@",
             label: "@"
+        },
+        controller: function ($scope) {
+            $scope.isDisabled = function () {
+                return (angular.isDefined($scope.disabled) && $scope.disabled)
+                    || !$scope.isDirty() || $scope.isInvalid();
+            };
+
+            $scope.isInvalid = function () {
+                return $scope.form && $scope.form.$invalid;
+            };
+
+            $scope.isDirty = function () {
+                return ($scope.form && $scope.form.$dirty)
+                    || (angular.isDefined($scope.dirty) && $scope.dirty);
+            };
         }
     };
 });
