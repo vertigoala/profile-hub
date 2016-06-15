@@ -402,7 +402,7 @@ class ExportService {
     def createOccurrencesUrl = { opus, occurrenceQuery ->
         String query
         if (opus.usePrivateRecordData) {
-            query = "${grailsApplication.config.sandbox.base.url}/biocache-service/occurrences/search?${occurrenceQuery}"
+            query = "${grailsApplication.config.sandbox.biocache.service.url}/occurrences/search?${occurrenceQuery}"
         } else {
             query = opus.mapConfig?.biocacheUrl ? "${(opus.mapConfig.biocacheUrl as String).replaceAll('/$', '')}/occurrences/search?${occurrenceQuery}" : ""
         }

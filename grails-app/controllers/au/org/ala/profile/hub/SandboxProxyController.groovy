@@ -1,6 +1,14 @@
 package au.org.ala.profile.hub
 
+import au.com.bytecode.opencsv.CSVWriter
+import grails.converters.JSON
 import groovy.json.JsonSlurper
+import org.apache.commons.io.FileUtils
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
+import org.springframework.web.multipart.commons.CommonsMultipartFile
+import tikaParser.TikaService
 
 import static au.org.ala.profile.hub.Utils.enc
 import au.org.ala.web.AuthService
@@ -12,37 +20,162 @@ import static au.org.ala.profile.hub.Utils.isHttpSuccess
 class SandboxProxyController extends BaseController {
     WebService webService
     AuthService authService
+    TikaService tikaService
     ProfileService profileService
 
-    def parseColumns() {
-        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}/datacheck/dataCheck/parseColumns", request.reader.text)
+    def parseCsvColumns() {
+        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/parseColumns", request.reader.text)
     }
 
-    def parseColumnsWithFirstLineInfo() {
-        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}/datacheck/dataCheck/parseColumnsWithFirstLineInfo", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
+    def parseFileColumns() {
+        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/parseColumns?id=${params.id}", request.reader.text)
     }
 
-    def processData() {
-        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}/datacheck/dataCheck/processData", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
+    def parseCsvColumnsWithFirstLineInfo() {
+        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/parseColumnsWithFirstLineInfo", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
     }
 
-    def upload() {
+    def parseFileColumnsWithFirstLineInfo() {
+        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/parseColumnsWithFirstLineInfo", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
+    }
+
+    def processCsvData() {
+        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/processData", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
+    }
+
+    def processFileData() {
+        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/viewProcessData?id=${params.id}", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
+    }
+
+    def csvUploadStatus() {
+        webService.proxyGetRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/uploadStatus?uid=${enc(params.uid)}&random=${enc(params.random)}")
+    }
+
+    def fileUploadStatus() {
+        webService.proxyGetRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/uploadStatus?uid=${enc(params.uid)}&random=${enc(params.random)}")
+    }
+
+    def previewUpload() {
+        render view: "data/uploadData", mode: [fn: params.fn, id: params.id, userId: authService.getUserId()]
+    }
+
+    def uploadFile() {
+        CommonsMultipartFile file = request.getFile('file')
+
+        long fileId = System.currentTimeMillis()
+        String uploadDirPath = "${grailsApplication.config.sandbox.upload.directory}/${fileId}"
+        log.debug "Creating upload directory " + uploadDirPath
+
+        File uploadDir = new File(uploadDirPath)
+        FileUtils.forceMkdir(uploadDir)
+
+        log.debug "Transferring file to directory...."
+        File newFile = new File("${uploadDirPath}${File.separatorChar}${file.getFileItem().getName()}")
+        file.transferTo(newFile)
+
+        log.debug "Detecting file formats...."
+        String contentType = FileUtil.detectFormat(newFile)
+
+        log.debug "Content type...." + contentType
+        //if its GZIPPED or ZIPPED extract the file
+        if (contentType == "application/zip") {
+            //upzip it
+            Map result = FileUtil.extractZip(newFile)
+            if (result.success) {
+                newFile = result.file
+                contentType = FileUtil.detectFormat(result.file)
+            }
+        } else if (contentType == "application/x-gzip") {
+            Map result = FileUtil.extractGZip(newFile)
+            if (result.success) {
+                newFile = result.file
+                contentType = FileUtil.detectFormat(result.file)
+            }
+        }
+
+        File extractedFile = new File("${uploadDirPath}${File.separatorChar}${fileId}.csv")
+
+        if (contentType.startsWith("text")) {
+            //extract and re-write into common CSV format
+            log.debug("Is a CSV....")
+            FileUtils.copyFile(newFile, extractedFile)
+        } else {
+            //extract the data
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(extractedFile))
+            String extractedString = tikaService.parseFile(newFile)
+            //HTML version of the file
+            Document doc = Jsoup.parse(extractedString);
+            Elements dataTable = doc.select("tr");
+
+            if (dataTable?.size() > 0) {
+                int cellCount = dataTable?.get(0)?.select("td")?.size() ?: 0
+                dataTable.each { tr ->
+                    Elements cells = tr.select("td")
+                    String[] fields = new String[cellCount]
+                    if (cells) {
+                        cells.eachWithIndex { cell, idx ->
+                            if (idx < cellCount) {
+                                fields[idx] = cell.text().trim()
+                            }
+                        }
+                    }
+                    csvWriter.writeNext(fields)
+                }
+                csvWriter.close()
+            }
+        }
+        //create a zipped version for uploading.....
+        FileUtil.zipFile(extractedFile)
+
+        render([fileId: fileId, fileName: newFile.getName()] as JSON)
+    }
+
+    def sendFileToBiocache() {
+        Map json = request.getJSON()
+
+        Map data = [
+                headers            : json.headers.trim(),
+                datasetName        : json.datasetName.trim(),
+                csvZippedUrl       : "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/serveFile?fileId=${json.fileId}",
+                separator          : "COMMA",
+                firstLineIsData    : json.firstLineIsData,
+                alaId              : authService.getUserId()
+        ]
+
+        Map result = webService.post("${grailsApplication.config.sandbox.biocache.service.url}/upload/",
+                data, [:], ContentType.APPLICATION_FORM_URLENCODED, true, true,
+                [Accept: ContentType.APPLICATION_JSON.toString()])
+
+        // refresh the biocache data cache
+        webService.get("${grailsApplication.config.sandbox.biocache.service.url}/cache/refresh")
+
+        handleFileUploadResponse(result, params.opusId)
+    }
+
+    def sendCsvDataToBiocache() {
         String csvData = request.getParameter("rawData").trim()
         Map data = [
                 headers            : request.getParameter("headers").trim(),
+                datasetName        : request.getParameter("datasetName").trim(),
                 csvData            : csvData,
                 separator          : getSeparatorName(csvData),
-                datasetName        : request.getParameter("datasetName").trim(),
                 customIndexedFields: request.getParameter("customIndexedFields").trim(),
                 firstLineIsData    : request.getParameter("firstLineIsData"),
                 alaId              : authService.getUserId()
         ]
 
-        Map opus = profileService.getOpus(params.opusId)
+        Map result = webService.post("${grailsApplication.config.sandbox.biocache.service.url}/upload/",
+                data, [:], ContentType.APPLICATION_FORM_URLENCODED, true, true,
+                [Accept: ContentType.APPLICATION_JSON.toString()])
 
-        Map result = webService.post("${grailsApplication.config.sandbox.base.url}/biocache-service/upload/", data, [:], ContentType.APPLICATION_FORM_URLENCODED, true, true, [Accept: ContentType.APPLICATION_JSON.toString()])
+        // refresh the biocache data cache
+        webService.get("${grailsApplication.config.sandbox.biocache.service.url}/cache/refresh")
 
-        webService.get("${grailsApplication.config.sandbox.base.url}/biocache-service/cache/refresh")
+        handleFileUploadResponse(result, params.opusId)
+    }
+
+    private handleFileUploadResponse(Map result, String opusId) {
+        Map opus = profileService.getOpus(opusId)
 
         // the biocache-service upload operation returns a json string in the format {uid: 'drId'}, which is jammed into
         // the resp map returned by the WebService class, as the KEY (with a value of null).
@@ -60,14 +193,6 @@ class SandboxProxyController extends BaseController {
         } else {
             handle result
         }
-    }
-
-    def uploadStatus() {
-        webService.proxyGetRequest(response, "${grailsApplication.config.sandbox.base.url}/datacheck/dataCheck/uploadStatus?uid=${enc(params.uid)}&random=${enc(params.random)}")
-    }
-
-    def previewUpload() {
-        render view: "data/uploadData", mode: [fn: params.fn, id: params.id, userId: authService.getUserId()]
     }
 
     private static String getSeparatorName(String raw) {

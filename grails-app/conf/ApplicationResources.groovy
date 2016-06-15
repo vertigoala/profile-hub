@@ -28,6 +28,7 @@ modules = {
         dependsOn "dual_multiselect"
         dependsOn "color"
         dependsOn "webcomponents"
+        dependsOn "urijs"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -205,5 +206,9 @@ modules = {
 
     webcomponents {
         resource url:"thirdparty/webcomponentsjs/webcomponents-0.7.22.min.js"
+    }
+
+    urijs {
+        resource url:"thirdparty/urijs-1.18.0/URI.js"
     }
 }

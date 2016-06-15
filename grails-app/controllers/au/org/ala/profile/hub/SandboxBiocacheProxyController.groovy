@@ -15,7 +15,7 @@ class SandboxBiocacheProxyController {
     def proxy() {
         String requestPath = request.forwardURI.substring("${request.contextPath}/ws".length() + 1)
         String queryString = request.queryString
-        String baseUrl = "${grailsApplication.config.sandbox.base.url}/biocache-service/"
+        String baseUrl = "${grailsApplication.config.sandbox.biocache.service.url}"
 
         webService.proxyGetRequest(response, "${baseUrl}${requestPath}${queryString ? "?" : ""}${queryString ?: ""}", true, true)
     }

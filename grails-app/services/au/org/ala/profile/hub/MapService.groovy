@@ -29,7 +29,7 @@ class MapService {
 
         String url
         if (useSandbox) {
-            url = "${grailsApplication.config.sandbox.base.url}/biocache-service/mapping/wms/image?${occurrenceQuery}&"
+            url = "${grailsApplication.config.sandbox.biocache.service.url}/mapping/wms/image?${occurrenceQuery}&"
         } else {
             url = "${grailsApplication.config.biocache.base.url}ws/mapping/wms/image?${occurrenceQuery}&"
         }

@@ -48,6 +48,7 @@ grails.project.dependency.resolution = {
         compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
         runtime "org.springframework:spring-test:4.1.2.RELEASE" // required by the rendering plugin
         runtime 'au.org.ala:image-utils:1.8.2'
+        runtime 'org.jsoup:jsoup:1.7.2'
 
         compile 'net.sf.jasperreports:jasperreports:6.2.0'
         compile 'net.sf.jasperreports:jasperreports-functions:6.2.0'
@@ -84,6 +85,7 @@ grails.project.dependency.resolution = {
         runtime(":ala-auth:1.3.1") {
             excludes "commons-httpclient"
         }
+        runtime ":tika-parser:1.3.0.1"
     }
 }
 grails.plugin.location."ala-ws-plugin" = "../ala-ws-plugin"

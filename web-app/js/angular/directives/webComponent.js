@@ -18,7 +18,8 @@ profileEditor.directive('webComponent', function () {
             contentSelectors: "@",
             excludeSelectors: "@",
             opusId: "@",
-            profileId: "@"
+            profileId: "@",
+            onloadCallback: "="
         },
         link: function (scope, element) {
             var div = document.createElement("div");
@@ -41,6 +42,10 @@ profileEditor.directive('webComponent', function () {
                             element.remove();
                         });
                     });
+                }
+
+                if (angular.isDefined(scope.onloadCallback)) {
+                    scope.onloadCallback();
                 }
 
                 var selectors = scope.contentSelectors.split(",");
@@ -70,6 +75,5 @@ profileEditor.directive('webComponent', function () {
 
             div.appendChild(link);
         }
-
     };
 });
