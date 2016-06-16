@@ -73,9 +73,7 @@ profileEditor.controller('DataController', ["profileService", "util", "messageSe
         var url = self.contextPath + "/opus/" + self.opusId + "/data/upload?uploadFile=" + self.uploadFile;
         self.uploadedSandboxFileName = null;
         self.uploadedSandboxFileId = null;
-        //if (angular.isDefined(self.uploadedSandboxFileId) && self.uploadedSandboxFileId) {
-        //    url += "&fn=" + self.uploadedSandboxFileName + "&id=" + self.uploadedSandboxFileId;
-        //}
+
         util.redirect(url);
     };
 
