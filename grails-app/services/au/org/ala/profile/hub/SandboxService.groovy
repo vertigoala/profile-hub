@@ -28,14 +28,11 @@ class SandboxService {
     }
 
     Map deleteDataSet(String opusId, String dataResourceUid) {
-        Map result = webService.delete("${grailsApplication.config.sandbox.biocache.service.url}/upload/${dataResourceUid}", [:], ContentType.APPLICATION_JSON, true, true)
+        webService.delete("${grailsApplication.config.sandbox.biocache.service.url}/upload/${dataResourceUid}", [:], ContentType.APPLICATION_JSON, true, true)
 
-        if (isHttpSuccess(result.statusCode as int)) {
-            Map opus = profileService.getOpus(opusId)
-            opus.dataResourceConfig.privateRecordSources.remove(dataResourceUid)
-            profileService.updateOpus(opusId, opus)
-        }
+        Map opus = profileService.getOpus(opusId)
+        opus.dataResourceConfig.privateRecordSources.remove(dataResourceUid)
 
-        result
+        profileService.updateOpus(opusId, opus)
     }
 }

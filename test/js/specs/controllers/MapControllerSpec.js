@@ -52,7 +52,7 @@ describe("MapController tests", function () {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
-            config: {map: {mapId: "123", token: "123"}, biocacheServiceUrl: "http://biocacheWmsUrl/"},
+            config: {map: {mapId: "123", token: "123"}, biocacheServiceUrl: "http://biocacheWmsUrl"},
             messageService: messageService
         });
 
@@ -62,7 +62,7 @@ describe("MapController tests", function () {
     it("should set the profile attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init();
         scope.$apply();
 
         expect(scope.mapCtrl.profile).toBeDefined();
@@ -71,7 +71,7 @@ describe("MapController tests", function () {
     it("should set the opus attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init();
         scope.$apply();
 
         expect(scope.mapCtrl.opus).toBeDefined();
@@ -80,7 +80,7 @@ describe("MapController tests", function () {
     it("should specify the overlay layer for the profile when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
+        scope.mapCtrl.init();
         scope.$apply();
 
         var layers = [];
@@ -95,7 +95,7 @@ describe("MapController tests", function () {
     it("should raise an alert message when the call to getProfile fails", function () {
         profileDefer.reject();
 
-        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init();
         scope.$apply();
 
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the map information.");
