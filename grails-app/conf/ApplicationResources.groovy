@@ -72,6 +72,7 @@ modules = {
         resource url:"js/angular/controllers/LinksController.js"
         resource url:"js/angular/controllers/SpecimenController.js"
         resource url:"js/angular/controllers/ImagesController.js"
+        resource url:"js/angular/controllers/MultimediaController.js"
         resource url:"js/angular/controllers/ListsController.js"
         resource url:"js/angular/controllers/MapController.js"
         resource url:"js/angular/controllers/NavigationController.js"

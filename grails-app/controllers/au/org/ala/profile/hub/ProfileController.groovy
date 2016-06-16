@@ -6,6 +6,8 @@ import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
 import groovy.json.JsonSlurper
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
@@ -22,6 +24,7 @@ class ProfileController extends BaseController {
     ExportService exportService
     ImageService imageService
     MapService mapService
+    DocumentResourceService documentResourceService
 
     def index() {}
 
@@ -313,14 +316,14 @@ class ProfileController extends BaseController {
         }
     }
 
-    def retrieveImagesPaged(){
-        if (!params.opusId || !params.profileId  || !params.pageSize || !params.startIndex) {
+    def retrieveImagesPaged() {
+        if (!params.opusId || !params.profileId || !params.pageSize || !params.startIndex) {
             badRequest "opusId, profileId, pageSize and startIndex are required parameters"
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
             boolean readonlyView = params.getBoolean('readonlyView', true)
-            def  response = imageService.retrieveImagesPaged(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView, params.pageSize as int, params.startIndex as int)
-            handle (response)
+            def response = imageService.retrieveImagesPaged(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView, params.pageSize as int, params.startIndex as int)
+            handle(response)
         }
     }
 
@@ -347,7 +350,7 @@ class ProfileController extends BaseController {
             doUpload(new MultipartFileTransferrableAdapter(multipartFile: file))
         } else if (params.url) {
             final ut = new UrlTransferrableAdapter(url: params.url.toURL())
-            ut.withCloseable { doUpload(ut)  }
+            ut.withCloseable { doUpload(ut) }
         } else {
             badRequest "a file or url is required"
         }
@@ -725,6 +728,35 @@ class ProfileController extends BaseController {
         render template: "images"
     }
 
+    def multimediaPanel = {
+        Map searchParams = [parentId: params.profileId]
+        Map profileDocuments = documentResourceService.search(searchParams)
+
+        def g = grailsApplication.mainContext.getBean('org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib')
+
+        def model = [
+                imageLocation    : g.resource(dir: '/images', plugin: 'document-preview-plugin'),
+                pdfgenUrl        : g.createLink(controller: 'preview', action: 'pdfUrl'),
+                pdfViewer        : g.createLink(controller: 'preview', action: 'viewer'),
+                imgViewer        : g.createLink(controller: 'preview', action: 'imageviewer'),
+                audioViewer      : g.createLink(controller: 'preview', action: 'audioviewer'),
+                videoViewer      : g.createLink(controller: 'preview', action: 'videoviewer'),
+                errorViewer      : g.createLink(controller: 'preview', action: 'error'),
+                documentUpdateUrl: g.createLink(controller: 'resource', action: 'documentUpdate'),
+                documentDeleteUrl: g.createLink(controller: 'resource', action: 'documentDelete'),
+                parentId         : params.profileId,
+                documents        : profileDocuments.documents,
+                parentId         : params.profileId,
+                roles            : [
+                        [id: 'embeddedAudio', name: 'Embedded Audio'],
+                        [id: 'embeddedVideo', name: 'Embedded Video']]
+        ]
+
+        def modelAsJs = modelAsJavascript(model)
+
+        render(template: "multimedia", model: [model: modelAsJs])
+    }
+
     def mapPanel = {
         render template: "map"
     }
@@ -763,5 +795,16 @@ class ProfileController extends BaseController {
 
     def nomenclaturePanel = {
         render template: "nomenclaturePanel"
+    }
+
+    private String modelAsJavascript(def model) {
+
+        if (!(model instanceof JSONObject) && !(model instanceof JSONArray)) {
+            model = model as JSON
+
+        }
+        def json = (model ?: [:] as JSON)
+        def modelJson = json.toString()
+        modelJson.encodeAsJavaScript()
     }
 }

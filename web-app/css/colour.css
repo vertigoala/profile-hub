@@ -49,7 +49,17 @@ h4, h5, h6 {
     color: #0087BE;
 }
 
-.btn-default {
+#resourceList input[type=text] {
+    border-color: #0087BE;
+}
+
+.btn-default, .dropdown-toggle {
+    background-color: #fff;
+    border-color: #0087BE;
+    color: #0087BE;
+}
+
+.btn-mini {
     background-color: #fff;
     border-color: #0087BE;
     color: #0087BE;

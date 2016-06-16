@@ -2,6 +2,8 @@ class UrlMappings {
 
     static mappings = {
 
+        "/resource/$action?/$id?(.$format)?" controller: "resource"
+
         "/ping" controller: "ping", action: "ping"
 
         "/tags" controller: "opus", action: "getTags"

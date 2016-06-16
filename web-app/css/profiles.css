@@ -387,6 +387,15 @@ hr.comment-divider {
     padding: 0 !important;
 }
 
+#multimediaPanelBody small{
+    font-size: 10.5px;
+}
+
+#multimediaPanelBody  ul {
+    padding-left: 0px;
+}
+
+
 /* ---- */
 
 /* audit history diff */
