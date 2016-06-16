@@ -64,6 +64,10 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/attachment/" controller: "profile", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
         "/opus/$opusId/profile/$profileId/map/snapshot" controller: "profile", action: [DELETE: "deleteMapSnapshot", POST: "createMapSnapshot"]
         "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
+        "/opus/$opusId/data/" controller: "data", action: [GET: "getDataSets"]
+        "/opus/$opusId/data/upload" controller: "data", action: [GET: "upload"]
+        "/opus/$opusId/data/uploadFile" controller: "sandboxProxy", action: [POST: "uploadFile"]
+        "/opus/$opusId/data/$dataResourceId/delete" controller: "data", action: [DELETE: "deleteDataSet"]
 
         "/opus/$opusId/vocab/$vocabId/update" controller: "vocab", action: [POST: "update"]
         "/opus/$opusId/vocab/$vocabId/findUsages" controller: "vocab", action: [GET: "findUsagesOfTerm"]
@@ -154,6 +158,32 @@ class UrlMappings {
         "/notAuthorised"(view: "/notAuthorised")
         "/error"(view: "/error")
         "/notFound"(view: "/notFound")
+
+        // The following URLs proxy requests for the Sandbox through Profile Hub.
+        // See the project wiki for more info on the Profiles-Sandbox integration.
+
+        // SANDBOX UPLOAD UI: The URL pattern must match the format used by the Sandbox UI, which is embedded in the
+        // data upload page via web components.
+        "/dataCheck/parseColumns" controller: "sandboxProxy", action: [POST: "parseCsvColumns"]
+        "/dataCheck/parseColumnsWithFirstLineInfo" controller: "sandboxProxy", action: [POST: "parseCsvColumnsWithFirstLineInfo"]
+        "/dataCheck/processData" controller: "sandboxProxy", action: [POST: "processCsvData"]
+        "/dataCheck/upload/parseColumns" controller: "sandboxProxy", action: [POST: "parseFileColumns"]
+        "/dataCheck/upload/parseColumnsWithFirstLineInfo" controller: "sandboxProxy", action: [POST: "parseFileColumnsWithFirstLineInfo"]
+        "/dataCheck/upload" controller: "sandboxProxy", action: [POST: "sendCsvDataToBiocache"]
+        "/dataCheck/upload/processData" controller: "sandboxProxy", action: [POST: "processFileData"]
+        "/dataCheck/upload/uploadToSandbox" controller: "sandboxProxy", action: [POST: "sendFileToBiocache"]
+        "/dataCheck/uploadStatus" controller: "sandboxProxy", action: [GET: "csvUploadStatus"]
+        "/dataCheck/upload/uploadStatus" controller: "sandboxProxy", action: [GET: "fileUploadStatus"]
+        "/upload/preview" controller: "sandboxProxy", action: [GET: "previewUpload"]
+
+        // BIOCACHE MAPS (used by MapController.js and the ALA.OccurrenceMap.js from the ala-map-plugin when the
+        // collection is configured to use private occurrence data)
+        "/opus/$opusId/ws/mapping/wms/reflect" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/occurrences/info" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/mapping/bounds.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/occurrence/legend" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/occurrences/search.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/search/grouped/facets" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
 
 
         // The following URLs need to match the URLs used by the ala-images-client plugin so that we can view draft

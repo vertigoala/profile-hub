@@ -184,7 +184,7 @@
         keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}',
         imageServiceUrl: '${grailsApplication.config.images.service.url}',
         bieServiceUrl: '${grailsApplication.config.bie.base.url}',
-        biocacheServiceUrl: '${grailsApplication.config.biocache.base.url}',
+        biocacheServiceUrl: '${opus && opus.usePrivateRecordData ? "${request.contextPath}${request.contextPath.endsWith("/") ? '' : '/'}opus/${opus.uuid}" : grailsApplication.config.biocache.base.url}',
         biocacheRecordUrl: '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}',
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
         isOpusReviewer: '${params.isOpusReviewer}',
@@ -198,10 +198,6 @@
         bootstrapCssFile: '${resource(dir: "/thirdparty/bootstrap/css", file: "bootstrap3.3.4.min.css")}',
         imageLoadErrorUrl: '${resource(dir: "/images", file: "not-available.png")}'
      });
-
-
-
-
 </r:script>
 
 <!-- JS resources-->

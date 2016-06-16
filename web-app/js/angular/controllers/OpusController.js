@@ -546,7 +546,9 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         var valid = false;
 
         if (self.opus && self.opus.dataResourceConfig && self.recordHubMultiSelectOptions) {
-            if (self.opus.dataResourceConfig.recordResourceOption == "HUBS") {
+            if (self.opus.usePrivateRecordData) {
+                valid = true;
+            } else if (self.opus.dataResourceConfig.recordResourceOption == "HUBS") {
                 valid = self.recordHubMultiSelectOptions.selectedItems.length != 0
             } else if (self.opus.dataResourceConfig.recordResourceOption == "RESOURCES") {
                 valid = self.recordResourceMultiSelectOptions.selectedItems.length != 0

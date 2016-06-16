@@ -27,6 +27,8 @@ modules = {
         dependsOn "keybase_overrides"
         dependsOn "dual_multiselect"
         dependsOn "color"
+        dependsOn "webcomponents"
+        dependsOn "urijs"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
@@ -53,6 +55,7 @@ modules = {
         resource url:"js/angular/directives/imageUpload.js"
         resource url:"js/angular/directives/closeModal.js"
         resource url:"js/angular/directives/fallbackSrc.js"
+        resource url:"js/angular/directives/webComponent.js"
         resource url:"js/angular/directives/tag.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
@@ -86,6 +89,7 @@ modules = {
         resource url:"js/angular/controllers/DoiController.js"
         resource url:"js/angular/controllers/ShareRequestController.js"
         resource url:"js/angular/controllers/UserDetailsController.js"
+        resource url:"js/angular/controllers/DataController.js"
         resource url:"js/angular/controllers/AdminController.js"
     }
 
@@ -198,5 +202,13 @@ modules = {
 
     color {
         resource url:"thirdparty/colorjs/color.min.js"
+    }
+
+    webcomponents {
+        resource url:"thirdparty/webcomponentsjs/webcomponents-0.7.22.min.js"
+    }
+
+    urijs {
+        resource url:"thirdparty/urijs-1.18.0/URI.js"
     }
 }

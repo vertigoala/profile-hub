@@ -117,12 +117,10 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @returns {*} The value of the specified param, or null if it does not exist
      */
     function getQueryParameter(param) {
-        var val = $location.search()[param];
-        if (!val) {
-            val = null;
-        }
+        var queryString = $location.absUrl().substring($location.absUrl().indexOf("?") + 1);
+        var queryParams = URI.parseQuery(queryString);
 
-        return val
+        return queryParams[param] || null;
     }
 
     /**
@@ -239,7 +237,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
                 var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
                 console.log(msg);
                 defer.reject(msg);
-                if (status == 403) {
+                if (status == 403 || status == 401) {
                     console.log("not authorised");
                     redirect(contextRoot() + "/notAuthorised");
                 }
