@@ -66,7 +66,6 @@
                                 url="${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/preview/${params.id}?fn=${params.fn}"
                                 content-selectors="#uploadedFileDetails,#recognisedDataDiv,#processSample"
                                 exclude-selectors="#optionsAfterDownload,link[href*='bootstrap'],link[href*='jquery'],link[href*='ala-styles']"
-                                opus-id="${opusId}"
                                 onload-callback="dataCtrl.fixSandboxUploadUrls">
                         </web-component>
                     </g:else>
@@ -79,7 +78,6 @@
                     <web-component url="${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}"
                                    content-selectors="#initialPaste,#recognisedDataDiv,#processSample,#processedData,#jsonBlob"
                                    exclude-selectors="#optionsAfterDownload,link[href*='bootstrap'],link[href*='jquery'],link[href*='ala-styles']"
-                                   opus-id="${opusId}"
                                    onload-callback="dataCtrl.fixSandboxUploadUrls">
                     </web-component>
                 </div>

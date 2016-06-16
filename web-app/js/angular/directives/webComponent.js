@@ -4,7 +4,7 @@
  * This directive allows you to :
  * - select which element(s) of the source html to include;
  * - exclude specific elements (optional)
- * - automatically append the opusId and/or profileId to all ajax requests made by the imported code
+ * - invoke the onloadCallback function (if provided) after the component has loaded
  *
  * NOTE: To use this you MUST include the Web Components polyfill from https://github.com/webcomponents/webcomponentsjs
  * to ensure cross browser support.
@@ -17,8 +17,6 @@ profileEditor.directive('webComponent', function () {
             url: "@",
             contentSelectors: "@",
             excludeSelectors: "@",
-            opusId: "@",
-            profileId: "@",
             onloadCallback: "="
         },
         link: function (scope, element) {
