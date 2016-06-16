@@ -7,10 +7,10 @@ import grails.converters.JSON
 
 import javax.validation.constraints.NotNull
 
-import static au.org.ala.profile.hub.util.HubConstants.getDEFAULT_OPUS_BANNER_HEIGHT_PX
-import static au.org.ala.profile.hub.util.HubConstants.getDEFAULT_OPUS_BANNER_URL
-import static au.org.ala.profile.hub.util.HubConstants.getDEFAULT_OPUS_LOGO_URL
-import static au.org.ala.profile.hub.util.HubConstants.getDEFAULT_OPUS_TITLE
+import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_BANNER_HEIGHT_PX
+import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_BANNER_URL
+import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_LOGO_URL
+import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_TITLE
 
 @Secured(role = Role.ROLE_PROFILE_EDITOR)
 class DataController extends BaseController {

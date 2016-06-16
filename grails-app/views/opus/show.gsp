@@ -67,7 +67,7 @@
             <tab heading="Reports" class="font-xxsmall">
                 <g:include controller="opus" action="reportPanel" params="[opusId: params.opusId]"/>
             </tab>
-            <g:if test="${usePrivateRecordData}">
+            <g:if test="${opus.usePrivateRecordData}">
                 <tab heading="Data" class="font-xxsmall">
                     <g:render template="../opus/data"/>
                 </tab>

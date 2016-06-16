@@ -37,13 +37,35 @@ profileEditor.controller('DataController', ["profileService", "util", "messageSe
     };
 
     self.fixSandboxUploadUrls = function () {
-        if (angular.isDefined(SANDBOXUPLOAD)) {
-            SANDBOXUPLOAD.fileId = self.uploadedSandboxFileId;
-            SANDBOXUPLOAD.uploadStatusUrl = self.contextPath + "/dataCheck/upload/uploadStatus";
-            SANDBOXUPLOAD.uploadLink = self.contextPath + "/dataCheck/upload/uploadToSandbox";
-            SANDBOXUPLOAD.parseColumnsWithFirstLineInfoUrl = self.contextPath + "/dataCheck/upload/parseColumnsWithFirstLineInfo?id=" + self.uploadedSandboxFileId + "&firstLineIsData=";
-            SANDBOXUPLOAD.viewProcessDataUrl = self.contextPath + "/dataCheck/upload/processData?id=";
-            SANDBOXUPLOAD.parseColumnsUrl = self.contextPath + "/dataCheck/upload/parseColumns?id=";
+        // the sandbox upload page defines this global variable
+        if (angular.isDefined(window.SANDBOXUPLOAD)) {
+            window.SANDBOXUPLOAD.fileId = self.uploadedSandboxFileId;
+            window.SANDBOXUPLOAD.uploadStatusUrl = self.contextPath + "/dataCheck/upload/uploadStatus?uid=";
+            window.SANDBOXUPLOAD.uploadLink = self.contextPath + "/dataCheck/upload/uploadToSandbox";
+            window.SANDBOXUPLOAD.parseColumnsWithFirstLineInfoUrl = self.contextPath + "/dataCheck/upload/parseColumnsWithFirstLineInfo?id=" + self.uploadedSandboxFileId + "&firstLineIsData=";
+            window.SANDBOXUPLOAD.viewProcessDataUrl = self.contextPath + "/dataCheck/upload/processData?id=";
+            window.SANDBOXUPLOAD.parseColumnsUrl = self.contextPath + "/dataCheck/upload/parseColumns?id=";
+        }
+
+        // make sure all ajax requests include the opus id and/or profile id
+        if (angular.isDefined(self.opusId) || angular.isDefined(self.profileId)) {
+            $.ajaxPrefilter(function (options, originalOptions) {
+                if (options.url.indexOf("opusId") == -1) {
+                    var combine = "";
+                    if (originalOptions.url.indexOf("?") > -1) {
+                        combine = "&";
+                    } else {
+                        combine = "?";
+                    }
+
+                    if (angular.isDefined(self.opusId)) {
+                        options.url = originalOptions.url + combine + "opusId=" + encodeURIComponent(self.opusId);
+                    }
+                    if (angular.isDefined(self.profileId)) {
+                        options.url = originalOptions.url + combine + "profileId=" + encodeURIComponent(self.profile);
+                    }
+                }
+            });
         }
     };
 

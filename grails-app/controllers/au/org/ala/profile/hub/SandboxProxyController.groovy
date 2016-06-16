@@ -1,6 +1,8 @@
 package au.org.ala.profile.hub
 
 import au.com.bytecode.opencsv.CSVWriter
+import au.org.ala.profile.security.Role
+import au.org.ala.profile.security.Secured
 import grails.converters.JSON
 import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
@@ -17,6 +19,7 @@ import org.apache.http.entity.ContentType
 
 import static au.org.ala.profile.hub.Utils.isHttpSuccess
 
+@Secured(role = Role.ROLE_USER, opusSpecific = true)
 class SandboxProxyController extends BaseController {
     WebService webService
     AuthService authService

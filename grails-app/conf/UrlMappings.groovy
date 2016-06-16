@@ -176,13 +176,14 @@ class UrlMappings {
         "/dataCheck/upload/uploadStatus" controller: "sandboxProxy", action: [GET: "fileUploadStatus"]
         "/upload/preview" controller: "sandboxProxy", action: [GET: "previewUpload"]
 
-        // BIOCACHE MAPS (used by MapController.js and the ALA.OccurrenceMap.js from the ala-map-plugin)
-        "/ws/mapping/wms/reflect" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
-        "/ws/occurrences/info" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
-        "/ws/mapping/bounds.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
-        "/ws/occurrence/legend" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
-        "/ws/occurrences/search.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
-        "/ws/search/grouped/facets" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        // BIOCACHE MAPS (used by MapController.js and the ALA.OccurrenceMap.js from the ala-map-plugin when the
+        // collection is configured to use private occurrence data)
+        "/opus/$opusId/ws/mapping/wms/reflect" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/occurrences/info" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/mapping/bounds.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/occurrence/legend" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/occurrences/search.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/search/grouped/facets" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
 
 
         // The following URLs need to match the URLs used by the ala-images-client plugin so that we can view draft

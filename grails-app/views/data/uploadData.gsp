@@ -63,9 +63,9 @@
                     <g:else>
                         <h2>1. Uploaded file</h2>
                         <web-component
-                                url="${grailsApplication.config.sandbox.base.url}/upload/preview/${params.id}?fn=${params.fn}"
+                                url="${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/preview/${params.id}?fn=${params.fn}"
                                 content-selectors="#uploadedFileDetails,#recognisedDataDiv,#processSample"
-                                exclude-selectors="link[href*='bootstrap'],link[href*='jquery'],link[href*='ala-styles']"
+                                exclude-selectors="#optionsAfterDownload,link[href*='bootstrap'],link[href*='jquery'],link[href*='ala-styles']"
                                 opus-id="${opusId}"
                                 onload-callback="dataCtrl.fixSandboxUploadUrls">
                         </web-component>
@@ -76,10 +76,11 @@
         <g:else>
             <div class="row embedded-sandbox">
                 <div class="col-md-12">
-                    <web-component url="${grailsApplication.config.sandbox.base.url}/"
+                    <web-component url="${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}"
                                    content-selectors="#initialPaste,#recognisedDataDiv,#processSample,#processedData,#jsonBlob"
                                    exclude-selectors="#optionsAfterDownload,link[href*='bootstrap'],link[href*='jquery'],link[href*='ala-styles']"
-                                   opus-id="${opusId}">
+                                   opus-id="${opusId}"
+                                   onload-callback="dataCtrl.fixSandboxUploadUrls">
                     </web-component>
                 </div>
             </div>

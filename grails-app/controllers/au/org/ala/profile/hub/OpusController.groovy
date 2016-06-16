@@ -73,8 +73,7 @@ class OpusController extends BaseController {
                     contact     : opus.contact,
                     glossaryUrl : getGlossaryUrl(opus),
                     aboutPageUrl: getAboutUrl(opus),
-                    currentUser : authService.getDisplayName(),
-                    usePrivateRecordData: opus.usePrivateRecordData
+                    currentUser : authService.getDisplayName()
             ])
         }
     }
@@ -129,8 +128,7 @@ class OpusController extends BaseController {
                         footerText  : opus.footerText,
                         contact     : opus.contact,
                         opusTitle   : opus.title,
-                        pageTitle   : "About ${opus.title}" ?: DEFAULT_OPUS_TITLE,
-                        usePrivateRecordData: opus.usePrivateRecordData
+                        pageTitle   : "About ${opus.title}" ?: DEFAULT_OPUS_TITLE
                 ])
             }
         }
@@ -142,7 +140,6 @@ class OpusController extends BaseController {
                 opusUrl             : "${grailsApplication.config.grails.serverURL}/opus/${params.opusId}",
                 date                : new Date().format('dd MMMM yyyy - hh:mm'),
                 year                : new Date().format('yyyy'),
-                usePrivateRecordData: opus.usePrivateRecordData,
                 genericCopyrightHtml: GENERIC_COPYRIGHT_TEXT
         ]
 
@@ -179,8 +176,7 @@ class OpusController extends BaseController {
                         footerText  : opus.footerText,
                         contact     : opus.contact,
                         glossaryUrl : getGlossaryUrl(opus),
-                        aboutPageUrl: getAboutUrl(opus),
-                        usePrivateRecordData: opus.usePrivateRecordData
+                        aboutPageUrl: getAboutUrl(opus)
                 ]
             }
         }
@@ -232,7 +228,7 @@ class OpusController extends BaseController {
                     contact             : opus.contact,
                     glossaryUrl         : getGlossaryUrl(opus),
                     aboutPageUrl        : getAboutUrl(opus),
-                    usePrivateRecordData: opus.usePrivateRecordData
+                    opus                : opus
             ]
         }
     }

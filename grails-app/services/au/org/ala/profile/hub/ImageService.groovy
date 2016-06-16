@@ -187,7 +187,7 @@ class ImageService {
             imageIsStoredLocally = false
         }
 
-        if (isHttpSuccess(response.statusCode as int)) {
+        if (response && isHttpSuccess(response.statusCode as int)) {
             response.resp = getImageDetails(metadata.imageId, contextPath, imageIsStoredLocally)
         }
 

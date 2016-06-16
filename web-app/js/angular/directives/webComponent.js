@@ -44,33 +44,14 @@ profileEditor.directive('webComponent', function () {
                     });
                 }
 
-                if (angular.isDefined(scope.onloadCallback)) {
-                    scope.onloadCallback();
-                }
-
                 var selectors = scope.contentSelectors.split(",");
                 angular.forEach(selectors, function (selector) {
                     element.append(link.import.querySelector(selector.trim()));
                 });
 
-                if (angular.isDefined(scope.opusId) || angular.isDefined(scope.profileId))
-                $.ajaxPrefilter(function (options, originalOptions) {
-                    if (options.url.indexOf("opusId") == -1) {
-                        var combine = "";
-                        if (originalOptions.url.indexOf("?") > -1) {
-                            combine = "&";
-                        } else {
-                            combine = "?";
-                        }
-
-                        if (angular.isDefined(scope.opusId)) {
-                            options.url = originalOptions.url + combine + "opusId=" + encodeURIComponent(scope.opusId);
-                        }
-                        if (angular.isDefined(scope.profileId)) {
-                            options.url = originalOptions.url + combine + "profileId=" + encodeURIComponent(scope.profile);
-                        }
-                    }
-                });
+                if (angular.isDefined(scope.onloadCallback)) {
+                    scope.onloadCallback();
+                }
             };
 
             div.appendChild(link);
