@@ -27,7 +27,6 @@ modules = {
         dependsOn "keybase_overrides"
         dependsOn "dual_multiselect"
         dependsOn "color"
-        dependsOn "webcomponents"
         dependsOn "urijs"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"

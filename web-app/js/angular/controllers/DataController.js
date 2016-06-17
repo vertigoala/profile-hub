@@ -67,6 +67,10 @@ profileEditor.controller('DataController', ["profileService", "util", "messageSe
                 }
             });
         }
+
+        if ($("#recognisedDataDiv").is(':visible') && window.init) {
+            window.init();
+        }
     };
 
     self.dataSourceOptionChanged = function () {
