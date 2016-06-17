@@ -2,6 +2,7 @@
 <html>
 <head>
     <r:require module="profiles"/>
+    <g:set var="excludeBugherd" value="true" scope="request"/>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Upload data</title>
 </head>

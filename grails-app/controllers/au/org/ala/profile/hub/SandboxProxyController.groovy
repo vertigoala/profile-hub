@@ -27,35 +27,35 @@ class SandboxProxyController extends BaseController {
     ProfileService profileService
 
     def parseCsvColumns() {
-        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/parseColumns", request.reader.text)
+        webService.proxyPostRequest(response, "${getSandboxPath()}dataCheck/parseColumns", request.reader.text)
     }
 
     def parseFileColumns() {
-        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/parseColumns?id=${params.id}", request.reader.text)
+        webService.proxyPostRequest(response, "${getSandboxPath()}upload/parseColumns?id=${params.id}", request.reader.text)
     }
 
     def parseCsvColumnsWithFirstLineInfo() {
-        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/parseColumnsWithFirstLineInfo", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
+        webService.proxyPostRequest(response, "${getSandboxPath()}dataCheck/parseColumnsWithFirstLineInfo", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
     }
 
     def parseFileColumnsWithFirstLineInfo() {
-        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/parseColumnsWithFirstLineInfo", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
+        webService.proxyPostRequest(response, "${getSandboxPath()}upload/parseColumnsWithFirstLineInfo", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
     }
 
     def processCsvData() {
-        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/processData", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
+        webService.proxyPostRequest(response, "${getSandboxPath()}dataCheck/processData", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
     }
 
     def processFileData() {
-        webService.proxyPostRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/viewProcessData?id=${params.id}", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
+        webService.proxyPostRequest(response, "${getSandboxPath()}upload/viewProcessData?id=${params.id}", request.parameterMap, ContentType.APPLICATION_FORM_URLENCODED)
     }
 
     def csvUploadStatus() {
-        webService.proxyGetRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/uploadStatus?uid=${enc(params.uid)}&random=${enc(params.random)}")
+        webService.proxyGetRequest(response, "${getSandboxPath()}dataCheck/uploadStatus?uid=${enc(params.uid)}&random=${enc(params.random)}")
     }
 
     def fileUploadStatus() {
-        webService.proxyGetRequest(response, "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/dataCheck/uploadStatus?uid=${enc(params.uid)}&random=${enc(params.random)}")
+        webService.proxyGetRequest(response, "${getSandboxPath()}dataCheck/uploadStatus?uid=${enc(params.uid)}&random=${enc(params.random)}")
     }
 
     def previewUpload() {
@@ -139,7 +139,7 @@ class SandboxProxyController extends BaseController {
         Map data = [
                 headers            : json.headers.trim(),
                 datasetName        : json.datasetName.trim(),
-                csvZippedUrl       : "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}/upload/serveFile?fileId=${json.fileId}",
+                csvZippedUrl       : "${getSandboxPath()}upload/serveFile?fileId=${json.fileId}",
                 separator          : "COMMA",
                 firstLineIsData    : json.firstLineIsData,
                 alaId              : authService.getUserId()
@@ -203,5 +203,15 @@ class SandboxProxyController extends BaseController {
         int commas = raw.count(",")
 
         tabs > commas ? "TAB" : "COMMA"
+    }
+
+    private String getSandboxPath() {
+        String path = "${grailsApplication.config.sandbox.base.url}${grailsApplication.config.sandbox.context.path}"
+
+        if (!path.endsWith("/")) {
+            path += "/"
+        }
+
+        path
     }
 }

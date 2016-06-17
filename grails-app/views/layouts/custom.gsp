@@ -205,12 +205,14 @@
 
 </body>
 <script type='text/javascript'>
-    (function (d, t) {
-        var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
-        bh.type = 'text/javascript';
-        bh.src = '//www.bugherd.com/sidebarv2.js?apikey=kqamg3xuhww6j6zrpthdmw';
-        s.parentNode.insertBefore(bh, s);
-    })(document, 'script');
+    <g:if test="${!excludeBugherd && !grailsApplication.config.bugherd.disabled}">
+        (function (d, t) {
+            var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            bh.type = 'text/javascript';
+            bh.src = '//www.bugherd.com/sidebarv2.js?apikey=kqamg3xuhww6j6zrpthdmw';
+            s.parentNode.insertBefore(bh, s);
+        })(document, 'script');
+    </g:if>
 
     // This unsaved changes code relies on AngularJS adding the ng-dirty flag to fields as they are modified.
     $(window).bind('beforeunload', function() {
