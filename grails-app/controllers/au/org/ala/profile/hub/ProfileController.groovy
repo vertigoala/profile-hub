@@ -748,7 +748,7 @@ class ProfileController extends BaseController {
                 documents        : profileDocuments.documents,
                 parentId         : params.profileId,
                 roles            : [
-//                        [id: 'embeddedAudio', name: 'Embedded Audio'],
+                        [id: 'embeddedAudio', name: 'Embedded Audio'],
                         [id: 'embeddedVideo', name: 'Embedded Video']]
         ]
 
