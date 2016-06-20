@@ -66,7 +66,7 @@
 
     <div class="panel-footer">
         <div class="row">
-            <div class="col-md-12">{{!opusCtrl.dataResource.uid}}
+            <div class="col-md-12">
                 <save-button ng-click="opusCtrl.saveOpus(OpusDetailsForm)" disabled="!opusCtrl.dataResource.uid" form="OpusDetailsForm"></save-button>
             </div>
         </div>
