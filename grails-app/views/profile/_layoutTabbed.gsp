@@ -77,6 +77,12 @@
                             <g:render template="images"/>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <g:include controller="profile" action="multimediaPanel"
+                               params="[opusId: params.opusId, profileId: params.profileId]"/>
+                        </div>
+                    </div>
                 </tab>
                 <tab heading="Literature & Links" class="font-xxsmall" managed-tab ng-show="managedTabCtrl.hasContent()">
                     <div class="row">
