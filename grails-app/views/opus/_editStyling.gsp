@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="branding">
             <h4 class="section-panel-heading">Branding</h4>
+            <p:help help-id="opus.edit.branding"/>
         </a>
     </div>
 

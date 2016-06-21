@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="imageSources">
             <h4 class="section-panel-heading">Image options</h4>
+            <p:help help-id="opus.edit.images"/>
         </a>
     </div>
 

@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="recordSources">
             <h4 class="section-panel-heading">Approved Specimen/Observation sources</h4>
+            <p:help help-id="opus.edit.records"/>
         </a>
     </div>
 

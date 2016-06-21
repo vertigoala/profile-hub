@@ -3,6 +3,7 @@
         <div class="panel-heading">
             <a name="glossary">
                 <h4 class="section-panel-heading">Glossary</h4>
+                <p:help help-id="opus.edit.glossary"/>
             </a>
         </div>
 

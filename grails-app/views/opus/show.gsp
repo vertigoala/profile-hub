@@ -61,6 +61,7 @@
             </div>
         </tab>
         <tab heading="Documents" class="font-xxsmall">
+            <p:help help-id="opus.documents" float="false" show="${params.isOpusEditor}"/>
             <g:render template="../common/attachments" model="[hideHeading: true]"/>
         </tab>
         <g:if test="${params.isOpusEditor}">

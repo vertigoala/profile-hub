@@ -38,8 +38,6 @@ profileEditor.controller('PublicationController', function (profileService, util
         var promise = profileService.getPublications(self.opusId, self.profileId);
         messageService.info("Loading publications...");
         promise.then(function (data) {
-                console.log(data.length + " publications retreived");
-
                 self.publications = data;
 
                 self.publications = orderBy(self.publications, "publicationDate", true);

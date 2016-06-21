@@ -147,6 +147,7 @@ class UrlMappings {
         "/admin/job/$jobType/$jobId" controller: "admin", action: [DELETE: "deleteJob"]
         "/admin/job/" controller: "admin", action: [GET: "listPendingJobs"]
         "/admin/tag/$tagId?" controller: "admin", action: [GET: "getTag", PUT: "createTag", POST: "updateTag", DELETE: "deleteTag"]
+        "/admin/reloadHelpUrls" controller: "admin", action: [POST: "reloadHelpUrls"]
         "/admin" controller: "admin", action: [GET: "index"]
         "/alaAdmin/index" controller: "admin", action: [GET: "alaIndex"]
         "/alaAdmin" controller: "admin", action: [GET: "alaIndex"]

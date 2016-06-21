@@ -47,6 +47,17 @@
         <hr/>
 
         <div class="panel-heading">
+            <h3>Reload Help URLs</h3>
+        </div>
+
+        <div class="panel-body">
+            <p>This clears the cache of help file URL mappings, allowing the mapping file (${grailsApplication.config.help.mapping.file}) to be updated without restarting the application.</p>
+
+            <button class="btn btn-primary" ng-click="adminCtrl.reloadHelpUrls()">Reload help urls</button>
+        </div>
+        <hr/>
+
+        <div class="panel-heading">
             <h3>Pending Jobs</h3>
         </div>
 

@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="lists">
             <h4 class="section-panel-heading">Approved Lists</h4>
+            <p:help help-id="opus.edit.lists"/>
         </a>
     </div>
 

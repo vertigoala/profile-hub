@@ -85,6 +85,7 @@
                     <li><delegated-search></delegated-search></li>
                     <li><a href="${request.contextPath}/">Profile collections</a></li>
                     <g:render template="/layouts/login"/>
+                    <li><p:help help-id="main"/></li>
                 </ul>
             </small>
         </div>

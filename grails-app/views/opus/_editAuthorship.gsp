@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="authorship">
             <h4 class="section-panel-heading">Authorship and attribution controls</h4>
+            <p:help help-id="opus.edit.authorship"/>
         </a>
     </div>
 

@@ -7,6 +7,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Bibliography</h4>
+                <p:help help-id="profile.edit.bibliography" show="${edit}"/>
             </div>
         </div>
     </div>

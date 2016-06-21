@@ -1,6 +1,7 @@
 <div ng-controller="DataController as dataCtrl" ng-cloak>
     <div class="row">
         <div class="col-md-12">
+            <p:help help-id="opus.data" show="${params.isOpusEditor}"/>
             <h4 class="inline-block padding-bottom-1">Data sets</h4>
             <div class="pull-right">
                 <a href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/data/upload" target="_self" class="btn btn-primary pull-right"><span class="fa fa-upload">&nbsp;</span>Upload a data set</a>

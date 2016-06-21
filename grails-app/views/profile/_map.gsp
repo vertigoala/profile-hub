@@ -21,6 +21,7 @@
                     </div>
 
                     <div ng-show="mapCtrl.editingMap">
+                        <p:help help-id="profile.edit.map" float="false"/>
                         <m:occurrenceMap id="editOccurrenceMap"/>
 
                         <div class="row">

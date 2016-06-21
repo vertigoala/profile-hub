@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="map">
             <h4 class="section-panel-heading">Map configuration</h4>
+            <p:help help-id="opus.edit.map"/>
         </a>
     </div>
 

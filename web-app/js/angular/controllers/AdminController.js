@@ -19,6 +19,14 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
     loadPendingJobs();
     loadTags();
 
+    self.reloadHelpUrls = function() {
+        var promise = $http.post(util.contextRoot() + "/admin/reloadHelpUrls");
+
+        promise.then(function() {
+            messageService.success("The help url cache has been cleared");
+        });
+    };
+
     self.reindex = function () {
         var promise = $http.post(util.contextRoot() + "/admin/reindex");
 

@@ -8,6 +8,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Versions</h4>
+                <p:help help-id="profile.edit.versions" show="${edit}"/>
             </div>
         </div>
     </div>

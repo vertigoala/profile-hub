@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="supportingCollections">
             <h4 class="section-panel-heading">Supporting Collections</h4>
+            <p:help help-id="opus.edit.supportingCollections"/>
         </a>
     </div>
 

@@ -60,7 +60,7 @@ accordion > div.panel-group > div.panel > div.panel-collapse > div.panel-body {
     height: 50px !important;
 }
 
-#citationHtml > .ta-editor{
+#citationHtml > .ta-editor {
     height: 100px !important;
     min-height: 100px !important;
 }
@@ -101,6 +101,7 @@ input[type=file] {
     position: relative;
     overflow: hidden;
 }
+
 .btn-file input[type=file] {
     position: absolute;
     top: 0;
@@ -292,15 +293,15 @@ hr.comment-divider {
 }
 
 .imgConLarge {
-     max-height: 500px;
-     overflow-y: scroll;
- }
+    max-height: 500px;
+    overflow-y: scroll;
+}
 
 .imgConCarousel {
-     max-height: 350px;
-     min-height: 350px;
-     overflow-y: scroll;
- }
+    max-height: 350px;
+    min-height: 350px;
+    overflow-y: scroll;
+}
 
 .imgCon img {
     height: 200px !important;
@@ -343,9 +344,9 @@ hr.comment-divider {
 }
 
 .side .map-snapshot div img {
-    width:100%;
-    max-width:100%;
-    height:auto;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
 }
 
 .top .map-snapshot p {
@@ -363,9 +364,9 @@ hr.comment-divider {
 }
 
 .side .primary-image img {
-    width:100%;
-    max-width:100%;
-    height:auto;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
 }
 
 .top .primary-image p {
@@ -450,6 +451,7 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .section-panel-heading {
     margin-bottom: 0;
     margin-top: 5px;
+    display: inline-block;
 }
 
 .section-no-para {
@@ -499,7 +501,6 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .panel-body {
     padding: 5px 15px 5px 15px;
 }
-
 
 .panel .panel-heading {
     border-bottom: 1px solid rgba(0, 135, 190, 0.2);
@@ -586,11 +587,11 @@ ul.dropdown-menu[datepicker-popup-wrap] {
 }
 
 .fallback-date-picker .btn-default {
-    border:  1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 .fallback-date-picker .btn.active {
-    border:  1px solid #ccc;
+    border: 1px solid #ccc;
     background-color: #39b3d7;
     color: black;
 }
@@ -843,7 +844,7 @@ span.breadcrumb-dropdown {
     content: none !important;
 }
 
-.breadcrumb>li+li:before {
+.breadcrumb > li + li:before {
     padding-left: 10px;
     padding-right: 5px;
 }
@@ -864,6 +865,14 @@ span.breadcrumb-dropdown {
     padding-left: 0;
     margin-left: 0;
     max-width: 40px;
+}
+
+.navbar-nav > li > div {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    line-height: 20px;
+    position: relative;
+    display: block;
 }
 
 .header-control {
@@ -910,9 +919,8 @@ span.breadcrumb-dropdown {
     width: 250px !important;
 }
 
-
 /*.header-control button:focus, .header-control button:hover {*/
-    /*background: transparent !important;*/
+/*background: transparent !important;*/
 /*}*/
 
 .keybase-logo {
@@ -1060,8 +1068,11 @@ span.breadcrumb-dropdown {
     margin-right: 5px;
     content: '\f102'
 }
- /*helps angular not destroy bootstrap styling, please see https://angular-ui.github.io/bootstrap/ */
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+/*helps angular not destroy bootstrap styling, please see https://angular-ui.github.io/bootstrap/ */
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
 
 .legend-container-short {
     max-height: 200px !important;
@@ -1132,3 +1143,4 @@ span.breadcrumb-dropdown {
 .embedded-sandbox .fileupload .input-append {
     padding-bottom: 20px;
 }
+
