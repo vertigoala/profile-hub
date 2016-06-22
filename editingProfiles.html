@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>ALA Profiles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">ALA Profiles Online Help</h1>
+    </section>
+
+    <section class="main-content">
+      <a href="./index.html">&lt;&nbsp;Main</a>
+      <h1>
+<a id="editing-profiles" class="anchor" href="#editing-profiles" aria-hidden="true"><span class="octicon octicon-link"></span></a>Editing Profiles</h1>
+
+<p>This page explains the various options available when creating or editing individual profile pages.</p>
+
+<p>
+These options are only available to Collection Administrators and Profile Editors.
+</p>
+
+<h2><a id="profile-name" class="anchor" href="#profile-name" aria-hidden="true"><span class="octicon octicon-link"></span></a>Profile Name</h2>
+
+<p>
+The Profile Name is more than just the title of the page. This is the key used to link to data from the Atlas of Living Australia (ALA) and the National Species List (NSL), and provides the hierarchy necessary to build the taxonomic tree.
+<p/>
+
+<h4>Creating a new profile, or editing the name of an existing profile</h4>
+<ol>
+<li>To create a new profile, click 'Add a new profile' from your collection's home page
+<li>To edit the name of an existing profile, edit the profile and then click the 'Edit name' link beside the profile name
+<li>Enter the name of the profile, then click 'Check Name'
+<li>The system will attempt to match the provided name against the ALA and the NSL (see below)
+<li>If there is a single exact match, then the system will present options to
+<ol>
+<li>Proceed, whereby the profile will be matched to the name, and the profile name and the matched name will be the same; or
+<li>Manually select a matching name from the ALA, whereby the profile name will be different to the matched name
+</ol>
+<li>If there is single non-exact match, then the system will present options to
+<ol>
+<li>Use the matched name instead, which will change the profile name to the matched name; or
+<li>Proceed with the name as entered, whereby the profile name will be different to the matched name; or
+<li>Manually select a matching name, whereby the profile name will be different to the matched name
+</ol>
+<li>If there is no matching name, or more than 1 matching name, then the system will present options to
+<ol>
+<li>Proceed with the name as entered, whereby the profile will NOT be matched to any name; or
+<li>Manually select a matching name, whereby the profile name will be different to the matched name
+</ol>
+<li>In cases where there is no matched name, the system will also present an option to specify the taxonomic hierarchy for the profile (see below)
+<li>Once satisfied with the profile name and the matched name, click Create Profile or Update Name
+</ol>
+<h4>Name matching</h4>
+<p>
+The name you provide for your Profile will be matched to an index of known scientific names in both the ALA and the NSL. For example, if you create a profile called 'Acacia', the system will automatically match the profile to the genus "<i>Acacia</i> Mill.". This will allow the ALA Profiles application to retrieve all occurrence records for the Acacia genus from the ALA, and the taxonomic nomenclature (e.g. the taxonomic concept, the protolog, etc) from the NSL.
+</p>
+<p>
+The name matching process includes logic to follow nomenclatural relationships from the value you entered to the currently accepted taxonomic name. This means that if you entered a synonym, for example, the system will match to the accepted name. You will be presented with a prompt asking if you would like to change the profile name to the accepted name, or leave it with the value you entered.
+</p>
+
+<h4>Manual name matching</h4>
+<p>
+Of course, you may not wish to name your profile by the scientific name. You can give any name you wish to your profile: if the system does not recognise it as a known scientific name, then you will be prompted to select the scientific name from a list. Doing this allows you to call the profile whatever you wish, while still allowing the system to automatically incorporate ALA data.
+</p>
+<p>
+While you can call your profile whatever you like, it is important to follow the prompts the system presents in order to match the profile to a taxonomic name - if you do not match the profile to a known taxon, then you will lose the ability to automatically incorporate information from other systems. That said, the system will not prevent you from creating a profile with no matched name, so if the subject of your profile simply does not exist in these other systems, then you can still create and maintain your own content.
+</p>
+
+<h4>Manually specifying the taxonomic hierarchy</h4>
+
+<p>
+One of the key pieces of information that is retreived via the matched scientific name is the taxonomic hierarchy. Simply creating a profile for a known species, for example, will automatically produce the taxonomic tree that can be used for navigation between profiles.
+</p>
+<p>
+In cases where your profile does not have a matched name (for example, you might be documenting a newly discovered subspecies, where a scientific name has not been published yet), it is still possible for you to specify the taxonomic hierarchy for your profile. When creating your profile (or when editing the name), the system will present an option to "Specify the hierarchy for...". Selecting this option will open a new panel asking for the rank and the name of the parent taxon or profile of your profile. You can enter either the scientific name or the name of an existing profile in your collection as the parent. The system will perform a similar matching process to that name. If it matches a known name or profile, then your new profile will be inserted into the taxonomic hierarchy below that point. For example, if you are creating a profile for a new species, you would enter the name of the parent genus and the system would automatically link your profile as a subordinate taxon for that genus.
+</p>
+<p>
+There are no limits on what rank(s) you can create new profiles for: in fact, you can specify your own completely custom hierarchy if you choose to do so. The only strict rule is that once you enter a known scientific name or profile name then you cannot customise the hierarchy further. You must join the recognised hierarchy at that point.
+</p>
+
+
+
+<h2><a id="profile-map" class="anchor" href="#profile-imap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuring the occurrence map</h2>
+
+<p>
+An occurrence map will be visible below the profile name on the Edit Profile page when your collection has been configured to use occurrence data from the ALA.
+</p>
+<p>
+By default, the occurrence map will show all ALA occurrence records for the taxon your profile is matched to, from the data resources specified in the Collection Administration page. However, editors can further refine the query used to construct the map for individual profiles where necessary.
+<p/>
+<ol>
+<li>Click the 'Edit Map Configuration' button below the map on the Edit Profile page
+<li>A larger map and a list of facets will be presented. Use the facets and map controls to refine the data that is visible on the map, and to colour-code it if required.
+<li>Once satisfied that the correct data is being displayed, click Save.
+</ol>
+
+<p>
+At any point prior to saving you can click the 'Undo unsaved changes' button to reset the map to the last saved configuration. Furthermore, you can click the 'Reset to default' button to remove all customisations that have been made or this profile and reset the map to the default configuration used by the collection.
+</p>
+
+<h4>Snapshot images</h4>
+
+<p>
+Occurrence maps are generated from live data every time the page is loaded. If you wish to present users with a static map that is not automatically updated, then click the 'Create snapshot image' button below the map once you are satisfied with the configuration. This will generate a static image of the map as it appears on the edit page (albeit with a different base layer). That image will then be visible on the profile view page. 
+</p>
+<p>
+Note that users will still have the option to view the 'live' data by clicking the 'Show live map' link below the image.
+<p/>
+<p>
+Collection administrators can choose to enable or disable the ability to create snapshot images of maps. By default, this feature is <i>disabled</i>.
+</p>
+
+
+
+<h2><a id="attributes" class="anchor" href="#attributes" aria-hidden="true"><span class="octicon octicon-link"></span></a>User-defined attributes</h2>
+
+<p>
+User-defined attributes are the heart of your profiles: this is where you enter the descriptive text for the taxon that your profile describes.
+</p>
+<p>
+Collection administrators can choose to limit attributes to a fixed list of titles (referred to as a 'strict vocabulary'), in which case Editors must select the attribute title from a predefined list, or they can choose to allow editors to define whatever titles they wish (referred to as a 'non-strict vocabulary'). Administrators can also specify a sort of template for profiles by flagging specific attributes as being mandatory, in which case they will be automatically added to every profile (with no content) as a prompt to editors to fill them in.
+</p>
+<p>
+To add a new attribute (each 'attribute' is displayed in a white box with a title on the view page):
+<ol>
+<li>On the Edit Profile page, click the 'Add Attribute' button below the map
+<li>Select (for strict vocabularies) or enter (for non-strict) the title
+<li>Enter the descriptive text. Basic formatting options are available via the toolbar on the edit field
+<li>Save the attribute when you are finished
+</ol>
+</p>
+<p>
+To edit an existing attribute, simply modify the text and click Save. To delete an attribute, click the 'Delete Attribute' button, then click OK in the confirmation prompt if you are sure you wish to delete the attribute - <b>this cannot be undone</b>.
+
+<h4>Authorship and attribution</h4>
+
+<p>
+By default, individual contributions to attributes are displayed below each attribute (this option can be disabled by the collection administrator). If your edit is significant enough that you feel it needs to be acknowledged, then select the 'This is a significant edit' checkbox below the attribute text field. This will display an additional field labelled 'Attribute to', prepopulated with your name. This is the name that will be displayed in the list of contributors for the attribute. If you wish to acknowledge someone else as the source of the change (e.g. you are simply entering text that another party provided), then change the name in the 'Attribute to' field before clicking Save.
+</p>
+<p>
+Below the significant edit checkbox is another field labelled 'Source'. This provides a way of acknowledging the source of the attribute as a whole, similar to a bibliographic entry (there is also a dedicated section for recording the full bibliography for your profile).
+<p/>
+
+<h4>Revision history</h4>
+<p>
+For each attibute, there is a 'Show history' link which, when clicked, will display the history of all changes that have been made to that attribute, when they were made, who made it and what was changed. Editors can choose to revert an attribute to an older version by clicking the 'Revert' button beside the version they wish to use.
+</p>
+
+<h4>Show information from supporting collections</h4>
+<p>
+This option will be available as a toggle control above the first user-defined attribute if the collection administrator has configured the collection to retrieve profile information from another collection.
+</p>
+<p>
+For example, the Flora of New South Wales collection could be configured to retreive profile information from the Flora of Australia collection. In that case, the editor of a profile in the Flora of NSW can enable the 'Show information from supporting collections' option to tell the system to automatically find and display user-defined attributes from the Flora of Australia if the Flora of Australia contains a profile for the same taxon.
+</p>
+<p>
+If both profiles have attributes with the same title, then the text from the Flora of NSW will be displayed, and a link will be added below the text to allow users to view the text of that attribute from the supporting collections. If the supporting collection has an attribute which is not in the editor's collection, then that attribute will be displayed along with the editor's attributes.
+<p/>
+
+<h2><a id="nomenclature" class="anchor" href="#nomenclature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nomenclature</h2>
+
+<p>
+The Nomenclature section will list all possible taxonomic concepts for the name that has been matched to the Profile. This information is retrieved from the National Species List. If there is no matched name, then the list of concepts will be blank. To select the nomenclature, simply pick the correct entry from the dropdown list and then click Save.
+</p>
+
+
+<h2><a id="links" class="anchor" href="#links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Links</h2>
+
+<p>
+The Links section allows editors to include links to external resources on their profile pages. These links can be to any web page, as long as it is publicly visible. 
+</p>
+<p>
+To add a link:
+<ol>
+<li>Click the 'Add new link' button
+<li>Copy and paste, or type, the URL for the web site you wish to link to
+<li>Enter a title for the link - this is the text that will be displayed on the profile page, which users will click to visit the page
+<li>Enter a brief description for the external resource - this will be displayed with the link title
+<li>Click Save
+</ol>
+To delete an existing link, click the Delete button below the link, then click Save. To update an existing link, simply edit the entry fields as appropriate, then click Save.
+</p>
+
+
+<h2><a id="bhlLinks" class="anchor" href="#bhlLinks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Biodiversity Heritage Library References</h2>
+
+<p>
+The Biodiversity Heritage Library (BHL) References section allows editors to include references to specific resources from the BHL. These references will be displayed with the resource title, publisher, DOI, and an image (if present).
+</p>
+<p>
+To add a BHL reference:
+<ol>
+<li>Click the 'Add new reference' button
+<li>Copy and paste, or enter, the URL for the resource from the BHL. URLs will need to be in the form <pre>http://biodiversitylibrary.org/page/29003916</pre>
+<li>Click the green tick button - if the url is correc then the summary information will be displayed below the entry fields
+<li>Enter a title and description to be displayed in addition to the summary information from the BHL
+<li>Click Save.
+</ol>
+
+To delete an existing reference, click the Delete button below the reference, then click Save. To update an existing reference, simply edit the entry fields as appropriate, then click Save.
+</p>
+
+
+<h2><a id="specimens" class="anchor" href="#specimens" aria-hidden="true"><span class="octicon octicon-link"></span></a>Specimens</h2>
+
+<p>
+The Specimens section allows editors to provide links to the type specimens used in the treatment of the taxon. These specimen records are held in the Atlas of Living Australia - adding a Specimen in this section will result in a link being displayed on the view page which will take the user to the ALA record for that specimen. Some summary information about the source of the record (the institution, collection and catalog number) will also be displayed in the profile.
+</p>
+<p>
+To add a specimen record:
+<ol>
+<li>Search the <a href="http://biocache.ala.org.au/search#tab_simpleSearch" title="ALA" target="_blank">Atlas of Living Australia</a> for the taxon your profile describes
+<li>Use the facet controls to further refine your search for the specific type specimen record(s)
+<li>View the type specimen record and copy the url - urls are in the form <pre>http://biocache.ala.org.au/occurrences/e0fd3aca-7b21-44de-abe4-6b392cd32aae</pre>
+<li>Click 'Add specimen'
+<li>Paste the url, then click the green tick - if the url is correct then the summary information will be displayed
+<li>Click save
+</ol>
+To delete an existing specimen link, click the Delete button below the specimen (this only removes the link from the profile - it does NOT remove the record from the ALA). 
+</p>
+
+
+<h2><a id="bibliography" class="anchor" href="#bibliography" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bibliography</h2>
+
+<p>
+The Bibliography section allows the editor to list all resources that were cited during the creation of the profile. Basic formatting can be applied using the toolbar controls. Bibliography entries can be re-ordered after they have been entered by using the up and down arrows beside each entry. To delete an entry, click the trash can icon beside the entry, then click Save. To edit an entry, click the edit icon, make the change and then click Save.
+</p>
+
+
+<h2><a id="conservationLists" class="anchor" href="#conservationLists" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conservation and Sensitivity Lists</h2>
+
+<p>
+This section will only be visible if the profile has been matched to a recognised scientific name. Editors cannot modify the content of this section: the system will automatically retrieve the relevant data when the page loads.
+</p>
+<h4>Conservation status</h4>
+<p>
+If the matched taxon has a specific conservation status in at least one Australian state or territory, or in the ICUN, then the status(es) will be displayed as coloured circles, with a link to the authority behind the status.
+</p>
+<h4>Sensitivity Lists</h4>
+<p>
+Collection administrators can nominate one or more 'species lists' from the <a href="http://lists.ala.org.au" title="ALA list tool" target="_blank">Atlas of Living Australia</a> which contains additional sensitivity information. For each of those nominated lists, a link to the list will be displayed in this section if the matched taxon appears in that list.
+</p>
+
+
+<h2><a id="featureLists" class="anchor" href="#featureLists" aria-hidden="true"><span class="octicon octicon-link"></span></a>Feature Lists</h2>
+<p>
+Collection Administrators can nominate one or more 'Feature Lists' (the title of this section can also be changed by the administrator) which contains additional information, such as traits and characters, for species within the collection. These lists are 'species lists' from the <a href="http://lists.ala.org.au" title="ALA list tool" target="_blank">Atlas of Living Australia</a>. Each of the features mentioned in the list for the matched taxon will be displayed in this section.</a>
+</p>
+<p>
+Editors cannot modify the content of this section: the system will automatically retrieve the relevant data when the page loads.
+</p>
+
+
+<h2><a id="taxonomy" class="anchor" href="#taxonomy" aria-hidden="true"><span class="octicon octicon-link"></span></a>Taxonomy</h2>
+<p>
+The Taxonomy section is automatically populated by retrieving the taxonomic hierarchy of the matched taxon from the Atlas of Living Australia. This section will list each rank in the hierarchy. If there is a corresponding profile for a given rank, then the name of the rank will be link - clicking that link will take the user to the profile for that taxon.
+</p>
+Each rank will also have a list icon beside it: clicking this icon will open a popup window listing all subordinate taxa profiles for that rank, enabling easy navigation throughout the taxonomic hierarchy.
+</p>
+<p>
+The section title will state where the taxonomy was sourced from: for example, the title may be "Taxonomy from Australian Plant Census", indicating that although the taxonomy was retrieved from the ALA, the original source of the information was the Australia Plant Census.
+</p>
+
+
+
+<h2><a id="images" class="anchor" href="#images" aria-hidden="true"><span class="octicon octicon-link"></span></a>Images</h2>
+<p>
+Images can be automatically retrieved from the Atlas of Living Australia, or individually uploaded by editors.
+</p>
+<p>
+Collection administrators can choose which ALA data sets to retrieve images from, and whether to automatically show all ALA images or to allow Editors to explicitly choose which images to display.
+</p>
+<p>
+When the administrator elects to automatically show all ALA images, editors will have the option to hide specific images: this is done by turning the 'Display on public view' toggle to No for each image you wish to exclude. When the administrator elects to allow editors to explicitly show ALA images, the 'Display on public view' toggle for all ALA images will by default be set to No, and editors will need to switch it to Yes for any image they wish to include on their profile.
+</p>
+<h4>Setting the Primary Image</h4>
+<p>
+The 'main image' is the image that is displayed at the top of the profile page, and on the cover of the PDF exports. Only 1 image can be set as the main image. To set the main image, switch the 'Use as the main image' toggle to Yes for the image you wish to use. If the editor does not explicitly set the main image, then the first image will be used instead.
+</p>
+
+<h4>Uploading new images</h4>
+<p>
+New images can be uploaded by clicking the 'Add image' button at the bottom of the Images section. Editors can add an image via a url, or by uploading a file from their local system. Enter the descriptive and attribution fields, then click Upload. All images uploaded must be provided with one of the Create Commons Attribution licences.
+</p>
+<p>
+Collection administrators can choose to automatically publish all images to the Atlas of Living Australia's public image repository. This makes images uploaded by editors visible via other public ALA sites. This option is enabled by default.
+</p>
+<p>
+If the administrator disables this option, then images will not be automatically published to the ALA's image repository. These images will be marked with a green 'private' tag below the image. Editors can choose to publish individual images to the ALA if they wish to do so by clicking the 'Push' button beside the image. Images that are publicly visible in the ALA's image repository are marked with a blue 'open' tag.
+</p>
+
+
+<h4>Changing image captions</h4>
+<p>
+Public images (those marked with the blue 'open' tag) can have additional captions provided by typing into the 'Alternative caption' field beside the image, then clicking Save. This text will be displayed below the image, along with the public attribution information, on the profile view page.
+</p>
+<p>
+Images that have not been published to the ALA image repository (those marked with the green 'private' tag), can have their metadata (title, description, attribution, etc) edited by clicking the Edit button beside the image.
+</p>
+
+
+<h4>Deleting images</h4>
+<p>
+Only 'private' images (images that have not been published to the ALA's public image repository, and are marked with the green 'private' tag) can be deleted from the Edit Profile page. These images can be deleted by clicking the Delete button beside the image. If an image from the ALA's image repository needs to be deleted, then the editor will need to contact the ALA.
+</p>
+
+
+
+<h2><a id="versions" class="anchor" href="#versions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version</h2>
+<p>
+Versions are point-in-time snapshots of the profile which can be used as official reference points (e.g. as citations in a journal article). Once a version is created, it will be available for ever and will never be changed. Each version is assigned a Digital Object Identifier (DOI), which serves as a permanent link to the resource. Each version will be a PDF representation of the profile, containing all information that was present when the version was created.
+</p>
+<p>
+In general, the first version should be created when the editor is satisfied that the profile is complete and accurate, then subsequent versions should be created prior to significant changes to the profile. 
+</p>
+
+<h2><a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Acknowledgements</h2>
+<p>
+This section provides fields for identifying the author(s) of the profile and for acknowledging any other significant contributions made by individuals, groups or organisations. The text from this section will be displayed at the bottom of the profile page, and on the PDF exports.
+</p>
+<p>
+As with user-defined attribute titles, collection administrators can choose to control the types of contributions that are acknowledged via a strict vocabulary of contribution types, or they can choose to allow editors to acknowledge any contribution they feel is warranted.
+</p>
+
+
+
+<h2><a id="comments" class="anchor" href="#comments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Comments</h2>
+<p>
+This section is visible to editors on the Edit Profile page, and also to Reviewers and Editors on the View Profile page. General users cannot see or add comments.
+</p>
+<p>
+The Comments section is intended as a simple peer review mechanism: collection administrators can grant individuals (e.g. subject matter experts) the Reviewer role to allow them to view and provide feedback on the contents of profiles within the collection. Reviewers cannot see the Edit Profile page: they can only add comments on the View Profile page. Editors can then review those comments and update their profile accordingly.
+</p>
+
+
+
+
+<h2><a id="optionsMenu" class="anchor" href="#optionsMenu" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Options Menu</h2>
+<h4>Show revision history</h4>
+<p>
+This menu item will display a section listing all changes that have been made to the profile over time. This provides an audit trail for the profile.
+</p>
+
+<h4>Lock for major revision</h4>
+<p>
+By default, all changes made to the profile are immediately visible to the public as soon as they are saved. If you intend to make significant changes over a period of time, then you can lock the profile for major revision: this puts the profile in Draft mode, where changes are not made available to general users until the editor publishes the draft. Reviewers and other editors will always see the draft version if they are logged in.
+</p>
+<p>
+All changes made while in draft mode are staged until the draft is published. This includes uploaded images: images will only be pushed to the ALA's public image repository once the draft is published.
+</p>
+
+<h4>Publish draft changes</h4>
+<p>
+This menu item is only visible when the profile has been locked for a major revision. Once you are satisfied that all changes have been made and are ready to make those changes visible to general users, click this option. You will then be presented with a confirmation dialog asking if you would like to also create a snapshot of the publicly visible version prior to replacing it with the new changes. Select Yes to create a new Version before releasing your changes; select No to just overwrite the public version.
+</p>
+
+<h4>Discard draft changes</h4>
+<p>
+This item is only visible when the prfoile has been locked for a major revision. Clicking this item will discard all changes that have been made to the profile since it was locked for major revision, reverting to the publically visible version. Any images that were uploaded while in draft mode will be deleted.
+</p>
+
+<h4>Delete this profile</h4>
+<p>
+This option will completely and permanently remove the profile from the system. This operation cannot be undone.
+</p>
+
+<h4>Archive this profile</h4>
+<p>
+This sets the profile to an 'archived' state, where it is still in the system and can be referenced via a direct link, but will not be included in search results (unless the 'include archived profiles' is selected). This allows a profile to be retained as a reference point when it becomes superceded by another profile (e.g. if a species is split, or two species are merged). Archived profiles can be re-instated if necessary.
+</p>
+    </section>
+  </body>
+</html>
