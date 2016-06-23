@@ -4,4 +4,5 @@
             <span class="fa fa-question-circle"></span>
         </a>
     </div>
+    <div class="clearfix"></div>
 </g:if>

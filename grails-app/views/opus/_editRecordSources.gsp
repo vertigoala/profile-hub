@@ -7,9 +7,9 @@
     </div>
 
     <div class="panel-body">
+        <h5 class="section-panel-heading padding-bottom-1">Record visibility</h5>
         <div class="row">
             <div class="col-sm-12">
-                <h5 class="section-panel-heading padding-bottom-1">Record visibility</h5>
 
                 <div class="col-sm-6">
                     <div class="radio">

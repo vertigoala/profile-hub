@@ -21,6 +21,20 @@ class HelpTagLib {
         }
     }
 
+    def helpUrl = { attrs ->
+        Map helpUrls = servletContext.getAttribute(HELP_URLS)
+        if (!helpUrls) {
+            helpUrls = loadHelpUrls()
+        }
+
+        String url = ""
+        if (helpUrls?.urls?.containsKey(attrs["help-id"])) {
+            url = "${helpUrls?.baseUrl}${helpUrls?.urls?.get(attrs["help-id"])}"
+        }
+
+        out << url
+    }
+
     private Map loadHelpUrls() {
         log.debug("Loading help url mappings...")
         String helpFile = "${grailsApplication.config.help.mapping.file}"

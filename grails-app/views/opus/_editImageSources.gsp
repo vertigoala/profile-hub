@@ -2,14 +2,14 @@
     <div class="panel-heading">
         <a name="imageSources">
             <h4 class="section-panel-heading">Image options</h4>
-            <p:help help-id="opus.edit.images"/>
         </a>
+        <p:help help-id="opus.edit.images"/>
     </div>
 
     <div class="panel-body">
+        <h5 class="section-panel-heading padding-bottom-1">Image visibility</h5>
         <div class="row">
             <div class="col-sm-12">
-                <h5 class="section-panel-heading padding-bottom-1">Image visibility</h5>
 
                 <div class="col-sm-6">
                     <div class="radio">

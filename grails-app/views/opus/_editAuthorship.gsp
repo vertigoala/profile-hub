@@ -31,5 +31,5 @@
 </div>
 
 <a name="authorshipVocab"></a>
-<vocabulary-editor vocab-id="opusCtrl.opus.authorshipVocabUuid" vocab-name="Acknowledgements vocabulary"
+<vocabulary-editor vocab-id="opusCtrl.opus.authorshipVocabUuid" vocab-name="Acknowledgements vocabulary" help-url="<p:helpUrl help-id="opus.edit.acknowledgementVocabulary"/>"
                    all-mandatory="true" allow-mandatory="false" allow-reordering="false" allow-categories="false"></vocabulary-editor>

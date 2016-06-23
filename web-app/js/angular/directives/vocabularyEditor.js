@@ -8,7 +8,8 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             allowReordering: '@',
             allowMandatory: '@',
             allMandatory: '@',
-            allowCategories: '@'
+            allowCategories: '@',
+            helpUrl: '@'
         },
         templateUrl: $browser.baseHref() + 'static/templates/vocabularyEditor.html',
         controller: ['$scope', 'profileService', 'util', 'messageService', '$modal', '$filter', function ($scope, profileService, util, messageService, $modal, $filter) {
