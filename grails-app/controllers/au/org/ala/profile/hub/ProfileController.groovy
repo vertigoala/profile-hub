@@ -730,7 +730,12 @@ class ProfileController extends BaseController {
 
     def multimediaPanel = {
         Map searchParams = [parentId: params.profileId]
-        Map profileDocuments = documentResourceService.search(searchParams)
+//        Map profileDocuments = documentResourceService.search(searchParams)
+
+        Map profileDocuments = documentResourceService.list(params.opusId, params.profileId)
+
+        String profileId = params.profileId
+        String opusId = params.opusId
 
         def g = grailsApplication.mainContext.getBean('org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib')
 
@@ -742,8 +747,10 @@ class ProfileController extends BaseController {
                 audioViewer      : g.createLink(controller: 'preview', action: 'audioviewer'),
                 videoViewer      : g.createLink(controller: 'preview', action: 'videoviewer'),
                 errorViewer      : g.createLink(controller: 'preview', action: 'error'),
-                documentUpdateUrl: g.createLink(controller: 'resource', action: 'documentUpdate'),
-                documentDeleteUrl: g.createLink(controller: 'resource', action: 'documentDelete'),
+                documentUpdateUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/update"),
+//              documentUpdateUrl: g.createLink( controller: 'resource', action: 'documentUpdate'),
+                documentDeleteUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/delete"),
+//              documentDeleteUrl: g.createLink(controller: 'resource', action: 'documentDelete'),
                 parentId         : params.profileId,
                 documents        : profileDocuments.documents,
                 parentId         : params.profileId,
@@ -808,3 +815,4 @@ class ProfileController extends BaseController {
         modelJson.encodeAsJavaScript()
     }
 }
+

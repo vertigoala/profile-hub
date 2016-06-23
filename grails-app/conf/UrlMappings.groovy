@@ -25,6 +25,12 @@ class UrlMappings {
         "/profile/search/taxon/levels" controller: "search", action: "getTaxonLevels"
         "/profile/search/children" controller: "search", action: "getImmediateChildren"
 
+
+
+        // This does not follow standard url convention because the document-preview-plugin appends the documentID at the end of it
+        "/opus/$opusId/profile/$profileId/resource/delete/$documentId" controller: "resource", action: [DELETE: "documentDelete"]
+        "/opus/$opusId/profile/$profileId/resource/update/$documentId?(.$format)?" controller: "resource", action: [POST: "documentUpdate"]
+        "/opus/$opusId/profile/$profileId/resource/update" controller: "resource", action: [POST: "documentUpdate"] // This is actually a create
         "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
         "/opus/$opusId/profile/$profileId/duplicate" controller: "profile", action: [PUT: "duplicateProfile"]
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]

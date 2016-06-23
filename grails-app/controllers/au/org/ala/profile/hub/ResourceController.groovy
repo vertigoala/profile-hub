@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import au.org.ala.web.CASRoles
 import grails.converters.JSON
@@ -9,8 +10,9 @@ import org.codehaus.groovy.grails.web.json.JSONArray
 import org.codehaus.groovy.grails.web.json.JSONObject
 
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST
+import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
 
-class ResourceController {
+class ResourceController extends BaseController {
 
     static final String ADMIN_ROLE = 'ROLE_ADMIN'
 
@@ -54,12 +56,19 @@ class ResourceController {
 
     /**
      * Proxies to the ecodata document controller.
-     * @param id the id of the document to update (if not supplied, a create operation will be assumed).
+     * @param documentId the documentId of the document to update (if not supplied, a create operation will be assumed).
      * @return the result of the update.
      */
-    def documentUpdate(String id) {
+    def documentUpdate(String documentId) {
 
-        log.debug("In documentUpdate for ID: ${id}")
+        log.debug("In documentUpdate for ID: ${documentId}")
+
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        log.debug("opusId: ${opusId}")
+        log.debug("profileId: ${profileId}")
+
 
         if (request.respondsTo('getFile')) {
             def f = request.getFile('files')
@@ -106,7 +115,7 @@ class ResourceController {
             Map document = JSON.parse(params.document)
             document.systemId = DOCUMENT_SYSTEM_ID
 
-            def result = documentResourceService.updateDocument(document)
+            def result = documentResourceService.updateDocument(opusId, profileId, document)
 
             log.debug("Result: ${result}")
             response.setContentType('text/plain;charset=UTF8')
@@ -116,12 +125,21 @@ class ResourceController {
     }
 
     /**
-     * Proxies to the eco data document controller to delete the document with the supplied id.
-     * @param id the id of the document to delete.
+     * Proxies to the eco data document controller to delete the document with the supplied documentId.
+     * @param documentId the documentId of the document to delete.
      * @return the result of the deletion.
      */
-    def documentDelete(String id) {
-        def result = documentResourceService .delete(id)
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def documentDelete(String documentId) {
+        log.debug("In documentUpdate for ID: ${documentId}")
+
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        log.debug("opusId: ${opusId}")
+        log.debug("profileId: ${profileId}")
+
+        def result = documentResourceService.delete(opusId, profileId, documentId)
         render status: result.statusCode
     }
 }
