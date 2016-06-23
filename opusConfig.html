@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>ALA Profiles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">ALA Profiles Online Help</h1>
+    </section>
+
+    <section class="main-content">
+      <a href="./index.html">&lt;&nbsp;Main</a>
+      <h1>
+<a id="opus-config" class="anchor" href="#opus-config" aria-hidden="true"><span class="octicon octicon-link"></span></a>Collection Configuration</h1>
+
+<p>This page explains the various collection configuration options available to the Collection Administrator.</p>
+
+<h2><a id="siteOverview" class="anchor" href="#siteOverview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Site Overview</h2>
+
+<p>
+This section allows the collection administrator to specify the main title and description for the collection, and to add any relevant tags. The Title and Description are displayed on the Collection's home page.
+<p/>
+
+<h4>Tags</h4>
+<p>
+Tags are used to categorise your collection. The list of available tags is predefined, but additional tags can be requested by contacting the Atlas of Living Australia.
+</p>
+<p>
+Adding tags to your collection will allow the system to group collections together by broad categories (such as all collections which contain flora treatments, or all collections which deal with indigenous knowledge). This has a number applications, including assisting with integrating your collection's data into other Atlas of Living Australia systems. For example, tagging your collection with the 'IEK' (Indigenous Ecological Knowledge) tag tells the system that content from your collection should be included in the 'Indigenous Information' tab on the ALA species profile pages.
+</p>
+<p>
+Note: only Public collections will be used in cases where tags are used to incorporate collection data into external systems.
+</p>
+
+
+
+
+<h2><a id="accessControl" class="anchor" href="#accessControl" aria-hidden="true"><span class="octicon octicon-link"></span></a>Access Control</h2>
+
+<p>
+This section allows administrators to control who can see the collection, and what those users can do within the collection.
+</p>
+
+<h4>Collection visibility</h4>
+<p>
+By default, you collection will be visible to the general public. Users do not need to sign into the system in order to view your profiles. Checking the 'Make this collection private' option will hide the collection from anyone except those users listed in the Access Control section: i.e. in order for someone to see your collection, you must explicitly grant them at least 'User' access. If a visitor does not sign in, or they have not been granted a role in your collection, then they will never see the collection.
+<p/>
+<p>
+By checking this option, the collection administrator gains complete control over who can view or interact with the collection.
+</p>
+<p>
+NOTE: checking this option does NOT automatically enable private image or record sources - these options need to be explicitly selected (see below for more details on these options).
+</p>
+
+<h4>Users</h4>
+
+<p>
+This section allows the administrator to grant users specific permissions within the collection. There are four roles, as described in the Access Control section. If your collection is public (i.e. you have not checked the 'Make this collection private' option) then ALL users are implicitly given the User role. If your collection is private then the administrator needs to explicitly grant individuals the User role.
+</p>
+<p>
+Roles are cumulative: i.e., a Reviewer can do everything a User can do, plus add review comments; an Editor can do everything a Reviewer can do, plus create and edit profiles; an Administrator can do everything an Editor can do, plus modify the collection configuration.
+</p>
+<p>
+To grant a role to an individual:
+<ol>
+<li>Click Add User
+<li>Search for the user by entering the full email address they used to register with the Atlas of Living Australia
+<li>Click 'Search for user'
+<li>If there is a matching user, then their name will be displayed below the search field
+<li>Select the appropriate role from the Role list
+<li>Optionally add some notes describing who the user is and why they have access - this is information just for the collection administrator(s)
+<li>Click OK
+<li>Once all users have been added, click Save.
+</ol>
+<p/>
+<p>
+Existing users can be deleted by clicking the trash can icon beside the user. Existing user's role and notes can be modified by clicking the edit icon beside the user.
+</p>
+<p>
+At any time prior to clicking Save, you can select the 'Reset' button to revert all unsaved changes.
+</p>
+
+<h3>Service access</h3>
+<p>
+You may wish to make your collection's data available to third-party applications. To access your data, those applications need an <i>Access Token</i>. The Service Access section allows the administrator to generate a token that can be provided to the owners of the third-party application to grant them system-level access to your collection's data. This will allow them to perform operations such as exporting the underlying data for every profile in your collection.
+</p>
+<p>
+To revoke access to your data, click the 'Revoke access token' button. From that point, no third-party systems will be able to access your data, until or unless you grant them another access token.
+</p>
+
+<h2><a id="branding" class="anchor" href="#branding" aria-hidden="true"><span class="octicon octicon-link"></span></a>Branding</h2>
+
+<p>
+The branding section allows administrators to personalise the appearance of the collection, and to provide various contact points.
+</p>
+<h4>Banners and logos</h4>
+<p>
+Two banner images (the images which appear at the top of each page) can be provided: one for profile view/edit pages, and one for all other pages of the collection. If only one is provided then it will be used for all pages. The banner can be configured as 'tall' or 'short' as suits your desired layout. If no image is provided, then the default will be used.
+</p>
+<p>
+A logo image can be provided, which will be displayed on the left-hand side of the page footer. This logo should represent your organisation/group or your collection. 
+</p>
+<p>
+A 'thumbnail' image can also be provided: this is displayed in the ALA Profiles landing page, where all collections are listed. It can be your logo, or any other image. If no thumbnail is provided then a default image will be used.
+</p>
+
+<h4>Short Name</h4>
+<p>
+The 'short name' is an abbreviated version of your collection's name, and is used to form the unique URL for your collection. If you do not provide a short name, then your collection's URL will contain the unique identifier for your collection. Short names must be unique across all collections in the ALA Profiles application to avoid conflicts between collections. As the short name forms part of your URL, it is recommended that you keep it as short as possible while still being unique and meaningful.
+</p>
+<p>
+For example, without a short name, your collection's URL would be something like this: http://profiles.ala.org.au/opus/8aa27a28-e38f-4048-8349-9102e5164948. With a short name of 'bob' then your URL would be http://profiles.ala.org.au/opus/bob.
+</p>
+
+<h4>Contact information</h4>
+<p>
+Each of the three supported contact mechanisms (email, facebook and twitter) will add an icon to the footer of every page in your collection, allowing your users to contact you or your organisation/group. If these fields are left blank then there will be no contact links in the page footer.
+</p>
+
+<h4>Copyright statement and page footer</h4>
+<p>
+The copyright statement is piece of text describing the copyright for the content of your collection. This text will be displayed just above the page footer on every profile in your collection.
+</p>
+<p>
+The footer text allows the administrator to define some standard text to be displayed on every page within the collection. This will be displayed beside the logo, above the standard ALA statement.
+</p>
+
+
+
+<h2><a id="profileEditingOptions" class="anchor" href="#profileEditingOptions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Profile Editing Options</h2>
+<p>
+This section allows the administrator to control the default behaviour that is applied when profiles are created and/or edited.
+</p>
+<h4>Automatically lock new profiles for major revision</h4>
+<p>
+Enabling this option will cause all new profiles to be immediately and automatically placed into Draft mode. This means that content within new profiles will not be visible to general users until the editor publishes the draft changes.
+</p>
+
+
+<h2><a id="profilePageLayout" class="anchor" href="#profilePageLayout" aria-hidden="true"><span class="octicon octicon-link"></span></a>Profile Page Layout</h2>
+<p>
+The ALA Profiles application supports a number of layouts for the View Profile page. This allows the administrator to select the layout which best suits their collection. Simply select the appropriate layout and click save: from that point on, every time a user navigates to the View Profile page they will see the selected layout.
+</p>
+
+
+<h2><a id="map" class="anchor" href="#map" aria-hidden="true"><span class="octicon octicon-link"></span></a>Map Configuration</h2>
+<p>
+The Map Configuration section defined the default behaviour for the occurrence maps which are displayed on each profile page. 
+</p>
+<h4>Map centre and zoom options</h4>
+<p>
+This section allows the administrator to defined the centre coordinates and initial zoom level for the map, so that it displays the appropriate geographic area for the collection. E.g. if you collection covers only species within New South Wales, then you would configure the map to centre on coordinates near the the geographic centre of NSW, and with a zoom level which allows NSW to fill the map window. Note that the choice of Profile Page Layout can affect the size of the occurrence map.
+</p>
+<p>
+By default, the 'Automatically zoom distribution maps' option is disabled, so the occurrence maps on every profile page will all start at the same centre coordinates and zoom level. Checking the 'Automatically zoom distribution maps' option will cause the occurrence maps on individual profile pages to automatically zoom in/out and re-centre to fit the occurrence data that is displayed.
+</p>
+<p>
+Note: users always have the option to toggle between the default zoom and the data fit - this option simply controls the starting position when the page first loads.
+</p>
+<p>It is recommended to set a Maximum auto zoom level when the 'Automatically zoom distribution maps' option is selected. This will prevent occurrence maps for profiles with only a very small number of occurrence records, or only a very small geographic distribution, from zoom in so far that none of the surrounding features are visible on the map.
+</p>
+
+<h4>Snapshot images</h4>
+<p>
+Enabling the 'Allow editors to create static snapshot images of distribution maps' option will give profile editors the ability to create a fixed image representation of their profile's distribution map which will be displayed on the View Profile page instead of the live map. If this option is disabled the occurrence maps will always display up-to-date distribution data retrieved from the ALA at the time the page was loaded. 
+</p>
+
+
+<h2><a id="keys" class="anchor" href="#keys" aria-hidden="true"><span class="octicon octicon-link"></span></a>Key Configuration</h2>
+<p>
+Profile collections can be integrated with identification keys developed and maintained in the <a href="http://keybase.rbg.vic.gov.au/" target="_blank">Keybase system</a>. Simply select the appropriate Keybase project and click Save. This will result in an 'Identify' tab being added to the collection home page to allow users to search for profiles using the Keybase interactive keyplayer, and a 'Key' tab being added to each View Profile page (where the taxon the profile is matched to has an associated key) to allow navigation between similar taxa via the interactive keyplayer.
+</p>
+<p>
+If no Keybase project has been selected then these additional tabs will not be visible.
+</p>
+
+
+<h2><a id="images" class="anchor" href="#images" aria-hidden="true"><span class="octicon octicon-link"></span></a>Image Options</h2>
+
+<p>
+This section controls where images are retrieved from, and how they are handled in your collection.
+</p>
+<p>
+Images can be retrieved from the public Atlas of Living Australia image repository, and they can also be uploaded directly into your collection's profiles.
+</p>
+
+<h4>Image visibility</h4>
+<p>
+By default, all images that are uploaded in a public collection are automatically pushed to the ALA's public image repository, linked to the taxon matched to the profile. This means all images must be suitably licenced for public use (all images uploaded through the ALA Profiles application must be given one of the Creative Commons Attribution licences).
+</p>
+<p>
+As the collection administrator, you can disable this automatic feature by selecting the 'Do not push images to the public Atlas of Living Australia image repository...' option under 'Image Visibility'. When this option is selected, images uploaded by editors will be stored in the ALA Profiles application rather than being published to the central ALA image repository. The editor can choose to explicitly push individual images to the public repository if they wish to.
+</p>
+
+<h4>Approved image sources</h4>
+<p>
+For any profile where there is a matched taxon, the system will display images for that taxon from the public ALA image repository. This section allows the administrator to decide whether to automatically show all ALA images on profiles, and give the editors the option to exclude specific images, or to hide ALA images untill the editor explicitly chooses to display specific images.
+</p>
+<p>
+Images in the ALA image repository are linked to <i>data resources</i>, which are generally the organisation/group/facility which originally provided the image to the ALA. The <b>Selected image sources</b> section allows the administrator to choose which data resource(s) to retrieve images from for profiles in their collection. There are four options:
+<ol>
+<li>All ALA data resources - this option will result in any image for the matched taxon being displayed in the profile page, regardless of its original source;
+<li>Specific groups of resources - related data resources in the ALA can be grouped together to make it easier to select resources: for example, the 'Australian Virtual Herbarium' is a grouping of several separate, but related, resources. This option allows the administrator to select one or more of these groups;
+<li>My collection only - when a your collection was created, it was assigned its own data resource in the ALA. This means that members of your collection can provide data and images directly to the ALA, which will then be associated with your collection's data resource. Selecting the 'My collection only' option will result in only images that you have provided to the ALA being included in your profiles.
+<li>Specific resources - this option allows the administrator to select one or more individual ALA data resources from which to display images.
+</ol>
+</p>
+<p>
+Select the option that is suitable for your collection, select the data resource(s) or group(s) if necessary, then click Save.
+</p>
+
+
+
+<h2><a id="records" class="anchor" href="#records" aria-hidden="true"><span class="octicon octicon-link"></span></a>Approved Specimen/observation sources</h2>
+
+<p>
+This section controls the source(s) of data used to populate the distribution maps for profiles. 
+</p>
+<h4>Record visibility</h4>
+<p>
+By default, all occurrence data used to populate distribution maps is retrieved from the public Atlas of Living Australia data repository. However, if your collection needs to use data is not publicly accessible, then the 'Allow participants to upload their own data...' option can be selected. Once selected, this will result in a new Data tab on the collection home page, where administrators and editors can upload their own data sets. All data uploaded within the collection is visible across the entire collection, regardles of who uploaded.
+</p>
+<p>
+This feature should only be used if your collection's data is not suitable for public use.
+</p>
+
+<h4>Record sources</h4>
+<p>
+For any profile where there is a matched taxon, the system will display a distribution map with occurrence records for that taxon from the public ALA data repository. 
+</p>
+<p>
+Like images, occurrence records in the ALA data repository are linked to <i>data resources</i>, which are generally the organisation/group/facility which originally provided the data to the ALA. The <b>Record sources</b> section allows the administrator to choose which data resource(s) to use when generating the distribution map profiles in their collection. There are four options:
+<ol>
+<li>All ALA data resources - this option will result in any occurrence records for the matched taxon being included in the distribution map, regardless of its original source;
+<li>Specific groups of resources - related data resources in the ALA can be grouped together to make it easier to select resources: for example, the 'Australian Virtual Herbarium' is a grouping of several separate, but related, resources. This option allows the administrator to select one or more of these groups, so that only occurrence data provided by those groups are displayed on the map;
+<li>My collection only - when a your collection was created, it was assigned its own data resource in the ALA. This means that members of your collection can provide data and images directly to the ALA, which will then be associated with your collection's data resource. Selecting the 'My collection only' option will result in only occurrence data that you have provided to the ALA being included in your profiles.
+<li>Specific resources - this option allows the administrator to select one or more individual ALA data resources to include in the distribution map.
+</ol>
+</p>
+<p>
+Select the option that is suitable for your collection, select the data resource(s) or group(s) if necessary, then click Save.
+</p>
+
+
+<h2><a id="lists" class="anchor" href="#lists" aria-hidden="true"><span class="octicon octicon-link"></span></a>Approved Lists</h2>
+<p>
+This section allows the administrator to identify a number of ALA 'species lists' which contain sensitivity information about the taxa in the collection. When a user views a profile page, any of these lists which contain the matched taxon for that profile will be displayed under the Conservation and Sentitivity section.
+</p>
+<p>
+To add lists for your collection:
+<ol>
+<li>Click the 'Add list' button
+<li>Start typing the name of the list from the <a href="http://lists.ala.org.au" title="ALA List Tool" target="_blank">Atlas of Living Australia Lists Tool</a>
+<li>Select the appropriate list
+<li>Click save
+</ol>
+To remove an existing list, click the trash can icon beside the list (this just removes the connection between your profile and the list - the list itself is not modified in any way). 
+</p>
+
+
+
+<h2><a id="featureLists" class="anchor" href="#featureLists" aria-hidden="true"><span class="octicon octicon-link"></span></a>Feature Lists</h2>
+<p>
+This section allows collection administrators to nominate one or more 'Feature Lists' which contain additional information, such as traits and characters, for species within the collection. These lists are 'species lists' from the <a href="http://lists.ala.org.au" title="ALA list tool" target="_blank">Atlas of Living Australia</a>. Each of the features mentioned in the list for the matched taxon will be displayed in this section.</a>
+</p>
+<p>
+By default, information from the feature lists are displayed on the View Profile page in a section titled 'Feature Lists'. The administrator can change the title of this section using the <b>Section title</b> field.
+</p>
+To add feature lists for your collection:
+<ol>
+<li>Click the 'Add list' button
+<li>Start typing the name of the list from the <a href="http://lists.ala.org.au" title="ALA List Tool" target="_blank">Atlas of Living Australia Lists Tool</a>
+<li>Select the appropriate list
+<li>Click save
+</ol>
+To remove an existing list, click the trash can icon beside the list (this just removes the connection between your profile and the list - the list itself is not modified in any way).
+</p>
+
+
+<h2><a id="supportingCollections" class="anchor" href="#supportingCollections" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supporting Collections</h2>
+<p>
+This section controls how data can be shared between you collection and other collections. As the collection administrator, you can request access to profile data from other collections, and respond to request from the administrators of other collections. This feature allows profile information to be shared between organisations without having to physically copy or re-enter the data.
+</p>
+<p>
+Data shared between collections still belongs to the source collection, and only the source collection's administrators/editors can modify the data: the requesting collection is given read-only access.
+</p>
+<h4>Sharing data with other collections</h4>
+<p>
+This section allows the administrator to configure how they want to respond to sharing requests from other collection administrators, and to view all the collections which have requested access.
+</p>
+<p>
+When the administrator for another collection requests access to your profile data, you will receive an email identifying the requestor and allowing you to approve or reject the request. The <b>Automatically approve requests to share collection data</b> option removes the need for that email and any action on your part: instead, any sharing request by any other collection will automatically be approved.
+</p>
+<p>
+All collections which have been granted access to your data will be listed in this section. To revoke access to your data, click the revoke icon beside the collection name (the thumbs-down icon). The administrator(s) of the other collection will receive an email informing them that they no longer have access to your collection's data. 
+</p>
+
+<h4>Access data from other collections</h4>
+<p>
+This section allows the administrator to request access to another collection's data, and provides some options to control how that data is used in your collection.
+</p>
+<p>
+The <b>Show data from supporting collections on the profile pages</b> option allows users to view user-defined attribute data from the supporting collection on the View Profile pages within your collection (when both collections have profiles for the same taxon).
+</p>
+<p>
+The <b>Allow profile editors to copy data from supporting collections on the profile pages</b> option gives editors of you collection the ability to copy data from user-defined attributes in the supporting collection into their profiles, so that they can modify the content. This is a convenience mechanism for creating a new user-defined attribute in your collection with the text from the supporting collection (rather than manually copying and pasting the text). Once the Copy option has been used, the attribute becomes a user-defined attribute within the profile, just like an attribute that the editor entered themselves, except that the text will be attributed to the supporting collection.
+</p>
+<p>
+Below these options will be a list of collections which you have requested access to, and the status of that request.
+</p>
+<p>
+To request access to another collection's data:
+<ol>
+<li>Click the 'Add collection' button
+<li>Enter the name of the collection whose data you wish to include in your profiles
+<li>Click Save
+<li>The request status will be displayed beside the new entry in the list.
+</ol>
+To stop accessing another collection's data, click the trash can icon beside the collection name.
+</p>
+<p>
+The request status will be one of:
+<ul>
+<li>Requested - the share request has been sent to the administrator(s) of the other collection, but they have not actioned it yet;
+<li>Approved - an administrator of the other collection has approved your request and granted you access to their profiles;
+<li>Revoked - an administrator of the other collection has revoked your access to their profiles
+<li>Rejected - an administrator of the other collection has rejected your request for access to their profiles
+</ul>
+</p>
+
+
+<h2><a id="attributeVocabulary" class="anchor" href="#attributeVocabulary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Attribute vocabulary</h2>
+<p>
+The Attribute vocabulary section allows administrators to control the types of user-defined attributes that editors use on their profiles. It also allows administrators to indicate which attribute should be displayed in the search results (the 'summary' attribute) and which attribute(s) contain name-related information.
+</p>
+<p>
+The Attribute vocabulary can be 'Strict' or 'Not Strict':
+<ul>
+<li>A Strict vocabularly means that editors cannot create their own user-defined attributes: they must select a title from a list that is maintained by the collection administrator in this section;
+<li>A Non strict vocabularly means that editors CAN create their own attributes: new titles will automatically be added to the vocabulary, and will appear in an autocomplete list as editors type the attribute title
+</ul>
+</p>
+<p>
+To add a new attribute type:
+<ol>
+<li>Enter the new term in the text field, then click 'Add term'
+<li>When all terms have been added, click Save.
+</ol>
+To edit an existing term, click the edit link beside the term. Remember to click save after closing the dialog. 
+</p>
+<h4>Deleting terms</h4>
+<p>
+To delete an existing term, click the trash can icon beside the term. If the term has not been used, then it will be removed from the list. You must click Save for change to take affect.
+</p>
+<p>
+If the term has been used in any profile in the collection then you will be presented with a dialog stating that the term has been used, and asking for a replacement value. Terms that have been used on profiles cannot be deleted. To delete a term that is use, you either need to specify a replacement term, or manually find all profiles that use the term and remove the attribute. This is to prevent unintentional data loss by blindly removing content from a potentially large number of profiles.
+</p>
+<h4>Ordering terms</h4>
+<p>
+The order of the terms in the attribute vocabulary controls the order in which user-defined attributes are displayed on the profile pages. 
+</p>
+<p>
+To change the order of user-defined attributes, use the up and down arrows beside the terms to move them into the desired order. When you are satisfied with the order, click Save. All profile pages will show the user-defined attributes in that order the next time they are viewed.
+</p>
+<h4>Mandatory terms</h4>
+<p>
+Flagging a term as 'mandatory' means that a user-defined attribute input field for that term will automatically be created on the Edit Profile page to prompt the editor to provide some text for that term.
+</p>
+<p>
+This is a slight misnomer, as profiles can still be created without providing a value for the attribute. However, it does provide a simple template mechanism for profiles, where editors will always see an empty input field for the 'mandatory' user-defined attributes.
+</p>
+<h4>Name terms</h4>
+<p>
+Names are important things, and there are often multiple possible names for the taxon being described by a profile. For example, you may name your profile after the scientific name for the taxon, but you also want to record the common name and the indigenous name. Furthermore, you want your users to be able to search for profiles using those names.
+</p>
+<p>
+All user-defined attributes are automatically included in the free-text search available on the Search tab of the collection home page. However, the search tab also allows users to perform a more specific "Name" search: this search does not simply look for the provided search term in the text, but rather it performs some complex name matching logic to find possible alternate names for the provided term and then searches for all of them. Additionally, it only searches the Profile Name, and user-defined attributes <i>that have been flagged as 'Name' attributes</i>. Therefore, flagging any attribute term that contains other names for the taxon as a 'Name' attribute will improve the accuracy of the Name-specific search.
+</p>
+<p>
+Additionally, user-defined attributes whose terms have been flagged as Name will be displayed below the profile name on the View Profile page and in the search results, rather than within the body of the page.
+<p/>
+<h4>Summary term</h4>
+<p>
+One attribute term can be flagged as being the 'summary' attribute - this attribute is then included in the search results, and also on other ALA species pages if your collection has been integrated with other ALA systems.
+</p>
+<p>
+Any attribute term can be used as the 'summary', but it should contain information that is useful for someone scanning a list of search results as they try to find the desired profile.
+</p>
+<p>
+If no attribute term has been flagged as the summary, then no text will be displayed in the search results: just the profile name and any Name attributes will be displayed.
+</p>
+
+
+
+
+
+
+<h2><a id="authorship" class="anchor" href="#authorship" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authorship and attribution controls</h2>
+<p>
+
+
+
+
+This section controls whether contributions to individual user-defined attributes are recorded and displayed on the View Profile page. When checked, editors will have the ability to flag any changes made to a user-defined attribute as a 'significant edit', which will then allow them to acknowledge the source of the update (either themselves or a third party). On the View Profile page, each user-defined attribute will be accompanied by a statement identifying the original author and any contributors.
+</p>
+<p>
+Disabling this option removes the author/contributor statement from the View Profile page, and removes the ability for editors to acknowledge the contribution.
+</p>
+
+<h2><a id="acknowledgementVocabulary" class="anchor" href="#acknowledgementVocabulary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Acknowledgements vocabulary</h2>
+<p>
+The acknowledgement vocabulary section allows administrators to control the types of contributions that profile editors should acknowledge when writing their profiles.
+</p>
+<p>
+The 'Strict' option will prevent editors from entering new types of contributions in the Authorship and Acknowledgements section of the Edit Profile page - instead, they will need to select the contribution type from a predefined list. That list is controlled by 'Existing terms' section of the Acknowledgements vocabulary.
+</p>
+<p>
+The 'Not strict' option will allow editors to enter their own types of contribution as they see fit. These terms will be displayed in the administrator's Acknowledgements vocabulary section, and the Edit Profile page will present the editor with an autocomplete list of existing terms as they type.
+</p>
+<p>
+To add a new contribution type:
+<ol>
+<li>Enter the new term in the text field, then click 'Add term'
+<li>When all terms have been added, click Save.
+</ol>
+To edit an existing term, click the edit link beside the term. Remember to click save after closing the dialog. To delete an existing term, click the trash can icon beside the term, then click Save. 
+
+
+
+<h2><a id="glossary" class="anchor" href="#glossary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Glossary</h2>
+<p>
+Every collection can define its own glossary of terms. Administrators and editors can add/edit/delete individual terms via the Glossary page. The Glossary section of the Collection Configuration page allows the administrator to perform a bulk upload of glossary items from a .CSV file.
+</p>
+<p>
+WARNING: Uploading a new glossary this way will <i>delete any existing glossary terms</i> and replace them with the content of the uploaded file.
+</p>
+<p>
+To upload a glossary:
+<ol>
+<li>Create a .csv (comma-separate text file) with 2 columns: 'term' and 'description'
+<li>Fill in the .csv file with your glossary. The order of terms does not matter - they will be sorted alphabetically during the import process
+<li>Select the file using the 'Choose file' button
+<li>Click Upload
+</ol>
+
+
+
+<h2><a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About page content</h2>
+<p>
+Every collection has an About page. The about page has the following sections:
+<ul>
+<li>Title - "About [collection name]"
+<li>Descriptive text entered by the administrator via the collection configuration page
+<li>Citations - an optional statement entered by the administrator via the collection configuration page explaining how the content of the collection should be cited. This section will not be displayed if the administrator has not entered the citation instructions;
+<li>Collection administration - a list of all Administrators assigned to the collection with their email address
+<li>Copyright - a standard copyright statement that applies to all collections in the ALA Profiles application
+</ul>
+</p>
+<p>This section of the collection administration screen allows the administrator to define the content to be shown on the About page. This should describe the collection and the organisation/group behind it. The About page content can be formatted using the formatting controls on the toolbar of the text field.
+</p>
+
+<h4>Formatted citation</h4>
+<p>
+You can also choose to include a standard citation format in your About page to inform users of the correct way to cite information from your collection.
+</p>
+
+
+
+<h2><a id="documents" class="anchor" href="#documents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documents</h2>
+<p> 
+The Documents tab allows administrators and editors to attach files or reference external resources containing supporting information for the collection.
+</p>
+<p>
+To add a document:
+<ol>
+<li>You must be an administrator or editor 
+<li>Go to the Documents tab on the collection home page
+<li>Click 'Add attachment' 
+<li>Select the resource type and fill in the form. Mandatory fields are marked with asterisks
+<li>Click OK
+</ol>
+</p>
+
+
+<h2><a id="reports" class="anchor" href="#reports" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reports</h2>
+<p>
+The Reports tab is only visible to administrators and editors, and contains a number of predefined reports to assist with the administration of the collection.
+</p>
+<h4>Archived Profiles</h4>
+<p>
+The Archived Profiles report will list every profile in the collect that has been Archived. Archived profiles are not visible in any profile listing (e.g. the Browse tab, any lists of subordinate taxa, the Identify/Key tabs, etc). They can be included in the results of the search tab if the 'Include archived' option is selected. This report gives administrators and editors a quick and easy way to view all profiles that have been archived, along with who archived them and when.
+</p>
+
+<h4>Draft Profiles</h4>
+<p>
+The Draft Profiles report lists all profiles in the collection that are currently locked for a major revision (i.e. are in Draft mode), who locked them and when they were locked. 
+</p>
+<p>
+Draft content is not visible to public users of your collection, so profiles generally should not be left in draft mode for extended periods of time. This report helps administrators and editors to keep an eye on how many profiles are locked and for how long. 
+</p>
+
+<h4>Mismatched Name</h4>
+<p>
+The Mismatched Names report lists all profiles where one of the following conditions has been met:
+<ul>
+<li>There is no matched taxon associated with the profile
+<li>There is a matched taxon, but the taxon name is different to the profile name
+<li>The profile name was not matched to a name in the National Species List
+</ul>
+The purpose of this report is to highlight potential issues with name matching, as an incorrectly matched name can result in incorrect data being retrieved from the ALA and other applications. There may be valid cases for a difference between the profile name and the matched taxon (e.g. the profile is named after the vernacular name of the species, whereas the matched name is always the scientific name), so not everything in this report is actually a problem: it is just a list of <i>potential</i> problems.
+</p>
+
+<h4>Recent Comments</h4>
+<p>
+The Recent Comments report lists all profiles that have had a review comment, within a specified time period (the default is within the last 30 days).
+</p>
+<p>
+This allows administrators and editors to quickly identify any profiles that are currently being reviewed and may need to be updated.
+</p>
+
+<h4>Recent Updates</h4>
+<p>The Recent Updates report simply lists any profiles that have been updated within a specified time period (the default is within the last 30 days), and who updated it. This lets administrators and editors track activity within the collection.
+</p>
+
+<h2><a id="data" class="anchor" href="#data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Uploading occurrence data</h2>
+<p>
+If the collection has been configured to use its own record data for the occurrence maps (see the <a href="#records">Approved Specimen/observation sources</a> section), then administrators and editors will have access to an additional 'Data' tab on the collection home page.
+</p>
+<p>
+This tab provides the ability to view and upload data sets for the collection. These data sets are only visible within the collection: they are not shared with any other ALA or third party system.
+</p>
+<p>
+To upload a data set:
+<ol>
+<li>From the collection home page, go to the Data tab and click 'Upload a data set'
+<li>On the new page, you can choose between uploading a data file or directly typing (or copy & pasting) the data - uploading a file is the recommended option for medium to large data sets
+<li>Upload the file (or enter the data, depending on your select)
+<li>The system will process the data and attempt to match your columns with standard Darwin Core terms
+<li>If necessary, adjust the column mappings to suit your data
+<li>Enter an informative data set name (this will be displayed on the Data tab) and click Upload you data
+<li>A status bar will appear to track the progress of the upload
+<li>Once the status bar reaches 100%, your data has been processed and is now associated with your collection
+</ol>
+To delete an existing data set, click the trash can icon beside the data set on the Data tab of the collection home page.
+</p>
+
+
+    </section>
+  </body>
+</html>

@@ -75,7 +75,7 @@ While you can call your profile whatever you like, it is important to follow the
 <h4>Manually specifying the taxonomic hierarchy</h4>
 
 <p>
-One of the key pieces of information that is retreived via the matched scientific name is the taxonomic hierarchy. Simply creating a profile for a known species, for example, will automatically produce the taxonomic tree that can be used for navigation between profiles.
+One of the key pieces of information that is retrieved via the matched scientific name is the taxonomic hierarchy. Simply creating a profile for a known species, for example, will automatically produce the taxonomic tree that can be used for navigation between profiles.
 </p>
 <p>
 In cases where your profile does not have a matched name (for example, you might be documenting a newly discovered subspecies, where a scientific name has not been published yet), it is still possible for you to specify the taxonomic hierarchy for your profile. When creating your profile (or when editing the name), the system will present an option to "Specify the hierarchy for...". Selecting this option will open a new panel asking for the rank and the name of the parent taxon or profile of your profile. You can enter either the scientific name or the name of an existing profile in your collection as the parent. The system will perform a similar matching process to that name. If it matches a known name or profile, then your new profile will be inserted into the taxonomic hierarchy below that point. For example, if you are creating a profile for a new species, you would enter the name of the parent genus and the system would automatically link your profile as a subordinate taxon for that genus.
@@ -157,7 +157,7 @@ For each attibute, there is a 'Show history' link which, when clicked, will disp
 This option will be available as a toggle control above the first user-defined attribute if the collection administrator has configured the collection to retrieve profile information from another collection.
 </p>
 <p>
-For example, the Flora of New South Wales collection could be configured to retreive profile information from the Flora of Australia collection. In that case, the editor of a profile in the Flora of NSW can enable the 'Show information from supporting collections' option to tell the system to automatically find and display user-defined attributes from the Flora of Australia if the Flora of Australia contains a profile for the same taxon.
+For example, the Flora of New South Wales collection could be configured to retrieve profile information from the Flora of Australia collection. In that case, the editor of a profile in the Flora of NSW can enable the 'Show information from supporting collections' option to tell the system to automatically find and display user-defined attributes from the Flora of Australia if the Flora of Australia contains a profile for the same taxon.
 </p>
 <p>
 If both profiles have attributes with the same title, then the text from the Flora of NSW will be displayed, and a link will be added below the text to allow users to view the text of that attribute from the supporting collections. If the supporting collection has an attribute which is not in the editor's collection, then that attribute will be displayed along with the editor's attributes.
@@ -240,7 +240,7 @@ This section will only be visible if the profile has been matched to a recognise
 </p>
 <h4>Conservation status</h4>
 <p>
-If the matched taxon has a specific conservation status in at least one Australian state or territory, or in the ICUN, then the status(es) will be displayed as coloured circles, with a link to the authority behind the status.
+If the matched taxon has a specific conservation status in at least one Australian state or territory, or in the IUCN, then the status(es) will be displayed as coloured circles, with a link to the authority behind the status.
 </p>
 <h4>Sensitivity Lists</h4>
 <p>
@@ -374,6 +374,23 @@ This option will completely and permanently remove the profile from the system. 
 <p>
 This sets the profile to an 'archived' state, where it is still in the system and can be referenced via a direct link, but will not be included in search results (unless the 'include archived profiles' is selected). This allows a profile to be retained as a reference point when it becomes superceded by another profile (e.g. if a species is split, or two species are merged). Archived profiles can be re-instated if necessary.
 </p>
+
+
+<h2><a id="documents" class="anchor" href="#documents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documents</h2>
+<p>
+The Documents tab allows editors to attach files or reference external resources containing supporting information for the profile.
+</p>
+<p>
+To add a document:
+<ol>
+<li>You must be an editor and on the Edit Profile page
+<li>Go to the Documents tab
+<li>Click 'Add attachment'
+<li>Select the resource type and fill in the form. Mandatory fields are marked with asterisks
+<li>Click OK
+</ol>
+</p>
+
     </section>
   </body>
 </html>
