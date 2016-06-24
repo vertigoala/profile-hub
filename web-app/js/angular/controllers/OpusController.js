@@ -113,7 +113,7 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                         recordResourceOption: "NONE",
                         recordSources: [],
                         imageResourceOption: "NONE",
-                        imgeSources: []
+                        imageSources: []
                     };
                 }
 
