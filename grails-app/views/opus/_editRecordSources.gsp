@@ -46,7 +46,7 @@
 
                  <div class="radio">
                     <label ng-repeat="(key, value) in opusCtrl.collectoryResourceOptions | orderBy: 'value'" class="inline-label padding-right-1">
-                        <input type="radio" name="{{key}}" ng-value="key" ng-model="opusCtrl.opus.dataResourceConfig.recordResourceOption" ng-change="opusCtrl.recordSourceOptionChanged()">
+                        <input type="radio" name="record{{key}}" ng-value="key" ng-model="opusCtrl.opus.dataResourceConfig.recordResourceOption" ng-change="opusCtrl.recordSourceOptionChanged()">
                         {{value}}
                     </label>
                 </div>
