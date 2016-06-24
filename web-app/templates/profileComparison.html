@@ -141,6 +141,30 @@
     </div>
 </div>
 
+<div class="row comparison-row" ng-if="diff.documents.changed || showEverything">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <strong>Multimedia</strong>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="document in diff.documents.comp">
+            <span class="minor-heading">Name:&nbsp; </span><span data-ng-bind-html="document.name.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Attribution:&nbsp; </span><span data-ng-bind-html="document.attribution.comp | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Licence:&nbsp; </span><span data-ng-bind-html="document.licence.comp | sanitizeHtml"></span><br/>
+            <!--<span class="minor-heading">Embedded Content:&nbsp; </span><span data-ng-bind-html="document.embeddedContent.comp | sanitizeHtml"></span><br/>-->
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+        <div ng-repeat="document in right.documents">
+            <span class="minor-heading">Name:&nbsp; </span><span data-ng-bind-html="document.name | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Attribution:&nbsp; </span><span data-ng-bind-html="document.attribution | sanitizeHtml"></span><br/>
+            <span class="minor-heading">Licence:&nbsp; </span><span data-ng-bind-html="document.licence | sanitizeHtml"></span><br/>
+            <!--<span class="minor-heading">Embedded Content:&nbsp; </span><span data-ng-bind-html="document.embbededContent | sanitizeHtml"></span><br/>-->
+            <div class="comparison-divider" ng-if="!$last"></div>
+        </div>
+    </div>
+</div>
+
 <div class="row" ng-if="diff.specimenIds.changed || showEverything">
     <div class="col-lg-2 col-md-2 col-sm-2">
         <strong>Specimens</strong>
