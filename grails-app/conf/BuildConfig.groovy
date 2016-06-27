@@ -73,7 +73,7 @@ grails.project.dependency.resolution = {
         compile ":ala-ws-plugin:1.3"
         compile ":ala-admin-plugin:1.2"
         compile ":quartz:1.0.2"
-        compile ":document-preview-plugin:0.2-SNAPSHOT"
+        compile ":document-preview-plugin:0.2"
 
         runtime(":images-client-plugin:0.6.1") {
             excludes "ala-bootstrap3"

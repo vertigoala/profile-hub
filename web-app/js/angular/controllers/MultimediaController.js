@@ -13,7 +13,7 @@ profileEditor.controller('MultimediaController', function (util, $filter, profil
         options.documentResourceAdmin =  edit == 'true';
         self.readonly = !options.documentResourceAdmin;
         self.documents = options.documents;
-        var docListViewModel = new DocListViewModel(options.documents || [], options);
-        ko.applyBindings(docListViewModel, document.getElementById('resourceList'));
+
+        ALA.DocView.initDocView('resourceList', options);
     };
 });
