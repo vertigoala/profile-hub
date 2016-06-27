@@ -71,7 +71,7 @@
                                 <g:include controller="profile" action="imagesPanel"
                                            params="[opusId: params.opusId]"/>
                                 <g:include controller="profile" action="multimediaPanel"
-                                           params="[opusId: params.opusId, profileId: params.profileId]"/>
+                                           params="[opusId: params.opusId, profileId: params.profileId, edit: edit]"/>
                             </g:if>
                             <g:include controller="profile" action="publicationsPanel"
                                        params="[opusId: params.opusId]"/>

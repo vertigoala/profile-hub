@@ -24,7 +24,6 @@ class ProfileController extends BaseController {
     ExportService exportService
     ImageService imageService
     MapService mapService
-    DocumentResourceService documentResourceService
 
     def index() {}
 
@@ -729,10 +728,8 @@ class ProfileController extends BaseController {
     }
 
     def multimediaPanel = {
-        Map searchParams = [parentId: params.profileId]
-//        Map profileDocuments = documentResourceService.search(searchParams)
 
-        Map profileDocuments = documentResourceService.list(params.opusId, params.profileId)
+        Map profileDocuments = profileService.listDocuments(params.opusId, params.profileId, params.edit)
 
         String profileId = params.profileId
         String opusId = params.opusId
@@ -748,12 +745,8 @@ class ProfileController extends BaseController {
                 videoViewer      : g.createLink(controller: 'preview', action: 'videoviewer'),
                 errorViewer      : g.createLink(controller: 'preview', action: 'error'),
                 documentUpdateUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/update"),
-//              documentUpdateUrl: g.createLink( controller: 'resource', action: 'documentUpdate'),
                 documentDeleteUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/delete"),
-//              documentDeleteUrl: g.createLink(controller: 'resource', action: 'documentDelete'),
-                parentId         : params.profileId,
                 documents        : profileDocuments.documents,
-                parentId         : params.profileId,
                 roles            : [
                         [id: 'embeddedAudio', name: 'Embedded Audio'],
                         [id: 'embeddedVideo', name: 'Embedded Video']]
@@ -813,6 +806,51 @@ class ProfileController extends BaseController {
         def json = (model ?: [:] as JSON)
         def modelJson = json.toString()
         modelJson.encodeAsJavaScript()
+    }
+
+    /**
+     * Proxies to the profile services profile controller to create or update a document.
+     * @param documentId the documentId of the document to update (if not supplied, a create operation will be assumed).
+     * @return the result of the update.
+     */
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def documentUpdate(String documentId) {
+
+        log.debug("In documentUpdate for ID: ${documentId}")
+
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        log.debug("opusId: ${opusId}")
+        log.debug("profileId: ${profileId}")
+
+
+        Map document = JSON.parse(params.document)
+
+        def result = profileService.updateDocument(opusId, profileId, document)
+
+        response.setContentType('text/plain;charset=UTF8')
+        def resultAsText = (result as JSON).toString()
+        render resultAsText
+    }
+
+    /**
+     * Proxies to the profile services profile controller to delete the document with the supplied documentId.
+     * @param documentId the documentId of the document to delete.
+     * @return the result of the deletion.
+     */
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def documentDelete(String documentId) {
+        log.debug("In documentUpdate for ID: ${documentId}")
+
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        log.debug("opusId: ${opusId}")
+        log.debug("profileId: ${profileId}")
+
+        def result = profileService.deleteDocument(opusId, profileId, documentId)
+        render status: result.statusCode
     }
 }
 

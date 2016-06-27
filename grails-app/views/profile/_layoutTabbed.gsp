@@ -80,7 +80,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <g:include controller="profile" action="multimediaPanel"
-                               params="[opusId: params.opusId, profileId: params.profileId]"/>
+                               params="[opusId: params.opusId, profileId: params.profileId, edit: edit]"/>
                         </div>
                     </div>
                 </tab>
