@@ -118,6 +118,7 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                 }
 
                 if (self.opus.tags) {
+                    if (!self.tags) self.tags = [];
                     self.opus.tags.forEach (function (tag) {
                         var t = _.find(self.tags, function (t) { return t.uuid == tag.uuid });
                         self.tags.splice(self.tags.indexOf(t), 1);
