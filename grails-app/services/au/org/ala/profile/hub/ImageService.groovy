@@ -42,7 +42,7 @@ class ImageService {
     static final Integer THUMBNAIL_MAX_SIZE = 300
 
     private getMetadataFromAlaImageService(String imageId) {
-        webService.get("${grailsApplication.config.uploaded.images.url}/ws/image/${imageId}", [:], ContentType.APPLICATION_JSON, false, true)
+        webService.get("${grailsApplication.config.images.service.url}/ws/image/${imageId}", [:], ContentType.APPLICATION_JSON, false, true)
     }
 
     String constructImageUrl(String contextPath, String opusId, String profileId, String imageId, String extension, String imageType, ImageUrlType urlType) {
@@ -93,7 +93,7 @@ class ImageService {
                 if (file?.exists()) {
                     String tileLocation = buildFilePath(dir, imageProperties.opusId, imageProperties.profileId, imageId) + separator + imageId + '_tiles/'
                     imageUrl = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.FULL)
-                    thumbnailUrl = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.T)
+                    thumbnailUrl = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.THUMBNAIL)
                     tileZoomLevels = new File(tileLocation)?.listFiles()?.size()
                     tileUrlPattern = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.TILE)
 
