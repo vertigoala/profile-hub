@@ -161,7 +161,6 @@
             <span class="minor-heading">Attribution:&nbsp; </span><span data-ng-bind-html="document.attribution | sanitizeHtml"></span><br/>
             <span class="minor-heading">Licence:&nbsp; </span><span data-ng-bind-html="document.licence | sanitizeHtml"></span><br/>
             <span class="minor-heading">Embedded Content:&nbsp; </span><br/>
-            <!-- The binding below should be treated as text and not html otherwise it won't display-->
             <div class="raw-embedded-content"><span  data-ng-bind="document.embeddedContent | sanitizeHtml"></span><br/></div>
             <div class="comparison-divider" ng-if="!$last"></div>
         </div>
