@@ -150,7 +150,8 @@
             <span class="minor-heading">Name:&nbsp; </span><span data-ng-bind-html="document.name.comp | sanitizeHtml"></span><br/>
             <span class="minor-heading">Attribution:&nbsp; </span><span data-ng-bind-html="document.attribution.comp | sanitizeHtml"></span><br/>
             <span class="minor-heading">Licence:&nbsp; </span><span data-ng-bind-html="document.licence.comp | sanitizeHtml"></span><br/>
-            <!--<span class="minor-heading">Embedded Content:&nbsp; </span><span data-ng-bind-html="document.embeddedContent.comp | sanitizeHtml"></span><br/>-->
+            <span class="minor-heading">Embedded Content:&nbsp; </span><br/>
+            <div class="raw-embedded-content"><span  data-ng-bind-html="document.embeddedContent.comp | sanitizeHtml"></span><br/></div>
             <div class="comparison-divider" ng-if="!$last"></div>
         </div>
     </div>
@@ -159,7 +160,9 @@
             <span class="minor-heading">Name:&nbsp; </span><span data-ng-bind-html="document.name | sanitizeHtml"></span><br/>
             <span class="minor-heading">Attribution:&nbsp; </span><span data-ng-bind-html="document.attribution | sanitizeHtml"></span><br/>
             <span class="minor-heading">Licence:&nbsp; </span><span data-ng-bind-html="document.licence | sanitizeHtml"></span><br/>
-            <!--<span class="minor-heading">Embedded Content:&nbsp; </span><span data-ng-bind-html="document.embbededContent | sanitizeHtml"></span><br/>-->
+            <span class="minor-heading">Embedded Content:&nbsp; </span><br/>
+            <!-- The binding below should be treated as text and not html otherwise it won't display-->
+            <div class="raw-embedded-content"><span  data-ng-bind="document.embeddedContent | sanitizeHtml"></span><br/></div>
             <div class="comparison-divider" ng-if="!$last"></div>
         </div>
     </div>

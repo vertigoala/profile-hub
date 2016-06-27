@@ -1093,3 +1093,7 @@ span.breadcrumb-dropdown {
 .full-width {
     width: 100%;
 }
+
+.raw-embedded-content {
+    overflow-x: auto;
+}
