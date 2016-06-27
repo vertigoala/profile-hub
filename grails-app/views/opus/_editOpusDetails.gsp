@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="overview">
             <h4 class="section-panel-heading">Site overview</h4>
+            <p:help help-id="opus.edit.siteOverview"/>
         </a>
     </div>
 

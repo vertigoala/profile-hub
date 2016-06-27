@@ -79,4 +79,13 @@ class AdminController extends BaseController {
 
         handle response
     }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def reloadHelpUrls() {
+        // clears the cached value from the servlet context, so the next time a page loads the file we be re-loaded and
+        // cached
+        servletContext.removeAttribute(HelpTagLib.HELP_URLS)
+
+        success [:]
+    }
 }

@@ -4,6 +4,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Nomenclature</h4>
+                <p:help help-id="profile.edit.nomenclature" show="${edit}"/>
             </div>
         </div>
     </div>

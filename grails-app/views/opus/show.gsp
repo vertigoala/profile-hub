@@ -61,12 +61,18 @@
             </div>
         </tab>
         <tab heading="Documents" class="font-xxsmall">
+            <p:help help-id="opus.documents" float="false" show="${params.isOpusEditor}"/>
             <g:render template="../common/attachments" model="[hideHeading: true]"/>
         </tab>
         <g:if test="${params.isOpusEditor}">
             <tab heading="Reports" class="font-xxsmall">
                 <g:include controller="opus" action="reportPanel" params="[opusId: params.opusId]"/>
             </tab>
+            <g:if test="${opus.usePrivateRecordData}">
+                <tab heading="Data" class="font-xxsmall">
+                    <g:render template="../opus/data"/>
+                </tab>
+            </g:if>
         </g:if>
     </tabset>
 

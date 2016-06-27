@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="map">
             <h4 class="section-panel-heading">Map configuration</h4>
+            <p:help help-id="opus.edit.map"/>
         </a>
     </div>
 
@@ -87,7 +88,7 @@
                         <label for="allowSnapshots" class="inline-label">
                             <input id="allowSnapshots" type="checkbox" name="allowSnapshots"
                                    ng-model="opusCtrl.opus.mapConfig.allowSnapshots" ng-false-value="false">
-                            Allow editors to create static snapshots images of distribution maps.
+                            Allow editors to create static snapshot images of distribution maps.
                         </label>
                     </div>
                 </div>

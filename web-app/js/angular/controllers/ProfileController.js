@@ -241,8 +241,8 @@ profileEditor.controller('ProfileController',
 
     self.moveBibliographyUp = function (index, form) {
         if (index > 0) {
-            self.profile.bibliography[index].order = self.profile.bibliography[index].order - 1;
-            self.profile.bibliography[index - 1].order = self.profile.bibliography[index - 1].order + 1;
+            self.profile.bibliography[index].order = index - 1;
+            self.profile.bibliography[index - 1].order = index;
 
             self.profile.bibliography = orderBy(self.profile.bibliography, "order");
 
@@ -253,8 +253,8 @@ profileEditor.controller('ProfileController',
 
     self.moveBibliographyDown = function (index, form) {
         if (index < self.profile.bibliography.length) {
-            self.profile.bibliography[index].order = self.profile.bibliography[index].order + 1;
-            self.profile.bibliography[index + 1].order = self.profile.bibliography[index + 1].order - 1;
+            self.profile.bibliography[index].order = index + 1;
+            self.profile.bibliography[index + 1].order = index;
 
             self.profile.bibliography = orderBy(self.profile.bibliography, "order");
 

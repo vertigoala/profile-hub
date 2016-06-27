@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="about">
             <h4 class="section-panel-heading">About page content</h4>
+            <p:help help-id="opus.edit.about"/>
         </a>
     </div>
 

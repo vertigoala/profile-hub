@@ -4,9 +4,9 @@
 profileEditor.controller('MapController', function ($scope, profileService, util, config, messageService, $http, $timeout) {
     var self = this;
 
-    var biocacheWMSUrl = config.biocacheServiceUrl + "ws/mapping/wms/reflect?";
-    var biocacheInfoUrl = config.biocacheServiceUrl + "ws/occurrences/info?";
-    var biocacheBoundsUrl = config.biocacheServiceUrl + "ws/mapping/bounds.json?";
+    var biocacheWMSUrl = config.biocacheServiceUrl + "/ws/mapping/wms/reflect?";
+    var biocacheInfoUrl = config.biocacheServiceUrl + "/ws/occurrences/info?";
+    var biocacheBoundsUrl = config.biocacheServiceUrl + "/ws/mapping/bounds.json?";
 
     self.autoZoom = false;
     self.showingEditorView = true;
@@ -239,6 +239,23 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         if (!self.showStaticImage) {
             $timeout(self.map.redraw, 100);
         }
+    };
+
+    // When the collection is using private data the Data Resource Ids are 'temporary' (not really, but that's what
+    // they're called in the Collectory) and don't exist in the real Biocache, so we need to remove everything from the
+    // query string except the q parameter so it will work in the Biocache.
+    self.getQueryToExploreInALA = function() {
+        var query = self.profile.occurrenceQuery;
+
+        if (self.opus.usePrivateRecordData) {
+            if (angular.isDefined(self.profile.guid) && self.profile.guid != null) {
+                query = URI.encodeReserved("q=lsid:" + self.profile.guid);
+            } else {
+                query = null;
+            }
+        }
+
+        return query;
     };
 
     // Removes everything other than the q= portion of the biocache query

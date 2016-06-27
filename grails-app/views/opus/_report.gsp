@@ -1,4 +1,5 @@
 <div class="padding-top-1" ng-controller="ReportController as reportCtrl" ng-cloak>
+    <p:help help-id="opus.reports" show="${params.isOpusEditor}"/>
     <div class="row" ng-cloak>
         <div class="col-md-3 margin-bottom-1 stay-on-screen">
             <ul class="nav nav-stacked" id="sidebar">

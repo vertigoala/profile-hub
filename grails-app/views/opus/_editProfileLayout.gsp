@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="profileLayout">
             <h4 class="section-panel-heading">Profile Page Layout</h4>
+            <p:help help-id="opus.edit.profilePageLayout"/>
         </a>
     </div>
 

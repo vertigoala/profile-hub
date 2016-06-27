@@ -1,6 +1,5 @@
 package au.org.ala.profile.hub
 
-import au.org.ala.profile.hub.util.HubConstants
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
@@ -20,7 +19,6 @@ class OpusController extends BaseController {
     UserService userService
     ProfileService profileService
     KeybaseService keybaseService
-    ImageService imageService
 
     def index() {
         render view: 'index', model: [
@@ -37,25 +35,25 @@ class OpusController extends BaseController {
 
     def search() {
         render view: 'search', model: [
-                logoUrl   : DEFAULT_OPUS_LOGO_URL,
-                bannerUrl : DEFAULT_OPUS_BANNER_URL,
+                logoUrl     : DEFAULT_OPUS_LOGO_URL,
+                bannerUrl   : DEFAULT_OPUS_BANNER_URL,
                 bannerHeight: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                pageTitle : DEFAULT_OPUS_TITLE,
-                footerText: ALA_FOOTER_TEXT,
-                contact   : [email   : ALA_CONTACT_EMAIL,
-                             facebook: ALA_CONTACT_FACEBOOK,
-                             twitter : ALA_CONTACT_TWITTER]
+                pageTitle   : DEFAULT_OPUS_TITLE,
+                footerText  : ALA_FOOTER_TEXT,
+                contact     : [email   : ALA_CONTACT_EMAIL,
+                               facebook: ALA_CONTACT_FACEBOOK,
+                               twitter : ALA_CONTACT_TWITTER]
         ]
     }
 
     @Secured(role = ROLE_ADMIN, opusSpecific = false)
     def create() {
         render view: "edit", model: [
-                logoUrl    : DEFAULT_OPUS_LOGO_URL,
-                bannerUrl  : DEFAULT_OPUS_BANNER_URL,
+                logoUrl     : DEFAULT_OPUS_LOGO_URL,
+                bannerUrl   : DEFAULT_OPUS_BANNER_URL,
                 bannerHeight: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                pageTitle  : DEFAULT_OPUS_TITLE,
-                currentUser: authService.getDisplayName()
+                pageTitle   : DEFAULT_OPUS_TITLE,
+                currentUser : authService.getDisplayName()
         ]
     }
 
@@ -124,13 +122,13 @@ class OpusController extends BaseController {
                 notFound()
             } else {
                 render(view: 'about', model: [
-                        logoUrl   : opus.brandingConfig?.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
-                        bannerUrl : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                        logoUrl     : opus.brandingConfig?.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                        bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                         bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                        footerText: opus.footerText,
-                        contact   : opus.contact,
-                        opusTitle : opus.title,
-                        pageTitle : "About ${opus.title}" ?: DEFAULT_OPUS_TITLE
+                        footerText  : opus.footerText,
+                        contact     : opus.contact,
+                        opusTitle   : opus.title,
+                        pageTitle   : "About ${opus.title}" ?: DEFAULT_OPUS_TITLE
                 ])
             }
         }
@@ -142,7 +140,7 @@ class OpusController extends BaseController {
                 opusUrl             : "${grailsApplication.config.grails.serverURL}/opus/${params.opusId}",
                 date                : new Date().format('dd MMMM yyyy - hh:mm'),
                 year                : new Date().format('yyyy'),
-                genericCopyrightHtml: HubConstants.GENERIC_COPYRIGHT_TEXT
+                genericCopyrightHtml: GENERIC_COPYRIGHT_TEXT
         ]
 
         handle response
@@ -222,14 +220,15 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render view: 'show', model: [
-                    logoUrl     : opus.brandingConfig?.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
-                    bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                    pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
-                    footerText  : opus.footerText,
-                    contact     : opus.contact,
-                    glossaryUrl : getGlossaryUrl(opus),
-                    aboutPageUrl: getAboutUrl(opus)
+                    logoUrl             : opus.brandingConfig?.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                    bannerUrl           : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                    bannerHeight        : opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
+                    pageTitle           : opus.title ?: DEFAULT_OPUS_TITLE,
+                    footerText          : opus.footerText,
+                    contact             : opus.contact,
+                    glossaryUrl         : getGlossaryUrl(opus),
+                    aboutPageUrl        : getAboutUrl(opus),
+                    opus                : opus
             ]
         }
     }
@@ -447,7 +446,7 @@ class OpusController extends BaseController {
 
             transferrable.transferTo(imageFile)
 
-            render ([imageUrl: "${request.contextPath}/opus/${opus.uuid}/image/${imageFile.getName()}"] as JSON)
+            render([imageUrl: "${request.contextPath}/opus/${opus.uuid}/image/${imageFile.getName()}"] as JSON)
         } else {
             notFound "No collection was found for id ${params.opus}"
         }
@@ -495,22 +494,6 @@ class OpusController extends BaseController {
 
     def editVocabPanel = {
         render template: "editVocab"
-    }
-
-    def taxaUploadPanel = {
-        render template: "taxaUpload"
-    }
-
-    def occurrenceUploadPanel = {
-        render template: "occurrenceUpload"
-    }
-
-    def phyloUploadPanel = {
-        render template: "phyloUpload"
-    }
-
-    def keyUploadPanel = {
-        render template: "keyUpload"
     }
 
     def editGlossaryPanel = {

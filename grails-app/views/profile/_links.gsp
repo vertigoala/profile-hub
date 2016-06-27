@@ -6,6 +6,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Links</h4>
+                <p:help help-id="profile.edit.links" show="${edit}"/>
             </div>
         </div>
     </div>

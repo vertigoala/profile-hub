@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage
 import java.util.List
 
 import static au.org.ala.profile.hub.Utils.getExtension
+import static au.org.ala.profile.hub.Utils.isHttpSuccess
 import static org.apache.http.HttpStatus.SC_OK
 
 /**
@@ -41,7 +42,7 @@ class ImageService {
     static final Integer THUMBNAIL_MAX_SIZE = 300
 
     private getMetadataFromAlaImageService(String imageId) {
-        webService.get("${grailsApplication.config.uploaded.images.url}/ws/image/${imageId}", [:], ContentType.APPLICATION_JSON, false, true)
+        webService.get("${grailsApplication.config.images.service.url}/ws/image/${imageId}", [:], ContentType.APPLICATION_JSON, false, true)
     }
 
     String constructImageUrl(String contextPath, String opusId, String profileId, String imageId, String extension, String imageType, ImageUrlType urlType) {
@@ -76,7 +77,7 @@ class ImageService {
 
         Map response = localImage ? profileService.getImageMetadata(imageId) : getMetadataFromAlaImageService(imageId)
 
-        if (response.statusCode == SC_OK) {
+        if (isHttpSuccess(response.statusCode as int)) {
             Map<String, String> imageProperties = response.resp as Map
 
             if (localImage) {
@@ -186,7 +187,7 @@ class ImageService {
             imageIsStoredLocally = false
         }
 
-        if (response?.statusCode == SC_OK) {
+        if (response && isHttpSuccess(response.statusCode as int)) {
             response.resp = getImageDetails(metadata.imageId, contextPath, imageIsStoredLocally)
         }
 
@@ -385,7 +386,7 @@ class ImageService {
     List prepareImagesForDisplay(def retrievedImages, def opus, def profile, boolean readonlyView) {
         List images = []
 
-        if (retrievedImages && retrievedImages.statusCode == SC_OK) {
+        if (retrievedImages && isHttpSuccess(retrievedImages.statusCode as int)) {
             List imagesAsMaps = retrievedImages.resp?.occurrences?.findResults { imageData ->
                 boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageData.image)
 

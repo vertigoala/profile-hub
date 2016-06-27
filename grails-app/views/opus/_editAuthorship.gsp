@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="authorship">
             <h4 class="section-panel-heading">Authorship and attribution controls</h4>
+            <p:help help-id="opus.edit.authorship"/>
         </a>
     </div>
 
@@ -30,5 +31,5 @@
 </div>
 
 <a name="authorshipVocab"></a>
-<vocabulary-editor vocab-id="opusCtrl.opus.authorshipVocabUuid" vocab-name="Acknowledgements vocabulary"
+<vocabulary-editor vocab-id="opusCtrl.opus.authorshipVocabUuid" vocab-name="Acknowledgements vocabulary" help-url="<p:helpUrl help-id="opus.edit.acknowledgementVocabulary"/>"
                    all-mandatory="true" allow-mandatory="false" allow-reordering="false" allow-categories="false"></vocabulary-editor>

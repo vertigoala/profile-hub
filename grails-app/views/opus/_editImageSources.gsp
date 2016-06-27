@@ -3,12 +3,13 @@
         <a name="imageSources">
             <h4 class="section-panel-heading">Image options</h4>
         </a>
+        <p:help help-id="opus.edit.images"/>
     </div>
 
     <div class="panel-body">
+        <h5 class="section-panel-heading padding-bottom-1">Image visibility</h5>
         <div class="row">
             <div class="col-sm-12">
-                <h5 class="section-panel-heading padding-bottom-1">Image visibility</h5>
 
                 <div class="col-sm-6">
                     <div class="radio">
@@ -70,7 +71,7 @@
 
                 <div class="radio">
                     <label ng-repeat="(key, value) in opusCtrl.collectoryResourceOptions | orderBy: 'value'" class="inline-label padding-right-1">
-                        <input type="radio" name="{{key}}" ng-value="key" ng-model="opusCtrl.opus.dataResourceConfig.imageResourceOption" ng-change="opusCtrl.imageSourceOptionChanged()">
+                        <input type="radio" name="image{{key}}" ng-value="key" ng-model="opusCtrl.opus.dataResourceConfig.imageResourceOption" ng-change="opusCtrl.imageSourceOptionChanged()">
                         {{value}}
                     </label>
                 </div>

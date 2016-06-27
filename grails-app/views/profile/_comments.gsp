@@ -7,6 +7,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <h4 class="section-panel-heading inline">Comments</h4>
+                    <p:help help-id="profile.comments"/>
                     <span class="pull-right small inline"><i class="fa fa-info-circle">&nbsp;</i>Comments can only be seen by profile Reviewers and Editors.</span>
                 </div>
             </div>

@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="featureLists">
             <h4 class="section-panel-heading">Feature Lists</h4>
+            <p:help help-id="opus.edit.featureLists"/>
         </a>
     </div>
 

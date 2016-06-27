@@ -5,6 +5,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Taxonomy <span ng-show="profileCtrl.profile.taxonomyTree"> from {{ profileCtrl.profile.taxonomyTree }}</span></h4>
+                <p:help help-id="profile.edit.taxonomy" show="${edit}"/>
             </div>
         </div>
     </div>

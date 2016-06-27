@@ -70,6 +70,7 @@
                 <div class="col-sm-12">
                     <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span>
                     </h4>
+                    <p:help help-id="profile.edit.images" show="${edit}"/>
                 </div>
             </div>
         </div>
