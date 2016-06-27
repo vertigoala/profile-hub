@@ -1144,3 +1144,15 @@ span.breadcrumb-dropdown {
     padding-bottom: 20px;
 }
 
+#multimediaPanelBody small{
+    font-size: 10.5px;
+}
+
+#multimediaPanelBody  ul {
+    padding-left: 0px;
+}
+
+.raw-embedded-content {
+    overflow-x: auto;
+}
+
