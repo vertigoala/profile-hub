@@ -19,6 +19,7 @@
                     <div id="edit-documents" class="pill-pane">
                         <div class="row-fluid">
                             <div class="span10">
+                                <g:render plugin="document-preview-plugin" template="/resource/removePopup"/>
                                 <g:render plugin="document-preview-plugin" template="/resource/attachDocument"/>
                                 <g:render plugin="document-preview-plugin" template="/resource/listDocuments" model="[documentResourceAdmin: edit]"/>
                             </div>

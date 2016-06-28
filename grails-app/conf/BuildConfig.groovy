@@ -74,7 +74,7 @@ grails.project.dependency.resolution = {
         compile ":ala-ws-plugin:1.4"
         compile ":ala-admin-plugin:1.2"
         compile ":quartz:1.0.2"
-        compile ":document-preview-plugin:0.2"
+        compile ":document-preview-plugin:0.3"
 
         runtime(":images-client-plugin:0.6.1") {
             excludes "ala-bootstrap3"
@@ -89,3 +89,5 @@ grails.project.dependency.resolution = {
         runtime ":tika-parser:1.3.0.1"
     }
 }
+
+//grails.plugin.location."document-preview-plugin" = "../document-preview-plugin"
