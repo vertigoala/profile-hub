@@ -1,7 +1,10 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.ws.service.WebService
+import grails.converters.JSON
+import groovyx.net.http.RESTClient
 import org.apache.http.HttpStatus
+import org.apache.http.entity.ContentType
 import org.springframework.web.multipart.MultipartFile
 
 import java.nio.file.Files
@@ -163,7 +166,7 @@ class BiocacheService {
         File tempDir = new File("${grailsApplication.config.temp.file.location}")
         String filename = copyFileForUpload(imageId, file, tempDir)
 
-        metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${enc(opusId)}/profile/${enc(profileId)}/file/${enc(filename)}"
+        metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${enc(opusId)}/profile/${enc(profileId)}/file/${enc(filename)}".toString()
 
         // make sure the spelling of licenSe is US to match the Darwin Core standard
         if (metadata.multimedia[0].containsKey("licence")) {
@@ -182,7 +185,8 @@ class BiocacheService {
         // The collectory config property of both the Profiles application and the sandbox biocache instance should be
         // set to the same value (production is ok since it is read-only).
 
-        webService.post("${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}", metadata)
+        String url = "${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}"
+        webService.post(url, metadata)
     }
 
     private static enc(String str) {
