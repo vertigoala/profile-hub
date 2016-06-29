@@ -1,20 +1,56 @@
 <div class="form-horizontal">
-    <div class="form-group">
-        <label for="file" class="col-sm-3 control-label">Image *</label>
-
+    <div class="form-group" ng-hide="disableSource">
+        <label class="col-sm-3 control-label">Upload source</label>
         <div class="col-sm-9">
-            <input id="file" type="file" ngf-select="" ng-model="files" name="file"
-                   accept="image/*" alt="preview" title="Image preview" required="true"
-                   ng-required="true">
+            <label class="radio-inline">
+                <input type="radio" ng-model="imageUpload.source" value="file" ng-change="imageUpload.clearUrl()" class="ignore-save-warning"> File
+            </label>
+            <label class="radio-inline">
+                <input type="radio" ng-model="imageUpload.source" value="url" ng-change="imageUpload.clearFiles()" class="ignore-save-warning"> URL
+            </label>
         </div>
     </div>
+    <div ng-show="imageUpload.source == 'file'">
+        <div class="form-group">
+            <label for="file" class="col-sm-3 control-label">Image *</label>
 
-    <div class="form-group" ng-show="files[0] != null">
-        <label class="col-sm-3 control-label">Preview</label>
+            <div class="col-sm-9">
+                <span class="btn btn-default btn-file">
+                    Choose file
+                    <input id="file" type="file" ngf-select="" ng-model="imageUpload.files" name="file"
+                           accept="image/*" alt="preview" title="Image preview"
+                           ng-required="imageUpload.source == 'file'">
+                </span>
+                <span class="font-xsmall">{{ imageUpload.files[0].name }}</span>
+            </div>
+        </div>
+        <div class="form-group" ng-show="imageUpload.files[0] != null">
+            <label class="col-sm-3 control-label">Preview</label>
 
-        <div class="col-sm-9">
-            <div class="upload-image-preview">
-                <img ngf-src="files[0]" class="thumbnail">
+            <div class="col-sm-9">
+                <div class="upload-image-preview">
+                    <img ngf-src="imageUpload.files[0]" class="thumbnail">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="imageUpload.source == 'url'">
+        <div class="form-group" >
+            <label for="url" class="col-sm-3 control-label">Image URL *</label>
+
+            <div class="col-sm-9">
+                <input id="url" type="url" ng-model="imageUpload.url" name="url" class="form-control"
+                       placeholder="https://example.com/image.png"
+                       ng-required="imageUpload.source == 'url'">
+            </div>
+        </div>
+        <div class="form-group" ng-show="imageUpload.url">
+            <label class="col-sm-3 control-label">Preview</label>
+
+            <div class="col-sm-9">
+                <div class="upload-image-preview">
+                    <img ng-src="{{imageUpload.url}}" fallback-src="{{ imageUpload.imageLoadErrorUrl }}" class="thumbnail">
+                </div>
             </div>
         </div>
     </div>
@@ -34,10 +70,10 @@
 
     <div class="form-horizontal">
         <div class="form-group">
-            <label for="dateCreated" class="col-sm-3 control-label">Date Taken</label>
+            <label for="created" class="col-sm-3 control-label">Date Taken</label>
 
             <div class="col-sm-9">
-                <fallback-date-picker field-id="dateCreated" ng-model="metadata.dateCreated" />
+                <fallback-date-picker field-id="created" ng-model="metadata.created" />
             </div>
         </div>
     </div>
@@ -93,7 +129,7 @@
 
             <div class="col-sm-9">
                 <select id="licence"
-                        ng-options="licence.name for licence in licences | orderBy:'name'"
+                        ng-options="licence for licence in licences track by licence"
                         ng-model="metadata.licence" class="form-control" ng-required="true">
                 </select>
             </div>
@@ -108,7 +144,10 @@
 </div>
 
 <div class="col-md-12">
-    <button class="btn btn-primary pull-right" ng-show="!uploadOnEvent" ng-click="doUpload()" ng-disabled="!files || file.length == 0">
+    <button class="btn btn-primary pull-right" ng-if="updateMode" ng-show="!updateOnEvent" ng-click="save()">
+        Save
+    </button>
+    <button class="btn btn-primary pull-right" ng-if="!updateMode" ng-show="!uploadOnEvent" ng-click="doUpload()" ng-disabled="(!imageUpload.files || imageUpload.files.length == 0) && !imageUpload.url">
         Upload
     </button>
 </div>

@@ -17,9 +17,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         FAMILY: "family",
         GENUS: "genus",
         SPECIES: "species",
-        SUBSPECIES: "subspecies",
-        CULTIVAR: "cultivar",
-        VARIETY: "variety"
+        SUBSPECIES: "subspecies"
     };
 
     /**
@@ -119,12 +117,10 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @returns {*} The value of the specified param, or null if it does not exist
      */
     function getQueryParameter(param) {
-        var val = $location.search()[param];
-        if (!val) {
-            val = null;
-        }
+        var queryString = $location.absUrl().substring($location.absUrl().indexOf("?") + 1);
+        var queryParams = URI.parseQuery(queryString);
 
-        return val
+        return queryParams[param] || null;
     }
 
     /**
@@ -241,7 +237,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
                 var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
                 console.log(msg);
                 defer.reject(msg);
-                if (status == 403) {
+                if (status == 403 || status == 401) {
                     console.log("not authorised");
                     redirect(contextRoot() + "/notAuthorised");
                 }
@@ -317,6 +313,19 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
     }
 
     /**
+     * Format a date object as a local date (ignoring the timezone and time components)
+     * @param date The date to format
+     * @returns {string} the formatted date
+     */
+    function formatLocalDate(date) {
+        if (angular.isDate(date)) {
+            return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        } else {
+            return date;
+        }
+    }
+
+    /**
      * Converts the human-readable label to a value suitable for use as a key by removing all spaces and punctuation, and converting to lowercase.
      *
      * @param label the label to convert
@@ -373,10 +382,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * @returns {*} true if the attribute is to be treated as a name
      */
     function isNameAttribute(attribute) {
-        var nameRegex = /name/i;
-
-        var match = attribute.title.match(nameRegex);
-        return match != null && match.length > 0;
+        return _.isBoolean(attribute.containsName) && attribute.containsName;
     }
 
     /**
@@ -398,6 +404,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         toKey: toKey,
         formatScientificName: formatScientificName,
         isNameAttribute: isNameAttribute,
+        formatLocalDate: formatLocalDate,
 
         LAST: LAST,
         FIRST: FIRST,

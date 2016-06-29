@@ -1,5 +1,7 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.ws.service.WebService
+
 class KeybaseService {
     static final String CHAR_ENCODING = "utf-8"
 

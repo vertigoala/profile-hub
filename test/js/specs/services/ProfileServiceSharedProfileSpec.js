@@ -25,7 +25,8 @@ describe("ProfileService shared profile tests", function () {
         opusId:'opusId1',
         attributes: [{
             title:'Common name',
-            plainText:'a common name'
+            plainText:'a common name',
+            containsName: true
         }]
     };
 
@@ -72,7 +73,7 @@ describe("ProfileService shared profile tests", function () {
         expect(sharedProfile.otherNames).toEqual(['a common name']);
 
 
-        sharedProfile.update({attributes:[{title:'name 1', plainText:'common name 1'}, {title:'name 2', plainText:'common name 2'}]});
+        sharedProfile.update({attributes:[{title:'name 1', plainText:'common name 1', containsName: true}, {title:'name 2', plainText:'common name 2', containsName: true}]});
         expect(sharedProfile.otherNames).toEqual(['common name 1', 'common name 2']);
     });
 

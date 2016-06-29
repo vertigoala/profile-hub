@@ -1,5 +1,22 @@
 <div class="{{ delSearchCtrl.layout == 'large' ? '' : 'form-inline header-control' }}">
     <div class="input-group">
+        <div class="input-group-btn">
+            <button class="dropdown-toggle btn {{ delSearchCtrl.layout == 'large' ? 'btn-lg' : 'btn-sm' }} btn-default"
+                    aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" title="Select the search type"
+                    type="button" ng-click="delSearchCtrl.search()">
+                <span ng-show="delSearchCtrl.searchOptions.nameOnly">
+                    {{ delSearchCtrl.layout == 'large' ? 'with name' : 'N'  }}
+                </span>
+                <span ng-hide="delSearchCtrl.searchOptions.nameOnly">
+                    {{ delSearchCtrl.layout == 'large' ? 'with text' : 'T'  }}
+                </span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a ng-click="delSearchCtrl.setSearchOption('name')">{{ delSearchCtrl.layout == 'large' ? 'with name' : 'Search for profiles by name'  }}</a></li>
+                <li><a ng-click="delSearchCtrl.setSearchOption('text')">{{ delSearchCtrl.layout == 'large' ? 'with text' : 'Search for profiles containing text'  }}</a></li>
+            </ul>
+        </div>
         <input id="searchTerm"
                ng-model="delSearchCtrl.searchTerm"
                ng-enter="delSearchCtrl.search()"
@@ -10,17 +27,48 @@
                autocomplete="on"
                type="text">
             <span class="input-group-btn">
-                <button class="btn {{ delSearchCtrl.layout == 'large' ? 'btn-lg btn-primary' : 'btn-sm btn-default' }}"
+                <button class="btn {{ delSearchCtrl.layout == 'large' ? 'btn-lg btn-primary' : 'btn-sm btn-default button-inside-input' }}"
                         type="button" ng-click="delSearchCtrl.search()"><span
                         class="fa fa-search"></span></button>
             </span>
     </div>
     <div ng-show="delSearchCtrl.layout == 'large'">
-        <button class="btn btn-link toggle-link ignore-save-warning" ng-model="delSearchCtrl.showOptions" btn-checkbox>Options</button>
+        <button class="btn btn-link toggle-link ignore-save-warning" ng-model="delSearchCtrl.showOptions" btn-checkbox>
+            Options
+        </button>
         <div ng-show="delSearchCtrl.showOptions" class="well">
-            <div class="checkbox">
-                <label for="includeArchived" class="inline-label">
-                    <input id="includeArchived" type="checkbox" name="showLinked" class="ignore-save-warning"
+            <div class="checkbox inline-block padding-right-1" ng-show="delSearchCtrl.searchOptions.nameOnly">
+                <label for="includeNameAttributes" class="inline-label">
+                    <input id="includeNameAttributes" type="checkbox" name="includeNameAttributes" class="ignore-save-warning"
+                           ng-model="delSearchCtrl.searchOptions.includeNameAttributes" ng-false-value="false">
+                    Include alternate names
+                </label>
+            </div>
+            <div class="checkbox inline-block padding-right-1" ng-show="delSearchCtrl.searchOptions.nameOnly">
+                <label for="searchAla" class="inline-label">
+                    <input id="searchAla" type="checkbox" name="searchAla" class="ignore-save-warning"
+                           ng-model="delSearchCtrl.searchOptions.searchAla" ng-false-value="false">
+                    Look for matching names in the ALA
+                </label>
+            </div>
+            <div class="checkbox inline-block padding-right-1" ng-show="delSearchCtrl.searchOptions.nameOnly">
+                <label for="searchNsl" class="inline-label">
+                    <input id="searchNsl" type="checkbox" name="searchNsl" class="ignore-save-warning"
+                           ng-model="delSearchCtrl.searchOptions.searchNsl" ng-false-value="false">
+                    Look for matching names in the NSL
+                </label>
+            </div>
+            <div class="checkbox inline-block padding-right-1" ng-hide="delSearchCtrl.searchOptions.nameOnly">
+                <label for="matchAll" class="inline-label">
+                    <input id="matchAll" type="checkbox" name="matchAll" class="ignore-save-warning"
+                           ng-model="delSearchCtrl.searchOptions.matchAll" ng-false-value="false">
+                    Must contain all terms
+                </label>
+            </div>
+            <div class="checkbox inline-block">
+                <label for="includeArchivedProfiles" class="inline-label">
+                    <input id="includeArchivedProfiles" type="checkbox" name="includeArchivedProfiles"
+                           class="ignore-save-warning"
                            ng-model="delSearchCtrl.searchOptions.includeArchived" ng-false-value="false">
                     Include archived profiles
                 </label>

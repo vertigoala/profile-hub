@@ -60,7 +60,7 @@ accordion > div.panel-group > div.panel > div.panel-collapse > div.panel-body {
     height: 50px !important;
 }
 
-#citationHtml > .ta-editor{
+#citationHtml > .ta-editor {
     height: 100px !important;
     min-height: 100px !important;
 }
@@ -95,6 +95,27 @@ accordion > div.panel-group > div.panel > div.panel-collapse > div.panel-body {
 
 input[type=file] {
     display: inline-block;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
 }
 
 input[type=checkbox], input[type=radio] {
@@ -187,12 +208,9 @@ hr.comment-divider {
     position: fixed;
 }
 
-.admin-message {
-    text-align: center;
-}
-
-.admin-message-text {
+.system-message {
     font-size: 24px;
+    text-align: center;
 }
 
 .customizable-logo-img {
@@ -275,15 +293,15 @@ hr.comment-divider {
 }
 
 .imgConLarge {
-     max-height: 500px;
-     overflow-y: scroll;
- }
+    max-height: 500px;
+    overflow-y: scroll;
+}
 
 .imgConCarousel {
-     max-height: 350px;
-     min-height: 350px;
-     overflow-y: scroll;
- }
+    max-height: 350px;
+    min-height: 350px;
+    overflow-y: scroll;
+}
 
 .imgCon img {
     height: 200px !important;
@@ -310,18 +328,48 @@ hr.comment-divider {
 .imgCon.thumbnail {
 }
 
+.map-snapshot {
+    display: inline-block;
+    width: 100%
+}
+
+.map-snapshot {
+    display: inline-block;
+    width: 100%;
+}
+
+.top .map-snapshot img {
+    height: 300px;
+    max-height: 300px;
+}
+
+.side .map-snapshot div img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+.top .map-snapshot p {
+    min-width: 250px;
+}
+
 .primary-image {
     display: inline-block;
     width: 100%;
 }
 
-.primary-image div img {
+.top .primary-image div img {
     height: 300px;
     max-height: 300px;
 }
 
-.primary-image p {
-    height: 290px;
+.side .primary-image img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+.top .primary-image p {
     min-width: 250px;
 }
 
@@ -403,6 +451,7 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .section-panel-heading {
     margin-bottom: 0;
     margin-top: 5px;
+    display: inline-block;
 }
 
 .section-no-para {
@@ -411,6 +460,10 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 .section-heading {
     margin-left: 0;
+}
+
+.margin-top-0 {
+    margin-top: 0;
 }
 
 .margin-top-1 {
@@ -423,6 +476,10 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 
 .margin-bottom-3 {
     margin-bottom: 150px;
+}
+
+.margin-right-2 {
+    margin-right: 20px;
 }
 
 .dropdown-menu {
@@ -444,7 +501,6 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 .panel-body {
     padding: 5px 15px 5px 15px;
 }
-
 
 .panel .panel-heading {
     border-bottom: 1px solid rgba(0, 135, 190, 0.2);
@@ -499,6 +555,10 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
     color: black;
 }
 
+.orange {
+    color: orange;
+}
+
 /**
  * Angular uses ng-cloak to hide dynamic content until the data is available. This causes screen flicker that shows the {{}} tags.
  * Angular (as per best practise) is loaded at the bottom of the page. The CSS it uses to hide dynamic content in in-lined in the AngularJS script file, so it also loads at the bottom of the page.
@@ -527,13 +587,25 @@ ul.dropdown-menu[datepicker-popup-wrap] {
 }
 
 .fallback-date-picker .btn-default {
-    border:  1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 .fallback-date-picker .btn.active {
-    border:  1px solid #ccc;
+    border: 1px solid #ccc;
     background-color: #39b3d7;
     color: black;
+}
+
+.form-inline .form-control {
+    margin-right: 10px;
+}
+
+.input-xs {
+    height: 30px;
+    padding: 5px 10px;
+    width: 75px;
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 input.form-control:focus + ul.dropdown-menu + span.input-group-btn > .btn-default,
@@ -689,7 +761,7 @@ input.form-control:focus + span.input-group-btn > .btn-default {
 .pill {
     font-size: 8px;
     height: 20px;
-    width: 40px;
+    min-width: 40px;
     margin: 5px;
     display: inline-block;
     font-weight: bold;
@@ -702,6 +774,15 @@ input.form-control:focus + span.input-group-btn > .btn-default {
     font-variant: small-caps;
     border: 1px solid #3d464c;
     background-color: #fff;
+}
+
+.pill-lg {
+    font-size: 13px;
+    height: 30px;
+    min-width: 60px;
+    line-height: 27px;
+    padding-right: 5px;
+    padding-left: 5px;
 }
 
 .pill-green {
@@ -763,7 +844,7 @@ span.breadcrumb-dropdown {
     content: none !important;
 }
 
-.breadcrumb>li+li:before {
+.breadcrumb > li + li:before {
     padding-left: 10px;
     padding-right: 5px;
 }
@@ -786,34 +867,61 @@ span.breadcrumb-dropdown {
     max-width: 40px;
 }
 
+.navbar-nav > li > div {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    line-height: 20px;
+    position: relative;
+    display: block;
+}
+
 .header-control {
     padding-top: 10px;
 }
 
+.button-inside-input, .button-inside-input:hover, .button-inside-input:focus {
+    border: none;
+    background: transparent !important;
+    margin-left: -40px !important;
+    z-index: 99;
+}
+
+.header-control .dropdown-toggle {
+    border-bottom-left-radius: 10px !important;
+    border-top-left-radius: 10px !important;
+    border-color: #66afe9;
+    border-right: none;
+}
+
+.header-control .dropdown-toggle:hover {
+    border-color: #66afe9;
+    border-right: none;
+    background: transparent !important;
+    margin-left: -30px !important;
+    z-index: 99;
+}
+
 .header-control input {
-    border-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+    border-left: none;
     width: 100px !important;
     -webkit-transition: width 1s ease-in-out;
     -moz-transition: width 1s ease-in-out;
     -o-transition: width 1s ease-in-out;
     transition: width 1s ease-in-out;
+    border-color: #66afe9;
 }
 
 .header-control input:focus {
-    border-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+    border-top-right-radius: 10px !important;
     width: 250px !important;
 }
 
-.header-control button {
-    border: none;
-    background: transparent;
-    margin-left: -30px !important;
-    z-index: 99;
-}
-
-.header-control button:focus, .header-control button:hover {
-    background: transparent !important;
-}
+/*.header-control button:focus, .header-control button:hover {*/
+/*background: transparent !important;*/
+/*}*/
 
 .keybase-logo {
     margin-top: 1em;
@@ -932,6 +1040,12 @@ span.breadcrumb-dropdown {
     color: #0087BE;
 }
 
+.last-updated-text {
+    color: #0087BE;
+    text-align: right;
+    text-align: end;
+}
+
 .width-40 {
     width: 40%
 }
@@ -954,3 +1068,91 @@ span.breadcrumb-dropdown {
     margin-right: 5px;
     content: '\f102'
 }
+
+/*helps angular not destroy bootstrap styling, please see https://angular-ui.github.io/bootstrap/ */
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
+
+.legend-container-short {
+    max-height: 200px !important;
+}
+
+.alert p {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: inherit;
+    color: inherit;
+}
+
+.close-edit-name {
+    margin-top: 20px;
+    margin-right: 15px;
+    display: inline-block;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/*
+ * The sandbox page that is embedded in the _uploadData.gsp template uses bootstrap 2, which we explicitly exclude from
+ * the import. There are only a few styles that cause problems, so we can just add those style here.
+ */
+.embedded-sandbox .span12 {
+    width: 100%;
+}
+
+.embedded-sandbox .bar {
+    float: left;
+    width: 0;
+    height: 100%;
+    font-size: 12px;
+    line-height: 20px;
+    color: #fff;
+    text-align: center;
+    background-color: #337ab7;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+    -webkit-transition: width .6s ease;
+    -o-transition: width .6s ease;
+    transition: width .6s ease;
+}
+
+.embedded-sandbox .btn {
+    background-color: #fff;
+    border-color: #0087BE;
+    color: #0087BE;
+}
+
+.embedded-sandbox h1 {
+    color: #0087BE;
+}
+
+.embedded-sandbox h2 {
+    border-bottom: inherit;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: .2em;
+    margin-top: 1.875em;
+    text-transform: none;
+}
+
+.embedded-sandbox .fileupload .input-append {
+    padding-bottom: 20px;
+}
+
+#multimediaPanelBody small{
+    font-size: 10.5px;
+}
+
+#multimediaPanelBody  ul {
+    padding-left: 0px;
+}
+
+.raw-embedded-content {
+    overflow-x: auto;
+}
+

@@ -9,11 +9,15 @@ describe("ProfileController tests", function () {
     var window;
     var profileDefer, deleteDefer, confirmDefer, modalDefer, updateDefer, authorDefer, archiveDefer, restoreDefer, searchDefer;
 
+    var mockConfig = {
+        readonly: true
+    };
+
     var modal = {
         open: function() {}
     };
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":[{"title": "attr1"}, {"title": "attr2"}]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "attributes":[{"title": "attr1"}, {"title": "attr2"}]}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
 
     beforeAll(function () {
         console.log("****** Profile Controller Tests ******");
@@ -67,7 +71,8 @@ describe("ProfileController tests", function () {
             profileService: profileService,
             util: util,
             messageService: messageService,
-            $modal: modal
+            $modal: modal,
+            config: mockConfig
         });
 
         form = {
@@ -475,6 +480,128 @@ describe("ProfileController tests", function () {
         expect(profileService.restoreArchivedProfile).toHaveBeenCalledWith("opusId", PROFILE_ID, "new profile name");
         expect(util.redirect).toHaveBeenCalledWith("/context/opus/sname/profile/new profile name");
         expect(messageService.alert).not.toHaveBeenCalled();
+    });
+
+    it("should leave manualHierarchy undefined when constructManualHierarchyForNameDirective is invoked when readonly = true", function() {
+        scope.profileCtrl.profile = {
+            classification: [{name: "one", guid: "123", rank: "r1"}],
+            manualClassification: true
+        };
+        mockConfig.readonly = true;
+
+        scope.profileCtrl.constructManualHierarchyForNameDirective();
+
+        expect(scope.profileCtrl.manualHierarchy).toBeUndefined();
+    });
+
+    it("should leave manualHierarchy undefined when constructManualHierarchyForNameDirective is invoked when profile.manualClassification = false", function() {
+        scope.profileCtrl.manualHierarchy = []; // any existing value will be discarded, leaving it undefined
+        scope.profileCtrl.profile = {
+            classification: [{name: "one", guid: "123", rank: "r1"}],
+            manualClassification: false
+        };
+        mockConfig.readonly = false;
+
+        scope.profileCtrl.constructManualHierarchyForNameDirective();
+
+        expect(scope.profileCtrl.manualHierarchy).toBeUndefined();
+    });
+
+    it("should set the manualHierarchy when constructManualHierarchyForNameDirective is invoked when readonly = false and profile.manualClassification = true", function() {
+        scope.profileCtrl.profile = {
+            classification: [{name: "profile", guid: "123", rank: "r1"}],
+            manualClassification: true
+        };
+        mockConfig.readonly = false;
+
+        scope.profileCtrl.constructManualHierarchyForNameDirective();
+
+        expect(scope.profileCtrl.manualHierarchy).toBeDefined();
+    });
+
+    it("should always include the profile as the first item in the manualHierarchy, with guid = null", function() {
+        scope.profileCtrl.profile = {
+            scientificName: "profileName",
+            rank: "r1",
+            profileId: "p1",
+            classification: [ // classification is always ordered top-down
+                {name: "parent", guid: "123", rank: "r2"},
+                {name: "profileName", profileId: "p1", rank: "r1"}
+            ],
+            manualClassification: true
+        };
+        mockConfig.readonly = false;
+
+        scope.profileCtrl.constructManualHierarchyForNameDirective();
+
+        // manual hierarchy is always constructed bottom-up
+        expect(scope.profileCtrl.manualHierarchy).toBeDefined();
+        expect(scope.profileCtrl.manualHierarchy[0].name).toBe("profileName");
+        expect(scope.profileCtrl.manualHierarchy[0].guid).toBeNull(); // the guid for the first item must be null
+        expect(scope.profileCtrl.manualHierarchy[0].rank).toBe("r1");
+        expect(scope.profileCtrl.manualHierarchy[0].checked).toBeTruthy();
+    });
+
+    it("should always include items up to and including the first one with a profileId", function() {
+        scope.profileCtrl.profile = {
+            scientificName: "profileName",
+            rank: "r1",
+            profileId: "p1",
+            classification: [ // classification is always ordered top-down
+                {name: "tooFar2", rank: "r5"},
+                {name: "tooFar1", profileId: "123", rank: "r4"},
+                {name: "greatGrandparent", profileId: "123", rank: "r4"},
+                {name: "grandparent", rank: "r3"},
+                {name: "parent", rank: "r2"},
+                {name: "profileName", profileId: "p1", rank: "r1"}
+            ],
+            manualClassification: true
+        };
+        mockConfig.readonly = false;
+
+        scope.profileCtrl.constructManualHierarchyForNameDirective();
+
+        // manual hierarchy is always constructed bottom-up
+        expect(scope.profileCtrl.manualHierarchy.length).toBe(4);
+        expect(scope.profileCtrl.manualHierarchy[0].name).toBe("profileName");
+        expect(scope.profileCtrl.manualHierarchy[0].guid).toBeFalsy();
+        expect(scope.profileCtrl.manualHierarchy[1].name).toBe("parent");
+        expect(scope.profileCtrl.manualHierarchy[1].guid).toBeFalsy();
+        expect(scope.profileCtrl.manualHierarchy[2].name).toBe("grandparent");
+        expect(scope.profileCtrl.manualHierarchy[2].guid).toBeFalsy();
+        expect(scope.profileCtrl.manualHierarchy[3].name).toBe("greatGrandparent");
+        expect(scope.profileCtrl.manualHierarchy[3].guid).toBe("123");
+    });
+
+    it("should always include items up to and including the first one with a guid", function() {
+        scope.profileCtrl.profile = {
+            scientificName: "profileName",
+            rank: "r1",
+            profileId: "p1",
+            classification: [ // classification is always ordered top-down
+                {name: "tooFar2", rank: "r5"},
+                {name: "tooFar1", profileId: "123", rank: "r4"},
+                {name: "greatGrandparent", guid: "123", rank: "r4"},
+                {name: "grandparent", rank: "r3"},
+                {name: "parent", rank: "r2"},
+                {name: "profileName", profileId: "p1", rank: "r1"}
+            ],
+            manualClassification: true
+        };
+        mockConfig.readonly = false;
+
+        scope.profileCtrl.constructManualHierarchyForNameDirective();
+
+        // manual hierarchy is always constructed bottom-up
+        expect(scope.profileCtrl.manualHierarchy.length).toBe(4);
+        expect(scope.profileCtrl.manualHierarchy[0].name).toBe("profileName");
+        expect(scope.profileCtrl.manualHierarchy[0].guid).toBeFalsy();
+        expect(scope.profileCtrl.manualHierarchy[1].name).toBe("parent");
+        expect(scope.profileCtrl.manualHierarchy[1].guid).toBeFalsy();
+        expect(scope.profileCtrl.manualHierarchy[2].name).toBe("grandparent");
+        expect(scope.profileCtrl.manualHierarchy[2].guid).toBeFalsy();
+        expect(scope.profileCtrl.manualHierarchy[3].name).toBe("greatGrandparent");
+        expect(scope.profileCtrl.manualHierarchy[3].guid).toBe("123");
     });
 });
 

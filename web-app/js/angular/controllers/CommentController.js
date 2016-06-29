@@ -1,7 +1,7 @@
 /**
  * Profile comments controller
  */
-profileEditor.controller('CommentController', function (profileService, navService, util, config, messageService, $filter) {
+profileEditor.controller('CommentController', function (profileService, util, config, messageService, $filter) {
     var self = this;
 
     self.comments = [];
@@ -19,10 +19,6 @@ profileEditor.controller('CommentController', function (profileService, navServi
         var promise = profileService.getComments(self.opusId, self.profileId);
         promise.then(function(data) {
             self.comments = orderBy(data, 'dateCreated');
-
-            if (config.isOpusReviewer) {
-                navService.add("Comments", "comments");
-            }
         })
     };
 

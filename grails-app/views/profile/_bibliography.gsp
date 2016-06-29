@@ -1,12 +1,13 @@
 <div class="panel panel-default" ng-controller="ProfileController as profileCtrl" ng-cloak ng-form="BiblioForm"
      ng-init="profileCtrl.loadProfile()"
      ng-show="profileCtrl.profile.bibliography.length > 0 || !profileCtrl.readonly()">
-    <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}bibliography"></a>
+    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}bibliography" title="Bibliography" condition="profileCtrl.profile.bibliography && profileCtrl.profile.bibliography.length > 0 || !profileCtrl.readonly()"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Bibliography</h4>
+                <p:help help-id="profile.edit.bibliography" show="${edit}"/>
             </div>
         </div>
     </div>
@@ -14,17 +15,21 @@
     <div class="panel-body">
 
         <div class="row section-no-para" ng-repeat="bibliography in profileCtrl.profile.bibliography">
-            <div class="col-sm-10">
-                <div data-ng-bind-html="bibliography.text | sanitizeHtml" ng-show="bibliography.uuid" class="inline-block"></div>
+            <div class="col-sm-9">
+                <div data-ng-bind-html="bibliography.text | sanitizeHtml" ng-show="!bibliography.edit" class="inline-block"></div>
 
-                <div class="form-group" ng-show="!bibliography.uuid">
+                <div class="form-group" ng-show="bibliography.edit">
                     <label for="bibliographyText" class="screen-reader-label">Bibliography text</label>
                     <textarea id="bibliographyText" ng-model="bibliography.text" ckeditor="richTextSmall"
-                              class="single-line-editor" required="required"></textarea>
+                              class="single-line-editor" dirty-check changed="profileCtrl.isDirty()"
+                              required="required"></textarea>
                 </div>
             </div>
 
-            <div class="col-sm-2" ng-class="bibliography.uuid ? '' : 'padding-top-1 margin-top-1'" ng-show="!profileCtrl.readonly()">
+            <div class="col-sm-3" ng-class="!bibliography.edit ? '' : 'padding-top-1 margin-top-1'" ng-show="!profileCtrl.readonly()">
+                <button class="btn btn-link fa fa-edit"
+                        ng-click="profileCtrl.editBibliography($index, BiblioForm)"
+                        title="Edit this bibliography entry"></button>
                 <button class="btn btn-link fa fa-trash-o color--red"
                         ng-click="profileCtrl.deleteBibliography($index, BiblioForm)"
                         title="Delete this bibliography entry"></button>
@@ -44,7 +49,7 @@
             <div class="col-md-12">
                 <button class="btn btn-default" ng-click="profileCtrl.addBibliography(BiblioForm)"><i
                         class="fa fa-plus"></i> Add bibliography</button>
-                <save-button ng-click="profileCtrl.saveProfile(BiblioForm)" form="BiblioForm"></save-button>
+                <save-button ng-click="profileCtrl.saveProfile()" dirty="profileCtrl.isDirty()"></save-button>
             </div>
         </div>
     </div>

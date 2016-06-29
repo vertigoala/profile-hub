@@ -133,16 +133,33 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        createProfile: function (opusId, scientificName, manuallyMatchedGuid) {
+        createProfile: function (opusId, scientificName, manuallyMatchedGuid, manualHierarchy) {
             $log.debug("Creating profile for " + scientificName + " in opus " + opusId);
             var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/create", {
                 opusId: opusId,
                 scientificName: scientificName,
-                manuallyMatchedGuid: manuallyMatchedGuid
+                manuallyMatchedGuid: manuallyMatchedGuid,
+                manualHierarchy: manualHierarchy
             });
 
             future.then(function (response) {
                 $log.debug("Profile created with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        duplicateProfile: function (opusId, profileIdToCopy, scientificName, manuallyMatchedGuid, manualHierarchy) {
+            $log.debug("Duplicating profile " + profileIdToCopy + " for " + scientificName + " in opus " + opusId);
+            var future = $http.put(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileIdToCopy + "/duplicate", {
+                opusId: opusId,
+                scientificName: scientificName,
+                manuallyMatchedGuid: manuallyMatchedGuid,
+                manualHierarchy: manualHierarchy
+            });
+
+            future.then(function (response) {
+                $log.debug("Profile duplicated with response code " + response.status);
             });
 
             return util.toStandardPromise(future);
@@ -211,6 +228,22 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 $log.debug("Profile updated with response code " + response.status);
 
                 clearCache();
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        createMapSnapshot: function(opusId, profileId, occurrenceQuery, extents) {
+            var future = enqueue(function () {
+                return $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/map/snapshot", {occurrenceQuery: occurrenceQuery, extents: extents});
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        deleteMapSnapshot: function(opusId, profileId) {
+            var future = enqueue(function () {
+                return $http.delete(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/map/snapshot");
             });
 
             return util.toStandardPromise(future);
@@ -460,6 +493,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        //For the biocache webservice: 'pageSize' is same as 'rows' and 'startIndex' is same as 'start' in SOLR
+        retrieveImagesPaged: function (opusId, profileId, searchIdentifier, readonlyView, nextPageNumber, numberToRetrieve) {
+            $log.debug("Retrieving images for " + searchIdentifier);
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/images/paged?searchIdentifier=" + searchIdentifier + "&readonlyView=" + readonlyView+"&pageSize="+numberToRetrieve+"&startIndex="+nextPageNumber, {cache: true});
+            future.then(function (response) {
+                $log.debug("Images retrieved with response code " + response.status)
+            });
+            return util.toStandardPromise(future);
+        },
+
         getImageMetadata: function (imageId, local) {
             var future = null;
             if (_.isBoolean(local) && local) {
@@ -467,6 +510,18 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             } else {
                 future = $http.get(config.imageServiceUrl + "/ws/image/" + imageId, {cache: true});
             }
+            return util.toStandardPromise(future);
+        },
+
+        saveImageMetadata: function(imageId, data) {
+            $log.debug("Saving image metadata: " + imageId);
+            var future = null;
+            if (imageId) {
+                future = enqueue(function() {
+                    return $http.post(util.contextRoot() + "/image/" + imageId + "/metadata", data)
+                });
+            }
+
             return util.toStandardPromise(future);
         },
 
@@ -716,6 +771,28 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             var future = $http.get(util.contextRoot() + "/dataResource/" + dataResourceId);
             future.then(function (response) {
                 $log.debug("Resource fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        listHubs: function () {
+            $log.debug("Fetching all hubs");
+
+            var future = $http.get(util.contextRoot() + "/dataHub");
+            future.then(function (response) {
+                $log.debug("Hubs fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        getHub: function (dataHubId) {
+            $log.debug("Fetching hub " + dataHubId);
+
+            var future = $http.get(util.contextRoot() + "/dataHub/" + dataHubId);
+            future.then(function (response) {
+                $log.debug("Hub fetched with response code " + response.status);
             });
 
             return util.toStandardPromise(future);
@@ -1012,8 +1089,37 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
             var future = $http.get(url, {cache: true});
             future.then(function (response) {
-                $log.debug("Attachment metadatd retrieved with response code " + response.status);
+                $log.debug("Attachment metadata retrieved with response code " + response.status);
             });
+
+            return util.toStandardPromise(future);
+        },
+
+        getBiocacheLegend: function(occurrenceQuery, colourBy) {
+            var future = $http.get(config.biocacheServiceUrl + "/occurrence/legend?type=application/json&" + occurrenceQuery + "&cm=" + colourBy);
+            future.then(function (response) {
+                $log.debug("Occurrence Query legend retrieved with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+        },
+
+        autocompleteName: function(prefix) {
+            return $http.jsonp(config.bieServiceUrl + "/ws/search/auto.json?idxType=TAXON&callback=JSON_CALLBACK&q=" + prefix);
+        },
+
+        getTags: function() {
+            var future = $http.get(util.contextRoot() + "/tags");
+            return util.toStandardPromise(future);
+        },
+
+        getDataSets: function(opusId) {
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/data");
+            return util.toStandardPromise(future);
+        },
+
+        deleteDataSet: function(opusId, dataSetId) {
+            var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/data/" + dataSetId + "/delete");
 
             return util.toStandardPromise(future);
         }

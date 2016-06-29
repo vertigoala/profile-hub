@@ -6,7 +6,7 @@ describe("SpecimenController tests", function () {
     var profileService;
     var profileDefer, lookupDefer, updateDefer;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "specimenIds":["e0fd3aca-7b21-44de-abe4-6b392cd32aae"]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "specimenIds":["e0fd3aca-7b21-44de-abe4-6b392cd32aae"]}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
 
     beforeAll(function () {
         console.log("****** Specimen Controller Tests ******");

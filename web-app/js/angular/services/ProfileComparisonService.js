@@ -97,6 +97,9 @@ profileEditor.service('profileComparisonService', function ($http, util, $cacheF
 
                 diff.authorship = compareLists(left.authorship, right.authorship, "category", ["text"]);
                 diff.bibliography = compareLists(left.bibliography, right.bibliography, "plainText", ["plainText"]);
+
+                var documentFields = ["name", "attribution", "licence", "embeddedContent"];
+                diff.documents = compareLists(left.documents, right.documents, "documentId", documentFields);
                 diff.links = compareLists(left.links, right.links, "uuid", ["url", "title", "description"]);
                 diff.bhl = compareLists(left.bhl, right.bhl, "uuid", ["url", "title", "description"]);
                 diff.primaryImage = compare(left.primaryImage, right.primaryImage);

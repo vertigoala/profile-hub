@@ -15,9 +15,24 @@ class CollectoryController extends BaseController {
             handle response
         }
     }
+    def getHub() {
+        if (!params.dataHubUid) {
+            badRequest();
+        } else {
+            def response = collectoryService.getDataHub(params.dataHubUid)
 
-    def list() {
-        response.setContentType(CONTEXT_TYPE_JSON)
+            handle response
+        }
+    }
+
+    def listHubs() {
+        response.setContentType(CONTENT_TYPE_JSON)
+        def resp = collectoryService.getDataHubs()
+        render resp as JSON
+    }
+
+    def listResources() {
+        response.setContentType(CONTENT_TYPE_JSON)
         def resp = collectoryService.getDataResources()
         render resp as JSON
     }

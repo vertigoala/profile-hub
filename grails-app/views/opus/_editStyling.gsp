@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="branding">
             <h4 class="section-panel-heading">Branding</h4>
+            <p:help help-id="opus.edit.branding"/>
         </a>
     </div>
 
@@ -14,7 +15,7 @@
                     <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.opusBanner" btn-checkbox >Upload a file</button>
                     <div ng-if="opusCtrl.showUpload.opusBanner" class="clearfix">
                         <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.opusBannerUploaded"
-                                url="{{opusCtrl.imageUploadUrl + 'opusBanner'}}" show-metadata="false"></image-upload>
+                                url="{{opusCtrl.imageUploadUrl + 'opusBanner'}}" show-metadata="false" disable-source="true"></image-upload>
                     </div>
                     <div class="radio">
                         <label for="opusBannerHeightTall" class="inline-label padding-right-1">Banner height</label>
@@ -42,7 +43,7 @@
                     <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.profileBanner" btn-checkbox >Upload a file</button>
                     <div ng-if="opusCtrl.showUpload.profileBanner" class="clearfix">
                         <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.profileBannerUploaded"
-                                      url="{{opusCtrl.imageUploadUrl + 'profileBanner'}}" show-metadata="false"></image-upload>
+                                      url="{{opusCtrl.imageUploadUrl + 'profileBanner'}}" show-metadata="false" disable-source="true"></image-upload>
                     </div>
                     <div class="radio">
                         <label for="profileBannerHeightTall" class="inline-label padding-right-1">Banner height</label>
@@ -69,7 +70,7 @@
                     <button class="btn btn-sm btn-default margin-top-1 margin-bottom-1 ignore-save-warning" ng-model="opusCtrl.showUpload.logo" btn-checkbox >Upload a file</button>
                     <div ng-if="opusCtrl.showUpload.logo" class="clearfix">
                         <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.logoUploaded"
-                                      url="{{opusCtrl.imageUploadUrl + 'logo'}}" show-metadata="false"></image-upload>
+                                      url="{{opusCtrl.imageUploadUrl + 'logo'}}" show-metadata="false" disable-source="true"></image-upload>
                     </div>
                     <div class="small">Recommended maximum width is 275px. There is no height limit.</div>
                 </div>
@@ -80,7 +81,7 @@
                     <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.thumbnail" btn-checkbox >Upload a file</button>
                     <div ng-if="opusCtrl.showUpload.thumbnail" class="clearfix">
                         <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.thumbnailUploaded"
-                                      url="{{opusCtrl.imageUploadUrl + 'thumbnail'}}" show-metadata="false"></image-upload>
+                                      url="{{opusCtrl.imageUploadUrl + 'thumbnail'}}" show-metadata="false" disable-source="true"></image-upload>
                     </div>
                     <div class="small">Recommended size 160px by 100px.</div>
                 </div>

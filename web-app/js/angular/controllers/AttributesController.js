@@ -1,7 +1,8 @@
 /**
  * Attributes controller
  */
-profileEditor.controller('AttributeEditor', function (profileService, navService, util, messageService, $window, $filter, $modal) {
+profileEditor.controller('AttributeEditor', ['profileService', 'util', 'messageService', '$window', '$filter', '$modal', function (profileService, util, messageService, $window, $filter, $modal) {
+    var self = this;
     var self = this;
 
     self.attributes = [];
@@ -54,7 +55,6 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
                 self.showSupportingData = data.profile.showLinkedOpusAttributes;
 
                 angular.forEach(self.attributes, function(attribute) {
-                    navService.add(attribute.title, util.toKey(attribute.title), 'attribute');
                     attribute.key = util.toKey(attribute.title);
                 });
 
@@ -352,13 +352,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     };
 
     self.toggleShowSupportingData = function(supportingAttributesForm) {
-        angular.forEach(self.supportingAttributeTitles, function(title) {
-            if (self.showSupportingData) {
-                navService.add(title, util.toKey(title));
-            } else {
-                navService.remove(util.toKey(title));
-            }
-        });
+
         profileService.updateProfile(self.opusId, self.profileId, {showLinkedOpusAttributes:self.showSupportingData}).then(
             function() {
                 supportingAttributesForm.$setPristine();
@@ -371,7 +365,7 @@ profileEditor.controller('AttributeEditor', function (profileService, navService
     self.parseInt = function(number) {
         return parseInt(number, 10);
     }
-});
+}]);
 
 
 /**

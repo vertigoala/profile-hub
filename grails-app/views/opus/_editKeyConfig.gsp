@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="key">
             <h4 class="section-panel-heading">Keys configuration</h4>
+            <p:help help-id="opus.edit.keys"/>
         </a>
     </div>
 

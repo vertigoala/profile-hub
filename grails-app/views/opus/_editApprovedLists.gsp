@@ -2,13 +2,14 @@
     <div class="panel-heading">
         <a name="lists">
             <h4 class="section-panel-heading">Approved Lists</h4>
+            <p:help help-id="opus.edit.lists"/>
         </a>
     </div>
 
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-12">
-                <p>Configure the species lists to be included in your profile pages. If you do not approve any specific lists, then all lists will be considered.</p>
+                <p>Configure the species lists to be included in your profile pages.</p>
 
                 <ul>
                     <li ng-repeat="approvedList in opusCtrl.opus.approvedLists">

@@ -1,11 +1,12 @@
 <div class="panel panel-default" ng-controller="LinksEditor as linkCtrl" ng-init="linkCtrl.init('${edit}')" ng-cloak
      ng-show="!linkCtrl.readonly || linkCtrl.links.length > 0" ng-form="LinkForm">
-    <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}links"></a>
+    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}links" title="Links" condition="!linkCtrl.readonly || linkCtrl.links.length > 0"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Links</h4>
+                <p:help help-id="profile.edit.links" show="${edit}"/>
             </div>
         </div>
     </div>

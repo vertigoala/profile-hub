@@ -7,11 +7,18 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     self.opusId = util.getEntityId("opus");
 
     self.searchOptions = {
-        includeArchived: false
+        matchAll: true,
+        includeArchived: false,
+        nameOnly: false,
+        includeNameAttributes: true,
+        searchAla: true,
+        searchNsl: true
     };
     self.searchResults = {};
 
     self.pageSize = 25;
+    self.showOptions = false;
+    self.searchTerm = "";
 
     self.search = function (pageSize, offset) {
         self.searchOptions.offset = offset || 0;
@@ -32,7 +39,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
             },
             function () {
                 messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
-            });
+            }
+        );
     };
 
     function cacheSearchResult(result) {
@@ -50,10 +58,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     self.retrieveCachedOrDelegatedSearch = function() {
         if ($sessionStorage.delegatedSearches && $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'] != null) {
             var delegatedSearch = $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'];
-            self.searchTerm = delegatedSearch.term;
-            self.searchOptions = delegatedSearch.searchOptions ? delegatedSearch.searchOptions : {
-                includeArchived: false
-            };
+            self.searchTerm = delegatedSearch.term || "";
+            self.searchOptions = delegatedSearch.searchOptions ? delegatedSearch.searchOptions : _.clone(self.searchOptions);
 
             delete $sessionStorage.delegatedSearches[self.opusId ? self.opusId : 'all'];
 
@@ -62,10 +68,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
             var cachedResult = $sessionStorage.searches ? $sessionStorage.searches[self.opusId ? self.opusId : 'all'] : {};
             if (cachedResult) {
                 self.searchResults = cachedResult.result;
-                self.searchTerm = cachedResult.term;
-                self.searchOptions = cachedResult.options ? cachedResult.options : {
-                    includeArchived: false
-                };
+                self.searchTerm = cachedResult.term || "";
+                self.searchOptions = cachedResult.options ? cachedResult.options : _.clone(self.searchOptions);
             }
         }
     };
@@ -75,6 +79,21 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         self.searchTerm = "";
 
         $sessionStorage.searches[self.opusId ? self.opusId : 'all'] = {};
+
+        self.resetSearchOptions();
+    };
+
+    self.resetSearchOptions = function() {
+        // don't reset the nameOnly option so the user remains on the search type they selected
+        var selectedSearchType = self.searchOptions.nameOnly;
+        self.searchOptions = {
+            matchAll: true,
+            includeArchived: false,
+            includeNameAttributes: true,
+            searchAla: true,
+            searchNsl: true,
+            nameOnly: selectedSearchType
+        };
     };
 
     self.loadImageForProfile = function (profileId) {
@@ -93,6 +112,13 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         }
     };
 
+    self.setSearchOption = function (option) {
+        self.searchOptions.nameOnly = option == 'name'
+    };
+
     self.retrieveCachedOrDelegatedSearch();
 
+    if (!self.searchResults) {
+        self.search();
+    }
 });

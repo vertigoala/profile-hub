@@ -1,9 +1,9 @@
-
 /**
  * Images controller
  */
-profileEditor.controller('ImagesController', function ($browser, $scope, profileService, navService, util, messageService, $modal, config) {
+profileEditor.controller('ImagesController', function ($browser, $scope, profileService, util, messageService, $modal, config) {
     var self = this;
+    self.defaultPageSize = 20;
 
     // Flag to prevent reloading images during the update process.
     var saving = false;
@@ -26,9 +26,9 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
                 // If the primary image specified for the profile changes then reload the images.
                 // Note that this function will be called once for initiation which is required to load the images.
-                $scope.$watch(function() {
+                $scope.$watch(function () {
                     return self.profile && self.profile.primaryImage;
-                }, function() {
+                }, function () {
                     if (!saving) {
                         self.loadImages();
                     }
@@ -48,7 +48,11 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
         self.profile.primaryImage = null;
 
         angular.forEach(self.images, function (image) {
-            self.profile.imageSettings.push({imageId: image.imageId, caption: image.caption, displayOption: image.displayOption});
+            self.profile.imageSettings.push({
+                imageId: image.imageId,
+                caption: image.caption,
+                displayOption: image.displayOption
+            });
 
             if (image.primary) {
                 self.profile.primaryImage = image.imageId;
@@ -65,7 +69,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
                 form.$setPristine();
 
-                loadImagesProfile.finally(function() {
+                loadImagesProfile.finally(function () {
                     saving = false;
                 });
             },
@@ -77,20 +81,24 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
         );
     };
 
-    self.loadImages = function () {
+
+    self.loadImages = function (offset, itemsPerPage) {
+        if (_.isUndefined(offset)) {
+            offset = 0;
+        }
+        if (_.isUndefined(itemsPerPage)) {
+            itemsPerPage = self.defaultPageSize;
+        }
+
         messageService.info("Loading images...");
 
         var searchIdentifier = self.profile.guid ? "lsid:" + self.profile.guid : "";
 
-        var sources = angular.copy(self.opus.imageSources);
-        sources.unshift(self.opus.dataResourceUid);
-
-        var imagesPromise = profileService.retrieveImages(self.opusId, self.profileId, searchIdentifier, sources.join(), self.readonly);
+        var imagesPromise = profileService.retrieveImagesPaged(self.opusId, self.profileId, searchIdentifier, self.readonly, offset, itemsPerPage);
 
         imagesPromise.then(function (data) {
                 self.images = [];
-
-                angular.forEach(data, function (image) {
+                angular.forEach(data.images, function (image) {
                     if (!self.readonly || !image.excluded) {
                         self.images.push(image);
 
@@ -108,17 +116,27 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                     });
                 }
 
-                if (self.images.length > 0 || !self.readonly) {
-                    navService.add("Images", "images");
+                var totalNumberOfImages = data.count;
+
+                if (totalNumberOfImages <= itemsPerPage) {
+                    itemsPerPage = totalNumberOfImages
                 }
 
+                //data for pagination
+                self.offset = offset;
+                self.totalItems = totalNumberOfImages;
+                self.itemsPerPage = itemsPerPage;
+                self.paginate = (self.totalItems > self.itemsPerPage);
+
             },
+
             function () {
                 messageService.alert("An error occurred while retrieving the images.");
             }
         );
         return imagesPromise;
-    };
+    }; //end of loadImages
+
 
     self.changeImageDisplay = function (form) {
         form.$setDirty();
@@ -141,12 +159,42 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
             resolve: {
                 opus: function () {
                     return self.opus;
+                },
+                image: function () {
+                    return null;
                 }
             }
         });
 
         popup.result.then(function () {
             self.loadImages();
+        });
+    };
+
+    self.editImage = function (image, offset, pageNumber) {
+        if (_.isUndefined(pageNumber)) {
+            pageNumber = 1;
+        }
+
+        var popup = $modal.open({
+            templateUrl: $browser.baseHref() + "static/templates/imageUploadModal.html",
+            controller: "ImageUploadController",
+            controllerAs: "imageUploadCtrl",
+            size: "md",
+            resolve: {
+                opus: function () {
+                    return self.opus;
+                },
+                image: function () {
+                    return image;
+                }
+            }
+        });
+
+        popup.result.then(function (image) {
+            self.page = pageNumber;
+            self.offset = offset;
+            self.loadImages(offset);
         });
     };
 
@@ -187,7 +235,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
             future.then(function (imageDetails) {
                 imageDetails.imageId = image;
                 showMetadataPopup(imageDetails);
-            }, function() {
+            }, function () {
                 messageService.alert("An error occurred while retrieving the image details");
             });
         } else {
@@ -209,7 +257,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
             }
         });
 
-        popup.opened.then(function() {
+        popup.opened.then(function () {
             // Disable the Leaflet.Sleep functionality, which is enabled by default as soon as Leaflet.Sleep.js is included.
             // The ALA Map plugin uses this, but it explicitly enables/disables the feature based on its config.
             L.Map.mergeOptions({
@@ -249,37 +297,38 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
         });
     }
 
-    self.publishPrivateImage = function(imageId) {
+    self.publishPrivateImage = function (imageId) {
         var confirm = util.confirm("Are you sure you wish to make this image available to other Atlas of Living Australia applications?");
 
-        confirm.then(function() {
+        confirm.then(function () {
             var future = profileService.publishPrivateImage(self.opusId, self.profileId, imageId);
 
             future.then(function () {
                 self.loadImages();
 
-                messageService.success("You images has been successfully published to the Atlas of Living Australia image library.");
-            }, function() {
+                messageService.success("Your images has been successfully published to the Atlas of Living Australia image library.");
+            }, function () {
                 messageService.alert("An error occurred while publishing your image.");
             })
         })
     };
 
-    self.deleteLocalImage = function(imageId, type) {
+    self.deleteLocalImage = function (imageId, type) {
         var confirm = util.confirm("Are you sure you wish to delete this image?");
 
-        confirm.then(function() {
+        confirm.then(function () {
             var future = profileService.deleteLocalImage(self.opusId, self.profileId, imageId, type);
 
             future.then(function () {
                 self.loadImages();
-            }, function() {
+            }, function () {
                 messageService.alert("An error occurred while deleting your staged image.");
             });
         });
     };
 
     self.imageCaption = function (image) {
+        if (!image) return '';
         if (image.caption) {
             return image.caption;
         }
@@ -291,7 +340,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 /**
  * Image metadata modal dialog controller
  */
-profileEditor.controller("ImageMetadataController", function($modalInstance, image) {
+profileEditor.controller("ImageMetadataController", function ($modalInstance, image) {
     var self = this;
 
     self.image = image;

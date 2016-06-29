@@ -9,7 +9,9 @@ module.exports = function (config) {
 
         plugins: [
             'karma-chrome-launcher',
+            'karma-jquery',
             'karma-jasmine',
+            'karma-jasmine-jquery',
             'karma-ng-html2js-preprocessor',
             'karma-coverage',
             'karma-firefox-launcher',
@@ -19,7 +21,7 @@ module.exports = function (config) {
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-        frameworks: ['jasmine'],
+        frameworks: ['jasmine-jquery','jasmine'],
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
@@ -46,8 +48,11 @@ module.exports = function (config) {
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/leaflet.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.Coordinates-0.1.5/Leaflet.Coordinates-0.1.5.min.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.loading-0.1.16/Control.Loading.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.EasyButton-1.2.0/easy-button.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/layers/SmartWmsLayer.js',
-            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/Map.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/web-app/js/Map.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/web-app/js/OccurrenceMap.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/web-app/vendor/urijs-1.18.0/URI.js',
             'web-app/thirdparty/modernizr/modernizer.js',
             'web-app/thirdparty/angular/angular-1.3.13.min.js',
             'web-app/thirdparty/angular/angular-sanitize-1.3.13.min.js',
@@ -67,6 +72,7 @@ module.exports = function (config) {
             'web-app/thirdparty/angular-inview/angular-inview-1.5.6.js',
             'web-app/thirdparty/ngStorage/ngStorage-0.3.10.min.js',
             'web-app/thirdparty/underscore/underscore-1.8.3.min.js',
+            'web-app/thirdparty/dualMultiselect/dualmultiselect.min.js',
             'web-app/js/angular/profiles.js',
             'web-app/js/angular/utils/*.js',
             'web-app/js/angular/services/*.js',

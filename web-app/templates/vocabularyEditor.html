@@ -1,6 +1,11 @@
 <div class="panel panel-default" ng-form="VocabForm" ng-cloak>
     <div class="panel-heading">
         <h4 class="section-panel-heading">{{ vocabName }}</h4>
+        <div class="pull-right text-right padding-left-1" ng-show="helpUrl">
+            <a href="{{helpUrl}}" class="help-icon" title="Click to view help content" target="_blank">
+                <span class="fa fa-question-circle"></span>
+            </a>
+        </div>
     </div>
 
     <div class="panel-body">
@@ -43,27 +48,59 @@
                 <div class="col-md-12">
 
                     <div class="row">
-                        <div ng-repeat="term in vocabulary.terms" class="column-item"
-                              ng-if="!termIsInReplacementList(term)">
-                            <div ng-class="term.termId ? '' : 'newItem'" class="inline-block"><span
-                                    ng-if="allowReordering">{{term.order + 1}}. </span>{{ term.name }}</div>
-                            <div class="inline-block">
-                                <button class="btn btn-link btn-xs fa fa-edit" title="Edit the {{ term.name }} term"
-                                        ng-click="editVocabTerm($index, VocabForm)"></button>
-                                <button class="btn btn-link btn-xs fa fa-trash-o color--red" title="Delete the {{ term.name }} term"
-                                        ng-click="removeVocabTerm($index, VocabForm)"></button>
-                                <button class="btn btn-link btn-xs fa fa-arrow-down"
-                                        ng-if="!$last && allowReordering"
-                                        ng-click="moveTermDown($index, VocabForm)"
-                                        title="Move this term down"></button>
-                                <button class="btn btn-link btn-xs fa fa-arrow-up" ng-if="!$first && allowReordering"
-                                        ng-click="moveTermUp($index, VocabForm)"
-                                        title="Move this term up"></button>
-                                <button class="btn btn-link btn-xs fa" ng-class="term.required ? 'color--anzac fa-toggle-on' : 'fa-toggle-off'"
-                                        ng-click="toggleRequired($index, VocabForm)"
-                                        ng-show="allowMandatory"
-                                        title="{{ term.required ? 'This term is mandatory. Click to make it optional.' : 'This term is optional. Click to make it mandatory.' }}"></button>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                <th>Order</th>
+                                <th>Term</th>
+                                <th ng-show="allowMandatory">
+                                    Mandatory?
+                                </th>
+                                <th ng-show="allowCategories">
+                                    Name? <span class="fa fa-question-circle"
+                                                title="This indicates that the attribute contains alternate names, and should be included in the Name Search. Alternate names are also displayed below the profile name on the view page."></span>
+                                </th>
+                                <th ng-show="allowCategories">
+                                    Summary? <span class="fa fa-question-circle"
+                                                   title="This indicates that the attribute should be displayed as the summary text in the search results."></span>
+                                </th>
+                                <th>Options</th>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="term in vocabulary.terms" ng-if="!termIsInReplacementList(term)">
+                                    <td>{{ term.order + 1 }}</td>
+                                    <td>{{ term.name }}</td>
+                                    <td ng-show="allowMandatory">
+                                        <input type="checkbox" ng-model="term.required" name="required">
+                                    </td>
+                                    <td ng-show="allowCategories">
+                                        <input type="checkbox" ng-model="term.containsName" name="containsName">
+                                    </td>
+                                    <td ng-show="allowCategories">
+                                        <input id="term{{$index}}" type="radio" ng-model="term.summary" name="summary"
+                                               ng-value="true" ng-change="summaryChanged($index)">
+                                    </td>
+                                    <td>
+                                        <div class="inline-block">
+                                            <button class="btn btn-link btn-xs fa fa-edit"
+                                                    title="Edit the {{ term.name }} term"
+                                                    ng-click="editVocabTerm($index, VocabForm)"></button>
+                                            <button class="btn btn-link btn-xs fa fa-trash-o color--red"
+                                                    title="Delete the {{ term.name }} term"
+                                                    ng-click="removeVocabTerm($index, VocabForm)"></button>
+                                            <button class="btn btn-link btn-xs fa fa-arrow-down"
+                                                    ng-if="!$last && allowReordering"
+                                                    ng-click="moveTermDown($index, VocabForm)"
+                                                    title="Move this term down"></button>
+                                            <button class="btn btn-link btn-xs fa fa-arrow-up"
+                                                    ng-if="!$first && allowReordering"
+                                                    ng-click="moveTermUp($index, VocabForm)"
+                                                    title="Move this term up"></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
 
                         <div class="row" ng-if="allowReordering">

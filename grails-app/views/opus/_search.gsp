@@ -1,9 +1,19 @@
 <div ng-controller="SearchController as searchCtrl" ng-cloak>
 
     <div class="col-xs-12 col-sm-12 col-md-12">
-        <h3 class="heading-medium">Search for a profile</h3>
+        <h3 class="heading-medium">Search for profile(s)</h3>
 
         <div class="input-group">
+            <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle btn-lg search-type-control" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    {{ searchCtrl.searchOptions.nameOnly ? 'with name' : 'with text' }} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a ng-click="searchCtrl.setSearchOption('name')">with name</a></li>
+                    <li><a ng-click="searchCtrl.setSearchOption('text')">with text</a></li>
+                </ul>
+            </div>
             <input id="searchTerm"
                    ng-model="searchCtrl.searchTerm"
                    ng-enter="searchCtrl.search()"
@@ -18,9 +28,37 @@
         </div>
         <button class="btn btn-link toggle-link ignore-save-warning" ng-model="searchCtrl.showOptions" btn-checkbox>Options</button>
         <div ng-show="searchCtrl.showOptions" class="well">
-            <div class="checkbox">
-                <label for="includeArchived" class="inline-label">
-                    <input id="includeArchived" type="checkbox" name="showLinked" class="ignore-save-warning"
+            <div class="checkbox inline-block padding-right-1" ng-show="searchCtrl.searchOptions.nameOnly">
+                <label for="includeNameAttributes" class="inline-label">
+                    <input id="includeNameAttributes" type="checkbox" name="includeNameAttributes" class="ignore-save-warning"
+                           ng-model="searchCtrl.searchOptions.includeNameAttributes" ng-false-value="false">
+                    Include alternate names
+                </label>
+            </div>
+            <div class="checkbox inline-block padding-right-1" ng-show="searchCtrl.searchOptions.nameOnly">
+                <label for="searchAla" class="inline-label">
+                    <input id="searchAla" type="checkbox" name="searchAla" class="ignore-save-warning"
+                           ng-model="searchCtrl.searchOptions.searchAla" ng-false-value="false">
+                    Look for matching names in the ALA
+                </label>
+            </div>
+            <div class="checkbox inline-block padding-right-1" ng-show="searchCtrl.searchOptions.nameOnly">
+                <label for="searchNsl" class="inline-label">
+                    <input id="searchNsl" type="checkbox" name="searchNsl" class="ignore-save-warning"
+                           ng-model="searchCtrl.searchOptions.searchNsl" ng-false-value="false">
+                    Look for matching names in the NSL
+                </label>
+            </div>
+            <div class="checkbox inline-block padding-right-1" ng-hide="searchCtrl.searchOptions.nameOnly">
+                <label for="matchAll" class="inline-label">
+                    <input id="matchAll" type="checkbox" name="matchAll" class="ignore-save-warning"
+                           ng-model="searchCtrl.searchOptions.matchAll" ng-false-value="false">
+                    Must contain all terms
+                </label>
+            </div>
+            <div class="checkbox inline-block">
+                <label for="includeArchivedProfiles" class="inline-label">
+                    <input id="includeArchivedProfiles" type="checkbox" name="includeArchivedProfiles" class="ignore-save-warning"
                            ng-model="searchCtrl.searchOptions.includeArchived" ng-false-value="false">
                     Include archived profiles
                 </label>
@@ -67,7 +105,7 @@
 
                 <div class="font-xsmall" ng-show="profile.otherNames"><h5><span ng-repeat="name in profile.otherNames">{{ name.text | capitalize }}<span ng-show="!$last">, </span></span></h5></div>
 
-                <div class="font-xsmall" ng-show="profile.description"><span ng-repeat="description in profile.description">{{ description.text | words: 100 | capitalize }}<span ng-show="!$last">, </span></span></div>
+                <div class="font-xsmall" ng-show="profile.description"><span ng-repeat="description in profile.description">{{ description.text | words: 100 }}<span ng-show="!$last">, </span></span></div>
             </div>
 
             <div class="col-md-2 col-sm-12 col-xs-12" ng-show="!searchCtrl.opusId">

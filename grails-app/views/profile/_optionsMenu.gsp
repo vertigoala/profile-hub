@@ -17,6 +17,11 @@
             <ul class="dropdown-menu"
                 role="menu"
                 aria-labelledby="optionsDropdown">
+                <li role="presentation" ng-if="!profileCtrl.readonly()">
+                    <a href="<p:helpUrl help-id='profile.edit.optionsMenu'/>" target="_blank"><span
+                            class="fa fa-question-circle"></span>&nbsp;&nbsp;Help
+                    </a>
+                </li>
                 <li role="presentation" ng-hide="profileCtrl.isArchived()">
                     <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/json"
                        target="_blank"><span class="fa fa-file-text-o"></span>&nbsp;&nbsp;Export as JSON

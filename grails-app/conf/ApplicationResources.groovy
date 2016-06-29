@@ -25,10 +25,14 @@ modules = {
         dependsOn "modernizr3"
         dependsOn "keybase"
         dependsOn "keybase_overrides"
+        dependsOn "dual_multiselect"
+        dependsOn "color"
+        dependsOn "urijs"
         resource url:"js/angular/profiles.js"
         resource url:"js/angular/utils/Filters.js"
         resource url:"js/angular/utils/Utils.js"
         resource url:"js/angular/directives/Misc.js"
+        resource url:"js/angular/directives/autoFocus.js"
         resource url:"js/angular/directives/keepalive.js"
         resource url:"js/angular/directives/keyplayer.js"
         resource url:"js/angular/directives/profileName.js"
@@ -36,6 +40,8 @@ modules = {
         resource url:"js/angular/directives/profileComparison.js"
         resource url:"js/angular/directives/nomenclature.js"
         resource url:"js/angular/directives/publication.js"
+        resource url:"js/angular/directives/managedTab.js"
+        resource url:"js/angular/directives/navigationAnchor.js"
         resource url:"js/angular/directives/link.js"
         resource url:"js/angular/directives/saveButton.js"
         resource url:"js/angular/directives/saveAll.js"
@@ -47,6 +53,9 @@ modules = {
         resource url:"js/angular/directives/markupText.js"
         resource url:"js/angular/directives/imageUpload.js"
         resource url:"js/angular/directives/closeModal.js"
+        resource url:"js/angular/directives/fallbackSrc.js"
+        resource url:"js/angular/directives/webComponent.js"
+        resource url:"js/angular/directives/tag.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"
@@ -65,8 +74,10 @@ modules = {
         resource url:"js/angular/controllers/LinksController.js"
         resource url:"js/angular/controllers/SpecimenController.js"
         resource url:"js/angular/controllers/ImagesController.js"
+        resource url:"js/angular/controllers/MultimediaController.js"
         resource url:"js/angular/controllers/ListsController.js"
         resource url:"js/angular/controllers/MapController.js"
+        resource url:"js/angular/controllers/NavigationController.js"
         resource url:"js/angular/controllers/PublicationController.js"
         resource url:"js/angular/controllers/GlossaryController.js"
         resource url:"js/angular/controllers/CommentController.js"
@@ -78,6 +89,7 @@ modules = {
         resource url:"js/angular/controllers/DoiController.js"
         resource url:"js/angular/controllers/ShareRequestController.js"
         resource url:"js/angular/controllers/UserDetailsController.js"
+        resource url:"js/angular/controllers/DataController.js"
         resource url:"js/angular/controllers/AdminController.js"
     }
 
@@ -136,7 +148,8 @@ modules = {
     ckeditor {
         defaultBundle false
 
-        resource url:"thirdparty/ckeditor/ckeditor.js", disposition: 'head', exclude: 'hashandcache'
+        resource url:"thirdparty/ckeditor/ckeditor.js", disposition: "head", exclude: "hashandcache"
+        resource url:"thirdparty/ckeditor/skins/moono/editor.css", exclude: "*"
         resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.css"
         resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.min.js"
     }
@@ -180,5 +193,23 @@ modules = {
 
         resource url: [plugin: "images-client-plugin", dir: 'js/img-gallery/lib/slider-pro/js', file: 'jquery.sliderPro.custom.js']
         resource url: [plugin: "images-client-plugin", dir: 'js/img-gallery/js', file: 'img-gallery.js']
+    }
+
+    dual_multiselect {
+        dependsOn "angular"
+        resource url:"thirdparty/dualMultiselect/dualmultiselect.css"
+        resource url:"thirdparty/dualMultiselect/dualmultiselect.min.js"
+    }
+
+    color {
+        resource url:"thirdparty/colorjs/color.min.js"
+    }
+
+    webcomponents {
+        resource url:"thirdparty/webcomponentsjs/webcomponents-0.7.22.min.js"
+    }
+
+    urijs {
+        resource url:"thirdparty/urijs-1.18.0/URI.js"
     }
 }

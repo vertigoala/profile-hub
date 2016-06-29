@@ -29,7 +29,7 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
 
             confirmed.then(function () {
                 var formData = new FormData();
-                formData.append("file", self.newFile);
+                formData.append("file", self.newFile[0]);
 
                 var promise = profileService.uploadGlossary(self.opusId, formData);
                 messageService.info("Uploading glossary...");
@@ -59,10 +59,6 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
                 }
             );
         })
-    };
-
-    self.setFileToUpload = function (element) {
-        self.newFile = element.files[0]
     };
 
     self.loadGlossary = function (prefix) {

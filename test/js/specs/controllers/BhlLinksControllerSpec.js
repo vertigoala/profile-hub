@@ -21,7 +21,7 @@ describe("BHLLinksController tests", function () {
     var profileService;
     var profileDefer, saveLinksDefer;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "bhl":[{},{}]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "bhl":[{},{}]}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
 
     beforeAll(function () {
         console.log("****** BHL Links Controller Tests ******");

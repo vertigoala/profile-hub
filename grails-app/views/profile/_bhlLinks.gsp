@@ -1,11 +1,12 @@
 <div class="panel panel-default" ng-controller="BHLLinksEditor as bhlCtrl" ng-init="bhlCtrl.init('${edit}')" ng-cloak
      ng-show="!bhlCtrl.readonly || bhlCtrl.bhl.length > 0" ng-form="BhlForm">
-    <a name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}bhllinks"></a>
+    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}bhllinks" title="Biodiversity Heritage Library references" condition="!bhlCtrl.readonly || bhlCtrl.bhl.length > 0"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-12">
                 <h4 class="section-panel-heading">Biodiversity Heritage Library references</h4>
+                <p:help help-id="profile.edit.bhlLinks" show="${edit}"/>
             </div>
         </div>
     </div>

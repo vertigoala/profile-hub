@@ -1,6 +1,6 @@
 <div ng-form="UploadForm">
     <div class="modal-header">
-        <h4 class="modal-title">Upload image</h4>
+        <h4 class="modal-title">{{imageUploadCtrl.modalTitle}}</h4>
         <close-modal close="imageUploadCtrl.cancel()"></close-modal>
     </div>
 
@@ -8,8 +8,10 @@
         <alert class="alert-danger" ng-show="imageUploadCtrl.error">{{ imageUploadCtrl.error }}</alert>
         <image-upload
                 opus="imageUploadCtrl.opus"
+                image="imageUploadCtrl.image"
                 on-upload-complete="imageUploadCtrl.uploadComplete"
                 upload-on-event="performUpload"
+                update-on-event="saveImageChanges"
                 url="{{imageUploadCtrl.uploadUrl}}">
         </image-upload>
     </div>

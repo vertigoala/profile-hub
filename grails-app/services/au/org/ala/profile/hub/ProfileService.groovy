@@ -1,7 +1,12 @@
 package au.org.ala.profile.hub
 
+import org.apache.http.entity.ContentType
+import org.springframework.web.multipart.MultipartFile
+
+import static au.org.ala.profile.hub.Utils.enc
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
+import au.org.ala.ws.service.WebService
 import org.apache.commons.lang.BooleanUtils
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
@@ -72,6 +77,10 @@ class ProfileService {
 
     def createProfile(String opusId, json) {
         webService.put("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/", json)
+    }
+
+    def duplicateProfile(String opusId, String profileId, Map json) {
+        webService.put("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${profileId}/duplicate", json)
     }
 
     def updateProfile(String opusId, String profileId, json, boolean latest = false) {
@@ -162,9 +171,9 @@ class ProfileService {
         List files = request.getFileNames().collect { request.getFile(it) }
 
         if (profileId) {
-            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attachment?latest=true", metadata, files)
+            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attachment?latest=true", [data: metadata], null, files)
         } else {
-            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/attachment", metadata, files)
+            webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/attachment", [data: metadata], null, files)
         }
     }
 
@@ -219,7 +228,7 @@ class ProfileService {
     def savePublication(String opusId, String profileId, file) {
         log.debug("Saving publication for profile ${profileId}")
 
-        webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/publication", [:], [file])
+        webService.postMultipart("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/publication", [:], null, [file])
     }
 
     def proxyGetPublicationFile(HttpServletResponse response, String opusId, String profileId, String publicationId) {
@@ -453,7 +462,8 @@ class ProfileService {
 
     def getStatistics(String opusId) {
         def urlPrefix = "${grailsApplication.config.profile.service.url}/statistics"
-        return webService.get("${urlPrefix}?opusId=${enc(opusId)}")
+
+        webService.get("${urlPrefix}?opusId=${enc(opusId)}")
     }
 
     def getFeatureLists(String opusId, String profileId) {
@@ -472,7 +482,24 @@ class ProfileService {
         result
     }
 
-    def getProfileKVP(String profileId, String drid) {
+    Map getNextPendingPDFJob() {
+        webService.get("${grailsApplication.config.profile.service.url}/job/pdf/next", [:], ContentType.APPLICATION_JSON, true, false)
+    }
+
+    void createPDFJob(Map params, boolean latest) {
+        params.latest = latest;
+        webService.put("${grailsApplication.config.profile.service.url}/job/pdf/", [params: params])
+    }
+
+    void updatePDFJob(String jobId, Map params) {
+        webService.post("${grailsApplication.config.profile.service.url}/job/pdf/${jobId}", params)
+    }
+
+    Map getTags() {
+        webService.get("${grailsApplication.config.profile.service.url}/tags/")
+    }
+
+    private def getProfileKVP(String profileId, String drid) {
         List result = []
         def list = getListItems(drid);
         if (list) {
@@ -482,15 +509,34 @@ class ProfileService {
                 }
             }
         }
-
         result
-    }
-
-    def enc(String value) {
-        value ? URLEncoder.encode(value, "UTF-8") : ""
     }
 
     boolean hasMatchedName(Map profile) {
         profile.guid as Boolean
+    }
+
+    def deleteDocument(String opusId, String profileId, String documentId) {
+        def url = "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/document/${documentId}"
+        webService.delete(url, [:], ContentType.TEXT_PLAIN)
+    }
+
+    def updateDocument(String opusId, String profileId, doc) {
+        def url ="${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/document/${doc.documentId ?:''}"
+        webService.post(url, doc)
+    }
+
+    def updateDocument(Map doc, MultipartFile file) {
+        def url = grailsApplication.config.profile.baseURL + "/document/${doc.documentId?:''}"
+        webService.postMultipart(url, [document:doc], [:], [file])
+    }
+
+    def Map listDocuments(String opusId, String profileId, boolean edit) {
+        def url ="${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/document/list?editMode=${edit}"
+        def resp = webService.get(url)
+        if (resp && !resp.error) {
+            return resp.resp
+        }
+        resp
     }
 }

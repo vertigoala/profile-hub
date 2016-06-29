@@ -28,7 +28,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h3 class="heading-medium">Search for a profile</h3>
+            <h3 class="heading-medium">Search for profile(s)</h3>
             <delegated-search layout="large"></delegated-search>
         </div>
     </div>

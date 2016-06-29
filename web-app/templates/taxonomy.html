@@ -15,7 +15,6 @@
     </ul>
 </div>
 
-
 <ul ng-if="layout != 'tree'"  class="{{ layout == 'horizontal' ? 'breadcrumb' : layout == 'tree' ? 'tree' : '' }}">
     <li ng-repeat="taxon in taxonomy" ng-if="limit < 0 || $index >= taxonomy.length - limit">
         <span ng-include src="'taxon.html'"></span>
@@ -40,14 +39,14 @@
             <a href="{{contextPath}}/opus/{{opusId}}/profile/{{taxon.profileName}}"
                class="{{ layout == 'horizontal' ? 'font-xxsmall' : '' }}"
                target="_self">
-                <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name }}
+                <span ng-if="includeRank  && taxon.rank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name }}
             </a>
         </span>
         <span ng-if="!taxon.profileId" class="{{ layout == 'horizontal' ? 'font-xxsmall' : '' }}">
-            <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name }}
+            <span ng-if="includeRank  && taxon.rank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name }}
         </span>
 
-        <span ng-if="showChildren && layout != 'horizontal' && taxon.childCount > 0" class="padding-left-1">
+        <span ng-if="showChildren && taxon.childCount > 0 && (!showChildrenForLastOnly || $last)" class="padding-left-1">
             <a href="" class="fa fa-list-ul"
                title="Show members {{ taxon.childCount }} of {{ taxon.rank }} {{ taxon.name }}"
                ng-click="showAllSubordinateTaxaPopup(taxon.rank, taxon.name, taxon.childCount)"></a>
@@ -72,17 +71,11 @@
             <a href="" ng-click="loadSubordinateTaxa(taxon.offset, taxon, true)"
                target="_self">
                 <span class="fa {{ taxon.loading ? 'fa-spin fa-spinner' : taxon.expanded ? 'fa-minus' : 'fa-plus' }} small"></span>
-                <span ng-show="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name | default:taxon.scientificName }}
             </a>
+            <span ng-include src="'taxonNode.html'"></span>
         </span>
         <span ng-if="!taxon.childCount || taxon.childCount == 0">
-            <span ng-if="includeRank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name | default:taxon.scientificName }}
-        </span>
-
-        <span ng-if="taxon.profileId">
-            <a href="" ng-href="{{contextPath}}/opus/{{opusId}}/profile/{{taxon.profileName}}" target="_self">
-                <span title="View the {{ taxon.name }} profile" class="padding-left-1 fa fa-mail-forward"></span>
-            </a>
+            <span ng-include src="'taxonNode.html'"></span>
         </span>
 
         <div class="form-group" ng-form="filterForm" ng-if="!taxon.showingCurrentProfileOnly && (taxon.children.length >= pageSize || taxon.filter) && taxon.expanded">
@@ -115,10 +108,22 @@
     </span>
 </script>
 
+<script type="text/ng-template" id="taxonNode.html">
+    <a ng-show="taxon.profileId" href="" ng-href="{{contextPath}}/opus/{{opusId}}/profile/{{taxon.profileName}}" title="View the {{taxon.name | default:taxon.scientificName}} profile" target="_self">
+        <span ng-include src="'taxonName'"/>
+    </a>
+
+    <span ng-show="!taxon.profileId" ng-include src="'taxonName'"></span>
+</script>
+
+<script type="text/ng-template" id="taxonName">
+    <span ng-if="includeRank && taxon.rank">{{ taxon.rank | capitalize }}: </span>{{ taxon.name | default:taxon.scientificName }}
+</script>
+
 <!-- template for the popup displayed when the 'show children' link is clicked -->
 <script type="text/ng-template" id="showTaxonChildren.html">
     <div class="modal-header">
-        <h4 class="modal-title">{{taxonChildrenCtrl.taxon.rank | capitalize}}: {{taxonChildrenCtrl.taxon.name | capitalize}}</h4>
+        <h4 class="modal-title"><span ng-show="taxonChildrenCtrl.taxon.rank">{{taxonChildrenCtrl.taxon.rank | capitalize}}: </span>{{taxonChildrenCtrl.taxon.name | capitalize}}</h4>
         <close-modal close="taxonChildrenCtrl.cancel()"></close-modal>
     </div>
 

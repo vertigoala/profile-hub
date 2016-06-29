@@ -2,19 +2,15 @@ package au.org.ala.profile.hub
 
 class SearchController extends BaseController {
 
-    private static final List<String> SEARCH_OPTIONS = ["nameOnly", "offset", "pageSize", "includeArchived"]
+    private static final List<String> SEARCH_OPTIONS = ["nameOnly", "offset", "pageSize", "includeArchived", "matchAll", "includeNameAttributes", "searchAla", "searchNsl"]
 
     ProfileService profileService
 
     def search() {
-        if (!params.term) {
-            badRequest "term is a required parameter"
-        } else {
-            List queryParams = params.findResults { key, value -> SEARCH_OPTIONS.contains(key) ? "&${key}=${value}" : null }
-            def response = profileService.search(params.opusId, params.term, queryParams)
+        List queryParams = params.findResults { key, value -> SEARCH_OPTIONS.contains(key) ? "&${key}=${value}" : null }
+        def response = profileService.search(params.opusId, params.term, queryParams)
 
-            handle response
-        }
+        handle response
     }
 
     def findByScientificName() {

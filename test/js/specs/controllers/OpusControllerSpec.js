@@ -26,13 +26,12 @@ describe("OpusController tests", function () {
     var form;
     var messageService;
     var profileService;
-    var opusDefer, getResourceDefer, listResourcesDefer, saveOpusDefer, listOpusDefer, getListsDefer, keysDefer, supportingCollectionDefer;
+    var opusDefer, getResourceDefer, saveOpusDefer, listOpusDefer, getListsDefer, keysDefer, supportingCollectionDefer, hubsDefer, resourcesDefer, tagsDefer;
 
-    var getOpusResponse = '{"title": "OpusName", "dataResourceUid":"dataUid1", "imageSources": ["source1", "source2", "source3"], "recordSources": ["source1", "source2", "source3"], "mapPointColour": "12345", "supportingOpuses": []}';
+    var getOpusResponse = '{"title": "OpusName", "dataResourceUid":"dataUid1", "mapConfig": {"mapPointColour": "12345"}, "dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2", "source3"]}, "recordSources": ["source1", "source2", "source3"], "supportingOpuses": []}';
     var getResourceResponse = '{"pubDescription":"resource description"}';
-    var listResourceResponse = '{"dr776":" Insect and spider wetland indicator species list","dr774":" Toothed whales found in Australian waters"}';
-    var getAllListsResponse = '{lists: [{"dataResourceUid": "id4", "listName": "list4"}, {"dataResourceUid": "id2", "listName": "list2"}, {"dataResourceUid": "id3", "listName": "list3"}, {"dataResourceUid": "id1", "listName": "list1"}]}';
-    var listOpusResponse = '[{"uuid":"opus1", "title":"Opus 1"}, {"uuid":"opus2", "title":"Opus 2"}, {"uuid":"' + OPUS_ID + '", "title":"Opus 3"}]';
+    var listHubsResponse = '{"dh1": "hub1", "dh2": "hub2", "dh3": "hub3", "dh4": "hub4"}';
+    var listResourcesResponse = '{"dr1": "resource1", "dr2": "resource2", "dr3": "resource3", "dr4": "resource4"}';
 
     beforeAll(function () {
         console.log("****** Opus Controller Tests ******");
@@ -49,16 +48,20 @@ describe("OpusController tests", function () {
 
         opusDefer = $q.defer();
         getResourceDefer = $q.defer();
-        listResourcesDefer = $q.defer();
         saveOpusDefer = $q.defer();
         listOpusDefer = $q.defer();
         getListsDefer = $q.defer();
         keysDefer = $q.defer();
         supportingCollectionDefer = $q.defer();
+        hubsDefer = $q.defer();
+        resourcesDefer = $q.defer();
+        tagsDefer = $q.defer();
 
+        spyOn(profileService, "getTags").and.returnValue(tagsDefer.promise);
         spyOn(profileService, "getOpus").and.returnValue(opusDefer.promise);
         spyOn(profileService, "getResource").and.returnValue(getResourceDefer.promise);
-        spyOn(profileService, "listResources").and.returnValue(listResourcesDefer.promise);
+        spyOn(profileService, "listResources").and.returnValue(resourcesDefer.promise);
+        spyOn(profileService, "listHubs").and.returnValue(hubsDefer.promise);
         spyOn(profileService, "saveOpus").and.returnValue(saveOpusDefer.promise);
         spyOn(profileService, "listOpus").and.returnValue(listOpusDefer.promise);
         spyOn(profileService, "getAllLists").and.returnValue(getListsDefer.promise);
@@ -98,18 +101,6 @@ describe("OpusController tests", function () {
         expect(scope.opusCtrl.opus).toBeDefined();
     });
 
-
-    it("should set the data resources map on the scope when the controller loads", function () {
-        opusDefer.resolve(JSON.parse(getOpusResponse));
-        listResourcesDefer.resolve(JSON.parse(listResourceResponse));
-
-        scope.opusCtrl.loadOpus();
-        scope.$apply();
-
-        expect(Object.keys(scope.opusCtrl.dataResources).length).toBe(2);
-        expect(scope.opusCtrl.dataResourceList.length).toBe(2);
-    });
-
     it("should set the opus data resource on the scope when the controller loads", function () {
         opusDefer.resolve(JSON.parse(getOpusResponse));
         getResourceDefer.resolve(JSON.parse(getResourceResponse));
@@ -130,18 +121,6 @@ describe("OpusController tests", function () {
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the opus.");
     });
 
-    it("should create a new empty image source record when addImageSource is invoked", function () {
-        scope.opusCtrl.addImageSource();
-
-        expect(scope.opusCtrl.newImageSources.length).toBe(1);
-    });
-
-    it("should create a new empty record source record when addRecordSource is invoked", function () {
-        scope.opusCtrl.addRecordSource();
-
-        expect(scope.opusCtrl.newRecordSources.length).toBe(1);
-    });
-
     it("should create a new empty supporting opus record when addSupportingOpus is invoked", function () {
         scope.opusCtrl.addSupportingOpus();
 
@@ -149,13 +128,13 @@ describe("OpusController tests", function () {
     });
 
     it("should create a new empty approved list record when addApprovedList is invoked", function () {
-        scope.opusCtrl.addApprovedList()
+        scope.opusCtrl.addApprovedList();
 
         expect(scope.opusCtrl.newApprovedLists.length).toBe(1);
     });
 
     it("should create a new empty bio status list record when addFeatureList is invoked", function () {
-        scope.opusCtrl.addFeatureList()
+        scope.opusCtrl.addFeatureList();
 
         expect(scope.opusCtrl.newFeatureLists.length).toBe(1);
     });
@@ -165,54 +144,6 @@ describe("OpusController tests", function () {
         scope.opusCtrl.addFeatureList();
 
         expect(scope.opusCtrl.newFeatureLists.length).toBe(1);
-    });
-
-    it("should remove an existing imageSource from the opus when removeImageSource is invoked with 'existing'", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-
-        scope.$apply();
-        scope.opusCtrl.removeImageSource(1, 'existing', form);
-
-        expect(scope.opusCtrl.opus.imageSources.length).toBe(2);
-        expect(scope.opusCtrl.opus.imageSources[0]).toBe("source1");
-        expect(scope.opusCtrl.opus.imageSources[1]).toBe("source3");
-    });
-
-    it("should remove an imageSource from the list of new sources when removeImageSource is invoked with 'new'", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-
-        scope.$apply();
-        scope.opusCtrl.newImageSources = ["newSource1", "newSource2", "newSource3"];
-        scope.opusCtrl.removeImageSource(1, 'new', form);
-
-        expect(scope.opusCtrl.opus.imageSources.length).toBe(3);
-        expect(scope.opusCtrl.newImageSources.length).toBe(2);
-        expect(scope.opusCtrl.newImageSources[0]).toBe("newSource1");
-        expect(scope.opusCtrl.newImageSources[1]).toBe("newSource3");
-    });
-
-    it("should remove an existing recordSource from the opus when removeRecordSource is invoked with 'existing'", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-
-        scope.$apply();
-        scope.opusCtrl.removeRecordSource(1, 'existing', form);
-
-        expect(scope.opusCtrl.opus.recordSources.length).toBe(2);
-        expect(scope.opusCtrl.opus.recordSources[0]).toBe("source1");
-        expect(scope.opusCtrl.opus.recordSources[1]).toBe("source3");
-    });
-
-    it("should remove an recordSource from the list of new sources when removeRecordSource is invoked with 'new'", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-
-        scope.$apply();
-        scope.opusCtrl.newRecordSources = ["newSource1", "newSource2", "newSource3"];
-        scope.opusCtrl.removeRecordSource(1, 'new', form);
-
-        expect(scope.opusCtrl.opus.recordSources.length).toBe(3);
-        expect(scope.opusCtrl.newRecordSources.length).toBe(2);
-        expect(scope.opusCtrl.newRecordSources[0]).toBe("newSource1");
-        expect(scope.opusCtrl.newRecordSources[1]).toBe("newSource3");
     });
 
     it("should remove an existing supporting opus from the opus when removeSupportingOpus is invoked with 'existing'", function () {
@@ -298,26 +229,6 @@ describe("OpusController tests", function () {
         expect(scope.opusCtrl.newFeatureLists[1]).toBe("list6");
     });
 
-    it("should set the form to Dirty removeImageSource is invoked", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-
-        scope.$apply();
-        scope.opusCtrl.newImageSources = ["newSource1", "newSource2", "newSource3"];
-
-        scope.opusCtrl.removeImageSource(1, 'new', form);
-        expect(form.$setDirty).toHaveBeenCalled();
-    });
-
-    it("should set the form to Dirty removeRecordSource is invoked", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-
-        scope.$apply();
-        scope.opusCtrl.newRecordSources = ["newSource1", "newSource2", "newSource3"];
-        scope.opusCtrl.removeRecordSource(1, 'new', form);
-
-        expect(form.$setDirty).toHaveBeenCalled();
-    });
-
     it("should set the form to Dirty removeSupportingOpus is invoked", function () {
         scope.opusCtrl.opus = JSON.parse(getOpusResponse);
         scope.$apply();
@@ -333,122 +244,6 @@ describe("OpusController tests", function () {
         scope.opusCtrl.removeSupportingOpus(1, 'new', form);
 
         expect(form.$setDirty).toHaveBeenCalled();
-    });
-
-    it("should merge newImageSources with the existing image sources when saveImageSources is called", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-        scope.opusCtrl.opusId = OPUS_ID;
-
-        scope.$apply();
-        scope.opusCtrl.newImageSources = [{dataResource: {id: "newId1"}}];
-
-        scope.opusCtrl.saveImageSources(form);
-
-        var expectedOpus = {
-            title: "OpusName",
-            dataResourceUid: "dataUid1",
-            imageSources: ["source1", "source2", "source3", "newId1"], // new id added here
-            recordSources: ["source1", "source2", "source3"],
-            mapPointColour: "12345",
-            supportingOpuses: [],
-            keybaseProjectId: "",
-            keybaseKeyId: ""
-        };
-
-        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
-    });
-
-    it("should validate that image sources have an associated data resource object", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-        scope.opusCtrl.opusId = OPUS_ID;
-        scope.$apply();
-
-        scope.opusCtrl.newImageSources = [{dataResource: {}}];
-
-        scope.opusCtrl.saveImageSources(form);
-
-        expect(profileService.saveOpus).not.toHaveBeenCalledWith();
-        expect(messageService.alert).toHaveBeenCalledWith("1 image source is not valid. You must select items from the list.");
-    });
-
-    it("should save the opus if no new image sources have been added but existing image sources have been removed", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-        scope.opusCtrl.opusId = OPUS_ID;
-        scope.$apply();
-
-        scope.opusCtrl.removeImageSource(1, 'existing', form);
-        scope.opusCtrl.saveImageSources(form);
-
-        var expectedOpus = {
-            title: "OpusName",
-            dataResourceUid: "dataUid1",
-            mapPointColour: "12345",
-            imageSources: ["source1", "source3"], // existing source (index 1) removed
-            recordSources: ["source1", "source2", "source3"],
-            supportingOpuses: [],
-            keybaseProjectId: "",
-            keybaseKeyId: ""
-        };
-
-        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
-    });
-
-    it("should merge newRecordSources with the existing record sources when saveRecordSources is called", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-        scope.opusCtrl.opusId = OPUS_ID;
-
-        scope.$apply();
-        scope.opusCtrl.newRecordSources = [{dataResource: {id: "newId1"}}];
-
-        scope.opusCtrl.saveRecordSources(form);
-
-        var expectedOpus = {
-            title: "OpusName",
-            dataResourceUid: "dataUid1",
-            imageSources: ["source1", "source2", "source3"],
-            recordSources: ["source1", "source2", "source3", "newId1"], // new id added here
-            mapPointColour: "12345",
-            supportingOpuses: [],
-            keybaseProjectId: "",
-            keybaseKeyId: ""
-        };
-
-        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
-    });
-
-    it("should validate that record sources have an associated data resource object", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-        scope.opusCtrl.opusId = OPUS_ID;
-        scope.$apply();
-
-        scope.opusCtrl.newRecordSources = [{dataResource: {}}];
-
-        scope.opusCtrl.saveRecordSources(form);
-
-        expect(profileService.saveOpus).not.toHaveBeenCalledWith();
-        expect(messageService.alert).toHaveBeenCalledWith("1 record source is not valid. You must select items from the list.");
-    });
-
-    it("should save the opus if no new record sources have been added but existing record sources have been removed", function () {
-        scope.opusCtrl.opus = JSON.parse(getOpusResponse);
-        scope.opusCtrl.opusId = OPUS_ID;
-        scope.$apply();
-
-        scope.opusCtrl.removeRecordSource(1, 'existing', form);
-        scope.opusCtrl.saveRecordSources(form);
-
-        var expectedOpus = {
-            title: "OpusName",
-            dataResourceUid: "dataUid1",
-            mapPointColour: "12345",
-            imageSources: ["source1", "source2", "source3"],
-            recordSources: ["source1", "source3"], // existing source (index 1) removed
-            supportingOpuses: [],
-            keybaseProjectId: "",
-            keybaseKeyId: ""
-        };
-
-        expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
     it("should merge newSupportingOpuses with the existing supporting opuses when saveSupportingOpus is called", function () {
@@ -526,7 +321,11 @@ describe("OpusController tests", function () {
     });
 
     it("should merge newApprovedLists with the existing approvedLists when saveApprovedLists is called", function () {
-        scope.opusCtrl.opus = {title: "OpusName", approvedLists: ["list1", "list2", "list3"]};
+        scope.opusCtrl.opus = {
+            title: "OpusName",
+            approvedLists: ["list1", "list2", "list3"],
+            dataResourceConfig: {recordSources: [], imageSources: []}
+        };
         scope.opusCtrl.newApprovedLists = [{list: {dataResourceUid: "list4"}}, {list: {dataResourceUid: "list5"}}, {list: {dataResourceUid: "list6"}}];
         scope.opusCtrl.opusId = OPUS_ID;
 
@@ -536,7 +335,8 @@ describe("OpusController tests", function () {
             title: "OpusName",
             approvedLists: ["list1", "list2", "list3", "list4", "list5", "list6"],
             keybaseProjectId: "",
-            keybaseKeyId: ""
+            keybaseKeyId: "",
+            dataResourceConfig: {recordSources: [], imageSources: []}
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -554,7 +354,7 @@ describe("OpusController tests", function () {
     });
 
     it("should save the opus if no new approved lists have been added but existing ones have been removed", function () {
-        scope.opusCtrl.opus = {title: "OpusName", approvedLists: ["list1", "list2", "list3"]};
+        scope.opusCtrl.opus = {title: "OpusName", approvedLists: ["list1", "list2", "list3"], dataResourceConfig: {recordSources: [], imageSources: []}};
         scope.opusCtrl.opusId = OPUS_ID;
 
         scope.opusCtrl.removeApprovedList(1, 'existing', form);
@@ -564,15 +364,15 @@ describe("OpusController tests", function () {
             title: "OpusName",
             approvedLists: ["list1", "list3"],
             keybaseProjectId: "",
-            keybaseKeyId: ""
+            keybaseKeyId: "",
+            dataResourceConfig: {recordSources: [], imageSources: []}
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
     });
 
-    //
     it("should merge newFeatureLists with the existing featureLists when saveFeatureLists is called", function () {
-        scope.opusCtrl.opus = {title: "OpusName", featureLists: []};
+        scope.opusCtrl.opus = {title: "OpusName", featureLists: [], dataResourceConfig: {recordSources: [], imageSources: []}};
         scope.opusCtrl.newFeatureLists = [{list: {dataResourceUid: "list4"}}];
         scope.opusCtrl.opusId = OPUS_ID;
 
@@ -582,7 +382,8 @@ describe("OpusController tests", function () {
             title: "OpusName",
             featureLists: ["list4"],
             keybaseProjectId: "",
-            keybaseKeyId: ""
+            keybaseKeyId: "",
+            dataResourceConfig: {recordSources: [], imageSources: []}
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -600,7 +401,7 @@ describe("OpusController tests", function () {
     });
 
     it("should save the opus if no new bio status lists have been added but existing ones have been removed", function () {
-        scope.opusCtrl.opus = {title: "OpusName", featureLists: ["list1"]};
+        scope.opusCtrl.opus = {title: "OpusName", featureLists: ["list1"], dataResourceConfig: {recordSources: [], imageSources: []}};
         scope.opusCtrl.opusId = OPUS_ID;
 
         scope.opusCtrl.removeFeatureList(0, 'existing', form);
@@ -610,7 +411,8 @@ describe("OpusController tests", function () {
             title: "OpusName",
             featureLists: [],
             keybaseProjectId: "",
-            keybaseKeyId: ""
+            keybaseKeyId: "",
+            dataResourceConfig: {recordSources: [], imageSources: []}
         };
 
         expect(profileService.saveOpus).toHaveBeenCalledWith(OPUS_ID, expectedOpus);
@@ -648,7 +450,7 @@ describe("OpusController tests", function () {
 
     it("should only check for duplicate short names when saving the opus if the short name has changed", function () {
         scope.opusCtrl.initialShortName = "oldShortName";
-        scope.opusCtrl.opus = {shortName: "oldShortName"};
+        scope.opusCtrl.opus = {shortName: "oldShortName", dataResourceConfig: {recordSources: [], imageSources: []}};
 
         scope.opusCtrl.saveOpus(form);
 
@@ -668,7 +470,7 @@ describe("OpusController tests", function () {
 
     it("should save the opus if there are no other opuses with the same shortName when saving the opus", function () {
         scope.opusCtrl.initialShortName = "oldShortName";
-        scope.opusCtrl.opus = {shortName: "newShortName"};
+        scope.opusCtrl.opus = {shortName: "newShortName", dataResourceConfig: {recordSources: [], imageSources: []}};
 
         opusDefer.reject({status: 404});
         scope.opusCtrl.saveOpus(form);
@@ -678,7 +480,7 @@ describe("OpusController tests", function () {
     });
 
     it("should redirect to the update opus page after creating a new opus", function () {
-        scope.opusCtrl.opus = {};
+        scope.opusCtrl.opus = {dataResourceConfig: {recordSources: [], imageSources: []}};
 
         var newUuid = "123456";
         saveOpusDefer.resolve({uuid: newUuid});
@@ -690,7 +492,7 @@ describe("OpusController tests", function () {
     });
 
     it("should stay on the same page after updating an exiting new opus", function () {
-        scope.opusCtrl.opus = {uuid: "123456"};
+        scope.opusCtrl.opus = {uuid: "123456", dataResourceConfig: {recordSources: [], imageSources: []}};
 
         saveOpusDefer.resolve({uuid: "123456"});
 
@@ -698,5 +500,164 @@ describe("OpusController tests", function () {
         scope.$apply();
 
         expect(mockUtil.redirect).not.toHaveBeenCalled();
-    })
+    });
+
+    it("should populate the image source list on the opus from the list of selected sources, when using the HUBS option",function() {
+        scope.opusCtrl.opusId = "123456";
+        scope.opusCtrl.opus = {uuid: "123456", dataResourceConfig: {recordSources: [], imageSources: [], imageResourceOption: "HUBS"}};
+
+        scope.opusCtrl.imageHubMultiSelectOptions = {
+            selectedItems: [{"name": "hub1", "id": "dh1"}, {"name": "hub2", "id": "dh2"}]
+        };
+
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        var expectedOpus = {
+            uuid: "123456", keybaseProjectId: '', keybaseKeyId: '',
+            dataResourceConfig: {recordSources: [], imageSources: ["dh1", "dh2"], imageResourceOption: 'HUBS'}
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith("123456", expectedOpus);
+    });
+
+    it("should populate the image source list on the opus from the list of selected sources, when using the RESOURCES option",function() {
+        scope.opusCtrl.opusId = "123456";
+        scope.opusCtrl.opus = {uuid: "123456", dataResourceConfig: {recordSources: [], imageSources: [], imageResourceOption: "RESOURCES"}};
+
+        scope.opusCtrl.imageResourceMultiSelectOptions = {
+            selectedItems: [{"name": "resource1", "id": "dr1"}, {"name": "resource2", "id": "dr2"}]
+        };
+
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        var expectedOpus = {
+            uuid: "123456", keybaseProjectId: '', keybaseKeyId: '',
+            dataResourceConfig: {recordSources: [], imageSources: ["dr1", "dr2"], imageResourceOption: 'RESOURCES'}
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith("123456", expectedOpus);
+    });
+
+    it("should populate the record source list on the opus from the list of selected sources, when using the HUBS option",function() {
+        scope.opusCtrl.opusId = "123456";
+        scope.opusCtrl.opus = {uuid: "123456", dataResourceConfig: {imageSources: [], recordSources: [], recordResourceOption: "HUBS"}};
+
+        scope.opusCtrl.recordHubMultiSelectOptions = {
+            selectedItems: [{"name": "hub1", "id": "dh1"}, {"name": "hub2", "id": "dh2"}]
+        };
+
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        var expectedOpus = {
+            uuid: "123456", keybaseProjectId: '', keybaseKeyId: '',
+            dataResourceConfig: {imageSources: [], recordSources: ["dh1", "dh2"], recordResourceOption: 'HUBS'}
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith("123456", expectedOpus);
+    });
+
+    it("should populate the record source list on the opus from the list of selected sources, when using the RESOURCES option",function() {
+        scope.opusCtrl.opusId = "123456";
+        scope.opusCtrl.opus = {uuid: "123456", dataResourceConfig: {imageSources: [], recordSources: [], recordResourceOption: "RESOURCES"}};
+
+        scope.opusCtrl.recordResourceMultiSelectOptions = {
+            selectedItems: [{"name": "resource1", "id": "dr1"}, {"name": "resource2", "id": "dr2"}]
+        };
+
+        scope.opusCtrl.saveOpus(form);
+        scope.$apply();
+
+        var expectedOpus = {
+            uuid: "123456", keybaseProjectId: '', keybaseKeyId: '',
+            dataResourceConfig: {imageSources: [], recordSources: ["dr1", "dr2"], recordResourceOption: 'RESOURCES'}
+        };
+
+        expect(profileService.saveOpus).toHaveBeenCalledWith("123456", expectedOpus);
+    });
+
+    it("should reset the record data source config to the original values from the opus, HUBS option", function() {
+        scope.RecordForm = form;
+        hubsDefer.resolve(JSON.parse(listHubsResponse));
+
+        scope.opusCtrl.originalRecordResourceOption = "HUBS";
+        scope.opusCtrl.opus = {uuid: "123456", dataResourceConfig: {imageSources: [], recordSources: ["dh1", "dh2"], recordResourceOption: "HUBS"}};
+
+        scope.opusCtrl.recordHubMultiSelectOptions = {
+            selectedItems: [{name: "hub1", id: "dh1"}], // only 1 selected: simulates the user removing an item before switching types
+            items: [{name: "hub2", id: "dh2"}, {name: "hub3", id: "dh3"}, {name: "hub4", id: "dh4"}]
+        };
+
+        // simulate modifying the record config by selecting the ALL option
+        scope.opusCtrl.opus.dataResourceConfig.recordResourceOption = "ALL";
+        scope.opusCtrl.resetRecordSources();
+        scope.$apply();
+
+        expect(scope.opusCtrl.opus.dataResourceConfig.recordResourceOption).toBe("HUBS");
+        expect(scope.opusCtrl.recordHubMultiSelectOptions.selectedItems).toEqual([{name: "hub1", id: "dh1"}, {name: "hub2", id: "dh2"}]);
+    });
+
+    it("should reset the record data source config to the original values from the opus, RESOURCES option", function() {
+        scope.RecordForm = form;
+        resourcesDefer.resolve(JSON.parse(listResourcesResponse));
+
+        scope.opusCtrl.originalRecordResourceOption = "RESOURCES";
+        scope.opusCtrl.opus = {uuid: "123456", dataResourceConfig: {imageSources: [], recordSources: ["dr1", "dr2"], recordResourceOption: "RESOURCES"}};
+
+        scope.opusCtrl.recordResourceMultiSelectOptions = {
+            selectedItems: [{name: "resource1", id: "dr1"}, {name: "resource2", id: "dr2"}],
+            items: [{name: "resource3", id: "dr3"}, {name: "resource4", id: "dr4"}]
+        };
+
+        // simulate modifying the record config by selecting the ALL option
+        scope.opusCtrl.opus.dataResourceConfig.recordResourceOption = "ALL";
+        scope.opusCtrl.resetRecordSources();
+        scope.$apply();
+
+        expect(scope.opusCtrl.opus.dataResourceConfig.recordResourceOption).toBe("RESOURCES");
+        expect(scope.opusCtrl.recordResourceMultiSelectOptions.selectedItems).toEqual([{name: "resource1", id: "dr1"}, {name: "resource2", id: "dr2"}]);
+    });
+    it("should reset the image data source config to the original values from the opus, HUBS option", function() {
+        scope.ImageForm = form;
+        hubsDefer.resolve(JSON.parse(listHubsResponse));
+
+        scope.opusCtrl.originalImageResourceOption = "HUBS";
+        scope.opusCtrl.opus = {uuid: "123456", dataResourceConfig: {recordSources: [], imageSources: ["dh1", "dh2"], imageResourceOption: "HUBS"}};
+
+        scope.opusCtrl.imageHubMultiSelectOptions = {
+            selectedItems: [{name: "hub1", id: "dh1"}], // only 1 selected: simulates the user removing an item before switching types
+            items: [{name: "hub2", id: "dh2"}, {name: "hub3", id: "dh3"}, {name: "hub4", id: "dh4"}]
+        };
+
+        // simulate modifying the image config by selecting the ALL option
+        scope.opusCtrl.opus.dataResourceConfig.imageResourceOption = "ALL";
+        scope.opusCtrl.resetImageSources();
+        scope.$apply();
+
+        expect(scope.opusCtrl.opus.dataResourceConfig.imageResourceOption).toBe("HUBS");
+        expect(scope.opusCtrl.imageHubMultiSelectOptions.selectedItems).toEqual([{name: "hub1", id: "dh1"}, {name: "hub2", id: "dh2"}]);
+    });
+
+    it("should reset the image data source config to the original values from the opus, RESOURCES option", function() {
+        scope.ImageForm = form;
+        resourcesDefer.resolve(JSON.parse(listResourcesResponse));
+
+        scope.opusCtrl.originalImageResourceOption = "RESOURCES";
+        scope.opusCtrl.opus = {uuid: "123456", dataResourceConfig: {recordSources: [], imageSources: ["dr1", "dr2"], imageResourceOption: "RESOURCES"}};
+
+        scope.opusCtrl.imageResourceMultiSelectOptions = {
+            selectedItems: [{name: "resource1", id: "dr1"}, {name: "resource2", id: "dr2"}],
+            items: [{name: "resource3", id: "dr3"}, {name: "resource4", id: "dr4"}]
+        };
+
+        // simulate modifying the image config by selecting the ALL option
+        scope.opusCtrl.opus.dataResourceConfig.imageResourceOption = "ALL";
+        scope.opusCtrl.resetImageSources();
+        scope.$apply();
+
+        expect(scope.opusCtrl.opus.dataResourceConfig.imageResourceOption).toBe("RESOURCES");
+        expect(scope.opusCtrl.imageResourceMultiSelectOptions.selectedItems).toEqual([{name: "resource1", id: "dr1"}, {name: "resource2", id: "dr2"}]);
+    });
 });

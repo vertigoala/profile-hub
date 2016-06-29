@@ -2,12 +2,13 @@
      ng-cloak id="browse_lists"
      ng-show="pubCtrl.publications.length > 0 || !pubCtrl.readonly()"
      ng-form="PubForm">
-    <a name="{{pubCtrl.readonly() ? 'view_' : 'edit_'}}publications"></a>
+    <navigation-anchor anchor-name="{{pubCtrl.readonly() ? 'view_' : 'edit_'}}publications" title="Versions" condition="pubCtrl.publications.length > 0 || !pubCtrl.readonly()"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Versions</h4>
+                <p:help help-id="profile.edit.versions" show="${edit}"/>
             </div>
         </div>
     </div>

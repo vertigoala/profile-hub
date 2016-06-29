@@ -1,7 +1,7 @@
 /**
  * Species Lists controller
  */
-profileEditor.controller('ListsEditor', function (profileService, navService, util, messageService, $filter) {
+profileEditor.controller('ListsEditor', function (profileService, util, messageService, $filter) {
     var self = this;
 
     self.lists = [];
@@ -34,10 +34,6 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
         var promise = profileService.getSpeciesProfile(self.opusId, self.profileId, self.profile.guid);
         promise.then(function (data) {
             self.conservationStatuses = orderBy(data.conservationStatuses, "region");
-
-            if (self.conservationStatuses && self.conservationStatuses.length > 0) {
-                navService.add("Conservation Status", "conservationStatus");
-            }
         });
     };
 
@@ -50,10 +46,6 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
             });
 
             self.featureLists = data;
-
-            if (self.hasFeatures) {
-                navService.add(self.opus.featureListSectionName || 'Feature List', "features");
-            }
         });
     };
 
@@ -103,10 +95,6 @@ profileEditor.controller('ListsEditor', function (profileService, navService, ut
                     });
 
                     self.lists = orderBy(self.lists, 'listName');
-
-                    if (self.lists.length > 0) {
-                        navService.add("Conservation & Sensitivity Lists", "lists");
-                    }
 
                 },
                 function () {

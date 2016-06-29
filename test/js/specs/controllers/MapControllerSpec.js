@@ -20,7 +20,7 @@ describe("MapController tests", function () {
     var http;
     var html = "<div id='occurrenceMap' data-leaflet-img='pathToLeafletImages'/>";
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "links":[{},{}]}, "opus": {"imageSources": ["source1", "source2"], "mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1"}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "occurrenceQuery":"q=lsid%3Aguid1", "links":[{},{}]}, "opus": {"imageSources": ["source1", "source2"],  "mapConfig": {"mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1"}}}';
 
     beforeAll(function () {
         console.log("****** Map Controller Tests ******");
@@ -32,8 +32,11 @@ describe("MapController tests", function () {
     beforeEach(module("profileEditor"));
 
     beforeEach(inject(function ($controller, $rootScope, _profileService_, $q, _messageService_, _$httpBackend_) {
-        $('#mapId').remove();
-        $(document.body).html(html);
+        var mapElem = jQuery('#occurrenceMap');
+        if (_.isUndefined(mapElem)) {
+            mapElem.remove();
+        }
+        jQuery(document.body).html(html);
 
         scope = $rootScope.$new();
         profileService = _profileService_;
@@ -49,7 +52,7 @@ describe("MapController tests", function () {
             $scope: scope,
             profileService: profileService,
             util: mockUtil,
-            config: {map: {mapId: "123", token: "123"}},
+            config: {map: {mapId: "123", token: "123"}, biocacheServiceUrl: "http://biocacheWmsUrl"},
             messageService: messageService
         });
 
@@ -59,7 +62,7 @@ describe("MapController tests", function () {
     it("should set the profile attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init();
         scope.$apply();
 
         expect(scope.mapCtrl.profile).toBeDefined();
@@ -68,26 +71,16 @@ describe("MapController tests", function () {
     it("should set the opus attribute of the current scope when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init();
         scope.$apply();
 
         expect(scope.mapCtrl.opus).toBeDefined();
     });
 
-    it("should set the biocache urls to the provided values when init is called", function () {
-        profileDefer.resolve(JSON.parse(getProfileResponse));
-
-        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
-        scope.$apply();
-
-        expect(scope.mapCtrl.biocacheInfoUrl).toBe("biocacheInfoUrl");
-        expect(scope.mapCtrl.biocacheWMSUrl).toBe("biocacheWmsUrl");
-    });
-
     it("should specify the overlay layer for the profile when init is called", function () {
         profileDefer.resolve(JSON.parse(getProfileResponse));
 
-        scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
+        scope.mapCtrl.init();
         scope.$apply();
 
         var layers = [];
@@ -95,38 +88,14 @@ describe("MapController tests", function () {
 
         expect(layers.length).toBe(3); // 2 base layers plus the occurrence layer
 
-        expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?q=lsid%3Aguid1");
+        expect(layers[2]._url).toBe("http://biocacheWmsUrl/ws/mapping/wms/reflect?q=lsid%3Aguid1");
         expect(layers[2].options.attribution).toBe("mapAttr1");
-    });
-
-    it("should add the rank exclusion clause to the wms url when there is one excluded rank", function() {
-        profileDefer.resolve({profile: {guid: "guid1"}, opus: {"mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1", excludeRanksFromMap: ["cultivar"]}});
-
-        scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
-        scope.$apply();
-
-        var layers = [];
-        scope.mapCtrl.map.getMapImpl().eachLayer(function (layer) { layers.push(layer) });
-
-        expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar)&q=lsid%3Aguid1");
-    });
-
-    it("should add the rank exclusion clause to the wms url when there are multiple excluded ranks", function() {
-        profileDefer.resolve({profile: {guid: "guid1"}, opus: {"mapDefaultLatitude": "123", "mapDefaultLongitude": "987", "mapZoom": "2", "mapAttribution":"mapAttr1", excludeRanksFromMap: ["cultivar","species"]}});
-        scope.mapCtrl.init("http://biocacheWmsUrl/bla?", "biocacheInfoUrl");
-
-        scope.$apply();
-
-        var layers = [];
-        scope.mapCtrl.map.getMapImpl().eachLayer(function (layer) { layers.push(layer) });
-
-        expect(layers[2]._url).toBe("http://biocacheWmsUrl/bla?fq=-(rank:cultivar OR rank:species)&q=lsid%3Aguid1");
     });
 
     it("should raise an alert message when the call to getProfile fails", function () {
         profileDefer.reject();
 
-        scope.mapCtrl.init("biocacheWmsUrl", "biocacheInfoUrl");
+        scope.mapCtrl.init();
         scope.$apply();
 
         expect(messageService.alert).toHaveBeenCalledWith("An error occurred while retrieving the map information.");

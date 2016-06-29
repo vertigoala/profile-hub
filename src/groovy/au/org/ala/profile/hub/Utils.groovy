@@ -1,7 +1,17 @@
 package au.org.ala.profile.hub
 
+import org.apache.http.HttpStatus
+import org.apache.tika.config.TikaConfig
+import org.apache.tika.mime.MimeTypeException
+
+import java.nio.file.Files
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 class Utils {
     static final String UUID_REGEX_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
+    /** Regex used to parse content-disposition headers */
+    private static final Pattern CONTENT_DISPOSITION_PATTERN = Pattern.compile(/filename\s*=\s*"([^"]*)"/)
 
     static String getCCLicenceIcon(String ccLicence) {
         String icon
@@ -27,19 +37,41 @@ class Utils {
     }
 
     static String getContentType(File file) {
-        String extension = file.getName().substring(file.getName().lastIndexOf("."))
-
-        List images = ["jpg", "jpeg", "gif", "tiff", "png", "bmp"]
-        if (images.contains(extension)) {
-            "image/*"
-        } else if (extension == "pdf") {
-            "application/pdf"
-        } else {
-            ""
-        }
+        return Files.probeContentType(file.toPath()) ?: 'application/octet-stream'
     }
 
     static String getExtension(String fileName) {
-        fileName ? fileName.substring(fileName.lastIndexOf(".")) : ""
+        if (!fileName) {
+            return ''
+        }
+        final idx = fileName.lastIndexOf(".")
+        return idx == -1 ? '' : fileName.substring(idx)
+    }
+
+    static String getExtensionFromContentType(String contentType) {
+        try {
+            TikaConfig.defaultConfig.mimeRepository.forName(contentType).extension
+        } catch (MimeTypeException e) {
+            ''
+        }
+    }
+
+    static String enc(String value) {
+        value ? URLEncoder.encode(value, "UTF-8") : ""
+    }
+
+    static String extractFilenameFromContentDisposition(String contentDisposition) {
+        try {
+            Matcher m = CONTENT_DISPOSITION_PATTERN.matcher(contentDisposition)
+            if (m.find()) {
+                return m.group(1)
+            }
+        } catch (IllegalStateException e) {
+        }
+        return ''
+    }
+
+    static boolean isHttpSuccess(int statusCode) {
+        HttpStatus.SC_OK <= statusCode && 299 >= statusCode
     }
 }

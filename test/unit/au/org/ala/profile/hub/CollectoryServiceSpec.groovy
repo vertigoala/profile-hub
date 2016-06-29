@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.ws.service.WebService
 import grails.converters.JSON
 import grails.test.mixin.TestFor
 import spock.lang.Specification

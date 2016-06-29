@@ -1,6 +1,6 @@
 <%@ page import="grails.util.Environment" %>
 <!DOCTYPE html>
-<html lang="en" ng-app="profileEditor">
+<html lang="en">
 <head>
     <base href="${request.contextPath}/">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -15,7 +15,7 @@
     <link href="http://www.ala.org.au/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon"
           type="image/x-icon"/>
     <title><g:layoutTitle/></title>
-    <r:require modules="profiles"/>
+    <r:require modules="profiles, ala_admin"/>
     <r:layoutResources/>
     <g:layoutHead/>
     <style type="text/css">
@@ -40,23 +40,9 @@
     %{--End Google Analytics--}%
 </head>
 
-<body id="${pageProperty(name: 'body.id')}" onload="${pageProperty(name: 'body.onload')}">
+<body id="${pageProperty(name: 'body.id')}" onload="${pageProperty(name: 'body.onload')}" ng-app="profileEditor">
 
-<g:if test="${grailsApplication.config.deployment_env && grailsApplication.config.deployment_env?.toLowerCase() != "prod" && grailsApplication.config.deployment_env?.toLowerCase() != "production"}">
-    <div class="padding-top-1" ng-cloak>
-        <alert type="warning admin-message">
-            <span class="admin-message-text">This is a ${grailsApplication.config.deployment_env.toUpperCase()} site.</span>
-        </alert>
-    </div>
-</g:if>
-
-<g:if test="${application.getAttribute("alaAdminMessage")}">
-    <div class="padding-top-1" ng-cloak>
-        <alert type="danger admin-message">
-            <span class="admin-message-text">${application.getAttribute("alaAdminMessage")}</span> &nbsp;&nbsp;(${application.getAttribute("alaAdminMessageTimestamp")})
-        </alert>
-    </div>
-</g:if>
+<ala:systemMessage/>
 
 <div ng-controller="CustomAlertController" id="generalAlert">
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" ng-cloak>{{alert.msg}}</alert>
@@ -99,6 +85,7 @@
                     <li><delegated-search></delegated-search></li>
                     <li><a href="${request.contextPath}/">Profile collections</a></li>
                     <g:render template="/layouts/login"/>
+                    <li><p:help help-id="main"/></li>
                 </ul>
             </small>
         </div>
@@ -198,7 +185,7 @@
         keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}',
         imageServiceUrl: '${grailsApplication.config.images.service.url}',
         bieServiceUrl: '${grailsApplication.config.bie.base.url}',
-        biocacheServiceUrl: '${grailsApplication.config.biocache.base.url}',
+        biocacheServiceUrl: '${opus && opus.usePrivateRecordData ? "${request.contextPath}${request.contextPath.endsWith("/") ? '' : '/'}opus/${opus.uuid}" : grailsApplication.config.biocache.base.url}',
         biocacheRecordUrl: '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}',
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
         isOpusReviewer: '${params.isOpusReviewer}',
@@ -209,12 +196,9 @@
         map: {mapId: '${grailsApplication.config.map.id}',
               accessKey: '${grailsApplication.config.map.access.key}'},
         mainCssFile: '${resource(dir: "/css", file: "profiles.css")}',
-        bootstrapCssFile: '${resource(dir: "/thirdparty/bootstrap/css", file: "bootstrap3.3.4.min.css")}'
+        bootstrapCssFile: '${resource(dir: "/thirdparty/bootstrap/css", file: "bootstrap3.3.4.min.css")}',
+        imageLoadErrorUrl: '${resource(dir: "/images", file: "not-available.png")}'
      });
-
-
-
-
 </r:script>
 
 <!-- JS resources-->
@@ -222,12 +206,14 @@
 
 </body>
 <script type='text/javascript'>
-    (function (d, t) {
-        var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
-        bh.type = 'text/javascript';
-        bh.src = '//www.bugherd.com/sidebarv2.js?apikey=kqamg3xuhww6j6zrpthdmw';
-        s.parentNode.insertBefore(bh, s);
-    })(document, 'script');
+    <g:if test="${!excludeBugherd && !grailsApplication.config.bugherd.disabled}">
+        (function (d, t) {
+            var bh = d.createElement(t), s = d.getElementsByTagName(t)[0];
+            bh.type = 'text/javascript';
+            bh.src = '//www.bugherd.com/sidebarv2.js?apikey=kqamg3xuhww6j6zrpthdmw';
+            s.parentNode.insertBefore(bh, s);
+        })(document, 'script');
+    </g:if>
 
     // This unsaved changes code relies on AngularJS adding the ng-dirty flag to fields as they are modified.
     $(window).bind('beforeunload', function() {
@@ -236,7 +222,7 @@
         $(":not(form).ng-dirty").each(function (index, field) {
             var $field = $(field);
 
-            if (!$field.hasClass("ignore-save-warning") && !$field.is("div") && !$field.is("ul")) {
+            if (!$field.hasClass("ignore-save-warning") && (!$field.is("div") || ($field.is("div") && $field.hasClass("dirty-check-container"))) && !$field.is("ul") && !$field.closest(".dualmultiselect")) {
                 $field.addClass("show-dirty");
                 dirty = true;
             }

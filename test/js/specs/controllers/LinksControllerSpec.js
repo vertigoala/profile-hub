@@ -18,7 +18,7 @@ describe("LinksController tests", function () {
     var profileService;
     var profileDefer, saveLinksDefer;
 
-    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "links":[{},{}]}, "opus": {"imageSources": ["source1", "source2"]}}';
+    var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "links":[{},{}]}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
 
     beforeAll(function () {
         console.log("****** Links Controller Tests ******");

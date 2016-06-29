@@ -1,18 +1,20 @@
 package au.org.ala.profile.hub
 
-import static au.org.ala.profile.hub.Utils.*
 import au.org.ala.images.thumb.ImageThumbnailer
 import au.org.ala.images.thumb.ThumbDefinition
 import au.org.ala.images.tiling.ImageTiler
 import au.org.ala.images.tiling.ImageTilerConfig
+import au.org.ala.ws.service.WebService
 import org.apache.commons.io.FileUtils
-import org.springframework.web.multipart.MultipartFile
+import org.apache.http.entity.ContentType
 
 import javax.imageio.ImageIO
 import java.awt.*
 import java.awt.image.BufferedImage
 import java.util.List
 
+import static au.org.ala.profile.hub.Utils.getExtension
+import static au.org.ala.profile.hub.Utils.isHttpSuccess
 import static org.apache.http.HttpStatus.SC_OK
 
 /**
@@ -40,7 +42,27 @@ class ImageService {
     static final Integer THUMBNAIL_MAX_SIZE = 300
 
     private getMetadataFromAlaImageService(String imageId) {
-        webService.get("${grailsApplication.config.uploaded.images.url}/ws/image/${imageId}", false, true)
+        webService.get("${grailsApplication.config.images.service.url}/ws/image/${imageId}", [:], ContentType.APPLICATION_JSON, false, true)
+    }
+
+    String constructImageUrl(String contextPath, String opusId, String profileId, String imageId, String extension, String imageType, ImageUrlType urlType) {
+        String url =  "${contextPath}/opus/${opusId}/profile/${profileId}/image/"
+
+        switch (urlType) {
+            case ImageUrlType.FULL:
+                url += "${imageId}${extension}"
+                break
+            case ImageUrlType.THUMBNAIL:
+                url += "thumbnail/${imageId}${extension}"
+                break
+            case ImageUrlType.TILE:
+                url += "${imageId}/tile/{z}/{x}/{y}"
+                break
+        }
+
+        url += "?type=${imageType}"
+
+        url
     }
 
     /**
@@ -55,8 +77,8 @@ class ImageService {
 
         Map response = localImage ? profileService.getImageMetadata(imageId) : getMetadataFromAlaImageService(imageId)
 
-        if (response.statusCode == SC_OK) {
-            Map imageProperties = response.resp as Map
+        if (isHttpSuccess(response.statusCode as int)) {
+            Map<String, String> imageProperties = response.resp as Map
 
             if (localImage) {
                 String dir = imageProperties.type as ImageType == ImageType.PRIVATE ? "${grailsApplication.config.image.private.dir}" : "${grailsApplication.config.image.staging.dir}"
@@ -70,10 +92,10 @@ class ImageService {
 
                 if (file?.exists()) {
                     String tileLocation = buildFilePath(dir, imageProperties.opusId, imageProperties.profileId, imageId) + separator + imageId + '_tiles/'
-                    imageUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}${extension}?type=${imageProperties.type}"
-                    thumbnailUrl = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/thumbnail/${imageId}${extension}?type=${imageProperties.type}"
+                    imageUrl = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.FULL)
+                    thumbnailUrl = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.THUMBNAIL)
                     tileZoomLevels = new File(tileLocation)?.listFiles()?.size()
-                    tileUrlPattern = "${contextPath}/opus/${imageProperties.opusId}/profile/${imageProperties.profileId}/image/${imageId}/tile/{z}/{x}/{y}?type=${imageProperties.type}"
+                    tileUrlPattern = constructImageUrl(contextPath, imageProperties.opusId, imageProperties.profileId, imageId, extension, imageProperties.type, ImageUrlType.TILE)
 
                 } else {  //provide support for previously used file directory structure
                     file = getLocalImageFile(dir, imageProperties.profileId, imageId, extension)
@@ -129,29 +151,30 @@ class ImageService {
         new File(fileLocation + "/${imageId}_tiles/${zoom}/${x}/${y}.png")
     }
 
-    def uploadImage(String contextPath, String opusId, String profileId, String dataResourceId, Map metadata, MultipartFile file) {
-        def profile = profileService.getProfile(opusId, profileId, true)
+    def uploadImage(String contextPath, String opusId, String profileId, String dataResourceId, Map metadata, Transferrable file) {
+        Map profileAndOpus = profileService.getProfile(opusId, profileId, true)
 
-        metadata.scientificName = profile.profile.scientificName
+        metadata.scientificName = profileAndOpus.profile.scientificName
         metadata.contentType = file.contentType
 
         def response
 
         boolean imageIsStoredLocally
-        if (profile.profile.privateMode && !profile.opus.keepImagesPrivate) {
+
+        if (profileAndOpus.profile.privateMode && !profileAndOpus.opus.keepImagesPrivate) {
             // if the collection is public and the profile is in draft mode, then stage the image: it will be
             // uploaded to the biocache when the profile's draft is released
             try {
-                storeLocalImage(profile, metadata, file, "${grailsApplication.config.image.staging.dir}")
+                storeLocalImage(profileAndOpus.opus, profileAndOpus.profile, metadata, file, "${grailsApplication.config.image.staging.dir}")
             } catch (IOException exception) {
                 log.error("Error saving local staged image ", exception)
             }
             response = profileService.recordStagedImage(opusId, profileId, metadata)
             imageIsStoredLocally = true
-        } else if (profile.opus.keepImagesPrivate) {
+        } else if (profileAndOpus.opus.keepImagesPrivate) {
             // if the admin has elected not to publish images, then store the image in the local image dir
             try {
-                storeLocalImage(profile, metadata, file, "${grailsApplication.config.image.private.dir}")
+                storeLocalImage(profileAndOpus.opus, profileAndOpus.profile, metadata, file, "${grailsApplication.config.image.private.dir}")
             } catch (IOException exception) {
                 log.error("Error saving local private image ", exception)
             }
@@ -159,23 +182,23 @@ class ImageService {
             imageIsStoredLocally = true
         } else {
             // if the profile is not in draft mode, upload the image to the biocache immediately
-            response = biocacheService.uploadImage(opusId, profile.profile.uuid, dataResourceId, file, metadata)
+            response = biocacheService.uploadImage(opusId, profileAndOpus.profile.uuid, dataResourceId, file, metadata)
             metadata.imageId = response?.resp?.images ? response.resp.images[0] : null
             imageIsStoredLocally = false
         }
 
-        if (response?.statusCode == SC_OK) {
+        if (response && isHttpSuccess(response.statusCode as int)) {
             response.resp = getImageDetails(metadata.imageId, contextPath, imageIsStoredLocally)
         }
 
         response
     }
 
-    private static storeLocalImage(Map profile, Map metadata, MultipartFile file, String directory) throws IOException {
-        String extension = getExtension(file.originalFilename)
-        metadata.imageId = UUID.randomUUID().toString()
+    void storeLocalImage(Map opus, Map profile, Map metadata, Transferrable file, String directory) throws IOException {
+        String extension = file.fileExtension ?: metadata.extension
+        metadata.imageId = metadata.imageId ?: UUID.randomUUID().toString()
         metadata.action = "add"
-        String fileLocation = buildFilePath(directory, profile.opus.uuid, profile.profile.uuid, metadata.imageId)
+        String fileLocation = buildFilePath(directory, opus.uuid, profile.uuid, metadata.imageId)
         File localDir = new File(fileLocation)
         localDir.mkdirs()
 
@@ -205,8 +228,7 @@ class ImageService {
         imageThumbnailer.generateThumbnails(imageBytes, thumbnailDirectory, definitionList)
     }
 
-    private
-    static File getLocalImageFile(String directory, String collectionId, String profileId, String imageId, String extension) {
+    File getLocalImageFile(String directory, String collectionId, String profileId, String imageId, String extension) {
         new File("${directory}/$collectionId/${profileId}/${imageId}/${imageId}${extension}")
     }
 
@@ -245,34 +267,142 @@ class ImageService {
         deleted
     }
 
-    def retrieveImages(String opusId, String profileId, boolean latest, String imageSources, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
+    def retrieveImagesPaged(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, int pageSize, int startIndex) {
         Map response = [:]
+        List combinedImages = []
+        Integer numberOfLocalImages = 0
+        Integer numberOfPublishedImages = 0
+        Map model = profileService.getProfile(opusId, profileId, latest)
+        Map profile = model.profile
+        Map opus = model.opus
+        Map numberOfPublishedImagesMap = biocacheService.imageCount(searchIdentifier, opus)
+        if (numberOfPublishedImagesMap && numberOfPublishedImagesMap?.resp && numberOfPublishedImagesMap?.resp?.totalRecords > 0) {
+            numberOfPublishedImages = numberOfPublishedImagesMap?.resp?.totalRecords
+        }
 
+        //1.PRIVATE IMAGES
+        // The collection may now, or may have been at some point, private, so look for any private images that may exist.
+        // When a collection is changed from private to public, existing private images are NOT published automatically.
+        // A public collection can also have private images depending on the settings of "Image Visibility" in the Image Options section of the collection admin page
+        if (profile.privateImages) {
+            if (profile.privateImages?.size() > 0) {
+                numberOfLocalImages = profile.privateImages.size()
+            }
+            List privateImagesPaged = pageImages(profile.privateImages, startIndex, pageSize)
+            if (privateImagesPaged && privateImagesPaged.size() > 0) {
+                combinedImages.addAll(convertLocalImages(privateImagesPaged, opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
+            }
+        }
+
+        //2.STAGED IMAGES
+        //we want to display the images in a specific order - private, staged, published
+        if (profile.privateMode && profile.stagedImages) {
+            numberOfLocalImages += profile.stagedImages.size()
+            if (combinedImages.size() < pageSize && profile.stagedImages.size() > 0) {
+                Integer newPageSize = pageSize - combinedImages.size() //partial page of private images
+                Integer newStartIndex = startIndex - profile.privateImages.size() + combinedImages.size()
+                List stagedImagesPaged = pageImages(profile.stagedImages, newStartIndex, newPageSize)
+                if (stagedImagesPaged && stagedImagesPaged.size() > 0) {
+                    combinedImages.addAll(convertLocalImages(stagedImagesPaged, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
+                }
+            }
+
+        }
+
+        //3.PUBLISHED IMAGES
+        if (combinedImages.size() < Integer.valueOf(pageSize) && numberOfPublishedImagesMap && numberOfPublishedImagesMap?.size() > 0) {
+            Integer newPageSize = Integer.valueOf(pageSize) - combinedImages.size() //partial page of private images
+            Integer newStartIndex = Integer.valueOf(startIndex) - numberOfLocalImages + combinedImages.size()
+            Map publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus, newPageSize, newStartIndex)
+
+            if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
+                List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
+                if (publishedImageList && publishedImageList.size() > 0) {
+                    combinedImages.addAll(publishedImageList)
+                }
+            }
+        }
+        response.statusCode = SC_OK
+        //we don't have support for JSON objects or serialization so this is a workaround
+        response.resp = [:]
+        response.resp.images = combinedImages
+        response.resp.count = numberOfPublishedImages + numberOfLocalImages
+
+        response
+    }
+
+    List pageImages(List privateImages, Integer offset, Integer pageSize) {
+        List imagesPage = []
+        Integer totalNumberOfImages = privateImages.size()
+        if (offset < totalNumberOfImages) {
+            Integer start = offset
+            if (start >= totalNumberOfImages) {
+                start = totalNumberOfImages - 1
+            }
+            Integer end = pageSize + offset - 1
+            if (end >= totalNumberOfImages) {
+                end = totalNumberOfImages - 1
+            }
+            imagesPage = privateImages[start..end]
+        }
+        imagesPage
+    }
+
+    def retrieveImages(Map opus, Map profile, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
+        Map response = [:]
+        List allImages = []
+
+        def publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus)
+        if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
+            List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
+            allImages.addAll(publishedImageList)
+        }
+
+        //we want to display the images in a specific order - staged, private, published
+        if (profile.privateMode && profile.stagedImages) {
+            allImages.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
+        }
+
+        // The collection may now, or may have been at some point, private, so look for any private images that may exist.
+        // When a collection is changed from private to public, existing private images are NOT published automatically.
+        if (profile.privateImages) {
+            allImages.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
+        }
+
+        response.statusCode = SC_OK
+        response.resp = allImages
+
+        response
+    }
+
+    def retrieveImages(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true) {
         def model = profileService.getProfile(opusId, profileId, latest)
         def profile = model.profile
         def opus = model.opus
 
-        def publishedImages = biocacheService.retrieveImages(searchIdentifier, imageSources)
+        retrieveImages(opus, profile, searchIdentifier, useInternalPaths, readonlyView)
+    }
 
+    List prepareImagesForDisplay(def retrievedImages, def opus, def profile, boolean readonlyView) {
         List images = []
 
-        if (publishedImages && publishedImages.statusCode == SC_OK) {
-            List biocacheImages = publishedImages.resp?.occurrences?.findResults { biocacheImage ->
-                boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, biocacheImage.image)
+        if (retrievedImages && isHttpSuccess(retrievedImages.statusCode as int)) {
+            List imagesAsMaps = retrievedImages.resp?.occurrences?.findResults { imageData ->
+                boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageData.image)
 
                 Map image = [
-                        imageId         : biocacheImage.image,
-                        occurrenceId    : biocacheImage.uuid,
-                        largeImageUrl   : biocacheImage.largeImageUrl,
-                        thumbnailUrl    : biocacheImage.thumbnailUrl,
-                        dataResourceName: biocacheImage.dataResourceName,
+                        imageId         : imageData.image,
+                        occurrenceId    : imageData.uuid,
+                        largeImageUrl   : imageData.largeImageUrl,
+                        thumbnailUrl    : imageData.thumbnailUrl,
+                        dataResourceName: imageData.dataResourceName,
                         excluded        : excluded,
                         displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
                         caption         : profile.imageSettings.find {
-                            it.imageId == biocacheImage.image
+                            it.imageId == imageData.image
                         }?.caption ?: '',
-                        primary         : biocacheImage.image == profile.primaryImage,
-                        metadata        : biocacheImage.imageMetadata && !biocacheImage.imageMetadata.isEmpty() ? biocacheImage.imageMetadata[0] : [:],
+                        primary         : imageData.image == profile.primaryImage,
+                        metadata        : imageData.imageMetadata && !imageData.imageMetadata.isEmpty() ? imageData.imageMetadata[0] : [:],
                         type            : ImageType.OPEN
                 ]
 
@@ -282,26 +412,15 @@ class ImageService {
                     image
                 }
             }
-            if (biocacheImages && biocacheImages.size() > 0) {
-                images.addAll(biocacheImages)
+            if (imagesAsMaps && imagesAsMaps.size() > 0) {
+                images.addAll(imagesAsMaps)
             }
         } else {
-            log.error("A HTTP status of ${publishedImages.statusCode} was returned from the biocache image lookup")
+            log.error("A HTTP status of ${retrievedImages.statusCode} was returned from the biocache image lookup")
         }
-
-        if (profile.privateMode && profile.stagedImages) {
-            images.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
-        }
-
-        // The collection may now, or may have been at some point, private, so look for any private images that may exist.
-        // When a collection is changed from private to public, existing private images are NOT published automatically.
-        images.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
-
-        response.statusCode = SC_OK
-        response.resp = images
-
-        response
+        images
     }
+
 
     private
     static boolean deleteLocalImage(List images, String collectionId, String profileId, String imageId, String directory) {
@@ -320,8 +439,9 @@ class ImageService {
 
     //RetrieveImages() calls this method and is itself called by ImageService (this class) and ExportService. The
     //latter needs to know the disk location of the images and will send useInternalPaths with a value of true
-    private
-    static convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false, boolean readonlyView = true) {
+
+    List convertLocalImages(List images, Map opus, Map profile, ImageType type, boolean useInternalPaths = false, boolean readonlyView = true) {
+        List convertedImages = []
         String imageUrlPrefix = "/opus/${opus.uuid}/profile/${profile.uuid}/image"
         //this is the default, NOT for ExportService
 
@@ -352,8 +472,9 @@ class ImageService {
                 ]
             }
 
-            image
+            convertedImages.add(image)
         }
+        convertedImages
     }
 
     static boolean isCurrentFileStructure(String collectionId, String profileId, String imageId) {
@@ -390,6 +511,10 @@ class ImageService {
         excluded
     }
 
+    def updateLocalImageMetadata(String imageId, Map metadata) {
+        webService.post("${grailsApplication.config.profile.service.url}/image/${enc(imageId)}/metadata", metadata)
+    }
+
     def publishPrivateImage(String opusId, String profileId, String imageId) {
         def model = profileService.getProfile(opusId, profileId, true)
 
@@ -416,6 +541,7 @@ class ImageService {
         Map profileUpdates = [:]
         List<File> imageDirectories = []
         List<File> imageFiles = []
+        List<File> imagesToPublish = []
         String localDirPath = staged ? grailsApplication.config.image.staging.dir : grailsApplication.config.image.private.dir
         //Check in old file directory structure
         File localDir = new File("${localDirPath}/${profile.uuid}")
@@ -432,7 +558,7 @@ class ImageService {
                 //these directories and take the image files without going into the subdirectories containing
                 //tiled images and thumbnails
                 imageDirectories.each { file ->
-                    file.traverse(maxDepth: 1) {
+                    file.traverse(maxDepth: 0) {
                         if (it.file) {
                             imageFiles << it
                         }
@@ -443,44 +569,48 @@ class ImageService {
 
         imageFiles.each {
             String imageId = imageIdFromFile(it)
-            Map localImage = images[imageId]
+            def image = images[imageId]
+            if (image) {
+                imagesToPublish << it
+            }
+        }
 
-            if (!localImage) {
-                log.error("Skipping publishing $it with id $imageId because it is missing image metadata.")
-                // Clean up staged / private file
-                deleteFileAndDirIfEmpty(imageId, it, localDir)
-            } else {
 
-                List<Map> multimedia = localImage ? [
-                        [
-                                creator         : localImage.creator ?: "",
-                                rights          : localImage.rights ?: "",
-                                rightsHolder    : localImage.rightsHolder ?: "",
-                                license         : localImage.licence ?: "",
-                                title           : localImage.title ?: "",
-                                description     : localImage.description ?: "",
-                                dateCreated     : localImage.dateCreated ?: "",
-                                originalFilename: localImage.originalFilename,
-                                contentType     : localImage.contentType
-                        ]
-                ] : []
-                Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
+        imagesToPublish.each {
+            String imageId = imageIdFromFile(it)
+            List<Map> localImage = [images[imageId]]
+            List<Map> multimedia = localImage ? [
+                    [
+                            creator         : localImage.creator ?: "",
+                            rights          : localImage.rights ?: "",
+                            rightsHolder    : localImage.rightsHolder ?: "",
+                            license         : localImage.licence ?: "",
+                            title           : localImage.title ?: "",
+                            description     : localImage.description ?: "",
+                            created         : localImage.created ?: "",
+                            originalFilename: localImage.originalFileName,
+                            contentType     : localImage.contentType
+                    ]
+            ] : []
+            Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
 
-                def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
+            def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
 
-                if (uploadResponse?.resp) {
-                    // check if the local image was set as the primary, and swap the local id for the new permanent id
-                    if (profile.primaryImage == imageId) {
-                        profileUpdates.primaryImage = uploadResponse.resp.images[0]
-                    }
-
-                    // check for any display options that were set for the local image, and swap the local id for the new permanent id
-                    Map imageDisplayOption = profile.imageSettings?.find { it.imageId == imageId }
-                    if (imageDisplayOption) {
-                        imageDisplayOption?.imageId = uploadResponse.resp.images[0]
-                    }
+            if (uploadResponse?.resp) {
+                // check if the local image was set as the primary, and swap the local id for the new permanent id
+                if (profile.primaryImage == imageId) {
+                    profileUpdates.primaryImage = uploadResponse.resp.images[0]
                 }
 
+                // check for any display options that were set for the local image, and swap the local id for the new permanent id
+                //that has been assigned by uploadImage call
+                Map imageDisplayOption = profile.imageSettings?.find { it.imageId == imageId }
+                if (imageDisplayOption) {
+                    imageDisplayOption?.imageId = uploadResponse.resp.images[0]
+                }
+            }
+            if ((uploadResponse?.statusCode?.toInteger() >= 200) && (uploadResponse?.statusCode?.toInteger() <= 299)) {
+                //don't delete the local images if the upload failed
                 if (staged) {
                     deleteStagedImage(opus.uuid, profile.uuid, imageId)
                 } else {
@@ -503,7 +633,7 @@ class ImageService {
 
     //Changed directory structure, supporting existing files stored in old structure, use updated method - same name
     @Deprecated
-    private static File getLocalImageFile(String directory, String profileId, String imageId, String extension) {
+    File getLocalImageFile(String directory, String profileId, String imageId, String extension) {
         new File("${directory}/${profileId}/${imageId}${extension}")
     }
 
@@ -540,6 +670,10 @@ class ImageService {
 
     private static String buildFilePath(String parentDir, String collectionId, String profileId, String imageId) {
         parentDir + separator + collectionId + separator + profileId + separator + imageId
+    }
+
+    def enc(String value) {
+        value ? URLEncoder.encode(value, "UTF-8") : ""
     }
 
 }

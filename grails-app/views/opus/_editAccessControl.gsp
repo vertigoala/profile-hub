@@ -2,6 +2,7 @@
     <div class="panel-heading">
         <a name="accessControl">
             <h4 class="section-panel-heading">Access control</h4>
+            <p:help help-id="opus.edit.accessControl"/>
         </a>
     </div>
 

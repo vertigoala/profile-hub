@@ -3,12 +3,13 @@
         <a name="imageSources">
             <h4 class="section-panel-heading">Image options</h4>
         </a>
+        <p:help help-id="opus.edit.images"/>
     </div>
 
     <div class="panel-body">
+        <h5 class="section-panel-heading padding-bottom-1">Image visibility</h5>
         <div class="row">
             <div class="col-sm-12">
-                <h5 class="section-panel-heading padding-bottom-1">Image visibility</h5>
 
                 <div class="col-sm-6">
                     <div class="radio">
@@ -64,34 +65,51 @@
 
             <div class="col-sm-12">
                 <h6 class="section-panel-heading padding-bottom-1">Selected image sources</h6>
-                <ul>
-                    <li ng-repeat="imageSource in opusCtrl.opus.imageSources">
-                        <a href="${grailsApplication.config.collectory.base.url}/public/show/{{imageSource}}">{{opusCtrl.dataResources[imageSource] | default:'Loading...'}}</a>
-                        <a class="btn btn-mini btn-link " title="Remove this resource"
-                           ng-click="opusCtrl.removeImageSource($index, 'existing', ImageForm)">
-                            <i class="fa fa-trash-o color--red"></i>
-                        </a>
-                    </li>
+                <p>
+                    Use the options below to select which data resources to use.
+                </p>
 
-                    <li ng-repeat="imageSource in opusCtrl.newImageSources">
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <input placeholder="Image source name..."
-                                       ng-model="imageSource.dataResource"
-                                       autocomplete="off"
-                                       size="70"
-                                       class="form-control"
-                                       typeahead="source as source.name for source in opusCtrl.dataResourceList | filter:$viewValue | limitTo:10"/>
-                                <span class="fa fa-ban color--red"
-                                      ng-if="imageSource.dataResource && !imageSource.dataResource.id"></span>
-                                <button class="btn btn-mini btn-link" title="Remove this resource"
-                                        ng-click="opusCtrl.removeImageSource($index, 'new', ImageForm)">
-                                    <i class="fa fa-trash-o color--red"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                <div class="radio">
+                    <label ng-repeat="(key, value) in opusCtrl.collectoryResourceOptions | orderBy: 'value'" class="inline-label padding-right-1">
+                        <input type="radio" name="image{{key}}" ng-value="key" ng-model="opusCtrl.opus.dataResourceConfig.imageResourceOption" ng-change="opusCtrl.imageSourceOptionChanged()">
+                        {{value}}
+                    </label>
+                </div>
+
+                <div ng-show="opusCtrl.opus.dataResourceConfig.imageResourceOption == 'ALL'">
+                    <p>
+                        <span class="fa fa-info-circle padding-left-1">&nbsp;</span>This option will retrieve images from all available data resources in the Atlas of Living Australia.
+                    </p>
+                </div>
+
+                <div ng-show="opusCtrl.opus.dataResourceConfig.imageResourceOption == 'NONE'">
+                    <p class="padding-left-1">
+                        <span class="fa fa-info-circle">&nbsp;</span>Every collection has its own data resource in the Atlas of Living Australia. This option will limit images to that resource only.
+                    </p>
+                    <p class="padding-left-1">
+                        The name of your collection's data resource is <a href="${grailsApplication.config.collectory.base.url}/public/show/{{opusCtrl.dataResource.uid}}" target="_blank" title="Click to visit your collection resource's page in the Atlas of Living Australia">{{opusCtrl.dataResource.name}}</a>.
+                    </p>
+                </div>
+
+                <div ng-show="opusCtrl.opus.dataResourceConfig.imageResourceOption == 'HUBS'">
+                    <div ng-show="opusCtrl.imageHubMultiSelectOptions.loading">
+                        <span class="fa fa-spin fa-spinner">&nbsp;&nbsp;</span>Loading...
+                    </div>
+                    <div ng-hide="opusCtrl.imageHubMultiSelectOptions.loading">
+                        <dualmultiselect options="opusCtrl.imageHubMultiSelectOptions"></dualmultiselect>
+                        <alert class="alert-danger" ng-hide="opusCtrl.isImageSourceSelectionValid()">You must select at least 1 resource</alert>
+                    </div>
+                </div>
+
+                <div ng-show="opusCtrl.opus.dataResourceConfig.imageResourceOption == 'RESOURCES'">
+                    <div ng-show="opusCtrl.imageResourceMultiSelectOptions.loading">
+                        <span class="fa fa-spin fa-spinner">&nbsp;&nbsp;</span>Loading...
+                    </div>
+                    <div ng-hide="opusCtrl.imageResourceMultiSelectOptions.loading">
+                        <dualmultiselect options="opusCtrl.imageResourceMultiSelectOptions"></dualmultiselect>
+                        <alert class="alert-danger" ng-hide="opusCtrl.isImageSourceSelectionValid()">You must select at least 1 resource</alert>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -100,12 +118,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="btn-group">
-                    <button class="btn btn-default" ng-click="opusCtrl.addImageSource()"><i
-                            class="fa fa-plus"></i>  Add image source</button>
+                    <button class="btn btn-default" ng-click="opusCtrl.resetImageSources()">Reset</button>
                 </div>
-                <save-button ng-click="opusCtrl.saveImageSources(ImageForm)" form="ImageForm"></save-button>
+                <save-button ng-click="opusCtrl.saveOpus(ImageForm)" disabled="!opusCtrl.isImageSourceSelectionValid()" form="ImageForm"></save-button>
             </div>
         </div>
     </div>
-
 </div>

@@ -2,8 +2,8 @@
  * Profile controller
  */
 profileEditor.controller('ProfileController',
-    ['profileService', 'profileComparisonService', 'util', 'messageService', 'navService', 'config', '$modal', '$window', '$filter', '$sce', '$location',
-        function (profileService, profileComparisonService, util, messageService, navService, config, $modal, $window, $filter, $sce, $location) {
+    ['profileService', 'profileComparisonService', 'util', 'messageService', 'navService', 'config', '$modal', '$window', '$filter', '$sce', '$location', '$scope', '$timeout',
+        function (profileService, profileComparisonService, util, messageService, navService, config, $modal, $window, $filter, $sce, $location, $scope, $timeout) {
     var self = this;
 
     self.profile = null;
@@ -28,10 +28,18 @@ profileEditor.controller('ProfileController',
 
     self.acknowledgementsSectionTitle = config.readonly ? 'Acknowledgements' : 'Authors and Acknowledgements';
 
+    self.bibliographyDirty = false;
+
+    self.manualHierarchy = null;
+
     var orderBy = $filter("orderBy");
 
     self.readonly = function () {
         return config.readonly
+    };
+
+    self.isDirty = function () {
+        return self.bibliographyDirty;
     };
 
     self.loadProfile = function () {
@@ -46,30 +54,17 @@ profileEditor.controller('ProfileController',
 
                     $window.document.title = self.profile.scientificName + " | " + self.opus.title;
 
-                    if (self.profile.specimenIds && self.profile.specimenIds.length > 0 || !self.readonly()) {
-                        navService.add("Specimens", "specimens");
-                    }
 
                     if (self.opus.keybaseProjectId) {
                         var keyPromise = profileService.findKeybaseKeyForName(self.opus.uuid, self.profile.scientificName);
                         keyPromise.then(function (data) {
                             if (data && data.keyId) {
                                 self.hasKeybaseKey = true;
-                                navService.add("Key", "key", "pdf");
+                                // The key player needs to be manually registered with the navigation service as
+                                // it needs to be lazily loaded.
+                                navService.add("Key", "key", undefined, 'Key');
                             }
                         });
-                    }
-
-                    if (self.profile.bibliography && self.profile.bibliography.length > 0 || !self.readonly()) {
-                        navService.add("Bibliography", "bibliography");
-                    }
-
-                    if (self.profile.guid) {
-                        navService.add("Map", "map");
-                    }
-
-                    if (self.profile.nslNomenclatureIdentifier) {
-                        navService.add("Nomenclature", "nomenclature");
                     }
 
                     self.authorshipCount = 0;
@@ -79,28 +74,62 @@ profileEditor.controller('ProfileController',
                         }
                     });
 
-                    if (!self.readonly() || self.authorshipCount > 0) {
-                        navService.add(self.acknowledgementsSectionTitle, "authorship");
-                    }
-
-                    if (!self.readonly()) {
-                        navService.add("Nomenclature", "nomenclature");
-                    }
-                    if (self.profile.classification) {
-                        navService.add("Taxonomy", "taxon");
-                    }
-
                     loadVocabulary();
                     loadNslNameDetails();
 
                     if (self.profile.matchedName) {
                         self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.matchedName.nameAuthor, self.profile.matchedName.fullName);
                     }
+
+                    self.constructManualHierarchyForNameDirective();
+
+                    // Load the other tabs content in the background.  If we leave them fully lazy loaded then
+                    // registering them with the navigation service needs to be done manually.
+                    $timeout(function() {
+                        navService.initialiseTabs();
+                    }, 0);
                 },
                 function () {
                     messageService.alert("An error occurred while loading the profile.");
                 }
             );
+        }
+    };
+
+    self.constructManualHierarchyForNameDirective = function() {
+        if (!self.readonly() && self.profile.manualClassification) {
+            self.manualHierarchy = [];
+
+            // The name check directive deals with the hierarchy from the BOTTOM UP, but we store it TOP DOWN, so reverse it
+            var tempClassification = _.clone(self.profile.classification);
+            tempClassification.reverse();
+
+            var firstKnownEntityFound = false;
+            tempClassification.forEach(function (item, index) {
+                // we want the first item, then all items up to and including the FIRST one with a guid or profileId
+                var doesNotHaveId = !item.guid && !item.profileId;
+                if ((doesNotHaveId && !firstKnownEntityFound) || !firstKnownEntityFound || index == 0) {
+                    self.manualHierarchy.push({
+                        name: item.profileName || item.name,
+                        guid: item.profileId || item.guid,
+                        rank: item.rank,
+                        checked: true
+                    });
+                }
+
+                if (index > 0 && !firstKnownEntityFound && !doesNotHaveId) {
+                    firstKnownEntityFound = true;
+                }
+            });
+
+            // only 1 item in the hierarchy can have a guid, as that indicates a match to a known entity (either a profile
+            // or a Name) which will have a defined classification: meaning that the user can define a custom classification
+            // UP TO the point where they join a known tree - they cannot change anything above that point.
+            // So, if we leave the first item (i.e. the current profile) with a guid (profileId), then user will not be able
+            // to modify the hierarchy.
+            self.manualHierarchy[0].guid = null;
+        } else {
+            self.manualHierarchy = undefined;
         }
     };
 
@@ -113,7 +142,7 @@ profileEditor.controller('ProfileController',
 
                     self.nslProtologue = data.name.primaryInstance[0].citationHtml;
                     if (data.name.primaryInstance[0].page) {
-                        self.nslProtologue += " " + data.name.primaryInstance[0].page;
+                        self.nslProtologue += ": " + data.name.primaryInstance[0].page;
                     }
                 }
             });
@@ -157,7 +186,7 @@ profileEditor.controller('ProfileController',
         });
     };
 
-    self.createProfile = function (opusId) {
+    self.createProfile = function (opusId, duplicateExisting) {
         var popup = $modal.open({
             templateUrl: "createProfile.html",
             controller: "CreateProfileController",
@@ -166,6 +195,9 @@ profileEditor.controller('ProfileController',
             resolve: {
                 opusId: function () {
                     return opusId;
+                },
+                duplicateExisting: function() {
+                    return duplicateExisting;
                 }
             }
         });
@@ -180,8 +212,16 @@ profileEditor.controller('ProfileController',
         if (!self.profile.bibliography) {
             self.profile.bibliography = [];
         }
-        self.profile.bibliography.push({text: "", order: self.profile.bibliography.length});
+        self.profile.bibliography.push({text: "", order: self.profile.bibliography.length, edit: true});
 
+        self.bibliographyDirty = true;
+        form.$setDirty();
+    };
+            
+    self.editBibliography = function (index, form) {
+        self.profile.bibliography[index].edit = true;
+
+        self.bibliographyDirty = true;
         form.$setDirty();
     };
 
@@ -195,27 +235,30 @@ profileEditor.controller('ProfileController',
             }
         });
 
+        self.bibliographyDirty = true;
         form.$setDirty();
     };
 
     self.moveBibliographyUp = function (index, form) {
         if (index > 0) {
-            self.profile.bibliography[index].order = self.profile.bibliography[index].order - 1;
-            self.profile.bibliography[index - 1].order = self.profile.bibliography[index - 1].order + 1;
+            self.profile.bibliography[index].order = index - 1;
+            self.profile.bibliography[index - 1].order = index;
 
             self.profile.bibliography = orderBy(self.profile.bibliography, "order");
 
+            self.bibliographyDirty = true;
             form.$setDirty();
         }
     };
 
     self.moveBibliographyDown = function (index, form) {
         if (index < self.profile.bibliography.length) {
-            self.profile.bibliography[index].order = self.profile.bibliography[index].order + 1;
-            self.profile.bibliography[index + 1].order = self.profile.bibliography[index + 1].order - 1;
+            self.profile.bibliography[index].order = index + 1;
+            self.profile.bibliography[index + 1].order = index;
 
             self.profile.bibliography = orderBy(self.profile.bibliography, "order");
 
+            self.bibliographyDirty = true;
             form.$setDirty();
         }
     };
@@ -278,6 +321,7 @@ profileEditor.controller('ProfileController',
 
             self.profile = data;
 
+            self.bibliographyDirty = false;
             if (form) {
                 form.$setPristine();
             }
@@ -344,7 +388,8 @@ profileEditor.controller('ProfileController',
             var future = profileService.renameProfile(self.opusId, self.profileId, {
                 newName: self.newName,
                 manuallyMatchedGuid: self.manuallyMatchedGuid,
-                clearMatch: false
+                clearMatch: false,
+                manualHierarchy: self.manualHierarchy
             });
 
             future.then(function (profile) {
@@ -509,6 +554,12 @@ profileEditor.controller('ProfileController',
             messageService.alert("An error has occurred while restoring your profile.");
         });
     }
+
+    // Support for lazy loading the keyplayer.
+    self.keybaseTemplateUrl = undefined;
+    self.initialiseKeyplayer = function() {
+        self.keybaseTemplateUrl = 'keyplayer.html';
+    };
 }]);
 
 /**

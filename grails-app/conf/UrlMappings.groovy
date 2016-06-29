@@ -4,6 +4,8 @@ class UrlMappings {
 
         "/ping" controller: "ping", action: "ping"
 
+        "/tags" controller: "opus", action: "getTags"
+
         "/speciesList/" controller: "speciesList", action: [GET: "getAllLists"]
 
         "/user/search" controller: "user", action: [GET: "findUser"]
@@ -21,7 +23,12 @@ class UrlMappings {
         "/profile/search/taxon/levels" controller: "search", action: "getTaxonLevels"
         "/profile/search/children" controller: "search", action: "getImmediateChildren"
 
+        // This does not follow standard url convention because the document-preview-plugin appends the documentID at the end of it
+        "/opus/$opusId/profile/$profileId/resource/delete/$documentId" controller: "profile", action: [DELETE: "documentDelete"]
+        "/opus/$opusId/profile/$profileId/resource/update/$documentId?(.$format)?" controller: "profile", action: [POST: "documentUpdate"]
+        "/opus/$opusId/profile/$profileId/resource/update" controller: "profile", action: [POST: "documentUpdate"] // This is actually a create
         "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
+        "/opus/$opusId/profile/$profileId/duplicate" controller: "profile", action: [PUT: "duplicateProfile"]
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
         "/opus/$opusId/profile/$profileId/update" controller: "profile", action: [GET: "edit", POST: "updateProfile"]
         "/opus/$opusId/profile/$profileId/rename" controller: "profile", action: [POST: "renameProfile"]
@@ -32,6 +39,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
         "/opus/$opusId/profile/$profileId/pdf" controller: "export", action: [GET: "getPdf"]
         "/opus/$opusId/profile/$profileId/images" controller: "profile", action: [GET: "retrieveImages"]
+        "/opus/$opusId/profile/$profileId/images/paged" controller: "profile", action: [GET: "retrieveImagesPaged"]
         "/opus/$opusId/profile/$profileId/primaryImage" controller: "profile", action: [GET: "getPrimaryImage"]
         "/opus/$opusId/profile/$profileId/image/$imageId" controller: "profile", action: [GET: "getLocalImage"]
         "/opus/$opusId/profile/$profileId/image/thumbnail/$imageId" controller: "profile", action: [GET: "retrieveLocalThumbnailImage"]
@@ -51,7 +59,6 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/attribute/$attributeId/delete" controller: "profile", action: [DELETE: "deleteAttribute"]
         "/opus/$opusId/profile/$profileId/links/update" controller: "profile", action: [POST: "updateLinks"]
         "/opus/$opusId/profile/$profileId/bhllinks/update" controller: "profile", action: [POST: "updateBHLLinks"]
-        "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
         "/opus/$opusId/profile/$profileId/comment/" controller: "comment", action: [GET: "getComments"]
         "/opus/$opusId/profile/$profileId/comment/create" controller: "comment", action: [PUT: "addComment"]
         "/opus/$opusId/profile/$profileId/comment/$commentId/update" controller: "comment", action: [POST: "updateComment"]
@@ -59,6 +66,12 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/authorship/update" controller: "profile", action: [POST: "updateAuthorship"]
         "/opus/$opusId/profile/$profileId/attachment/$attachmentId" controller: "profile", action: [GET: "getAttachmentMetadata", DELETE: "deleteAttachment"]
         "/opus/$opusId/profile/$profileId/attachment/" controller: "profile", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
+        "/opus/$opusId/profile/$profileId/map/snapshot" controller: "profile", action: [DELETE: "deleteMapSnapshot", POST: "createMapSnapshot"]
+        "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
+        "/opus/$opusId/data/" controller: "data", action: [GET: "getDataSets"]
+        "/opus/$opusId/data/upload" controller: "data", action: [GET: "upload"]
+        "/opus/$opusId/data/uploadFile" controller: "sandboxProxy", action: [POST: "uploadFile"]
+        "/opus/$opusId/data/$dataResourceId/delete" controller: "data", action: [DELETE: "deleteDataSet"]
 
         "/opus/$opusId/vocab/$vocabId/update" controller: "vocab", action: [POST: "update"]
         "/opus/$opusId/vocab/$vocabId/findUsages" controller: "vocab", action: [GET: "findUsagesOfTerm"]
@@ -100,11 +113,15 @@ class UrlMappings {
         "/opus" controller: "opus", action: [GET: "index"]
 
         "/dataResource/$dataResourceUid" controller: "collectory", action: [GET: "getResource"]
-        "/dataResource/" controller: "collectory", action: [GET: "list"]
+        "/dataResource/" controller: "collectory", action: [GET: "listResources"]
+        "/dataHub/$dataHubUid" controller: "collectory", action: [GET: "getHub"]
+        "/dataHub/" controller: "collectory", action: [GET: "listHubs"]
         "/licences/" controller: "collectory", action: [GET: "licences"]
 
         "/keybase/projects" controller: "opus", action: [GET: "retrieveKeybaseProjects"]
         "/keybase/findKey" controller: "keybase", action: [GET: "findKey"]
+        "/keybase/keyLookup" controller: "keybase", action: [GET: "keyLookup"]
+
 
         "/checkName" controller: "profile", action: [GET: "checkName"]
 
@@ -121,6 +138,8 @@ class UrlMappings {
         "/publication/$pubId" controller: "profile", action: [GET: "getPublication"]
         "/publication/$pubId/json" controller: "profile", action: [GET: "getPublicationJson"]
 
+        "/image/$imageId/metadata" controller: "profile", action: [POST: "updateLocalImageMetadata"]
+
         "/" controller: "opus", action: [GET: "index"]
 
         "/logout/logout" controller: "logout", action: "logout"
@@ -128,7 +147,14 @@ class UrlMappings {
         "/admin/message" controller: "admin", action: [GET: "getMessage", POST: "postMessage"]
         "/admin/reloadConfig" controller: "admin", action: [POST: "reloadConfig"]
         "/admin/reindex" controller: "admin", action: [POST: "reindex"]
+        "/admin/rematchNames" controller: "admin", action: [POST: "rematchNames"]
+        "/admin/job/$jobType/$jobId" controller: "admin", action: [DELETE: "deleteJob"]
+        "/admin/job/" controller: "admin", action: [GET: "listPendingJobs"]
+        "/admin/tag/$tagId?" controller: "admin", action: [GET: "getTag", PUT: "createTag", POST: "updateTag", DELETE: "deleteTag"]
+        "/admin/reloadHelpUrls" controller: "admin", action: [POST: "reloadHelpUrls"]
         "/admin" controller: "admin", action: [GET: "index"]
+        "/alaAdmin/index" controller: "admin", action: [GET: "alaIndex"]
+        "/alaAdmin" controller: "admin", action: [GET: "alaIndex"]
 
         "500"(view: "/error")
         "404"(view: "/notFound")
@@ -137,6 +163,32 @@ class UrlMappings {
         "/notAuthorised"(view: "/notAuthorised")
         "/error"(view: "/error")
         "/notFound"(view: "/notFound")
+
+        // The following URLs proxy requests for the Sandbox through Profile Hub.
+        // See the project wiki for more info on the Profiles-Sandbox integration.
+
+        // SANDBOX UPLOAD UI: The URL pattern must match the format used by the Sandbox UI, which is embedded in the
+        // data upload page via web components.
+        "/dataCheck/parseColumns" controller: "sandboxProxy", action: [POST: "parseCsvColumns"]
+        "/dataCheck/parseColumnsWithFirstLineInfo" controller: "sandboxProxy", action: [POST: "parseCsvColumnsWithFirstLineInfo"]
+        "/dataCheck/processData" controller: "sandboxProxy", action: [POST: "processCsvData"]
+        "/dataCheck/upload/parseColumns" controller: "sandboxProxy", action: [POST: "parseFileColumns"]
+        "/dataCheck/upload/parseColumnsWithFirstLineInfo" controller: "sandboxProxy", action: [POST: "parseFileColumnsWithFirstLineInfo"]
+        "/dataCheck/upload" controller: "sandboxProxy", action: [POST: "sendCsvDataToBiocache"]
+        "/dataCheck/upload/processData" controller: "sandboxProxy", action: [POST: "processFileData"]
+        "/dataCheck/upload/uploadToSandbox" controller: "sandboxProxy", action: [POST: "sendFileToBiocache"]
+        "/dataCheck/uploadStatus" controller: "sandboxProxy", action: [GET: "csvUploadStatus"]
+        "/dataCheck/upload/uploadStatus" controller: "sandboxProxy", action: [GET: "fileUploadStatus"]
+        "/upload/preview" controller: "sandboxProxy", action: [GET: "previewUpload"]
+
+        // BIOCACHE MAPS (used by MapController.js and the ALA.OccurrenceMap.js from the ala-map-plugin when the
+        // collection is configured to use private occurrence data)
+        "/opus/$opusId/ws/mapping/wms/reflect" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/occurrences/info" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/mapping/bounds.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/occurrence/legend" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/occurrences/search.json" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
+        "/opus/$opusId/ws/search/grouped/facets" controller: "sandboxBiocacheProxy", action: [GET: "proxy"]
 
 
         // The following URLs need to match the URLs used by the ala-images-client plugin so that we can view draft

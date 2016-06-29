@@ -13,6 +13,7 @@ class ProfileControllerSpec extends Specification {
     AuthService authService
     BiocacheService biocacheService
     ImageService imageService
+    MapService mapService
 
     def setup() {
         controller = new ProfileController()
@@ -21,10 +22,12 @@ class ProfileControllerSpec extends Specification {
         authService = Mock(AuthService)
         biocacheService = Mock(BiocacheService)
         imageService = Mock(ImageService)
+        mapService = Mock(MapService)
         controller.profileService = profileService
         controller.authService = authService
         controller.biocacheService = biocacheService
         controller.imageService = imageService
+        controller.mapService = mapService
 
         authService.getDisplayName() >> "Fred Bloggs"
     }
@@ -135,7 +138,7 @@ class ProfileControllerSpec extends Specification {
 
     def "getJson should return the profile added to the model"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: "bla"]
+        profileService.getProfile(_, _, _) >> [profile: [:], opus: [:]]
 
         when:
         params.profileId = "bla"
@@ -468,7 +471,7 @@ class ProfileControllerSpec extends Specification {
 
     def "retrieveImages should return an empty map with there are no visible images"() {
         setup:
-        imageService.retrieveImages(_, _, _, _, _) >> [resp: [resp: "bla"], statusCode: 200]
+        imageService.retrieveImages(_, _, _, _) >> [resp: [resp: "bla"], statusCode: 200]
 
         when:
         params.searchIdentifier = "blabla"
@@ -515,7 +518,7 @@ class ProfileControllerSpec extends Specification {
         assert response.status == 666
     }
 
-    def "show/edit should not include the map when the profile has no matched name"() {
+    def "show should not include the map when the profile has no matched name"() {
 
         setup:
         profileService.getProfile(_, _, _) >> [profile: [scientificName: "bla", guid:null], opus: [title: "opus"]]
@@ -528,17 +531,24 @@ class ProfileControllerSpec extends Specification {
 
         then:
         model.displayMap == false
+    }
+
+    def "edit should include the map even when the profile has no matched name"() {
+        setup:
+        profileService.getProfile(_, _, _) >> [profile: [scientificName: "bla", guid:null], opus: [title: "opus"]]
+        profileService.hasMatchedName(_) >> false
 
         when:
+        params.opusId = "opus"
+        params.profileId = "bla"
         controller.edit()
 
         then:
-        model.displayMap == false
+        model.displayMap == true
     }
 
 
     def "show/edit should include the map when the profile has a matched name"() {
-
         setup:
         profileService.getProfile(_, _, _) >> [profile: [scientificName: "bla", guid:"1234"], opus: [title: "opus"]]
         profileService.hasMatchedName(_) >> true

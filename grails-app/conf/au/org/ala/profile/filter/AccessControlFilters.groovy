@@ -7,6 +7,8 @@ import au.org.ala.profile.security.PrivateCollectionSecurityExempt
 import au.org.ala.web.AuthService
 import org.apache.http.HttpStatus
 
+import java.lang.annotation.Annotation
+
 class AccessControlFilters {
 
     AuthService authService
@@ -55,15 +57,15 @@ class AccessControlFilters {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_REVIEWER.toString()
                                     } != null || params.isOpusAdmin || params.isOpusEditor
 
-                                    params.isOpusUser = opus.authorities?.find {
+                                    params.isOpusUser = !opus.privateCollection || opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_USER.toString()
                                     } != null || params.isOpusReviewer || params.isOpusAdmin || params.isOpusEditor
                                 }
                                 log.debug("User ${request.userPrincipal?.name} is : Opus Admin? ${params.isOpusAdmin}; Opus editor? ${params.isOpusEditor}; Opus reviewer? ${params.isOpusReviewer}; Opus user? ${params.isOpusUserr};")
 
                                 if (!opus || !opus.privateCollection || params.isOpusUser || controllerAction.isAnnotationPresent(PrivateCollectionSecurityExempt)) {
-                                    if (controllerAction.isAnnotationPresent(Secured)) {
-                                        def annotation = controllerAction.getAnnotation(Secured)
+                                    if (controllerAction.isAnnotationPresent(Secured) || controllerClass.getClazz().isAnnotationPresent(Secured)) {
+                                        Annotation annotation = controllerAction.getAnnotation(Secured) ?: controllerClass.getClazz().getAnnotation(Secured)
 
                                         String requiredRole = annotation.role().toString()
 
@@ -78,6 +80,8 @@ class AccessControlFilters {
                                                 } else if (requiredRole == Role.ROLE_PROFILE_REVIEWER.toString()) {
                                                     authorised = params.isOpusAdmin || params.isOpusEditor || params.isOpusReviewer
                                                     log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
+                                                } else if (requiredRole == Role.ROLE_USER.toString()) {
+                                                    authorised = params.isOpusAdmin || params.isOpusEditor || params.isOpusReviewer || params.isOpusUser
                                                 }
                                             } else {
                                                 log.debug "Security for action ${actionFullName} is opus specific, but no matching opus was found with id ${params.opusId}"

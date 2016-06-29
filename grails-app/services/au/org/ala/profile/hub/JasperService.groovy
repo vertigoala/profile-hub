@@ -95,12 +95,6 @@ class JasperService {
         return reportData
     }
 
-    @Deprecated
-    ByteArrayOutputStream generateReport(String jasperReportDir, JasperExportFormat format, Collection reportData, Map parameters) {
-        JasperReportDef reportDef = new JasperReportDef(name: parameters._file, folder: jasperReportDir, reportData: reportData, fileFormat: format, parameters: parameters)
-        return generateReport(reportDef)
-    }
-
     /**
      * Generate a report based on a single jasper file.
      * @param format , target format
@@ -109,9 +103,19 @@ class JasperService {
      */
     ByteArrayOutputStream generateReport(JasperReportDef reportDef) {
         ByteArrayOutputStream byteArray = new ByteArrayOutputStream()
+        generateReport(reportDef) { byteArray }
+        return byteArray
+    }
+
+    /**
+     * Generate a report based on a single jasper file and send the output directly to an output stream.
+     * @param format , target format
+     * @param reportDef , jasper report object
+     * @param outputStream A closure that generates an output stream for the report to generated into.
+     */
+    void generateReport(JasperReportDef reportDef, Closure<OutputStream> outputStream) {
         JRExporter exporter = generateExporter(reportDef)
 
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArray)
         exporter.setParameter(JRExporterParameter.CHARACTER_ENCODING, "UTF-8")
 
         def jasperPrint = reportDef.jasperPrinter
@@ -120,9 +124,8 @@ class JasperService {
         }
 
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, reportDef.jasperPrinter)
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, outputStream())
         exporter.exportReport()
-
-        return byteArray
     }
 
     /**

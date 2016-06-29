@@ -1,5 +1,5 @@
 /**
- * Angular service for interacting with the profile service application
+ * Angular service for managing transient user interface messages (alerts, warnings, etc)
  */
 profileEditor.factory('messageService', function ($rootScope) {
 
