@@ -1,6 +1,6 @@
 <%@ page import="grails.util.Environment" %>
 <!DOCTYPE html>
-<html lang="en" ng-app="profileEditor">
+<html lang="en">
 <head>
     <base href="${request.contextPath}/">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -40,7 +40,7 @@
     %{--End Google Analytics--}%
 </head>
 
-<body id="${pageProperty(name: 'body.id')}" onload="${pageProperty(name: 'body.onload')}">
+<body id="${pageProperty(name: 'body.id')}" onload="${pageProperty(name: 'body.onload')}" ng-app="profileEditor">
 
 <ala:systemMessage/>
 

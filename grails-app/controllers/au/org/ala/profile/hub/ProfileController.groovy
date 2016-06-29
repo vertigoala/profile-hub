@@ -6,6 +6,8 @@ import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import grails.converters.JSON
 import groovy.json.JsonSlurper
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
@@ -727,6 +729,36 @@ class ProfileController extends BaseController {
         render template: "images"
     }
 
+    def multimediaPanel = {
+
+        Map profileDocuments = profileService.listDocuments(params.opusId, params.profileId, params.edit)
+
+        String profileId = params.profileId
+        String opusId = params.opusId
+
+        def g = grailsApplication.mainContext.getBean('org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib')
+
+        def model = [
+                imageLocation    : g.resource(dir: '/images', plugin: 'document-preview-plugin'),
+                pdfgenUrl        : g.createLink(controller: 'preview', action: 'pdfUrl'),
+                pdfViewer        : g.createLink(controller: 'preview', action: 'viewer'),
+                imgViewer        : g.createLink(controller: 'preview', action: 'imageviewer'),
+                audioViewer      : g.createLink(controller: 'preview', action: 'audioviewer'),
+                videoViewer      : g.createLink(controller: 'preview', action: 'videoviewer'),
+                errorViewer      : g.createLink(controller: 'preview', action: 'error'),
+                documentUpdateUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/update"),
+                documentDeleteUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/delete"),
+                documents        : profileDocuments.documents,
+                roles            : [
+                        [id: 'embeddedAudio', name: 'Embedded Audio'],
+                        [id: 'embeddedVideo', name: 'Embedded Video']]
+        ]
+
+        def modelAsJs = modelAsJavascript(model)
+
+        render(template: "multimedia", model: [model: modelAsJs])
+    }
+
     def mapPanel = {
         render template: "map"
     }
@@ -766,4 +798,61 @@ class ProfileController extends BaseController {
     def nomenclaturePanel = {
         render template: "nomenclaturePanel"
     }
+
+    private String modelAsJavascript(def model) {
+
+        if (!(model instanceof JSONObject) && !(model instanceof JSONArray)) {
+            model = model as JSON
+
+        }
+        def json = (model ?: [:] as JSON)
+        def modelJson = json.toString()
+        modelJson.encodeAsJavaScript()
+    }
+
+    /**
+     * Proxies to the profile services profile controller to create or update a document.
+     * @param documentId the documentId of the document to update (if not supplied, a create operation will be assumed).
+     * @return the result of the update.
+     */
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def documentUpdate(String documentId) {
+
+        log.debug("In documentUpdate for ID: ${documentId}")
+
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        log.debug("opusId: ${opusId}")
+        log.debug("profileId: ${profileId}")
+
+
+        Map document = JSON.parse(params.document)
+
+        def result = profileService.updateDocument(opusId, profileId, document)
+
+        response.setContentType('text/plain;charset=UTF8')
+        def resultAsText = (result as JSON).toString()
+        render resultAsText
+    }
+
+    /**
+     * Proxies to the profile services profile controller to delete the document with the supplied documentId.
+     * @param documentId the documentId of the document to delete.
+     * @return the result of the deletion.
+     */
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def documentDelete(String documentId) {
+        log.debug("In documentUpdate for ID: ${documentId}")
+
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        log.debug("opusId: ${opusId}")
+        log.debug("profileId: ${profileId}")
+
+        def result = profileService.deleteDocument(opusId, profileId, documentId)
+        render status: result.statusCode
+    }
 }
+

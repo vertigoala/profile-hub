@@ -1,6 +1,7 @@
 package au.org.ala.profile.hub
 
 import org.apache.http.entity.ContentType
+import org.springframework.web.multipart.MultipartFile
 
 import static au.org.ala.profile.hub.Utils.enc
 import au.org.ala.profile.hub.util.ReportType
@@ -508,11 +509,34 @@ class ProfileService {
                 }
             }
         }
-
         result
     }
 
     boolean hasMatchedName(Map profile) {
         profile.guid as Boolean
+    }
+
+    def deleteDocument(String opusId, String profileId, String documentId) {
+        def url = "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/document/${documentId}"
+        webService.delete(url, [:], ContentType.TEXT_PLAIN)
+    }
+
+    def updateDocument(String opusId, String profileId, doc) {
+        def url ="${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/document/${doc.documentId ?:''}"
+        webService.post(url, doc)
+    }
+
+    def updateDocument(Map doc, MultipartFile file) {
+        def url = grailsApplication.config.profile.baseURL + "/document/${doc.documentId?:''}"
+        webService.postMultipart(url, [document:doc], [:], [file])
+    }
+
+    def Map listDocuments(String opusId, String profileId, boolean edit) {
+        def url ="${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/document/list?editMode=${edit}"
+        def resp = webService.get(url)
+        if (resp && !resp.error) {
+            return resp.resp
+        }
+        resp
     }
 }

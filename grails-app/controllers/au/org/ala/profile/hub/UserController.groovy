@@ -21,15 +21,21 @@ class UserController extends BaseController {
     }
 
     def getUserDetails() {
+
         Map user = profileService.getUserDetails(params.opusId)
-        if (!user.roles) {
-            user.roles = []
+        if(user) {
+            if (!user.roles) {
+                user.roles = []
+            }
+
+            if (params.isALAAdmin) {
+                user.roles << Role.ROLE_ADMIN.name()
+            }
+
+            render user as JSON
+        } else {
+            render [:] as JSON
         }
 
-        if (params.isALAAdmin) {
-            user.roles << Role.ROLE_ADMIN.name()
-        }
-
-        render user as JSON
     }
 }
