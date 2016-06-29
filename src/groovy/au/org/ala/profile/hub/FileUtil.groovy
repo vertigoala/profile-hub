@@ -1,6 +1,7 @@
 package au.org.ala.profile.hub
 
 import au.com.bytecode.opencsv.CSVReader
+import groovy.util.logging.Log4j
 import org.apache.tika.metadata.HttpHeaders
 import org.apache.tika.metadata.Metadata
 import org.apache.tika.metadata.TikaMetadataKeys
@@ -15,6 +16,7 @@ import java.util.zip.GZIPInputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
+@Log4j
 class FileUtil {
     static String detectFormat(file) {
         AutoDetectParser parser = new AutoDetectParser()
@@ -49,6 +51,7 @@ class FileUtil {
                 [file: null, success: false, message: "Empty zip file"]
             }
         } catch (Exception e) {
+            log.error("Failed to extract ZIP file", e)
             [file: null, success: false, message: "Problem extracting ZIP"]
         }
     }
@@ -88,6 +91,7 @@ class FileUtil {
             copyStream(istream, ostream)
             result = [file: outputFile, success: true]
         } catch (Exception e) {
+            log.error("Failed to extract GZIP file", e)
             result = [file: null, success: false, message: "Problem extracting GZIP"]
         } finally {
             ostream?.close()
