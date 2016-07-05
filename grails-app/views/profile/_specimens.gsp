@@ -22,7 +22,7 @@
         </div>
 
         <div ng-repeat="specimen in specCtrl.specimens">
-            <div class="row section-no-para">
+            <div class="row margin-bottom-1">
                 <div class="col-sm-12">
                     <div ng-if="!specCtrl.readonly() && !specimen.saved">
                         <div class="form-group">
