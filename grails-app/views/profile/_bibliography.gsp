@@ -14,7 +14,7 @@
 
     <div class="panel-body">
 
-        <div class="row section-no-para" ng-repeat="bibliography in profileCtrl.profile.bibliography">
+        <div class="row" ng-repeat="bibliography in profileCtrl.profile.bibliography">
             <div class="col-sm-9">
                 <div data-ng-bind-html="bibliography.text | sanitizeHtml" ng-show="!bibliography.edit" class="inline-block"></div>
 

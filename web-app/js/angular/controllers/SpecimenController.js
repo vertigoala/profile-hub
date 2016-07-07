@@ -3,6 +3,9 @@
  */
 profileEditor.controller('SpecimenController', function (profileService, util, messageService, config) {
     var self = this;
+    var nothingProvided = "Whoops, please add something before checking.",
+        notUrl = "Invalid URL. The URL must be of the form specified above.",
+        alreadyExists = "Sorry, that specimen has already been added to this profile. Please choose another.";
 
     self.specimens = [];
 
@@ -28,7 +31,7 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
                 });
             },
             function () {
-                messageService.alert("An error occurred while retrieving the Biodiversity Heritage References.");
+                messageService.alert("An error occurred while retrieving specimens.");
             });
     };
 
@@ -37,13 +40,14 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
     self.lookupSpecimenDetails = function (index, specimenId, url) {
         self.error = null;
         var saved = true;
-        var errorMsg = "Invalid URL. The URL must of the form specified above.";
 
         if (url) {
             specimenId = util.getPathItemFromUrl(util.LAST, url);
             saved = false;
         }
 
+        // We can't check a specimen added through the UI here, as this method is used by self.loadSpecimens and must
+        // succeed for saved specimens.
         if (specimenId && util.isUuid(specimenId)) {
             var promise = profileService.lookupSpecimenDetails(specimenId);
             promise.then(function (data) {
@@ -58,12 +62,12 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
                     specimen.saved = saved;
                 },
                 function () {
-                    self.specimens[index].error = "Invalid URL. The URL must of the form specified above.";
+                    self.specimens[index].error = notUrl;
                     messageService.alert("Failed to lookup specimen information.");
                 }
             );
         } else {
-            self.specimens[index] = {url: url, error: errorMsg};
+            self.specimens[index] = {url: url, error: notUrl};
         }
     };
 
@@ -75,6 +79,35 @@ profileEditor.controller('SpecimenController', function (profileService, util, m
         });
 
         return valid;
+    };
+
+    self.checkAddedSpecimen = function (index, url) {
+        var specimenId = null;
+        var count = 0;
+
+        if (url) {
+            specimenId = util.getPathItemFromUrl(util.LAST, url);
+        } else {
+            self.specimens[index].error = nothingProvided;
+        }
+
+        if (util.isUuid(specimenId)) {
+            angular.forEach(self.specimens, function(item) {
+                if (item.id == specimenId) {
+                    count++;
+                }
+            });
+
+            if (count >= 1) {
+                console.log("Already exists: %s", specimenId);
+                self.specimens[index].error = alreadyExists;
+            } else {
+                self.specimens[index].error = null;
+                self.lookupSpecimenDetails(index, specimenId, null);
+            }
+        } else {
+            self.specimens[index].error = notUrl;
+        }
     };
 
     self.addSpecimen = function (form) {

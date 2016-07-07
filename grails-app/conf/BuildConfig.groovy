@@ -5,6 +5,7 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.project.work.dir = "target/work"
 grails.project.target.level = 1.7
 grails.project.source.level = 1.7
+grails.reload.enabled = true
 
 grails.project.fork = [
         // configure settings for the test-app JVM, uses the daemon by default
