@@ -14,7 +14,7 @@
         </div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-12" ng-if="!specCtrl.readonly()">
+                <div class="col-sm-12">
                     <div ng-repeat="comment in commentCtrl.comments | orderBy:'dateCreated'"
                          ng-init="path = [$index]" class="comment">
                         <hr ng-if="!$first" class="comment-divider"/>
