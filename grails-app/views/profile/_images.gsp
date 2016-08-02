@@ -81,7 +81,6 @@
                     <div class="row">
                         <div class="col-sm-4">
                             <h5>Image</h5>
-                        </p>
                         </div>
 
                         <div class="col-sm-2">
