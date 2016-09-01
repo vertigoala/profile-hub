@@ -52,12 +52,14 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                 var colourBy = URI.parseQuery(self.profile.occurrenceQuery).colourBy;
 
                 if (!_.isUndefined(colourBy) && !_.isEmpty(colourBy)) {
+                    var label = colourBy.toLowerCase().split(/\s+/).map(function(s) { return s.length > 0 ? s[0].toUpperCase() + s.substring(1) : '' }).join(' ');
                     self.legend = new L.Control.Legend({
                         id: "legend",
                         position: "bottomright",
                         items: [],
                         collapse: true,
-                        legendListClass: "legend-container-short"
+                        legendListClass: "legend-container-short",
+                        label: label
                     });
                     self.map.addControl(self.legend);
                 }

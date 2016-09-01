@@ -18,6 +18,9 @@ grails.project.fork = [
         console: [maxMemory: 1024, minMemory: 64, debug: false, maxPerm: 256]
 ]
 
+//grails.plugin.location."document-preview-plugin" = "../document-preview-plugin"
+//grails.plugin.location."ala-map" = "../ala-map-plugin"
+
 grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
 
@@ -71,7 +74,7 @@ grails.project.dependency.resolution = {
         compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
-        compile ":ala-map:2.0.1"
+        compile ":ala-map:2.0.2"
         compile ":ala-ws-plugin:1.4"
         compile ":ala-admin-plugin:1.2"
         compile ":quartz:1.0.2"
@@ -90,5 +93,3 @@ grails.project.dependency.resolution = {
         runtime ":tika-parser:1.3.0.1"
     }
 }
-
-//grails.plugin.location."document-preview-plugin" = "../document-preview-plugin"
