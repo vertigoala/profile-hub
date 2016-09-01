@@ -151,6 +151,11 @@ modules = {
         resource url:"thirdparty/ckeditor/ckeditor.js", disposition: "head", exclude: "hashandcache"
         resource url:"thirdparty/ckeditor/skins/moono/editor_gecko.css", exclude: "*"
         resource url:"thirdparty/ckeditor/skins/moono/editor.css", exclude: "*"
+        resource url:"thirdparty/ckeditor/skins/moono/editor_ie8.css",
+                wrapper: { s -> "<!--[if gte IE 8]>$s<![endif]-->" }
+        resource url:"thirdparty/ckeditor/skins/moono/editor_iequirks.css",
+                wrapper: { s -> "<!--[if gte IE 8]>$s<![endif]-->" }
+
         resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.css"
         resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.min.js"
     }
