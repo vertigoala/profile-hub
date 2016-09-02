@@ -1,3 +1,5 @@
+import grails.util.Environment
+
 grails.servlet.version = "3.0" // Change depending on target container compliance (2.5 or 3.0)
 grails.project.class.dir = "target/classes"
 grails.project.test.class.dir = "target/test-classes"
@@ -58,8 +60,10 @@ grails.project.dependency.resolution = {
         compile 'net.sf.jasperreports:jasperreports-functions:6.2.0'
         compile 'au.org.ala:jasper-liberation-fonts-2.00.1:1.1'
         compile 'net.glxn:qrgen:1.4'
-        compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160203.1-ALA'
-        compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+        compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160827.1'
+        compile 'com.google.guava:guava:19.0'
+        compile 'com.google.code.findbugs:jsr305:3.0.1'
+        compile 'com.squareup.retrofit2:retrofit:2.1.0'
 
     }
 
@@ -71,7 +75,6 @@ grails.project.dependency.resolution = {
 
         compile ":mail:1.0.7"
         compile ":cache:1.1.8"
-        compile ":uploadr:0.8.2"
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
         compile ":ala-map:2.0.2"
@@ -91,5 +94,9 @@ grails.project.dependency.resolution = {
             excludes "commons-httpclient"
         }
         runtime ":tika-parser:1.3.0.1"
+
+        if (Environment.current == Environment.DEVELOPMENT) {
+            compile "org.grails.plugins:console:1.5.11"
+        }
     }
 }
