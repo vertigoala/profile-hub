@@ -41,7 +41,7 @@ class BiocacheService {
         String sandboxImageSearchUrl = "${grailsApplication.config.sandbox.biocache.service.url}/occurrences/search.json"
 
         int biocacheImages = countImages(biocacheImageSearchUrl, searchIdentifier, opus)
-        int sandboxImages = countImages(sandboxImageSearchUrl, searchIdentifier, opus)
+        int sandboxImages = grailsApplication.config.sandbox.biocache.service.url ? countImages(sandboxImageSearchUrl, searchIdentifier, opus) : 0
 
         [statusCode: HttpStatus.SC_OK, resp: [totalRecords: biocacheImages + sandboxImages]]
     }
@@ -78,14 +78,16 @@ class BiocacheService {
                 result = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
                 int biocacheImageCount = result?.resp?.occurrences?.size() ?: 0
                 if (biocacheImageCount < pageSize) {
-                    String sandboxImageSearchUrl = "${grailsApplication.config.sandbox.biocache.service.url}/occurrences/search.json"
-                    startIndex = Math.max(0, startIndex - totalBiocacheImageCount)
-                    Map sandboxResult = webService.get("${sandboxImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize - biocacheImageCount}&startIndex=${startIndex}")
-                    if (sandboxResult?.resp?.occurrences) {
-                        if (!result?.resp?.occurrences) {
-                            result.resp.occurrences = []
+                    if (grailsApplication.config.sandbox.biocache.service.url) {
+                        String sandboxImageSearchUrl = "${grailsApplication.config.sandbox.biocache.service.url}/occurrences/search.json"
+                        startIndex = Math.max(0, startIndex - totalBiocacheImageCount)
+                        Map sandboxResult = webService.get("${sandboxImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize - biocacheImageCount}&startIndex=${startIndex}")
+                        if (sandboxResult?.resp?.occurrences) {
+                            if (!result?.resp?.occurrences) {
+                                result.resp.occurrences = []
+                            }
+                            result.resp.occurrences.addAll(sandboxResult.resp.occurrences)
                         }
-                        result.resp.occurrences.addAll(sandboxResult.resp.occurrences)
                     }
                 }
             } else {
