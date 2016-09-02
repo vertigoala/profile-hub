@@ -30,5 +30,23 @@ profileEditor.controller('CustomAlertController', function CustomAlertController
     $scope.closeAlert = function (index) {
         $scope.alerts.splice(index, 1);
     };
+
+
 });
 
+
+profileEditor.controller('StayOnAlertController', function StayOnAlertController($rootScope, $scope, $http, $location, $timeout) {
+    $scope.alerts = [];
+
+    $rootScope.$on('stayOnDisplayAlerts', function (event, alerts) {
+        $scope.alerts.pop();
+        $scope.alerts = $scope.alerts.concat(alerts);
+    });
+
+    function pop() {
+        $scope.alerts.pop();
+    }
+    $scope.closeAlert = function (index) {
+        $scope.alerts.splice(index, 1);
+    };
+});

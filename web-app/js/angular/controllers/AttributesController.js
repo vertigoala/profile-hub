@@ -234,6 +234,10 @@ profileEditor.controller('AttributeEditor', ['profileService', 'util', 'messageS
     self.saveAttribute = function (idx, attributeForm) {
         var attribute = self.attributes[idx];
         self.attributes[idx].saving = true;
+        if(!attribute.text || !attribute.title){
+            messageService.alertStayOn( "Attribution title and description fields are mandatory.");
+            return;
+        }
 
         var data = {
             profileId: self.profile.uuid,

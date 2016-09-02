@@ -30,6 +30,15 @@ profileEditor.factory('messageService', function ($rootScope) {
     }
 
 
+    function alertStayOn(message) {
+        msgStayOn(ALERT, message);
+    }
+
+
+    function msgStayOn(type, message) {
+        $rootScope.$emit('stayOnDisplayAlerts', [{type: type, msg: message}]);
+    }
+
     /**
      * Public API
      */
@@ -38,6 +47,7 @@ profileEditor.factory('messageService', function ($rootScope) {
         warning: warning,
         info: info,
         alert: alert,
+        alertStayOn: alertStayOn,
 
         SUCCESS: SUCCESS,
         ERROR: ALERT,

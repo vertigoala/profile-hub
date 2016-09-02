@@ -48,6 +48,11 @@
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" ng-cloak>{{alert.msg}}</alert>
 </div>
 
+<div ng-controller="StayOnAlertController" id="stayOnAlert">
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" ng-cloak>{{alert.msg}}</alert>
+</div>
+
+
 <!-- Navbar -->
 <nav class="navbar navbar-default" id="primary-nav">
     <div class="container">
