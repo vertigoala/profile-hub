@@ -74,7 +74,7 @@ describe("AttributesController tests", function () {
         spyOn(form, "$setPristine");
         spyOn(form, "$setDirty");
 
-        messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
+        messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop","alertStayOn"]);
 
         controller = $controller("AttributeEditor as attrCtrl", {
             $scope: scope,
