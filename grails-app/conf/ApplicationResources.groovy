@@ -6,6 +6,7 @@ modules = {
         resource url:"css/colour.css"
         resource url:"css/tree.css"
         resource url:"css/sidebar.css"
+        dependsOn "modernizr3"
         dependsOn "jquery"
         dependsOn "bootstrap3"
         dependsOn "angular"
@@ -22,7 +23,6 @@ modules = {
         dependsOn "ng_storage"
         dependsOn "angular_truncate"
         dependsOn "underscore"
-        dependsOn "modernizr3"
         dependsOn "keybase"
         dependsOn "keybase_overrides"
         dependsOn "dual_multiselect"
@@ -148,14 +148,8 @@ modules = {
     ckeditor {
         defaultBundle false
 
-        resource url:"thirdparty/ckeditor/ckeditor.js", disposition: "head", exclude: "hashandcache"
-        resource url:"thirdparty/ckeditor/skins/moono/editor_gecko.css", exclude: "*"
-        resource url:"thirdparty/ckeditor/skins/moono/editor.css", exclude: "*"
-        resource url:"thirdparty/ckeditor/skins/moono/editor_ie8.css",
-                wrapper: { s -> "<!--[if gte IE 8]>$s<![endif]-->" }
-        resource url:"thirdparty/ckeditor/skins/moono/editor_iequirks.css",
-                wrapper: { s -> "<!--[if gte IE 8]>$s<![endif]-->" }
-
+        // ckeditor is excluded from resources processing in Config.groovy
+        resource url:"thirdparty/ckeditor/ckeditor.js", disposition: "head"
         resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.css"
         resource url:"thirdparty/ckeditor/ng-ckeditor-0.2.1.min.js"
     }

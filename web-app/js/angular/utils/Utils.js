@@ -223,7 +223,7 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
      * Therefore, we will create a new standard promise (which just uses then()) and return it instead.
      * http://weblog.west-wind.com/posts/2014/Oct/24/AngularJs-and-Promises-with-the-http-Service has a good explanation.
      *
-     * TODO Angular 1.4+ $http service returns real promises, so the additional HTTP response logic in this should be converted into an interceptor:
+     * TODO Angular 1.4+ $http service returns real promises, so the additional HTTP response logic in this should be converted to an interceptor:
      * https://docs.angularjs.org/api/ng/service/$http
      *
      * @param httpPromise $http extended promise
@@ -244,7 +244,7 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
                     console.log("not authorised");
                     redirect(contextRoot() + "/notAuthorised");
                 } else if (status >= 400 && (_.isUndefined(request.disableAlertOnFailure) || !request.disableAlertOnFailure)) {
-                    messageService.alertStayOn("Error calling " + request.url + ", response: " + status + ".  Try reloading the page, maybe this will go away?");
+                    messageService.alertStayOn("Error calling " + request.url + ", response: " + status + ".  Please refresh the page.");
                 }
 
             });

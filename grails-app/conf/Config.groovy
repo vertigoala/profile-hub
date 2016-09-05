@@ -49,6 +49,15 @@ grails.views.default.codec = "html"
 grails.resources.adhoc.patterns = ['/js/*', '/images/*', '/css/*', '/plugins/*', '/thirdparty/*', '/vendor/*', '/templates/*']
 grails.resources.adhoc.includes = ['/js/**', '/images/**', '/css/**', '/plugins/**', '/thirdparty/**', '/vendor/**', '/templates/**']
 
+//grails.resources.mappers.'*'.excludes = ['/thirdparty/ckeditor/**/*']
+grails.resources.mappers.bundle.excludes = ['/thirdparty/ckeditor/**/*']
+grails.resources.mappers.hashandcache.excludes = ['/thirdparty/ckeditor/**/*']
+grails.resources.mappers.zip.excludes = ['/thirdparty/ckeditor/**/*']
+//grails.resources.mappers.baseurl.excludes = ['/thirdparty/ckeditor/**/*']
+//grails.resources.mappers.csspreprocessor.excludes = ['/thirdparty/ckeditor/**/*']
+//grails.resources.mappers.cssrewriter.excludes = ['/thirdparty/ckeditor/**/*']
+//grails.resources.mappers.yuijsminify.excludes = ['/thirdparty/ckeditor/**/*']
+
 // The default scope for controllers. May be prototype, session or singleton.
 // If unspecified, controllers are prototype scoped.
 grails.controllers.defaultScope = 'singleton'
