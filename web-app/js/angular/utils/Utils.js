@@ -244,7 +244,7 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
                     console.log("not authorised");
                     redirect(contextRoot() + "/notAuthorised");
                 } else if (status >= 400 && (_.isUndefined(request.disableAlertOnFailure) || !request.disableAlertOnFailure)) {
-                    messageService.alertStayOn("Error calling " + request.url + ", response: " + status + ".  Try reloading the page, maybe this will go away?");
+                    messageService.alertStayOn("Error calling " + request.url + ", response: " + status + ".  Please refresh the page.");
                 }
 
             });
