@@ -17,7 +17,7 @@ profileEditor.controller('CustomAlertController', function CustomAlertController
         length = (length * 80) + 1000;
         if (!$.isEmptyObject(alerts)) {
             var timeout = $timeout(function () {
-                $('#generalAlert div.alert').fadeOut({duration: 2000});
+                $('#timeoutAlert div.alert').fadeOut({duration: 2000});
                 $timeout.cancel(timeout);
             }, length);
         }
@@ -34,11 +34,14 @@ profileEditor.controller('CustomAlertController', function CustomAlertController
 
 });
 
-
 profileEditor.controller('StayOnAlertController', function StayOnAlertController($rootScope, $scope, $http, $location, $timeout) {
     $scope.alerts = [];
 
     $rootScope.$on('stayOnDisplayAlerts', function (event, alerts) {
+        angular.forEach(alerts ? alerts : [], function (alert) {
+            $scope.alerts.push(alert);
+        });
+
         $scope.alerts.pop();
         $scope.alerts = $scope.alerts.concat(alerts);
     });
@@ -47,6 +50,6 @@ profileEditor.controller('StayOnAlertController', function StayOnAlertController
         $scope.alerts.pop();
     }
     $scope.closeAlert = function (index) {
-        $scope.alerts.splice(index, 1);
+        $scope.alerts.splice(0, $scope.alerts.length);
     };
 });

@@ -44,11 +44,11 @@
 
 <ala:systemMessage/>
 
-<div ng-controller="CustomAlertController" id="generalAlert">
+<div ng-controller="CustomAlertController" id="timeoutAlert" class="genericAlert">
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" ng-cloak>{{alert.msg}}</alert>
 </div>
 
-<div ng-controller="StayOnAlertController" id="stayOnAlert">
+<div ng-controller="StayOnAlertController" id="stayOnAlert" class="genericAlert">
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" ng-cloak>{{alert.msg}}</alert>
 </div>
 
