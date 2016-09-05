@@ -218,9 +218,12 @@ class ExportService {
         if (params.taxonomy || params.conservation) {
             model.profile.speciesProfile = profileService.getSpeciesProfile(model.profile.guid)?.resp
 
-            model.profile.speciesProfile?.conservationStatuses?.each {
-                it.colour = getColourForStatus(it.status)
-                it.regionAbbrev = statusRegions[it.region]
+            model.profile.speciesProfile?.conservationStatuses = model.profile.speciesProfile?.conservationStatuses?.collect {
+                def result = [
+                        colour : getColourForStatus(it.value.status),
+                        regionAbbrev: statusRegions[it.key] ?: it.key,
+                        rawStatus: it.value.status
+                ]
             }
 
             model.profile.classifications = model.profile.classification.collect { [rank: it.rank, scientificName: it.name] }

@@ -1,7 +1,7 @@
 /**
  * Utility functions
  */
-profileEditor.factory('util', function ($location, $q, config, $modal, $window) {
+profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window', 'messageService', function ($location, $q, config, $modal, $window, messageService) {
 
     var KEYWORDS = ["create", "update", "delete", "search"];
     var UUID_REGEX_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
@@ -223,6 +223,9 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
      * Therefore, we will create a new standard promise (which just uses then()) and return it instead.
      * http://weblog.west-wind.com/posts/2014/Oct/24/AngularJs-and-Promises-with-the-http-Service has a good explanation.
      *
+     * TODO Angular 1.4+ $http service returns real promises, so the additional HTTP response logic in this should be converted into an interceptor:
+     * https://docs.angularjs.org/api/ng/service/$http
+     *
      * @param httpPromise $http extended promise
      * @return standard promise
      */
@@ -240,7 +243,10 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
                 if (status == 403 || status == 401) {
                     console.log("not authorised");
                     redirect(contextRoot() + "/notAuthorised");
+                } else if (status >= 400 && (_.isUndefined(request.disableAlertOnFailure) || !request.disableAlertOnFailure)) {
+                    messageService.alertStayOn("Error calling " + request.url + ", response: " + status + ".  Try reloading the page, maybe this will go away?");
                 }
+
             });
 
             return defer.promise;
@@ -412,7 +418,7 @@ profileEditor.factory('util', function ($location, $q, config, $modal, $window) 
         UUID_REGEX_PATTERN: UUID_REGEX_PATTERN
     };
 
-});
+}]);
 
 
 /**

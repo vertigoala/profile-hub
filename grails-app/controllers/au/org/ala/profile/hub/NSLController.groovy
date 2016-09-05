@@ -21,7 +21,11 @@ class NSLController extends BaseController {
         } else {
             def concepts = nslService.listConcepts(params.nslNameIdentifier)
 
-            render concepts as JSON
+            if (concepts) {
+                render concepts as JSON
+            } else {
+                response.sendError(500, "Error contacting NSL")
+            }
         }
     }
 }

@@ -1,3 +1,5 @@
+import grails.util.Environment
+
 class UrlMappings {
 
     static mappings = {
@@ -197,5 +199,9 @@ class UrlMappings {
         "/image/proxyImage/$imageId" controller: "image", action: [GET: "downloadImage"]
         "/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
         "/opus/$opusId/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
+
+        if (Environment.current == Environment.DEVELOPMENT) {
+            "/console/$action?/$id?(.$format)?" controller: 'console'
+        }
     }
 }
