@@ -56,22 +56,28 @@
                         <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
                                 class="fa fa-lock"></span>&nbsp;&nbsp;Lock for major revision</a>
                     </li>
-                    <li role="presentation"
-                        ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
-                        <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
-                                class="fa fa-unlock"></span>&nbsp;&nbsp;Publish draft changes</a>
-                    </li>
+                    <g:if test="${params.isOpusEditorPlus}">
+                        <li role="presentation"
+                            ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
+                            <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
+                                    class="fa fa-unlock"></span>&nbsp;&nbsp;Publish draft changes</a>
+                        </li>
+                    </g:if>
                     <li role="presentation"
                         ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
                         <a href="" ng-click="profileCtrl.discardDraftChanges()"><span
                                 class="fa fa-times-circle"></span>&nbsp;&nbsp;Discard draft changes</a>
                     </li>
                     <li class="divider" ng-hide="profileCtrl.readonly()"></li>
-                    <li role="presentation">
-                        <a href="" ng-click="profileCtrl.deleteProfile()" target="_self"
-                           ng-hide="profileCtrl.readonly() || !profileCtrl.profileId || profileCtrl.profile.publications.length > 0"><span
-                                class="fa fa-trash-o"></span>&nbsp;&nbsp;Delete this profile</a>
-                    </li>
+
+                    <g:if test="${params.isOpusEditorPlus}">
+                        <li role="presentation">
+                            <a href="" ng-click="profileCtrl.deleteProfile()" target="_self"
+                               ng-hide="profileCtrl.readonly() || !profileCtrl.profileId || profileCtrl.profile.publications.length > 0"><span
+                                    class="fa fa-trash-o"></span>&nbsp;&nbsp;Delete this profile</a>
+                        </li>
+                    </g:if>
+
                     <li role="presentation">
                         <a href="" ng-click="profileCtrl.archiveProfile()" target="_self"
                            ng-hide="profileCtrl.readonly() || profileCtrl.isArchived()"><span

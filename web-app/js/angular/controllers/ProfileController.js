@@ -284,7 +284,7 @@ profileEditor.controller('ProfileController',
             messageService.info("Applying changes. Please wait...");
         }
 
-        var future = profileService.toggleDraftMode(self.opusId, self.profileId, snapshot);
+        var future = profileService.toggleDraftMode(self.opusId, self.profileId, snapshot, self.profile.privateMode);
 
         future.then(function () {
             messageService.success("The profile has been successfully updated.");

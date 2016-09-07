@@ -7,9 +7,13 @@ profileEditor.controller('UserAccessController', function (messageService, util,
     self.opus = null;
     self.users = [];
     self.opusId = util.getEntityId("opus");
-    self.roles = [{name: "Admin", key: "ROLE_PROFILE_ADMIN"},
+    self.roles = [
+        // Order is important - Refactoring needed to lookup based on key rather than order.
+        {name: "Admin", key: "ROLE_PROFILE_ADMIN"},
         {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
-        {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"}];
+        {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"},
+        {name: "Editor Plus", key: "ROLE_PROFILE_EDITOR_PLUS"}
+    ];
 
     var userRole = {name: "User", key: "ROLE_USER"};
 
@@ -80,7 +84,7 @@ profileEditor.controller('UserAccessController', function (messageService, util,
         if (self.opus.privateCollection) {
             self.roles.push(userRole);
         } else {
-            self.roles.splice(3, 1)
+            self.roles.splice(4, 1)
         }
     };
 

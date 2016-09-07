@@ -87,8 +87,8 @@ class ProfileService {
         webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}?latest=${latest}", json)
     }
 
-    def toggleDraftMode(String opusId, String profileId) {
-        webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/toggleDraftMode", null)
+    def toggleDraftMode(String opusId, String profileId, boolean publish = false) {
+        webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/toggleDraftMode?publish=${publish}", null)
     }
 
     def discardDraftChanges(String opusId, String profileId) {

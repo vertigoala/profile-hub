@@ -15,6 +15,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 import javax.validation.constraints.NotNull
 
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
+import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR_PLUS
 
 class ProfileController extends BaseController {
 
@@ -32,7 +33,7 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profileAndOpus || !profileAndOpus.profile) {
@@ -59,7 +60,7 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profileAndOpus) {
@@ -112,7 +113,7 @@ class ProfileController extends BaseController {
         if (!json || !params.profileId) {
             badRequest()
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             def response = profileService.updateProfile(params.opusId as String, params.profileId as String, json, latest)
 
             handle response
@@ -132,7 +133,22 @@ class ProfileController extends BaseController {
     }
 
     @Secured(role = ROLE_PROFILE_EDITOR)
-    def toggleDraftMode() {
+    def createDraftMode() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            if (params.snapshot == 'true' && enabled("publications")) {
+                savePublication()
+            }
+
+            def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String)
+
+            handle response
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR_PLUS)
+    def publishDraft() {
         if (!params.profileId) {
             badRequest()
         } else {
@@ -146,7 +162,7 @@ class ProfileController extends BaseController {
                 imageService.publishStagedImages(params.opusId, params.profileId)
             }
 
-            def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String)
+            def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String, true)
 
             handle response
         }
@@ -189,7 +205,7 @@ class ProfileController extends BaseController {
             badRequest "profileId is a required parameter"
         } else {
             response.setContentType(CONTENT_TYPE_JSON)
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profileAndOpus) {
@@ -201,7 +217,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR_PLUS)
     def deleteProfile() {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
@@ -302,7 +318,7 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
 
             def model = profileService.getProfile(params.opusId, params.profileId, latest)
 
@@ -321,7 +337,7 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.profileId || !params.pageSize || !params.startIndex) {
             badRequest "opusId, profileId, pageSize and startIndex are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             boolean readonlyView = params.getBoolean('readonlyView', true)
             def response = imageService.retrieveImagesPaged(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView, params.pageSize as int, params.startIndex as int)
             handle(response)
@@ -333,7 +349,7 @@ class ProfileController extends BaseController {
             badRequest "opusId, profileId and imageSources are required parameters"
         } else {
 
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             boolean readonlyView = params.getBoolean('readonlyView', true)
 
             def response = imageService.retrieveImages(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView)
@@ -539,7 +555,7 @@ class ProfileController extends BaseController {
             if (!pubJson) {
                 notFound()
             } else {
-                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
                 def profile = profileService.getProfile(pubJson.opusId, pubJson.profileId, latest)
 
                 if (!profile) {
@@ -639,7 +655,7 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
 
             def result = profileService.getAttachmentMetadata(params.opusId, params.profileId, params.attachmentId ?: null, latest)
 

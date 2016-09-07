@@ -205,10 +205,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        toggleDraftMode: function (opusId, profileId, snapshot) {
+        toggleDraftMode: function (opusId, profileId, snapshot, publish) {
             $log.debug("Toggling draft mode for profile " + profileId);
             var future = enqueue(function () {
-                return $http.post(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/toggleDraftMode?snapshot=" + snapshot);
+                var url = util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId;
+                if(publish){
+                    url = url + "/publishDraft?snapshot=" + snapshot;
+                } else {
+                    url =  url + "/createDraftMode?snapshot=" + snapshot;
+                }
+
+                return $http.post(url);
             });
             future.then(function (response) {
                 $log.debug("Profile updated with response code " + response.status);

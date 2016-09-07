@@ -36,6 +36,7 @@
                         <ul>
                             <li><b>Admin</b> - can edit the configuration for the entire collection, and can modify any profile in the collection.
                             </li>
+                            <li><b>Editor Plus</b> - can add, edit, publish and delete any profile within this collection.</li>
                             <li><b>Editor</b> - can add and edit content on any profile page within this collection.</li>
                             <li><b>Reviewer</b> - can view and add review comments on any profile page within this collection, but cannot create or modify profiles.
                             <li ng-show="userCtrl.opus.privateCollection"><b>User</b> - can view any profile page within this <i>private</i> collection, but cannot create or modify profiles, and cannot comment on profiles.
