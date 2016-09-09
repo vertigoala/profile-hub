@@ -155,7 +155,7 @@
 
                     <div class="col-sm-9">
                         <textarea id="description" ng-model="attachmentUploadCtrl.metadata.description"
-                                  class="form-control" rows="3" maxlength="500" ng-maxlength="500"></textarea>
+                                  class="form-control" rows="3" maxlength="1024" ng-maxlength="1024"></textarea>
                     </div>
                 </div>
             </div>

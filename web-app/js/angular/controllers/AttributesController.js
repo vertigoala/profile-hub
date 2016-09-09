@@ -75,7 +75,7 @@ profileEditor.controller('AttributeEditor', ['profileService', 'util', 'messageS
     };
 
     self.showAttribute = function (attribute) {
-        return (self.readonly && !attribute.matchedAsName &&
+        return (self.readonly && !attribute.matchedAsName && attribute.text &&
             (!attribute.fromCollection ||
             (attribute.fromCollection && self.opus.showLinkedOpusAttributes && self.showSupportingData)))
             || (!self.readonly &&
@@ -234,8 +234,8 @@ profileEditor.controller('AttributeEditor', ['profileService', 'util', 'messageS
     self.saveAttribute = function (idx, attributeForm) {
         var attribute = self.attributes[idx];
         self.attributes[idx].saving = true;
-        if(!attribute.text || !attribute.title){
-            messageService.alertStayOn( "Attribution title and description fields are mandatory.");
+        if(!self.attributes[idx].title){
+            messageService.alertStayOn( "Attribution title field is mandatory.");
             return;
         }
 

@@ -165,7 +165,7 @@
         <label for="attributeContent" class="screen-reader-label">Content</label>
 
         <div ng-show="attribute.matchedAsName" class="small padding-bottom-1"><i class="fa fa-info-circle">&nbsp;</i>This attribute will be displayed below the profile name. Any formatting, images, links, etc will be ignored.</div>
-        <textarea id="attributeContent" ng-model="attribute.text" name="attribute" ckeditor="richTextFullToolbar" required="required"></textarea>
+        <textarea id="attributeContent" ng-model="attribute.text" name="attribute" ckeditor="richTextFullToolbar"></textarea>
 
         <div class="row"
              ng-if="attrCtrl.opus.allowFineGrainedAttribution && (attribute.uuid || attribute.original)">
@@ -268,7 +268,7 @@
             <span class="col-md-12">
                 <button class="btn btn-default" ng-click="attrCtrl.deleteAttribute($index)">Delete attribute</button>
                 <save-button ng-click="attrCtrl.saveAttribute($index, AttributeForm)"
-                             disabled="!AttributeForm.$dirty || !attrCtrl.isValid(attribute.title) || !attribute.text"
+                             disabled="!AttributeForm.$dirty || !attrCtrl.isValid(attribute.title)"
                              dirty="AttributeForm.$dirty || !attribute.uuid"
                              form="AttributeForm">
                 </save-button>
