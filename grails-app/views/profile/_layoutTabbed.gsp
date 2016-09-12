@@ -43,16 +43,18 @@
             <tabset>
                 <tab heading="Profile" class="font-xxsmall" ng-show="managedTabCtrl.hasContent()" managed-tab>
                     <div class="row" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
-                        <div ng-class="imageCtrl.primaryImage ? 'col-md-9' : 'col-md-12'">
+                        <div ng-class="(imageCtrl.primaryImage || profileCtrl.primaryAudio || profileCtrl.primaryVideo) ? 'col-md-9' : 'col-md-12'">
                             <g:render template="attributes"/>
                             <g:render template="specimens"/>
                             <g:if test="${!profile.archivedDate}">
                                 <g:render template="taxon"/>
                             </g:if>
                         </div>
-                        <div class="side col-md-3" ng-if="imageCtrl.primaryImage">
+                        <div class="side col-md-3" ng-if="imageCtrl.primaryImage || profileCtrl.primaryVideo || profileCtrl.primaryAudio">
                             <g:render template="mapSnapshot" model="[size: 'small']"/>
                             <g:render template="primaryImage" model="[size: 'small', hideViewAll:true]"/>
+                            <div ng-if="profileCtrl.primaryVideo" embed selected-multimedia="profileCtrl.primaryVideo"></div>
+                            <div ng-if="profileCtrl.primaryAudio" embed selected-multimedia="profileCtrl.primaryAudio"></div>
                         </div>
                     </div>
                     <div class="row">
@@ -79,8 +81,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <g:include controller="profile" action="multimediaPanel"
-                               params="[opusId: params.opusId, profileId: params.profileId, edit: edit]"/>
+                            <multimedia profile="profileCtrl.profile" readonly="profileCtrl.readonly"></multimedia>
                         </div>
                     </div>
                 </tab>

@@ -54,6 +54,8 @@ profileEditor.controller('ProfileController',
 
                     $window.document.title = self.profile.scientificName + " | " + self.opus.title;
 
+                    self.primaryVideo = self.profile.primaryVideo ? _.find(self.profile.documents, function(doc) { return doc.documentId == self.profile.primaryVideo }) : null;
+                    self.primaryAudio = self.profile.primaryAudio ? _.find(self.profile.documents, function(doc) { return doc.documentId == self.profile.primaryAudio }) : null;
 
                     if (self.opus.keybaseProjectId) {
                         var keyPromise = profileService.findKeybaseKeyForName(self.opus.uuid, self.profile.scientificName);

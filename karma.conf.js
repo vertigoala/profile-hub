@@ -44,6 +44,7 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
+            'node_modules/jasmine-data_driven_tests/src/all.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/jquery-2.1.4/jquery-2.1.4.min.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/leaflet.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.Coordinates-0.1.5/Leaflet.Coordinates-0.1.5.min.js',
@@ -59,6 +60,7 @@ module.exports = function (config) {
             'test/js/thirdparty/angular-mocks-1.3.13.js',
             'web-app/thirdparty/angular/ui-bootstrap-tpls-0.12.0.js',
             'web-app/thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js',
+            'web-app/thirdparty/angular-bootstrap-show-errors/showErrors.js',
             'web-app/thirdparty/ng-file-upload/ng-file-upload-shim-5.0.7.min.js',
             'web-app/thirdparty/ng-file-upload/ng-file-upload-5.0.7.min.js',
             'web-app/thirdparty/angular-leaflet/angular-leaflet-directive.min.js',
@@ -113,7 +115,11 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome','Firefox','PhantomJS'],
+        browsers: [
+            // 'Chrome',
+            // 'Firefox',
+            'PhantomJS'
+        ],
 
 
         // Continuous Integration mode

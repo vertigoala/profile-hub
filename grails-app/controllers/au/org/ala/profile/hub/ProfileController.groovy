@@ -745,36 +745,6 @@ class ProfileController extends BaseController {
         render template: "images"
     }
 
-    def multimediaPanel = {
-
-        Map profileDocuments = profileService.listDocuments(params.opusId, params.profileId, params.edit)
-
-        String profileId = params.profileId
-        String opusId = params.opusId
-
-        def g = grailsApplication.mainContext.getBean('org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib')
-
-        def model = [
-                imageLocation    : g.resource(dir: '/images', plugin: 'document-preview-plugin'),
-                pdfgenUrl        : g.createLink(controller: 'preview', action: 'pdfUrl'),
-                pdfViewer        : g.createLink(controller: 'preview', action: 'viewer'),
-                imgViewer        : g.createLink(controller: 'preview', action: 'imageviewer'),
-                audioViewer      : g.createLink(controller: 'preview', action: 'audioviewer'),
-                videoViewer      : g.createLink(controller: 'preview', action: 'videoviewer'),
-                errorViewer      : g.createLink(controller: 'preview', action: 'error'),
-                documentUpdateUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/update"),
-                documentDeleteUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/delete"),
-                documents        : profileDocuments.documents,
-                roles            : [
-                        [id: 'embeddedAudio', name: 'Embedded Audio'],
-                        [id: 'embeddedVideo', name: 'Embedded Video']]
-        ]
-
-        def modelAsJs = modelAsJavascript(model)
-
-        render(template: "multimedia", model: [model: modelAsJs])
-    }
-
     def mapPanel = {
         render template: "map"
     }
@@ -827,6 +797,21 @@ class ProfileController extends BaseController {
     }
 
     /**
+     * Waste even more time by getting just the list of ~~documents~~ multimedia resources for a profile.
+     */
+    def documentList() {
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        def docs = profileService.listDocuments(opusId, profileId, params.boolean('edit') ?: false)
+        if (docs.error) {
+            response.sendError(500, "Couldn't list documents")
+        } else {
+            respond docs
+        }
+    }
+
+    /**
      * Proxies to the profile services profile controller to create or update a document.
      * @param documentId the documentId of the document to update (if not supplied, a create operation will be assumed).
      * @return the result of the update.
@@ -843,13 +828,16 @@ class ProfileController extends BaseController {
         log.debug("profileId: ${profileId}")
 
 
-        Map document = JSON.parse(params.document)
+        Map document = request.getJSON()  // fuck off if you send an array you cunts.
 
         def result = profileService.updateDocument(opusId, profileId, document)
 
-        response.setContentType('text/plain;charset=UTF8')
-        def resultAsText = (result as JSON).toString()
-        render resultAsText
+        if (result.error) {
+            response.sendError(500, "Couldn't update document")
+        } else {
+            def respondObj = result.resp
+            respond(respondObj)
+        }
     }
 
     /**
@@ -859,7 +847,7 @@ class ProfileController extends BaseController {
      */
     @Secured(role = ROLE_PROFILE_EDITOR)
     def documentDelete(String documentId) {
-        log.debug("In documentUpdate for ID: ${documentId}")
+        log.debug("In documentDelete for ID: ${documentId}")
 
         String opusId = params.opusId
         String profileId = params.profileId
@@ -869,6 +857,27 @@ class ProfileController extends BaseController {
 
         def result = profileService.deleteDocument(opusId, profileId, documentId)
         render status: result.statusCode
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def setPrimaryMultimedia() {
+        log.debug("setPrimaryMultimedia()")
+
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        log.debug("opusId: ${opusId}")
+        log.debug("profileId: ${profileId}")
+
+        Map doc = request.getJSON()
+
+        def result = profileService.setPrimaryMultimedia(opusId, profileId, doc)
+
+        if (result.error) {
+            response.sendError(500, "Couldn't update primary multimedia")
+        } else {
+            response.sendError(204)
+        }
     }
 }
 

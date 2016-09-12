@@ -1129,6 +1129,30 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             var future = $http.delete(util.contextRoot() + "/opus/" + opusId + "/data/" + dataSetId + "/delete");
 
             return util.toStandardPromise(future);
+        },
+
+        addMultimedia: function(profile, multimedia) {
+            var future = $http.post(util.contextRoot() + "/opus/" + profile.opusId + "/profile/" + profile.uuid + "/multimedia", multimedia);
+            return util.toStandardPromise(future);
+        },
+
+        editMultimedia: function(profile, multimedia) {
+            if (multimedia.documentId) {
+                var future = $http.post(util.contextRoot() + "/opus/" + profile.opusId + "/profile/" + profile.uuid + "/multimedia/" + multimedia.documentId, multimedia);
+                return util.toStandardPromise(future);
+            } else {
+                return this.addMultimedia(profile,multimedia);
+            }
+        },
+
+        deleteMultimedia: function(profile, multimediaId) {
+            var future = $http.delete(util.contextRoot() + "/opus/" + profile.opusId + "/profile/" + profile.uuid + "/multimedia/" + multimediaId);
+            return util.toStandardPromise(future);
+        },
+
+        setPrimaryMultimedia: function(profile, primaryAudio, primaryVideo) {
+            var future = $http.post(util.contextRoot() + "/opus/" + profile.opusId + "/profile/" + profile.uuid + "/primaryMultimedia", {primaryAudio: primaryAudio, primaryVideo: primaryVideo});
+            return util.toStandardPromise(future);
         }
     }
 });

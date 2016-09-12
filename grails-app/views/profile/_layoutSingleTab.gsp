@@ -41,6 +41,12 @@
         <div class="col-md-6 col-sm-12" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
             <g:render template="primaryImage"/>
         </div>
+        <div class="col-md-6 col-sm-12" ng-if="profileCtrl.profile.primaryVideo">
+            <div embed selected-multimedia="profileCtrl.primaryVideo"></div>
+        </div>
+        <div class="col-md-6 col-sm-12" ng-if="profileCtrl.profile.primaryAudio">
+            <div embed selected-multimedia="profileCtrl.primaryAudio"></div>
+        </div>
     </div>
 </g:if>
 
@@ -70,8 +76,7 @@
                                            params="[opusId: params.opusId]"/>
                                 <g:include controller="profile" action="imagesPanel"
                                            params="[opusId: params.opusId]"/>
-                                <g:include controller="profile" action="multimediaPanel"
-                                           params="[opusId: params.opusId, profileId: params.profileId, edit: edit]"/>
+                                <multimedia profile="profileCtrl.profile" readonly="profileCtrl.readonly"></multimedia>
                             </g:if>
                             <g:include controller="profile" action="publicationsPanel"
                                        params="[opusId: params.opusId]"/>

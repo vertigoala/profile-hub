@@ -526,11 +526,6 @@ class ProfileService {
         webService.post(url, doc)
     }
 
-    def updateDocument(Map doc, MultipartFile file) {
-        def url = grailsApplication.config.profile.baseURL + "/document/${doc.documentId?:''}"
-        webService.postMultipart(url, [document:doc], [:], [file])
-    }
-
     def Map listDocuments(String opusId, String profileId, boolean edit) {
         def url ="${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/document/list?editMode=${edit}"
         def resp = webService.get(url)
@@ -538,5 +533,11 @@ class ProfileService {
             return resp.resp
         }
         resp
+    }
+
+    def setPrimaryMultimedia(String opusId, String profileId, json) {
+        // mmm boilerplate.
+        def url = "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/primaryMultimedia"
+        return webService.post(url, json)
     }
 }

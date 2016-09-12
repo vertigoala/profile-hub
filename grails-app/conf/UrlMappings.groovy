@@ -25,10 +25,6 @@ class UrlMappings {
         "/profile/search/taxon/levels" controller: "search", action: "getTaxonLevels"
         "/profile/search/children" controller: "search", action: "getImmediateChildren"
 
-        // This does not follow standard url convention because the document-preview-plugin appends the documentID at the end of it
-        "/opus/$opusId/profile/$profileId/resource/delete/$documentId" controller: "profile", action: [DELETE: "documentDelete"]
-        "/opus/$opusId/profile/$profileId/resource/update/$documentId?(.$format)?" controller: "profile", action: [POST: "documentUpdate"]
-        "/opus/$opusId/profile/$profileId/resource/update" controller: "profile", action: [POST: "documentUpdate"] // This is actually a create
         "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
         "/opus/$opusId/profile/$profileId/duplicate" controller: "profile", action: [PUT: "duplicateProfile"]
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
@@ -70,6 +66,9 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/attachment/$attachmentId" controller: "profile", action: [GET: "getAttachmentMetadata", DELETE: "deleteAttachment"]
         "/opus/$opusId/profile/$profileId/attachment/" controller: "profile", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
         "/opus/$opusId/profile/$profileId/map/snapshot" controller: "profile", action: [DELETE: "deleteMapSnapshot", POST: "createMapSnapshot"]
+        "/opus/$opusId/profile/$profileId/multimedia/$documentId" controller: "profile", action: [DELETE: "documentDelete", POST: "documentUpdate"]
+        "/opus/$opusId/profile/$profileId/multimedia" controller: "profile", action: [GET: "documentList", POST: "documentUpdate"]
+        "/opus/$opusId/profile/$profileId/primaryMultimedia" controller: "profile", action: [POST: "setPrimaryMultimedia"]
         "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
         "/opus/$opusId/data/" controller: "data", action: [GET: "getDataSets"]
         "/opus/$opusId/data/upload" controller: "data", action: [GET: "upload"]

@@ -12,6 +12,7 @@ modules = {
         dependsOn "angular"
         dependsOn "angular_bootstrap_colourpicker"
         dependsOn "angular_loading_bar"
+        dependsOn "angular_bootstrap_showErrors"
         dependsOn "fontawesome"
         dependsOn "ckeditor"
         dependsOn "google_diff"
@@ -56,6 +57,7 @@ modules = {
         resource url:"js/angular/directives/fallbackSrc.js"
         resource url:"js/angular/directives/webComponent.js"
         resource url:"js/angular/directives/tag.js"
+        resource url:"js/angular/services/EmbedService.js"
         resource url:"js/angular/services/ProfileService.js"
         resource url:"js/angular/services/MessageService.js"
         resource url:"js/angular/services/NavService.js"
@@ -113,6 +115,10 @@ modules = {
     angular_loading_bar {
         resource url:"thirdparty/angular-loading-bar/loading-bar-0.7.1.min.js"
         resource url:"thirdparty/angular-loading-bar/loading-bar-0.7.1.min.css"
+    }
+
+    angular_bootstrap_showErrors {
+        resource url:"thirdparty/angular-bootstrap-show-errors/showErrors.js"
     }
 
     fontawesome {
