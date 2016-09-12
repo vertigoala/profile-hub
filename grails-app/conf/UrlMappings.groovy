@@ -67,7 +67,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/attachment/" controller: "profile", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
         "/opus/$opusId/profile/$profileId/map/snapshot" controller: "profile", action: [DELETE: "deleteMapSnapshot", POST: "createMapSnapshot"]
         "/opus/$opusId/profile/$profileId/multimedia/$documentId" controller: "profile", action: [DELETE: "documentDelete", POST: "documentUpdate"]
-        "/opus/$opusId/profile/$profileId/multimedia" controller: "profile", action: [GET: "documentList", POST: "documentUpdate"]
+        "/opus/$opusId/profile/$profileId/multimedia" controller: "profile", action: [POST: "documentUpdate"]
         "/opus/$opusId/profile/$profileId/primaryMultimedia" controller: "profile", action: [POST: "setPrimaryMultimedia"]
         "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
         "/opus/$opusId/data/" controller: "data", action: [GET: "getDataSets"]

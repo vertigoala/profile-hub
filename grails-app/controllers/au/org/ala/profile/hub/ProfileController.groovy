@@ -797,21 +797,6 @@ class ProfileController extends BaseController {
     }
 
     /**
-     * Waste even more time by getting just the list of ~~documents~~ multimedia resources for a profile.
-     */
-    def documentList() {
-        String opusId = params.opusId
-        String profileId = params.profileId
-
-        def docs = profileService.listDocuments(opusId, profileId, params.boolean('edit') ?: false)
-        if (docs.error) {
-            response.sendError(500, "Couldn't list documents")
-        } else {
-            respond docs
-        }
-    }
-
-    /**
      * Proxies to the profile services profile controller to create or update a document.
      * @param documentId the documentId of the document to update (if not supplied, a create operation will be assumed).
      * @return the result of the update.
@@ -828,7 +813,7 @@ class ProfileController extends BaseController {
         log.debug("profileId: ${profileId}")
 
 
-        Map document = request.getJSON()  // fuck off if you send an array you cunts.
+        Map document = request.getJSON()
 
         def result = profileService.updateDocument(opusId, profileId, document)
 
