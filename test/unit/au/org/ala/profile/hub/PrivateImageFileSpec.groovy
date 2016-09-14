@@ -68,7 +68,7 @@ class PrivateImageFileSpec extends Specification {
         imageService.profileService = profileService
         imageService.grailsApplication = grailsApplication
         imageService.profileService.getProfile(_, _, _) >> [profile: [scientificName: 'Olympia', uuid: 'profile1', privateImages: [123]], opus: [keepImagesPrivate: true, uuid: 'collection1']]
-        imageService.biocacheService.uploadImage(_,_,_,_,_) >> [statusCode: 201, resp: ['imageId':'123']]
+        imageService.biocacheService.uploadImage(_,_,_,_,_, _) >> [statusCode: 201, resp: ['images':['123']]]
 
         mockRequest = new MockMultipartHttpServletRequest()
         controller.metaClass.request = mockRequest
@@ -174,7 +174,7 @@ class PrivateImageFileSpec extends Specification {
         LocalImage privateImage = populateLocalImage(imageId)
         ProfileService profileServiceMock = Mock(ProfileService)  //we don't seem to be able to override the mocked method once it has been set above, so we are creating a new mock
         imageService.setProfileService(profileServiceMock)
-        imageService.profileService.getProfile(_, _, _) >> [profile: [privateImages: [privateImage],uuid: 'profile1'], opus: [keepImagesPrivate: true, uuid: 'collection1']]
+        imageService.profileService.getProfile(_, _, _) >> [profile: [privateImages: [privateImage],uuid: 'profile1'], opus: [keepImagesPrivate: true, uuid: 'collection1', usePrivateRecordData:true]]
         when: "we try to publish the image, update its status and remove it from local storage"
         imageService.publishPrivateImage(opusId,profileId,imageId)
         then: "its status is updated"

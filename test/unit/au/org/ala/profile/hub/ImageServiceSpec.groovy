@@ -47,13 +47,13 @@ class ImageServiceSpec extends Specification {
 
     def "uploadImage should send the image to the biocache immediately if the profile is not in draft mode"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [privateMode: false], opus: []]
+        profileService.getProfile(_, _, _) >> [profile: [privateMode: false], opus: [usePrivateRecordData:false]]
 
         when:
         imageService.uploadImage("contextPath", "opusId", "profileId", "dataResourceId", [:], dummyFileTransferrable)
 
         then:
-        1 * biocacheService.uploadImage(_, _, _, _, _) >> [:]
+        1 * biocacheService.uploadImage(_, _, _, _, _, _) >> [:]
     }
 
     def "uploadImage should move the image to the staging directory and invoke profileService.recordStagedImage if the profile is in draft mode"() {
@@ -66,7 +66,7 @@ class ImageServiceSpec extends Specification {
         then:
         1 * dummyFile.transferTo(_) // the actual destination file is randomly named, so we can't check the path
         1 * profileService.recordStagedImage(_, _, _)
-        0 * biocacheService.uploadImage(_, _, _, _, _)
+        0 * biocacheService.uploadImage(_, _, _, _, _, _)
     }
 
     def "deleteStagedImage should do nothing if the profile has no staged images"() {
@@ -416,10 +416,12 @@ class ImageServiceSpec extends Specification {
 
     def "publishImages should upload images to the biocache and delete the staged files"() {
         setup:
-        profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1"], profile: [uuid: "profile1", stagedImages: [
+        profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1", usePrivateRecordData:false],
+                                               profile: [uuid: "profile1", stagedImages: [
                 [imageId: "image1", originalFileName: "image1.jpg"],
                 [imageId: "image2", originalFileName: "image2.jpg"]
         ]]]
+
         File stagedDir = new File("${grailsApplication.config.image.staging.dir}/profile1")
         stagedDir.mkdir()
         File stagedFile1 = new File("${grailsApplication.config.image.staging.dir}/profile1/image1.jpg")
@@ -434,14 +436,14 @@ class ImageServiceSpec extends Specification {
         imageService.publishStagedImages("opusId", "profile1")
 
         then:
-        imageService.biocacheService.uploadImage(_,_,_,_,_) >> [statusCode: 201, resp: ['imageId':'123']]
+        imageService.biocacheService.uploadImage(_,_,_,_,_,_) >> [statusCode: 201, resp: ['images':'123']]
         2 * profileService.recordStagedImage(_, _, _)
         assertFalse ("Staged images were not removed after upload",new File("${grailsApplication.config.image.staging.dir}/profile1").exists())
     }
 
     def "publishImages should replace the staged id with a permanent id for the primary image if it was a staged image"() {
         setup:
-        profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1"], profile: [uuid: "profile1", stagedImages: [
+        profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1", usePrivateRecordData:false], profile: [uuid: "profile1", stagedImages: [
                 [imageId: "image1", originalFileName: "image1.jpg"],
                 [imageId: "image2", originalFileName: "image2.jpg"]
         ], primaryImage                                                                      : "image1"]]
@@ -452,8 +454,8 @@ class ImageServiceSpec extends Specification {
         stagedFile1.createNewFile()
         stagedFile2.createNewFile()
 
-        biocacheService.uploadImage(_, _, _, stagedFile1, _) >> [resp: [images: ["permId1"]]]
-        biocacheService.uploadImage(_, _, _, stagedFile2, _) >> [resp: [images: ["permId2"]]]
+        biocacheService.uploadImage(_, _, _, stagedFile1, _, _) >> [statusCode: 201, resp: [images: ["permId1"]]]
+        biocacheService.uploadImage(_, _, _, stagedFile2, _, _) >> [statusCode: 201,resp: [images: ["permId2"]]]
 
         expect:
         new File("${grailsApplication.config.image.staging.dir}/profile1").list().size() == 2
@@ -470,7 +472,7 @@ class ImageServiceSpec extends Specification {
 
     def "publishImages should not crash if the images do not have any metadata"() {
         setup:
-        profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1"], profile: [uuid: "profile1", stagedImages: [
+        profileService.getProfile(_, _, _) >> [opus: [dataResourceUid: "dr1", usePrivateRecordData:false], profile: [uuid: "profile1", stagedImages: [
                 [imageId: "image2", originalFileName: "image2.jpg"]
         ]]]
         File stagedDir = new File("${grailsApplication.config.image.staging.dir}/profile1")
@@ -487,7 +489,7 @@ class ImageServiceSpec extends Specification {
         imageService.publishStagedImages("opusId", "profile1")
 
         then:
-        imageService.biocacheService.uploadImage(_,_,_,_,_) >> [statusCode: 201, resp: ['imageId':'123']]
+        imageService.biocacheService.uploadImage(_,_,_,_,_,_) >> [statusCode: 201, resp: ['images':['123']]]
         1 * profileService.recordStagedImage(_, _, _)
         assertFalse("Something went wrong when an image has no metadata",new File("${grailsApplication.config.image.staging.dir}/profile1/image2.jpg").exists())
   }
