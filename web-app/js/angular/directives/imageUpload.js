@@ -82,7 +82,7 @@ profileEditor.directive('imageUpload', function ($browser, $http, config) {
 
             function handleUploadSuccess(imageMetadata) {
                 $scope.image = {};
-                self.files = null;
+                self.files = [];
                 $cacheFactory.get('$http').removeAll();
 
                 if (angular.isDefined($scope.callbackHandler)) {
