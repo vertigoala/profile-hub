@@ -683,7 +683,7 @@ class ImageService {
         Log log = LogFactory.getLog(this)
 
         if (file.exists()) {
-            FileUtils.forceDelete()
+            FileUtils.forceDelete(file)
         } else {
             log.warn "File [${file}] does not exist, nothing to delete"
         }
