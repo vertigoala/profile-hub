@@ -6,6 +6,8 @@ import au.org.ala.images.tiling.ImageTiler
 import au.org.ala.images.tiling.ImageTilerConfig
 import au.org.ala.ws.service.WebService
 import org.apache.commons.io.FileUtils
+import org.apache.commons.logging.Log
+import org.apache.commons.logging.LogFactory
 import org.apache.http.entity.ContentType
 
 import javax.imageio.ImageIO
@@ -182,8 +184,8 @@ class ImageService {
             imageIsStoredLocally = true
         } else {
             // if the profile is not in draft mode, upload the image to the biocache immediately
-            response = biocacheService.uploadImage(opusId, profileAndOpus.profile.uuid, dataResourceId, file, metadata)
-            metadata.imageId = response?.resp?.images ? response.resp.images[0] : null
+            response = biocacheService.uploadImage(opusId, profileAndOpus.profile.uuid, dataResourceId, file, metadata, profileAndOpus.opus.usePrivateRecordData)
+            metadata.imageId = response?.resp?.images ? sanitiseId( response.resp.images[0]) : null
             imageIsStoredLocally = false
         }
 
@@ -388,10 +390,12 @@ class ImageService {
 
         if (retrievedImages && isHttpSuccess(retrievedImages.statusCode as int)) {
             List imagesAsMaps = retrievedImages.resp?.occurrences?.findResults { imageData ->
-                boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageData.image)
+
+                String imageId = sanitiseId(imageData.image)
+                boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageId)
 
                 Map image = [
-                        imageId         : imageData.image,
+                        imageId         : imageId,
                         occurrenceId    : imageData.uuid,
                         largeImageUrl   : imageData.largeImageUrl,
                         thumbnailUrl    : imageData.thumbnailUrl,
@@ -399,9 +403,9 @@ class ImageService {
                         excluded        : excluded,
                         displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
                         caption         : profile.imageSettings.find {
-                            it.imageId == imageData.image
+                            it.imageId == imageId
                         }?.caption ?: '',
-                        primary         : imageData.image == profile.primaryImage,
+                        primary         : imageId == profile.primaryImage,
                         metadata        : imageData.imageMetadata && !imageData.imageMetadata.isEmpty() ? imageData.imageMetadata[0] : [:],
                         type            : ImageType.OPEN
                 ]
@@ -422,19 +426,30 @@ class ImageService {
     }
 
 
-    private
-    static boolean deleteLocalImage(List images, String collectionId, String profileId, String imageId, String directory) {
-        String pathToFile = buildFilePath(directory, collectionId, profileId, imageId)
-        File localDir = new File(pathToFile)
-        if (localDir.exists()) {
-            deleteDirectoryAndContents(localDir)
-        } else {
-            deleteLocalImage(images, imageId, directory + separator + profileId)
+    private static boolean deleteLocalImage(List images, String collectionId, String profileId, String imageId, String directory) {
+        Log log = LogFactory.getLog(this)
+        try {
+            String pathToFile = buildFilePath(directory, collectionId, profileId, imageId)
+            File localDir = new File(pathToFile)
+
+            if (localDir.exists()) {
+                deleteDirectoryAndContents(localDir)
+            } else {
+                log.warn("Directory [${localDir}] does not exists, trying to delete old image directory structure")
+                deleteLocalImage(images, imageId, directory + separator + profileId)
+            }
+            true
+        } catch (Exception e) {
+            log.error("Unable to delete local image.", e)
+            false
         }
     }
 
-    private static boolean deleteDirectoryAndContents(File directoryToDelete) {
-        directoryToDelete.deleteDir()
+    private static void deleteDirectoryAndContents(File directoryToDelete) {
+        Log log = LogFactory.getLog(this)
+
+        log.debug "About to delete [${directoryToDelete}]"
+        FileUtils.deleteDirectory(directoryToDelete)
     }
 
     //RetrieveImages() calls this method and is itself called by ImageService (this class) and ExportService. The
@@ -594,22 +609,26 @@ class ImageService {
             ] : []
             Map metadata = [multimedia: multimedia, scientificName: profile.scientificName]
 
-            def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata)
+            def uploadResponse = biocacheService.uploadImage(opus.uuid, profile.uuid, opus.dataResourceUid, it, metadata, opus.usePrivateRecordData)
 
-            if (uploadResponse?.resp) {
+            // Success condition is complex as biocache can return 20X code even when it didn't return an image
+            if (uploadResponse?.resp?.images[0]
+                    && (uploadResponse?.statusCode?.toInteger() >= 200) && (uploadResponse?.statusCode?.toInteger() <= 299)) {
+
+                String newImageId = sanitiseId(uploadResponse?.resp?.images[0])
+
                 // check if the local image was set as the primary, and swap the local id for the new permanent id
                 if (profile.primaryImage == imageId) {
-                    profileUpdates.primaryImage = uploadResponse.resp.images[0]
+                    profileUpdates.primaryImage = newImageId
                 }
 
                 // check for any display options that were set for the local image, and swap the local id for the new permanent id
                 //that has been assigned by uploadImage call
                 Map imageDisplayOption = profile.imageSettings?.find { it.imageId == imageId }
                 if (imageDisplayOption) {
-                    imageDisplayOption?.imageId = uploadResponse.resp.images[0]
+                    imageDisplayOption?.imageId = newImageId
                 }
-            }
-            if ((uploadResponse?.statusCode?.toInteger() >= 200) && (uploadResponse?.statusCode?.toInteger() <= 299)) {
+
                 //don't delete the local images if the upload failed
                 if (staged) {
                     deleteStagedImage(opus.uuid, profile.uuid, imageId)
@@ -622,6 +641,17 @@ class ImageService {
         if (profileUpdates) {
             profileService.updateProfile(opus.uuid, profile.uuid, profileUpdates, true)
         }
+    }
+
+    /**
+     *  Replace '.' and '/' with '-'
+     * @param input
+     * @return
+     */
+    private static String sanitiseId(String input) {
+        // Workaround. Biocache local storage will return file paths instead of uuid which will break
+        // profile data model so let's sanitize the ID
+        input.replaceAll($/[\./]/$, '-')
     }
 
     //Changed directory structure, supporting existing files stored in old structure, use updated method - same name
@@ -639,7 +669,7 @@ class ImageService {
 
     //Changed directory structure, supporting existing files stored in old structure, use updated method - same name
     @Deprecated
-    private static boolean deleteLocalImage(List images, String imageId, String directory) {
+    private static void deleteLocalImage(List images, String imageId, String directory) {
         def image = images.find { it.imageId == imageId }
         String extension = getExtension(image.originalFileName)
         File localDir = new File(directory)
@@ -650,18 +680,28 @@ class ImageService {
     //Changed directory structure, supporting existing files stored in old structure, use deleteDirectoryAndContents()
     @Deprecated
     private static deleteFileAndDirIfEmpty(String imageId, File file, File localDir) {
-        boolean deleted = file.delete()
+        Log log = LogFactory.getLog(this)
+
+        if (file.exists()) {
+            FileUtils.forceDelete()
+        } else {
+            log.warn "File [${file}] does not exist, nothing to delete"
+        }
 
         File tileDir = new File(localDir, "${imageId}_tiles")
         if (tileDir.exists()) {
-            deleted &= tileDir.deleteDir()
+            FileUtils.deleteDirectory(tileDir)
+        } else {
+            log.warn "Directory [${tileDir}] does not exist, nothing to delete"
         }
 
-        if (localDir.listFiles()?.length == 0) {
-            localDir.delete()
+        // If the below fails it won't be a show stopper for the whole image deletion
+        // We will only leave some unused directories behind.
+        if (localDir.exists()) {
+            if (localDir.listFiles()?.length == 0) {
+                localDir.delete()
+            }
         }
-
-        deleted
     }
 
     private static String imageIdFromFile(File file) {
