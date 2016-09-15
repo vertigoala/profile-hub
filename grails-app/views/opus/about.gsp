@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <r:require module="profiles"/>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>${pageTitle}</title>
 </head>
