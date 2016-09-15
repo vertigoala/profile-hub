@@ -6,7 +6,7 @@
 // to create separate JavaScript files as needed.
 //
 //= require jquery
-//= require bootstrap
+//  do we really require bootstrap if we have angular-ui-bootstrap?
 //= require angular
 //= require angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js
 //= require angular-loading-bar/loading-bar-0.7.1.min.js
