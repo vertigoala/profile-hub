@@ -33,8 +33,8 @@ class AccessControlFilters {
                             it.shortName.equalsIgnoreCase("${controllerName.capitalize()}Controller")
                         }
 
-                        if (controllerName.equalsIgnoreCase('console') && usersRoles.contains(Role.ROLE_ADMIN.toString())) {
-                            authorised = true
+                        if (controllerName.equalsIgnoreCase('console')) {
+                            authorised = usersRoles.contains(Role.ROLE_ADMIN.toString())
                         } else if (actionName) {
                             def controllerAction = controllerClass.getClazz().getDeclaredMethod(actionName)
 

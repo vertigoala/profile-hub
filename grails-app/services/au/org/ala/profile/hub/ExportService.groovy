@@ -292,7 +292,7 @@ class ExportService {
         // Retrieve occurrences-map image url
         String occurrenceQuery = model.profile.occurrenceQuery
         if (mapService.snapshotImageExists(opus.uuid, model.profile.uuid) && opus.mapConfig.allowSnapshots) {
-            model.profile.mapImageUrl = "${grailsApplication.config.grails.serverURL}${mapService.getSnapshotImageUrl("", opus.uuid, model.profile.uuid)}"
+            model.profile.mapImageUrl = "${grailsApplication.config.grails.serverURL}${mapService.getSnapshotImageUrlWithUUIDs("", opus.uuid, model.profile.uuid)}"
         } else {
             model.profile.mapImageUrl = mapService.constructMapImageUrl(occurrenceQuery, opus.usePrivateRecordData)
         }
