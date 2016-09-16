@@ -17,7 +17,7 @@ profileEditor.directive('nomenclature', function ($browser) {
 
             $scope.loadConcepts = function () {
                 $scope.loading = true;
-                if (!$scope.references) {
+                if (!$scope.references && $scope.nslNameId !== null) {
                     profileService.getNomenclatureList($scope.nslNameId).
                         then(function (resp) {
                             $scope.references = resp;
