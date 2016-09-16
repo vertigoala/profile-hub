@@ -3,7 +3,6 @@
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Not Authorised</title>
-    <r:require module="profiles"/>
 </head>
 
 <body>

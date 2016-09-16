@@ -7,9 +7,6 @@
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>${profile.scientificName}</title>
-
-    <r:require module="profiles"/>
-
 </head>
 
 <body>

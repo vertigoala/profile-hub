@@ -90,7 +90,7 @@
                                  ng-if="profile.image.url && profile.image.type.name != 'OPEN'"
                                  class="thumbnail"/>
                         </div>
-                        <img src="${request.contextPath}/images/not-available.png"
+                        <asset:image src="not-available.png"
                              ng-hide="profile.image.url || profile.image.status == 'checking' || profile.image.status == 'not-checked'" class="thumbnail"
                              alt="There is no image for this profile"/>
                         <div class="fa fa-spinner fa-spin" ng-show="profile.image.status != 'checked'"></div>

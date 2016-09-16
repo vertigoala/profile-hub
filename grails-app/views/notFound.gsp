@@ -3,7 +3,6 @@
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Not Found</title>
-    <r:require module="profiles"/>
 </head>
 
 <body>

@@ -46,17 +46,8 @@ grails.mime.types = [ // the first one is the default format
 // Legacy setting for codec used to encode data with ${}
 grails.views.default.codec = "html"
 
-grails.resources.adhoc.patterns = ['/js/*', '/images/*', '/css/*', '/plugins/*', '/thirdparty/*', '/vendor/*', '/templates/*']
-grails.resources.adhoc.includes = ['/js/**', '/images/**', '/css/**', '/plugins/**', '/thirdparty/**', '/vendor/**', '/templates/**']
-
-//grails.resources.mappers.'*'.excludes = ['/thirdparty/ckeditor/**/*']
-grails.resources.mappers.bundle.excludes = ['/thirdparty/ckeditor/**/*']
-grails.resources.mappers.hashandcache.excludes = ['/thirdparty/ckeditor/**/*']
-grails.resources.mappers.zip.excludes = ['/thirdparty/ckeditor/**/*']
-//grails.resources.mappers.baseurl.excludes = ['/thirdparty/ckeditor/**/*']
-//grails.resources.mappers.csspreprocessor.excludes = ['/thirdparty/ckeditor/**/*']
-//grails.resources.mappers.cssrewriter.excludes = ['/thirdparty/ckeditor/**/*']
-//grails.resources.mappers.yuijsminify.excludes = ['/thirdparty/ckeditor/**/*']
+grails.assets.bundle=true
+grails.assets.excludes = ["ckeditor/**/*", "leaflet-control-geocoder-1.3.2/Control.Geocoder.js"]
 
 // The default scope for controllers. May be prototype, session or singleton.
 // If unspecified, controllers are prototype scoped.

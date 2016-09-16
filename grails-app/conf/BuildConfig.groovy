@@ -77,23 +77,34 @@ grails.project.dependency.resolution = {
         compile ":cache:1.1.8"
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
-        compile ":ala-map:2.0.2"
-        compile ":ala-ws-plugin:1.4"
-        compile ":ala-admin-plugin:1.2"
+        compile(":ala-map:2.0.2") {
+            excludes "resources"
+        }
+        compile(":ala-ws-plugin:1.4") {
+            excludes "resources"
+        }
+        compile(":ala-admin-plugin:1.2") {
+            excludes "resources"
+        }
         compile ":quartz:1.0.2"
-        compile ":document-preview-plugin:0.4"
 
         runtime(":images-client-plugin:0.6.1") {
-            excludes "ala-bootstrap3"
+            excludes "ala-bootstrap3", "resources"
         }
-        runtime ":resources:1.2.14"
+//        runtime ":resources:1.2.14"
         runtime(":ala-bootstrap3:1.1") {
-            excludes "ala-cas-client"
+            excludes "ala-cas-client", "resources"
         }
         runtime(":ala-auth:1.3.1") {
-            excludes "commons-httpclient"
+            excludes "commons-httpclient", "resources"
         }
         runtime ":tika-parser:1.3.0.1"
+
+        //compile ":twitter-bootstrap:3.3.6"
+        runtime ":jquery:1.11.1"
+        compile ":asset-pipeline:2.11.0"
+        runtime ":angular-annotate-asset-pipeline:2.4.1"
+        runtime ":angular-template-asset-pipeline:2.3.0"
 
         if (Environment.current == Environment.DEVELOPMENT) {
             compile "org.grails.plugins:console:1.5.11"

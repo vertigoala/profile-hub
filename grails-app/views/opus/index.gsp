@@ -5,7 +5,6 @@
     <meta name="logoUrl" content="${logoUrl}"/>
     <title>Profile collections | Atlas of Living Australia</title>
 
-    <r:require module="profiles"/>
 </head>
 
 <body>
@@ -43,7 +42,7 @@
             <a href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"
                target="_self">
                 <img class="img-responsive collection-thumbnail thumbnail" src=""
-                     ng-src="{{opus.thumbnailUrl | default:'${request.contextPath}/images/generic_flower.png'}}"
+                     ng-src="{{opus.thumbnailUrl | default:'${asset.assetPath(src: "generic_flower.png")}' }}"
                      alt="{{opus.title}} logo" title="{{opus.title}}"></a>
             <h4 class="font-xxsmall" style="width: 160px;"><a
                     href="${request.contextPath}/opus/{{opus.shortName ? opus.shortName : opus.uuid}}"

@@ -42,7 +42,7 @@ class ProfileController extends BaseController {
                 // archived profiles cannot be edited by anyone
                 notAuthorised()
             } else {
-                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, params.opusId, params.profileId)
+                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 profileAndOpus << [edit                : true,
                           currentUser         : authService.getDisplayName(),
                           glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
@@ -66,7 +66,7 @@ class ProfileController extends BaseController {
             if (!profileAndOpus) {
                 notFound()
             } else {
-                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
+                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 Map model = profileAndOpus
                 model << [edit                : false,
                           glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
@@ -211,7 +211,7 @@ class ProfileController extends BaseController {
             if (!profileAndOpus) {
                 notFound()
             } else {
-                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
+                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 render profileAndOpus as JSON
             }
         }
@@ -705,16 +705,21 @@ class ProfileController extends BaseController {
         if (!occurrenceQuery) {
             badRequest "A json body with an occurrenceQuery property are required"
         } else {
-            mapService.createMapSnapshot(opusId, profileId, occurrenceQuery, extents)
+            def opusAndProfile = profileService.getProfile(opusId, profileId, true)
+            mapService.createMapSnapshot(opusAndProfile.opus, opusAndProfile.profile, occurrenceQuery, extents)
+            success([mapSnapshotUrl: mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, opusAndProfile.opus.uuid, opusAndProfile.profile.uuid)])
         }
-
-        success([mapSnapshotUrl: mapService.getSnapshotImageUrl(request.contextPath, opusId, profileId)])
     }
 
     @Secured(role = ROLE_PROFILE_EDITOR)
     def deleteMapSnapshot(@NotNull String opusId, @NotNull String profileId) {
-        mapService.deleteMapSnapshot(opusId, profileId)
-        success([:])
+        def opusAndProfile = profileService.getProfile(opusId, profileId)
+        if (!opusAndProfile || !opusAndProfile.profile) {
+            notFound "The requested profile does not exist"
+        } else {
+            mapService.deleteMapSnapshot(opusAndProfile.opus.uuid, opusAndProfile.profile.uuid)
+            success([:])
+        }
     }
 
     private getGlossaryUrl(opus) {
