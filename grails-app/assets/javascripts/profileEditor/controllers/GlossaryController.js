@@ -90,7 +90,7 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
 
     self.editGlossaryItem = function (index) {
         var popup = $modal.open({
-            templateUrl: "editItemPopup.html",
+            templateUrl: "/profileEditor/editItemPopup.htm",
             controller: "GlossaryModalController",
             controllerAs: "glossaryModalCtrl",
             size: "md",
@@ -108,7 +108,7 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
 
     self.addGlossaryItem = function () {
         var popup = $modal.open({
-            templateUrl: "editItemPopup.html",
+            templateUrl: "/profileEditor/editItemPopup.htm",
             controller: "GlossaryModalController",
             controllerAs: "glossaryModalCtrl",
             size: "md",

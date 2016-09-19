@@ -64,7 +64,7 @@ profileEditor.directive('taxonomy', function ($browser) {
              */
             $scope.showAllSubordinateTaxaPopup = function (level, scientificName, childCount) {
                 $modal.open({
-                    templateUrl: "showTaxonChildren.html",
+                    templateUrl: "/profileEditor/showTaxonChildren.htm",
                     controller: function (profileService, messageService, $modalInstance, taxon, contextPath, opusId) {
                         var self = this;
 

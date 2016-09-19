@@ -161,7 +161,7 @@ describe("ProfileController tests", function () {
     it("should open the modal dialog, and redirect to the edit profile page when it is closed, when createProfile is invoked", function() {
         scope.profileCtrl.createProfile("opusId");
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "createProfile.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/createProfile.htm"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({ controller: "CreateProfileController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "createProfileCtrl"}));
     });
@@ -381,7 +381,7 @@ describe("ProfileController tests", function () {
         scope.profileCtrl.archiveProfile();
         scope.$apply();
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "archiveProfilePopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/archiveProfilePopup.htm"}));
     });
 
     it("should redirect to the profile view page when archiveProfile succeeds", function() {
@@ -462,7 +462,7 @@ describe("ProfileController tests", function () {
         scope.$apply();
 
         expect(util.confirm).not.toHaveBeenCalled();
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "restoreProfilePopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/restoreProfilePopup.htm"}));
     });
 
     it("should redirect to the profile view page when restoreProfile succeeds and there are duplicate profile names", function() {
@@ -476,7 +476,7 @@ describe("ProfileController tests", function () {
         scope.profileCtrl.restoreProfile();
         scope.$apply();
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "restoreProfilePopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/restoreProfilePopup.htm"}));
         expect(profileService.restoreArchivedProfile).toHaveBeenCalledWith("opusId", PROFILE_ID, "new profile name");
         expect(util.redirect).toHaveBeenCalledWith("/context/opus/sname/profile/new profile name");
         expect(messageService.alert).not.toHaveBeenCalled();

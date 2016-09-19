@@ -17,6 +17,7 @@ class AccessControlFilters {
     def filters = {
         all(controller: '*', action: '*') {
             before = {
+                params.currentUserId = authService.userId
                 params.currentUser = authService.getDisplayName()
                 List<String> usersRoles = request.userPrincipal ? request.userPrincipal.attributes.authority.split(",") : []
                 params.isALAAdmin = usersRoles.contains(Role.ROLE_ADMIN.toString())

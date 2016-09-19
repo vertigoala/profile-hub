@@ -183,7 +183,7 @@ describe('Directive: VocabularyEditor', function () {
         scope.removeVocabTerm(1, form);
         scope.$apply();
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "removeTermPopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/removeTermPopup.htm"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controller: "RemoveTermController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "removeTermCtrl"}));
     });
@@ -191,7 +191,7 @@ describe('Directive: VocabularyEditor', function () {
     it("should display the modal edit term popup when editVocabTerm is invoked", function() {
         scope.editVocabTerm(1, form);
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "editTermPopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/editTermPopup.htm"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controller: "VocabModalController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "vocabModalCtrl"}));
     });

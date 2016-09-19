@@ -190,7 +190,7 @@ profileEditor.controller('ProfileController',
 
     self.createProfile = function (opusId, duplicateExisting) {
         var popup = $modal.open({
-            templateUrl: "createProfile.html",
+            templateUrl: "/profileEditor/createProfile.htm",
             controller: "CreateProfileController",
             controllerAs: "createProfileCtrl",
             size: "md",
@@ -462,7 +462,7 @@ profileEditor.controller('ProfileController',
 
     self.showAuditComparison = function (auditItem) {
         $modal.open({
-            templateUrl: "auditComparisonPopup.html",
+            templateUrl: "/profileEditor/auditComparisonPopup.htm",
             controller: "ComparisonPopupController",
             controllerAs: "compareCtrl",
             size: "lg",
@@ -479,7 +479,7 @@ profileEditor.controller('ProfileController',
 
     self.compareWithOtherProfile = function () {
         $modal.open({
-            templateUrl: "profileComparisonPopup.html",
+            templateUrl: "/profileEditor/profileComparisonPopup.htm",
             controller: "ComparisonPopupController",
             controllerAs: "compareCtrl",
             size: "lg",
@@ -496,7 +496,7 @@ profileEditor.controller('ProfileController',
 
     self.archiveProfile = function () {
         var popup = $modal.open({
-            templateUrl: "archiveProfilePopup.html",
+            templateUrl: "/profileEditor/archiveProfilePopup.htm",
             controller: "ArchiveProfileController",
             controllerAs: "archiveCtrl",
             size: "md"
@@ -525,7 +525,7 @@ profileEditor.controller('ProfileController',
                 })
             } else {
                 var popup = $modal.open({
-                    templateUrl: "restoreProfilePopup.html",
+                    templateUrl: "/profileEditor/restoreProfilePopup.htm",
                     controller: "RestoreProfileController",
                     controllerAs: "restoreCtrl",
                     size: "md",

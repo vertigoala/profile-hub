@@ -90,7 +90,7 @@ profileEditor.controller('UserAccessController', function (messageService, util,
 
     function showPopup(user) {
         return $modal.open({
-            templateUrl: "addEditUserPopup.html",
+            templateUrl: "/profileEditor/addEditUserPopup.htm",
             controller: "AddEditUserController",
             controllerAs: "addUserCtrl",
             size: "md",

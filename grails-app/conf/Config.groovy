@@ -46,7 +46,7 @@ grails.mime.types = [ // the first one is the default format
 // Legacy setting for codec used to encode data with ${}
 grails.views.default.codec = "html"
 
-grails.assets.bundle=true
+//grails.assets.bundle=true
 grails.assets.excludes = ["ckeditor/**/*", "leaflet-control-geocoder-1.3.2/Control.Geocoder.js"]
 
 // The default scope for controllers. May be prototype, session or singleton.

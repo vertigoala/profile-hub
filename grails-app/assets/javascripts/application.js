@@ -6,7 +6,8 @@
 // to create separate JavaScript files as needed.
 //
 //= require jquery
-//  do we really require bootstrap if we have angular-ui-bootstrap?
+// TODO Refactor to remove dependency on bootstrap JS (will require changes to map plugin?)
+//= require bootstrap
 //= require angular
 //= require angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js
 //= require angular-loading-bar/loading-bar-0.7.1.min.js
@@ -28,10 +29,10 @@
 //= require colorjs/color.min.js
 //= require urijs-1.18.0/URI.js
 //= require webcomponentsjs/webcomponents-0.7.22.min.js
+//= require mapAndImages
 //= require profileEditor/profiles.js
 //= require_tree profileEditor/controllers
 //= require_tree profileEditor/directives
 //= require_tree profileEditor/services
 //= require_tree profileEditor/templates
 //= require_tree profileEditor/utils
-//= require mapAndImages

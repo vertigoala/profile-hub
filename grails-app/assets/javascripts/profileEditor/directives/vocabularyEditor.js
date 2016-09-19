@@ -69,7 +69,7 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
 
             function showRemoveTermPopup(data, existingTermIndex, form) {
                 var popup = $modal.open({
-                    templateUrl: "removeTermPopup.html",
+                    templateUrl: "/profileEditor/removeTermPopup.htm",
                     controller: "RemoveTermController",
                     controllerAs: "removeTermCtrl",
                     size: "md",
@@ -122,7 +122,7 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
 
             $scope.editVocabTerm = function(index, form) {
                 var popup = $modal.open({
-                    templateUrl: "editTermPopup.html",
+                    templateUrl: "/profileEditor/editTermPopup.htm",
                     controller: "VocabModalController",
                     controllerAs: "vocabModalCtrl",
                     size: "md",

@@ -40,7 +40,7 @@ profileEditor.controller('AttachmentController', function (profileService, messa
 
     self.uploadAttachment = function () {
         var popup = $modal.open({
-            templateUrl: "attachmentUpload.html",
+            templateUrl: "/profileEditor/attachmentUpload.htm",
             controller: "AttachmentUploadController",
             controllerAs: "attachmentUploadCtrl",
             size: "md",
@@ -58,7 +58,7 @@ profileEditor.controller('AttachmentController', function (profileService, messa
 
     self.editAttachment = function (attachment) {
         var popup = $modal.open({
-            templateUrl: "attachmentUpload.html",
+            templateUrl: "/profileEditor/attachmentUpload.htm",
             controller: "AttachmentUploadController",
             controllerAs: "attachmentUploadCtrl",
             size: "md",

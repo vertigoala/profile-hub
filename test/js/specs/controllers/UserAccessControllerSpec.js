@@ -108,7 +108,7 @@ describe("UserAccessController tests", function () {
     it("should open the modal dialog when addUser is invoked", function () {
         scope.userCtrl.addUser(form);
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "addEditUserPopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/addEditUserPopup.htm"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controller: "AddEditUserController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "addUserCtrl"}));
     });
@@ -118,7 +118,7 @@ describe("UserAccessController tests", function () {
 
         scope.userCtrl.editUser("user2", form);
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "addEditUserPopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/addEditUserPopup.htm"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controller: "AddEditUserController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "addUserCtrl"}));
     });

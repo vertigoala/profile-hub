@@ -1,4 +1,3 @@
-<script type="text/ng-template" id="profileComparisonPopup.html">
 <div class="modal-header">
     <h4 class="modal-title">Comparison</h4>
     <close-modal close="compareCtrl.close()"></close-modal>
@@ -18,7 +17,7 @@
         </div>
     </div>
 
-    <div ng-if="compareCtrl.loading""><span class="fa fa-spin fa-spinner"></span>&nbsp;Loading...</div>
+    <div ng-if="compareCtrl.loading"><span class="fa fa-spin fa-spinner"></span>&nbsp;Loading...</div>
 
 <div ng-if="compareCtrl.right">
     <profile-comparison left="compareCtrl.left"
@@ -31,4 +30,3 @@
 <div class="modal-footer">
     <button class="btn btn-default" ng-click="compareCtrl.close()">Close</button>
 </div>
-</script>

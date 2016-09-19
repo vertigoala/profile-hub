@@ -186,8 +186,10 @@
 <asset:script type="text/javascript">
     angular.module('app.config', []).constant('config', {
         contextPath: '${request.contextPath}',
+        edit: ${!!edit},
         readonly: ${!edit},
         currentUser: '${params.currentUser}',
+        currentUserId: '${params.currentUserId}',
         profileServiceUrl: '${grailsApplication.config.profile.service.url}',
         keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}',
         imageServiceUrl: '${grailsApplication.config.images.service.url}',
@@ -195,8 +197,10 @@
         biocacheServiceUrl: '${opus && opus.usePrivateRecordData ? "${request.contextPath}${request.contextPath.endsWith("/") ? '' : '/'}opus/${opus.uuid}" : grailsApplication.config.biocache.base.url}',
         biocacheRecordUrl: '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}',
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
-        isOpusReviewer: '${params.isOpusReviewer}',
+        isOpusReviewer: ${!!params.isOpusReviewer},
+        isOpusEditor: ${!!params.isOpusEditor},
         nslServiceUrlPrefix: '${grailsApplication.config.nsl.service.url.prefix}',
+        nslNameUrlPrefix: '${grailsApplication.config.nsl.name.url.prefix}',
         nslServiceApniConceptSuffix: '${grailsApplication.config.nsl.service.apni.concept.suffix}',
         features: {publications: '${grailsApplication.config.feature.publications}',
                    imageUpload:'${grailsApplication.config.feature.feature.imageUpload}'},

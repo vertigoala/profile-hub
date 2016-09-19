@@ -343,7 +343,7 @@ profileEditor.controller('AttributeEditor', ['profileService', 'util', 'messageS
         var supporting = self.supportingAttributes[title.toLowerCase()];
 
         $modal.open({
-            templateUrl: "supportingCollections.html",
+            templateUrl: "/profileEditor/supportingCollections.htm",
             controller: "AttributePopupController",
             controllerAs: "attrModalCtrl",
             size: "lg",

@@ -9,7 +9,7 @@ profileEditor.controller('ExportController', function (util, $window, $modal, $h
 
     self.exportPdf = function(rank, scientificName) {
         var popup = $modal.open({
-            templateUrl: "exportPdf.html",
+            templateUrl: "/profileEditor/exportPdf.htm",
             controller: "ExportPDFController",
             controllerAs: "pdfCtrl",
             size: "md",
