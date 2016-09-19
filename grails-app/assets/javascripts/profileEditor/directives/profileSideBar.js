@@ -15,7 +15,7 @@ profileEditor.directive('profileSideBar', function ($browser) {
 
             self.open = function(sidebarTemplate) {
                 self.templateId = sidebarTemplate;
-                self.url = $browser.baseHref() + "static/templates/" + sidebarTemplate + ".html";
+                self.url = "/profileEditor/" + sidebarTemplate + ".htm";
                 $('#sideBarContents').toggleClass("sidebar-open");
             };
 

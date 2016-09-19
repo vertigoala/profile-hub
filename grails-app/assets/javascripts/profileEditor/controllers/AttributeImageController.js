@@ -18,7 +18,7 @@ profileEditor.controller('AttributeImageController', function ($scope, profileSe
     self.profile = profile;
 
     self.contextPath = util.contextRoot();
-    self.uploadContentTemplate = util.contextRoot() + '/static/templates/imageUpload.html';
+    self.uploadContentTemplate = '/profileEditor/imageUpload.htm';
 
     self.uploadUrl = util.contextRoot() + "/opus/" + util.getEntityId("opus") + "/profile/" + util.getEntityId("profile") + "/image/upload";
 

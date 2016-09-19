@@ -32,7 +32,7 @@ module.exports = function (config) {
 
         ngHtml2JsPreprocessor: {
             cacheIdFromPath: function(filepath) {
-                // The URL defined in the template is /static/templates/ (because grails deploys anything under web-app to /static).
+                // The URL defined in the template is /profileEditor/ (because there is an asset pipeline plugin that automatically adds them to the cache under this name).
                 // This function rewrites the requested URL to the actual relative path to the template files
                 return filepath.replace(/grails\-app\/assets\/javascripts\/profileEditor\/templates\/(.*)\.tpl.htm/, "/profileEditor/$1.htm");
             },
