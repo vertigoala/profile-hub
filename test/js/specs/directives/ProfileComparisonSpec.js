@@ -9,8 +9,6 @@ describe('Directive: ProfileComparison', function () {
         console.log("----------------------------");
     });
 
-    beforeEach(module("templates"));
-
     beforeEach(function () {
         module('profileEditor');
 

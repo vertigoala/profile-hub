@@ -27,8 +27,6 @@ describe('Directive: VocabularyEditor', function () {
         console.log("----------------------------");
     });
 
-    beforeEach(module("templates"));
-
     beforeEach(function () {
         // Load the directive's module
         module('profileEditor');

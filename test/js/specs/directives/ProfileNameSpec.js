@@ -13,8 +13,6 @@ describe('Directive: ProfileName', function () {
         console.log("----------------------------");
     });
 
-    beforeEach(module("templates"));
-
     beforeEach(function () {
         module('profileEditor');
 

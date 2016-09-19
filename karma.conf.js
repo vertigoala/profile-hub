@@ -26,7 +26,7 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'grails-app/assets/javascripts/angular/**/*.js': ['coverage'],
+            'grails-app/assets/javascripts/profileEditor/**/*.js': ['coverage'],
             'grails-app/assets/javascripts/profileEditor/templates/*.tpl.htm': ['ng-html2js']
         },
 
@@ -34,12 +34,12 @@ module.exports = function (config) {
             cacheIdFromPath: function(filepath) {
                 // The URL defined in the template is /profileEditor/ (because there is an asset pipeline plugin that automatically adds them to the cache under this name).
                 // This function rewrites the requested URL to the actual relative path to the template files
-                return filepath.replace(/grails\-app\/assets\/javascripts\/profileEditor\/templates\/(.*)\.tpl.htm/, "/profileEditor/$1.htm");
+                return filepath.replace(/grails\-app\/assets\/javascripts\/profileEditor\/templates\/(.*)\.tpl\.htm/, "/profileEditor/$1.htm");
             },
 
             // setting this option will create only a single module that contains templates
             // from all the files, so you can load them all with module('foo')
-            moduleName: 'templates'
+            moduleName: 'profileEditor'
         },
 
         // list of files / patterns to load in the browser
@@ -50,10 +50,10 @@ module.exports = function (config) {
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.Coordinates-0.1.5/Leaflet.Coordinates-0.1.5.min.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.loading-0.1.16/Control.Loading.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.EasyButton-1.2.0/easy-button.js',
-            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/grails-app/assets/javascripts/layers/SmartWmsLayer.js',
-            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/grails-app/assets/javascripts/Map.js',
-            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/grails-app/assets/javascripts/OccurrenceMap.js',
-            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/web-app/vendor/urijs-1.18.0/URI.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/urijs-1.18.0/URI.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/layers/SmartWmsLayer.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/Map.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/OccurrenceMap.js',
             'grails-app/assets/thirdparty/modernizr/modernizer.js',
             'grails-app/assets/thirdparty/angular/angular-1.3.13.min.js',
             'grails-app/assets/thirdparty/angular/angular-sanitize-1.3.13.min.js',
@@ -75,12 +75,12 @@ module.exports = function (config) {
             'grails-app/assets/thirdparty/ngStorage/ngStorage-0.3.10.min.js',
             'grails-app/assets/thirdparty/underscore/underscore-1.8.3.min.js',
             'grails-app/assets/thirdparty/dualMultiselect/dualmultiselect.min.js',
-            'grails-app/assets/javascripts/angular/profiles.js',
-            'grails-app/assets/javascripts/angular/utils/*.js',
-            'grails-app/assets/javascripts/angular/services/*.js',
-            'grails-app/assets/javascripts/angular/controllers/*.js',
+            'grails-app/assets/javascripts/profileEditor/profiles.js',
+            'grails-app/assets/javascripts/profileEditor/utils/*.js',
+            'grails-app/assets/javascripts/profileEditor/services/*.js',
+            'grails-app/assets/javascripts/profileEditor/controllers/*.js',
             'grails-app/assets/javascripts/profileEditor/templates/*.tpl.htm',
-            'grails-app/assets/javascripts/angular/directives/*.js',
+            'grails-app/assets/javascripts/profileEditor/directives/*.js',
             'test/js/specs/MockConfigModule.js',
             'test/js/specs/**/*.js'
         ],
