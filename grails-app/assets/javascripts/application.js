@@ -6,7 +6,7 @@
 // to create separate JavaScript files as needed.
 //
 //= require jquery
-// TODO Refactor to remove dependency on bootstrap JS (will require changes to map plugin?)
+// TODO Refactor dropdowns (and others?) to angular-ui-bootstrap to remove dependency on bootstrap JS (will require changes to map plugin?)
 //= require bootstrap
 //= require angular
 //= require angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js
