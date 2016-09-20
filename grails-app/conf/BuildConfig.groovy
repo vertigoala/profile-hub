@@ -20,7 +20,6 @@ grails.project.fork = [
         console: [maxMemory: 1024, minMemory: 64, debug: false, maxPerm: 256]
 ]
 
-//grails.plugin.location."document-preview-plugin" = "../document-preview-plugin"
 //grails.plugin.location."ala-map" = "../ala-map-plugin"
 
 grails.project.dependency.resolver = "maven"
@@ -102,7 +101,7 @@ grails.project.dependency.resolution = {
 
         //compile ":twitter-bootstrap:3.3.6"
         runtime ":jquery:1.11.1"
-        compile ":asset-pipeline:2.11.0"
+        compile ":asset-pipeline:2.11.2-SNAPSHOT"
         runtime ":angular-annotate-asset-pipeline:2.4.1"
         runtime ":angular-template-asset-pipeline:2.3.0"
 
