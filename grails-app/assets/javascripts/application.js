@@ -13,7 +13,8 @@
 //= require angular-loading-bar/loading-bar-0.7.1.min.js
 //= require angular-bootstrap-show-errors/showErrors.js
 //= require angular/ui-bootstrap-tpls-0.12.0.js
-//= require ckeditor/ng-ckeditor-0.2.1.min.js
+//= require ckeditor/ckeditor.js
+//= require ckeditor/ng-ckeditor-0.2.1.js
 //= require google-diff-match-patch/diff_match_patch_uncompressed.js
 //= require jspath/jspath.js
 //= require angular-scroll/angular-scroll.min.js

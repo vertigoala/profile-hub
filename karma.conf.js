@@ -65,7 +65,7 @@ module.exports = function (config) {
             'grails-app/assets/thirdparty/ng-file-upload/ng-file-upload-5.0.7.min.js',
             'grails-app/assets/thirdparty/angular-leaflet/angular-leaflet-directive.min.js',
             'grails-app/assets/thirdparty/angular-loading-bar/loading-bar-0.7.1.min.js',
-            'grails-app/assets/thirdparty/ckeditor/ng-ckeditor-0.2.1.min.js',
+            'grails-app/assets/thirdparty/ckeditor/ng-ckeditor-0.2.1.js',
             'grails-app/assets/thirdparty/ckeditor/ckeditor.js',
             'grails-app/assets/thirdparty/google-diff-match-patch/diff_match_patch.js',
             'grails-app/assets/thirdparty/angular-scroll/angular-scroll.min.js',

@@ -47,7 +47,7 @@ grails.mime.types = [ // the first one is the default format
 grails.views.default.codec = "html"
 
 //grails.assets.bundle=true
-grails.assets.excludes = ["ckeditor/**/*"]
+grails.assets.minifyOptions.excludes = ["**/*.min.js"]
 
 // The default scope for controllers. May be prototype, session or singleton.
 // If unspecified, controllers are prototype scoped.

@@ -15,8 +15,9 @@
     <link href="http://www.ala.org.au/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon"
           type="image/x-icon"/>
     <title><g:layoutTitle/></title>
-    %{--<r:require modules="profiles, ala_admin"/>--}%
-    %{--<r:layoutResources/>--}%
+    <script>
+        var CKEDITOR_BASEPATH = '${request.contextPath}/assets/ckeditor/';
+    </script>
     <g:layoutHead/>
     <asset:stylesheet href="application.css" />
     <asset:javascript src="head.js" />

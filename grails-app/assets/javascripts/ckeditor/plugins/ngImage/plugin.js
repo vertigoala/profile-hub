@@ -9,7 +9,8 @@ CKEDITOR.plugins.add('ngImage', {
                     var element = CKEDITOR.dom.element.createFromHtml(imageElementHtml);
                     editor.insertElement(element);
                 };
-                angular.element($('#attributeContent')).scope().attrCtrl.insertImage(callback);
+                // angular.element($('#attributeContent')).scope().attrCtrl.insertImage(callback);
+                editor.fire('insertNgImage', { callback: callback })
             }
         });
 
