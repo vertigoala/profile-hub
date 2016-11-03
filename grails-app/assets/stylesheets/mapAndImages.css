@@ -1,0 +1,18 @@
+/*
+ * maps
+ *= require map.css
+ *= require leaflet-0.7.7/leaflet.css
+ *= require Leaflet.draw-0.2.4/leaflet.draw.css
+ *= require Leaflet.Coordinates-0.1.5/Leaflet.Coordinates-0.1.5.css
+ *= require Leaflet.Coordinates-0.1.5/Leaflet.Coordinates-0.1.5.ie.css
+ *= require Leaflet.EasyButton-1.2.0/easy-button.css
+ * Geocoder would go here but the JS doesn't work with the asset-pipeline
+ *= require Leaflet.markercluster-0.4.0-hotfix.1/MarkerCluster.css
+ *= require Leaflet.markercluster-0.4.0-hotfix.1/MarkerCluster.Default.css
+ *= require Leaflet.loading-0.1.16/Control.Loading.css
+ *
+ * images
+ * dependsOn font-awesome
+ *= require img-gallery/lib/slider-pro/css/slider-pro.css
+ *= require img-gallery/css/img-gallery.css
+ */

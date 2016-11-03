@@ -15,9 +15,12 @@
     <link href="http://www.ala.org.au/wp-content/themes/ala2011/images/favicon.ico" rel="shortcut icon"
           type="image/x-icon"/>
     <title><g:layoutTitle/></title>
-    <r:require modules="profiles, ala_admin"/>
-    <r:layoutResources/>
+    <script>
+        var CKEDITOR_BASEPATH = '${request.contextPath}/assets/ckeditor/';
+    </script>
     <g:layoutHead/>
+    <asset:stylesheet href="application.css" />
+    <asset:javascript src="head.js" />
     <style type="text/css">
     #banner-image {
         background-image: url(${bannerUrl ?: grailsApplication.config.images.service.url + '/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original'});
@@ -44,9 +47,14 @@
 
 <ala:systemMessage/>
 
-<div ng-controller="CustomAlertController" id="generalAlert">
+<div ng-controller="CustomAlertController" id="timeoutAlert" class="genericAlert">
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" ng-cloak>{{alert.msg}}</alert>
 </div>
+
+<div ng-controller="StayOnAlertController" id="stayOnAlert" class="genericAlert">
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" ng-cloak>{{alert.msg}}</alert>
+</div>
+
 
 <!-- Navbar -->
 <nav class="navbar navbar-default" id="primary-nav">
@@ -107,7 +115,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-4 col-lg-3 margin-bottom-2 site-logo" id="site-logo">
                     <img class="img-responsive customizable-logo-img"
-                         src="${logoUrl ?: resource(dir: "images", file: "atlasoflivingaust.png")}"
+                         src="${logoUrl ?: asset.assetPath(src: "atlasoflivingaust.png")}"
                          alt="${logoAlt ?: 'logo'}"/>
                 </div>
 
@@ -168,19 +176,21 @@
     </footer>
 </div>
 
-<r:script>
+<asset:script type="text/javascript">
     // show warning if using IE6
     if ($.browser && $.browser.msie && $.browser.version.slice(0, 1) == '6') {
         $('#header').prepend($('<div style="text-align:center;color:red;">WARNING: This page is not compatible with IE6.' +
         ' Many functions will still work but layout and image transparency will be disrupted.</div>'));
     }
-</r:script>
+</asset:script>
 
-<r:script>
+<asset:script type="text/javascript">
     angular.module('app.config', []).constant('config', {
         contextPath: '${request.contextPath}',
+        edit: ${!!edit},
         readonly: ${!edit},
         currentUser: '${params.currentUser}',
+        currentUserId: '${params.currentUserId}',
         profileServiceUrl: '${grailsApplication.config.profile.service.url}',
         keybaseProjectUrl: '${grailsApplication.config.keybase.project.lookup}',
         imageServiceUrl: '${grailsApplication.config.images.service.url}',
@@ -188,21 +198,26 @@
         biocacheServiceUrl: '${opus && opus.usePrivateRecordData ? "${request.contextPath}${request.contextPath.endsWith("/") ? '' : '/'}opus/${opus.uuid}" : grailsApplication.config.biocache.base.url}',
         biocacheRecordUrl: '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}',
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
-        isOpusReviewer: '${params.isOpusReviewer}',
+        isOpusReviewer: ${!!params.isOpusReviewer},
+        isOpusEditor: ${!!params.isOpusEditor},
         nslServiceUrlPrefix: '${grailsApplication.config.nsl.service.url.prefix}',
+        nslNameUrlPrefix: '${grailsApplication.config.nsl.name.url.prefix}',
         nslServiceApniConceptSuffix: '${grailsApplication.config.nsl.service.apni.concept.suffix}',
         features: {publications: '${grailsApplication.config.feature.publications}',
                    imageUpload:'${grailsApplication.config.feature.feature.imageUpload}'},
         map: {mapId: '${grailsApplication.config.map.id}',
               accessKey: '${grailsApplication.config.map.access.key}'},
-        mainCssFile: '${resource(dir: "/css", file: "profiles.css")}',
-        bootstrapCssFile: '${resource(dir: "/thirdparty/bootstrap/css", file: "bootstrap3.3.4.min.css")}',
-        imageLoadErrorUrl: '${resource(dir: "/images", file: "not-available.png")}'
+        mainCssFile: '${assetPath(src: "profiles.css")}',
+        bootstrapCssFile: '${assetPath(src: "/bootstrap/css/bootstrap3.3.4.min.css")}',
+        imageLoadErrorUrl: '${assetPath(src: "not-available.png")}',
+        development: ${Environment.current == Environment.DEVELOPMENT}
      });
-</r:script>
+</asset:script>
 
 <!-- JS resources-->
-<r:layoutResources/>
+%{--<r:layoutResources/>--}%
+<asset:javascript src="application.js" />
+<asset:deferredScripts />
 
 </body>
 <script type='text/javascript'>

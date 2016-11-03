@@ -22,8 +22,6 @@ describe('Directive: Taxonomy (Tree Layout)', function () {
         console.log("----------------------------");
     });
 
-    beforeEach(module("templates"));
-
     beforeEach(function () {
         module('profileEditor');
 

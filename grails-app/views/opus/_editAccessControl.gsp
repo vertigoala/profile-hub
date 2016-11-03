@@ -36,6 +36,7 @@
                         <ul>
                             <li><b>Admin</b> - can edit the configuration for the entire collection, and can modify any profile in the collection.
                             </li>
+                            <li><b>Editor Plus</b> - can add, edit, publish and delete any profile within this collection.</li>
                             <li><b>Editor</b> - can add and edit content on any profile page within this collection.</li>
                             <li><b>Reviewer</b> - can view and add review comments on any profile page within this collection, but cannot create or modify profiles.
                             <li ng-show="userCtrl.opus.privateCollection"><b>User</b> - can view any profile page within this <i>private</i> collection, but cannot create or modify profiles, and cannot comment on profiles.
@@ -132,80 +133,4 @@
             </div>
         </div>
     </div>
-
-
-
-    <script type="text/ng-template" id="addEditUserPopup.html">
-    <div class="modal-header">
-        <h4 class="modal-title">{{addUserCtrl.isNewUser ? 'Add User' : 'Edit User'}}</h4>
-        <close-modal close="addUserCtrl.cancel()"></close-modal>
-    </div>
-
-    <div class="modal-body" ng-form="UserForm">
-        <div class="row">
-            <div class="col-md-12">
-
-                <div class="alert alert-danger" ng-show="addUserCtrl.error">{{addUserCtrl.error}}</div>
-
-                <p ng-show="addUserCtrl.isNewUser">
-                    To add users, search for them by <b>email address</b>. <br/>
-                    <b>Note:</b> users need to be registered with the Atlas of Living Australia.
-                </p>
-
-                <div class="form-horizontal">
-                    <div class="input-group" ng-show="addUserCtrl.isNewUser">
-                        <input class="form-control" id="appendedInputButton" type="text"
-                               ng-model="addUserCtrl.searchTerm"
-                               name="searchTerm" ng-enter="addUserCtrl.userSearch()">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button"
-                                    ng-click="addUserCtrl.userSearch()">Search for user</button>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="info padding-top-1" ng-show="addUserCtrl.user.userId">
-                    <span>{{ addUserCtrl.user.name }}</span>
-                    -
-                    <span>{{ addUserCtrl.user.email }}</span>
-                    <hr/>
-                </div>
-
-                <div class="row margin-top-1">
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label for="role" class="col-sm-3 control-label">Role</label>
-
-                            <div class="col-sm-8">
-                                <select id="role" ng-model="addUserCtrl.user.role" required ng-required
-                                        class="form-control"
-                                        ng-options="role.key as role.name for role in addUserCtrl.roles">
-                                    <option value="">-- select a role --</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label for="notes" class="col-sm-3 control-label">Notes:</label>
-
-                            <div class="col-sm-8">
-                                <textarea id="notes" ng-model="addUserCtrl.user.notes" rows="4"
-                                          class="form-control"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="addUserCtrl.ok()"
-                ng-disabled="!addUserCtrl.user.userId || !addUserCtrl.user.role">OK</button>
-        <button class="btn btn-default" ng-click="addUserCtrl.cancel()">Cancel</button>
-    </div>
-    </script>
-
 </div>

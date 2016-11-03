@@ -14,7 +14,7 @@ class ExportController extends BaseController {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             def model = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
             if (!model) {
                 notFound()
@@ -31,10 +31,17 @@ class ExportController extends BaseController {
 
                     render [:] as JSON
                 } else {
-                    response.contentType = 'application/pdf'
-                    response.setHeader 'Content-disposition', "attachment; filename=\"${model.profile.scientificName.replaceAll(/\\W/, '')}.pdf\""
-                    exportService.createPdf(extractOptionsFromParams(), { response.outputStream }, latest)
-                    response.outputStream.flush()
+                    try {
+                        exportService.createPdf(extractOptionsFromParams(), {
+                            response.contentType = 'application/pdf'
+                            response.setHeader 'Content-disposition', "attachment; filename=\"${model.profile.scientificName.replaceAll(/\\W/, '')}.pdf\""
+                            response.outputStream
+                        }, latest)
+                        response.outputStream.flush()
+                    } catch (e) {
+                        log.error("Caught exception while generating PDF", e)
+                        response.sendError(500, "Unable to generate PDF")
+                    }
                 }
             }
         }

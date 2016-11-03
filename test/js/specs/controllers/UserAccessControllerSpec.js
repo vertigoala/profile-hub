@@ -108,7 +108,7 @@ describe("UserAccessController tests", function () {
     it("should open the modal dialog when addUser is invoked", function () {
         scope.userCtrl.addUser(form);
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "addEditUserPopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/addEditUserPopup.htm"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controller: "AddEditUserController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "addUserCtrl"}));
     });
@@ -118,7 +118,7 @@ describe("UserAccessController tests", function () {
 
         scope.userCtrl.editUser("user2", form);
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "addEditUserPopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/addEditUserPopup.htm"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controller: "AddEditUserController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "addUserCtrl"}));
     });
@@ -178,7 +178,9 @@ describe("UserAccessController tests", function () {
 
         expect(scope.userCtrl.roles).toEqual([{name: "Admin", key: "ROLE_PROFILE_ADMIN"},
             {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
-            {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"}]);
+            {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"},
+            {name: "Editor Plus", key: "ROLE_PROFILE_EDITOR_PLUS"}]);
+
     });
 
     it("should add the User role to the list of roles when private mode is esabled", function () {
@@ -188,6 +190,7 @@ describe("UserAccessController tests", function () {
         expect(scope.userCtrl.roles).toEqual([{name: "Admin", key: "ROLE_PROFILE_ADMIN"},
             {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
             {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"},
+            {name: "Editor Plus", key: "ROLE_PROFILE_EDITOR_PLUS"},
             {name: "User", key: "ROLE_USER"}]);
     });
 

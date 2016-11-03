@@ -31,7 +31,7 @@ class MapService {
         if (useSandbox) {
             url = "${grailsApplication.config.sandbox.biocache.service.url}/mapping/wms/image?${occurrenceQuery}&"
         } else {
-            url = "${grailsApplication.config.biocache.base.url}ws/mapping/wms/image?${occurrenceQuery}&"
+            url = "${grailsApplication.config.biocache.base.url}/ws/mapping/wms/image?${occurrenceQuery}&"
         }
 
         params.each { k, v -> url += "${k}=${v}&" }
@@ -45,36 +45,43 @@ class MapService {
         url
     }
 
-    void createMapSnapshot(String opusId, String profileId, String occurrenceQuery, String extents = DEFAULT_EXTENTS) {
-        Map profileAndOpus = profileService.getProfile(opusId, profileId, true)
+    void createMapSnapshot(opus, profile, String occurrenceQuery, String extents = DEFAULT_EXTENTS) {
+//        Map profileAndOpus = profileService.getProfile(opusId, profileId, true)
 
-        String url = constructMapImageUrl(occurrenceQuery, profileAndOpus.opus.usePrivateRecordData, profileAndOpus.opus.mapConfig.mapPointColour, extents)
+        String url = constructMapImageUrl(occurrenceQuery, opus.usePrivateRecordData, opus.mapConfig.mapPointColour, extents)
 
-        deleteMapSnapshot(opusId, profileId)
+        deleteMapSnapshot(opus.uuid, profile.uuid)
 
         UrlTransferrableAdapter transfer = new UrlTransferrableAdapter(url: url.toURL())
         transfer.withCloseable {
             Map metadata = [imageId: MAP_SNAPSHOT_IMAGE_NAME, extension: ".${MAP_FILE_TYPE}"]
-            imageService.storeLocalImage(profileAndOpus.opus, profileAndOpus.profile, metadata, transfer, grailsApplication.config.image.private.dir)
+            imageService.storeLocalImage(opus, profile, metadata, transfer, grailsApplication.config.image.private.dir)
         }
     }
 
-    void deleteMapSnapshot(String opusId, String profileId) {
-        Map profileAndOpus = profileService.getProfile(opusId, profileId, true)
+    void deleteMapSnapshot(String opusUuid, String profileUuid) {
+//        Map profileAndOpus = profileService.getProfile(opusUuid, profileUuid, true)
 
-        if (snapshotImageExists(profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)) {
-            imageService.deletePrivateImage(profileAndOpus.opus.uuid, profileAndOpus.profile.uuid, MAP_SNAPSHOT_IMAGE_NAME)
+        if (snapshotImageExists(opusUuid, profileUuid)) {
+            imageService.deletePrivateImage(opusUuid, profileUuid, MAP_SNAPSHOT_IMAGE_NAME)
         }
     }
 
-    String getSnapshotImageUrl(String contextPath, String opusId, String profileId) {
-        Map profileAndOpus = profileService.getProfile(opusId, profileId, true)
+    /**
+     * Enables skipping the round trip to the profile service to load the profile and opus if you already are
+     * sure of the UUIDs
+     * @param contextPath
+     * @param opusUUID
+     * @param profileUUID
+     * @return
+     */
+    String getSnapshotImageUrlWithUUIDs(String contextPath, String opusUUID, String profileUUID) {
         String url = null
 
-        if (snapshotImageExists(profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)) {
+        if (snapshotImageExists(opusUUID, profileUUID)) {
             url = imageService.constructImageUrl(contextPath,
-                    profileAndOpus.opus.uuid,
-                    profileAndOpus.profile.uuid,
+                    opusUUID,
+                    profileUUID,
                     MAP_SNAPSHOT_IMAGE_NAME,
                     ".${MAP_FILE_TYPE}",
                     ImageType.PRIVATE.toString(),
@@ -82,6 +89,11 @@ class MapService {
         }
 
         url
+    }
+
+    String getSnapshotImageUrl(String contextPath, String opusId, String profileId) {
+        Map profileAndOpus = profileService.getProfile(opusId, profileId, true)
+        getSnapshotImageUrlWithUUIDs(contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
     }
 
     boolean snapshotImageExists(String opusId, String profileId) {

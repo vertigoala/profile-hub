@@ -5,7 +5,6 @@
     <meta name="logoUrl" content="${logoUrl}"/>
     <title>Profile search | Atlas of Living Australia</title>
 
-    <r:require module="profiles"/>
 </head>
 
 <body>

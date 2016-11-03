@@ -17,6 +17,7 @@ class AccessControlFilters {
     def filters = {
         all(controller: '*', action: '*') {
             before = {
+                params.currentUserId = authService.userId
                 params.currentUser = authService.getDisplayName()
                 List<String> usersRoles = request.userPrincipal ? request.userPrincipal.attributes.authority.split(",") : []
                 params.isALAAdmin = usersRoles.contains(Role.ROLE_ADMIN.toString())
@@ -33,7 +34,9 @@ class AccessControlFilters {
                             it.shortName.equalsIgnoreCase("${controllerName.capitalize()}Controller")
                         }
 
-                        if (actionName) {
+                        if (controllerName.equalsIgnoreCase('console')) {
+                            authorised = usersRoles.contains(Role.ROLE_ADMIN.toString())
+                        } else if (actionName) {
                             def controllerAction = controllerClass.getClazz().getDeclaredMethod(actionName)
 
                             if (!usersRoles.contains(Role.ROLE_ADMIN.toString())) {
@@ -49,19 +52,23 @@ class AccessControlFilters {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_ADMIN.toString()
                                     } != null
 
+                                    params.isOpusEditorPlus = opus.authorities?.find {
+                                        it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_EDITOR_PLUS.toString()
+                                    } != null || params.isOpusAdmin
+
                                     params.isOpusEditor = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_EDITOR.toString()
-                                    } != null || params.isOpusAdmin
+                                    } != null || params.isOpusAdmin || params.isOpusEditorPlus
 
                                     params.isOpusReviewer = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_REVIEWER.toString()
-                                    } != null || params.isOpusAdmin || params.isOpusEditor
+                                    } != null || params.isOpusAdmin || params.isOpusEditor || params.isOpusEditorPlus
 
                                     params.isOpusUser = !opus.privateCollection || opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_USER.toString()
-                                    } != null || params.isOpusReviewer || params.isOpusAdmin || params.isOpusEditor
+                                    } != null || params.isOpusReviewer || params.isOpusAdmin || params.isOpusEditor || params.isOpusEditorPlus
                                 }
-                                log.debug("User ${request.userPrincipal?.name} is : Opus Admin? ${params.isOpusAdmin}; Opus editor? ${params.isOpusEditor}; Opus reviewer? ${params.isOpusReviewer}; Opus user? ${params.isOpusUserr};")
+                                log.debug("User ${request.userPrincipal?.name} is : Opus Admin? ${params.isOpusAdmin}; Opus editor plus? ${params.isOpusEditorPlus}; Opus editor? ${params.isOpusEditor}; Opus reviewer? ${params.isOpusReviewer}; Opus user? ${params.isOpusUserr};")
 
                                 if (!opus || !opus.privateCollection || params.isOpusUser || controllerAction.isAnnotationPresent(PrivateCollectionSecurityExempt)) {
                                     if (controllerAction.isAnnotationPresent(Secured) || controllerClass.getClazz().isAnnotationPresent(Secured)) {
@@ -74,14 +81,17 @@ class AccessControlFilters {
                                                 if (requiredRole == Role.ROLE_PROFILE_ADMIN.toString()) {
                                                     authorised = params.isOpusAdmin
                                                     log.debug "Action ${actionFullName} requires ROLE_PROFILE_ADMIN. User ${request.userPrincipal?.name} has it? ${authorised}"
+                                                } else if (requiredRole == Role.ROLE_PROFILE_EDITOR_PLUS.toString()) {
+                                                    authorised = params.isOpusAdmin || params.isOpusEditorPlus
+                                                    log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_EDITOR.toString()) {
-                                                    authorised = params.isOpusAdmin || params.isOpusEditor
+                                                    authorised = params.isOpusAdmin || params.isOpusEditor || params.isOpusEditorPlus
                                                     log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_REVIEWER.toString()) {
-                                                    authorised = params.isOpusAdmin || params.isOpusEditor || params.isOpusReviewer
+                                                    authorised = params.isOpusAdmin || params.isOpusEditor || params.isOpusReviewer || params.isOpusEditorPlus
                                                     log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_USER.toString()) {
-                                                    authorised = params.isOpusAdmin || params.isOpusEditor || params.isOpusReviewer || params.isOpusUser
+                                                    authorised = params.isOpusAdmin || params.isOpusEditor || params.isOpusReviewer || params.isOpusUser || params.isOpusEditorPlus
                                                 }
                                             } else {
                                                 log.debug "Security for action ${actionFullName} is opus specific, but no matching opus was found with id ${params.opusId}"
@@ -97,6 +107,7 @@ class AccessControlFilters {
                             } else {
                                 params.isOpusAdmin = true
                                 params.isOpusEditor = true
+                                params.isOpusEditorPlus = true
                                 params.isOpusReviewer = true
                                 params.isOpusUser = true
                                 log.debug "User ${request.userPrincipal?.name} is an ALA Admin user"
@@ -116,6 +127,7 @@ class AccessControlFilters {
                     boolean authenticated = authService.getDisplayName() != null
                     params.isOpusAdmin = authenticated
                     params.isOpusEditor = authenticated
+                    params.isOpusEditorPlus = authenticated
                     params.isOpusReviewer = authenticated
                     params.isOpusUser = authenticated
                     log.warn "**** Authorisation has been disabled! ****"

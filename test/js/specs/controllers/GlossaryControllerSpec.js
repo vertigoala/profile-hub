@@ -263,7 +263,7 @@ describe("GlossaryController tests", function () {
     it("should open the modal dialog when addGlossaryItem is invoked", function() {
         scope.glossaryCtrl.addGlossaryItem();
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "editItemPopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/editItemPopup.htm"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({ controller: "GlossaryModalController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "glossaryModalCtrl"}));
     });
@@ -271,7 +271,7 @@ describe("GlossaryController tests", function () {
     it("should open the modal dialog when editGlossaryItem is invoked", function() {
         scope.glossaryCtrl.editGlossaryItem(1);
 
-        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "editItemPopup.html"}));
+        expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({templateUrl: "/profileEditor/editItemPopup.htm"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({ controller: "GlossaryModalController"}));
         expect(modal.open).toHaveBeenCalledWith(jasmine.objectContaining({controllerAs: "glossaryModalCtrl"}));
     });

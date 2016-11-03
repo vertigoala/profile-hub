@@ -2,11 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <r:require module="profiles"/>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Profile collections</title>
-    <script type="text/javascript"
-            src="http://markusslima.github.io/bootstrap-filestyle/1.0.6/js/bootstrap-filestyle.min.js"></script>
+    <asset:script type="text/javascript"
+            src="http://markusslima.github.io/bootstrap-filestyle/1.0.6/js/bootstrap-filestyle.min.js"></asset:script>
     <style type="text/css">
     .bootstrap-filestyle label {
         margin-bottom: 8px;

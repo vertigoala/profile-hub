@@ -67,7 +67,7 @@ class CommentController extends BaseController {
         // reviewers can only edit/delete their own comments
 
         boolean allowed = false
-        if (params.isOpusAdmin || params.isOpusEditor || (params.isOpusReviewer && comment.author.userId == authService.getUserId())) {
+        if (params.isOpusAdmin || params.isOpusEditorPlus || params.isOpusEditor || (params.isOpusReviewer && comment.author.userId == authService.getUserId())) {
             allowed = true
         }
 

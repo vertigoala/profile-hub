@@ -87,8 +87,8 @@ class ProfileService {
         webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}?latest=${latest}", json)
     }
 
-    def toggleDraftMode(String opusId, String profileId) {
-        webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/toggleDraftMode", null)
+    def toggleDraftMode(String opusId, String profileId, boolean publish = false) {
+        webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/toggleDraftMode?publish=${publish}", null)
     }
 
     def discardDraftChanges(String opusId, String profileId) {
@@ -526,11 +526,6 @@ class ProfileService {
         webService.post(url, doc)
     }
 
-    def updateDocument(Map doc, MultipartFile file) {
-        def url = grailsApplication.config.profile.baseURL + "/document/${doc.documentId?:''}"
-        webService.postMultipart(url, [document:doc], [:], [file])
-    }
-
     def Map listDocuments(String opusId, String profileId, boolean edit) {
         def url ="${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/document/list?editMode=${edit}"
         def resp = webService.get(url)
@@ -538,5 +533,11 @@ class ProfileService {
             return resp.resp
         }
         resp
+    }
+
+    def setPrimaryMultimedia(String opusId, String profileId, json) {
+        // mmm boilerplate.
+        def url = "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/primaryMultimedia"
+        return webService.post(url, json)
     }
 }

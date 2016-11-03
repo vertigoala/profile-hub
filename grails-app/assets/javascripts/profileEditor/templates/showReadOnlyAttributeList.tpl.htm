@@ -1,0 +1,22 @@
+<!-- template for the read-only view of an attribute list -->
+<div ng-repeat="title in attrCtrl.attributeTitles" ng-cloak>
+    <navigation-anchor anchor-name="view_{{title.key}}" title="{{title.name}}" category="attribute" condition="attrCtrl.showTitleGroup(title.name)"></navigation-anchor>
+    <div class="panel panel-default" ng-if="attrCtrl.showTitleGroup(title.name)">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="section-panel-heading">{{ title.name }}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-12" ng-if="attrCtrl.showTitleGroup(title.name)">
+                    <span ng-repeat="attribute in attrCtrl.attributes | groupAttributes:title.name">
+                        <ng-include src="'/profileEditor/readOnlyAttributeBody.htm'"></ng-include>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

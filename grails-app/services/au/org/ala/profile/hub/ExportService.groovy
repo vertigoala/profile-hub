@@ -218,10 +218,11 @@ class ExportService {
         if (params.taxonomy || params.conservation) {
             model.profile.speciesProfile = profileService.getSpeciesProfile(model.profile.guid)?.resp
 
-            model.profile.speciesProfile?.conservationStatuses?.each {
-                it.colour = getColourForStatus(it.status)
-                it.regionAbbrev = statusRegions[it.region]
-            }
+            model.profile.speciesProfile?.conservationStatuses = model.profile.speciesProfile?.conservationStatuses?.collect {[
+                        colour : getColourForStatus(it.value.status),
+                        regionAbbrev: statusRegions[it.key] ?: it.key,
+                        rawStatus: it.value.status
+            ]}
 
             model.profile.classifications = model.profile.classification.collect { [rank: it.rank, scientificName: it.name] }
             if (model.profile.classifications && model.profile.taxonomyTree) {
@@ -291,7 +292,7 @@ class ExportService {
         // Retrieve occurrences-map image url
         String occurrenceQuery = model.profile.occurrenceQuery
         if (mapService.snapshotImageExists(opus.uuid, model.profile.uuid) && opus.mapConfig.allowSnapshots) {
-            model.profile.mapImageUrl = "${grailsApplication.config.grails.serverURL}${mapService.getSnapshotImageUrl("", opus.uuid, model.profile.uuid)}"
+            model.profile.mapImageUrl = "${grailsApplication.config.grails.serverURL}${mapService.getSnapshotImageUrlWithUUIDs("", opus.uuid, model.profile.uuid)}"
         } else {
             model.profile.mapImageUrl = mapService.constructMapImageUrl(occurrenceQuery, opus.usePrivateRecordData)
         }

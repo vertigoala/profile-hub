@@ -26,59 +26,61 @@ module.exports = function (config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'web-app/js/angular/**/*.js': ['coverage'],
-            'web-app/templates/*.html': ['ng-html2js']
+            'grails-app/assets/javascripts/profileEditor/**/*.js': ['coverage'],
+            'grails-app/assets/javascripts/profileEditor/templates/*.tpl.htm': ['ng-html2js']
         },
 
         ngHtml2JsPreprocessor: {
             cacheIdFromPath: function(filepath) {
-                // The URL defined in the template is /static/templates/ (because grails deploys anything under web-app to /static).
+                // The URL defined in the template is /profileEditor/ (because there is an asset pipeline plugin that automatically adds them to the cache under this name).
                 // This function rewrites the requested URL to the actual relative path to the template files
-                return filepath.replace(/web\-app\/templates\/(.*)\.html/, "/static/templates/$1.html");
+                return filepath.replace(/grails\-app\/assets\/javascripts\/profileEditor\/templates\/(.*)\.tpl\.htm/, "/profileEditor/$1.htm");
             },
 
             // setting this option will create only a single module that contains templates
             // from all the files, so you can load them all with module('foo')
-            moduleName: 'templates'
+            moduleName: 'profileEditor'
         },
 
         // list of files / patterns to load in the browser
         files: [
+            'node_modules/jasmine-data_driven_tests/src/all.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/jquery-2.1.4/jquery-2.1.4.min.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/leaflet-0.7.7/leaflet.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.Coordinates-0.1.5/Leaflet.Coordinates-0.1.5.min.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.loading-0.1.16/Control.Loading.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/Leaflet.EasyButton-1.2.0/easy-button.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/vendor/urijs-1.18.0/URI.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/layers/SmartWmsLayer.js',
-            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/web-app/js/Map.js',
-            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/web-app/js/OccurrenceMap.js',
-            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/v2/web-app/vendor/urijs-1.18.0/URI.js',
-            'web-app/thirdparty/modernizr/modernizer.js',
-            'web-app/thirdparty/angular/angular-1.3.13.min.js',
-            'web-app/thirdparty/angular/angular-sanitize-1.3.13.min.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/Map.js',
+            'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/OccurrenceMap.js',
+            'grails-app/assets/thirdparty/modernizr/modernizer.js',
+            'grails-app/assets/thirdparty/angular/angular-1.3.13.min.js',
+            'grails-app/assets/thirdparty/angular/angular-sanitize-1.3.13.min.js',
             'test/js/thirdparty/angular-mocks-1.3.13.js',
-            'web-app/thirdparty/angular/ui-bootstrap-tpls-0.12.0.js',
-            'web-app/thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js',
-            'web-app/thirdparty/ng-file-upload/ng-file-upload-shim-5.0.7.min.js',
-            'web-app/thirdparty/ng-file-upload/ng-file-upload-5.0.7.min.js',
-            'web-app/thirdparty/angular-leaflet/angular-leaflet-directive.min.js',
-            'web-app/thirdparty/angular-loading-bar/loading-bar-0.7.1.min.js',
-            'web-app/thirdparty/ckeditor/ng-ckeditor-0.2.1.min.js',
-            'web-app/thirdparty/ckeditor/ckeditor.js',
-            'web-app/thirdparty/google-diff-match-patch/diff_match_patch.js',
-            'web-app/thirdparty/angular-scroll/angular-scroll.min.js',
-            'web-app/thirdparty/checklist-model/checklist-model-0.2.4.js',
-            'web-app/thirdparty/angular-truncate/truncate.js',
-            'web-app/thirdparty/angular-inview/angular-inview-1.5.6.js',
-            'web-app/thirdparty/ngStorage/ngStorage-0.3.10.min.js',
-            'web-app/thirdparty/underscore/underscore-1.8.3.min.js',
-            'web-app/thirdparty/dualMultiselect/dualmultiselect.min.js',
-            'web-app/js/angular/profiles.js',
-            'web-app/js/angular/utils/*.js',
-            'web-app/js/angular/services/*.js',
-            'web-app/js/angular/controllers/*.js',
-            'web-app/templates/*.html',
-            'web-app/js/angular/directives/*.js',
+            'grails-app/assets/thirdparty/angular/ui-bootstrap-tpls-0.12.0.js',
+            'grails-app/assets/thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js',
+            'grails-app/assets/thirdparty/angular-bootstrap-show-errors/showErrors.js',
+            'grails-app/assets/thirdparty/ng-file-upload/ng-file-upload-shim-5.0.7.min.js',
+            'grails-app/assets/thirdparty/ng-file-upload/ng-file-upload-5.0.7.min.js',
+            'grails-app/assets/thirdparty/angular-leaflet/angular-leaflet-directive.min.js',
+            'grails-app/assets/thirdparty/angular-loading-bar/loading-bar-0.7.1.min.js',
+            'grails-app/assets/thirdparty/ckeditor/ng-ckeditor-0.2.1.js',
+            'grails-app/assets/thirdparty/ckeditor/ckeditor.js',
+            'grails-app/assets/thirdparty/google-diff-match-patch/diff_match_patch.js',
+            'grails-app/assets/thirdparty/angular-scroll/angular-scroll.min.js',
+            'grails-app/assets/thirdparty/checklist-model/checklist-model-0.2.4.js',
+            'grails-app/assets/thirdparty/angular-truncate/truncate.js',
+            'grails-app/assets/thirdparty/angular-inview/angular-inview-1.5.6.js',
+            'grails-app/assets/thirdparty/ngStorage/ngStorage-0.3.10.min.js',
+            'grails-app/assets/thirdparty/underscore/underscore-1.8.3.min.js',
+            'grails-app/assets/thirdparty/dualMultiselect/dualmultiselect.min.js',
+            'grails-app/assets/javascripts/profileEditor/profiles.js',
+            'grails-app/assets/javascripts/profileEditor/utils/*.js',
+            'grails-app/assets/javascripts/profileEditor/services/*.js',
+            'grails-app/assets/javascripts/profileEditor/controllers/*.js',
+            'grails-app/assets/javascripts/profileEditor/templates/*.tpl.htm',
+            'grails-app/assets/javascripts/profileEditor/directives/*.js',
             'test/js/specs/MockConfigModule.js',
             'test/js/specs/**/*.js'
         ],
@@ -113,7 +115,11 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Chrome','Firefox','PhantomJS'],
+        browsers: [
+            'Chrome',
+            'Firefox',
+            'PhantomJS'
+        ],
 
 
         // Continuous Integration mode

@@ -3,9 +3,6 @@
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Profile</title>
-
-    <r:require modules="profiles, map, images_plugin"/>
-
 </head>
 
 <body>
@@ -158,8 +155,7 @@
                                                    params="[opusId: params.opusId]"/>
                                         <g:include controller="profile" action="imagesPanel"
                                                    params="[opusId: params.opusId]"/>
-                                        <g:include controller="profile" action="multimediaPanel"
-                                                   params="[opusId: params.opusId, profileId: params.profileId, edit: edit]"/>
+                                        <multimedia profile="profileCtrl.profile" readonly="profileCtrl.readonly"></multimedia>
                                     </g:if>
                                     <g:include controller="profile" action="publicationsPanel"
                                                params="[opusId: params.opusId]"/>
@@ -206,8 +202,6 @@
 
         <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span
                 class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
-
-        <g:render template="profileComparisonPopup"/>
 
     </div>
 

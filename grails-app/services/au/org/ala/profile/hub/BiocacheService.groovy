@@ -41,7 +41,7 @@ class BiocacheService {
         String sandboxImageSearchUrl = "${grailsApplication.config.sandbox.biocache.service.url}/occurrences/search.json"
 
         int biocacheImages = countImages(biocacheImageSearchUrl, searchIdentifier, opus)
-        int sandboxImages = countImages(sandboxImageSearchUrl, searchIdentifier, opus)
+        int sandboxImages = grailsApplication.config.sandbox.biocache.service.url ? countImages(sandboxImageSearchUrl, searchIdentifier, opus) : 0
 
         [statusCode: HttpStatus.SC_OK, resp: [totalRecords: biocacheImages + sandboxImages]]
     }
@@ -78,14 +78,16 @@ class BiocacheService {
                 result = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
                 int biocacheImageCount = result?.resp?.occurrences?.size() ?: 0
                 if (biocacheImageCount < pageSize) {
-                    String sandboxImageSearchUrl = "${grailsApplication.config.sandbox.biocache.service.url}/occurrences/search.json"
-                    startIndex = Math.max(0, startIndex - totalBiocacheImageCount)
-                    Map sandboxResult = webService.get("${sandboxImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize - biocacheImageCount}&startIndex=${startIndex}")
-                    if (sandboxResult?.resp?.occurrences) {
-                        if (!result?.resp?.occurrences) {
-                            result.resp.occurrences = []
+                    if (grailsApplication.config.sandbox.biocache.service.url) {
+                        String sandboxImageSearchUrl = "${grailsApplication.config.sandbox.biocache.service.url}/occurrences/search.json"
+                        startIndex = Math.max(0, startIndex - totalBiocacheImageCount)
+                        Map sandboxResult = webService.get("${sandboxImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize - biocacheImageCount}&startIndex=${startIndex}")
+                        if (sandboxResult?.resp?.occurrences) {
+                            if (!result?.resp?.occurrences) {
+                                result.resp.occurrences = []
+                            }
+                            result.resp.occurrences.addAll(sandboxResult.resp.occurrences)
                         }
-                        result.resp.occurrences.addAll(sandboxResult.resp.occurrences)
                     }
                 }
             } else {
@@ -159,14 +161,19 @@ class BiocacheService {
      * @param dataResourceId
      * @param file - can be a File from disk or a MultipartFile streamed directly
      * @param metadata - information about the image
+     * @param useSandbox - is the image associatted to a private collection, if so store in private sandbox
      * @return Map response from the webservice including statusCode and resp
      */
-    def uploadImage(String opusId, String profileId, String dataResourceId, file, Map metadata) {
+    def uploadImage(String opusId, String profileId, String dataResourceId, file, Map metadata, boolean useSandbox = true) {
         String imageId = UUID.randomUUID()
         File tempDir = new File("${grailsApplication.config.temp.file.location}")
         String filename = copyFileForUpload(imageId, file, tempDir)
 
+        String uploadUrl = useSandbox ? grailsApplication.config.sandbox.image.upload.url : grailsApplication.config.image.upload.url
+
+
         metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${enc(opusId)}/profile/${enc(profileId)}/file/${enc(filename)}".toString()
+
 
         // make sure the spelling of licenSe is US to match the Darwin Core standard
         if (metadata.multimedia[0].containsKey("licence")) {
@@ -174,7 +181,7 @@ class BiocacheService {
             metadata.multimedia[0].remove("licence")
         }
 
-        log.debug("Uploading image ${metadata.multimedia[0].identifier} to ${grailsApplication.config.image.upload.url}${dataResourceId} with metadata ${metadata}")
+        log.debug("Uploading image ${metadata.multimedia[0].identifier} to ${uploadUrl}${dataResourceId} with metadata ${metadata}")
 
         // In the lower (non-Production) environments, the image.upload.url config property should be set to the url of
         // the SANDBOX instance of the Biocache that is deployed with the Profiles application. In Production, this
@@ -185,7 +192,7 @@ class BiocacheService {
         // The collectory config property of both the Profiles application and the sandbox biocache instance should be
         // set to the same value (production is ok since it is read-only).
 
-        String url = "${grailsApplication.config.image.upload.url}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}"
+        String url = "${uploadUrl}${dataResourceId}?apiKey=${grailsApplication.config.image.upload.apiKey}"
         webService.post(url, metadata)
     }
 

@@ -3,7 +3,6 @@
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Error</title>
-    <r:require module="profiles"/>
 </head>
 
 <body>

@@ -11,8 +11,6 @@ describe('Directive: DelegatedSearch', function () {
         console.log("----------------------------");
     });
 
-    beforeEach(module("templates"));
-
     beforeEach(function () {
         module('profileEditor');
 
@@ -29,6 +27,7 @@ describe('Directive: DelegatedSearch', function () {
 
             var element = angular.element(validTemplate);
             $compile(element)(testScope);
+
             testScope.$digest();
             scope = element.isolateScope();
         });

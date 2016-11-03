@@ -4,8 +4,6 @@
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>${pageTitle}</title>
 
-    <r:require module="profiles"/>
-
 </head>
 
 <body>

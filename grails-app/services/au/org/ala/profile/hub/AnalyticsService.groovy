@@ -34,7 +34,7 @@ class AnalyticsService {
                 final call = googleAnalyticsClient.collect('1', googleAnalyticsId, clientId, 'pageview', data)
                 try {
                     final resp = call.execute()
-                    if (!resp.success) {
+                    if (!resp.successful) {
                         log.warn("Analytics pageview for $clientId with data: $data failed")
                     }
                 } catch(e) {

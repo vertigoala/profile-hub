@@ -15,6 +15,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 import javax.validation.constraints.NotNull
 
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
+import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR_PLUS
 
 class ProfileController extends BaseController {
 
@@ -32,7 +33,7 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profileAndOpus || !profileAndOpus.profile) {
@@ -41,7 +42,7 @@ class ProfileController extends BaseController {
                 // archived profiles cannot be edited by anyone
                 notAuthorised()
             } else {
-                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, params.opusId, params.profileId)
+                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 profileAndOpus << [edit                : true,
                           currentUser         : authService.getDisplayName(),
                           glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
@@ -59,13 +60,13 @@ class ProfileController extends BaseController {
         if (!params.profileId) {
             badRequest "profileId is a required parameter"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profileAndOpus) {
                 notFound()
             } else {
-                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
+                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 Map model = profileAndOpus
                 model << [edit                : false,
                           glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
@@ -112,7 +113,7 @@ class ProfileController extends BaseController {
         if (!json || !params.profileId) {
             badRequest()
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             def response = profileService.updateProfile(params.opusId as String, params.profileId as String, json, latest)
 
             handle response
@@ -132,7 +133,22 @@ class ProfileController extends BaseController {
     }
 
     @Secured(role = ROLE_PROFILE_EDITOR)
-    def toggleDraftMode() {
+    def createDraftMode() {
+        if (!params.profileId) {
+            badRequest()
+        } else {
+            if (params.snapshot == 'true' && enabled("publications")) {
+                savePublication()
+            }
+
+            def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String)
+
+            handle response
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR_PLUS)
+    def publishDraft() {
         if (!params.profileId) {
             badRequest()
         } else {
@@ -146,7 +162,7 @@ class ProfileController extends BaseController {
                 imageService.publishStagedImages(params.opusId, params.profileId)
             }
 
-            def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String)
+            def response = profileService.toggleDraftMode(params.opusId as String, params.profileId as String, true)
 
             handle response
         }
@@ -189,19 +205,19 @@ class ProfileController extends BaseController {
             badRequest "profileId is a required parameter"
         } else {
             response.setContentType(CONTENT_TYPE_JSON)
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
 
             if (!profileAndOpus) {
                 notFound()
             } else {
-                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrl(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
+                profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 render profileAndOpus as JSON
             }
         }
     }
 
-    @Secured(role = ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_EDITOR_PLUS)
     def deleteProfile() {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
@@ -302,7 +318,7 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
 
             def model = profileService.getProfile(params.opusId, params.profileId, latest)
 
@@ -311,7 +327,7 @@ class ProfileController extends BaseController {
             String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
             List images = imageService.retrieveImages(params.opusId, params.profileId, latest, searchIdentifier)?.resp
 
-            Map primaryImage = images.find { it.imageId == primaryImageId } ?: images[0] ?: [:]
+            Map primaryImage = images.find { it?.imageId == primaryImageId } ?: images[0] ?: [:]
 
             render primaryImage as JSON
         }
@@ -321,7 +337,7 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.profileId || !params.pageSize || !params.startIndex) {
             badRequest "opusId, profileId, pageSize and startIndex are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             boolean readonlyView = params.getBoolean('readonlyView', true)
             def response = imageService.retrieveImagesPaged(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView, params.pageSize as int, params.startIndex as int)
             handle(response)
@@ -333,7 +349,7 @@ class ProfileController extends BaseController {
             badRequest "opusId, profileId and imageSources are required parameters"
         } else {
 
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             boolean readonlyView = params.getBoolean('readonlyView', true)
 
             def response = imageService.retrieveImages(params.opusId, params.profileId, latest, params.searchIdentifier, false, readonlyView)
@@ -539,7 +555,7 @@ class ProfileController extends BaseController {
             if (!pubJson) {
                 notFound()
             } else {
-                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+                boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
                 def profile = profileService.getProfile(pubJson.opusId, pubJson.profileId, latest)
 
                 if (!profile) {
@@ -639,7 +655,7 @@ class ProfileController extends BaseController {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin
+            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
 
             def result = profileService.getAttachmentMetadata(params.opusId, params.profileId, params.attachmentId ?: null, latest)
 
@@ -689,16 +705,21 @@ class ProfileController extends BaseController {
         if (!occurrenceQuery) {
             badRequest "A json body with an occurrenceQuery property are required"
         } else {
-            mapService.createMapSnapshot(opusId, profileId, occurrenceQuery, extents)
+            def opusAndProfile = profileService.getProfile(opusId, profileId, true)
+            mapService.createMapSnapshot(opusAndProfile.opus, opusAndProfile.profile, occurrenceQuery, extents)
+            success([mapSnapshotUrl: mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, opusAndProfile.opus.uuid, opusAndProfile.profile.uuid)])
         }
-
-        success([mapSnapshotUrl: mapService.getSnapshotImageUrl(request.contextPath, opusId, profileId)])
     }
 
     @Secured(role = ROLE_PROFILE_EDITOR)
     def deleteMapSnapshot(@NotNull String opusId, @NotNull String profileId) {
-        mapService.deleteMapSnapshot(opusId, profileId)
-        success([:])
+        def opusAndProfile = profileService.getProfile(opusId, profileId)
+        if (!opusAndProfile || !opusAndProfile.profile) {
+            notFound "The requested profile does not exist"
+        } else {
+            mapService.deleteMapSnapshot(opusAndProfile.opus.uuid, opusAndProfile.profile.uuid)
+            success([:])
+        }
     }
 
     private getGlossaryUrl(opus) {
@@ -727,36 +748,6 @@ class ProfileController extends BaseController {
 
     def imagesPanel = {
         render template: "images"
-    }
-
-    def multimediaPanel = {
-
-        Map profileDocuments = profileService.listDocuments(params.opusId, params.profileId, params.edit)
-
-        String profileId = params.profileId
-        String opusId = params.opusId
-
-        def g = grailsApplication.mainContext.getBean('org.codehaus.groovy.grails.plugins.web.taglib.ApplicationTagLib')
-
-        def model = [
-                imageLocation    : g.resource(dir: '/images', plugin: 'document-preview-plugin'),
-                pdfgenUrl        : g.createLink(controller: 'preview', action: 'pdfUrl'),
-                pdfViewer        : g.createLink(controller: 'preview', action: 'viewer'),
-                imgViewer        : g.createLink(controller: 'preview', action: 'imageviewer'),
-                audioViewer      : g.createLink(controller: 'preview', action: 'audioviewer'),
-                videoViewer      : g.createLink(controller: 'preview', action: 'videoviewer'),
-                errorViewer      : g.createLink(controller: 'preview', action: 'error'),
-                documentUpdateUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/update"),
-                documentDeleteUrl: g.createLink(uri: "/opus/$opusId/profile/$profileId/resource/delete"),
-                documents        : profileDocuments.documents,
-                roles            : [
-                        [id: 'embeddedAudio', name: 'Embedded Audio'],
-                        [id: 'embeddedVideo', name: 'Embedded Video']]
-        ]
-
-        def modelAsJs = modelAsJavascript(model)
-
-        render(template: "multimedia", model: [model: modelAsJs])
     }
 
     def mapPanel = {
@@ -827,13 +818,16 @@ class ProfileController extends BaseController {
         log.debug("profileId: ${profileId}")
 
 
-        Map document = JSON.parse(params.document)
+        Map document = request.getJSON()
 
         def result = profileService.updateDocument(opusId, profileId, document)
 
-        response.setContentType('text/plain;charset=UTF8')
-        def resultAsText = (result as JSON).toString()
-        render resultAsText
+        if (result.error) {
+            response.sendError(500, "Couldn't update document")
+        } else {
+            def respondObj = result.resp
+            respond(respondObj)
+        }
     }
 
     /**
@@ -843,7 +837,7 @@ class ProfileController extends BaseController {
      */
     @Secured(role = ROLE_PROFILE_EDITOR)
     def documentDelete(String documentId) {
-        log.debug("In documentUpdate for ID: ${documentId}")
+        log.debug("In documentDelete for ID: ${documentId}")
 
         String opusId = params.opusId
         String profileId = params.profileId
@@ -853,6 +847,27 @@ class ProfileController extends BaseController {
 
         def result = profileService.deleteDocument(opusId, profileId, documentId)
         render status: result.statusCode
+    }
+
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def setPrimaryMultimedia() {
+        log.debug("setPrimaryMultimedia()")
+
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        log.debug("opusId: ${opusId}")
+        log.debug("profileId: ${profileId}")
+
+        Map doc = request.getJSON()
+
+        def result = profileService.setPrimaryMultimedia(opusId, profileId, doc)
+
+        if (result.error) {
+            response.sendError(500, "Couldn't update primary multimedia")
+        } else {
+            response.sendError(204)
+        }
     }
 }
 

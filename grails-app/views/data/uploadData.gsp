@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <r:require modules="webcomponents, profiles"/>
     <g:set var="excludeBugherd" value="true" scope="request"/>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
     <title>Upload data</title>

@@ -1,3 +1,5 @@
+import grails.util.Environment
+
 class UrlMappings {
 
     static mappings = {
@@ -23,10 +25,6 @@ class UrlMappings {
         "/profile/search/taxon/levels" controller: "search", action: "getTaxonLevels"
         "/profile/search/children" controller: "search", action: "getImmediateChildren"
 
-        // This does not follow standard url convention because the document-preview-plugin appends the documentID at the end of it
-        "/opus/$opusId/profile/$profileId/resource/delete/$documentId" controller: "profile", action: [DELETE: "documentDelete"]
-        "/opus/$opusId/profile/$profileId/resource/update/$documentId?(.$format)?" controller: "profile", action: [POST: "documentUpdate"]
-        "/opus/$opusId/profile/$profileId/resource/update" controller: "profile", action: [POST: "documentUpdate"] // This is actually a create
         "/opus/$opusId/profile/create" controller: "profile", action: [PUT: "createProfile"]
         "/opus/$opusId/profile/$profileId/duplicate" controller: "profile", action: [PUT: "duplicateProfile"]
         "/opus/$opusId/profile/$profileId/delete" controller: "profile", action: [DELETE: "deleteProfile"]
@@ -34,7 +32,8 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/rename" controller: "profile", action: [POST: "renameProfile"]
         "/opus/$opusId/profile/$profileId/archive" controller: "profile", action: [POST: "archiveProfile"]
         "/opus/$opusId/profile/$profileId/restore" controller: "profile", action: [POST: "restoreArchivedProfile"]
-        "/opus/$opusId/profile/$profileId/toggleDraftMode" controller: "profile", action: [POST: "toggleDraftMode"]
+        "/opus/$opusId/profile/$profileId/createDraftMode" controller: "profile", action: [POST: "createDraftMode"]
+        "/opus/$opusId/profile/$profileId/publishDraft" controller: "profile", action: [POST: "publishDraft"]
         "/opus/$opusId/profile/$profileId/discardDraftChanges" controller: "profile", action: [POST: "discardDraftChanges"]
         "/opus/$opusId/profile/$profileId/json" controller: "profile", action: [GET: "getJson"]
         "/opus/$opusId/profile/$profileId/pdf" controller: "export", action: [GET: "getPdf"]
@@ -67,6 +66,9 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/attachment/$attachmentId" controller: "profile", action: [GET: "getAttachmentMetadata", DELETE: "deleteAttachment"]
         "/opus/$opusId/profile/$profileId/attachment/" controller: "profile", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
         "/opus/$opusId/profile/$profileId/map/snapshot" controller: "profile", action: [DELETE: "deleteMapSnapshot", POST: "createMapSnapshot"]
+        "/opus/$opusId/profile/$profileId/multimedia/$documentId" controller: "profile", action: [DELETE: "documentDelete", POST: "documentUpdate"]
+        "/opus/$opusId/profile/$profileId/multimedia" controller: "profile", action: [POST: "documentUpdate"]
+        "/opus/$opusId/profile/$profileId/primaryMultimedia" controller: "profile", action: [POST: "setPrimaryMultimedia"]
         "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
         "/opus/$opusId/data/" controller: "data", action: [GET: "getDataSets"]
         "/opus/$opusId/data/upload" controller: "data", action: [GET: "upload"]
@@ -197,5 +199,9 @@ class UrlMappings {
         "/image/proxyImage/$imageId" controller: "image", action: [GET: "downloadImage"]
         "/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
         "/opus/$opusId/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
+
+        if (Environment.current == Environment.DEVELOPMENT) {
+            "/console/$action?/$id?(.$format)?" controller: 'console'
+        }
     }
 }

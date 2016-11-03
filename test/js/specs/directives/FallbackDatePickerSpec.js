@@ -3,7 +3,6 @@ describe('Directive: FallbackDatePicker', function () {
   var elm,
       scope;
 
-  beforeEach(module('templates'));
   beforeEach(module('profileEditor'));
 
   beforeEach(inject(function ($compile, $rootScope) {
