@@ -290,7 +290,7 @@ class ProfileController extends BaseController {
 
     @Secured(role = ROLE_PROFILE_EDITOR)
     def updateAttribute() {
-        log.debug "Updating attributing....."
+        log.debug "Updating attribute....."
         def jsonRequest = request.getJSON()
 
         // the attributeId may be blank (e.g. when creating a new attribute), but the request should still have it
