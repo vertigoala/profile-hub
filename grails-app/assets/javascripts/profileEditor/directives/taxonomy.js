@@ -50,8 +50,8 @@ profileEditor.directive('taxonomy', function ($browser) {
              * This lets us display the infraspecific taxa on the page at page load, rather than on a click event
              */
             $scope.initialiseAllSubordinateTaxaList = function() {
-                if ($scope.layout != "tree" && !_.isUndefined($scope.taxonomy) && $scope.showInfraspecific) {
-                    var lastTaxon = $scope.taxonomy[$scope.taxonomy.length - 1];
+                if ($scope.layout != "tree" && !_.isUndefined(self.taxonomy) && $scope.showInfraspecific) {
+                    var lastTaxon = self.taxonomy[self.taxonomy.length - 1];
                     if (!_.isUndefined(lastTaxon) && lastTaxon.rank == "species") {
                         $scope.showAllSubordinateTaxaList(lastTaxon);
                     }
@@ -170,7 +170,7 @@ profileEditor.directive('taxonomy', function ($browser) {
                 var previous = null;
 
                 if ($scope.layout == 'tree') {
-                    var tmp = angular.copy($scope.taxonomy);
+                    var tmp = angular.copy(self.taxonomy);
                     angular.forEach (tmp, function (next) {
                         if (previous != null) {
                             previous.children = [next];
@@ -187,11 +187,11 @@ profileEditor.directive('taxonomy', function ($browser) {
             };
 
             $scope.removeRanksWithNoProfile = function() {
-                var tmp = angular.copy($scope.taxonomy);
-                $scope.taxonomy = [];
+                var tmp = angular.copy(self.taxonomy);
+                self.taxonomy = [];
                 angular.forEach(tmp, function(taxon) {
                     if (taxon.profileId) {
-                        $scope.taxonomy.push(taxon);
+                        self.taxonomy.push(taxon);
                     }
                 });
             };
