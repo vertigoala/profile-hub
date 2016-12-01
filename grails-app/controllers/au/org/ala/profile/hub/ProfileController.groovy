@@ -320,16 +320,13 @@ class ProfileController extends BaseController {
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
 
-            def model = profileService.getProfile(params.opusId, params.profileId, latest)
+            Map model = profileService.getProfile(params.opusId, params.profileId, latest)
+            Map profile = model.profile
+            Map opus = model.opus
 
-            String primaryImageId = model.profile.primaryImage
+            def imageMetadata = imageService.getPrimaryImageMetaData(opus, profile)
 
-            String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-            List images = imageService.retrieveImages(params.opusId, params.profileId, latest, searchIdentifier)?.resp
-
-            Map primaryImage = images.find { it?.imageId == primaryImageId } ?: images[0] ?: [:]
-
-            render primaryImage as JSON
+            render imageMetadata as JSON
         }
     }
 

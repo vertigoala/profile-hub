@@ -5,6 +5,7 @@ import au.org.ala.images.thumb.ThumbDefinition
 import au.org.ala.images.tiling.ImageTiler
 import au.org.ala.images.tiling.ImageTilerConfig
 import au.org.ala.ws.service.WebService
+import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
@@ -45,6 +46,18 @@ class ImageService {
 
     private getMetadataFromAlaImageService(String imageId) {
         webService.get("${grailsApplication.config.images.service.url}/ws/image/${imageId}", [:], ContentType.APPLICATION_JSON, false, true)
+    }
+
+    private def getJSON(String url) {
+        try {
+            def u = new URL(url);
+            def text = u.text
+            return new JsonSlurper().parseText(text)
+        } catch (Exception ex) {
+            System.err.println(url)
+            System.err.println(ex.message)
+            return null
+        }
     }
 
     String constructImageUrl(String contextPath, String opusId, String profileId, String imageId, String extension, String imageType, ImageUrlType urlType) {
@@ -329,6 +342,8 @@ class ImageService {
         response.resp = [:]
         response.resp.images = combinedImages
         response.resp.count = numberOfPublishedImages + numberOfLocalImages
+        if (profile.primaryImage && profile.primaryImage != '{}')
+            response.resp.primaryImage = getPrimaryImageMetaData(opus, profile, combinedImages)
 
         response
     }
@@ -384,6 +399,68 @@ class ImageService {
 
         retrieveImages(opus, profile, searchIdentifier, useInternalPaths, readonlyView)
     }
+
+    Map getPrimaryImageMetaData(opus, profile, biocacheImagesList = null) {
+
+        Map image = null
+        if (profile.primaryImage) {
+
+            def imageId = profile.primaryImage
+
+            Map imageData = getJSON("${grailsApplication.config.images.service.url}/ws/getImageInfo?id=${imageId}&includeMetadata=true")
+
+            boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageId)
+
+            if (!excluded) {
+
+                def occurrenceId = imageData.metadata?.find { it.key == 'occurrenceId' }.getAt("value")
+
+                def dataResourceId = imageData.dataResourceUid
+
+                Map dataResource = getJSON("${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}")
+
+                image = [
+                        imageId         : imageId,
+                        occurrenceId    : occurrenceId,
+                        largeImageUrl   : "${grailsApplication.config.images.service.url}/image/proxyImageThumbnailLarge?imageId=${imageId}", //"largeImageUrl" -> "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=e896221a-537f-4b36-95a4-ef29909053d1"
+                        thumbnailUrl    : "${grailsApplication.config.images.service.url}/image/proxyImageThumbnail?imageId=${imageId}", //"thumbnailUrl" -> "http://images.ala.org.au/image/proxyImageThumbnail?imageId=e896221a-537f-4b36-95a4-ef29909053d1"
+                        dataResourceName: dataResource.name,
+                        excluded        : excluded,
+                        displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
+                        caption         : profile.imageSettings.find {
+                            it.imageId == imageId
+                        }?.caption ?: '',
+                        primary         : imageId == profile.primaryImage,
+                        metadata        : [creator      : imageData.creator, description: imageData.description, fileSize: imageData.sizeInBytes,
+                                           height       : imageData.height, imageId: imageId, imageUrl: imageData.imageUrl,
+                                           largeThumbUrl: "${grailsApplication.config.images.service.url}/image/proxyImageThumbnailLarge?imageId=${imageId}",
+                                           license      : imageData.license, mimetype: imageData.mimeType, squareThumbUrl: '', thumbHeight: '',
+                                           thumbUrl     : "${grailsApplication.config.images.service.url}/image/proxyImageThumbnail?imageId=${imageId}",
+                                           thumbWidth   : '', titleZoomLevels: imageData.titleZoomLevels,
+                                           title        : imageData.title, created: imageData.created,
+                                           rights       : imageData.rights, rightsHolder: imageData.rightsHolder, width: imageData.width], //imageData.imageMetadata && !imageData.imageMetadata.isEmpty() ? imageData.imageMetadata[0] : [:],
+                        type            : ImageType.OPEN
+                ]
+
+            }
+
+        }
+
+        if (!image) {
+            if (!biocacheImagesList) {
+                String searchIdentifier = profile.guid ? "lsid:" + profile.guid : profile.scientificName
+                List images = retrieveImages(opus, profile, searchIdentifier)?.resp
+
+                image = images[0]
+            } else {
+                image = biocacheImagesList
+            }
+        }
+
+        image
+
+    }
+
 
     List prepareImagesForDisplay(def retrievedImages, def opus, def profile, boolean readonlyView) {
         List images = []

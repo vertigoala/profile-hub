@@ -102,16 +102,18 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                     if (!self.readonly || !image.excluded) {
                         self.images.push(image);
 
-                        if (image.imageId == self.profile.primaryImage) {
+/*                        if (image.imageId == self.profile.primaryImage) {
                             self.primaryImage = image;
-                        }
+                        }*/
                     }
                 });
+
+                self.primaryImage = data.primaryImage;
 
                 if (!self.primaryImage && self.images.length > 0) {
                     angular.forEach(self.images, function (image) {
                         if (!image.excluded && !self.primaryImage) {
-                            self.primaryImage = image;
+                           self.primaryImage = image;
                         }
                     });
                 }
