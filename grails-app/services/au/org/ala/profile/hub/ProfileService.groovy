@@ -107,14 +107,14 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/publication/${enc(pubId)}")?.resp
     }
 
-    def getProfile(String opusId, String profileId, boolean latest = false) {
+    def getProfile(String opusId, String profileId, boolean latest = false, boolean fullClassification = false, Integer countChildrenLimit = null) {
         log.debug("Loading profile " + profileId)
 
         Map result
 
         try {
             String encodedProfileId = URLEncoder.encode(profileId, "UTF-8")
-            def profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${encodedProfileId}?latest=${latest}")?.resp
+            def profile = webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${encodedProfileId}?latest=${latest}&fullClassification=${fullClassification}&countChildrenLimit=${countChildrenLimit}")?.resp
 
             if (!profile) {
                 return null

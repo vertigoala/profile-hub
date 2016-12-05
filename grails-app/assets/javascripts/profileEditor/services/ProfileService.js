@@ -82,7 +82,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         getProfile : function(opusId, profileId) {
             $log.debug("Fetching profile " + profileId);
 
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {params: {fullClassification: true, countChildrenLimit: 11}, cache: true});
             future = util.toStandardPromise(future);
             future.then(function(data) {
                 // Only cache the profile data from the profie being viewed.  Profiles from supporting collections
