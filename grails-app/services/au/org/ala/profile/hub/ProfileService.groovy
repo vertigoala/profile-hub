@@ -107,7 +107,7 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/publication/${enc(pubId)}")?.resp
     }
 
-    def getProfile(String opusId, String profileId, boolean latest = false, boolean fullClassification = false, Integer countChildrenLimit = null) {
+    def getProfile(String opusId, String profileId, boolean latest = false, Boolean fullClassification = false, Integer countChildrenLimit = null) {
         log.debug("Loading profile " + profileId)
 
         Map result
