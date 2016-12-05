@@ -43,7 +43,7 @@ describe("ProfileService tests", function () {
     it("should invoke the get profile as json service on the context root when getProfile is called", function () {
         service.getProfile("opusId1", "profileId1");
 
-        http.expectGET("/someContext/opus/opusId1/profile/profileId1/json").respond("bla");
+        http.expectGET("/someContext/opus/opusId1/profile/profileId1/json?countChildrenLimit=11&fullClassification=true").respond("bla");
     });
 
     it("should invoke the delete profile service on the context root when deleteProfile is called", function () {
