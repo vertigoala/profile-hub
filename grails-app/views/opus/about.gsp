@@ -32,7 +32,7 @@
         <div class="col-md-12 col-xs-12 col-lg-12" ng-show="aboutCtrl.hasCitation()">
             <p>The taxon profiles in this collection should be cited as per the following example:</p>
             <div class="citation-example">
-                <p class="padding-left-1">Conn, B.J. ({{aboutCtrl.citationYear}}) Loganiaceae. In: <span data-ng-bind-html="aboutCtrl.citationHtml | sanitizeHtml"></span>. <a href="{{aboutCtrl.citationUrl}}">{{aboutCtrl.citationUrl}}</a>. {{aboutCtrl.citationDate}}</p>
+                <p class="padding-left-1">Conn, B.J. ({{aboutCtrl.citationYear}}) Loganiaceae. In: <span data-ng-bind-html="aboutCtrl.citationHtml | sanitizeHtml"></span>. <a ng-href="{{aboutCtrl.citationUrl}}" ng-bind="aboutCtrl.citationUrl"></a>. {{aboutCtrl.citationDate}}</p>
             </div>
         </div>
 

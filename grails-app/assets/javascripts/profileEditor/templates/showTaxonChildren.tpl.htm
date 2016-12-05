@@ -13,7 +13,7 @@
         <tr ng-repeat="profile in taxonChildrenCtrl.profiles">
             <td>{{profile.rank | capitalize}}</td>
             <td>
-                <a href="{{taxonChildrenCtrl.contextPath}}/opus/{{ taxonChildrenCtrl.opusId }}/profile/{{ profile.scientificName }}"
+                <a ng-href="{{taxonChildrenCtrl.contextPath}}/opus/{{ taxonChildrenCtrl.opusId }}/profile/{{ profile.scientificName }}"
                    target="_self">{{profile.scientificName}}</a>
             </td>
         </tr>
