@@ -342,7 +342,7 @@ class ImageService {
         response.resp = [:]
         response.resp.images = combinedImages
         response.resp.count = numberOfPublishedImages + numberOfLocalImages
-        if (profile.primaryImage && profile.primaryImage != '{}')
+        if (profile.primaryImage)
             response.resp.primaryImage = getPrimaryImageMetaData(opus, profile, combinedImages)
 
         response
@@ -411,9 +411,9 @@ class ImageService {
 
             boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageId)
 
-            if (!excluded) {
+            if (!excluded && imageData && !imageData.isEmpty()) {
 
-                def occurrenceId = imageData.metadata?.find { it.key == 'occurrenceId' }.getAt("value")
+                def occurrenceId = imageData.metadata?.find { it.key == 'occurrenceId' }?.getAt("value")
 
                 def dataResourceId = imageData.dataResourceUid
 
@@ -447,13 +447,16 @@ class ImageService {
         }
 
         if (!image) {
-            if (!biocacheImagesList) {
+            //if the primary image has been turned off, then default to the first image in biocache
+            if (biocacheImagesList && biocacheImagesList.size() == 0) {
+                // get the first image in the list
+                image = biocacheImagesList[0]
+            } else {
                 String searchIdentifier = profile.guid ? "lsid:" + profile.guid : profile.scientificName
                 List images = retrieveImages(opus, profile, searchIdentifier)?.resp
+                if (images && images.size() > 0)
+                    image = images[0]
 
-                image = images[0]
-            } else {
-                image = biocacheImagesList
             }
         }
 
