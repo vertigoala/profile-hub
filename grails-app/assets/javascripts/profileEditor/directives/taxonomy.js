@@ -14,8 +14,12 @@ profileEditor.directive('taxonomy', function ($browser) {
             showWithProfileOnly: '@',
             limit: '@'
         },
-        templateUrl: '/profileEditor/taxonomy.htm',
-        controller: ['$scope', 'config', '$modal', 'messageService', 'profileService', function ($scope, config, $modal, messageService, profileService) {
+        templateUrl: function(element, attrs) {
+            return '/profileEditor/' + (attrs.layout == 'tree' ? 'taxonomy-tree.htm' : 'taxonomy-horizontal.htm');
+        },
+        controllerAs: 'taxonomyCtrl',
+        controller: function ($scope, config, $modal, messageService, profileService) {
+            var self = this;
             $scope.contextPath = config.contextPath;
             $scope.showChildren = false;
             $scope.showChildrenForLastOnly = false;
@@ -195,11 +199,15 @@ profileEditor.directive('taxonomy', function ($browser) {
                     }
                 });
             };
-        }],
+
+            if ($scope.layout == "tree" && !_.isUndefined(self.taxonomy)) {
+                $scope.hierarchialiseTaxonomy();
+            }
+        },
         link: function (scope) {
             scope.$watch("data", function(newValue) {
                 if (!_.isUndefined(newValue)) {
-                    scope.taxonomy = angular.copy(newValue);
+                    scope.taxonomyCtrl.taxonomy = angular.copy(newValue);
 
                     scope.initialiseAllSubordinateTaxaList();
                 }
@@ -229,21 +237,21 @@ profileEditor.directive('taxonomy', function ($browser) {
             scope.$watch("showWithProfileOnly", function(newValue) {
                 if (!_.isUndefined(newValue)) {
                     scope.showWithProfileOnly = isTruthy(newValue);
-                    if (scope.showWithProfileOnly && !_.isUndefined(scope.taxonomy)) {
+                    if (scope.showWithProfileOnly && !_.isUndefined(scope.taxonomyCtrl.taxonomy)) {
                         scope.removeRanksWithNoProfile();
                     }
                 }
             });
 
-            scope.$watch("layout", function(newValue) {
-                if (!_.isUndefined(newValue)) {
-                    scope.layout = newValue;
-                }
-
-                if (scope.layout == "tree" && !_.isUndefined(scope.taxonomy)) {
-                    scope.hierarchialiseTaxonomy();
-                }
-            });
+            // scope.$watch("layout", function(newValue) {
+            //     if (!_.isUndefined(newValue)) {
+            //         scope.layout = newValue;
+            //     }
+            //
+            //     if (scope.layout == "tree" && !_.isUndefined(scope.taxonomy)) {
+            //         scope.hierarchialiseTaxonomy();
+            //     }
+            // });
         }
     };
 

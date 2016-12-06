@@ -11,7 +11,7 @@
         <tr ng-repeat="profile in reportCtrl.reportData.records">
             <td>
                 <!-- TODO test context path -->
-                <a href="{{ config.contextPath }}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.profileName.scientificName }}"
+                <a ng-href="{{ config.contextPath }}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.profileName.scientificName }}"
                    target="_blank">
                     <span data-ng-bind-html="profile.profileName | formatProfileName | sanitizeHtml"></span>
                     <span ng-show="profile.manuallyMatchedName">&nbsp;*</span>
@@ -22,7 +22,7 @@
             </td>
             <td>
                 <!-- TODO test grailsApplication.config.nsl.name.url.prefix -->
-                <a href="{{ config.nslNameUrlPrefix }}{{profile.nslNameId}}"
+                <a ng-href="{{ config.nslNameUrlPrefix }}{{profile.nslNameId}}"
                    ng-if="profile.nslNameId" title="Click to view the NSL name" target="_blank"><i
                         class="fa fa-check color--green"></i></a>
                 <i title="This name was not found in the NSL" class="fa fa-close color--red"

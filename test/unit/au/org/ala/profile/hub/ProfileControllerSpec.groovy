@@ -118,7 +118,7 @@ class ProfileControllerSpec extends Specification {
 
     def "getJson should return a 404 if the profile is not found"() {
         setup:
-        profileService.getProfile(_, _, _) >> null
+        profileService.getProfile(_, _, _, _, _) >> null
 
         when:
         params.profileId = "bla"
@@ -138,7 +138,7 @@ class ProfileControllerSpec extends Specification {
 
     def "getJson should return the profile added to the model"() {
         setup:
-        profileService.getProfile(_, _, _) >> [profile: [:], opus: [:]]
+        profileService.getProfile(_, _, _, _, _) >> [profile: [:], opus: [:]]
 
         when:
         params.profileId = "bla"

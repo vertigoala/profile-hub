@@ -83,7 +83,7 @@
                 </div>
 
                 <div class="col-md-2 margin-bottom-1 text-right" ng-show="link.thumbnailUrl">
-                    <a href="{{link.url}}" target="_blank">
+                    <a ng-href="{{link.url}}" target="_blank">
                         <img ng-model="link.thumbnailUrl" ng-src="{{link.thumbnailUrl}}"
                              style="max-height:150px;" alt="{{link.title}}" class="img-rounded"/>
                     </a>
