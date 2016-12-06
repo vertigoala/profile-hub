@@ -414,7 +414,8 @@ class ImageService {
 
             boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageId)
 
-            if (!excluded && imageData && !imageData.isEmpty()) {
+            // If image id doesn't exist in image service, it returned {"success": false}, for eg: http://images-dev.ala.org.au/ws/getImageInfo?id=4552bea3-ca16-46c0-ae03-f2e3e91d2d08&includeMetadata=true
+            if (!excluded && imageData && !imageData.isEmpty() && !(imageData.containsKey("success") && imageData.success == false)) {
 
                 def occurrenceId = imageData.metadata?.find { it.key == 'occurrenceId' }?.getAt("value")
 
@@ -457,7 +458,7 @@ class ImageService {
 
         if (!image) {
             //if the primary image has been turned off, then default to the first image in biocache
-            if (biocacheImagesList && biocacheImagesList.size() == 0) {
+            if (biocacheImagesList && biocacheImagesList.size() > 0) {
                 // get the first image in the list
                 image = biocacheImagesList[0]
                 log.debug ("Set default primary image to first biocache list image: ")
