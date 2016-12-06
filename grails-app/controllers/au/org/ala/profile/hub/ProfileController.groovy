@@ -114,6 +114,8 @@ class ProfileController extends BaseController {
             badRequest()
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
+            log.debug("Saving profile for opus id: " + params.opusId + " profile id: " + params.profileId)
+            log.debug(json)
             def response = profileService.updateProfile(params.opusId as String, params.profileId as String, json, latest)
 
             handle response

@@ -43,7 +43,10 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
     self.saveProfile = function (form) {
         saving = true;
-        self.profile.imageSettings = [];
+
+        if (!self.profile.imageSettings) {
+            self.profile.imageSettings = [];
+        }
 
         self.profile.primaryImage = null;
 
@@ -65,7 +68,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 messageService.info("Updating profile...");
                 self.profile = data;
 
-                var loadImagesProfile = self.loadImages();
+                var loadImagesProfile = self.loadImages(self.offset);
 
                 form.$setPristine();
 
@@ -101,14 +104,12 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 angular.forEach(data.images, function (image) {
                     if (!self.readonly || !image.excluded) {
                         self.images.push(image);
-
-/*                        if (image.imageId == self.profile.primaryImage) {
-                            self.primaryImage = image;
-                        }*/
                     }
                 });
 
-                self.primaryImage = data.primaryImage;
+                if (data.primaryImage && data.primaryImage.imageId == self.profile.primaryImage) {
+                    self.primaryImage = data.primaryImage;
+                }
 
                 if (!self.primaryImage && self.images.length > 0) {
                     angular.forEach(self.images, function (image) {
