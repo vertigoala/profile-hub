@@ -10,7 +10,7 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.apache.http.entity.ContentType
-
+import static groovy.json.JsonOutput.*
 import javax.imageio.ImageIO
 import java.awt.*
 import java.awt.image.BufferedImage
@@ -409,6 +409,9 @@ class ImageService {
 
             Map imageData = getJSON("${grailsApplication.config.images.service.url}/ws/getImageInfo?id=${imageId}&includeMetadata=true")
 
+            log.debug ("Obtained imageData map from " + "${grailsApplication.config.images.service.url}/ws/getImageInfo?id=${imageId}&includeMetadata=true ")
+            log.debug (toJson(imageData))
+
             boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageId)
 
             if (!excluded && imageData && !imageData.isEmpty()) {
@@ -419,12 +422,15 @@ class ImageService {
 
                 Map dataResource = getJSON("${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}")
 
+                log.debug ("Obtained dataResource map from " + "${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}")
+                log.debug (toJson(dataResource))
+
                 image = [
                         imageId         : imageId,
                         occurrenceId    : occurrenceId,
                         largeImageUrl   : "${grailsApplication.config.images.service.url}/image/proxyImageThumbnailLarge?imageId=${imageId}", //"largeImageUrl" -> "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=e896221a-537f-4b36-95a4-ef29909053d1"
                         thumbnailUrl    : "${grailsApplication.config.images.service.url}/image/proxyImageThumbnail?imageId=${imageId}", //"thumbnailUrl" -> "http://images.ala.org.au/image/proxyImageThumbnail?imageId=e896221a-537f-4b36-95a4-ef29909053d1"
-                        dataResourceName: dataResource.name,
+                        dataResourceName: dataResource?.name,
                         excluded        : excluded,
                         displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
                         caption         : profile.imageSettings.find {
@@ -442,6 +448,9 @@ class ImageService {
                         type            : ImageType.OPEN
                 ]
 
+                log.debug ("Printing primary image map")
+                log.debug (toJson(image))
+
             }
 
         }
@@ -451,11 +460,16 @@ class ImageService {
             if (biocacheImagesList && biocacheImagesList.size() == 0) {
                 // get the first image in the list
                 image = biocacheImagesList[0]
+                log.debug ("Set default primary image to first biocache list image: ")
+                log.debug (toJson(image))
             } else {
                 String searchIdentifier = profile.guid ? "lsid:" + profile.guid : profile.scientificName
                 List images = retrieveImages(opus, profile, searchIdentifier)?.resp
-                if (images && images.size() > 0)
+                if (images && images.size() > 0) {
                     image = images[0]
+                    log.debug("Rerieved biocache list from retrieveImages for " + searchIdentifier + " and set default primary image to first list image: ")
+                    log.debug(toJson(image))
+                }
 
             }
         }
