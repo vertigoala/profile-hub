@@ -109,13 +109,12 @@ class ProfileController extends BaseController {
     @Secured(role = ROLE_PROFILE_EDITOR)
     def updateProfile() {
         def json = request.getJSON()
-
+        log.debug("updateProfile with json " + json + " for profile " + params.profileId)
         if (!json || !params.profileId) {
             badRequest()
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
             log.debug("Saving profile for opus id: " + params.opusId + " profile id: " + params.profileId)
-            log.debug(json)
             def response = profileService.updateProfile(params.opusId as String, params.profileId as String, json, latest)
 
             handle response
@@ -149,6 +148,7 @@ class ProfileController extends BaseController {
         }
     }
 
+    @PrivateCollectionSecurityExempt
     @Secured(role = ROLE_PROFILE_EDITOR_PLUS)
     def publishDraft() {
         if (!params.profileId) {
@@ -577,6 +577,7 @@ class ProfileController extends BaseController {
         }
     }
 
+    @PrivateCollectionSecurityExempt
     @Secured(role = ROLE_PROFILE_EDITOR)
     def savePublication() {
         if (!enabled("publications")) {

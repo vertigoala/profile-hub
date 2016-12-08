@@ -403,14 +403,14 @@ class ImageService {
     Map getPrimaryImageMetaData(opus, profile, biocacheImagesList = null) {
 
         Map image = null
-        if (profile.primaryImage) {
+        if (profile.primaryImage && profile.primaryImage != {}) {
 
             def imageId = profile.primaryImage
 
             Map imageData = getJSON("${grailsApplication.config.images.service.url}/ws/getImageInfo?id=${imageId}&includeMetadata=true")
 
             log.debug ("Obtained imageData map from " + "${grailsApplication.config.images.service.url}/ws/getImageInfo?id=${imageId}&includeMetadata=true ")
-            log.debug (toJson(imageData))
+      //      log.debug (toJson(imageData))
 
             boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageId)
 
@@ -462,14 +462,14 @@ class ImageService {
                 // get the first image in the list
                 image = biocacheImagesList[0]
                 log.debug ("Set default primary image to first biocache list image: ")
-                log.debug (toJson(image))
+               // log.debug (toJson(image))
             } else {
                 String searchIdentifier = profile.guid ? "lsid:" + profile.guid : profile.scientificName
                 List images = retrieveImages(opus, profile, searchIdentifier)?.resp
                 if (images && images.size() > 0) {
                     image = images[0]
                     log.debug("Rerieved biocache list from retrieveImages for " + searchIdentifier + " and set default primary image to first list image: ")
-                    log.debug(toJson(image))
+               //     log.debug(toJson(image))
                 }
 
             }
