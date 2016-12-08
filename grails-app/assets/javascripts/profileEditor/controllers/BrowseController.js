@@ -92,7 +92,7 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
 
         self.searchTerm = null;
 
-        var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon, scientificName, self.pageSize, offset, self.sortOption);
+        var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon, scientificName, self.pageSize, offset, { sortBy: self.sortOption});
         results.then(function (data) {
                 self.profiles = data;
             },

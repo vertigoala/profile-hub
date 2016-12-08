@@ -43,7 +43,20 @@
             class="fa fa-check">&nbsp;</i>Yes, use the matched name
     </button>
 </alert>
-<alert type="warning" class="warning" ng-if="nameCheck.noMatch && !nameCheck.providedNameDuplicate">
+<alert type="warning" class="warning" ng-if="nameCheck.noMatch && nameCheck.matchedNameDuplicates">
+    <p class="small-text">
+        Multiple matches were found for '{{ nameCheck.providedName }}'. Please select the best match below:
+        <button class="btn btn-link" ng-repeat="match in nameCheck.matchedNameDuplicates" ng-click="checkMatch(match)"><i
+                class="fa fa-circle-o">&nbsp;</i> {{match.fullName}} | rank: {{match.rank}} | kingdom: {{match.kingdom}}
+        </button>
+    </p>
+    <p class="small-text">
+        You can choose to match your profile to an existing name by clicking "Search for a match" below
+        <span ng-show="nameCheck.noMatch">, or you can specify the taxonomic hierarchy for your profile by clicking "Specify the hierarchy for {{name}}" below</span>.
+    </p>
+</alert>
+
+<alert type="warning" class="warning" ng-if="nameCheck.noMatch && !nameCheck.providedNameDuplicate && !nameCheck.matchedNameDuplicates">
     <p class="small-text">
         No match was found for '{{ nameCheck.providedName }}'. Please check the name before continuing.
     </p>
@@ -52,7 +65,6 @@
         <span ng-show="nameCheck.noMatch">, or you can specify the taxonomic hierarchy for your profile by clicking "Specify the hierarchy for {{name}}" below</span>.
     </p>
 </alert>
-
 <div class="padding-bottom-1">
     <a ng-click="toggleManualMatch()" ng-if="nameCheck && !nameCheck.providedNameDuplicate" class="margin-right-2">
         <span class="fa fa-search">&nbsp;</span>{{nameCheck.noMatch ? 'Search for a match' : 'Match to a different

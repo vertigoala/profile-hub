@@ -28,8 +28,20 @@ class SearchController extends BaseController {
         if (!params.taxon || !params.scientificName) {
             badRequest "taxon (e.g. phylum, genus, species, etc) and scientificName are a required parameters. You can also optionally supply opusId (comma-separated list of opus ids), max (max records to return), offset (0 based index to start from)."
         } else {
-            boolean countChildren = params.countChildren ? params.countChildren.toBoolean() : false
-            def response = profileService.findByNameAndTaxonLevel(params.opusId, params.taxon, params.scientificName, params.max, params.offset, params.sortBy, countChildren)
+            boolean countChildren = params.boolean('countChildren', false)
+            boolean immediateChildrenOnly = params.boolean('immediateChildrenOnly', false)
+            def response = profileService.findByNameAndTaxonLevel(params.opusId, params.taxon, params.scientificName, params.max, params.offset, params.sortBy, countChildren, immediateChildrenOnly)
+
+            handle response
+        }
+    }
+
+    def countByNameAndTaxonLevel() {
+        if (!params.taxon || !params.scientificName) {
+            badRequest "taxon (e.g. phylum, genus, species, etc) and scientificName are a required parameters. You can also optionally supply opusId (comma-separated list of opus ids), max (max records to return), offset (0 based index to start from)."
+        } else {
+            boolean immediateChildrenOnly = params.boolean('immediateChildrenOnly', false)
+            def response = profileService.countByNameAndTaxonLevel(params.opusId, params.taxon, params.scientificName, immediateChildrenOnly)
 
             handle response
         }

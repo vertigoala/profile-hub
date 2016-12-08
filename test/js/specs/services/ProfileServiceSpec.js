@@ -43,7 +43,7 @@ describe("ProfileService tests", function () {
     it("should invoke the get profile as json service on the context root when getProfile is called", function () {
         service.getProfile("opusId1", "profileId1");
 
-        http.expectGET("/someContext/opus/opusId1/profile/profileId1/json?countChildrenLimit=11&fullClassification=true").respond("bla");
+        http.expectGET("/someContext/opus/opusId1/profile/profileId1/json?fullClassification=true").respond("bla");
     });
 
     it("should invoke the delete profile service on the context root when deleteProfile is called", function () {
@@ -225,13 +225,13 @@ describe("ProfileService tests", function () {
     it("should invoke the taxon level and name search service on the context root when profileSearchByTaxonLevelAndName is invoked", function() {
         service.profileSearchByTaxonLevelAndName("opusId", "taxonName", "sciName", 10, 5);
 
-        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&sortBy=name&countChildren=false").respond("bla");
+        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&sortBy=name&countChildren=false&immediateChildrenOnly=false").respond("bla");
     });
 
     it("should invoke the taxon level and name search service on the context root with a sort param if provided when profileSearchByTaxonLevelAndName is invoked", function() {
-        service.profileSearchByTaxonLevelAndName("opusId", "taxonName", "sciName", 10, 5, "sortme");
+        service.profileSearchByTaxonLevelAndName("opusId", "taxonName", "sciName", 10, 5, {sortBy: "sortme"});
 
-        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&sortBy=sortme&countChildren=false").respond("bla");
+        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&sortBy=sortme&countChildren=false&immediateChildrenOnly=false").respond("bla");
     });
 
     it("should invoke the taxon levels search service on the context root when getTaxonLevels is invoked", function() {

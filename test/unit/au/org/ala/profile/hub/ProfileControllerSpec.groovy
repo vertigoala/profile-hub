@@ -138,7 +138,7 @@ class ProfileControllerSpec extends Specification {
 
     def "getJson should return the profile added to the model"() {
         setup:
-        profileService.getProfile(_, _, _, _, _) >> [profile: [:], opus: [:]]
+        profileService.getProfile(_, _, _, _) >> [profile: [:], opus: [:]]
 
         when:
         params.profileId = "bla"

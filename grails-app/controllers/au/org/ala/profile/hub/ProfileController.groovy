@@ -208,9 +208,8 @@ class ProfileController extends BaseController {
         } else {
             response.setContentType(CONTENT_TYPE_JSON)
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
-            final fullClassification = params.boolean("fullClassification")
-            final countChildrenLimit = params.int("countChildrenLimit")
-            Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest, fullClassification, countChildrenLimit)
+            final fullClassification = params.boolean("fullClassification", false)
+            Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest, fullClassification)
 
             if (!profileAndOpus) {
                 notFound()

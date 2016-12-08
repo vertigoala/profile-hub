@@ -153,13 +153,13 @@ describe("BrowseController tests", function () {
     it("should default the offset to 0 if it is not provided to searchByTaxon", function() {
         scope.browseCtrl.searchByTaxon("taxonName", "sciName", 10);
 
-        expect(profileService.profileSearchByTaxonLevelAndName).toHaveBeenCalledWith("opusId1", "taxonName", "sciName", 25, 0, 'taxonomy');
+        expect(profileService.profileSearchByTaxonLevelAndName).toHaveBeenCalledWith("opusId1", "taxonName", "sciName", 25, 0, {sortBy: 'taxonomy'});
     });
 
     it("should use the provided offset to searchByTaxon", function() {
         scope.browseCtrl.searchByTaxon("taxonName", "sciName", 10, 666);
 
-        expect(profileService.profileSearchByTaxonLevelAndName).toHaveBeenCalledWith("opusId1", "taxonName", "sciName", 25, 666, 'taxonomy');
+        expect(profileService.profileSearchByTaxonLevelAndName).toHaveBeenCalledWith("opusId1", "taxonName", "sciName", 25, 666, {sortBy: 'taxonomy'});
     });
 
     it("should raise an alert message if the call to searchByTaxonLevel fails", function() {
