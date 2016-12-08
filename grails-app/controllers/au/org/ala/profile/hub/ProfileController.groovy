@@ -417,6 +417,7 @@ class ProfileController extends BaseController {
         }
     }
 
+    @PrivateCollectionSecurityExempt
     def retrieveLocalThumbnailImage() {
         if (!params.type) {
             badRequest "type is a required parameter"
