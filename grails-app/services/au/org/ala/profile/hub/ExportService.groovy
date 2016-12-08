@@ -351,22 +351,31 @@ class ExportService {
      * @return
      */
     static String formatAttributeText(String text, String title) {
-        if (text.startsWith('<p>')) {
-            text = text.replaceFirst('<p>', "<p><b>${title}:</b> ")
-        } else if (text.startsWith('<')) {
-            text = "<p><b>${title}:</b></p>${text}"
-        } else {
-            text = "<b>${title}:</b> ${text}"
-        }
+        if (text) {
+            if (text.startsWith('<p>')) {
+                text = text.replaceFirst('<p>', "<p><b>${title}:</b> ")
+            } else if (text.startsWith('<')) {
+                text = "<p><b>${title}:</b></p>${text}"
+            } else {
+                text = "<b>${title}:</b> ${text}"
+            }
 
-        return text
+            return text
+        } else {
+            return ''
+        }
     }
 
     // Applies all the default HTML sanitizers to convert text
     static String sanitizeHtml(String html) {
-        // Note that the FORMATTING pre defined policy allows font tags but does not allow the attributes on them,
-        // so font tags are effectively stripped out of the output.
-        FORMATTING.and(STYLES).and(LINKS).and(BLOCKS).and(IMAGES).and(TABLES).sanitize(html)
+        if (html) {
+            // Note that the FORMATTING pre defined policy allows font tags but does not allow the attributes on them,
+            // so font tags are effectively stripped out of the output.
+            return FORMATTING.and(STYLES).and(LINKS).and(BLOCKS).and(IMAGES).and(TABLES).sanitize(html)
+        } else {
+            return ''
+        }
+
     }
 
     /**
@@ -377,7 +386,11 @@ class ExportService {
      * @return The converted text
      */
     static String convertTagsForJasper(String text) {
-        convertTags(convertTags(convertTags(text, "strong", "b"), "em", "i"), "s", "strike")
+        if (text) {
+            return convertTags(convertTags(convertTags(text, "strong", "b"), "em", "i"), "s", "strike")
+        } else {
+            return ''
+        }
     }
 
     /**
@@ -388,7 +401,11 @@ class ExportService {
      * @return the converted string
      */
     private static String convertTags(String text, String from, String to) {
-        text.replaceAll("<$from>", "<$to>").replaceAll("</$from>", "</${to.split('\\s')[0]}>")
+        if (text) {
+            return text.replaceAll("<$from>", "<$to>").replaceAll("</$from>", "</${to.split('\\s')[0]}>")
+        } else {
+            return ''
+        }
     }
 
     /**
@@ -397,7 +414,7 @@ class ExportService {
      * @return
      */
     static String formatStatusText(String text) {
-        text.replaceAll('_', ' ').capitalize()
+        text ? text.replaceAll('_', ' ').capitalize() : ''
     }
 
     def createOccurrencesUrl = { opus, occurrenceQuery ->
@@ -411,17 +428,17 @@ class ExportService {
     }
 
     def getColourForStatus(status) {
-        String colour;
+        String colour
 
         if (status =~ /extinct$/ || status =~ /wild/) {
-            colour = "red";
+            colour = "red"
         } else if (status =~ /Critically/ || status =~ /^Endangered/ || status =~ /Vulnerable/) {
-            colour = "yellow";
+            colour = "yellow"
         } else {
-            colour = "green";
+            colour = "green"
         }
 
-        return colour;
+        return colour
     };
 
     List<Map> extractImagesFromAttributeText(String text, List<Map> images) {
