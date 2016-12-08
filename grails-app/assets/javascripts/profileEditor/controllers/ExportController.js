@@ -66,7 +66,7 @@ profileEditor.controller('ExportPDFController', function (opusId, rank, scientif
     self.loading = false;
     self.children = {id: "children", name: "Lower level taxa", selected: true};
 
-    self.childCount = -1;
+    self.totalChildren = -1;
 
     var exportableSections = ["attributes", "map", "taxonomy", "taxon", "nomenclature", "links", "bhllinks", "specimens", "bibliography", "images", "conservation", "features", "key"];
 
@@ -93,10 +93,10 @@ profileEditor.controller('ExportPDFController', function (opusId, rank, scientif
     };
 
     $scope.$watch(function() {return self.children.selected}, function() {
-        if (self.childCount == -1 && self.children.selected) {
+        if (self.totalChildren == -1 && self.children.selected) {
             self.loading = true;
-            profileService.profileSearchByTaxonLevelAndName(opusId, rank, scientificName, 9999, 0).then(function(data) {
-                self.childCount = data.length;
+            profileService.profileCountByTaxonLevelAndName(opusId, rank, scientificName).then(function(data) {
+                self.totalChildren = data.total;
                 self.loading = false;
             });
         }
