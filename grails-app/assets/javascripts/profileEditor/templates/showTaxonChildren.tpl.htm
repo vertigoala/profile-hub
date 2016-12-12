@@ -1,6 +1,6 @@
 <!-- template for the popup displayed when the 'show children' link is clicked -->
 <div class="modal-header">
-    <h4 class="modal-title"><span ng-show="taxonChildrenCtrl.taxon.rank">{{taxonChildrenCtrl.taxon.rank | capitalize}}: </span>{{taxonChildrenCtrl.taxon.profileName | default: taxonChildrenCtrl.taxon.name | capitalize}}</h4>
+    <h4 class="modal-title"><span ng-show="taxonChildrenCtrl.taxon.rank">{{taxonChildrenCtrl.taxon.rank | capitalize}}: </span>{{taxonChildrenCtrl.taxon.name | capitalize}}</h4>
     <close-modal close="taxonChildrenCtrl.cancel()"></close-modal>
 </div>
 
@@ -25,7 +25,7 @@
                 previous-text="Prev" boundary-links="true"
                 ng-show="taxonChildrenCtrl.totalResults > taxonChildrenCtrl.pageSize"></pagination>
 
-    <span ng-show="taxonChildrenCtrl.profiles.length == 0">There are no child taxa for {{taxonChildrenCtrl.taxon.profileName | default: taxonChildrenCtrl.taxon.name | capitalize}}</span>
+    <span ng-show="taxonChildrenCtrl.profiles.length == 0">There are no child taxa for {{taxonChildrenCtrl.taxon.name | capitalize}}</span>
 </div>
 
 <div class="modal-footer">
