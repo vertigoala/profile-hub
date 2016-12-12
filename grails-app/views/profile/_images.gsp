@@ -119,14 +119,14 @@
                         <div class="col-sm-2">
                             <div class="small center">
                                 <div class="btn-group">
-                                    <label class="btn btn-xs"
+                                    <button class="btn btn-xs" ng-disabled="image.primary"
                                            ng-class="image.displayOption == 'INCLUDE' ? 'btn-success' : 'btn-default'"
                                            ng-model="image.displayOption" btn-radio="'INCLUDE'"
-                                           ng-change="imageCtrl.changeImageDisplay(ImageForm)">Yes</label>
-                                    <label class="btn btn-xs"
+                                           ng-change="imageCtrl.changeImageDisplay(ImageForm)">Yes</button>
+                                    <button class="btn btn-xs" ng-disabled="image.primary"
                                            ng-class="image.displayOption == 'EXCLUDE' ? 'btn-danger' : 'btn-default'"
                                            ng-model="image.displayOption" btn-radio="'EXCLUDE'"
-                                           ng-change="imageCtrl.changeImageDisplay(ImageForm)">No</label>
+                                           ng-change="imageCtrl.changeImageDisplay(ImageForm)">No</button>
                                 </div>
                             </div>
                         </div>
@@ -134,16 +134,16 @@
                         <div class="col-sm-2">
                             <div class="small center">
                                 <div class="btn-group">
-                                    <label class="btn btn-xs"
+                                    <button class="btn btn-xs" ng-disabled="image.displayOption == 'EXCLUDE'"
                                            ng-class="image.primary ? 'btn-success' : 'btn-default'"
                                            ng-model="image.primary"
                                            ng-click="imageCtrl.changePrimaryImage(image.imageId, ImageForm)"
-                                           btn-radio="true">Yes</label>
-                                    <label class="btn btn-xs"
+                                           btn-radio="true">Yes</button>
+                                    <button class="btn btn-xs" ng-disabled="image.displayOption == 'EXCLUDE'"
                                            ng-class="image.primary ? 'btn-default' : 'btn-danger'"
                                            ng-model="image.primary"
                                            ng-click="imageCtrl.changePrimaryImage(image.imageId, ImageForm)"
-                                           btn-radio="false">No</label>
+                                           btn-radio="false">No</button>
                                 </div>
                             </div>
                         </div>
