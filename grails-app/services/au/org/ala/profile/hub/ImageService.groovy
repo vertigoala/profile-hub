@@ -48,18 +48,6 @@ class ImageService {
         webService.get("${grailsApplication.config.images.service.url}/ws/image/${imageId}", [:], ContentType.APPLICATION_JSON, false, true)
     }
 
-    private def getJSON(String url) {
-        try {
-            def u = new URL(url);
-            def text = u.text
-            return new JsonSlurper().parseText(text)
-        } catch (Exception ex) {
-            System.err.println(url)
-            System.err.println(ex.message)
-            return null
-        }
-    }
-
     String constructImageUrl(String contextPath, String opusId, String profileId, String imageId, String extension, String imageType, ImageUrlType urlType) {
         String url =  "${contextPath}/opus/${opusId}/profile/${profileId}/image/"
 
@@ -342,9 +330,9 @@ class ImageService {
         response.resp = [:]
         response.resp.images = combinedImages
         response.resp.count = numberOfPublishedImages + numberOfLocalImages
-        if (profile.primaryImage)
+        if (profile.primaryImage) {
             response.resp.primaryImage = getPrimaryImageMetaData(opus, profile, combinedImages)
-
+        }
         response
     }
 
@@ -407,21 +395,20 @@ class ImageService {
 
             def imageId = profile.primaryImage
 
-            Map imageData = getJSON("${grailsApplication.config.images.service.url}/ws/getImageInfo?id=${imageId}&includeMetadata=true")
+            Map imageData = webService.get("${grailsApplication.config.images.service.url}/ws/getImageInfo", [id: imageId, includeMetadata:true], ContentType.APPLICATION_JSON, false, false)
 
             log.debug ("Obtained imageData map from " + "${grailsApplication.config.images.service.url}/ws/getImageInfo?id=${imageId}&includeMetadata=true ")
-      //      log.debug (toJson(imageData))
 
             boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageId)
 
             // If image id doesn't exist in image service, it returned {"success": false}, for eg: http://images-dev.ala.org.au/ws/getImageInfo?id=4552bea3-ca16-46c0-ae03-f2e3e91d2d08&includeMetadata=true
-            if (!excluded && imageData && !imageData.isEmpty() && !(imageData.containsKey("success") && imageData.success == false)) {
+            if (!excluded && (imageData.resp && !imageData.resp.isEmpty()) && !(imageData.resp.containsKey("success") && imageData.resp.success == false)) {
 
-                def occurrenceId = imageData.metadata?.find { it.key == 'occurrenceId' }?.getAt("value")
+                def occurrenceId = imageData.resp.metadata?.find { it.key == 'occurrenceId' }?.getAt("value")
+                def dataResourceId = imageData.resp.dataResourceUid
 
-                def dataResourceId = imageData.dataResourceUid
-
-                Map dataResource = getJSON("${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}")
+                Map dataResource = webService.get("${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}", [:], ContentType.APPLICATION_JSON, false, false)
+                        //getJSON("${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}")
 
                 log.debug ("Obtained dataResource map from " + "${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}")
                 log.debug (toJson(dataResource))
@@ -438,14 +425,14 @@ class ImageService {
                             it.imageId == imageId
                         }?.caption ?: '',
                         primary         : imageId == profile.primaryImage,
-                        metadata        : [creator      : imageData.creator, description: imageData.description, fileSize: imageData.sizeInBytes,
-                                           height       : imageData.height, imageId: imageId, imageUrl: imageData.imageUrl,
+                        metadata        : [creator      : imageData.resp.creator, description: imageData.resp.description, fileSize: imageData.resp.sizeInBytes,
+                                           height       : imageData.resp.height, imageId: imageId, imageUrl: imageData.resp.imageUrl,
                                            largeThumbUrl: "${grailsApplication.config.images.service.url}/image/proxyImageThumbnailLarge?imageId=${imageId}",
-                                           license      : imageData.license, mimetype: imageData.mimeType, squareThumbUrl: '', thumbHeight: '',
+                                           license      : imageData.resp.license, mimetype: imageData.resp.mimeType, squareThumbUrl: '', thumbHeight: '',
                                            thumbUrl     : "${grailsApplication.config.images.service.url}/image/proxyImageThumbnail?imageId=${imageId}",
-                                           thumbWidth   : '', titleZoomLevels: imageData.titleZoomLevels,
-                                           title        : imageData.title, created: imageData.created,
-                                           rights       : imageData.rights, rightsHolder: imageData.rightsHolder, width: imageData.width], //imageData.imageMetadata && !imageData.imageMetadata.isEmpty() ? imageData.imageMetadata[0] : [:],
+                                           thumbWidth   : '', titleZoomLevels: imageData.resp.titleZoomLevels,
+                                           title        : imageData.resp.title, created: imageData.resp.created,
+                                           rights       : imageData.resp.rights, rightsHolder: imageData.resp.rightsHolder, width: imageData.resp.width], //imageData.imageMetadata && !imageData.imageMetadata.isEmpty() ? imageData.imageMetadata[0] : [:],
                         type            : ImageType.OPEN
                 ]
 
