@@ -43,7 +43,7 @@
             class="fa fa-check">&nbsp;</i>Yes, use the matched name
     </button>
 </alert>
-<alert type="warning" class="warning" ng-if="nameCheck.noMatch && nameCheck.matchedNameDuplicates">
+<alert type="warning" class="warning" ng-if="nameCheck.noMatch && nameCheck.matchedNameDuplicates.length > 0">
     <p class="small-text">
         Multiple matches were found for '{{ nameCheck.providedName }}'. Please select the best match below:
         <button class="btn btn-link" ng-repeat="match in nameCheck.matchedNameDuplicates" ng-click="checkMatch(match)"><i
