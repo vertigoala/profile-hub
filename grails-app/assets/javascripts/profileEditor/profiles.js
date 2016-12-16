@@ -94,6 +94,7 @@ profileEditor.run(function ($rootScope, config) {
         removeButtons: '',
         removePlugins: '',
         extraPlugins: 'symbol,alaToolbar,ngImage,autogrow',
+        autoGrow_minHeight: 130, // font-size 15px * 1.5em line height + 10px margin bottom per <p> for 4 lines
         toolbar: [
             { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
             { name: 'clipboard', items: ['PasteText', '-', 'Undo', 'Redo' ] },

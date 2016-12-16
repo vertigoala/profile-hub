@@ -16,10 +16,25 @@
 			if ( editor.elementMode == CKEDITOR.ELEMENT_MODE_INLINE )
 				return;
 
+			var configBottomSpace = editor.config.autoGrow_bottomSpace || 0,
+				configMinHeight = editor.config.autoGrow_minHeight !== undefined ? editor.config.autoGrow_minHeight : 200,
+				configMaxHeight = editor.config.autoGrow_maxHeight || Infinity;
+			function enpxify(v) {
+				return typeof v === 'number' ? v + 'px' : v;
+			}
 			editor.on( 'instanceReady', function() {
 				// Simply set auto height with div wysiwyg.
-				if ( editor.editable().isInline() )
-					editor.ui.space( 'contents' ).setStyle( 'height', 'auto' );
+				if ( editor.editable().isInline() ) {
+					var contents = editor.ui.space( 'contents' );
+					contents.setStyle( 'height', 'auto' );
+					contents.setStyle( 'min-height', enpxify(configMinHeight) );
+					if (configMaxHeight !== Infinity) {
+						contents.setStyle( 'max-height', enpxify(configMaxHeight) );
+					}
+					if (configBottomSpace !== 0) {
+						contents.setStyle( 'margin-bottom', enpxify(configBottomSpace) );
+					}
+				}
 				// For classic (`iframe`-based) wysiwyg we need to resize the editor.
 				else
 					initIframeAutogrow( editor );
