@@ -10,6 +10,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
 
     self.images = [];
     self.primaryImage = null;
+    self.availableImages = 0;
 
     self.init = function (edit) {
         self.readonly = edit != 'true';
@@ -130,7 +131,7 @@ profileEditor.controller('ImagesController', function ($browser, $scope, profile
                 self.totalItems = totalNumberOfImages;
                 self.itemsPerPage = itemsPerPage;
                 self.paginate = (self.totalItems > self.itemsPerPage);
-
+                self.availableImagesCount = data.availImagesCount;
             },
 
             function () {
