@@ -157,7 +157,6 @@
           if (attrs.ckeditor == 'richTextSingleLine') {
             instance.on('key', function(event) {
                 if (event.data.keyCode == 13) {
-                    // add saving function here
                     event.cancel();
                 }
             });
