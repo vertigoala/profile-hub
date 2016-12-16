@@ -47,22 +47,31 @@ class ImagePagingSpec extends Specification {
         imageService.setProfileService(profileService)
         biocacheServiceMockNoImages = Mock(BiocacheService)
         biocacheServiceMockNoImages.retrieveImages(_, _, _, _) >> [:]
+        biocacheServiceMockNoImages.retrieveImages(_, _, _, _, _, _) >> [:]
         biocacheServiceMockNoImages.imageCount(*_) >> [resp: [totalRecords: 0]]
         biocacheServiceMockImages = Mock(BiocacheService)
-        biocacheServiceMockMoreImages = Mock(BiocacheService)
         biocacheServiceMockImages.retrieveImages(_, _, 3, 0) >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"]]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 3, 0, _, _) >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"]]]]
         biocacheServiceMockImages.retrieveImages(_, _, 4, 0) >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"], [image: "published4"]]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 4, 0, _, _) >> [statusCode: 200, resp: [occurrences: [[image: "published1"], [image: "published2"], [image: "published3"], [image: "published4"]]]]
         biocacheServiceMockImages.retrieveImages(_, _, 5, 3) >> [statusCode: 200, resp: [occurrences: [[image: "published4"], [image: "published5"], [image: "published6"], [image: "published7"], [image: "published8"]]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 5, 3, _, _) >> [statusCode: 200, resp: [occurrences: [[image: "published4"], [image: "published5"], [image: "published6"], [image: "published7"], [image: "published8"]]]]
         biocacheServiceMockImages.retrieveImages(_, _, 5, 8) >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 5, 8, _, _) >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
         biocacheServiceMockImages.retrieveImages(_, _, 5, 15) >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
+        biocacheServiceMockImages.retrieveImages(_, _, 5, 15, _, _) >> [statusCode: 200, resp: [occurrences: publishedImages[-1..-3]]]
         biocacheServiceMockImages.imageCount(*_) >> [resp: [totalRecords: 11]]
 
         biocacheServiceMockMoreImages = Mock(BiocacheService)
         biocacheServiceMockMoreImages.imageCount(*_) >> [resp: [totalRecords: 11]]
         biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 0) >> [statusCode: 200, resp: [occurrences: publishedImages[0..4]]]
+        biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 0, _, _) >> [statusCode: 200, resp: [occurrences: publishedImages[0..4]]]
         biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 5) >> [statusCode: 200, resp: [occurrences: publishedImages[5..9]]]
+        biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 5, _, _) >> [statusCode: 200, resp: [occurrences: publishedImages[5..9]]]
         biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 10) >> [statusCode: 200, resp: [occurrences: publishedImages[10..10]]]
+        biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 10, _, _) >> [statusCode: 200, resp: [occurrences: publishedImages[10..10]]]
         biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 15) >> [statusCode: 200, resp: [occurrences: [:]]]
+        biocacheServiceMockMoreImages.retrieveImages(_, _, 5, 15, _, _) >> [statusCode: 200, resp: [occurrences: [:]]]
 
     }
 
@@ -188,23 +197,23 @@ class ImagePagingSpec extends Specification {
         List imagesPage4 = alaResponse4.resp.images
         Integer count = alaResponse.resp.count
         then: "the first page has the correct number of images"
-        assertTrue(test_description + ' - page 1 does not have the correct number of images', imagesPage1.size() == pageSize)
+        imagesPage1.size() == pageSize
         and: "the first image of the first page is the first image available"
-        assertTrue(test_description + ' - the first image of page 1 is NOT the first image available', imagesPage1[0].imageId == image1Id)
+        imagesPage1[0].imageId == image1Id
         and: "the second page has the correct number of images"
-        assertTrue(test_description + ' - page 2 does NOT have the correct number of images', imagesPage2.size() == pageSize)
+        imagesPage2.size() == pageSize
         and: "the third page has the correct number of images"
-        assertTrue(test_description + ' - page 3 does NOT have the correct number of images', imagesPage3.size() == page3Size)
+        imagesPage3.size() == page3Size
         and: "there is no fourth page"
-        assertTrue(test_description + ' - page 4 does NOT have the correct number of images', imagesPage4.size() == 0)
+        imagesPage4.size() == 0
         and: "the first image on the second page is the image immediately after the last image on the first page"
-        assertTrue(test_description + ' - the first image on page 2 is NOT sequential to the last image on page 1', Integer.valueOf(imagesPage2[0].imageId[-1]) == Integer.valueOf(imagesPage1[-1].imageId[-1]) + 1)
+        Integer.valueOf(imagesPage2[0].imageId[-1]) == Integer.valueOf(imagesPage1[-1].imageId[-1]) + 1
         and: "the first image on the third page is the image immediately after the last image on the second page"
-        assertTrue(test_description + ' - the first image on page 3 is not sequential to the last image on page 2', Integer.valueOf(imagesPage3[0].imageId[-1]) == Integer.valueOf(imagesPage2[-1].imageId[-1]) + 1)
+        Integer.valueOf(imagesPage3[0].imageId[-1]) == Integer.valueOf(imagesPage2[-1].imageId[-1]) + 1
         and: 'the count of total available images is accurate'
-        assertTrue(test_description + ' - the number of paged images is different to the total number of images', count == totalNumberOfImages)
+        count == totalNumberOfImages
         and: "all images are accounted for"
-        assertTrue(test_description + ' - not all images were accounted for', count == (imagesPage1.size() + imagesPage2.size() + imagesPage3.size() + imagesPage4.size()))
+        count == (imagesPage1.size() + imagesPage2.size() + imagesPage3.size() + imagesPage4.size())
         where: "combinations of image types are"
         profileResponse                                                                                                                                                || image1Id | page3Size | totalNumberOfImages | biocacheService | test_description
         [profile: [scientificName: 'Olympia', uuid: 'profile1', privateImages: privateImagesComplex], opus: [keepImagesPrivate: true, uuid: 'collection1']]            || 'imageId1' | 2 | 12 | biocacheServiceMockNoImages | "Private images only"
@@ -230,16 +239,16 @@ class ImagePagingSpec extends Specification {
         List imagesPage5 = alaResponse5.resp.images
         Integer count = alaResponse3.resp.count
         then: "the third page has the correct number of images"
-        assertTrue(test_description + ' - page 3 has an incorrect number of images', imagesPage3.size() == pageSize)
+        imagesPage3.size() == pageSize
         and: "the third page consists of private and published images"
-        assertTrue(test_description + ' - the first image on page 3 is not the expected image', imagesPage3[0].imageId == image1Id)
-        assertTrue(test_description + ' - the last image on page 3 is not the expected image', imagesPage3[4].imageId == image2Id)
+        imagesPage3[0].imageId == image1Id
+        imagesPage3[4].imageId == image2Id
         and: "the fourth page has the correct number of images"
-        assertTrue(test_description + ' - the number of images on page 4 is wrong', imagesPage4.size() == pageSize)
+        imagesPage4.size() == pageSize
         and: "the last page has the correct number of images"
-        assertTrue(test_description + '- the last page has an incorrect number of images', imagesPage5.size() == lastPageSize)
+        imagesPage5.size() == lastPageSize
         and: "all images are accounted for"
-        assert (count == (imagesPage3.size() + imagesPage4.size()) + imagesPage5.size() + 10) //10 is the first 2 pages which we aren't using in this test
+        count == (imagesPage3.size() + imagesPage4.size()) + imagesPage5.size() + 10 //10 is the first 2 pages which we aren't using in this test
         where: "combinations of image types are"
         profileResponse                                                                                                                                                                              || image1Id | image2Id | lastPageSize | biocacheService | test_description
         [profile: [scientificName: 'Olympia', uuid: 'profile1', privateImages: privateImagesComplex], opus: [keepImagesPrivate: true, uuid: 'collection1']]                                          || 'imageId11' | 'published3' | 3 | biocacheServiceMockImages | "Private and published images"

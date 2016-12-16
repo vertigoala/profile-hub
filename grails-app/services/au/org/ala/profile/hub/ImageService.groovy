@@ -280,18 +280,12 @@ class ImageService {
         Map opus = model.opus
         String minusQuery = ""
 
-        List excluded = profile.imageSettings?.grep {
-            isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, it.imageId)
-        }?.imageId
+        List excluded = profile.imageSettings?.findAll {
+            isExcluded(opus.approvedImageOption, it?.displayOption?.toString())
+        }?.collect { it.imageId } ?: []
 
         if (readonlyView) {
-            excluded.each {
-                if (minusQuery != "") {
-                    minusQuery = minusQuery + " AND -image_url:" + it
-                } else {
-                    minusQuery = "-image_url:" + it
-                }
-            }
+            minusQuery = excluded.collect { "-image_url: $it" }.join(' AND ')
         }
 
         Map numberOfPublishedImagesMap = biocacheService.imageCount(searchIdentifier, opus, minusQuery)
@@ -635,6 +629,11 @@ class ImageService {
         }
 
         excluded
+    }
+
+    private static boolean isExcluded(String defaultOptionStr, String displayOptionStr) {
+        ImageOption defaultOption = ImageOption.byName(defaultOptionStr, ImageOption.INCLUDE)
+        return ImageOption.byName(displayOptionStr, defaultOption) == ImageOption.EXCLUDE
     }
 
     def updateLocalImageMetadata(String imageId, Map metadata) {
