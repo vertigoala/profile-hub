@@ -278,7 +278,23 @@ class ImageService {
         Map model = profileService.getProfile(opusId, profileId, latest)
         Map profile = model.profile
         Map opus = model.opus
-        Map numberOfPublishedImagesMap = biocacheService.imageCount(searchIdentifier, opus)
+        String minusQuery = ""
+
+        List excluded = profile.imageSettings?.grep {
+            isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, it.imageId)
+        }?.imageId
+
+        if (readonlyView) {
+            excluded.each {
+                if (minusQuery != "") {
+                    minusQuery = minusQuery + " AND -image_url:" + it
+                } else {
+                    minusQuery = "-image_url:" + it
+                }
+            }
+        }
+
+        Map numberOfPublishedImagesMap = biocacheService.imageCount(searchIdentifier, opus, minusQuery)
         if (numberOfPublishedImagesMap && numberOfPublishedImagesMap?.resp && numberOfPublishedImagesMap?.resp?.totalRecords > 0) {
             numberOfPublishedImages = numberOfPublishedImagesMap?.resp?.totalRecords
         }
@@ -316,13 +332,18 @@ class ImageService {
         if (combinedImages.size() < Integer.valueOf(pageSize) && numberOfPublishedImagesMap && numberOfPublishedImagesMap?.size() > 0) {
             Integer newPageSize = Integer.valueOf(pageSize) - combinedImages.size() //partial page of private images
             Integer newStartIndex = Integer.valueOf(startIndex) - numberOfLocalImages + combinedImages.size()
-            Map publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus, newPageSize, newStartIndex)
-
+            List publishedImageList = []
+            Map publishedImagesMap = [:]
+            if (readonlyView) {
+                publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus, newPageSize, newStartIndex, "&fl=id,image_url", minusQuery)
+            } else {
+                publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus, newPageSize, newStartIndex)
+            }
             if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
-                List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
-                if (publishedImageList && publishedImageList.size() > 0) {
-                    combinedImages.addAll(publishedImageList)
-                }
+                publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
+            }
+            if (publishedImageList && publishedImageList.size() > 0) {
+                combinedImages.addAll(publishedImageList)
             }
         }
         response.statusCode = SC_OK
@@ -330,6 +351,14 @@ class ImageService {
         response.resp = [:]
         response.resp.images = combinedImages
         response.resp.count = numberOfPublishedImages + numberOfLocalImages
+
+        if (excluded && !readonlyView) {
+            int excludedCount = excluded?.size()
+            response.resp.availImagesCount = response.resp.count - excludedCount
+        } else {
+            response.resp.availImagesCount = response.resp.count
+        }
+
         if (profile.primaryImage) {
             response.resp.primaryImage = getPrimaryImageMetaData(opus, profile, combinedImages)
         }
@@ -494,7 +523,7 @@ class ImageService {
 
                 // only return images that have not been included, unless we are in the edit view, in which case we
                 // need to show all available images in order for the editor to decide which to include/exclude
-                if (!excluded || !readonlyView) {
+                if ((readonlyView && !excluded) || (!readonlyView)) {
                     image
                 }
             }

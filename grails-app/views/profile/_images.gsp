@@ -1,12 +1,12 @@
 <div class="panel panel-default" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
-    <div ng-if="imageCtrl.images.length > 0 && imageCtrl.readonly" ng-cloak>
+    <div ng-if="imageCtrl.images.length >= 0 && imageCtrl.readonly" ng-cloak>
         <navigation-anchor anchor-name="view_images" title="Images"
                            condition="imageCtrl.images.length > 0"></navigation-anchor>
 
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span>
+                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.availableImagesCount}})</span>
                     </h4>
                 </div>
             </div>
@@ -68,7 +68,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span>
+                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.availableImagesCount}})</span>
                     </h4>
                     <p:help help-id="profile.edit.images" show="${edit}"/>
                 </div>
