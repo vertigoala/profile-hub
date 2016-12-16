@@ -149,8 +149,9 @@
           instance.on('insertNgImage', function(event) {
             if (scope.attrCtrl) {
               scope.attrCtrl.insertImage(event.data.callback);
+            } else {
+              $log.debug("insertNgImage event but not in a scope with attrCtrl available.")
             }
-            $log.debug("insertNgImage event but not in a scope with attrCtrl available.")
           });
 
           // XXX Hack to disallow enter for single line text boxes
