@@ -93,7 +93,7 @@ profileEditor.run(function ($rootScope, config) {
         'skin': 'moono',
         removeButtons: '',
         removePlugins: '',
-        extraPlugins: 'symbol,alaToolbar,ngImage',
+        extraPlugins: 'symbol,alaToolbar,ngImage,autogrow',
         toolbar: [
             { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
             { name: 'clipboard', items: ['PasteText', '-', 'Undo', 'Redo' ] },
