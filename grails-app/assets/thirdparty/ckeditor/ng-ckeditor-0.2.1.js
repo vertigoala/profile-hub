@@ -153,6 +153,16 @@
             $log.debug("insertNgImage event but not in a scope with attrCtrl available.")
           });
 
+          // XXX Hack to disallow enter for single line text boxes
+          if (attrs.ckeditor == 'richTextSingleLine') {
+            instance.on('key', function(event) {
+                if (event.data.keyCode == 13) {
+                    // add saving function here
+                    event.cancel();
+                }
+            });
+          }
+
           ngModel.$render = function() {
             data.push(ngModel.$viewValue);
             if (isReady) {

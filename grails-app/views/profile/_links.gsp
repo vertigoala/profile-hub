@@ -15,8 +15,8 @@
         <div class="row">
             <div class="col-sm-12">
                 <ul>
-                    <li ng-repeat="link in linkCtrl.links" ng-if="link.uuid"><a href="{{link.url}}">{{ link.title }}</a>
-                        <span ng-if="link.description">&nbsp;-&nbsp;</span>{{ link.description }}
+                    <li ng-repeat="link in linkCtrl.links" ng-if="link.uuid"><a ng-href="{{link.url}}" ng-bind-html="link.title | sanitizeHtml "></a>
+                        <span ng-if="link.description">&nbsp;-&nbsp;</span><span ng-bind-html="link.description | sanitizeHtml"></span>
                         <a class="btn btn-link" ng-click="linkCtrl.deleteLink($index, LinkForm)"
                            ng-show="!linkCtrl.readonly" title="Delete">
                             <i class="fa fa-trash-o color--red"></i>
@@ -33,12 +33,12 @@
 
                         <div class="form-group">
                             <label>Title</label>
-                            <input type="text" class="form-control" ng-model="link.title"/><br/>
+                            <textarea ng-model="link.title" ckeditor="richTextSingleLine"></textarea>
                         </div>
 
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea rows="3" class="form-control" ng-model="link.description"></textarea>
+                            <textarea ng-model="link.description" ckeditor="richTextSimpleToolbar"></textarea>
                         </div>
                         <button class="btn btn-danger pull-right"
                                 ng-click="linkCtrl.deleteLink($index, LinkForm)">Delete</button>

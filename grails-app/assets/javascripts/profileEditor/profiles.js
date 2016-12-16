@@ -54,6 +54,17 @@ profileEditor.run(function ($rootScope, config) {
         removePlugins: 'toolbar',
         height: 50
     };
+    $rootScope.richTextSingleLine = { // this name is used as a constant to hack in some features
+        language: 'en-au',
+        'skin': 'moono',
+        removeButtons: '',
+        removePlugins: '',
+        height: 'auto',
+        toolbar: [
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Subscript', 'Superscript' ] }
+        ],
+        enterMode: CKEDITOR.ENTER_BR
+    };
     $rootScope.richTextSmall = {
         language: 'en-au',
         'skin': 'moono',
@@ -61,7 +72,7 @@ profileEditor.run(function ($rootScope, config) {
         removePlugins: '',
         height: 50,
         toolbar: [
-            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline' ] }
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Subscript', 'Superscript' ] }
         ]
     };
 
@@ -70,9 +81,11 @@ profileEditor.run(function ($rootScope, config) {
         'skin': 'moono',
         removeButtons: '',
         removePlugins: '',
+        height: '97px', // font-size 15px * 1.5em line height + 10px margin bottom per <p> for 3 lines
         toolbar: [
-            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline' ] }
-        ]
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Subscript', 'Superscript' ] }
+        ],
+        enterMode: CKEDITOR.ENTER_BR
     };
 
     $rootScope.richTextFullToolbar = {

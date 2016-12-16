@@ -21,7 +21,7 @@
                 <div class="form-group" ng-show="bibliography.edit">
                     <label for="bibliographyText" class="screen-reader-label">Bibliography text</label>
                     <textarea id="bibliographyText" ng-model="bibliography.text" ckeditor="richTextSmall"
-                              class="single-line-editor" dirty-check changed="profileCtrl.isDirty()"
+                              dirty-check changed="profileCtrl.isDirty()"
                               required="required"></textarea>
                 </div>
             </div>

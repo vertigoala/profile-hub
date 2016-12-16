@@ -13,7 +13,7 @@
     <div class="clearfix"></div>
     <p class="caption">{{ imageCtrl.primaryImage.dataResourceName }}<br>
         <span ng-if="imageCtrl.imageCaption(imageCtrl.primaryImage)">
-            "{{ imageCtrl.imageCaption(imageCtrl.primaryImage) }}"
+            <span ng-bind-html="imageCtrl.imageCaption(imageCtrl.primaryImage) | sanitizeHtml"></span>
             <span class="caption"  ng-if="imageCtrl.primaryImage.metadata.creator">
                 by {{ imageCtrl.primaryImage.metadata.creator }}<span
                     ng-if="imageCtrl.primaryImage.metadata.created">,

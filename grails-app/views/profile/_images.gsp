@@ -30,7 +30,7 @@
                             <p class="caption">{{ image.dataResourceName }}</p>
 
                             <p class="caption"
-                               ng-if="imageCtrl.imageCaption(image)">"{{ imageCtrl.imageCaption(image) }}"
+                               ng-if="imageCtrl.imageCaption(image)">"<span ng-bind-html="imageCtrl.imageCaption(image) | sanitizeHtml"></span>"
                                 <span class="caption"
                                       ng-if="image.metadata.creator">by {{ image.metadata.creator }}<span
                                         ng-if="image.metadata.created">, {{ image.metadata.created | date: 'dd/MM/yyyy' }}</span>
@@ -150,9 +150,8 @@
 
                         <div class="col-sm-4">
                             <div class="form-group" ng-if="image.type.name == 'OPEN'">
-                                <label class="sr-only" for="{{image.imageId}}-caption">Caption</label>
-                                <input type="text" class="form-control" id="{{image.imageId}}-caption"
-                                       ng-model="image.caption" placeholder="Alternative caption">
+                                <label>Alternative caption</label>
+                                <textarea ng-model="image.caption" ckeditor="richTextSingleLine" placeholder="Alternative caption"></textarea>
                             </div>
 
                             <div class="form-group" ng-if="image.type.name != 'OPEN'">
