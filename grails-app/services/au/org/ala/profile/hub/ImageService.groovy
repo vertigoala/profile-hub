@@ -279,10 +279,9 @@ class ImageService {
         Map profile = model.profile
         Map opus = model.opus
         String minusQuery = ""
+        ImageOption opusDefaultOption = ImageOption.byName(opus.approvedImageOption, ImageOption.INCLUDE)
 
-        List excluded = profile.imageSettings?.findAll {
-            isExcluded(opus.approvedImageOption, it?.displayOption?.toString())
-        }?.collect { it.imageId } ?: []
+        List excluded = profile?.imageSettings.findAll { isExcluded(opusDefaultOption, it?.displayOption?.toString()) }*.imageId
 
         if (readonlyView) {
             minusQuery = excluded.collect { "-image_url: $it" }.join(' AND ')
@@ -631,8 +630,7 @@ class ImageService {
         excluded
     }
 
-    private static boolean isExcluded(String defaultOptionStr, String displayOptionStr) {
-        ImageOption defaultOption = ImageOption.byName(defaultOptionStr, ImageOption.INCLUDE)
+    private static boolean isExcluded(ImageOption defaultOption, String displayOptionStr) {
         return ImageOption.byName(displayOptionStr, defaultOption) == ImageOption.EXCLUDE
     }
 
