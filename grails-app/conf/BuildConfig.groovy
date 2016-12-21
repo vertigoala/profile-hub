@@ -20,7 +20,9 @@ grails.project.fork = [
         console: [maxMemory: 1024, minMemory: 64, debug: false, maxPerm: 256]
 ]
 
+//grails.plugin.location."asset-pipeline" = "../../grails-asset-pipeline"
 //grails.plugin.location."ala-map" = "../ala-map-plugin"
+//grails.plugin.location."ala-ws-plugin" = "../ala-ws-plugin"
 
 grails.project.dependency.resolver = "maven"
 grails.project.dependency.resolution = {
@@ -46,6 +48,7 @@ grails.project.dependency.resolution = {
     management {
         dependency "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
         dependency "org.apache.httpcomponents:httpclient:${httpmimeVersion}"
+        dependency "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
     }
 
     dependencies {
@@ -76,10 +79,10 @@ grails.project.dependency.resolution = {
         compile ":cache:1.1.8"
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
-        compile(":ala-map:2.0.3") {
+        compile(":ala-map:2.0.4") {
             excludes "resources"
         }
-        compile(":ala-ws-plugin:1.4") {
+        compile(":ala-ws-plugin:1.5") {
             excludes "resources"
         }
         compile(":ala-admin-plugin:1.2") {

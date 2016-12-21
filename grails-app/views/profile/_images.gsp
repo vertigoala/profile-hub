@@ -1,12 +1,12 @@
 <div class="panel panel-default" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
-    <div ng-if="imageCtrl.images.length > 0 && imageCtrl.readonly" ng-cloak>
+    <div ng-if="imageCtrl.images.length >= 0 && imageCtrl.readonly" ng-cloak>
         <navigation-anchor anchor-name="view_images" title="Images"
                            condition="imageCtrl.images.length > 0"></navigation-anchor>
 
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span>
+                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.availableImagesCount}})</span>
                     </h4>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                             <p class="caption">{{ image.dataResourceName }}</p>
 
                             <p class="caption"
-                               ng-if="imageCtrl.imageCaption(image)">"{{ imageCtrl.imageCaption(image) }}"
+                               ng-if="imageCtrl.imageCaption(image)">"<span ng-bind-html="imageCtrl.imageCaption(image) | sanitizeHtml"></span>"
                                 <span class="caption"
                                       ng-if="image.metadata.creator">by {{ image.metadata.creator }}<span
                                         ng-if="image.metadata.created">, {{ image.metadata.created | date: 'dd/MM/yyyy' }}</span>
@@ -68,7 +68,7 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.totalItems}})</span>
+                    <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.availableImagesCount}})</span>
                     </h4>
                     <p:help help-id="profile.edit.images" show="${edit}"/>
                 </div>
@@ -119,14 +119,14 @@
                         <div class="col-sm-2">
                             <div class="small center">
                                 <div class="btn-group">
-                                    <label class="btn btn-xs"
+                                    <button class="btn btn-xs" ng-disabled="image.primary"
                                            ng-class="image.displayOption == 'INCLUDE' ? 'btn-success' : 'btn-default'"
                                            ng-model="image.displayOption" btn-radio="'INCLUDE'"
-                                           ng-change="imageCtrl.changeImageDisplay(ImageForm)">Yes</label>
-                                    <label class="btn btn-xs"
+                                           ng-change="imageCtrl.changeImageDisplay(ImageForm)">Yes</button>
+                                    <button class="btn btn-xs" ng-disabled="image.primary"
                                            ng-class="image.displayOption == 'EXCLUDE' ? 'btn-danger' : 'btn-default'"
                                            ng-model="image.displayOption" btn-radio="'EXCLUDE'"
-                                           ng-change="imageCtrl.changeImageDisplay(ImageForm)">No</label>
+                                           ng-change="imageCtrl.changeImageDisplay(ImageForm)">No</button>
                                 </div>
                             </div>
                         </div>
@@ -134,25 +134,24 @@
                         <div class="col-sm-2">
                             <div class="small center">
                                 <div class="btn-group">
-                                    <label class="btn btn-xs"
+                                    <button class="btn btn-xs" ng-disabled="image.displayOption == 'EXCLUDE'"
                                            ng-class="image.primary ? 'btn-success' : 'btn-default'"
                                            ng-model="image.primary"
                                            ng-click="imageCtrl.changePrimaryImage(image.imageId, ImageForm)"
-                                           btn-radio="true">Yes</label>
-                                    <label class="btn btn-xs"
+                                           btn-radio="true">Yes</button>
+                                    <button class="btn btn-xs" ng-disabled="image.displayOption == 'EXCLUDE'"
                                            ng-class="image.primary ? 'btn-default' : 'btn-danger'"
                                            ng-model="image.primary"
                                            ng-click="imageCtrl.changePrimaryImage(image.imageId, ImageForm)"
-                                           btn-radio="false">No</label>
+                                           btn-radio="false">No</button>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-sm-4">
                             <div class="form-group" ng-if="image.type.name == 'OPEN'">
-                                <label class="sr-only" for="{{image.imageId}}-caption">Caption</label>
-                                <input type="text" class="form-control" id="{{image.imageId}}-caption"
-                                       ng-model="image.caption" placeholder="Alternative caption">
+                                <label>Alternative caption</label>
+                                <textarea ng-model="image.caption" ckeditor="richTextSingleLine" placeholder="Alternative caption"></textarea>
                             </div>
 
                             <div class="form-group" ng-if="image.type.name != 'OPEN'">

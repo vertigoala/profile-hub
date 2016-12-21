@@ -109,11 +109,12 @@ class ProfileController extends BaseController {
     @Secured(role = ROLE_PROFILE_EDITOR)
     def updateProfile() {
         def json = request.getJSON()
-
+        log.debug("updateProfile with json " + json + " for profile " + params.profileId)
         if (!json || !params.profileId) {
             badRequest()
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
+            log.debug("Saving profile for opus id: " + params.opusId + " profile id: " + params.profileId)
             def response = profileService.updateProfile(params.opusId as String, params.profileId as String, json, latest)
 
             handle response
@@ -147,6 +148,7 @@ class ProfileController extends BaseController {
         }
     }
 
+    @PrivateCollectionSecurityExempt
     @Secured(role = ROLE_PROFILE_EDITOR_PLUS)
     def publishDraft() {
         if (!params.profileId) {
@@ -206,7 +208,8 @@ class ProfileController extends BaseController {
         } else {
             response.setContentType(CONTENT_TYPE_JSON)
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
-            Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
+            final fullClassification = params.boolean("fullClassification", false)
+            Map profileAndOpus = profileService.getProfile(params.opusId as String, params.profileId as String, latest, fullClassification)
 
             if (!profileAndOpus) {
                 notFound()
@@ -290,7 +293,7 @@ class ProfileController extends BaseController {
 
     @Secured(role = ROLE_PROFILE_EDITOR)
     def updateAttribute() {
-        log.debug "Updating attributing....."
+        log.debug "Updating attribute....."
         def jsonRequest = request.getJSON()
 
         // the attributeId may be blank (e.g. when creating a new attribute), but the request should still have it
@@ -320,16 +323,13 @@ class ProfileController extends BaseController {
         } else {
             boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
 
-            def model = profileService.getProfile(params.opusId, params.profileId, latest)
+            Map model = profileService.getProfile(params.opusId, params.profileId, latest)
+            Map profile = model.profile
+            Map opus = model.opus
 
-            String primaryImageId = model.profile.primaryImage
+            def imageMetadata = imageService.getPrimaryImageMetaData(opus, profile)
 
-            String searchIdentifier = model.profile.guid ? "lsid:" + model.profile.guid : model.profile.scientificName
-            List images = imageService.retrieveImages(params.opusId, params.profileId, latest, searchIdentifier)?.resp
-
-            Map primaryImage = images.find { it?.imageId == primaryImageId } ?: images[0] ?: [:]
-
-            render primaryImage as JSON
+            render imageMetadata as JSON
         }
     }
 
@@ -417,6 +417,7 @@ class ProfileController extends BaseController {
         }
     }
 
+    @PrivateCollectionSecurityExempt
     def retrieveLocalThumbnailImage() {
         if (!params.type) {
             badRequest "type is a required parameter"
@@ -576,6 +577,7 @@ class ProfileController extends BaseController {
         }
     }
 
+    @PrivateCollectionSecurityExempt
     @Secured(role = ROLE_PROFILE_EDITOR)
     def savePublication() {
         if (!enabled("publications")) {

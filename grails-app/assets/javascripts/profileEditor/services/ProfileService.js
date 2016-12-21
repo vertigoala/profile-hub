@@ -82,7 +82,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         getProfile : function(opusId, profileId) {
             $log.debug("Fetching profile " + profileId);
 
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {params: {fullClassification: true}, cache: true});
             future = util.toStandardPromise(future);
             future.then(function(data) {
                 // Only cache the profile data from the profie being viewed.  Profiles from supporting collections
@@ -725,16 +725,26 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        profileSearchByTaxonLevelAndName: function (opusId, taxon, scientificName, max, offset, sortBy, countChildren) {
-            if (_.isUndefined(countChildren)) {
-                countChildren = false;
-            }
-            if (_.isUndefined(sortBy)) {
-                sortBy = "name";
-            }
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset + "&sortBy=" + sortBy + "&countChildren=" + countChildren);
+        profileSearchByTaxonLevelAndName: function (opusId, taxon, scientificName, max, offset, optionalParams) {
+            var options = angular.extend({
+                countChildren: false,
+                sortBy: 'name',
+                immediateChildrenOnly: false
+            }, optionalParams);
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset + "&sortBy=" + options.sortBy + "&countChildren=" + options.countChildren + "&immediateChildrenOnly=" + options.immediateChildrenOnly);
             future.then(function (response) {
                 $log.debug("Facet search returned with response code " + response.status);
+            });
+            return util.toStandardPromise(future);
+        },
+
+        profileCountByTaxonLevelAndName: function (opusId, taxon, scientificName, optionalParams) {
+            var options = angular.extend({
+                immediateChildrenOnly: false
+            }, optionalParams);
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name/count?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&immediateChildrenOnly=" + options.immediateChildrenOnly);
+            future.then(function (response) {
+                $log.debug("Profile count  by taxon level and name returned with response code " + response.status);
             });
             return util.toStandardPromise(future);
         },

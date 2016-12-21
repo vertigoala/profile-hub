@@ -37,24 +37,22 @@
                     </div>
 
                     <div>
-                        <span ng-if="bhlCtrl.readonly && link.title != ''"><span class="minor-heading">Title:&nbsp;</span>{{link.title}}
+                        <span ng-if="bhlCtrl.readonly && link.title != ''"><span class="minor-heading">Title:&nbsp;</span><span ng-bind-html="link.title | sanitizeHtml"></span>
                         </span>
 
                         <div ng-show="!bhlCtrl.readonly" class="form-group">
                             <label for="title">Title</label>
-                            <input id="title" type="text" class="form-control" ng-model="link.title"
-                                   value="{{link.title}}"/>
+                            <textarea id="title" ng-model="link.title" ckeditor="richTextSingleLine"></textarea>
                         </div>
                     </div>
 
                     <div>
-                        <span ng-if="bhlCtrl.readonly && link.description != ''"><span class="minor-heading">Description:&nbsp;</span>{{link.description}}
+                        <span ng-if="bhlCtrl.readonly && link.description != ''"><span class="minor-heading">Description:&nbsp;</span><span ng-bind-html="link.description | sanitizeHtml"></span>
                         </span>
 
                         <div ng-show="!bhlCtrl.readonly" class="form-group">
                             <label for="description">Description</label>
-                            <textarea id="description" rows="3" class="form-control"
-                                      ng-model="link.description">{{link.description}}</textarea>
+                            <textarea id="description" ng-model="link.description" ckeditor="richTextSimpleToolbar"></textarea>
                         </div>
                     </div>
                 </div>
@@ -83,7 +81,7 @@
                 </div>
 
                 <div class="col-md-2 margin-bottom-1 text-right" ng-show="link.thumbnailUrl">
-                    <a href="{{link.url}}" target="_blank">
+                    <a ng-href="{{link.url}}" target="_blank">
                         <img ng-model="link.thumbnailUrl" ng-src="{{link.thumbnailUrl}}"
                              style="max-height:150px;" alt="{{link.title}}" class="img-rounded"/>
                     </a>

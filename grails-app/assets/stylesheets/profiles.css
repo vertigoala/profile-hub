@@ -1188,3 +1188,8 @@ span.breadcrumb-dropdown {
     overflow-x: auto;
 }
 
+/* XXX hacks to enable single line rich text, fragile if ckeditor structure changes */
+textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
+    height: auto;
+    padding: 6px 12px;
+}

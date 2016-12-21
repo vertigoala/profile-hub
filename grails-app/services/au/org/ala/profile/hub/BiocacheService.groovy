@@ -27,7 +27,7 @@ class BiocacheService {
      * @param imageSources - the drd resources
      * @return Map conforming to ALA response structure containing image count and http status code
      */
-    Map imageCount(String searchIdentifier, Map opus) {
+    Map imageCount(String searchIdentifier, Map opus, String minusQuery = "") {
         // In the lower (non-production) environments, images should be uploaded to the SANDBOX instance of the biocache
         // that is install with the Profiles application (see the uploadImage method of this class). This means that any
         // image that is uploaded during testing will be handled by the local biocache instance, NOT the production
@@ -40,14 +40,14 @@ class BiocacheService {
         String biocacheImageSearchUrl = "${grailsApplication.config.biocache.base.url}/ws/occurrences/search.json"
         String sandboxImageSearchUrl = "${grailsApplication.config.sandbox.biocache.service.url}/occurrences/search.json"
 
-        int biocacheImages = countImages(biocacheImageSearchUrl, searchIdentifier, opus)
-        int sandboxImages = grailsApplication.config.sandbox.biocache.service.url ? countImages(sandboxImageSearchUrl, searchIdentifier, opus) : 0
+        int biocacheImages = countImages(biocacheImageSearchUrl, searchIdentifier, opus, minusQuery)
+        int sandboxImages = grailsApplication.config.sandbox.biocache.service.url ? countImages(sandboxImageSearchUrl, searchIdentifier, opus, minusQuery) : 0
 
         [statusCode: HttpStatus.SC_OK, resp: [totalRecords: biocacheImages + sandboxImages]]
     }
 
-    private int countImages(String imageSearchUrl, String searchIdentifier, Map opus) {
-        String imagesQuery = constructQueryString(searchIdentifier, opus)
+    private int countImages(String imageSearchUrl, String searchIdentifier, Map opus, String minusQuery = "") {
+        String imagesQuery = constructQueryString(searchIdentifier, opus, minusQuery)
         Map result = webService.get("${imageSearchUrl}?q=${imagesQuery}&facets=multimedia&flimit=0&foffset=0&fq=multimedia:Image&pageSize=0")
 
         int count = result?.resp?.totalRecords ?: 0
@@ -55,7 +55,7 @@ class BiocacheService {
         count
     }
 
-    def retrieveImages(String searchIdentifier, Map opus, int pageSize = DEFAULT_BIOCACHE_PAGE_SIZE, int startIndex = 0) {
+    def retrieveImages(String searchIdentifier, Map opus, int pageSize = DEFAULT_BIOCACHE_PAGE_SIZE, int startIndex = 0, relevantFacets = "", minusQuery = "") {
         // In the lower (non-production) environments, images should be uploaded to the SANDBOX instance of the biocache
         // that is install with the Profiles application (see the uploadImage method of this class). This means that any
         // image that is uploaded during testing will be handled by the local biocache instance, NOT the production
@@ -68,20 +68,20 @@ class BiocacheService {
 
         Map result = [:]
         if (searchIdentifier) {
-            String imagesQuery = constructQueryString(searchIdentifier, opus)
+            String imagesQuery = constructQueryString(searchIdentifier, opus, minusQuery)
             log.debug("Fetching images for ${searchIdentifier} using query ${imagesQuery}")
 
             String biocacheImageSearchUrl = "${grailsApplication.config.biocache.base.url}/ws/occurrences/search.json"
             int totalBiocacheImageCount = countImages(biocacheImageSearchUrl, searchIdentifier, opus)
 
             if (totalBiocacheImageCount > startIndex - 1) {
-                result = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}")
+                result = webService.get("${biocacheImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize}&startIndex=${startIndex}" + relevantFacets )
                 int biocacheImageCount = result?.resp?.occurrences?.size() ?: 0
                 if (biocacheImageCount < pageSize) {
                     if (grailsApplication.config.sandbox.biocache.service.url) {
                         String sandboxImageSearchUrl = "${grailsApplication.config.sandbox.biocache.service.url}/occurrences/search.json"
                         startIndex = Math.max(0, startIndex - totalBiocacheImageCount)
-                        Map sandboxResult = webService.get("${sandboxImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize - biocacheImageCount}&startIndex=${startIndex}")
+                        Map sandboxResult = webService.get("${sandboxImageSearchUrl}?q=${imagesQuery}&fq=multimedia:Image&format=json&im=true&pageSize=${pageSize - biocacheImageCount}&startIndex=${startIndex}" + relevantFacets)
                         if (sandboxResult?.resp?.occurrences) {
                             if (!result?.resp?.occurrences) {
                                 result.resp.occurrences = []
@@ -100,7 +100,7 @@ class BiocacheService {
         result
     }
 
-    String constructQueryString(String searchIdentifier, Map opus) {
+    String constructQueryString(String searchIdentifier, Map opus, String minusQuery= "") {
         String query
         if (opus?.dataResourceConfig?.imageResourceOption) {
             Map config = opus.dataResourceConfig
@@ -126,7 +126,15 @@ class BiocacheService {
             query = "${searchIdentifier}"
         }
 
-        enc(query)
+        query = enc(query)
+
+        def mQuery = ""
+        if (query && minusQuery) {
+            mQuery = enc(" AND ${minusQuery}")
+        }
+
+        query = query + mQuery
+
     }
 
     String copyFileForUpload(String imageId, def file, File tempDir) {

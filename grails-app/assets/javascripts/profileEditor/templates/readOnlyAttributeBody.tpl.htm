@@ -31,7 +31,7 @@
                 <span class="pull-right">
                     <!-- TODO context path -->
                     From Collection: <a
-                        href="{{ config.contextPath }}/opus/{{attribute.fromCollection.opusShortName ? attribute.fromCollection.opusShortName : attribute.fromCollection.opusId}}/profile/{{attribute.fromCollection.profileId}}"
+                        ng-href="{{ config.contextPath }}/opus/{{attribute.fromCollection.opusShortName ? attribute.fromCollection.opusShortName : attribute.fromCollection.opusId}}/profile/{{attribute.fromCollection.profileId}}"
                         target="_self">{{attribute.fromCollection.opusTitle}}</a>
                 </span>
             </span>

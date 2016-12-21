@@ -243,7 +243,7 @@ profileEditor.controller('AttributeEditor', ['profileService', 'util', 'messageS
             profileId: self.profile.uuid,
             uuid: attribute.uuid,
             title: capitalize(attribute.title),
-            text: attribute.text
+            text: attribute.text || ''
         };
 
         if (attribute.source) {

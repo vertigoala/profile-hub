@@ -26,7 +26,7 @@
                 <tr ng-repeat="profile in browseCtrl.profiles">
                     <td>{{profile.rank | capitalize | default:'Unknown'}}:</td>
                     <td>
-                        <a href="{{browseCtrl.contextPath}}/opus/{{ browseCtrl.opusId }}/profile/{{ profile.scientificName | enc }}"
+                        <a ng-href="{{browseCtrl.contextPath}}/opus/{{ browseCtrl.opusId }}/profile/{{ profile.scientificName | enc }}"
                            target="_self" class="scientific-name">{{profile.scientificName}}</a>
                     </td>
                 </tr>

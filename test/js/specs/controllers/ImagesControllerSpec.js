@@ -126,6 +126,7 @@ describe("ImagesController tests", function () {
 
     it("should set the primaryImage to the image identified by the primaryImage attribute of the profile if present", function () {
         var getProfileResponse = '{"profile": {"guid": "guid1", "scientificName":"profileName", "primaryImage": "imageId2"}, "opus": {"dataResourceConfig": {"imageResourceOption": "RESOURCES", "imageSources": ["source1", "source2"]}}}';
+        var retrieveImagesPagedResponse =  '{"images":[{"imageId": "imageId1", "largeImageUrl": "url1", "dataResourceName": "name1"}, {"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}], "primaryImage":{"imageId": "imageId2", "largeImageUrl": "url2", "dataResourceName": "name2"}, "count":5}';
         profileDefer.resolve(JSON.parse(getProfileResponse));
         imagesPagedDefer.resolve(JSON.parse(retrieveImagesPagedResponse));
 

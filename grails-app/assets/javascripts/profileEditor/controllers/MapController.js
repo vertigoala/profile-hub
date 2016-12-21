@@ -8,6 +8,8 @@ profileEditor.controller('MapController', function ($scope, profileService, util
     var biocacheInfoUrl = config.biocacheServiceUrl + "/ws/occurrences/info?";
     var biocacheBoundsUrl = config.biocacheServiceUrl + "/ws/mapping/bounds.json?";
 
+    var dirtyFormOnMapChangeSubscription = null;
+
     self.autoZoom = false;
     self.showingEditorView = true;
     self.showStaticImage = true;
@@ -197,19 +199,25 @@ profileEditor.controller('MapController', function ($scope, profileService, util
         confirm.then(function () {
             self.editableMap.setQueryString(self.profile.occurrenceQuery);
         });
-        $scope.MapForm.$setPristine();
+        self.MapForm.$setPristine();
     };
 
     self.toggleEditingMap = function () {
         if (self.editingMap) {
             self.editableMap.setQueryString(self.profile.occurrenceQuery);
             self.editingMap = false;
-            $scope.MapForm.$setPristine();
+            if (dirtyFormOnMapChangeSubscription != null) {
+              dirtyFormOnMapChangeSubscription.cancel();
+            }
+            self.MapForm.$setPristine();
         } else {
             self.editingMap = true;
             if (_.isUndefined(self.editableMap)) {
                 createEditableMap();
             }
+            dirtyFormOnMapChangeSubscription = self.editableMap.map.subscribe(function () {
+                self.MapForm.$setDirty();
+            });
         }
     };
 
@@ -292,10 +300,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                 }
             );
 
-            self.editableMap.map.subscribe(function () {
-                $scope.MapForm.$setDirty();
-            });
-            setTimeout(self.editableMap.map.redraw, 500);
+            $timeout(self.editableMap.map.redraw, 500);
         }
     }
 });

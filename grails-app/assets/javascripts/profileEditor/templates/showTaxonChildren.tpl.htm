@@ -13,17 +13,17 @@
         <tr ng-repeat="profile in taxonChildrenCtrl.profiles">
             <td>{{profile.rank | capitalize}}</td>
             <td>
-                <a href="{{taxonChildrenCtrl.contextPath}}/opus/{{ taxonChildrenCtrl.opusId }}/profile/{{ profile.scientificName }}"
+                <a ng-href="{{taxonChildrenCtrl.contextPath}}/opus/{{ taxonChildrenCtrl.opusId }}/profile/{{ profile.scientificName }}"
                    target="_self">{{profile.scientificName}}</a>
             </td>
         </tr>
     </table>
-    <pagination total-items="taxonChildrenCtrl.taxon.count"
+    <pagination total-items="taxonChildrenCtrl.totalResults"
                 ng-change="taxonChildrenCtrl.loadChildren((taxonChildrenCtrl.page - 1) * taxonChildrenCtrl.pageSize)"
                 ng-model="taxonChildrenCtrl.page" max-size="10" class="pagination-sm"
                 items-per-page="taxonChildrenCtrl.pageSize"
                 previous-text="Prev" boundary-links="true"
-                ng-show="taxonChildrenCtrl.taxon.count > taxonChildrenCtrl.pageSize"></pagination>
+                ng-show="taxonChildrenCtrl.totalResults > taxonChildrenCtrl.pageSize"></pagination>
 
     <span ng-show="taxonChildrenCtrl.profiles.length == 0">There are no child taxa for {{taxonChildrenCtrl.taxon.name | capitalize}}</span>
 </div>

@@ -5,11 +5,12 @@ import au.org.ala.images.thumb.ThumbDefinition
 import au.org.ala.images.tiling.ImageTiler
 import au.org.ala.images.tiling.ImageTilerConfig
 import au.org.ala.ws.service.WebService
+import groovy.json.JsonSlurper
 import org.apache.commons.io.FileUtils
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.apache.http.entity.ContentType
-
+import static groovy.json.JsonOutput.*
 import javax.imageio.ImageIO
 import java.awt.*
 import java.awt.image.BufferedImage
@@ -277,7 +278,16 @@ class ImageService {
         Map model = profileService.getProfile(opusId, profileId, latest)
         Map profile = model.profile
         Map opus = model.opus
-        Map numberOfPublishedImagesMap = biocacheService.imageCount(searchIdentifier, opus)
+        String minusQuery = ""
+        ImageOption opusDefaultOption = ImageOption.byName(opus.approvedImageOption, ImageOption.INCLUDE)
+
+        List excluded = profile?.imageSettings.findAll { isExcluded(opusDefaultOption, it?.displayOption?.toString()) }*.imageId
+
+        if (readonlyView) {
+            minusQuery = excluded.collect { "-image_url: $it" }.join(' AND ')
+        }
+
+        Map numberOfPublishedImagesMap = biocacheService.imageCount(searchIdentifier, opus, minusQuery)
         if (numberOfPublishedImagesMap && numberOfPublishedImagesMap?.resp && numberOfPublishedImagesMap?.resp?.totalRecords > 0) {
             numberOfPublishedImages = numberOfPublishedImagesMap?.resp?.totalRecords
         }
@@ -315,13 +325,18 @@ class ImageService {
         if (combinedImages.size() < Integer.valueOf(pageSize) && numberOfPublishedImagesMap && numberOfPublishedImagesMap?.size() > 0) {
             Integer newPageSize = Integer.valueOf(pageSize) - combinedImages.size() //partial page of private images
             Integer newStartIndex = Integer.valueOf(startIndex) - numberOfLocalImages + combinedImages.size()
-            Map publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus, newPageSize, newStartIndex)
-
+            List publishedImageList = []
+            Map publishedImagesMap = [:]
+            if (readonlyView) {
+                publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus, newPageSize, newStartIndex, "&fl=id,image_url", minusQuery)
+            } else {
+                publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus, newPageSize, newStartIndex)
+            }
             if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
-                List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
-                if (publishedImageList && publishedImageList.size() > 0) {
-                    combinedImages.addAll(publishedImageList)
-                }
+                publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
+            }
+            if (publishedImageList && publishedImageList.size() > 0) {
+                combinedImages.addAll(publishedImageList)
             }
         }
         response.statusCode = SC_OK
@@ -330,6 +345,16 @@ class ImageService {
         response.resp.images = combinedImages
         response.resp.count = numberOfPublishedImages + numberOfLocalImages
 
+        if (excluded && !readonlyView) {
+            int excludedCount = excluded?.size()
+            response.resp.availImagesCount = response.resp.count - excludedCount
+        } else {
+            response.resp.availImagesCount = response.resp.count
+        }
+
+        if (profile.primaryImage) {
+            response.resp.primaryImage = getPrimaryImageMetaData(opus, profile, combinedImages)
+        }
         response
     }
 
@@ -385,6 +410,85 @@ class ImageService {
         retrieveImages(opus, profile, searchIdentifier, useInternalPaths, readonlyView)
     }
 
+    Map getPrimaryImageMetaData(opus, profile, biocacheImagesList = null) {
+
+        Map image = null
+        if (profile.primaryImage && profile.primaryImage != {}) {
+
+            def imageId = profile.primaryImage
+
+            Map imageData = webService.get("${grailsApplication.config.images.service.url}/ws/getImageInfo", [id: imageId, includeMetadata:true], ContentType.APPLICATION_JSON, false, false)
+
+            log.debug ("Obtained imageData map from " + "${grailsApplication.config.images.service.url}/ws/getImageInfo?id=${imageId}&includeMetadata=true ")
+
+            boolean excluded = isExcluded(opus.approvedImageOption, profile.imageSettings ?: null, imageId)
+
+            // If image id doesn't exist in image service, it returned {"success": false}, for eg: http://images-dev.ala.org.au/ws/getImageInfo?id=4552bea3-ca16-46c0-ae03-f2e3e91d2d08&includeMetadata=true
+            if (!excluded && (imageData.resp && !imageData.resp.isEmpty()) && !(imageData.resp.containsKey("success") && imageData.resp.success == false)) {
+
+                def occurrenceId = imageData.resp.metadata?.find { it.key == 'occurrenceId' }?.getAt("value")
+                def dataResourceId = imageData.resp.dataResourceUid
+
+                Map dataResource = webService.get("${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}", [:], ContentType.APPLICATION_JSON, false, false)
+                        //getJSON("${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}")
+
+                log.debug ("Obtained dataResource map from " + "${grailsApplication.config.collectory.base.url}/ws/dataResource/${dataResourceId}")
+                log.debug (toJson(dataResource))
+
+                image = [
+                        imageId         : imageId,
+                        occurrenceId    : occurrenceId,
+                        largeImageUrl   : "${grailsApplication.config.images.service.url}/image/proxyImageThumbnailLarge?imageId=${imageId}", //"largeImageUrl" -> "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=e896221a-537f-4b36-95a4-ef29909053d1"
+                        thumbnailUrl    : "${grailsApplication.config.images.service.url}/image/proxyImageThumbnail?imageId=${imageId}", //"thumbnailUrl" -> "http://images.ala.org.au/image/proxyImageThumbnail?imageId=e896221a-537f-4b36-95a4-ef29909053d1"
+                        dataResourceName: dataResource?.resp?.name,
+                        excluded        : excluded,
+                        displayOption   : excluded ? ImageOption.EXCLUDE.name() : ImageOption.INCLUDE.name(),
+                        caption         : profile.imageSettings.find {
+                            it.imageId == imageId
+                        }?.caption ?: '',
+                        primary         : imageId == profile.primaryImage,
+                        metadata        : [creator      : imageData.resp.creator, description: imageData.resp.description, fileSize: imageData.resp.sizeInBytes,
+                                           height       : imageData.resp.height, imageId: imageId, imageUrl: imageData.resp.imageUrl,
+                                           largeThumbUrl: "${grailsApplication.config.images.service.url}/image/proxyImageThumbnailLarge?imageId=${imageId}",
+                                           license      : imageData.resp.license, mimetype: imageData.resp.mimeType, squareThumbUrl: '', thumbHeight: '',
+                                           thumbUrl     : "${grailsApplication.config.images.service.url}/image/proxyImageThumbnail?imageId=${imageId}",
+                                           thumbWidth   : '', titleZoomLevels: imageData.resp.titleZoomLevels,
+                                           title        : imageData.resp.title, created: imageData.resp.created,
+                                           rights       : imageData.resp.rights, rightsHolder: imageData.resp.rightsHolder, width: imageData.resp.width], //imageData.imageMetadata && !imageData.imageMetadata.isEmpty() ? imageData.imageMetadata[0] : [:],
+                        type            : ImageType.OPEN
+                ]
+
+                log.debug ("Printing primary image map")
+                log.debug (toJson(image))
+
+            }
+
+        }
+
+        if (!image) {
+            //if the primary image has been turned off, then default to the first image in biocache
+            if (biocacheImagesList && biocacheImagesList.size() > 0) {
+                // get the first image in the list
+                image = biocacheImagesList[0]
+                log.debug ("Set default primary image to first biocache list image: ")
+               // log.debug (toJson(image))
+            } else {
+                String searchIdentifier = profile.guid ? "lsid:" + profile.guid : profile.scientificName
+                List images = retrieveImages(opus, profile, searchIdentifier)?.resp
+                if (images && images.size() > 0) {
+                    image = images[0]
+                    log.debug("Rerieved biocache list from retrieveImages for " + searchIdentifier + " and set default primary image to first list image: ")
+               //     log.debug(toJson(image))
+                }
+
+            }
+        }
+
+        image
+
+    }
+
+
     List prepareImagesForDisplay(def retrievedImages, def opus, def profile, boolean readonlyView) {
         List images = []
 
@@ -412,7 +516,7 @@ class ImageService {
 
                 // only return images that have not been included, unless we are in the edit view, in which case we
                 // need to show all available images in order for the editor to decide which to include/exclude
-                if (!excluded || !readonlyView) {
+                if ((readonlyView && !excluded) || (!readonlyView)) {
                     image
                 }
             }
@@ -524,6 +628,10 @@ class ImageService {
         }
 
         excluded
+    }
+
+    private static boolean isExcluded(ImageOption defaultOption, String displayOptionStr) {
+        return ImageOption.byName(displayOptionStr, defaultOption) == ImageOption.EXCLUDE
     }
 
     def updateLocalImageMetadata(String imageId, Map metadata) {

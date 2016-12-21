@@ -73,6 +73,11 @@ profileEditor.directive('profileName', function ($browser) {
                 $scope.checkName();
             };
 
+            $scope.checkMatch = function (match) {
+                $scope.name = match.fullName;
+                $scope.checkName();
+            };
+
             $scope.toggleManualMatch = function () {
                 $scope.showManualMatch = !$scope.showManualMatch;
                 $scope.showManualHierarchy = false;

@@ -21,6 +21,7 @@ class UrlMappings {
         "/profile/search" controller: "search", action: [GET: "search"]
         "/profile/search/scientificName" controller: "search", action: [GET: "findByScientificName"]
         "/profile/search/taxon/name" controller: "search", action: "findByNameAndTaxonLevel"
+        "/profile/search/taxon/name/count" controller: "search", action: "countByNameAndTaxonLevel"
         "/profile/search/taxon/level" controller: "search", action: "groupByTaxonLevel"
         "/profile/search/taxon/levels" controller: "search", action: "getTaxonLevels"
         "/profile/search/children" controller: "search", action: "getImmediateChildren"

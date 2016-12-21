@@ -3,36 +3,40 @@ profileEditor.directive('taxonomy', function ($browser) {
         restrict: 'AE',
         require: [],
         scope: {
-            data: '=data',
-            currentName: "@",
+            data: '=',
             opusId: '=',
             layout: '@',
-            includeRank: '@',
-            showChildren: '@',
-            showChildrenForLastOnly: '@',
-            showInfraspecific: '@',
-            showWithProfileOnly: '@',
-            limit: '@'
+            sIncludeRank: '@includeRank', // the following are never bound to expressions, just literal boolean / int values.
+            sShowChildren: '@showChildren', // So we need to accept these values as strings and parse them in the controller.
+            sShowChildrenForLastOnly: '@showChildrenForLastOnly',
+            sShowInfraspecific: '@showInfraspecific',
+            sShowWithProfileOnly: '@showWithProfileOnly',
+            sLimit: '@limit'
         },
-        templateUrl: '/profileEditor/taxonomy.htm',
-        controller: ['$scope', 'config', '$modal', 'messageService', 'profileService', function ($scope, config, $modal, messageService, profileService) {
-            $scope.contextPath = config.contextPath;
-            $scope.showChildren = false;
-            $scope.showChildrenForLastOnly = false;
-            $scope.showInfraspecific = false;
-            $scope.showWithProfileOnly = false;
-            $scope.includeRank = false;
-            $scope.limit = -1;
-            $scope.pageSize = 15;
+        bindToController: true,
+        templateUrl: function(element, attrs) {
+            return '/profileEditor/' + (attrs.layout == 'tree' ? 'taxonomy-tree.htm' : 'taxonomy-horizontal.htm');
+        },
+        controllerAs: 'taxonomyCtrl',
+        controller: function ($scope, config, $modal, messageService, profileService) {
+            var self = this;
+            self.contextPath = config.contextPath;
+            self.showChildren = isTruthy(self.sShowChildren);
+            self.showChildrenForLastOnly = isTruthy(self.sShowChildrenForLastOnly);
+            self.showInfraspecific = isTruthy(self.sShowInfraspecific);
+            self.showWithProfileOnly = isTruthy(self.sShowWithProfileOnly);
+            self.includeRank = isTruthy(self.sIncludeRank);
+            self.limit = parseInt(self.sLimit) || -1;
+            self.pageSize = 15;
 
             /**
              * Fetch all subordinate taxa (of any rank, not just the immediate children) and populate the 'children'
              * property of the taxon. This is used to display a drown-down list of subordinate taxa.
              */
-            $scope.showAllSubordinateTaxaList = function(taxon) {
+            self.showAllSubordinateTaxaList = function(taxon) {
                 if (_.isUndefined(taxon.children) || !taxon.children) {
                     taxon.loading = true;
-                    var results = profileService.profileSearchByTaxonLevelAndName($scope.opusId, taxon.rank, taxon.name, $scope.pageSize, 0);
+                    var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon.rank, taxon.name, self.pageSize, 0);
                     results.then(function (data) {
                             taxon.children = data;
                             taxon.loading = false;
@@ -49,11 +53,11 @@ profileEditor.directive('taxonomy', function ($browser) {
              * Executes showAllSubordinateTaxa when the directive is loaded and the last rank in hierarchy is Species.
              * This lets us display the infraspecific taxa on the page at page load, rather than on a click event
              */
-            $scope.initialiseAllSubordinateTaxaList = function() {
-                if ($scope.layout != "tree" && !_.isUndefined($scope.taxonomy) && $scope.showInfraspecific) {
-                    var lastTaxon = $scope.taxonomy[$scope.taxonomy.length - 1];
+            self.initialiseAllSubordinateTaxaList = function() {
+                if (self.layout != "tree" && !_.isUndefined(self.taxonomy) && self.showInfraspecific) {
+                    var lastTaxon = self.taxonomy[self.taxonomy.length - 1];
                     if (!_.isUndefined(lastTaxon) && lastTaxon.rank == "species") {
-                        $scope.showAllSubordinateTaxaList(lastTaxon);
+                        self.showAllSubordinateTaxaList(lastTaxon);
                     }
                 }
             };
@@ -62,25 +66,26 @@ profileEditor.directive('taxonomy', function ($browser) {
              * Fetch all subordinate taxa (of any rank, not just the immediate children) and display a modal dialog with
              * pagination.
              */
-            $scope.showAllSubordinateTaxaPopup = function (level, scientificName, childCount) {
+            self.showAllSubordinateTaxaPopup = function (level, scientificName) {
                 $modal.open({
                     templateUrl: "/profileEditor/showTaxonChildren.htm",
                     controller: function (profileService, messageService, $modalInstance, taxon, contextPath, opusId) {
-                        var self = this;
+                        var modal = this;
 
-                        self.pageSize = 10;
-                        self.taxon = taxon;
-                        self.opusId = opusId;
-                        self.contextPath = contextPath;
+                        modal.pageSize = 10;
+                        modal.taxon = taxon;
+                        modal.opusId = opusId;
+                        modal.contextPath = contextPath;
+                        modal.totalResults = 0; // TODO
 
-                        self.loadChildren = function (offset) {
+                        modal.loadChildren = function (offset) {
                             if (offset === undefined) {
                                 offset = 0;
                             }
 
-                            var results = profileService.profileSearchByTaxonLevelAndName(self.opusId, taxon.rank, taxon.name, self.pageSize, offset);
+                            var results = profileService.profileSearchByTaxonLevelAndName(modal.opusId, taxon.rank, taxon.name, modal.pageSize, offset, {immediateChildrenOnly: true});
                             results.then(function (data) {
-                                    self.profiles = data;
+                                    modal.profiles = data;
                                 },
                                 function () {
                                     messageService.alert("Failed to perform search for '" + taxon.rank + " " + taxon.name + "'.");
@@ -88,9 +93,18 @@ profileEditor.directive('taxonomy', function ($browser) {
                             );
                         };
 
-                        self.loadChildren(0);
+                        function getChildCount() {
+                            var results = profileService.profileCountByTaxonLevelAndName(modal.opusId, taxon.rank, taxon.name, {immediateChildrenOnly: true});
+                            results.then(function (data) {
+                                modal.totalResults = data.total;
+                            });
+                        }
 
-                        self.cancel = function () {
+                        getChildCount();
+
+                        modal.loadChildren(0);
+
+                        modal.cancel = function () {
                             $modalInstance.dismiss("cancel");
                         }
                     },
@@ -98,13 +112,13 @@ profileEditor.directive('taxonomy', function ($browser) {
                     size: "lg",
                     resolve: {
                         taxon: function () {
-                            return {rank: level, name: scientificName, count: childCount};
+                            return {rank: level, name: scientificName};
                         },
                         contextPath: function () {
-                            return $scope.contextPath;
+                            return self.contextPath;
                         },
                         opusId: function () {
-                            return $scope.opusId;
+                            return self.opusId;
                         }
                     }
                 });
@@ -114,7 +128,7 @@ profileEditor.directive('taxonomy', function ($browser) {
              * Fetch only the immediate children of the specified taxon (e.g. if taxon is a genus, then only get the
              * species, not the subspecies)
              */
-            $scope.loadSubordinateTaxa = function (offset, taxon, openCloseSection) {
+            self.loadSubordinateTaxa = function (offset, taxon, openCloseSection) {
                 if (openCloseSection) {
                     taxon.expanded = !taxon.expanded || false;
 
@@ -128,7 +142,7 @@ profileEditor.directive('taxonomy', function ($browser) {
                         offset = 0;
                     }
 
-                    var results = profileService.profileSearchGetImmediateChildren($scope.opusId, taxon.rank, taxon.name, $scope.pageSize, offset, taxon.filter);
+                    var results = profileService.profileSearchGetImmediateChildren(self.opusId, taxon.rank, taxon.name, self.pageSize, offset, taxon.filter);
                     taxon.loading = true;
                     results.then(function (data) {
                             if (!_.isUndefined(data) && data.length > 0) {
@@ -139,10 +153,10 @@ profileEditor.directive('taxonomy', function ($browser) {
                                 } else {
                                     taxon.children = data;
                                 }
-                                taxon.offset = (taxon.offset || 0) + $scope.pageSize;
+                                taxon.offset = (taxon.offset || 0) + self.pageSize;
                                 taxon.showingCurrentProfileOnly = false;
 
-                                taxon.mightHaveMore = data.length >= $scope.pageSize;
+                                taxon.mightHaveMore = data.length >= self.pageSize;
                             } else {
                                 if (!_.isUndefined(taxon.filter) && taxon.filter) {
                                     taxon.children = [];
@@ -159,18 +173,18 @@ profileEditor.directive('taxonomy', function ($browser) {
                 }
             };
 
-            $scope.filterChanged = function(taxon) {
+            self.filterChanged = function(taxon) {
                 taxon.offset = 0;
                 if (_.isUndefined(taxon.filter) || taxon.filter.trim().length == 0) {
-                    $scope.loadSubordinateTaxa(0, taxon, false);
+                    self.loadSubordinateTaxa(0, taxon, false);
                 }
             };
 
-            $scope.hierarchialiseTaxonomy = function() {
+            self.hierarchialiseTaxonomy = function() {
                 var previous = null;
 
-                if ($scope.layout == 'tree') {
-                    var tmp = angular.copy($scope.taxonomy);
+                if (self.layout == 'tree') {
+                    var tmp = angular.copy(self.taxonomy);
                     angular.forEach (tmp, function (next) {
                         if (previous != null) {
                             previous.children = [next];
@@ -182,68 +196,46 @@ profileEditor.directive('taxonomy', function ($browser) {
                         }
                         previous = next;
                     });
-                    $scope.hierarchy = [tmp[0]];
+                    self.hierarchy = [tmp[0]];
                 }
             };
 
-            $scope.removeRanksWithNoProfile = function() {
-                var tmp = angular.copy($scope.taxonomy);
-                $scope.taxonomy = [];
+            self.removeRanksWithNoProfile = function() {
+                var tmp = angular.copy(self.taxonomy);
+                self.taxonomy = [];
                 angular.forEach(tmp, function(taxon) {
                     if (taxon.profileId) {
-                        $scope.taxonomy.push(taxon);
+                        self.taxonomy.push(taxon);
                     }
                 });
             };
-        }],
-        link: function (scope) {
-            scope.$watch("data", function(newValue) {
-                if (!_.isUndefined(newValue)) {
-                    scope.taxonomy = angular.copy(newValue);
 
-                    scope.initialiseAllSubordinateTaxaList();
-                }
-            });
-            scope.$watch("includeRank", function(newValue) {
-                if (!_.isUndefined(newValue)) {
-                    scope.includeRank = isTruthy(newValue);
-                }
-            });
-            scope.$watch("showChildren", function(newValue) {
-                if (!_.isUndefined(newValue)) {
-                    scope.showChildren = isTruthy(newValue);
-                }
-            });
-            scope.$watch("showChildrenForLastOnly", function(newValue) {
-                if (!_.isUndefined(newValue)) {
-                    scope.showChildrenForLastOnly = isTruthy(newValue);
-                }
-            });
-            scope.$watch("showInfraspecific", function(newValue) {
-                if (!_.isUndefined(newValue)) {
-                    scope.showInfraspecific = isTruthy(newValue);
+            self.initTaxonomy = function(data) {
+                self.taxonomy = angular.copy(data);
 
-                    scope.initialiseAllSubordinateTaxaList();
-                }
-            });
-            scope.$watch("showWithProfileOnly", function(newValue) {
+                self.initialiseAllSubordinateTaxaList();
+            };
+
+            self.initTaxonomy(self.data);
+
+            $scope.$watch("taxonomyCtrl.data", function(newValue) {
                 if (!_.isUndefined(newValue)) {
-                    scope.showWithProfileOnly = isTruthy(newValue);
-                    if (scope.showWithProfileOnly && !_.isUndefined(scope.taxonomy)) {
-                        scope.removeRanksWithNoProfile();
-                    }
+                    self.initTaxonomy(newValue);
                 }
             });
 
-            scope.$watch("layout", function(newValue) {
-                if (!_.isUndefined(newValue)) {
-                    scope.layout = newValue;
-                }
 
-                if (scope.layout == "tree" && !_.isUndefined(scope.taxonomy)) {
-                    scope.hierarchialiseTaxonomy();
-                }
-            });
+            if (self.showInfraspecific) {
+                self.initialiseAllSubordinateTaxaList();
+            }
+
+            if (self.layout == "tree" && !_.isUndefined(self.taxonomy)) {
+                self.hierarchialiseTaxonomy();
+            }
+
+            if (self.showWithProfileOnly && !_.isUndefined(self.taxonomy)) {
+                self.removeRanksWithNoProfile();
+            }
         }
     };
 

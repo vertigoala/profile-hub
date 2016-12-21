@@ -45,7 +45,7 @@
         <tr ng-repeat="profile in reportCtrl.reportData.records">
             <td>
                 <!-- TODO contextPath -->
-                <a href="{{ config.contextPath }}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.scientificName }}"
+                <a ng-href="{{ config.contextPath }}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.scientificName }}"
                    target="_blank" class="scientific-name">{{profile.scientificName}}</a>
             </td>
             <td>

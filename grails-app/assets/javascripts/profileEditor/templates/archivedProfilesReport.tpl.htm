@@ -7,7 +7,7 @@
         <tr ng-repeat="profile in reportCtrl.reportData.records">
             <td>
                 <!-- TODO test this vs relative to <base> -->
-                <a href="{{ config.contextPath }}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.profileId }}"
+                <a ng-href="{{ config.contextPath }}/opus/{{ reportCtrl.opusId }}/profile/{{ profile.profileId }}"
                    target="_blank" class="scientific-name">{{profile.scientificName}}</a>
             </td>
             <td>

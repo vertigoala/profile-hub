@@ -1,7 +1,7 @@
 <g:set var="allowStaticImage" value="${allowStaticImage ?: false}"/>
 <g:if test="${displayMap}">
     <div ng-controller="MapController as mapCtrl"
-         ng-cloak ng-form="MapForm" ng-class="mapCtrl.editingMap || ${fullWidth ?: false} ? 'col-md-12' : 'col-md-6 col-sm-12'">
+         ng-cloak ng-form="mapCtrl.MapForm" ng-class="mapCtrl.editingMap || ${fullWidth ?: false} ? 'col-md-12' : 'col-md-6 col-sm-12'">
         <navigation-anchor anchor-name="map" title="Map" on-display="mapCtrl.init()"></navigation-anchor>
 
         <div class="row">
@@ -32,10 +32,10 @@
                                     <button class="btn btn-danger" ng-show="mapCtrl.profile.mapSnapshot && mapCtrl.opus.mapConfig.allowSnapshots"
                                             ng-click="mapCtrl.deleteMapSnapshot()">Delete snapshot image</button>
                                     <save-button ng-click="mapCtrl.saveMapConfiguration(MapForm)"
-                                                 disabled="!MapForm.$dirty"
-                                                 dirty="MapForm.$dirty"
+                                                 disabled="!mapCtrl.MapForm.$dirty"
+                                                 dirty="mapCtrl.MapForm.$dirty"
                                                  btn-class="btn btn-default"
-                                                 form="MapForm">
+                                                 form="mapCtrl.MapForm">
                                     </save-button>
                                 </div>
 
