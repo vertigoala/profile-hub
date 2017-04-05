@@ -871,5 +871,22 @@ class ProfileController extends BaseController {
             response.sendError(204)
         }
     }
+
+    @Secured(role = ROLE_PROFILE_EDITOR)
+    def setStatus() {
+        log.debug('setStatus()')
+
+        String opusId = params.opusId
+        String profileId = params.profileId
+
+        Map doc = request.getJSON()
+        def result = profileService.setStatus(opusId, profileId, doc)
+
+        if (result.error) {
+            response.sendError(500, "Couldn't update status")
+        } else {
+            response.sendError(204)
+        }
+    }
 }
 

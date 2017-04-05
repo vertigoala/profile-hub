@@ -70,6 +70,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/multimedia/$documentId" controller: "profile", action: [DELETE: "documentDelete", POST: "documentUpdate"]
         "/opus/$opusId/profile/$profileId/multimedia" controller: "profile", action: [POST: "documentUpdate"]
         "/opus/$opusId/profile/$profileId/primaryMultimedia" controller: "profile", action: [POST: "setPrimaryMultimedia"]
+        "/opus/$opusId/profile/$profileId/status" controller: 'profile', action: [POST: 'setStatus']
         "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
         "/opus/$opusId/data/" controller: "data", action: [GET: "getDataSets"]
         "/opus/$opusId/data/upload" controller: "data", action: [GET: "upload"]
@@ -81,6 +82,7 @@ class UrlMappings {
         "/opus/$opusId/vocab/$vocabId/replaceUsages" controller: "vocab", action: [POST: "replaceUsagesOfTerm"]
         "/opus/$opusId/vocab/$vocabId" controller: "vocab", action: [GET: "show"]
 
+        "/opus/$opusId/additionalStatuses" controller: "opus", action: [POST: 'updateAdditionalStatuses']
         "/opus/$opusId/about/json" controller: "opus", action: [GET: "getAboutHtml"]
         "/opus/$opusId/about/update" controller: "opus", action: [PUT: "updateAbout"]
         "/opus/$opusId/about" controller: "opus", action: [GET: "about"]

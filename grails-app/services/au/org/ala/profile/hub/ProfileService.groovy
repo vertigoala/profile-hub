@@ -75,6 +75,10 @@ class ProfileService {
         webService.get("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/vocab/${enc(vocabId)}")
     }
 
+    def updateOpusAdditionalStatuses(String opusId, additionalStatuses) {
+        webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/additionalStatuses", [addtionalStatuses: additionalStatuses])
+    }
+
     def createProfile(String opusId, json) {
         webService.put("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/", json)
     }
@@ -544,6 +548,11 @@ class ProfileService {
     def setPrimaryMultimedia(String opusId, String profileId, json) {
         // mmm boilerplate.
         def url = "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/primaryMultimedia"
+        return webService.post(url, json)
+    }
+
+    def setStatus(String opusId, String profileId, json) {
+        def url = "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/status"
         return webService.post(url, json)
     }
 }

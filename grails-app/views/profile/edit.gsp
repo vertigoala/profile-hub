@@ -133,6 +133,7 @@
                         <tab heading="Details" class="font-xxsmall" managed-tab>
                             <div class="row">
                                 <div class="col-md-12">
+                                    <profile-status opus="profileCtrl.opus" profile="profileCtrl.profile" readonly="profileCtrl.readonly"></profile-status>
                                     <g:include controller="profile" action="attributesPanel"
                                                params="[opusId: params.opusId]"/>
                                     <g:include controller="profile" action="nomenclaturePanel"

@@ -429,6 +429,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        updateAdditionalStatuses: function (opusId, additionalStatuses) {
+            $log.debug("Updating additional statuses for " + opusId + " with " + additionalStatuses);
+            var future = enqueue(function() {
+                return $http.post(util.contextRoot() + '/opus/' + opusId + '/additionalStatuses', additionalStatuses, {disableAlertOnFailure: true});
+            });
+            return util.toStandardPromise(future);
+        },
+
         getAuditHistory: function (objectId, offset, max) {
             $log.debug("Fetching audit for object " + objectId);
             var future = $http.get(util.contextRoot() + "/audit/object/" + objectId, {
@@ -1162,6 +1170,11 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
         setPrimaryMultimedia: function(profile, primaryAudio, primaryVideo) {
             var future = $http.post(util.contextRoot() + "/opus/" + profile.opusId + "/profile/" + profile.uuid + "/primaryMultimedia", {primaryAudio: primaryAudio, primaryVideo: primaryVideo});
+            return util.toStandardPromise(future);
+        },
+
+        setStatus: function(profile, status) {
+            var future = $http.post(util.contextRoot() + '/opus/' + profile.opusId + '/profile/' + profile.uuid + '/status', { status: status }, {disableAlertOnFailure: true });
             return util.toStandardPromise(future);
         }
     }

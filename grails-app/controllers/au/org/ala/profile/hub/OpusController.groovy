@@ -422,6 +422,16 @@ class OpusController extends BaseController {
         }
     }
 
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def updateAdditionalStatuses() {
+        if (!params.opusId) {
+            badRequest("opusId is mandatory")
+        } else {
+            profileService.updateOpusAdditionalStatuses(params.opusId, request.JSON)
+            response.sendError(204)
+        }
+    }
+
     def getTags() {
         Map response = profileService.getTags()
 
