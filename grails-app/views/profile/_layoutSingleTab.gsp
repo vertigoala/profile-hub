@@ -118,13 +118,13 @@
     <navigation-anchor anchor-name="view_authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="profileCtrl.profile.authorship.length > 0"></navigation-anchor>
 
     <div class="col-sm-12 col-md-8 profile-contributor-text">
-        Profile contributors: <span ng-repeat="contrib in profileCtrl.profile.authorship"
-                                    ng-show="contrib.text">{{contrib.category | capitalize}}<span
-                ng-show="contrib.category == 'Author'">(s)</span> - {{contrib.text}}<span
-                ng-show="!$last">;&nbsp;</span></span>
+        <span ng-repeat="contrib in profileCtrl.profile.authorship"
+                                    ng-show="contrib.text">{{contrib.category | capitalize}}(s) - {{contrib.text}}<span
+                ng-show="!$last"><br/></span>
+        </span>
     </div>
     <div class="col-sm-12 col-md-4 last-updated-text">
-        Last updated: <span class="last-updated">{{ profileCtrl.profile.lastPublished | date : 'MMM d, y h:mm' }}</span><br>
+        Last updated: <span class="last-updated">{{profileCtrl.profile.lastUpdatedBy?profileCtrl.profile.lastUpdatedBy + ';':''}} {{ profileCtrl.profile.lastPublished | date : 'MMM d, y h:mm' }}</span><br>
         Status: <span ng-bind="profileCtrl.profile.profileStatus"></span>
     </div>
 </div>

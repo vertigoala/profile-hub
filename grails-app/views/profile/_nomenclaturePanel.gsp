@@ -30,12 +30,3 @@
         </div>
     </div>
 </div>
-
-
-<div class="row padding-bottom-1" ng-if="profileCtrl.readonly()">
-    <navigation-anchor anchor-name="view_nomenclature" title="Nomenclature" condition="profileCtrl.profile.nslNomenclatureIdentifier"></navigation-anchor>
-    <nomenclature nsl-name-id="profileCtrl.profile.nslNameIdentifier"
-                  nsl-nomenclature-id="profileCtrl.profile.nslNomenclatureIdentifier"
-                  readonly="{{profileCtrl.readonly()}}"
-                  save-function="profileCtrl.saveProfile"></nomenclature>
-</div>
