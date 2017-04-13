@@ -15,5 +15,6 @@
 *= require sidebar.css
 *= require bootstrap-fileupload/bootstrap-fileupload.min.css
 *= require ala-admin.css
+*= require animation.css
 *= require mapAndImages
 */

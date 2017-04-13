@@ -72,7 +72,7 @@
                             <th>Options</th>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="logo in opusCtrl.opus.brandingConfig.logos">
+                            <tr ng-repeat="logo in opusCtrl.opus.brandingConfig.logos" class="repeat-items">
                                 <td>
                                     <div class="margin-bottom-1" ng-if="logo.logoUrl">
                                         <img class="img-thumbnail" ng-src="{{logo.logoUrl}}">

@@ -1,0 +1,19 @@
+.repeat-items.ng-move,
+.repeat-items.ng-enter,
+.repeat-items.ng-leave {
+    transition:all linear 0.5s;
+}
+
+.repeat-items.ng-leave.ng-leave-active,
+.repeat-items.ng-move,
+.repeat-items.ng-enter {
+    opacity:0;
+    max-height:0;
+}
+
+.repeat-items.ng-leave,
+.repeat-items.ng-move.ng-move-active,
+.repeat-items.ng-enter.ng-enter-active {
+    opacity:1;
+    max-height:30px;
+}
