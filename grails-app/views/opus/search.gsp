@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta name="layout" content="${grailsApplication.config.layout}"/>
-    <meta name="logoUrl" content="${logoUrl}"/>
     <title>Profile search | Atlas of Living Australia</title>
 
 </head>

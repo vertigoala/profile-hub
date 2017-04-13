@@ -19,7 +19,6 @@
 	<field name="colophon.collectionCopyright" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="colophon.logo" class="java.lang.String"/>
 	<field name="colophon.profileLink" class="java.lang.String"/>
 	<field name="colophon.citation" class="java.lang.String"/>
 	<field name="colophon.version" class="java.lang.String"/>
@@ -58,10 +57,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{colophon.profileLink}]]></textFieldExpression>
 			</textField>
-			<image hAlign="Center" vAlign="Bottom" onErrorType="Blank">
-				<reportElement positionType="FixRelativeToBottom" x="160" y="540" width="200" height="103" uuid="61b61662-d6fb-463c-8964-e9467aab4703"/>
-				<imageExpression><![CDATA[$F{colophon.logo}]]></imageExpression>
-			</image>
 			<image onErrorType="Blank">
 				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="136" y="660" width="249" height="75" backcolor="#DDDDDD" uuid="d5384ce3-f158-4e4d-9d60-8d784b2f6ff8"/>
 				<imageExpression><![CDATA["img/atlas-poweredby_rgb-lightbg.png"]]></imageExpression>

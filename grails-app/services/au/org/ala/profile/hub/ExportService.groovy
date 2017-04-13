@@ -185,14 +185,13 @@ class ExportService {
                 cover   : [
                         title       : opus.title,
                         subtitle    : firstProfile?.fullName ?: firstProfile?.scientificName,
-                        logo        : opus.logoUrl,
+                        logos        : opus.brandingConfig.logos?:[],
                         banner      : opus.bannerUrl,
                         primaryImage: firstProfile?.primaryImage ?: (firstProfile?.images?.size() > 0 ? firstProfile?.images[0].leftImage.largeImageUrl : '')
                 ],
                 colophon: [
                         collectionCopyright: "&copy; ${opus.copyrightText}",
                         genericCopyright   : HubConstants.PDF_COPYRIGHT_TEXT,
-                        logo               : opus.logoUrl,
                         profileLink        : "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${firstProfile?.uuid}",
                         citation           : citation,
                         version            : firstProfile.version ?: null,

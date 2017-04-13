@@ -1,17 +1,15 @@
 package au.org.ala.profile.hub
 
-import org.apache.http.entity.ContentType
-import org.springframework.web.multipart.MultipartFile
-
-import static au.org.ala.profile.hub.Utils.enc
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
 import au.org.ala.ws.service.WebService
 import org.apache.commons.lang.BooleanUtils
+import org.apache.http.entity.ContentType
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
 import javax.servlet.http.HttpServletResponse
 
+import static au.org.ala.profile.hub.Utils.enc
 import static au.org.ala.profile.hub.util.HubConstants.*
 
 class ProfileService {
@@ -131,7 +129,7 @@ class ProfileService {
             result = [
                     opus         : opus,
                     profile      : profile,
-                    logoUrl      : opus.brandingConfig?.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
+                    logos      : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
                     bannerUrl    : opus.brandingConfig?.profileBannerUrl ?: opus.brandingConfig?.opusBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     bannerHeight: opus.brandingConfig?.profileBannerHeight ?: opus.brandingConfig?.opusBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                     pageTitle    : opus.title ?: DEFAULT_OPUS_TITLE

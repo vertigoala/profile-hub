@@ -391,6 +391,14 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
         return _.isBoolean(attribute.containsName) && attribute.containsName;
     }
 
+
+    /**
+     * Generate random sequence of characters
+     */
+    getRandomString = function () {
+        return Math.random().toString(36).substring(7);
+    };
+
     /**
      * Public API
      */
@@ -411,6 +419,7 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
         formatScientificName: formatScientificName,
         isNameAttribute: isNameAttribute,
         formatLocalDate: formatLocalDate,
+        getRandomString: getRandomString,
 
         LAST: LAST,
         FIRST: FIRST,

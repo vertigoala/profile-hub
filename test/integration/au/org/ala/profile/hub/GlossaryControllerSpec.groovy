@@ -47,7 +47,7 @@ class GlossaryControllerSpec extends IntegrationSpec {
 
         then:
         assert controller.modelAndView.model.size() == 4
-        assert controller.modelAndView.model.containsKey("logoUrl")
+        assert controller.modelAndView.model.containsKey("logos")
         assert controller.modelAndView.model.containsKey("bannerUrl")
         assert controller.modelAndView.model.containsKey("pageTitle")
         assert controller.modelAndView.model.containsKey("bannerHeight")

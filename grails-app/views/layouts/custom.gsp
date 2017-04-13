@@ -114,9 +114,24 @@
 
             <div class="row">
                 <div class="col-xs-12 col-sm-4 col-lg-3 margin-bottom-2 site-logo" id="site-logo">
-                    <img class="img-responsive customizable-logo-img"
-                         src="${logoUrl ?: asset.assetPath(src: "atlasoflivingaust.png")}"
-                         alt="${logoAlt ?: 'logo'}"/>
+                    <g:each in="${logos?:[[logoUrl:asset.assetPath(src: "atlasoflivingaust.png")]]}" var="logo">
+                        <div class="row margin-bottom-1">
+                            <div class="col-xs-12 col-sm-12 col-lg-12">
+                                <g:if test="${logo.hyperlink}">
+                                    <a href="${logo.hyperlink}" target="_blank">
+                                        <img class="img-responsive customizable-logo-img"
+                                             src="${logo.logoUrl}"
+                                             alt="logo"/>
+                                    </a>
+                                </g:if>
+                                <g:else>
+                                    <img class="img-responsive customizable-logo-img"
+                                         src="${logo.logoUrl}"
+                                         alt="logo"/>
+                                </g:else>
+                            </div>
+                        </div>
+                    </g:each>
                 </div>
 
                 <div class="col-xs-12 col-sm-8 col-lg-9">

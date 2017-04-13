@@ -516,9 +516,61 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         self.StyleForm.$setDirty();
     };
 
+    self.getLogoUploadUrl = function () {
+        return self.imageUploadUrl + util.getRandomString();
+    };
+
+    self.addAnEmptyLogo = function () {
+        var logo = {
+                logoUrl: undefined,
+                hyperlink: undefined
+            };
+
+        self.opus.brandingConfig.logos.push(logo);
+    };
+
     self.logoUploaded = function (result) {
-        self.opus.brandingConfig.logoUrl = util.getBaseHref() + result.imageUrl;
+        var logoUrl = util.getBaseHref() + result.imageUrl,
+            logo = {
+                logoUrl: logoUrl,
+                hyperlink: undefined
+            };
+
+        self.opus.brandingConfig.logos.push(logo);
         self.toggleUploadPanel('logo');
+        self.StyleForm.$setDirty();
+    };
+
+    self.removeLogo = function ($index, logo) {
+        if (self.opus.brandingConfig.logos.length) {
+            self.opus.brandingConfig.logos.splice($index,1);
+            self.StyleForm.$setDirty();
+        }
+    };
+
+    self.moveLogoUp = function($index, logo){
+        if($index == 0 || self.opus.brandingConfig.logos.length == 0){
+            return;
+        }
+
+        var moveDown = self.opus.brandingConfig.logos[$index-1],
+            moveUp = logo;
+
+        self.opus.brandingConfig.logos[$index] = moveDown;
+        self.opus.brandingConfig.logos[$index-1] = moveUp;
+        self.StyleForm.$setDirty();
+    };
+
+    self.moveLogoDown = function($index, logo){
+        if($index == (self.opus.brandingConfig.logos.length - 1)  || self.opus.brandingConfig.logos.length == 0){
+            return;
+        }
+
+        var moveUp = self.opus.brandingConfig.logos[$index+1],
+            moveDown = logo;
+
+        self.opus.brandingConfig.logos[$index+1] = moveDown;
+        self.opus.brandingConfig.logos[$index] = moveUp;
         self.StyleForm.$setDirty();
     };
 
