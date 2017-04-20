@@ -1,3 +1,4 @@
+<%@ page import="grails.util.Environment" %>
 <div class="btn-group" ng-show="profileCtrl.opus">
     <div class="col-md-6" ng-show="!profileCtrl.readonly()">
         <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}"
@@ -22,11 +23,13 @@
                             class="fa fa-question-circle"></span>&nbsp;&nbsp;Help
                     </a>
                 </li>
-                <li role="presentation" ng-hide="profileCtrl.isArchived()">
-                    <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/json"
-                       target="_blank"><span class="fa fa-file-text-o"></span>&nbsp;&nbsp;Export as JSON
-                    </a>
-                </li>
+                <g:if test="${Environment.current == Environment.DEVELOPMENT}">
+                    <li role="presentation" ng-hide="profileCtrl.isArchived()">
+                        <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profileId}}/json"
+                           target="_blank"><span class="fa fa-file-text-o"></span>&nbsp;&nbsp;Export as JSON
+                        </a>
+                    </li>
+                </g:if>
                 <li role="presentation" ng-controller="ExportController as exportCtrl"
                     ng-hide="profileCtrl.isArchived() || !profileCtrl.readonly()">
                     <a href=""
@@ -34,10 +37,6 @@
                        target="_blank"><span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;Export as PDF
                     </a>
                 </li>
-            %{--<li role="presentation">--}%
-            %{--<a href="" ng-click="profileCtrl.compareWithOtherProfile()"><span--}%
-            %{--class="fa fa-camera-retro"></span>&nbsp;&nbsp;Compare with another profile</a>--}%
-            %{--</li>--}%
                 <g:if test="${params.isOpusEditor}">
                     <li class="divider" ng-hide="profileCtrl.isArchived()"></li>
                     <li role="presentation" ng-hide="!profileCtrl.readonly() || profileCtrl.isArchived()">
