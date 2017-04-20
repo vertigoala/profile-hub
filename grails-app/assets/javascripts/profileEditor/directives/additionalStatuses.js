@@ -19,26 +19,9 @@
         $scope.$watch(function() { return self.opus }, setStatuses);
         setStatuses();
 
-        self.addStatus = '';
-
-        self.addStatusChange = function() {
-            doAddStatus();
-        };
-
-        function doAddStatus() {
-            if (self.addStatus) {
-                self.additionalStatuses.push(self.addStatus);
-                self.addStatus = '';
-            }
-        }
-
-        self.addStatusKeyPress = function(e) {
-            var code = (e.keyCode ? e.keyCode : e.which);
-
-            if(code == 13) { // 'Enter' keycode
-                doAddStatus(); // your function here or some other code
-                e.preventDefault();
-            }
+        self.appendStatus = function() {
+            self.additionalStatuses.push('');
+            self.AdditionalStatusesForm.$setDirty();
         };
 
         self.changeStatus = function(index) {
