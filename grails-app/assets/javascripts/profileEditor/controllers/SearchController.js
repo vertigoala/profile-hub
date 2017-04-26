@@ -121,4 +121,17 @@ profileEditor.controller('SearchController', function (profileService, util, mes
     if (!self.searchResults) {
         self.search();
     }
+
+    self.autoCompleteSearchByScientificName = function (prefix) {
+        if (self.searchOptions.nameOnly) {
+            return profileService.profileSearch(self.opusId, prefix, true, self.sortOption, true).then(function (data) {
+                // need to have filter to limit the result because of limitTo not working in typehead
+                // https://github.com/angular-ui/bootstrap/issues/1740
+                return $filter('limitTo')($filter("orderBy")(data, "scientificName"), 10);
+            });
+        } else {
+            return {};
+        }
+     };
+ 
 });

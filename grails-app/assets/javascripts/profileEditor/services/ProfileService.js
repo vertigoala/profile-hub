@@ -700,7 +700,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        profileSearch: function (opusId, scientificName, useWildcard, sortBy) {
+        profileSearch: function (opusId, scientificName, useWildcard, sortBy, autoCompleteScientificName) {
             $log.debug("Searching for " + scientificName + (useWildcard ? " with wildcard" : ""));
 
             if (typeof sortBy == 'undefined') {
@@ -709,10 +709,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             if (typeof useWildcard == 'undefined') {
                 useWildcard = true;
             }
+            if (typeof autoCompleteScientificName == 'undefined') {
+                autoCompleteScientificName = false;
+            }
             if (typeof opusId == 'undefined') {
                 opusId = "";
             }
-            var future = $http.get(util.contextRoot() + "/profile/search/scientificName?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard + "&sortBy=" + sortBy);
+            var future = $http.get(util.contextRoot() + "/profile/search/scientificName?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard + "&sortBy=" + sortBy + "&autoCompleteScientificName=" + autoCompleteScientificName);
             future.then(function (response) {
                 $log.debug("Profile search returned with response code " + response.status);
             });
