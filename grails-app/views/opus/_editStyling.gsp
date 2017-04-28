@@ -88,20 +88,26 @@
                                     <div class="small">e.g. https://www.ala.org.au. The logo will link to the URL entered here. If left blank, no link will be added.</div>
                                 </td>
                                 <td>
-                                    <button class="btn btn-link btn-xs fa fa-trash-o color--red" title="Delete logo" ng-click="opusCtrl.removeLogo($index, logo)"></button>
-                                    <button class="btn btn-link btn-xs fa fa-arrow-down ng-scope" ng-if="!$last" ng-click="opusCtrl.moveLogoDown($index, logo)" title="Move this logo down"></button>
-                                    <button class="btn btn-link btn-xs fa fa-arrow-up ng-scope" ng-if="!$first " ng-click="opusCtrl.moveLogoUp($index, logo)" title="Move this logo up"></button>
+                                    <button class="btn btn-link btn-xs fa fa-trash-o color--red" title="Delete logo" ng-click="opusCtrl.removeItem($index, opusCtrl.opus.brandingConfig.logos, opusCtrl.StyleForm)"></button>
+                                    <button class="btn btn-link btn-xs fa fa-arrow-down ng-scope" ng-if="!$last" ng-click="opusCtrl.moveItemDown($index, opusCtrl.opus.brandingConfig.logos, opusCtrl.StyleForm)" title="Move this logo down"></button>
+                                    <button class="btn btn-link btn-xs fa fa-arrow-up ng-scope" ng-if="!$first " ng-click="opusCtrl.moveItemUp($index, opusCtrl.opus.brandingConfig.logos, opusCtrl.StyleForm)" title="Move this logo up"></button>
                                 </td>
                             </tr>
                         </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="2">
+                                <button class="btn btn-sm btn-default margin-top-1 margin-bottom-1" ng-click="opusCtrl.addAnEmptyLogo()" ><i class="fa fa-plus"></i> Add a logo from link</button>
+                                <button class="btn btn-sm btn-default margin-top-1 margin-bottom-1 ignore-save-warning" ng-model="opusCtrl.showUpload.logo" btn-checkbox >Upload a file</button>
+                                <div ng-if="opusCtrl.showUpload.logo" class="clearfix">
+                                    <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.logoUploaded"
+                                                  url-generator="opusCtrl.generateFileUploadUrl" show-metadata="false" disable-source="true"></image-upload>
+                                </div>
+                                <div class="small">Recommended maximum width is 275px. There is no height limit.</div>
+                            </td>
+                        </tr>
+                        </tfoot>
                     </table>
-                    <button class="btn btn-sm btn-default margin-top-1 margin-bottom-1" ng-click="opusCtrl.addAnEmptyLogo()" ><i class="fa fa-plus"></i> Add a logo</button>
-                    <button class="btn btn-sm btn-default margin-top-1 margin-bottom-1 ignore-save-warning" ng-model="opusCtrl.showUpload.logo" btn-checkbox >Upload a logo</button>
-                    <div ng-if="opusCtrl.showUpload.logo" class="clearfix">
-                        <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.logoUploaded"
-                                      url-generator="opusCtrl.getLogoUploadUrl" show-metadata="false" disable-source="true"></image-upload>
-                    </div>
-                    <div class="small">Recommended maximum width is 275px. There is no height limit.</div>
                 </div>
 
                 <div class="form-group">

@@ -12,7 +12,7 @@
 //= require angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js
 //= require angular-loading-bar/loading-bar-0.7.1.min.js
 //= require angular-bootstrap-show-errors/showErrors.js
-//= require angular/ui-bootstrap-tpls-0.12.0.js
+//= require angular/ui-bootstrap-tpls-0.14.3.min.js
 //= require ckeditor/ckeditor.js
 //= require ckeditor/ng-ckeditor-0.2.1.js
 //= require google-diff-match-patch/diff_match_patch_uncompressed.js

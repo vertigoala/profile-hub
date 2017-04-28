@@ -17,8 +17,9 @@
     <h1 class="hidden">Welcome to the eFlora website</h1><!-- Show the H1 on each page -->
 
     <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
-
-    <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
+    <g:if test="${params.isOpusEditor}">
+        <g:include controller="opus" action="reportPanel" params="[opusId: params.opusId]"/>
+    </g:if>
 </div>
 </body>
 

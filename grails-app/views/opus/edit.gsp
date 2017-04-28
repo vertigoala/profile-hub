@@ -68,6 +68,7 @@
                     <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
                     <li><a href="#featureLists" du-smooth-scroll class="font-xxsmall">Feature Lists</a></li>
                     <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>
+                    <li><a href="#landingpage" du-smooth-scroll class="font-xxsmall">Home page</a></li>
                     <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Image options</a></li>
                     <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
                     <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
@@ -87,6 +88,8 @@
                 <g:include controller="opus" action="editAccessControlPanel" params="[opusId: params.opusId]"/>
 
                 <g:include controller="opus" action="editStylingPanel" params="[opusId: params.opusId]"/>
+
+                <g:include controller="opus" action="editLandingPagePanel" params="[opusId: params.opusId]"/>
 
                 <g:render template="editProfileEditingOptions" model="[opusId: params.opusId]"/>
 

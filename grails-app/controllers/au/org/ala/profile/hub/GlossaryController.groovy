@@ -24,7 +24,15 @@ class GlossaryController extends BaseController {
                         logos  : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
                         bannerUrl: opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                         bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                        pageTitle: "${opus.title} Glossary" ?: DEFAULT_OPUS_TITLE
+                        pageTitle: "${opus.title} Glossary" ?: DEFAULT_OPUS_TITLE,
+                        pageName    : 'glossary',
+                        searchUrl   : getSearchUrl(opus),
+                        browseUrl   : getBrowseUrl(opus),
+                        identifyUrl : getIdentifyUrl(opus),
+                        documentsUrl: getDocumentsUrl(opus),
+                        reportsUrl  : getReportsUrl(opus),
+                        glossaryUrl : getGlossaryUrl(opus),
+                        aboutPageUrl: getAboutUrl(opus)
                 ])
             }
         }

@@ -45,6 +45,11 @@ class ProfileController extends BaseController {
                 profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 profileAndOpus << [edit                : true,
                           currentUser         : authService.getDisplayName(),
+                          searchUrl           : getSearchUrl(profileAndOpus.opus),
+                          browseUrl           : getBrowseUrl(profileAndOpus.opus),
+                          identifyUrl         : getIdentifyUrl(profileAndOpus.opus),
+                          documentsUrl        : getDocumentsUrl(profileAndOpus.opus),
+                          reportsUrl          : getReportsUrl(profileAndOpus.opus),
                           glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
                           aboutPageUrl        : getAboutUrl(profileAndOpus.opus, profileAndOpus.profile),
                           footerText          : profileAndOpus.opus.footerText,
@@ -69,6 +74,11 @@ class ProfileController extends BaseController {
                 profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 Map model = profileAndOpus
                 model << [edit                : false,
+                          searchUrl           : getSearchUrl(profileAndOpus.opus),
+                          browseUrl           : getBrowseUrl(profileAndOpus.opus),
+                          identifyUrl         : getIdentifyUrl(profileAndOpus.opus),
+                          documentsUrl        : getDocumentsUrl(profileAndOpus.opus),
+                          reportsUrl          : getReportsUrl(profileAndOpus.opus),
                           glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
                           aboutPageUrl        : getAboutUrl(profileAndOpus.opus, profileAndOpus.profile),
                           footerText          : profileAndOpus.opus.footerText,
@@ -565,6 +575,11 @@ class ProfileController extends BaseController {
                     Map model = profile
                     model.edit = false
                     model.currentUser = authService.getDisplayName()
+                    model.searchUrl = getSearchUrl(profile.opus)
+                    model.browseUrl  = getBrowseUrl(profile.opus)
+                    model.identifyUrl = getIdentifyUrl(profile.opus)
+                    model.documentsUrl = getDocumentsUrl(profile.opus)
+                    model.reportsUrl   = getReportsUrl(profile.opus)
                     model.glossaryUrl = getGlossaryUrl(profile.opus)
                     model.aboutPageUrl = getAboutUrl(profile.opus, profile)
                     model.footerText = profile.opus.footerText
@@ -722,14 +737,6 @@ class ProfileController extends BaseController {
             mapService.deleteMapSnapshot(opusAndProfile.opus.uuid, opusAndProfile.profile.uuid)
             success([:])
         }
-    }
-
-    private getGlossaryUrl(opus) {
-        opus?.glossaryUuid ? "${request.contextPath}/opus/${opus.uuid}/glossary" : ""
-    }
-
-    private getAboutUrl(opus, profile) {
-        "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/about#?profile=${profile.scientificName}"
     }
 
     def attributesPanel = {

@@ -18,7 +18,8 @@
 
     <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
+    <p:help help-id="opus.documents" float="false" show="${params.isOpusEditor}"/>
+    <g:render template="../common/attachments" model="[hideHeading: true]"/>
 </div>
 </body>
 

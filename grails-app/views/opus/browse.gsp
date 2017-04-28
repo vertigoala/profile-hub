@@ -18,7 +18,7 @@
 
     <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
 
-    <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
+    <g:include controller="opus" action="browsePanel" params="[opusId: params.opusId]"/>
 </div>
 </body>
 

@@ -432,7 +432,7 @@ editor, .toggleNext, a > apc, apnilink, a > i.fa-search {
 }
 
 .jumbotron {
-    margin: 5px 0;
+    margin: 0 0 5px 0;
 }
 
 .heading-large {
@@ -1025,9 +1025,13 @@ span.breadcrumb-dropdown {
 
 .carousel-indicators {
     left: 0;
-    bottom: -50px;
+    bottom: 20px;
     width: 100%;
     margin-left: 0;
+}
+
+#main-content .carousel-caption, #main-content .carousel-caption p {
+    color: white;
 }
 
 .image-selection-list img {

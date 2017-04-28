@@ -47,7 +47,8 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         opusBanner: false,
         profileBanner: false,
         thumbnail: false,
-        logo: false
+        logo: false,
+        imageSlider: false
     };
 
     self.collectoryResourceOptions = {
@@ -516,10 +517,6 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         self.StyleForm.$setDirty();
     };
 
-    self.getLogoUploadUrl = function () {
-        return self.imageUploadUrl + util.getRandomString();
-    };
-
     self.addAnEmptyLogo = function () {
         var logo = {
                 logoUrl: undefined,
@@ -541,37 +538,58 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         self.StyleForm.$setDirty();
     };
 
-    self.removeLogo = function ($index, logo) {
-        if (self.opus.brandingConfig.logos.length) {
-            self.opus.brandingConfig.logos.splice($index,1);
-            self.StyleForm.$setDirty();
+    self.generateFileUploadUrl = function () {
+        return self.imageUploadUrl + util.getRandomString();
+    };
+
+    self.addAnEmptyImage = function () {
+        var image = {
+            imageUrl: undefined,
+            credit: undefined
+        };
+
+        self.opus.opusLayoutConfig.images.push(image);
+    };
+
+    self.imageUploaded = function (result) {
+        var imageUrl = util.getBaseHref() + result.imageUrl,
+            image = {
+                imageUrl: imageUrl,
+                credit: undefined
+            };
+
+        self.opus.opusLayoutConfig.images.push(image);
+        self.toggleUploadPanel('imageSlider');
+        self.LandingPage.$setDirty();
+    };
+
+    self.removeItem = function ($index, list, form) {
+        if (list.length) {
+            list.splice($index,1);
+            form.$setDirty();
         }
     };
 
-    self.moveLogoUp = function($index, logo){
-        if($index == 0 || self.opus.brandingConfig.logos.length == 0){
+    self.moveItemUp = function($index, list, form){
+        if($index == 0 || list.length == 0){
             return;
         }
 
-        var moveDown = self.opus.brandingConfig.logos[$index-1],
-            moveUp = logo;
-
-        self.opus.brandingConfig.logos[$index] = moveDown;
-        self.opus.brandingConfig.logos[$index-1] = moveUp;
-        self.StyleForm.$setDirty();
+        var moveUp = list[$index];
+        list[$index] = list[$index-1];
+        list[$index-1] = moveUp;
+        form.$setDirty();
     };
 
-    self.moveLogoDown = function($index, logo){
-        if($index == (self.opus.brandingConfig.logos.length - 1)  || self.opus.brandingConfig.logos.length == 0){
+    self.moveItemDown = function($index, list, form){
+        if($index == (list.length - 1)  || list.length == 0){
             return;
         }
 
-        var moveUp = self.opus.brandingConfig.logos[$index+1],
-            moveDown = logo;
-
-        self.opus.brandingConfig.logos[$index+1] = moveDown;
-        self.opus.brandingConfig.logos[$index] = moveUp;
-        self.StyleForm.$setDirty();
+        var moveDown = list[$index];
+        list[$index] = list[$index+1];
+        list[$index+1] = moveDown;
+        form.$setDirty();
     };
 
     self.thumbnailUploaded = function (result) {

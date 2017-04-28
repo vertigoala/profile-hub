@@ -80,12 +80,36 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
+                <g:if test="${searchUrl}">
+                    <li class="${pageName=='search'?'active':''}"><a href="${searchUrl}">Search</a></li>
+                </g:if>
+                <g:if test="${browseUrl}">
+                    <li class="${pageName=='browse'?'active':''}"><a href="${browseUrl}">Browse</a></li>
+                </g:if>
+                <g:if test="${identifyUrl}">
+                    <li class="${pageName=='identify'?'active':''}"><a href="${identifyUrl}">Identify</a></li>
+                </g:if>
+                <g:if test="${documentsUrl}">
+                    <li class="${pageName=='documents'?'active':''}"><a href="${documentsUrl}">Context</a></li>
+                </g:if>
                 <g:if test="${glossaryUrl}">
-                    <li><a href="${glossaryUrl}" target="_blank">Glossary</a></li>
+                    <li class="${pageName=='glossary'?'active':''}"><a href="${glossaryUrl}" target="_blank">Glossary</a></li>
                 </g:if>
-                <g:if test="${aboutPageUrl}">
-                    <li><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
+                <g:if test="${aboutPageUrl && reportsUrl}">
+                    <li class="dropdown font-xsmall ${pageName=='about'?'active':''}">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            More
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li class="${pageName=='about'?'active':''}"><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
+                            <li class="${pageName=='reports'?'active':''}"><a href="${reportsUrl}">Reports</a></li>
+                        </ul>
+                    </li>
                 </g:if>
+                <g:else>
+                    <li class="${pageName=='about'?'active':''}"><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
+                </g:else>
             </ul>
 
             <small>
