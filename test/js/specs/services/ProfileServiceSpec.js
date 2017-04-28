@@ -195,19 +195,25 @@ describe("ProfileService tests", function () {
     it("should invoke the profile search operation on the context root when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName");
 
-        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=true&sortBy=name").respond("bla");
+        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=true&sortBy=name&autoCompleteScientificName=false").respond("bla");
     });
 
     it("should invoke the profile search operation on the context root with wildcard=false if false is passed in when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName", false);
 
-        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false&sortBy=name").respond("bla");
+        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false&sortBy=name&autoCompleteScientificName=false").respond("bla");
     });
 
     it("should invoke the profile search operation on the context root with the sort by value provided when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName", false, "sortme");
 
-        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false&sortBy=sortme").respond("bla");
+        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false&sortBy=sortme&autoCompleteScientificName=false").respond("bla");
+    });
+
+    it("should invoke the profile search operation on the context root when wildcardsearch profileSearch on autoCompleteScientificName is called ", function() {
+        service.profileSearch("opusId", "scientificName", true, "sortme", true);
+
+        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=true&sortBy=sortme&autoCompleteScientificName=true").respond("bla");
     });
 
     it("should invoke the taxon level search service on the context root when profileSearchByTaxonLevel is invoked", function() {

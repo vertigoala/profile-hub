@@ -19,8 +19,10 @@
                    ng-enter="searchCtrl.search()"
                    name="searchTerm"
                    class="input-lg form-control ignore-save-warning"
-                   autocomplete="on"
-                   type="text">
+                   autocomplete="off"
+                   type="text"
+                   typeahead-editable="false"
+                   typeahead="profile.scientificName as profile.scientificName for profile in searchCtrl.autoCompleteSearchByScientificName($viewValue) | filter:$viewValue | limitTo:10" />
             <span class="input-group-btn">
                 <button class="btn btn-primary btn-lg" type="button" ng-click="searchCtrl.search()">Search</button>
                 <button class="btn btn-default btn-lg" type="button" ng-click="searchCtrl.clearSearch()" title="Clear search"><span class="fa fa-trash"></span></button>
@@ -102,6 +104,7 @@
                 <h4 class="inline-block"><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.archivedDate ? profile.uuid : profile.scientificName | enc }}"
                        target="_self">{{ profile.scientificName }}</a></h4>
                 <div class="inline-block padding-left-1" ng-show="profile.rank">({{profile.rank | capitalize}})</div>
+                <div class="inline-block padding-left-1" ng-show="profile.taxonStatus">({{profile.taxonStatus | capitalize}})</div>
 
                 <div class="font-xsmall" ng-show="profile.otherNames"><h5><span ng-repeat="name in profile.otherNames">{{ name.text | capitalize }}<span ng-show="!$last">, </span></span></h5></div>
 

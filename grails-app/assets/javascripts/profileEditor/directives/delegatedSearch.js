@@ -16,7 +16,7 @@ profileEditor.directive('delegatedSearch', function ($browser) {
             layout: '@'
         },
         templateUrl: '/profileEditor/delegatedSearch.htm',
-        controller: ['$scope', '$sessionStorage', 'util', function ($scope, $sessionStorage, util) {
+        controller: ['$scope', 'profileService', '$sessionStorage', 'util', '$filter', function ($scope, profileService, $sessionStorage, util, $filter) {
             var self = this;
             self.layout = $scope.layout || 'small';
 
@@ -54,6 +54,19 @@ profileEditor.directive('delegatedSearch', function ($browser) {
                     util.redirect(util.contextRoot() + "/opus/search");
                 } else {
                     util.redirect(util.contextRoot() + "/opus/" + opusId);
+                }
+            };
+
+            self.autoCompleteSearchByScientificName = function (prefix) {
+                if (self.searchOptions.nameOnly) {
+                    var opusId = util.getEntityId("opus");
+                    return profileService.profileSearch(opusId, prefix, true, null, true).then(function (data) {
+                        // need to have filter to limit the result because of limitTo not working in typehead
+                        // https://github.com/angular-ui/bootstrap/issues/1740
+                        return $filter('limitTo')($filter("orderBy")(data, "scientificName"), 10);
+                    });
+                } else {
+                    return {};
                 }
             };
 

@@ -24,8 +24,10 @@
                title="Enter a search term"
                placeholder="Search..."
                class="delegated-search-control form-control ignore-save-warning {{ delSearchCtrl.layout == 'large' ? 'input-lg' : 'input-sm' }}"
-               autocomplete="on"
-               type="text">
+               autocomplete="off"
+               type="text"
+               typeahead-editable="false"
+               typeahead="profile.scientificName as profile.scientificName for profile in delSearchCtrl.autoCompleteSearchByScientificName($viewValue) | filter:$viewValue | limitTo:10" />
             <span class="input-group-btn">
                 <button class="btn {{ delSearchCtrl.layout == 'large' ? 'btn-lg btn-primary' : 'btn-sm btn-default button-inside-input' }}"
                         type="button" ng-click="delSearchCtrl.search()"><span
