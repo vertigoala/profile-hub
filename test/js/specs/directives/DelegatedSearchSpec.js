@@ -92,7 +92,7 @@ describe('Directive: DelegatedSearch', function () {
         scope.delSearchCtrl.search();
         scope.$digest();
 
-        expect(util.redirect).toHaveBeenCalledWith("/path/opus/opusId1");
+        expect(util.redirect).toHaveBeenCalledWith("/path/opus/opusId1/search");
     });
 
     it("should redirect to the general collections search page when searching outside an opus", function() {
