@@ -21,7 +21,7 @@
                    class="input-lg form-control ignore-save-warning"
                    autocomplete="off"
                    type="text"
-                   typeahead-editable="false"
+                   typeahead-editable="true"
                    typeahead="profile.scientificName as profile.scientificName for profile in searchCtrl.autoCompleteSearchByScientificName($viewValue) | filter:$viewValue | limitTo:10" />
             <span class="input-group-btn">
                 <button class="btn btn-primary btn-lg" type="button" ng-click="searchCtrl.search()">Search</button>
