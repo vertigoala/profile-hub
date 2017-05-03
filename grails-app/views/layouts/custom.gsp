@@ -239,6 +239,8 @@
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
         isOpusReviewer: ${!!params.isOpusReviewer},
         isOpusEditor: ${!!params.isOpusEditor},
+        listServiceUrl: '${grailsApplication.config.lists.base.url}',
+        masterListType: '${grailsApplication.config.lists.masterlist.type ?: 'PROFILE' }',
         nslServiceUrlPrefix: '${grailsApplication.config.nsl.service.url.prefix}',
         nslNameUrlPrefix: '${grailsApplication.config.nsl.name.url.prefix}',
         nslServiceApniConceptSuffix: '${grailsApplication.config.nsl.service.apni.concept.suffix}',

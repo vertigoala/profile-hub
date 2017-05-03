@@ -437,6 +437,22 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        updateMasterList: function (opusId, masterListUid) {
+            $log.debug("Updating master list for " + opusId + " with " + masterListUid);
+            var future = enqueue(function() {
+                return $http.post(util.contextRoot() + '/opus/' + opusId + '/masterList', { masterListUid: masterListUid }, {disableAlertOnFailure: true});
+            });
+            return util.toStandardPromise(future);
+        },
+
+        syncMasterList: function(opusId) {
+            $log.debug("Syncing master list for " + opusId);
+            var future = enqueue(function() {
+                return $http.post(util.contextRoot() + '/opus/' + opusId + '/masterList/sync', {}, {disableAlertOnFailure: true});
+            });
+            return util.toStandardPromise(future);
+        },
+
         getAuditHistory: function (objectId, offset, max) {
             $log.debug("Fetching audit for object " + objectId);
             var future = $http.get(util.contextRoot() + "/audit/object/" + objectId, {
@@ -620,7 +636,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
         getSpeciesProfile: function (opusId, profileId, guid) {
             $log.debug("Retrieving species profile for " + guid);
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/speciesProfile?guid=" + guid, {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/speciesProfile?guid=" + guid, {cache: true, disableAlertOnFailure: true});
             future.then(function (response) {
                 $log.debug("Species Profile retrieved with response code " + response.status)
             });

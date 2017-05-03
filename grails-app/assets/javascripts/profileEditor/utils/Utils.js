@@ -1,7 +1,7 @@
 /**
  * Utility functions
  */
-profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window', 'messageService', function ($location, $q, config, $modal, $window, messageService) {
+profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$window', 'messageService', function ($location, $log, $q, config, $modal, $window, messageService) {
 
     var KEYWORDS = ["create", "update", "delete", "search"];
     var UUID_REGEX_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
@@ -238,13 +238,13 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
             });
             httpPromise.error(function (data, status, context, request) {
                 var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
-                console.log(msg);
+                $log.error(msg);
                 defer.reject(msg);
                 if (status == 403 || status == 401) {
                     console.log("not authorised");
                     redirect(contextRoot() + "/notAuthorised");
                 } else if (status >= 400 && (_.isUndefined(request.disableAlertOnFailure) || !request.disableAlertOnFailure)) {
-                    messageService.alertStayOn("Error calling " + request.url + ", response: " + status + ".  Please refresh the page.");
+                    messageService.alertStayOn("An error occured.");
                 }
 
             });

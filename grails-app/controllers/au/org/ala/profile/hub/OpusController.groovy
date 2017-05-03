@@ -566,6 +566,26 @@ class OpusController extends BaseController {
         }
     }
 
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def updateMasterList() {
+        if (!params.opusId) {
+            badRequest("opusId is mandatory")
+        } else {
+            profileService.updateOpusMasterList(params.opusId, request.JSON)
+            response.sendError(204)
+        }
+    }
+
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def syncMasterList() {
+        if (!params.opusId) {
+            badRequest("opusId is mandatory")
+        } else {
+            profileService.syncOpusMasterList(params.opusId)
+            response.sendError(204)
+        }
+    }
+
     def getTags() {
         Map response = profileService.getTags()
 

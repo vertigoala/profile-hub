@@ -1,0 +1,36 @@
+<div class="panel panel-default" ng-show="$ctrl.isEdittable" ng-cloak>
+    <div>
+        <a name="edit_master_list"></a>
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="section-panel-heading">Master List</h4>
+                    <p:help help-id="opus.edit.masterList"/>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <p>The master list prevents any taxa not on the list from being available in the collection.</p>
+            <div ng-form="$ctrl.MasterListForm">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="status">Select Master List</label>
+                    </div>
+                    <div class="col-sm-8">
+                        <select id="status" class="form-control" ng-options="list.dataResourceUid as list.listName for list in $ctrl.lists" ng-model="$ctrl.masterListUid">
+                            <option value="">-- No master list --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer" ng-if="$ctrl.isEdittable">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-success" ng-disabled="$ctrl.MasterListForm.$dirty || !$ctrl.masterListUid" ng-click="$ctrl.syncNow()">Sync now</button>
+                    <save-button form="$ctrl.MasterListForm" ng-click="$ctrl.saveMasterList()"></save-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
