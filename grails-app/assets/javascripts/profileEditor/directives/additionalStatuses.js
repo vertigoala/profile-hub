@@ -5,12 +5,6 @@
 
         // self.opus set by directive attribute
 
-        // TODO i18n
-        self.default = [
-            'Complete',
-            'In review'
-        ];
-
         function setStatuses() {
             var statuses;
             statuses = self.opus ? self.opus.additionalStatuses || [] : [];
