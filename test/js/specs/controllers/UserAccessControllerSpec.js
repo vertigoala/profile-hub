@@ -177,20 +177,20 @@ describe("UserAccessController tests", function () {
         scope.userCtrl.privateModeChanged();
 
         expect(scope.userCtrl.roles).toEqual([{name: "Admin", key: "ROLE_PROFILE_ADMIN"},
-            {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
+            {name: "Author", key: "ROLE_PROFILE_AUTHOR"},
             {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"},
-            {name: "Editor Plus", key: "ROLE_PROFILE_EDITOR_PLUS"}]);
+            {name: "Editor", key: "ROLE_PROFILE_EDITOR"}]);
 
     });
 
-    it("should add the User role to the list of roles when private mode is esabled", function () {
+    it("should add the User role to the list of roles when private mode is enabled", function () {
         scope.userCtrl.opus = {privateCollection: true};
         scope.userCtrl.privateModeChanged();
 
         expect(scope.userCtrl.roles).toEqual([{name: "Admin", key: "ROLE_PROFILE_ADMIN"},
-            {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
+            {name: "Author", key: "ROLE_PROFILE_AUTHOR"},
             {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"},
-            {name: "Editor Plus", key: "ROLE_PROFILE_EDITOR_PLUS"},
+            {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
             {name: "User", key: "ROLE_USER"}]);
     });
 
