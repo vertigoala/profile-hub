@@ -238,6 +238,7 @@
         biocacheRecordUrl: '${grailsApplication.config.biocache.base.url}${grailsApplication.config.biocache.occurrence.record.path}',
         nslNameUrl: '${grailsApplication.config.nsl.name.url.prefix}',
         isOpusReviewer: ${!!params.isOpusReviewer},
+        isOpusAuthor: ${!!params.isOpusAuthor},
         isOpusEditor: ${!!params.isOpusEditor},
         listServiceUrl: '${grailsApplication.config.lists.base.url}',
         masterListType: '${grailsApplication.config.lists.masterlist.type ?: 'PROFILE' }',
