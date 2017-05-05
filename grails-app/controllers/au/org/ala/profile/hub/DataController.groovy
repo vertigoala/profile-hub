@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull
 
 import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_BANNER_HEIGHT_PX
 import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_BANNER_URL
-import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_LOGO_URL
+import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_LOGOS
 import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_TITLE
 
 @Secured(role = Role.ROLE_PROFILE_EDITOR)
@@ -42,7 +42,7 @@ class DataController extends BaseController {
 
         render view: 'uploadData', model: [
                 opusId      : opus.uuid,
-                logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                 bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                 bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                 pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,

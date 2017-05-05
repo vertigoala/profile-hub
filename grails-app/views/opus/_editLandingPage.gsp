@@ -41,8 +41,8 @@
                             </td>
                             <td>
                                 <button class="btn btn-link btn-xs fa fa-trash-o color--red" title="Delete image" ng-click="opusCtrl.removeItem($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage)"></button>
-                                <button class="btn btn-link btn-xs fa fa-arrow-down ng-scope" ng-if="!$last" ng-click="opusCtrl.moveItemDown($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage)" title="Move this image down"></button>
-                                <button class="btn btn-link btn-xs fa fa-arrow-up ng-scope" ng-if="!$first " ng-click="opusCtrl.moveItemUp($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage)" title="Move this image up"></button>
+                                <button class="btn btn-link btn-xs fa fa-arrow-down ng-scope" ng-if="!$last" ng-click="opusCtrl.move($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage, 1)" title="Move this image down"></button>
+                                <button class="btn btn-link btn-xs fa fa-arrow-up ng-scope" ng-if="!$first " ng-click="opusCtrl.move($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage, -1)" title="Move this image up"></button>
                             </td>
                         </tr>
                         </tbody>

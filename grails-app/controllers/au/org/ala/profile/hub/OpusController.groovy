@@ -22,7 +22,7 @@ class OpusController extends BaseController {
 
     def index() {
         render view: 'index', model: [
-                logos     : DEFAULT_OPUS_LOGO_URL,
+                logos     : DEFAULT_OPUS_LOGOS,
                 bannerUrl   : DEFAULT_OPUS_BANNER_URL,
                 bannerHeight: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                 pageTitle   : DEFAULT_OPUS_TITLE,
@@ -40,7 +40,7 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render(view: 'search', model: [
-                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                     bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                     pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
@@ -66,7 +66,7 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render(view: 'browse', model: [
-                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                     bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                     pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
@@ -92,7 +92,7 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render(view: 'identify', model: [
-                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                     bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                     pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
@@ -118,7 +118,7 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render(view: 'documents', model: [
-                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                     bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                     pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
@@ -146,7 +146,7 @@ class OpusController extends BaseController {
             notAuthorised()
         } else {
             render(view: 'reports', model: [
-                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                     bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                     pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
@@ -168,7 +168,7 @@ class OpusController extends BaseController {
     @Secured(role = ROLE_ADMIN, opusSpecific = false)
     def create() {
         render view: "edit", model: [
-                logos     : DEFAULT_OPUS_LOGO_URL,
+                logos     : DEFAULT_OPUS_LOGOS,
                 bannerUrl   : DEFAULT_OPUS_BANNER_URL,
                 bannerHeight: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                 pageTitle   : DEFAULT_OPUS_TITLE,
@@ -184,7 +184,7 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render(view: 'edit', model: [
-                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                    logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                     bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                     pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
@@ -246,7 +246,7 @@ class OpusController extends BaseController {
                 notFound()
             } else {
                 render(view: 'about', model: [
-                        logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                        logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                         bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                         bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                         footerText  : opus.footerText,
@@ -301,7 +301,7 @@ class OpusController extends BaseController {
                 notFound()
             } else {
                 render view: 'shareRequest', model: [
-                        logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                        logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                         bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                         bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                         pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
@@ -349,7 +349,7 @@ class OpusController extends BaseController {
             notFound()
         } else {
             render view: 'show', model: [
-                    logos             : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                    logos             : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                     bannerUrl           : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     bannerHeight        : opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                     pageTitle           : opus.title ?: DEFAULT_OPUS_TITLE,

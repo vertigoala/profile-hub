@@ -570,26 +570,17 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         }
     };
 
-    self.moveItemUp = function($index, list, form){
-        if($index == 0 || list.length == 0){
-            return;
-        }
-
-        var moveUp = list[$index];
-        list[$index] = list[$index-1];
-        list[$index-1] = moveUp;
+    self.move = function(index, list, form, dir) {
+        var newIndex = index + dir;
+        if (!self.rangeCheck(list, index) || !self.rangeCheck(list, newIndex) || !list) return;
+        var original = list[index];
+        list[index] = list[newIndex];
+        list[newIndex] = original;
         form.$setDirty();
     };
 
-    self.moveItemDown = function($index, list, form){
-        if($index == (list.length - 1)  || list.length == 0){
-            return;
-        }
-
-        var moveDown = list[$index];
-        list[$index] = list[$index+1];
-        list[$index+1] = moveDown;
-        form.$setDirty();
+    self.rangeCheck = function (list, index) {
+        return (index < list.length)  && (index >= 0);
     };
 
     self.thumbnailUploaded = function (result) {

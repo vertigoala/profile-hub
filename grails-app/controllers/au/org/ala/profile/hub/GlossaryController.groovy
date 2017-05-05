@@ -21,7 +21,7 @@ class GlossaryController extends BaseController {
                 notFound()
             } else {
                 render(view: 'glossary', model: [
-                        logos  : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGO_URL,
+                        logos  : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                         bannerUrl: opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                         bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                         pageTitle: "${opus.title} Glossary" ?: DEFAULT_OPUS_TITLE,

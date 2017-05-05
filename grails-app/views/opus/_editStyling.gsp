@@ -89,8 +89,8 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-link btn-xs fa fa-trash-o color--red" title="Delete logo" ng-click="opusCtrl.removeItem($index, opusCtrl.opus.brandingConfig.logos, opusCtrl.StyleForm)"></button>
-                                    <button class="btn btn-link btn-xs fa fa-arrow-down ng-scope" ng-if="!$last" ng-click="opusCtrl.moveItemDown($index, opusCtrl.opus.brandingConfig.logos, opusCtrl.StyleForm)" title="Move this logo down"></button>
-                                    <button class="btn btn-link btn-xs fa fa-arrow-up ng-scope" ng-if="!$first " ng-click="opusCtrl.moveItemUp($index, opusCtrl.opus.brandingConfig.logos, opusCtrl.StyleForm)" title="Move this logo up"></button>
+                                    <button class="btn btn-link btn-xs fa fa-arrow-down ng-scope" ng-if="!$last" ng-click="opusCtrl.move($index, opusCtrl.opus.brandingConfig.logos, opusCtrl.StyleForm, 1)" title="Move this logo down"></button>
+                                    <button class="btn btn-link btn-xs fa fa-arrow-up ng-scope" ng-if="!$first " ng-click="opusCtrl.move($index, opusCtrl.opus.brandingConfig.logos, opusCtrl.StyleForm, -1)" title="Move this logo up"></button>
                                 </td>
                             </tr>
                         </tbody>
