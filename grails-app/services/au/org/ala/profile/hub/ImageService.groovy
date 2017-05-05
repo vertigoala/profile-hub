@@ -270,6 +270,12 @@ class ImageService {
         deleted
     }
 
+    def deleteSnapshotImage(String directory, String opusId, String profileId, String imageId) {
+        def dirPath = buildFilePath(directory, opusId, profileId, imageId);
+        File dir = new File(dirPath)
+        deleteDirectoryAndContents(dir)
+    }
+
     def retrieveImagesPaged(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, int pageSize, int startIndex) {
         Map response = [:]
         List combinedImages = []

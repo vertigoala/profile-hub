@@ -723,8 +723,10 @@ class ProfileController extends BaseController {
             badRequest "A json body with an occurrenceQuery property are required"
         } else {
             def opusAndProfile = profileService.getProfile(opusId, profileId, true)
-            mapService.createMapSnapshot(opusAndProfile.opus, opusAndProfile.profile, occurrenceQuery, extents)
-            success([mapSnapshotUrl: mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, opusAndProfile.opus.uuid, opusAndProfile.profile.uuid)])
+            mapService.createMapSnapshot(opusAndProfile.opus, opusAndProfile.profile, occurrenceQuery,
+                    extents)
+            success([mapSnapshotUrl: mapService.getSnapshotImageUrlWithUUIDs(
+                    request.contextPath, opusAndProfile.opus.uuid, opusAndProfile.profile.uuid)])
         }
     }
 

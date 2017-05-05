@@ -60,10 +60,9 @@ class MapService {
     }
 
     void deleteMapSnapshot(String opusUuid, String profileUuid) {
-//        Map profileAndOpus = profileService.getProfile(opusUuid, profileUuid, true)
-
         if (snapshotImageExists(opusUuid, profileUuid)) {
-            imageService.deletePrivateImage(opusUuid, profileUuid, MAP_SNAPSHOT_IMAGE_NAME)
+            imageService.deleteSnapshotImage(grailsApplication.config.image.private.dir,
+                    opusUuid, profileUuid, MAP_SNAPSHOT_IMAGE_NAME)
         }
     }
 
