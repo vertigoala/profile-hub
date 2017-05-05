@@ -6,7 +6,7 @@ import grails.util.Holders
 class HubConstants {
     static final String DEFAULT_OPUS_TITLE = "Profile Collections"
     static final String DEFAULT_OPUS_VOCAB = "Not specified"
-    static final String DEFAULT_OPUS_LOGOS = []
+    static final List DEFAULT_OPUS_LOGOS = []
     static final String DEFAULT_OPUS_BANNER_URL = "${Holders.config.images.service.url}/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original"
     static final int DEFAULT_OPUS_BANNER_HEIGHT_PX = 100
     static final String ALA_FOOTER_TEXT = "ALA Profiles provides a central location to gather collections of species profiles."
