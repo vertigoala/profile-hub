@@ -34,11 +34,19 @@ class OpusController extends BaseController {
     }
 
     def search() {
-        def opus = profileService.getOpus(params.opusId as String)
-
-        if (!opus) {
-            notFound()
+        if (params.opusId == null) {
+            render view: 'search', model: [
+                    logos     : DEFAULT_OPUS_LOGOS,
+                    bannerUrl   : DEFAULT_OPUS_BANNER_URL,
+                    bannerHeight: DEFAULT_OPUS_BANNER_HEIGHT_PX,
+                    pageTitle   : DEFAULT_OPUS_TITLE,
+                    footerText  : ALA_FOOTER_TEXT,
+                    contact     : [email   : ALA_CONTACT_EMAIL,
+                                   facebook: ALA_CONTACT_FACEBOOK,
+                                   twitter : ALA_CONTACT_TWITTER]
+            ]
         } else {
+            def opus = profileService.getOpus(params.opusId as String)
             render(view: 'search', model: [
                     logos     : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                     bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
