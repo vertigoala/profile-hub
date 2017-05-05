@@ -102,9 +102,9 @@
 
             <div ng-class="searchCtrl.opusId ? 'col-md-10 col-sm-12 col-xs-12' : 'col-md-8 col-sm-12 col-xs-12'">
                 <h4 class="inline-block"><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.archivedDate ? profile.uuid : profile.scientificName | enc }}"
-                       target="_self">{{ profile.scientificName }}</a></h4>
+                                            target="_self"><span data-ng-bind-html="searchCtrl.formatName(profile) | sanitizeHtml"></span></a></h4>
                 <div class="inline-block padding-left-1" ng-show="profile.rank">({{profile.rank | capitalize}})</div>
-                <div class="inline-block padding-left-1" ng-show="profile.taxonStatus">({{profile.taxonStatus | capitalize}})</div>
+                <div class="inline-block padding-left-1" ng-show="profile.matchInfo.reason">(<span data-ng-bind-html="searchCtrl.formatReason(profile) | sanitizeHtml"></span>)</div>
 
                 <div class="font-xsmall" ng-show="profile.otherNames"><h5><span ng-repeat="name in profile.otherNames">{{ name.text | capitalize }}<span ng-show="!$last">, </span></span></h5></div>
 
