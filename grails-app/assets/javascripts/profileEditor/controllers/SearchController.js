@@ -133,5 +133,38 @@ profileEditor.controller('SearchController', function (profileService, util, mes
             return {};
         }
      };
+
+    self.formatName = function (profile) {
+        if (!profile) {
+            return null;
+        }
+
+        if (profile.matchedName && profile.scientificName == profile.matchedName.scientificName) {
+            return util.formatScientificName(profile.scientificName, profile.nameAuthor, profile.fullName);
+        } else {
+            return util.formatScientificName(profile.scientificName, profile.nameAuthor, null);
+        }
+    };
+
+    self.formatReason = function (profile) {
+        if (!profile || !profile.matchInfo || !profile.matchInfo.reason) {
+            return null;
+        }
+
+        var matchInfo = profile.matchInfo;
+
+        if (matchInfo.reason == 'accname') {
+            return "accepted name"
+        } else if (matchInfo.reason == 'internalmatch') {
+            var formattedMatchedName = util.formatScientificName(matchInfo.matchName.scientificName, matchInfo.matchName.nameAuthor, matchInfo.matchName.fullName);
+            return "internally matched to " + formattedMatchedName;
+        } else if (matchInfo.reason == 'nslaccname') {
+            var formattedNSLName = util.formatScientificName(matchInfo.nslmatchname.canonicalName, matchInfo.nslmatchname.scientificNameAuthorship, "");
+            return "accepted name for " + formattedNSLName;
+        } else {
+            return "";
+        }
+    };
+
  
 });

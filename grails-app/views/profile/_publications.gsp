@@ -14,7 +14,7 @@
     </div>
 
     <div class="panel-body">
-    <g:if test="${params.isOpusEditor && grailsApplication.config.feature?.publications == 'false'}">
+    <g:if test="${params.isOpusAuthor && grailsApplication.config.feature?.publications == 'false'}">
         <alert type="warning">Snapshot versioning has been temporarily disabled.</alert>
     </g:if>
     <div class="row section-no-para">
@@ -29,7 +29,7 @@
     <div class="panel-footer" ng-if="!pubCtrl.readonly()">
         <div class="row">
             <div class="col-md-12">
-                <g:if test="${params.isOpusEditor && grailsApplication.config.feature?.publications != 'false'}">
+                <g:if test="${params.isOpusAuthor && grailsApplication.config.feature?.publications != 'false'}">
                     <button ng-show="!pubCtrl.readonly() && !pubCtrl.newPublication"
                             ng-click="pubCtrl.savePublication()"
                             class="btn btn-default"><i

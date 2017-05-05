@@ -53,7 +53,7 @@ profileEditor.directive('delegatedSearch', function ($browser) {
                 if (_.isUndefined(opusId) || opusId == null || !opusId) {
                     util.redirect(util.contextRoot() + "/opus/search");
                 } else {
-                    util.redirect(util.contextRoot() + "/opus/" + opusId);
+                    util.redirect(util.contextRoot() + "/opus/" + opusId + "/search");
                 }
             };
 

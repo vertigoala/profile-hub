@@ -133,6 +133,7 @@
     </div>
     <div class="col-sm-12 col-md-4 last-updated-text">
         Last updated: <span class="last-updated">{{profileCtrl.profile.lastUpdatedBy?profileCtrl.profile.lastUpdatedBy + ';':''}} {{ profileCtrl.profile.lastPublished | date : 'MMM d, y h:mm' }}</span>
+        Status: <span ng-bind="profileCtrl.profile.profileStatus"></span>
     </div>
 </div>
 

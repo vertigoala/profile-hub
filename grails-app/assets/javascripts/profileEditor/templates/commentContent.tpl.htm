@@ -9,7 +9,7 @@
         </div>
 
         <!-- config is on root scope -->
-        <div ng-if="config.isOpusReviewer && (config.isOpusEditor || comment.author.userId == config.currentUserId)"
+        <div ng-if="config.isOpusReviewer && (config.isOpusAuthor || comment.author.userId == config.currentUserId)"
              class="col-md-4">
             <button class="btn btn-link fa fa-trash-o color--red" ng-click="commentCtrl.deleteComment(path)"
                     title="Delete comment"></button>

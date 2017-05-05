@@ -12,7 +12,7 @@ import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_BANNER_URL
 import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_LOGOS
 import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_TITLE
 
-@Secured(role = Role.ROLE_PROFILE_EDITOR)
+@Secured(role = Role.ROLE_PROFILE_AUTHOR)
 class DataController extends BaseController {
 
     AuthService authService

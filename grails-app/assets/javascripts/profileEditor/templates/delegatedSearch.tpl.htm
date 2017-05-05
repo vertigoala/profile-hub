@@ -26,7 +26,7 @@
                class="delegated-search-control form-control ignore-save-warning {{ delSearchCtrl.layout == 'large' ? 'input-lg' : 'input-sm' }}"
                autocomplete="off"
                type="text"
-               typeahead-editable="false"
+               typeahead-editable="true"
                typeahead="profile.scientificName as profile.scientificName for profile in delSearchCtrl.autoCompleteSearchByScientificName($viewValue) | filter:$viewValue | limitTo:10" />
             <span class="input-group-btn">
                 <button class="btn {{ delSearchCtrl.layout == 'large' ? 'btn-lg btn-primary' : 'btn-sm btn-default button-inside-input' }}"

@@ -14,7 +14,7 @@ class ExportController extends BaseController {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
         } else {
-            boolean latest = params.isOpusReviewer || params.isOpusEditor || params.isOpusAdmin || params.isOpusEditorPlus
+            boolean latest = params.isOpusReviewer || params.isOpusAuthor || params.isOpusAdmin || params.isOpusEditor
             def model = profileService.getProfile(params.opusId as String, params.profileId as String, latest)
             if (!model) {
                 notFound()

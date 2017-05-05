@@ -58,6 +58,7 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == true
         params.isOpusAdmin == true
         params.isOpusEditor == true
+        params.isOpusAuthor == true
         params.isOpusReviewer == true
 
         where:
@@ -66,6 +67,7 @@ class AccessControlFiltersSpec extends Specification {
         "alaAdminAction"        | 200
         "profileAdminAction"    | 200
         "profileEditorAction"   | 200
+        "profileAuthorAction"   | 200
         "profileReviewerAction" | 200
     }
 
@@ -94,6 +96,7 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == false
         params.isOpusAdmin == false
         params.isOpusEditor == false
+        params.isOpusAuthor == false
         params.isOpusReviewer == false
 
         where:
@@ -102,6 +105,7 @@ class AccessControlFiltersSpec extends Specification {
         "alaAdminAction"        | 403
         "profileAdminAction"    | 403
         "profileEditorAction"   | 403
+        "profileAuthorAction"   | 403
         "profileReviewerAction" | 403
     }
 
@@ -130,6 +134,7 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == false
         params.isOpusAdmin == true
         params.isOpusEditor == true
+        params.isOpusAuthor == true
         params.isOpusReviewer == true
 
         where:
@@ -138,6 +143,7 @@ class AccessControlFiltersSpec extends Specification {
         "alaAdminAction"        | 403
         "profileAdminAction"    | 200
         "profileEditorAction"   | 200
+        "profileAuthorAction"   | 200
         "profileReviewerAction" | 200
 
     }
@@ -167,6 +173,7 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == false
         params.isOpusAdmin == false
         params.isOpusEditor == true
+        params.isOpusAuthor == true
         params.isOpusReviewer == true
 
         where:
@@ -175,6 +182,45 @@ class AccessControlFiltersSpec extends Specification {
         "alaAdminAction"        | 403
         "profileAdminAction"    | 403
         "profileEditorAction"   | 200
+        "profileAuthorAction"   | 200
+        "profileReviewerAction" | 200
+    }
+
+    void "profile authors can access public and opus-specific author actions"() {
+        setup:
+        // need to do this because grailsApplication.controllerClasses is empty in the filter when run from the unit test
+        // unless we manually add the dummy controller class used in this test
+        grailsApplication.addArtefact("Controller", SecuredController)
+
+        defineBeans {
+            authService(MockAuthService)
+            profileService(MockProfileService)
+        }
+
+        when:
+        params.opusId = "author1"
+        request.userPrincipal = new User([authority: "", userid: "PROFILE_AUTHOR_USER"])
+
+        withFilters(controller: "secured", action: action) {
+
+            controller."${action}"()
+        }
+
+        then:
+        response.status == responseCode
+        params.isALAAdmin == false
+        params.isOpusAdmin == false
+        params.isOpusEditor == false
+        params.isOpusAuthor == true
+        params.isOpusReviewer == true
+
+        where:
+        action                  | responseCode
+        "publicAction"          | 200
+        "alaAdminAction"        | 403
+        "profileAdminAction"    | 403
+        "profileEditorAction"   | 403
+        "profileAuthorAction"   | 200
         "profileReviewerAction" | 200
     }
 
@@ -203,6 +249,7 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == false
         params.isOpusAdmin == false
         params.isOpusEditor == false
+        params.isOpusAuthor == false
         params.isOpusReviewer == true
 
         where:
@@ -211,6 +258,7 @@ class AccessControlFiltersSpec extends Specification {
         "alaAdminAction"        | 403
         "profileAdminAction"    | 403
         "profileEditorAction"   | 403
+        "profileAuthorAction"   | 403
         "profileReviewerAction" | 200
     }
 
@@ -345,6 +393,11 @@ class SecuredController {
 
     }
 
+    @Secured(role = Role.ROLE_PROFILE_AUTHOR)
+    def profileAuthorAction() {
+
+    }
+
     @Secured(role = Role.ROLE_PROFILE_REVIEWER)
     def profileReviewerAction() {
 
@@ -375,17 +428,22 @@ class MockProfileService extends ProfileService {
         if (opusId == "admin1") {
             opus = [uuid: opusId, authorities: [[userId: "PROFILE_ADMIN_USER", role: Role.ROLE_PROFILE_ADMIN.toString()],
                                                 [userId: 2, role: Role.ROLE_PROFILE_ADMIN.toString()],
-                                                [userId: 3, role: Role.ROLE_PROFILE_EDITOR.toString()],
-                                                [userId: 4, role: Role.ROLE_PROFILE_EDITOR.toString()]]]
+                                                [userId: 3, role: Role.ROLE_PROFILE_AUTHOR.toString()],
+                                                [userId: 4, role: Role.ROLE_PROFILE_AUTHOR.toString()]]]
         } else if (opusId == "editor1") {
             opus = [uuid: opusId, authorities: [[userId: 1, role: Role.ROLE_PROFILE_ADMIN.toString()],
                                                 [userId: 2, role: Role.ROLE_PROFILE_ADMIN.toString()],
-                                                [userId: 3, role: Role.ROLE_PROFILE_EDITOR.toString()],
+                                                [userId: 3, role: Role.ROLE_PROFILE_AUTHOR.toString()],
                                                 [userId: "PROFILE_EDITOR_USER", role: Role.ROLE_PROFILE_EDITOR.toString()]]]
+        } else if (opusId == "author1") {
+            opus = [uuid: opusId, authorities: [[userId: 1, role: Role.ROLE_PROFILE_ADMIN.toString()],
+                                                [userId: 2, role: Role.ROLE_PROFILE_ADMIN.toString()],
+                                                [userId: 3, role: Role.ROLE_PROFILE_AUTHOR.toString()],
+                                                [userId: "PROFILE_AUTHOR_USER", role: Role.ROLE_PROFILE_AUTHOR.toString()]]]
         } else if (opusId == "reviewer1") {
             opus = [uuid: opusId, authorities: [[userId: 1, role: Role.ROLE_PROFILE_ADMIN.toString()],
                                                 [userId: 2, role: Role.ROLE_PROFILE_ADMIN.toString()],
-                                                [userId: 3, role: Role.ROLE_PROFILE_EDITOR.toString()],
+                                                [userId: 3, role: Role.ROLE_PROFILE_AUTHOR.toString()],
                                                 [userId: "PROFILE_REVIEWER_USER", role: Role.ROLE_PROFILE_REVIEWER.toString()]]]
         } else if (opusId == "private") {
             opus = [uuid: opusId, privateCollection: true, authorities: [[userId: "1234", role: Role.ROLE_USER.toString()]]]

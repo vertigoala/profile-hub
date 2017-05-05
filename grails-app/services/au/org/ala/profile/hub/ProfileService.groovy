@@ -77,6 +77,14 @@ class ProfileService {
         webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/additionalStatuses", [addtionalStatuses: additionalStatuses])
     }
 
+    def updateOpusMasterList(String opusId, masterListUid) {
+        webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/masterList", masterListUid)
+    }
+
+    def syncOpusMasterList(String opusId) {
+        webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/masterList/sync", [:])
+    }
+
     def createProfile(String opusId, json) {
         webService.put("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/", json)
     }

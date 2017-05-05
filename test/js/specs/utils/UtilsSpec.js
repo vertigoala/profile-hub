@@ -107,5 +107,11 @@ describe("Util tests", function () {
     it("should return true when a valid uuid is passed to isUuid", function() {
         expect(service.isUuid("e0fd3aca-7b21-44de-abe4-6b392cd32aae")).toBe(true);
     });
+
+    it("should format autonyms correctly", function() {
+        expect(service.formatScientificName(
+            "Adenanthos cygnorum subsp. cygnorum", "Diels", "Adenanthos cygnorum Diels subsp. cygnorum"))
+        .toBe("<span class='scientific-name'>Adenanthos cygnorum <span class='normal-text'>Diels</span> <span class='normal-text'>subsp.</span> cygnorum</span>");
+    });
 });
 

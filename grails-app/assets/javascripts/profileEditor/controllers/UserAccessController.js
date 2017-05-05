@@ -10,9 +10,9 @@ profileEditor.controller('UserAccessController', function (messageService, util,
     self.roles = [
         // Order is important - Refactoring needed to lookup based on key rather than order.
         {name: "Admin", key: "ROLE_PROFILE_ADMIN"},
-        {name: "Editor", key: "ROLE_PROFILE_EDITOR"},
+        {name: "Author", key: "ROLE_PROFILE_AUTHOR"},
         {name: "Reviewer", key: "ROLE_PROFILE_REVIEWER"},
-        {name: "Editor Plus", key: "ROLE_PROFILE_EDITOR_PLUS"}
+        {name: "Editor", key: "ROLE_PROFILE_EDITOR"}
     ];
 
     var userRole = {name: "User", key: "ROLE_USER"};

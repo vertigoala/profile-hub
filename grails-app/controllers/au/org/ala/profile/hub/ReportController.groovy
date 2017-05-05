@@ -8,7 +8,7 @@ class ReportController extends BaseController {
 
     ProfileService profileService
 
-    @Secured(role = Role.ROLE_PROFILE_EDITOR)
+    @Secured(role = Role.ROLE_PROFILE_AUTHOR)
     def loadReport() {
         DateRangeType period;
         Date to, from;
