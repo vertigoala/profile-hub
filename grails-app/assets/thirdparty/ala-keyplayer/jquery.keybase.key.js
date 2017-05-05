@@ -429,8 +429,6 @@
         $('<span>', {class: 'keybase-player-filter'}).appendTo('.' + settings.cssClass.remainingItems + ' .keybase-player-menu');
         $('<a>', {href: '#'}).appendTo('.keybase-player-filter');
 
-        // removing font-awesome check since it can be reasonably assume it is loaded in profiles and
-        // because the check proposed will always return false on grails environment.
         $('.keybase-player-filter a').html('<i class="fa fa-filter fa-lg fa-lg"></i>');
         $('.' + settings.cssClass.stepBack + ' a').html('<i class="fa fa-undo fa-lg fa-lg"></i>');
         $('.' + settings.cssClass.startOver + ' a').html('<i class="fa fa-refresh fa-lg fa-lg"></i>');
@@ -1607,8 +1605,6 @@
         //settings.bracketedKeyDisplay(json);
         if ($('.keybase-player-filter-remove').length === 0) {
             remainingItemsElem.children('h3').children('.keybase-player-menu').append('<span class="keybase-player-filter-remove"><a href="#"></a></span>');
-            // removing font-awesome check since it can be reasonably assume it is loaded in profiles and
-            // because the check proposed will always return false on grails environment.
             $('.keybase-player-filter-remove a').html('<i class="fa fa-trash fa-lg fa-lg"></i>');
             
             $('.keybase-player-filter-remove').click(function(e) {
