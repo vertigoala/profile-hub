@@ -139,11 +139,9 @@ profileEditor.controller('SearchController', function (profileService, util, mes
             return null;
         }
 
-        if (profile.matchedName && profile.scientificName == profile.matchedName.scientificName) {
-            return util.formatScientificName(profile.scientificName, profile.nameAuthor, profile.fullName);
-        } else {
-            return util.formatScientificName(profile.scientificName, profile.nameAuthor, null);
-        }
+        var fullName  = profile.matchedName && profile.scientificName == profile.matchedName.scientificName ? profile.fullName : null;
+        return util.formatScientificName(profile.scientificName, profile.nameAuthor, fullName);
+
     };
 
     self.formatReason = function (profile) {
