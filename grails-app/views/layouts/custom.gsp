@@ -161,15 +161,25 @@
                 <div class="col-xs-12 col-sm-8 col-lg-9">
 
                     <div class="col-md-12 col-lg-6">
+                        <g:if test="${footerText}">
                         <p class="lead">
-                            <g:if test="${footerText}">
                                 ${raw(footerText)}
-                            </g:if>
                         </p>
+                        </g:if>
 
                         <p class="lead">
                             ALA: sharing biodiversity knowledge to shape our future.
                         </p>
+
+                        <g:if test="${opus.brandingConfig.shortLicense}">
+                            <p>
+                                ${raw(opus.brandingConfig.shortLicense)}
+                            </p>
+                        </g:if>
+
+                        <g:if test="${opus}">
+                            <g:render template="../opus/issn" model="${[issn: opus.brandingConfig.issn]}"></g:render>
+                        </g:if>
                     </div>
 
                     <div class="col-sm-6 col-md-6 col-lg-3">

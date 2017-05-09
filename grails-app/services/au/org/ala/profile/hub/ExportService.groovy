@@ -192,6 +192,7 @@ class ExportService {
                 colophon: [
                         collectionCopyright: "&copy; ${opus.copyrightText}",
                         genericCopyright   : HubConstants.PDF_COPYRIGHT_TEXT,
+                        pdfLicense         : opus.brandingConfig.pdfLicense,
                         profileLink        : "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${firstProfile?.uuid}",
                         citation           : citation,
                         version            : firstProfile.version ?: null,

@@ -95,3 +95,15 @@ profileEditor.filter("formatText", function () {
 profileEditor.filter('enc', function() {
     return window.encodeURIComponent;
 });
+
+/**
+ * Replace unicode character with space
+ *
+ * Usage: {{ someHtmlAttribute | replaceUnicodeWithSpace }}
+ *
+ */
+profileEditor.filter('replaceUnicodeWithSpace', function() {
+    return function(text) {
+        return text ? String(text).replace(/&[^;]+;/gm, ' ') : '';
+    }
+});

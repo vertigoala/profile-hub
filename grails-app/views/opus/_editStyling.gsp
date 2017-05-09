@@ -169,6 +169,30 @@
                               class="form-control" ng-maxlength="300" maxlength="300"></textarea>
                     <span class="small">To be displayed in the page footer</span>
                 </div>
+
+                <div class="form-group">
+                    <label>ISSN</label>
+                    <input type="text" class="form-control" name="issn" ng-model="opusCtrl.opus.brandingConfig.issn" ng-minlength="8" ng-maxlength="8"/>
+                    <div class="small">Value entered must be <b>8 characters</b> long without hyphen. </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="footerText">License - short description</label>
+
+                    <textarea id="licenseShort" ng-model="opusCtrl.opus.brandingConfig.shortLicense" rows="4"
+                              class="form-control" ng-maxlength="100" maxlength="100" ckeditor="richTextFullToolbar"></textarea>
+                    <div class="small">The text described here will appear on the footer. The maximum characters permitted is 100.</div>
+                    <div class="small italics">Characters remaining: {{100 - (opusCtrl.opus.brandingConfig.shortLicense | plainText | replaceUnicodeWithSpace).length}}</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="footerText">License - long description</label>
+
+                    <textarea id="pdfLicense" ng-model="opusCtrl.opus.brandingConfig.pdfLicense" rows="4"
+                              class="form-control" ng-maxlength="500" maxlength="500"></textarea>
+                    <div class="small">License details entered here will appear when profile is exported to PDF. The maximum characters permitted is 500.</div>
+                    <div class="small italics">Characters remaining: {{500 - (opusCtrl.opus.brandingConfig.pdfLicense || '').length}}</div>
+                </div>
             </div>
         </div>
     </div>
