@@ -171,13 +171,13 @@
                             ALA: sharing biodiversity knowledge to shape our future.
                         </p>
 
-                        <g:if test="${opus.brandingConfig.shortLicense}">
+                        <g:if test="${opus?.brandingConfig?.shortLicense}">
                             <p>
                                 ${raw(opus.brandingConfig.shortLicense)}
                             </p>
                         </g:if>
 
-                        <g:if test="${opus}">
+                        <g:if test="${opus?.brandingConfig?.issn}">
                             <g:render template="../opus/issn" model="${[issn: opus.brandingConfig.issn]}"></g:render>
                         </g:if>
                     </div>
