@@ -97,7 +97,18 @@
                     Results for "{{browseCtrl.searchTerm}}*"
                 </h4>
                 <h4 ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level != browseCtrl.selectedTaxon.name">
-                    {{browseCtrl.selectedTaxon.level | capitalize}}: {{browseCtrl.selectedTaxon.name | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
+                    {{browseCtrl.selectedTaxon.level | capitalize}}:
+                    <span ng-show="browseCtrl.selectedTaxon.profileExist">
+                        <a href="${request.contextPath}/opus/{{ browseCtrl.opusId }}/profile/{{ browseCtrl.selectedTaxon.name | enc }}"
+                           target="_self" class="scientific-name">
+                            {{browseCtrl.selectedTaxon.name | capitalize}}
+                        </a>
+                    </span>
+                    <span ng-show="!browseCtrl.selectedTaxon.profileExist">
+                        {{browseCtrl.selectedTaxon.name | capitalize}}
+                    </span>
+
+                    <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
                 </h4>
                 <h4 ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level == browseCtrl.selectedTaxon.name">
                     {{browseCtrl.selectedTaxon.level | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
