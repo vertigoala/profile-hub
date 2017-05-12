@@ -105,10 +105,10 @@ profileEditor.controller('BrowseController', function (profileService, util, mes
         getProfile.then(function (data) {
             // It is possible that by the time ajax query returns, the selected taxon was changed by the user.
             // Adding a scientific name check to prevent this scenario.
-            if(self.selectedTaxon && (self.selectedTaxon.name == data.profile.scientificName)) {
+            if(self.selectedTaxon &&  data.profile && (self.selectedTaxon.name == data.profile.scientificName)) {
                 self.selectedTaxon.profileExist = true;
             }
-        })
+        });
     };
 
     self.changeSortOrder = function() {
