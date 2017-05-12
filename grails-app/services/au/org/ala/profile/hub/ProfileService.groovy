@@ -314,7 +314,7 @@ class ProfileService {
                 profileId      : profileId,
                 links          : links,
                 userId         : authService.getUserId(),
-                userDisplayName: authService.userDetails().userDisplayName
+                userDisplayName: authService.userDetails().displayName
         ])
     }
 
@@ -325,7 +325,7 @@ class ProfileService {
                 profileId      : profileId,
                 links          : links,
                 userId         : authService.getUserId(),
-                userDisplayName: authService.userDetails().userDisplayName
+                userDisplayName: authService.userDetails().displayName
         ])
     }
 
@@ -334,7 +334,7 @@ class ProfileService {
 
         attribute.profileId = profileId
         attribute.userId = authService.getUserId()
-        attribute.userDisplayName = authService.userDetails().userDisplayName
+        attribute.userDisplayName = authService.userDetails().displayName
 
         webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/attribute/${enc(attribute.uuid ?: '')}", attribute)
     }

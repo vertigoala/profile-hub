@@ -25,7 +25,7 @@ class UserControllerSpec extends Specification {
 
     def "findUser should return the resp element of the response from the service call on success"() {
         setup:
-        mockUserService.findUser(_) >> [resp: [resp: [userId: "user1"]], statusCode: 200]
+        mockUserService.findUser(_) >> new au.org.ala.web.UserDetails(userId: 'user1')
 
         when:
         params.userName = "fred"
@@ -33,18 +33,18 @@ class UserControllerSpec extends Specification {
 
         then:
         assert response.status == HttpStatus.SC_OK
-        assert response.json == [resp: [userId: "user1"]]
+        assert response.json?.userId == "user1"
     }
 
     def "findUser should return the error code from the service on failure of the service call"() {
         setup:
-        mockUserService.findUser(_) >> [error: "something died!", statusCode: 666]
+        mockUserService.findUser(_) >> null
 
         when:
         params.userName = "fred"
         controller.findUser()
 
         then:
-        assert response.status == 666
+        assert response.status == 404
     }
 }

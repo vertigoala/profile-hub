@@ -9,29 +9,15 @@ class UserService {
     WebService webService
 
     def getCurrentUserDisplayName() {
-        getUser()?.displayName ?: "" //?:"mark.woolston@csiro.au"
+        authService.displayName ?: "" //?:"mark.woolston@csiro.au"
     }
 
     def getCurrentUserId() {
-        getUser()?.userId ?: ""
-    }
-
-    public UserDetails getUser() {
-        def u = authService.userDetails()
-        def user
-
-        if (u?.userId) {
-            user = new UserDetails()
-            user.displayName = u.userDisplayName
-            user.userId = u.userId
-            user.userName = u.email
-        }
-
-        return user
+        authService.userId ?: ""
     }
 
     def findUser(String username) {
-        webService.post("${grailsApplication.config.userdetails.service.url}/userDetails/getUserDetails?userName=${username?.encodeAsURL()}", [:])
+        authService.getUserForEmailAddress(username)
     }
 
     def userInRole(role) {
@@ -45,8 +31,7 @@ class UserService {
     }
 
     def checkEmailExists(String email) {
-        def url = "${grailsApplication.config.userdetails.service.url}/userdetails/userDetails/getUserDetails?userName=${email}"
-        def resp = webService.post(url.toString(), [:])
-        return resp?.resp?.userId ?: ""
+        def resp = authService.getUserForEmailAddress(email)
+        return resp?.userId ?: ""
     }
 }

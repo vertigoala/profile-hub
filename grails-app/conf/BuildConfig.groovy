@@ -65,7 +65,7 @@ grails.project.dependency.resolution = {
         compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160827.1'
         compile 'com.google.guava:guava:19.0'
         compile 'com.google.code.findbugs:jsr305:3.0.1'
-        compile 'com.squareup.retrofit2:retrofit:2.1.0'
+        compile 'com.squareup.retrofit2:retrofit:2.2.0'
 
     }
 
@@ -82,7 +82,7 @@ grails.project.dependency.resolution = {
         compile(":ala-map:2.0.4") {
             excludes "resources"
         }
-        compile(":ala-ws-plugin:1.5") {
+        compile(":ala-ws-plugin:1.6.1-SNAPSHOT") {
             excludes "resources"
         }
         compile(":ala-admin-plugin:1.2") {
@@ -97,14 +97,14 @@ grails.project.dependency.resolution = {
         runtime(":ala-bootstrap3:1.1") {
             excludes "ala-cas-client", "resources"
         }
-        runtime(":ala-auth:1.3.1") {
+        runtime(":ala-auth:2.1.0") {
             excludes "commons-httpclient", "resources"
         }
         runtime ":tika-parser:1.3.0.1"
 
         //compile ":twitter-bootstrap:3.3.6"
         runtime ":jquery:1.11.1"
-        compile ":asset-pipeline:2.11.2-SNAPSHOT"
+        compile ":asset-pipeline:2.14.1"
         runtime ":angular-annotate-asset-pipeline:2.4.1"
         runtime ":angular-template-asset-pipeline:2.3.0"
 
