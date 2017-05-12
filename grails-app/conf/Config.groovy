@@ -123,6 +123,9 @@ environments {
         }
         security.cas.appServerName='http://devt.ala.org.au:8080'
     }
+    test {
+        security.cas.appServerName='http://devt.ala.org.au:8080'
+    }
     production {
         grails.logging.jul.usebridge = false
         grails {
@@ -132,7 +135,6 @@ environments {
                 props = ["mail.debug": "false"]
             }
         }
-        security.cas.appServerName='http://devt.ala.org.au:8080'
     }
 }
 
