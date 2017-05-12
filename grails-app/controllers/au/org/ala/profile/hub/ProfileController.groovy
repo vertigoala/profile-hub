@@ -72,6 +72,7 @@ class ProfileController extends BaseController {
                 notFound()
             } else {
                 profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
+                String profileUrl = getProfileUrl(profileAndOpus.opus, profileAndOpus.profile)
                 Map model = profileAndOpus
                 model << [edit                : false,
                           searchUrl           : getSearchUrl(profileAndOpus.opus),
@@ -84,7 +85,9 @@ class ProfileController extends BaseController {
                           footerText          : profileAndOpus.opus.footerText,
                           contact             : profileAndOpus.opus.contact,
                           usePrivateRecordData: profileAndOpus.opus.usePrivateRecordData,
-                          displayMap          : profileService.hasMatchedName(model.profile)]
+                          displayMap          : profileService.hasMatchedName(model.profile),
+                          citation            : profileService.getCitation(profileAndOpus.opus, profileAndOpus.profile, profileUrl)
+                ]
                 render view: "show", model: model
             }
         }

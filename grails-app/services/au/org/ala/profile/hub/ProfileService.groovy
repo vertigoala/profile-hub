@@ -8,6 +8,7 @@ import org.apache.http.entity.ContentType
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
 import javax.servlet.http.HttpServletResponse
+import java.text.SimpleDateFormat
 
 import static au.org.ala.profile.hub.Utils.enc
 import static au.org.ala.profile.hub.util.HubConstants.*
@@ -560,5 +561,54 @@ class ProfileService {
     def setStatus(String opusId, String profileId, json) {
         def url = "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/profile/${enc(profileId)}/status"
         return webService.post(url, json)
+    }
+
+    String getCitation(Map opus, Map profile, String profileUrl = ''){
+        if(opus.citationProfile){
+            String year = ""
+            try {
+                year = new SimpleDateFormat("yyyy").format(utilService.convertUTCToDate(profile.lastPublished))
+            } catch (Exception e){
+                log.error("Could not convert date - ${profile.lastPublished}")
+            }
+
+            Map substitutions = [
+                    '\\$Today'   : new SimpleDateFormat("dd MMMMM yyyy").format(new Date()),
+                    '\\$Url'     : profileUrl,
+                    '\\$Profile' : profile.scientificName,
+                    '\\$Year'    : year
+            ]
+
+            Map authorship = getCombinedAuthorship(profile.authorship, true)
+            authorship.each{ key, value ->
+                substitutions[key] = value.join(', ')
+            }
+
+            String result = opus.citationProfile;
+            substitutions.each { key, value ->
+                result = result.replaceAll(key, value);
+            }
+
+            result = result.replaceAll('\\$[^\\s]*', "")
+
+            result
+        }
+    }
+
+    Map getCombinedAuthorship(List authorship, Boolean addSpecialCharacter = false){
+        if(authorship && authorship.size()){
+            Map result = [:]
+            String specialCharacter = addSpecialCharacter?'\\$':''
+            authorship.each{ item ->
+                String key = specialCharacter + item.category
+                if(!result[key]){
+                    result[key] = []
+                }
+
+                result[key].push(item.text)
+            }
+
+            result
+        }
     }
 }

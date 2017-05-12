@@ -122,6 +122,11 @@
                                     ng-show="contrib.text">{{contrib.category | capitalize}}(s) - {{contrib.text}}<span
                 ng-show="!$last"><br/></span>
         </span>
+        <g:if test="citation">
+        <span>
+                $citation
+        </span>
+        </g:if>
     </div>
     <div class="col-sm-12 col-md-4 last-updated-text">
         Last updated: <span class="last-updated">{{profileCtrl.profile.lastUpdatedBy?profileCtrl.profile.lastUpdatedBy + ';':''}} {{ profileCtrl.profile.lastPublished | date : 'MMM d, y h:mm' }}</span><br>

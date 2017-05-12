@@ -1,6 +1,8 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.profile.hub.util.DateRangeType
+
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 class UtilService {
@@ -44,5 +46,10 @@ class UtilService {
     Date today() {
         Date now = new Date();
         Date today = new Date(now.getYear(), now.getMonth(), now.getDate());
+    }
+
+    Date convertUTCToDate(String date){
+        DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        df1.parse(date);
     }
 }

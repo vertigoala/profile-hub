@@ -47,4 +47,10 @@ class BaseController extends BasicWSController {
     private getAboutUrl(opus, profile) {
         "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/about#?profile=${profile.scientificName}"
     }
+
+    private getProfileUrl(opus, profile) {
+        if(opus && profile){
+            "${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/${opus.uuid}/profile/${profile.uuid}"
+        }
+    }
 }

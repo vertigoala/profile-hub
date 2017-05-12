@@ -177,7 +177,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="footerText">License - short description</label>
+                    <label for="licenseShort">License - short description</label>
 
                     <textarea id="licenseShort" ng-model="opusCtrl.opus.brandingConfig.shortLicense" rows="4"
                               class="form-control" ng-maxlength="100" maxlength="100" ckeditor="richTextFullToolbar"></textarea>
@@ -186,7 +186,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="footerText">License - long description</label>
+                    <label for="pdfLicense">License - long description</label>
 
                     <textarea id="pdfLicense" ng-model="opusCtrl.opus.brandingConfig.pdfLicense" rows="4"
                               class="form-control" ng-maxlength="500" maxlength="500"></textarea>
