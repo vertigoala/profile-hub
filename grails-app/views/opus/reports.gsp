@@ -11,7 +11,8 @@
     <!-- Breadcrumb -->
     <ol class="breadcrumb" ng-cloak>
         <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-        <li class="font-xxsmall active">{{opusCtrl.opus.title}}</li>
+        <li><a class="font-xxsmall"
+               href="${request.contextPath}/opus/{{opusCtrl.urlSuffix}}">{{opusCtrl.opus.title}}</a></li>
     </ol><!-- End Breadcrumb -->
 
     <h1 class="hidden">Welcome to the eFlora website</h1><!-- Show the H1 on each page -->

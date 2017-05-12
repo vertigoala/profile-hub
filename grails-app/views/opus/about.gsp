@@ -11,8 +11,7 @@
     <ol class="breadcrumb" ng-cloak>
         <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
         <li><a class="font-xxsmall"
-               href="${request.contextPath}/opus/{{aboutCtrl.opusId}}">${opusTitle}</a>
-        </li>
+               href="${request.contextPath}/opus/{{aboutCtrl.urlSuffix}}">${opusTitle}</a></li>
         <li ng-show="aboutCtrl.fromProfile"><a class="font-xxsmall"
                href="${request.contextPath}/opus/{{aboutCtrl.opusId}}/profile/{{aboutCtrl.fromProfile}}">{{aboutCtrl.fromProfile}}</a>
         </li>

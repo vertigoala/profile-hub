@@ -37,6 +37,7 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
     self.valid = false;
     self.editors = [];
     self.initialShortName = null;
+    self.urlSuffix = null;
 
     self.keybaseTemplateUrl = undefined;
     self.keybaseProjects = [];
@@ -130,6 +131,7 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                 });
 
                 self.initialShortName = data.shortName;
+                self.urlSuffix = self.opus.shortName ? self.opus.shortName : self.opus.uuid;
 
                 self.supportingOpuses = [].concat(self.opus.supportingOpuses);
                 self.supportingOpuses = self.supportingOpuses.concat(self.opus.requestedSupportingOpuses);
