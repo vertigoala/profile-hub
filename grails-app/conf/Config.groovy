@@ -132,6 +132,7 @@ environments {
                 props = ["mail.debug": "false"]
             }
         }
+        security.cas.appServerName='http://devt.ala.org.au:8080'
     }
 }
 
