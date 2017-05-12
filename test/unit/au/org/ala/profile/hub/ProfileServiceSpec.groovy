@@ -17,7 +17,7 @@ class ProfileServiceSpec extends Specification {
 
         authService = Mock(AuthService)
         authService.getUserId() >> "user1"
-        authService.userDetails() >> [userDisplayName: "fred smith"]
+        authService.userDetails() >> new au.org.ala.web.UserDetails(firstName: 'fred', lastName: 'smith')
 
         webService = Mock(WebService)
         service = new ProfileService()
