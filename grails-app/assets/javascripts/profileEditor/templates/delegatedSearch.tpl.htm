@@ -5,16 +5,16 @@
                     aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" title="Select the search type"
                     type="button" ng-click="delSearchCtrl.search()">
                 <span ng-show="delSearchCtrl.searchOptions.nameOnly">
-                    {{ delSearchCtrl.layout == 'large' ? 'with name' : 'N'  }}
+                    {{ delSearchCtrl.layout == 'large' ? 'by name' : 'N'  }}
                 </span>
                 <span ng-hide="delSearchCtrl.searchOptions.nameOnly">
-                    {{ delSearchCtrl.layout == 'large' ? 'with text' : 'T'  }}
+                    {{ delSearchCtrl.layout == 'large' ? 'containing text' : 'T'  }}
                 </span>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
-                <li><a ng-click="delSearchCtrl.setSearchOption('name')">{{ delSearchCtrl.layout == 'large' ? 'with name' : 'Search for profiles by name'  }}</a></li>
-                <li><a ng-click="delSearchCtrl.setSearchOption('text')">{{ delSearchCtrl.layout == 'large' ? 'with text' : 'Search for profiles containing text'  }}</a></li>
+                <li><a ng-click="delSearchCtrl.setSearchOption('name')">{{ delSearchCtrl.layout == 'large' ? 'by name' : 'Search for profiles by name'  }}</a></li>
+                <li><a ng-click="delSearchCtrl.setSearchOption('text')">{{ delSearchCtrl.layout == 'large' ? 'containing text' : 'Search for profiles containing text'  }}</a></li>
             </ul>
         </div>
         <input id="searchTerm"

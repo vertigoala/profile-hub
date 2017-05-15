@@ -7,11 +7,11 @@
             <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle btn-lg search-type-control" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                    {{ searchCtrl.searchOptions.nameOnly ? 'with name' : 'with text' }} <span class="caret"></span>
+                    {{ searchCtrl.searchOptions.nameOnly ? 'by name' : 'containing text' }} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a ng-click="searchCtrl.setSearchOption('name')">with name</a></li>
-                    <li><a ng-click="searchCtrl.setSearchOption('text')">with text</a></li>
+                    <li><a ng-click="searchCtrl.setSearchOption('name')">by name</a></li>
+                    <li><a ng-click="searchCtrl.setSearchOption('text')">containing text</a></li>
                 </ul>
             </div>
             <input id="searchTerm"
