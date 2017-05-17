@@ -36,12 +36,17 @@
         </ol>
 
         <div class="row" ng-cloak>
-            <alert type="warning"
+
+            <uib-alert type="info" ng-if="profileCtrl.profile.profileStatus == 'Empty'">
+                <i class="fa fa-exclamation"></i> This profile is a stub.
+            </uib-alert>
+
+            <uib-alert type="warning"
                    ng-if="profileCtrl.profile.privateMode"><span
                     class="fa fa-lock"></span>&nbsp;&nbsp;You are viewing a profile that is currently in draft. These changes will not be visible to public users until the profile is completed and the draft is released.
-            </alert>
+            </uib-alert>
 
-            <alert type="warning"
+            <uib-alert type="warning"
                    ng-if="profileCtrl.isArchived()">
                 <p>
                     This profile has been archived with the following explanation:
@@ -69,7 +74,7 @@
                     <br/>
                     ${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.uuid}}/profile/{{profileCtrl.profile.uuid}}
                 </p>
-            </alert>
+            </uib-alert>
         </div>
 
         <g:if test="${opus?.profileLayoutConfig?.layout}">
