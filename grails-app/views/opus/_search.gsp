@@ -109,6 +109,8 @@
                 <div class="font-xsmall" ng-show="profile.otherNames"><h5><span ng-repeat="name in profile.otherNames">{{ name.text | capitalize }}<span ng-show="!$last">, </span></span></h5></div>
 
                 <div class="font-xsmall" ng-show="profile.description"><span ng-repeat="description in profile.description">{{ description.text | words: 100 }}<span ng-show="!$last">, </span></span></div>
+
+                <div class="font-xsmall" ng-show="profile.profileStatus == 'Empty'"><uib-alert type="info"><i class="fa fa-exclamation"></i> This is profile is a stub.</uib-alert></div>
             </div>
 
             <div class="col-md-2 col-sm-12 col-xs-12" ng-show="!searchCtrl.opusId">
