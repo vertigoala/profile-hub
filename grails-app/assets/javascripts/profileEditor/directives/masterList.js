@@ -6,7 +6,7 @@
 
         self.lists = [];
         var listType = config.masterListType;
-        $http.get(config.listServiceUrl + '/ws/speciesList', { params: { 'listType': 'eq:TEST', max: -1, user: config.currentUserId } })
+        $http.get(config.listServiceUrl + '/ws/speciesList', { params: { 'listType': 'eq:' + config.masterListType, max: -1, user: config.currentUserId } })
             .then(function(response) {
                 self.lists = response.data.lists;
             }, function(response) {
