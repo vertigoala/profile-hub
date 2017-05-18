@@ -395,9 +395,53 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
     /**
      * Generate random sequence of characters
      */
-    getRandomString = function () {
+    function getRandomString () {
         return Math.random().toString(36).substring(7);
     };
+
+    /**
+     * Translate facets to user readable text
+     */
+     function getFacetLabel(fieldName) {
+        var lookup = {
+            "state":"State or Territory",
+            "synonym.decade":"occurrence_year",
+            "location_id":"Location ID",
+            "event_id":"Event ID",
+            "elevation_d_rng":"Elevation (in metres)",
+            "min_elevation_d_rng":"Minimum elevation (in metres)",
+            "cl1048":"IBRA 7 Regions",
+            "cl21":"IMCRA Regions",
+            "raw_identification_qualifier":"Raw identification qualifier",
+            "original_name_usage":"Original name usage",
+            "cl2079":"capad 2014 terrestrial",
+            "cl2078":"capad 2014 marine",
+            "cl925":"Estuary habitat mapping",
+            "cl901":"Directory of Important Wetlands",
+            "cl958":"Commonwealth Electoral Boundaries",
+            "cl1049":"IBRA 7 Subregions",
+            "cl1085":"Koppen Climate Classification (All Classes)",
+            "cl678":"Land use",
+            "cl991":"Geomorphology of the Australian Margin and adjacent seafloor",
+            "cl916":"NRM Regions",
+            "cl935":"RAMSAR wetland regions",
+            "cl1057":"River Regions",
+            "cl2013":"ASGS Australian States and Territories",
+            "cl927":"States including coastal waters",
+            "cl923":"Surface Geology of Australia",
+            "cl619":"Vegetation - condition",
+            "cl1076":"IGBP Land Cover vegetation classification scheme (2011)",
+            "cl918":"National Dynamic Land Cover",
+            "occurrence_decade_i":"Year (by decade)",
+            "data_resource_uid":"Data resource",
+            "data_resource":"Data resource",
+            "dataset_name":"Dataset name",
+            "species_list_uid":"Species lists",
+            "institution_uid":"Institution"
+        };
+
+        return  (ALA.OccurrenceMapUtils && ALA.OccurrenceMapUtils.formatFacetName && ALA.OccurrenceMapUtils.formatFacetName( fieldName, lookup)) || "Unknown";
+     };
 
     /**
      * Public API
@@ -420,7 +464,7 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
         isNameAttribute: isNameAttribute,
         formatLocalDate: formatLocalDate,
         getRandomString: getRandomString,
-
+        getFacetLabel: getFacetLabel,
         LAST: LAST,
         FIRST: FIRST,
         RANK: RANK,

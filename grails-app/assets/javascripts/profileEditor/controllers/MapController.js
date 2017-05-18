@@ -54,7 +54,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                 var colourBy = URI.parseQuery(self.profile.occurrenceQuery).colourBy;
 
                 if (!_.isUndefined(colourBy) && !_.isEmpty(colourBy)) {
-                    var label = colourBy.toLowerCase().split(/\s+/).map(function(s) { return s.length > 0 ? s[0].toUpperCase() + s.substring(1) : '' }).join(' ');
+                    var label = util.getFacetLabel(colourBy);
                     self.legend = new L.Control.Legend({
                         id: "legend",
                         position: "bottomright",
