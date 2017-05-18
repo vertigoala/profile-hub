@@ -69,7 +69,8 @@ class OpusControllerSpec extends Specification {
         controller.edit()
 
         then:
-        assert model.size() == 14
+        assert model.size() == 15
+        assert model.containsKey("opus")
         assert model.containsKey("logos")
         assert model.containsKey("bannerUrl")
         assert model.containsKey("bannerHeight")

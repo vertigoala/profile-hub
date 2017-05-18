@@ -21,7 +21,7 @@
 
             <div class="pull-right">
                 <g:if test="${params.isOpusEditor}">
-                    <div class="btn-group" ng-controller="ProfileController as profileCtrl">
+                    <div class="btn-group" ng-controller="ProfileController as profileCtrl" ng-show="!opusCtrl.opus.masterListUid">
                         <button id="addProfile" class="btn btn-default"
                                 ng-click="profileCtrl.createProfile(opusCtrl.opusId, false)">
                             <span class="fa fa-plus">&nbsp;</span>Add a new profile
