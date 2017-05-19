@@ -55,7 +55,7 @@
                         <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
                                 class="fa fa-lock"></span>&nbsp;&nbsp;Lock for major revision</a>
                     </li>
-                    <g:if test="${params.isOpusEditorPlus}">
+                    <g:if test="${params.isOpusEditor}">
                         <li role="presentation"
                             ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
                             <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
@@ -69,7 +69,7 @@
                     </li>
                     <li class="divider" ng-hide="profileCtrl.readonly()"></li>
 
-                    <g:if test="${params.isOpusEditorPlus}">
+                    <g:if test="${params.isOpusEditor}">
                         <li role="presentation">
                             <a href="" ng-click="profileCtrl.deleteProfile()" target="_self"
                                ng-hide="profileCtrl.readonly() || !profileCtrl.profileId || profileCtrl.profile.publications.length > 0"><span
