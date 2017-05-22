@@ -8,15 +8,6 @@
 <body>
 
 <div class="container" ng-controller="AboutController as aboutCtrl" ng-cloak>
-    <ol class="breadcrumb" ng-cloak>
-        <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-        <li><a class="font-xxsmall"
-               href="${request.contextPath}/opus/{{aboutCtrl.urlSuffix}}">${opusTitle}</a></li>
-        <li ng-show="aboutCtrl.fromProfile"><a class="font-xxsmall"
-               href="${request.contextPath}/opus/{{aboutCtrl.opusId}}/profile/{{aboutCtrl.fromProfile}}">{{aboutCtrl.fromProfile}}</a>
-        </li>
-        <li class="font-xxsmall active">About</li>
-    </ol>
     <div class="margin-bottom-2"></div>
     <h2 class="heading-large">${pageTitle}</h2>
     <div class="row">

@@ -8,12 +8,6 @@
 
 <body>
 <div ng-controller="ShareRequestController as shareCtrl" ng-cloak>
-    <ol class="breadcrumb" ng-cloak>
-        <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-        <li><a class="font-xxsmall active"
-               href="${request.contextPath}/opus/{{shareCtrl.opus.shortName ? shareCtrl.opus.shortName : shareCtrl.opus.uuid}}">{{shareCtrl.opus.title}}</a>
-        </li>
-    </ol>
 
     <div class="row padding-bottom-2">
         <div class="col-sm-12 padding-bottom-1">

@@ -9,14 +9,7 @@
 
 <div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
     <div class="row">
-        <div class="col-sm-6">
-            <!-- Breadcrumb -->
-            <ol class="breadcrumb" ng-cloak>
-                <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-                <li><a class="font-xxsmall" href="${request.contextPath}/opus/{{opusCtrl.urlSuffix}}">{{opusCtrl.opus.title}}</a></li>
-            </ol><!-- End Breadcrumb -->
-        </div>
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <h1 class="hidden">Welcome to the eFlora website</h1><!-- Show the H1 on each page -->
 
             <div class="pull-right">
