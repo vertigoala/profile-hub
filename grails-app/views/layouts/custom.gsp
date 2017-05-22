@@ -132,98 +132,75 @@
     <g:layoutBody/>
 
     <div class="row"></div>
-    <footer class="main-footer">
-        <div class="container margin-bottom-2">
-            <div class="main-footer-border"></div>
+</div>
+<footer class="main-footer">
+    <div class="container margin-bottom-2">
+        <div class="main-footer-border"></div>
 
-            <div class="row">
-                <div class="col-xs-12 col-sm-4 col-lg-3 margin-bottom-2 site-logo" id="site-logo">
-                    <g:each in="${logos?:[[logoUrl:asset.assetPath(src: "atlasoflivingaust.png")]]}" var="logo">
-                        <div class="row margin-bottom-1">
-                            <div class="col-xs-12 col-sm-12 col-lg-12">
-                                <g:if test="${logo.hyperlink}">
-                                    <a href="${logo.hyperlink}" target="_blank">
-                                        <img class="img-responsive customizable-logo-img"
-                                             src="${logo.logoUrl}"
-                                             alt="logo"/>
-                                    </a>
-                                </g:if>
-                                <g:else>
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4 margin-bottom-1 site-logo" id="site-logo">
+                <g:each in="${logos?:[[logoUrl:asset.assetPath(src: "au-gov-logo.png")]]}" var="logo">
+                    <div class="row margin-bottom-1">
+                        <div class="col-xs-12">
+                            <g:if test="${logo.hyperlink}">
+                                <a href="${logo.hyperlink}" target="_blank">
                                     <img class="img-responsive customizable-logo-img"
                                          src="${logo.logoUrl}"
                                          alt="logo"/>
-                                </g:else>
-                            </div>
-                        </div>
-                    </g:each>
-                </div>
-
-                <div class="col-xs-12 col-sm-8 col-lg-9">
-
-                    <div class="col-md-12 col-lg-6">
-                        <g:if test="${footerText}">
-                        <p class="lead">
-                                ${raw(footerText)}
-                        </p>
-                        </g:if>
-
-                        <p class="lead">
-                            ALA: sharing biodiversity knowledge to shape our future.
-                        </p>
-
-                        <g:if test="${opus?.brandingConfig?.shortLicense}">
-                            <p>
-                                ${raw(opus.brandingConfig.shortLicense)}
-                            </p>
-                        </g:if>
-
-                        <g:if test="${opus?.brandingConfig?.issn}">
-                            <g:render template="../opus/issn" model="${[issn: opus.brandingConfig.issn]}"></g:render>
-                        </g:if>
-                    </div>
-
-                    <div class="col-sm-6 col-md-6 col-lg-3">
-                        <ul class="link-list">
-                            <li class="heading">Site navigation</li>
-                            <li><a href="${request.contextPath}/">Collections</a></li>
-                            <g:if test="${glossaryUrl}">
-                                <li><a href="${glossaryUrl}" target="_blank">Glossary</a></li>
+                                </a>
                             </g:if>
-                        </ul>
+                            <g:else>
+                                <img class="img-responsive customizable-logo-img"
+                                     src="${logo.logoUrl}"
+                                     alt="logo"/>
+                            </g:else>
+                        </div>
                     </div>
+                </g:each>
+            </div>
 
-                    <div class="col-sm-6 col-md-6 col-lg-3">
-                        <g:if test="${aboutPageUrl}">
-                            <ul class="link-list">
-                                <li class="heading">Site information</li>
-                                    <li><a href="${aboutPageUrl}" target="_blank">About Us</a></li>
-                            </ul>
-                        </g:if>
-                    </div>
-
-                    <div class="col-xs-12 col-sm-7 col-md-6">
-                        <g:if test="${contact}">
-                            <ul class="social list-inline">
-                                <g:if test="${contact.facebook}">
-                                    <li><a class="soc-facebook" href="${contact.facebook}"
-                                           title="Facebook" target="_blank"><i class="fa fa-facebook"></i></a></li>
-                                </g:if>
-                                <g:if test="${contact.twitter}">
-                                    <li><a class="soc-twitter" href="${contact.twitter}" title="Twitter"
-                                           target="_blank"><i class="fa fa-twitter"></i></a></li>
-                                </g:if>
-                                <g:if test="${contact.email}">
-                                    <li><a class="soc-envelope" href="${contact.email.contains('@') ? 'mailto:' + contact.email : contact.email}"
-                                           title="Email" target="_blank"><i class="fa fa-envelope"></i></a></li>
-                                </g:if>
-                            </ul>
-                        </g:if>
-                    </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 margin-bottom-1">
+                <div class="margin-bottom-1">
+                    <a href="https://www.ala.org.au">
+                        <img src="${asset.assetPath(src: "ala-logo-2016-inline.png")}"
+                             class="img-responsive" alt="ALA logo">
+                    </a>
                 </div>
+
+                <g:if test="${opus?.brandingConfig?.issn}">
+                    <g:render template="../opus/issn" model="${[issn: opus.brandingConfig.issn]}"></g:render>
+                </g:if>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <g:if test="${contact?.facebook || contact?.twitter || contact?.email}">
+                    <ul class="social list-inline margin-bottom-1">
+                        <g:if test="${contact.facebook}">
+                            <li><a class="soc-facebook" href="${contact.facebook}"
+                                   title="${opus ? 'Contact this collection via Facebook' : 'Contact the Atlas via Facebook'}"
+                                   target="_blank"><i class="fa fa-facebook"></i></a></li>
+                        </g:if>
+                        <g:if test="${contact.twitter}">
+                            <li><a class="soc-twitter" href="${contact.twitter}"
+                                   title="${opus ? 'Contact this collection via Twitter' : 'Contact the Atlas via Twitter'}"
+                                   target="_blank"><i class="fa fa-twitter"></i></a></li>
+                        </g:if>
+                        <g:if test="${contact.email}">
+                            <li><a class="soc-envelope" href="${contact.email.contains('@') ? 'mailto:' + contact.email : contact.email}"
+                                   title="${opus ? 'Email this collection' : 'Email the Atlas'}"
+                                   target="_blank"><i class="fa fa-envelope"></i></a></li>
+                        </g:if>
+                    </ul>
+                </g:if>
+
+                <ul class="link-list">
+                    <li class="heading">Site navigation</li>
+                    <li><a href="${request.contextPath}/">Collections</a></li>
+                </ul>
             </div>
         </div>
-    </footer>
-</div>
+    </div>
+</footer>
 
 <asset:script type="text/javascript">
     // show warning if using IE6
