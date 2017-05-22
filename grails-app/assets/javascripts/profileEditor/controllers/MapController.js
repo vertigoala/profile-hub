@@ -173,6 +173,13 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
     self.saveMapConfiguration = function () {
         self.profile.occurrenceQuery = self.editableMap.getQueryString();
+        // set a flag if user has made custom map configuration. This flag will determine whether to return user configured
+        // occurrenceQuery or default occurrenceQuery for the profile.
+        if(self.profile.occurrenceQuery == extractBaseQuery(self.profile.occurrenceQuery)){
+            self.profile.isCustomMapConfig = false;
+        } else {
+            self.profile.isCustomMapConfig = true;
+        }
 
         var promise = profileService.updateProfile(self.opusId, self.profileId, self.profile);
         promise.then(function () {
