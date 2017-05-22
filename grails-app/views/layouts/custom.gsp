@@ -139,7 +139,7 @@
 
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4 margin-bottom-1 site-logo" id="site-logo">
-                <g:each in="${logos?:[[logoUrl:asset.assetPath(src: "au-gov-logo.png")]]}" var="logo">
+                <g:each in="${logos?:[[logoUrl:asset.assetPath(src: "ala-logo-2016-inline.png")]]}" var="logo">
                     <div class="row margin-bottom-1">
                         <div class="col-xs-12">
                             <g:if test="${logo.hyperlink}">
@@ -162,7 +162,7 @@
             <div class="col-xs-12 col-sm-6 col-md-4 margin-bottom-1">
                 <div class="margin-bottom-1">
                     <a href="https://www.ala.org.au">
-                        <img src="${asset.assetPath(src: "ala-logo-2016-inline.png")}"
+                        <img src="${asset.assetPath(src: "au-gov-logo.png")}"
                              class="img-responsive" alt="ALA logo">
                     </a>
                 </div>
