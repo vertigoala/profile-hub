@@ -244,7 +244,7 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
                     console.log("not authorised");
                     redirect(contextRoot() + "/notAuthorised");
                 } else if (status >= 400 && (_.isUndefined(request.disableAlertOnFailure) || !request.disableAlertOnFailure)) {
-                    messageService.alertStayOn("An error occured.");
+                    messageService.alertStayOn("An error occurred.");
                 }
 
             });

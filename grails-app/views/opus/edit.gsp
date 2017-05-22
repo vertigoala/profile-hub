@@ -18,12 +18,6 @@
 <div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
     <a name="top"></a>
 
-    <ol class="breadcrumb" ng-cloak>
-        <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-        <li><a class="font-xxsmall"
-               href="${request.contextPath}/opus/{{opusCtrl.urlSuffix}}">{{opusCtrl.opus.title}}</a></li>
-    </ol>
-
     <div class="row" ng-cloak>
         <div class="col-md-6">
             <p class="lead">

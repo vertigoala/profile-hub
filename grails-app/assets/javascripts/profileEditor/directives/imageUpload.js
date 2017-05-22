@@ -81,7 +81,7 @@ profileEditor.directive('imageUpload', function ($browser, $http, config) {
                         url: $scope.uploadUrl,
                         data: $.param(data)  // TODO replace this with $httpParamSerializer in angular 1.4+
                     }).then(function(result) { return result.data; }).then(handleUploadSuccess, function() {
-                        $scope.error = "An error occured while uploading your image.";
+                        $scope.error = "An error occurred while uploading your image.";
                     });
                 } else {
                     console.error("'performUpload' event broadcast when there are 0 files to be uploaded");
