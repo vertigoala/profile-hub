@@ -123,9 +123,9 @@
                 ng-show="!$last"><br/></span>
         </span>
         <g:if test="citation">
-        <br/>
+        <br/><br/>
         <span>
-                $citation
+                ${citation}
         </span>
         </g:if>
     </div>

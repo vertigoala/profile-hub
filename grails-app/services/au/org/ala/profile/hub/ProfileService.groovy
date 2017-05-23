@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse
 import java.text.SimpleDateFormat
 
 import static au.org.ala.profile.hub.Utils.enc
+import static au.org.ala.profile.hub.Utils.parseISODateToObject
 import static au.org.ala.profile.hub.util.HubConstants.*
 
 class ProfileService {
@@ -567,7 +568,9 @@ class ProfileService {
         if(opus.citationProfile){
             String year = ""
             try {
-                year = new SimpleDateFormat("yyyy").format(utilService.convertUTCToDate(profile.lastPublished))
+                SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+                yearFormat.setTimeZone(TimeZone.getTimeZone("UTC"))
+                year = yearFormat.format(parseISODateToObject(profile.lastPublished))
             } catch (Exception e){
                 log.error("Could not convert date - ${profile.lastPublished}")
             }
@@ -596,7 +599,7 @@ class ProfileService {
     }
 
     Map getCombinedAuthorship(List authorship, Boolean addSpecialCharacter = false){
-        if(authorship && authorship.size()){
+        if(authorship){
             Map result = [:]
             String specialCharacter = addSpecialCharacter?'\\$':''
             authorship.each{ item ->
@@ -605,7 +608,7 @@ class ProfileService {
                     result[key] = []
                 }
 
-                result[key].push(item.text)
+                result[key] << item.text
             }
 
             result

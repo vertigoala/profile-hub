@@ -130,9 +130,9 @@
               ng-show="contrib.text">{{contrib.category | capitalize}}(s) - {{contrib.text}}<span
                 ng-show="!$last"><br/></span>
         </span>
-        <g:if test="citation">
-            <br/>
-            <span>
+        <g:if test="${citation}">
+            <br/><br/>
+            <span class="padding-top-10">
                 ${citation}
             </span>
         </g:if>

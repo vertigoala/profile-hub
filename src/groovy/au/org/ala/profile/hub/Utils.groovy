@@ -5,6 +5,8 @@ import org.apache.tika.config.TikaConfig
 import org.apache.tika.mime.MimeTypeException
 
 import java.nio.file.Files
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -73,5 +75,10 @@ class Utils {
 
     static boolean isHttpSuccess(int statusCode) {
         HttpStatus.SC_OK <= statusCode && 299 >= statusCode
+    }
+
+    static Date parseISODateToObject(String date){
+        DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+        df1.parse(date);
     }
 }
