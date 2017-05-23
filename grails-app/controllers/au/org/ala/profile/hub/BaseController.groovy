@@ -50,12 +50,7 @@ class BaseController extends BasicWSController {
 
     private getProfileUrl(opus, profile) {
         if(opus && profile){
-            String serverPort = "";
-            if(!((request.scheme in ['http', 'https']) && (request.serverPort in [80, 443]))){
-                serverPort =  ":" + request.serverPort
-            }
-
-            "${request.scheme}://${request.serverName}${serverPort}${request.contextPath}/opus/${opus.uuid}/profile/${profile.uuid}"
+            "${grailsApplication.mainContext.getBean("grailsLinkGenerator").resource(file: "/opus/${opus.uuid}/profile/${profile.uuid}", absolute: true)}"
         }
     }
 }
