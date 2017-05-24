@@ -18,7 +18,8 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
         GENUS: "genus",
         SPECIES: "species",
         SUBSPECIES: "subspecies",
-        VARIETY: "variety"
+        VARIETY: "variety",
+        FORMA: "forma"
     };
 
     /**
