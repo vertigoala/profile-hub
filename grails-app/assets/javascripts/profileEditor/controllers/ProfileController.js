@@ -30,7 +30,7 @@ profileEditor.controller('ProfileController',
 
     self.bibliographyDirty = false;
 
-    self.manualHierarchy = null;
+    self.manualHierarchy = [];
 
     var orderBy = $filter("orderBy");
 
@@ -131,7 +131,7 @@ profileEditor.controller('ProfileController',
             // to modify the hierarchy.
             self.manualHierarchy[0].guid = null;
         } else {
-            self.manualHierarchy = undefined;
+            self.manualHierarchy = [];
         }
     };
 
