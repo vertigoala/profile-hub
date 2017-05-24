@@ -50,7 +50,7 @@ class BaseController extends BasicWSController {
 
     private getProfileUrl(opus, profile) {
         if(opus && profile){
-            "${grailsApplication.mainContext.getBean("grailsLinkGenerator").resource(file: "/opus/${opus.uuid}/profile/${profile.uuid}", absolute: true)}"
+            "${createLink(uri: "/opus/${opus.uuid}/profile/${profile.uuid}", absolute: true)}"
         }
     }
 }
