@@ -218,13 +218,6 @@ hr.comment-divider {
     margin: 0 auto;
 }
 
-@media (min-width: 768px) {
-    .customizable-logo-img {
-        max-width: 275px;
-        margin: 0;
-    }
-}
-
 .comparison-row {
     margin-top: 10px;
     padding-top: 10px;
@@ -1203,4 +1196,63 @@ span.breadcrumb-dropdown {
 textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
     height: auto;
     padding: 6px 12px;
+}
+
+.collection-header {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 1em;
+}
+
+.collection-header .logo {
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.collection-header .logo img.img-responsive {
+    max-height: 500px;
+}
+
+.collection-header fader, .collection-header .fader {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 100%;
+}
+
+fader > div, .fader > div {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    /*   background-size: 100% auto; */
+    background-position: center center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+fader, .fader {
+    position: relative;
+}
+
+@media (min-width: 768px) {
+    .customizable-logo-img {
+        max-width: 275px;
+        margin: 0;
+    }
+    .collection-header {
+        margin-bottom: 2em;
+    }
+}
+@media (min-width: 992px) {
+    .collection-header {
+        margin-bottom: 3em;
+    }
+}
+
+@media (min-width: 1200px) {
+    .collection-header {
+        margin-bottom: 3em;
+    }
 }

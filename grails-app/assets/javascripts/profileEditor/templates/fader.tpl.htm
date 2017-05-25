@@ -1,0 +1,9 @@
+<div ng-if="$ctrl.type != 'css'" ng-repeat="image in $ctrl.images" style="background-image: url({{ image.imageUrl }});"></div>
+<div ng-if="$ctrl.type == 'css'" ng-repeat="image in $ctrl.images"
+     style="
+     background-image: url({{ image.url }});
+     animation-name: fader-{{ $ctrl.uuid }};
+     animation-iteration-count: infinite;
+     animation-duration: {{ $ctrl.totalDuration() / 1000 }}s;
+     animation-delay: {{ $index * ($ctrl.fadeDuration + $ctrl.displayDuration) / 1000 }}s;"></div>
+<div ng-if="$ctrl.gradient && $ctrl.gradientWidth" style="background-image: linear-gradient(to right, {{$ctrl.gradient | rgba }}, rgba(0, 0, 0, 0) {{$ctrl.gradientWidth | number }}%, rgba(0,0,0,0) 100%)"></div>

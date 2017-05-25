@@ -18,7 +18,8 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
         GENUS: "genus",
         SPECIES: "species",
         SUBSPECIES: "subspecies",
-        VARIETY: "variety"
+        VARIETY: "variety",
+        FORMA: "forma"
     };
 
     /**
@@ -442,7 +443,65 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
         };
 
         return  (ALA.OccurrenceMapUtils && ALA.OccurrenceMapUtils.formatFacetName && ALA.OccurrenceMapUtils.formatFacetName( fieldName, lookup)) || "Unknown";
-     };
+     }
+
+    var lut = []; for (var i=0; i<256; i++) { lut[i] = (i<16?'0':'')+(i).toString(16); }
+    function generateUuid()  {
+        var d0 = Math.random()*0xffffffff|0;
+        var d1 = Math.random()*0xffffffff|0;
+        var d2 = Math.random()*0xffffffff|0;
+        var d3 = Math.random()*0xffffffff|0;
+        return lut[d0&0xff]+lut[d0>>8&0xff]+lut[d0>>16&0xff]+lut[d0>>24&0xff]+'-'+
+          lut[d1&0xff]+lut[d1>>8&0xff]+'-'+lut[d1>>16&0x0f|0x40]+lut[d1>>24&0xff]+'-'+
+          lut[d2&0x3f|0x80]+lut[d2>>8&0xff]+'-'+lut[d2>>16&0xff]+lut[d2>>24&0xff]+
+          lut[d3&0xff]+lut[d3>>8&0xff]+lut[d3>>16&0xff]+lut[d3>>24&0xff];
+    }
+
+    function rgbaFromNumber(number) {
+        var retVal;
+        if (isFinite(number)) {
+            var red = number >> 24 & 0xFF;
+            var green = number >> 16 & 0xFF;
+            var blue = number >> 8 & 0xFF;
+            var alpha = (number >> 0 & 0xFF) / 255;
+            retVal = 'rgba(' + red + ',' + green + ',' + blue + ',' + alpha + ')';
+        } else {
+            $log.warn("Can't convert " + number + " to RGBA");
+            retVal = 'rgba(0,0,0,0)';
+        }
+        return retVal;
+    }
+
+    function numberFromRgba(rgba) {
+        if (!rgba) return null;
+        var value = rgba.split('(');
+        if (value.length !== 2) {
+            $log.debug(rgba + " is not an rgba");
+            return 0;
+        }
+        value = value[1].split(')');
+        if (value.length !== 2) {
+          $log.debug(rgba + " is not an rgba");
+          return 0;
+        }
+        value = value[0].split(',');
+        if (value.length < 3 || value.length > 4) {
+          $log.debug(rgba + " is not an rgba");
+          return 0;
+        }
+        var red = parseInt(value[0]);
+        var green = parseInt(value[1]);
+        var blue = parseInt(value[2]);
+        var alpha;
+        if (value.length === 4) {
+            alpha = parseFloat(value[3]);
+        } else {
+            alpha = 1.0;
+        }
+        alpha = Math.round(alpha * 255);
+
+        return ((red & 0xFF) << 24) + ((green & 0xFF) << 16) + ((blue & 0xFF) << 8) + (alpha & 0xFF);
+    }
 
     /**
      * Public API
@@ -466,6 +525,9 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
         formatLocalDate: formatLocalDate,
         getRandomString: getRandomString,
         getFacetLabel: getFacetLabel,
+        generateUuid: generateUuid,
+        rgbaFromNumber: rgbaFromNumber,
+        numberFromRgba: numberFromRgba,
         LAST: LAST,
         FIRST: FIRST,
         RANK: RANK,
