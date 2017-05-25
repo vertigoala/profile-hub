@@ -45,6 +45,7 @@ class ProfileController extends BaseController {
                 profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 profileAndOpus << [edit                : true,
                           currentUser         : authService.getDisplayName(),
+                          opusUrl             : getOpusUrl(profileAndOpus.opus),
                           searchUrl           : getSearchUrl(profileAndOpus.opus),
                           browseUrl           : getBrowseUrl(profileAndOpus.opus),
                           identifyUrl         : getIdentifyUrl(profileAndOpus.opus),
@@ -75,6 +76,7 @@ class ProfileController extends BaseController {
                 String profileUrl = getProfileUrl(profileAndOpus.opus, profileAndOpus.profile)
                 Map model = profileAndOpus
                 model << [edit                : false,
+                          opusUrl             : getOpusUrl(profileAndOpus.opus),
                           searchUrl           : getSearchUrl(profileAndOpus.opus),
                           browseUrl           : getBrowseUrl(profileAndOpus.opus),
                           identifyUrl         : getIdentifyUrl(profileAndOpus.opus),
@@ -577,6 +579,7 @@ class ProfileController extends BaseController {
                 } else {
                     Map model = profile
                     model.edit = false
+                    model.opusUrl = getOpusUrl(profile.opus)
                     model.currentUser = authService.getDisplayName()
                     model.searchUrl = getSearchUrl(profile.opus)
                     model.browseUrl  = getBrowseUrl(profile.opus)

@@ -67,55 +67,25 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <g:if test="${opus}">
-                <span class="navbar-brand">
-                    <a href="${request.contextPath}/opus/${opus.shortName ?: opus.uuid}" title="${opus.title}">${opus.title}</a>
-                </span>
-            </g:if>
-            <g:else>
-                <span class="navbar-brand">${pageTitle}</span>
-            </g:else>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <g:if test="${searchUrl}">
-                    <li class="${pageName=='search'?'active':''}"><a href="${searchUrl}">Search</a></li>
-                </g:if>
-                <g:if test="${browseUrl}">
-                    <li class="${pageName=='browse'?'active':''}"><a href="${browseUrl}">Browse</a></li>
-                </g:if>
-                <g:if test="${identifyUrl}">
-                    <li class="${pageName=='identify'?'active':''}"><a href="${identifyUrl}">Identify</a></li>
-                </g:if>
-                <g:if test="${documentsUrl}">
-                    <li class="${pageName=='documents'?'active':''}"><a href="${documentsUrl}">Context</a></li>
-                </g:if>
-                <g:if test="${glossaryUrl}">
-                    <li class="${pageName=='glossary'?'active':''}"><a href="${glossaryUrl}" target="_blank">Glossary</a></li>
-                </g:if>
-                <g:if test="${aboutPageUrl && reportsUrl}">
-                    <li class="dropdown font-xsmall ${pageName=='about'?'active':''}">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            More
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li class="${pageName=='about'?'active':''}"><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
-                            <li class="${pageName=='reports'?'active':''}"><a href="${reportsUrl}">Reports</a></li>
-                        </ul>
-                    </li>
-                </g:if>
-                <g:else>
-                    <li class="${pageName=='about'?'active':''}"><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
-                </g:else>
-            </ul>
-
             <small>
                 <ul class="nav navbar-nav navbar-right">
                     <li><delegated-search></delegated-search></li>
-                    <li><a href="${request.contextPath}/">Profile collections</a></li>
+                    <g:if test="${opusUrl}">
+                        <li class="${pageName=='opus'?'active':''}"><a href="${opusUrl}">Home</a></li>
+                    </g:if>
+                    <g:if test="${browseUrl}">
+                        <li class="${pageName=='browse'?'active':''}"><a href="${browseUrl}">Browse</a></li>
+                    </g:if>
+                    <g:if test="${glossaryUrl}">
+                        <li class="${pageName=='glossary'?'active':''}"><a href="${glossaryUrl}">Glossary</a></li>
+                    </g:if>
+                    <g:if test="${glossaryUrl}">
+                        <li class="${pageName=='about'?'active':''}"><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
+                    </g:if>
                     <g:render template="/layouts/login"/>
                     <li><p:help help-id="main"/></li>
                 </ul>

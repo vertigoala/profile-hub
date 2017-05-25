@@ -48,6 +48,13 @@ class BaseController extends BasicWSController {
         "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/about#?profile=${profile.scientificName}"
     }
 
+    private getOpusUrl(opus) {
+        if(opus){
+            "${createLink(uri: "/opus/${opus.uuid}", absolute: true)}"
+        }
+    }
+
+
     private getProfileUrl(opus, profile) {
         if(opus && profile){
             "${createLink(uri: "/opus/${opus.uuid}/profile/${profile.uuid}", absolute: true)}"

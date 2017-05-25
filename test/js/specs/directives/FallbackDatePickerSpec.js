@@ -55,7 +55,7 @@ describe('Directive: FallbackDatePicker', function () {
     });
 
     it('should update the element', function() {
-      var date = new Date('2015-01-31T00:00:00');
+      var date = new Date('2015-01-31T00:00:00Z');
       scope.testModel.someDate = date;
       scope.$digest();
       expect(new Date(elm.find('input')[0].value)).toEqual(date);
