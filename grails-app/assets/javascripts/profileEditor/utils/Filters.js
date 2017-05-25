@@ -107,3 +107,27 @@ profileEditor.filter('replaceUnicodeWithSpace', function() {
         return text ? String(text).replace(/&[^;]+;/gm, ' ') : '';
     }
 });
+
+
+
+/**
+ * Turn a number into an rgba string
+ */
+profileEditor.filter('rgba', function(util) {
+    return util.rgbaFromNumber;
+});
+
+/**
+ * Augment ngModel to parse and format numbers as rgba strings
+ */
+profileEditor.directive('numberToRgba', function(util) {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function(scope, element, attr, ngModel) {
+            ngModel.$parsers.push(util.numberFromRgba);
+            ngModel.$formatters.push(util.rgbaFromNumber);
+        }
+    }
+
+});

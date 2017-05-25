@@ -31,7 +31,7 @@
                         </label>
                     </div>
 
-                    <div class="small">This image will be displayed on all pages <em>except</em> the profile view and edit pages.
+                    <div class="small">This image will be displayed on all pages <em>except</em> the collection homepage and the profile view and edit pages.
                     If left blank, the banner image for profile pages will be used.
                     If both fields are left blank then a system default image will be used.</div>
                     <div class="small">Recommended size is at least 1000px wide by {{ opusCtrl.opus.brandingConfig.opusBannerHeight }}px high.</div>

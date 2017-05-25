@@ -9,6 +9,29 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-12">
+
+                <div class="form-group">
+                    <label>Logo for hero banner</label>
+                    <input type="text" class="form-control" name="heroUrl" ng-model="opusCtrl.opus.opusLayoutConfig.opusLogoUrl"/>
+                    <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.opusLogo" btn-checkbox >Upload a file</button>
+                    <div ng-if="opusCtrl.showUpload.opusLogo" class="clearfix">
+                        <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.opusLogoUploaded"
+                                      url="{{opusCtrl.imageUploadUrl + 'opusLogo'}}" show-metadata="false" disable-source="true"></image-upload>
+                    </div>
+
+                    <span class="help-block">
+                        This image will be displayed on on the collection home page.  If left blank, a placeholder logo will be used.
+                    </span>
+                    <div class="alert alert-info">
+                        <p>
+                            <strong><i class="fa fa-exclamation-circle"><span class="sr-only">Note:</span></i></strong>
+                            Recommended size is 200-300 px height by 414px wide.  If the image exceeds 500px in height, it
+                            will be scaled (preserving aspect ratio) to 500px high.  The images below will be scaled
+                            and cropped to match this images height and the remaining window width.
+                        </p>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label for="explanatoryText">Explanatory text</label>
                     <textarea id="explanatoryText" ng-model="opusCtrl.opus.opusLayoutConfig.explanatoryText" name="explanatoryText" ckeditor="richTextFullToolbar"></textarea>
@@ -40,9 +63,9 @@
                                 </div>
                             </td>
                             <td>
-                                <button class="btn btn-link btn-xs fa fa-trash-o color--red" title="Delete image" ng-click="opusCtrl.removeItem($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage)"></button>
-                                <button class="btn btn-link btn-xs fa fa-arrow-down ng-scope" ng-if="!$last" ng-click="opusCtrl.move($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage, 1)" title="Move this image down"></button>
-                                <button class="btn btn-link btn-xs fa fa-arrow-up ng-scope" ng-if="!$first " ng-click="opusCtrl.move($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage, -1)" title="Move this image up"></button>
+                                <button class="btn btn-link btn-xs" title="Delete image" ng-click="opusCtrl.removeItem($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage)"><i class="fa fa-trash-o color--red"></i></button>
+                                <button class="btn btn-link btn-xs" title="Move this image down" ng-if="!$last" ng-click="opusCtrl.move($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage, 1)"><i class="fa fa-arrow-down"></i></button>
+                                <button class="btn btn-link btn-xs" title="Move this image up" ng-if="!$first " ng-click="opusCtrl.move($index, opusCtrl.opus.opusLayoutConfig.images, opusCtrl.LandingPage, -1)"><i class="fa fa-arrow-up"></i></button>
                             </td>
                         </tr>
                         </tbody>
@@ -55,8 +78,9 @@
                                     <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.imageUploaded"
                                                   url-generator="opusCtrl.generateFileUploadUrl" show-metadata="false" disable-source="true"></image-upload>
                                 </div>
-                                <div class="small">
-                                    Note! All images must be of the same dimension. It must be at least 900 pixels wide and 500 pixels high.
+                                <div class="alert alert-info small" role="alert">
+                                    <p><strong><i class="fa fa-exclamation-circle"><span class="sr-only">Note:</span></i></strong> All images should be at least as tall as the logo image and as wide as the widest monitor (in "display" pixels) you wish to support.</p>
+                                    <p>Images will be scaled and center cropped to fit in the hero area.</p>
                                 </div>
                             </td>
                         </tr>
@@ -75,6 +99,24 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label>Gradient</label>
+                    <input class="form-control" name="gradient" colorpicker="rgba" number-to-rgba type="text" ng-model="opusCtrl.opus.opusLayoutConfig.gradient" />
+                    <span class="help-block">
+                        This is the starting colour for the gradient that begins after the logo and fades to rgba(0,0,0,0).  Set to rgba(0,0,0,0) to disable.
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label>Gradient width</label>
+                    <div class="input-group">
+                        <input class="form-control" name="gradient-width" type="number" placeholder="49.0" step="0.1" min="0" max="100" ng-model="opusCtrl.opus.opusLayoutConfig.gradientWidth" />
+                        <span class="input-group-addon">%</span>
+                    </div>
+                    <span class="help-block">
+                        The width of the gradient, set to 0.0 to disable.
+                    </span>
+                </div>
+
+                <div class="form-group">
                     <label for="updatesSection">Updates section</label>
                     <textarea id="updatesSection" ng-model="opusCtrl.opus.opusLayoutConfig.updatesSection" name="updatesSection" ckeditor="richTextFullToolbar"></textarea>
                     <div class="small">
@@ -82,29 +124,30 @@
                     </div>
                 </div>
 
+                <h5>Help text for sections in home page</h5>
+                <p>
+                    Enter the formatted content that you wish to appear on hover on search, browse, identify and context buttons on collection home page.
+                </p>
                 <div class="form-group">
-                    <label>Help text for sections in home page</label>
-                    <div class="input-group margin-bottom-1">
-                        <span class="input-group-addon">Search</span>
-                        <input type="text" class="form-control"  name="helpTextSearch" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextSearch"/>
-                    </div>
-                    <div class="input-group margin-bottom-1">
-                        <span class="input-group-addon">Browse</span>
-                        <input type="text" class="form-control"  name="helpTextBrowse" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextBrowse"/>
-                    </div>
-                    <div class="input-group margin-bottom-1">
-                        <span class="input-group-addon">Identify</span>
-                        <input type="text" class="form-control"  name="helpTextIdentify" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextIdentify"/>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon">Context</span>
-                        <input type="text" class="form-control"  name="helpTextDocuments" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextDocuments"/>
-                    </div>
-                    <div class="small">
-                        Enter the formatted content that you wish to appear on hover on search, browse, identify and context buttons on collection home page.
-                    </div>
+                    <label for="helpTextSearch">Search</label>
+                    <input type="text" class="form-control"  id="helpTextSearch" name="helpTextSearch" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextSearch"/>
                 </div>
-
+                <div class="form-group">
+                    <label for="helpTextBrowse">Browse</label>
+                    <input type="text" class="form-control" id="helpTextBrowse" name="helpTextBrowse" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextBrowse"/>
+                </div>
+                <div class="form-group">
+                    <label for="helpTextIdentify">Identify</label>
+                    <input type="text" class="form-control" id="helpTextIdentify" name="helpTextIdentify" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextIdentify"/>
+                </div>
+                %{--<div class="form-group">--}%
+                    %{--<label for="helpTextFilter">Filter</label>--}%
+                    %{--<input type="text" class="form-control" id="helpTextFilter" name="helpTextFilter" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextFilter"/>--}%
+                %{--</div>--}%
+                <div class="form-group">
+                    <label for="helpTextDocuments">Context</label>
+                    <input type="text" class="form-control" id="helpTextDocuments" name="helpTextDocuments" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextDocuments"/>
+                </div>
             </div>
         </div>
     </div>
