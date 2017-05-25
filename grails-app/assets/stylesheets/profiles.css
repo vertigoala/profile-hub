@@ -1205,9 +1205,9 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
 }
 
 .collection-header .logo {
-    flex-basis: auto;
-    flex-grow: 0;
-    flex-shrink: 0;
+    flex-basis: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
 }
 
 .collection-header .logo img.img-responsive {
@@ -1215,9 +1215,10 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
 }
 
 .collection-header fader, .collection-header .fader {
+    display: none;
     flex-grow: 1;
     flex-shrink: 1;
-    flex-basis: 100%;
+    flex-basis: 0;
 }
 
 fader > div, .fader > div {
@@ -1234,6 +1235,21 @@ fader > div, .fader > div {
 
 fader, .fader {
     position: relative;
+}
+
+@media (min-width: 426px) {
+    .collection-header fader, .collection-header .fader {
+        display: block;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 100%;
+    }
+
+    .collection-header .logo {
+        flex-basis: auto;
+        flex-grow: 0;
+        flex-shrink: 1;
+    }
 }
 
 @media (min-width: 768px) {
