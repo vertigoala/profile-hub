@@ -102,7 +102,7 @@
                     <label>Gradient</label>
                     <input class="form-control" name="gradient" colorpicker="rgba" number-to-rgba type="text" ng-model="opusCtrl.opus.opusLayoutConfig.gradient" />
                     <span class="help-block">
-                        This is the starting colour for the gradient that begins after the logo and fades to rgba(0,0,0,0).  Set to rgba(0,0,0,0) to disable.
+                        This is the starting colour for the gradient that begins after the logo and fades to rgba(0,0,0,0).  Set to rgba(0,0,0,0) to disable.  Use rgba(248,248,248,1) if you logo has a transparent background.
                     </span>
                 </div>
                 <div class="form-group">
@@ -112,7 +112,9 @@
                         <span class="input-group-addon">%</span>
                     </div>
                     <span class="help-block">
-                        The width of the gradient, set to 0.0 to disable.
+                        The width of the gradient, set to 0.0 to disable.  The gradient will start from the left and
+                        degrade to the right, starting from the gradient colour and fading to transparent at this
+                        percentage of the width of the image carousel.
                     </span>
                 </div>
 

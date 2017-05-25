@@ -70,8 +70,8 @@
 
 <asset:script type="text/javascript">
     // show warning if using IE6
-    if ($.browser && $.browser.msie && $.browser.version.slice(0, 1) == '6') {
-        $('#header').prepend($('<div style="text-align:center;color:red;">WARNING: This page is not compatible with IE6.' +
+    if ($.browser && $.browser.msie && $.browser.version.slice(0, 1) < 11) {
+        $('#header').prepend($('<div style="text-align:center;color:red;">WARNING: This page is not compatible with IE10 or below.' +
 ' Many functions will still work but layout and image transparency will be disrupted.</div>'));
     }
 </asset:script>
@@ -105,6 +105,7 @@
         mainCssFile: '${assetPath(src: "profiles.css")}',
         bootstrapCssFile: '${assetPath(src: "/bootstrap/css/bootstrap3.3.4.min.css")}',
         imageLoadErrorUrl: '${assetPath(src: "not-available.png")}',
+        defaultOpusLogo: '${assetPath(src: "no-logo.svg")}',
         development: ${Environment.current == Environment.DEVELOPMENT}
     });
 </asset:script>
