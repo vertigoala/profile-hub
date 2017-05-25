@@ -25,7 +25,7 @@
                     <div class="alert alert-info">
                         <p>
                             <strong><i class="fa fa-exclamation-circle"><span class="sr-only">Note:</span></i></strong>
-                            Recommended size is 200-300 px height by 414px wide.  If the image exceeds 500px in height, it
+                            Recommended size is 200-300 px height by 425px wide.  If the image exceeds 500px in height, it
                             will be scaled (preserving aspect ratio) to 500px high.  The images below will be scaled
                             and cropped to match this images height and the remaining window width.
                         </p>
