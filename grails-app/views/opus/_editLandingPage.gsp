@@ -79,7 +79,7 @@
                                                   url-generator="opusCtrl.generateFileUploadUrl" show-metadata="false" disable-source="true"></image-upload>
                                 </div>
                                 <div class="alert alert-info small" role="alert">
-                                    <p><strong><i class="fa fa-exclamation-circle"><span class="sr-only">Note:</span></i></strong> All images should be at least as tall as the logo image and as wide as the widest monitor (in "display" pixels) you wish to support.</p>
+                                    <p><strong><i class="fa fa-exclamation-circle"><span class="sr-only">Note:</span></i></strong> All images should be at least as tall as the logo image and as wide as the widest supported monitor (in "display" pixels).</p>
                                     <p>Images will be scaled and center cropped to fit in the hero area.</p>
                                 </div>
                             </td>
@@ -102,7 +102,7 @@
                     <label>Gradient</label>
                     <input class="form-control" name="gradient" colorpicker="rgba" number-to-rgba type="text" ng-model="opusCtrl.opus.opusLayoutConfig.gradient" />
                     <span class="help-block">
-                        This is the starting colour for the gradient that begins after the logo and fades to rgba(0,0,0,0).  Set to rgba(0,0,0,0) to disable.  Use rgba(248,248,248,1) if you logo has a transparent background.
+                        This is the starting colour for the gradient that begins after the logo and fades to rgba(0,0,0,0).  Set to rgba(0,0,0,0) to disable.  Use rgba(248,248,248,1) if the logo has a transparent background.
                     </span>
                 </div>
                 <div class="form-group">
