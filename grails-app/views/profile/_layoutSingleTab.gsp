@@ -123,10 +123,14 @@
                 ng-show="!$last"><br/></span>
         </span>
         <g:if test="citation">
-        <br/><br/>
-        <span>
+            <g:if test="${profile?.authorship}">
+                <span>
+                    <br/><br/>
+                </span>
+            </g:if>
+            <span>
                 ${citation}
-        </span>
+            </span>
         </g:if>
     </div>
     <div class="col-sm-12 col-md-4 last-updated-text">

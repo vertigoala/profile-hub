@@ -1,6 +1,7 @@
 package au.org.ala.profile.hub
 
 import au.org.ala.ws.controller.BasicWSController
+import static au.org.ala.profile.hub.Utils.enc
 
 class BaseController extends BasicWSController {
 
@@ -57,7 +58,7 @@ class BaseController extends BasicWSController {
 
     private getProfileUrl(opus, profile) {
         if(opus && profile){
-            "${createLink(uri: "/opus/${opus.uuid}/profile/${profile.uuid}", absolute: true)}"
+            "${createLink(uri: "/opus/${opus.shortName ? opus.shortName : opus.uuid}/profile/${enc(profile.scientificName)}", absolute: true)}"
         }
     }
 }

@@ -127,11 +127,15 @@
 
     <div class="col-sm-12 col-md-8 profile-contributor-text">
         <span ng-repeat="contrib in profileCtrl.profile.authorship"
-              ng-show="contrib.text">{{contrib.category | capitalize}}(s) - {{contrib.text}}<span
-                ng-show="!$last"><br/></span>
+              ng-show="contrib.text">{{contrib.category | capitalize}}(s) - {{contrib.text}}
+            <span ng-show="!$last"><br/></span>
         </span>
         <g:if test="${citation}">
-            <br/><br/>
+            <g:if test="${profile?.authorship}">
+                <span>
+                    <br/><br/>
+                </span>
+            </g:if>
             <span class="padding-top-10">
                 ${citation}
             </span>
