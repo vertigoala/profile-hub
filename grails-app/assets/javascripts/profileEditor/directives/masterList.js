@@ -36,9 +36,9 @@
             )
         };
 
-        self.syncNow = function() {
+        self.syncNow = function(regen) {
             messageService.info("Syncing master list...");
-            profileService.syncMasterList(self.opus.uuid).then(
+            profileService.syncMasterList(self.opus.uuid, regen).then(
                 function(response) {
                     messageService.success("Master list sync completed");
                 }, function(response) {

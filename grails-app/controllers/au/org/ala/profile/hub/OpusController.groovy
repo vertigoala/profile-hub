@@ -597,7 +597,8 @@ class OpusController extends BaseController {
         if (!params.opusId) {
             badRequest("opusId is mandatory")
         } else {
-            profileService.syncOpusMasterList(params.opusId)
+            def regen = params.boolean('regenerateStubs', false)
+            profileService.syncOpusMasterList(params.opusId, regen)
             response.sendError(204)
         }
     }

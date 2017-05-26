@@ -83,8 +83,8 @@ class ProfileService {
         webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/masterList", masterListUid)
     }
 
-    def syncOpusMasterList(String opusId) {
-        webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/masterList/sync", [:])
+    def syncOpusMasterList(String opusId, boolean regen) {
+        webService.post("${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/masterList/sync?regenerateStubs=${regen}", [:])
     }
 
     def createProfile(String opusId, json) {

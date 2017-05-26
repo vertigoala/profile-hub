@@ -445,10 +445,11 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        syncMasterList: function(opusId) {
+        syncMasterList: function(opusId, regen) {
             $log.debug("Syncing master list for " + opusId);
+            var regenParam = regen ? 'true' : 'false';
             var future = enqueue(function() {
-                return $http.post(util.contextRoot() + '/opus/' + opusId + '/masterList/sync', {}, {disableAlertOnFailure: true});
+                return $http.post(util.contextRoot() + '/opus/' + opusId + '/masterList/sync?regenerateStubs=' + regenParam, {}, {disableAlertOnFailure: true});
             });
             return util.toStandardPromise(future);
         },
