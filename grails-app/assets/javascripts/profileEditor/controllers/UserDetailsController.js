@@ -36,7 +36,6 @@ profileEditor.controller('UserDetailController', function (profileService, $filt
                 self.user.role = self.userRole;
             }
 
-            self.tooltip = self.user.displayName + (self.user.role && self.user.role != self.userRole ? ' (' + self.user.role.name + ")" : '');
         });
     };
 
