@@ -1,7 +1,7 @@
 (function() {
     "use strict";
 
-    function MasterListController($scope, $http, config, messageService, profileService) {
+    function MasterListController($scope, $http, $log, config, messageService, profileService) {
         var self = this;
 
         self.lists = [];
@@ -44,7 +44,7 @@
                 }, function(response) {
                     messageService.alert("Master list sync failed 😢");
                 }
-            )
+            );
         };
     }
 
