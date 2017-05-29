@@ -27,11 +27,19 @@
 
             <div class="col-xs-12 col-sm-6 col-md-4 margin-bottom-1">
                 <div class="margin-bottom-1">
-                    <a href="https://www.ala.org.au">
+                    <a href="https://www.gov.au">
                         <img src="${asset.assetPath(src: "au-gov-logo.png")}"
-                             class="img-responsive" alt="ALA logo">
+                             width="138" class="img-responsive" alt="ALA logo">
                     </a>
                 </div>
+
+                <g:if test="${footerText}">
+                    <p class="lead">${raw(footerText)}</p>
+                </g:if>
+
+                <g:if test="${opus?.brandingConfig?.shortLicense}">
+                    ${raw(opus.brandingConfig.shortLicense)}
+                </g:if>
 
                 <g:if test="${opus?.brandingConfig?.issn}">
                     <g:render template="../opus/issn" model="${[issn: opus.brandingConfig.issn]}"></g:render>
@@ -62,6 +70,9 @@
                 <ul class="link-list">
                     <li class="heading">Site navigation</li>
                     <li><a href="${request.contextPath}/">Collections</a></li>
+                    <g:if test="${contact.email}">
+                        <li><a href="${contact.email.contains('@') ? 'mailto:' + contact.email : contact.email}">Contact Us</a></li>
+                    </g:if>
                 </ul>
             </div>
         </div>
