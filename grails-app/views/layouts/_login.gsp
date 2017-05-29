@@ -1,7 +1,8 @@
 <g:if test="${params.currentUser}">
 <li class="dropdown font-xsmall" ng-controller="UserDetailController as userCtrl">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" title="Settings" aria-label="Settings">
-        <span class="fa fa-bars {{ userCtrl.user.role.colour }}"></span>
+        <span class="hidden-xs fa fa-bars {{ userCtrl.user.role.colour }}"></span>
+        <span class="visible-xs-inline"><span class="pull-right caret"></span>Settings</span>
     </a>
     <ul class="dropdown-menu" role="menu" ng-controller="ProfileController as profileCtrl" ng-init="profileCtrl.loadProfile()">
         <li role="separator" class="padding-bottom-1">
