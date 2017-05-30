@@ -37,7 +37,7 @@ class GlossaryControllerSpec extends IntegrationSpec {
         controller.response.status == SC_NOT_FOUND
     }
 
-    def "edit should return a model with the expected number of elements"() {
+    def "view should return a model with the expected number of elements"() {
         setup:
         profileService.getOpus(_) >> [uuid: "opusId1"]
 
@@ -46,7 +46,7 @@ class GlossaryControllerSpec extends IntegrationSpec {
         controller.view()
 
         then:
-        assert controller.modelAndView.model.size() == 14
+        assert controller.modelAndView.model.size() == 16
         assert controller.modelAndView.model.containsKey("logos")
         assert controller.modelAndView.model.containsKey("bannerUrl")
         assert controller.modelAndView.model.containsKey("pageTitle")
