@@ -26,13 +26,6 @@
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-4 margin-bottom-1">
-                <div class="margin-bottom-1">
-                    <a href="https://www.gov.au">
-                        <img src="${asset.assetPath(src: "au-gov-logo.png")}"
-                             width="138" class="img-responsive" alt="ALA logo">
-                    </a>
-                </div>
-
                 <g:if test="${footerText}">
                     <p class="lead">${raw(footerText)}</p>
                 </g:if>
