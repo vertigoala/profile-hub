@@ -63,7 +63,7 @@
                 <ul class="link-list">
                     <li class="heading">Site navigation</li>
                     <li><a href="${request.contextPath}/">Collections</a></li>
-                    <g:if test="${contact.email}">
+                    <g:if test="${contact?.email}">
                         <li><a href="${contact.email.contains('@') ? 'mailto:' + contact.email : contact.email}">Contact Us</a></li>
                     </g:if>
                 </ul>
