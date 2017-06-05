@@ -51,7 +51,7 @@ class BaseController extends BasicWSController {
 
     private getOpusUrl(opus) {
         if(opus){
-            "${createLink(uri: "/opus/${opus.uuid}", absolute: true)}"
+            createLink(uri: "/opus/${opus.shortName ?: opus.uuid}", absolute: true)
         }
     }
 
