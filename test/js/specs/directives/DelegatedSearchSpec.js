@@ -72,7 +72,7 @@ describe('Directive: DelegatedSearch', function () {
         scope.delSearchCtrl.search();
         scope.$digest();
 
-        expect(sessionStorage.delegatedSearches).toEqual({"opusId1": {term: "test", "searchOptions": {"includeArchived": false, matchAll: true, nameOnly: false, includeNameAttributes: true, searchAla: true, searchNsl: true}}});
+        expect(sessionStorage.delegatedSearches).toEqual({"opusId1": {term: "test", "searchOptions": { matchAll: true, nameOnly: false, includeNameAttributes: true}}});
     });
 
     it("should populate the delegatedSearches object of the sessionStorage for the 'all' search when search is invoked and there is no opus", function() {
@@ -82,7 +82,7 @@ describe('Directive: DelegatedSearch', function () {
         scope.delSearchCtrl.search();
         scope.$digest();
 
-        expect(sessionStorage.delegatedSearches).toEqual({"all": {term: "test", "searchOptions": {"includeArchived": false, matchAll: true, nameOnly: false, includeNameAttributes: true, searchAla: true, searchNsl: true}}});
+        expect(sessionStorage.delegatedSearches).toEqual({"all": {term: "test", "searchOptions": { matchAll: true, nameOnly: false, includeNameAttributes: true}}});
     });
 
     it("should redirect to the opus home page when searching within an opus", function() {

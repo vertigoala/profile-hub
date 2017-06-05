@@ -7,10 +7,11 @@
             <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle btn-lg search-type-control" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                    {{ searchCtrl.searchOptions.nameOnly ? 'by name' : 'containing text' }} <span class="caret"></span>
+                    {{ searchCtrl.isScientificName() ? 'by scientific name' : searchCtrl.isCommonName() ? 'by common name' : 'containing text' }} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a ng-click="searchCtrl.setSearchOption('name')">by name</a></li>
+                    <li><a ng-click="searchCtrl.setSearchOption('scientificname')">by scientific name</a></li>
+                    <li><a ng-click="searchCtrl.setSearchOption('commonname')">by common name</a></li>
                     <li><a ng-click="searchCtrl.setSearchOption('text')">containing text</a></li>
                 </ul>
             </div>
@@ -24,33 +25,12 @@
                    typeahead-editable="true"
                    typeahead="profile.scientificName as profile.scientificName for profile in searchCtrl.autoCompleteSearchByScientificName($viewValue) | filter:$viewValue | limitTo:10" />
             <span class="input-group-btn">
-                <button class="btn btn-primary btn-lg" type="button" ng-click="searchCtrl.search()">Search</button>
-                <button class="btn btn-default btn-lg" type="button" ng-click="searchCtrl.clearSearch()" title="Clear search"><span class="fa fa-trash"></span></button>
+                <button class="btn btn-primary btn-lg search-buttons-responsive-large-screen" type="button" ng-click="searchCtrl.search()">Search</button>
+                <button class="btn btn-default btn-lg search-buttons-responsive-large-screen" type="button" ng-click="searchCtrl.clearSearch()" title="Clear search"><span class="fa fa-trash"></span></button>
+                <button class="btn btn-default btn-lg search-buttons-responsive-small-screen" type="button" ng-click="searchCtrl.search()" title="Clear search"><span class="fa fa-search"></span></button>
             </span>
         </div>
-        <button class="btn btn-link toggle-link ignore-save-warning" ng-model="searchCtrl.showOptions" btn-checkbox>Options</button>
-        <div ng-show="searchCtrl.showOptions" class="well">
-            <div class="checkbox inline-block padding-right-1" ng-show="searchCtrl.searchOptions.nameOnly">
-                <label for="includeNameAttributes" class="inline-label">
-                    <input id="includeNameAttributes" type="checkbox" name="includeNameAttributes" class="ignore-save-warning"
-                           ng-model="searchCtrl.searchOptions.includeNameAttributes" ng-false-value="false">
-                    Include alternate names
-                </label>
-            </div>
-            <div class="checkbox inline-block padding-right-1" ng-show="searchCtrl.searchOptions.nameOnly">
-                <label for="searchAla" class="inline-label">
-                    <input id="searchAla" type="checkbox" name="searchAla" class="ignore-save-warning"
-                           ng-model="searchCtrl.searchOptions.searchAla" ng-false-value="false">
-                    Look for matching names in the ALA
-                </label>
-            </div>
-            <div class="checkbox inline-block padding-right-1" ng-show="searchCtrl.searchOptions.nameOnly">
-                <label for="searchNsl" class="inline-label">
-                    <input id="searchNsl" type="checkbox" name="searchNsl" class="ignore-save-warning"
-                           ng-model="searchCtrl.searchOptions.searchNsl" ng-false-value="false">
-                    Look for matching names in the NSL
-                </label>
-            </div>
+        <div class="well margin-top-1">
             <div class="checkbox inline-block padding-right-1" ng-hide="searchCtrl.searchOptions.nameOnly">
                 <label for="matchAll" class="inline-label">
                     <input id="matchAll" type="checkbox" name="matchAll" class="ignore-save-warning"
@@ -58,11 +38,11 @@
                     Must contain all terms
                 </label>
             </div>
-            <div class="checkbox inline-block">
-                <label for="includeArchivedProfiles" class="inline-label">
-                    <input id="includeArchivedProfiles" type="checkbox" name="includeArchivedProfiles" class="ignore-save-warning"
-                           ng-model="searchCtrl.searchOptions.includeArchived" ng-false-value="false">
-                    Include archived profiles
+            <div class="checkbox inline-block padding-right-1">
+                <label for="hideStubs" class="inline-label">
+                    <input id="hideStubs" type="checkbox" name="hideStubs" class="ignore-save-warning"
+                           ng-model="searchCtrl.searchOptions.hideStubs" ng-false-value="false">
+                    Hide empty profile
                 </label>
             </div>
         </div>

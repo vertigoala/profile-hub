@@ -503,6 +503,54 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
         return ((red & 0xFF) << 24) + ((green & 0xFF) << 16) + ((blue & 0xFF) << 8) + (alpha & 0xFF);
     }
 
+    function isSearchSettingFor(category, searchOptions){
+        if(searchOptions){
+            switch (category){
+                case 'scientificname':
+                    return searchOptions.nameOnly && !searchOptions.includeNameAttributes;
+                    break;
+                case 'commonname':
+                    return searchOptions.nameOnly && searchOptions.includeNameAttributes;
+                    break;
+                case 'text':
+                    return !searchOptions.nameOnly;
+                    break;
+            }
+        }
+    }
+
+    function setSearchOptions(option, searchOptions) {
+        if(searchOptions){
+            switch(option){
+                case 'scientificname':
+                    searchOptions.nameOnly = true;
+                    searchOptions.includeNameAttributes = false;
+                    break;
+                case 'commonname':
+                    searchOptions.nameOnly = true;
+                    searchOptions.includeNameAttributes = true;
+                    break;
+                case 'text':
+                    searchOptions.nameOnly = false;
+                    break;
+            }
+        }
+    }
+
+    function getSearchTypeFromOptions(searchOptions) {
+        if(isSearchSettingFor('scientificname', searchOptions)){
+            return 'scientificname'
+        }
+
+        if(isSearchSettingFor('commonname', searchOptions)){
+            return 'commonname'
+        }
+
+        if(isSearchSettingFor('text', searchOptions)){
+            return 'text'
+        }
+    }
+
     /**
      * Public API
      */
@@ -528,6 +576,9 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
         generateUuid: generateUuid,
         rgbaFromNumber: rgbaFromNumber,
         numberFromRgba: numberFromRgba,
+        isSearchSettingFor: isSearchSettingFor,
+        setSearchOptions: setSearchOptions,
+        getSearchTypeFromOptions: getSearchTypeFromOptions,
         LAST: LAST,
         FIRST: FIRST,
         RANK: RANK,

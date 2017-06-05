@@ -20,20 +20,15 @@ profileEditor.directive('delegatedSearch', function ($browser) {
             var self = this;
             self.layout = $scope.layout || 'small';
 
-            self.textSearch = {key: 'T', value: 'text'};
-            self.nameSearch = {key: 'N', value: 'name'};
-
             self.searchOptions = {
-                includeArchived: false,
                 matchAll: true,
                 nameOnly: false,
-                includeNameAttributes: true,
-                searchAla: true,
-                searchNsl: true
+                includeNameAttributes: true
             };
             self.showOptions = false;
 
             self.searchTerm = null;
+            self.selectedSearch = ($sessionStorage.searches || {}).selectedSearch || 'text';
             self.contextPath = $browser.baseHref();
 
             self.search = function() {
@@ -45,11 +40,17 @@ profileEditor.directive('delegatedSearch', function ($browser) {
                 if (!$sessionStorage.delegatedSearches || _.isUndefined($sessionStorage.delegatedSearches)) {
                     $sessionStorage.delegatedSearches = {};
                 }
+
                 $sessionStorage.delegatedSearches[opusId ? opusId : 'all'] = {
                     term: self.searchTerm,
                     searchOptions: self.searchOptions
                 };
 
+                if(!$sessionStorage.searches){
+                    $sessionStorage.searches = {}
+                }
+
+                $sessionStorage.searches.selectedSearch = self.selectedSearch;
                 if (_.isUndefined(opusId) || opusId == null || !opusId) {
                     util.redirect(util.contextRoot() + "/opus/search");
                 } else {
@@ -58,7 +59,7 @@ profileEditor.directive('delegatedSearch', function ($browser) {
             };
 
             self.autoCompleteSearchByScientificName = function (prefix) {
-                if (self.searchOptions.nameOnly) {
+                if (util.isSearchSettingFor('scientificname', self.searchOptions)) {
                     var opusId = util.getEntityId("opus");
                     return profileService.profileSearch(opusId, prefix, true, null, true).then(function (data) {
                         // need to have filter to limit the result because of limitTo not working in typehead
@@ -71,8 +72,23 @@ profileEditor.directive('delegatedSearch', function ($browser) {
             };
 
             self.setSearchOption = function (option) {
-                self.searchOptions.nameOnly = option == 'name'
+                self.selectedSearch = option;
+                util.setSearchOptions(option, self.searchOptions);
             };
+            
+            self.isCommonName = function () {
+                return util.isSearchSettingFor('commonname', self.searchOptions);
+            };
+
+            self.isScientificName = function () {
+                return util.isSearchSettingFor('scientificname', self.searchOptions);
+            };
+
+            self.isContainingText = function () {
+                return util.isSearchSettingFor('text', self.searchOptions);
+            };
+
+            self.selectedSearch && self.setSearchOption(self.selectedSearch);
         }],
         controllerAs: "delSearchCtrl",
         link: function (scope, element, attrs, ctrl) {
