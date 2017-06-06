@@ -603,6 +603,19 @@ class OpusController extends BaseController {
         }
     }
 
+    def getMasterListKeybaseItems() {
+        if (!params.opusId) {
+            badRequest "opusId is mandatory"
+        } else {
+            def list = profileService.getMasterListKeybaseItems(params.opusId)?.resp
+            if (list == null) {
+                notFound "Ain't no master list"
+            } else {
+                respond list
+            }
+        }
+    }
+
     def getTags() {
         Map response = profileService.getTags()
 

@@ -614,4 +614,9 @@ class ProfileService {
             result
         }
     }
+
+    def getMasterListKeybaseItems(String opusId) {
+        def url = "${grailsApplication.config.profile.service.url}/opus/${enc(opusId)}/masterList/keybaseItems"
+        return webService.get(url)
+    }
 }
