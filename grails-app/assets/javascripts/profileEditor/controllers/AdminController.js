@@ -4,6 +4,27 @@
 profileEditor.controller('ALAAdminController', function ($http, util, messageService, profileService) {
     var self = this;
 
+    self.backupName = '';
+    self.restoreDBName = '';
+
+    self.backupCollectionMultiSelectOptions = {
+        filterPlaceHolder: 'Start typing to filter the list below.',
+        labelAll: 'All collections',
+        labelSelected: 'Collections to backup',
+        orderProperty: 'name',
+        selectedItems: [],
+        items: []
+    };
+
+    self.restoreCollectionMultiSelectOptions = {
+        filterPlaceHolder: 'Start typing to filter the list below.',
+        labelAll: 'All collections',
+        labelSelected: 'Backup file to restore',
+        orderProperty: 'name',
+        selectedItems: [],
+        items: []
+    };
+
     self.collectionMultiSelectOptions = {
         filterPlaceHolder: 'Start typing to filter the list below.',
         labelAll: 'All collections',
@@ -15,6 +36,7 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
 
     self.tags = [];
 
+    loadBackupFileList();
     loadOpusList();
     loadPendingJobs();
     loadTags();
@@ -59,6 +81,48 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
             messageService.alert("Select one or more collections to rematch!");
         }
     };
+
+    self.backupCollections = function () {
+        if (self.backupCollectionMultiSelectOptions.selectedItems.length > 0 && self.backupName != '') {
+            var selectedIds = [];
+            self.backupCollectionMultiSelectOptions.selectedItems.forEach(function (opus) {
+                selectedIds.push(opus.id);
+            });
+
+            var promise = $http.post(util.contextRoot() + "/admin/backupCollections", {opusUuids: selectedIds.join(","), backupName: self.backupName});
+
+            promise.then(function () {
+                    messageService.success("Backup collections completed");
+                },
+                function () {
+                    messageService.alert("An error prevented the backup");
+                }
+            );
+        } else {
+            messageService.alert("Select one or more collections to backup and fill in the backup name");
+        }
+    }
+
+    self.restoreCollections = function () {
+        if (self.restoreCollectionMultiSelectOptions.selectedItems.length > 0 && self.restoreDBName != '') {
+            var selectedBackups = [];
+            self.restoreCollectionMultiSelectOptions.selectedItems.forEach(function (backupName) {
+                selectedBackups.push(backupName.name);
+            });
+
+            var promise = $http.post(util.contextRoot() + "/admin/restoreCollections", {backupNames: selectedBackups.join(","), restoreDB: self.restoreDBName});
+
+            promise.then(function () {
+                    messageService.success("Restore collections completed");
+                },
+                function () {
+                    messageService.alert("An error prevented the restoration");
+                }
+            );
+        } else {
+            messageService.alert("Select one or more backup name to restore and enter the database name");
+        }
+    }
 
     self.deleteJob = function(jobType, jobId) {
         var confirm = util.confirm("Are you sure you want to delete this job?");
@@ -110,12 +174,29 @@ profileEditor.controller('ALAAdminController', function ($http, util, messageSer
         self.tags.push({uuid: null, colour: null, name: "", abbrev: ""});
     };
 
+    function loadBackupFileList() {
+        self.restoreCollectionMultiSelectOptions.items.length = 0;
+
+        profileService.listBackupFiles().then(function (data) {
+            angular.forEach(data, function (file) {
+                self.restoreCollectionMultiSelectOptions.items.push({
+                    name: file
+                });
+            });
+        });
+    }
+
     function loadOpusList() {
         self.collectionMultiSelectOptions.items.length = 0;
+        self.backupCollectionMultiSelectOptions.items.length = 0;
 
         profileService.listOpus().then(function (data) {
             angular.forEach(data, function (opus) {
                 self.collectionMultiSelectOptions.items.push({
+                    id: opus.uuid,
+                    name: opus.title
+                });
+                self.backupCollectionMultiSelectOptions.items.push ({
                     id: opus.uuid,
                     name: opus.title
                 });

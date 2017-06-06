@@ -295,6 +295,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        listBackupFiles: function() {
+            $log.debug("Fetching backup files");
+            var future = $http.get(util.contextRoot() + "/admin/listBackupFiles", {cache: true});
+            future.then(function (response) {
+                $log.debug("Backup file list fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+
+        },
+
         listOpus: function () {
             $log.debug("Fetching all opuses");
             var future = $http.get(util.contextRoot() + "/opus/list", {cache: true});
