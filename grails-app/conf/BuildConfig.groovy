@@ -82,7 +82,7 @@ grails.project.dependency.resolution = {
         compile(":ala-map:2.0.4") {
             excludes "resources"
         }
-        compile(":ala-ws-plugin:1.6.1-SNAPSHOT") {
+        compile(":ala-ws-plugin:1.6.1") {
             excludes "resources"
         }
         compile(":ala-admin-plugin:1.2") {
@@ -97,7 +97,7 @@ grails.project.dependency.resolution = {
         runtime(":ala-bootstrap3:1.1") {
             excludes "ala-cas-client", "resources"
         }
-        runtime(":ala-auth:2.1.0") {
+        runtime(":ala-auth:2.1.1") {
             excludes "commons-httpclient", "resources"
         }
         runtime ":tika-parser:1.3.0.1"
