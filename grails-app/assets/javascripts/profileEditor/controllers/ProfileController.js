@@ -559,6 +559,31 @@ profileEditor.controller('ProfileController',
 
     // Support for lazy loading the keyplayer.
     self.keybaseTemplateUrl = undefined;
+    self.masterListKeybaseItemsLoading = false;
+    self.masterListKeybaseItems = null;
+
+    self.canInitialiseKeyplayer = function() {
+        if (self.masterListKeybaseItems !== null) return true;
+        if (!self.opus) return false;
+        if (!self.opus.masterListUid) return true;
+        if (!self.masterListKeybaseItemsLoading) {
+            // well hacked son
+            self.masterListKeybaseItemsLoading = true;
+            profileService.loadMasterListItems(self.opus).then(function(results) {
+                self.masterListKeybaseItems = results;
+            }, function(error) {
+                $log.error("Failed to load master list items", error);
+                var msg;
+                if (self.opus.title.toLowerCase().indexOf('australia') !== -1 && Math.random() >= 0.9) {
+                    msg = "Strewth mate, the master list is deadset cactus";
+                } else {
+                    msg = "Could not load master list.";
+                }
+                messageService.alertStayOn(msg);
+            });
+        }
+        return false;
+    };
     self.initialiseKeyplayer = function() {
         self.keybaseTemplateUrl = 'keyplayer.html';
     };

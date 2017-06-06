@@ -13,9 +13,10 @@
 
     <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
     %{-- A hack to get key player initialised--}%
-    <div class="row" ng-show="opusCtrl.opus.keybaseKeyId && !opusCtrl.initialiseKeyplayer()">
+    <div class="row" ng-show="opusCtrl.opus.keybaseKeyId && opusCtrl.canInitialiseKeyplayer() && !opusCtrl.initialiseKeyplayer()">
         <script type="text/ng-template" id="keyplayer.html">
         <key-player key-id="opusCtrl.opus.keybaseKeyId" style="display: block"
+                    only-include-items="opusCtrl.masterListKeybaseItems"
                     keybase-url="${g.createLink(controller:'keybase', action:'keyLookup', absolute: true)}"
                     profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}/profile"></key-player>
         </script>

@@ -89,9 +89,10 @@
                 </tab>
                 <tab managed-tab heading="Key" class="font-xxsmall" select-to-initialise="true"
                      ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey">
-                    <div class="row">
+                    <div class="row" ng-if="profileCtrl.canInitialiseKeyplayer()">
                         <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                     opus-id="profileCtrl.opus.uuid"
+                                    only-include-items="profileCtrl.masterListKeybaseItems"
                                     keybase-url="${g.createLink(controller:'keybase', action:'keyLookup', absolute: true)}"
                                     key-lookup-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
                                     profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>

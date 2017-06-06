@@ -1196,6 +1196,11 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         setStatus: function(profile, status) {
             var future = $http.post(util.contextRoot() + '/opus/' + profile.opusId + '/profile/' + profile.uuid + '/status', { status: status }, {disableAlertOnFailure: true });
             return util.toStandardPromise(future);
+        },
+
+        loadMasterListItems: function(opus) {
+            var future = $http.get(util.contextRoot() + '/opus/' + opus.uuid + '/masterList/keybaseItems', {disableAlertOnFailure: true });
+            return util.toStandardPromise(future);
         }
     }
 });
