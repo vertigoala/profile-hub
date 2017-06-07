@@ -97,7 +97,7 @@ grails.project.dependency.resolution = {
         runtime(":ala-bootstrap3:1.1") {
             excludes "ala-cas-client", "resources"
         }
-        runtime(":ala-auth:2.1.1") {
+        runtime(":ala-auth:2.1.2") {
             excludes "commons-httpclient", "resources"
         }
         runtime ":tika-parser:1.3.0.1"
