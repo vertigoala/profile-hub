@@ -186,6 +186,7 @@
                 for (var i = 0; i < safeStrings.length; ++i) {
                     obj[transform(safeStrings[i])] = true;
                 }
+                return obj;
             }
 
             filterGuidSet = toStringSet(filterItemGuids);
