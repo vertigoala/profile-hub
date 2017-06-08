@@ -105,6 +105,7 @@ class UrlMappings {
         "/opus/$opusId/attachment/$attachmentId" controller: "opus", action: [GET: "getAttachmentMetadata", DELETE: "deleteAttachment"]
         "/opus/$opusId/attachment/" controller: "opus", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
 
+        "/opus/$opusId/florulaList" controller: "opus", action: [POST: "updateFlorulaList"]
         "/opus/$opusId/users/update" controller: "opus", action: [POST: "updateUsers"]
         "/opus/$opusId/access/token" controller: "opus", action: [POST: "generateAccessToken", PUT: "generateAccessToken", DELETE: "revokeAccessToken"]
 
@@ -121,6 +122,7 @@ class UrlMappings {
         "/opus/$opusId/search" controller: "opus", action: [GET: "search"]
         "/opus/$opusId/browse" controller: "opus", action: [GET: "browse"]
         "/opus/$opusId/identify" controller: "opus", action: [GET: "identify"]
+        "/opus/$opusId/filter" controller: "opus", action: [GET: "filter"]
         "/opus/$opusId/documents" controller: "opus", action: [GET: "documents"]
         "/opus/$opusId/reports" controller: "opus", action: [GET: "reports"]
         "/opus" controller: "opus", action: [GET: "index"]

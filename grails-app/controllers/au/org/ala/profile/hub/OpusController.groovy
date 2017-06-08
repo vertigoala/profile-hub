@@ -2,15 +2,20 @@ package au.org.ala.profile.hub
 
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
+import au.org.ala.ws.service.WebService
 import grails.converters.JSON
 import groovy.json.JsonSlurper
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
+import javax.servlet.http.Cookie
+
+import static au.org.ala.profile.hub.WebServiceWrapperService.FLORULA_COOKIE
 import static au.org.ala.profile.hub.util.HubConstants.*
 import static au.org.ala.profile.security.Role.ROLE_ADMIN
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
+import static javax.servlet.http.HttpServletResponse.SC_BAD_GATEWAY
 
 class OpusController extends BaseController {
 
@@ -19,6 +24,7 @@ class OpusController extends BaseController {
     UserService userService
     ProfileService profileService
     KeybaseService keybaseService
+    WebService webService
 
     def index() {
         render view: 'index', model: [
@@ -45,24 +51,8 @@ class OpusController extends BaseController {
             ]
         } else {
             def opus = profileService.getOpus(params.opusId as String)
-            render(view: 'search', model: [
-                    opus        : opus,
-                    logos       : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                    bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                    footerText  : opus.footerText,
-                    contact     : opus.contact,
-                    opusUrl     : getOpusUrl(opus),
-                    pageName    : 'search',
-                    searchUrl   : getSearchUrl(opus),
-                    browseUrl   : getBrowseUrl(opus),
-                    identifyUrl : getIdentifyUrl(opus),
-                    documentsUrl: getDocumentsUrl(opus),
-                    reportsUrl  : getReportsUrl(opus),
-                    glossaryUrl : getGlossaryUrl(opus),
-                    aboutPageUrl: getAboutUrl(opus),
-                    currentUser : authService.getDisplayName()
-            ])
+            def model = commonViewModelParams(opus, 'search')
+            render(view: 'search', model: model)
         }
     }
 
@@ -72,24 +62,8 @@ class OpusController extends BaseController {
         if (!opus) {
             notFound()
         } else {
-            render(view: 'browse', model: [
-                    opus        : opus,
-                    logos       : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                    bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                    footerText  : opus.footerText,
-                    contact     : opus.contact,
-                    pageName    : 'browse',
-                    opusUrl     : getOpusUrl(opus),
-                    searchUrl   : getSearchUrl(opus),
-                    browseUrl   : getBrowseUrl(opus),
-                    identifyUrl : getIdentifyUrl(opus),
-                    documentsUrl: getDocumentsUrl(opus),
-                    reportsUrl  : getReportsUrl(opus),
-                    glossaryUrl : getGlossaryUrl(opus),
-                    aboutPageUrl: getAboutUrl(opus),
-                    currentUser : authService.getDisplayName()
-            ])
+            def model = commonViewModelParams(opus, 'browse')
+            render(view: 'browse', model: model)
         }
     }
 
@@ -99,24 +73,25 @@ class OpusController extends BaseController {
         if (!opus) {
             notFound()
         } else {
-            render(view: 'identify', model: [
-                    opus        : opus,
-                    logos       : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                    bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                    footerText  : opus.footerText,
-                    contact     : opus.contact,
-                    pageName    : 'identify',
-                    opusUrl     : getOpusUrl(opus),
-                    searchUrl   : getSearchUrl(opus),
-                    browseUrl   : getBrowseUrl(opus),
-                    identifyUrl : getIdentifyUrl(opus),
-                    documentsUrl: getDocumentsUrl(opus),
-                    reportsUrl  : getReportsUrl(opus),
-                    glossaryUrl : getGlossaryUrl(opus),
-                    aboutPageUrl: getAboutUrl(opus),
-                    currentUser : authService.getDisplayName()
-            ])
+            def model = commonViewModelParams(opus, 'identify')
+            render(view: 'identify', model: model)
+        }
+    }
+
+    def filter() {
+        def opus = profileService.getOpus(params.opusId as String)
+
+        if (!opus) {
+            notFound("Opus ${params.opusId} not found")
+        } else {
+            def model = commonViewModelParams(opus, 'filter')
+            def listType = grailsApplication.config.lists.masterlist.type ?: 'PROFILE'
+            def lists = webService.get(grailsApplication.config.lists.base.url + '/ws/speciesList', [ 'listType': 'eq:' + listType , max: -1, user: authService.userId ])
+            if (!lists || !(lists.statusCode in 200..299)) {
+                response.sendError(SC_BAD_GATEWAY, "lists service unavailable")
+            } else {
+                render(view: 'filter', model: model + [lists: lists.resp.lists])
+            }
         }
     }
 
@@ -126,24 +101,8 @@ class OpusController extends BaseController {
         if (!opus) {
             notFound()
         } else {
-            render(view: 'documents', model: [
-                    opus        : opus,
-                    logos       : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                    bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                    footerText  : opus.footerText,
-                    contact     : opus.contact,
-                    pageName    : 'documents',
-                    opusUrl     : getOpusUrl(opus),
-                    searchUrl   : getSearchUrl(opus),
-                    browseUrl   : getBrowseUrl(opus),
-                    identifyUrl : getIdentifyUrl(opus),
-                    documentsUrl: getDocumentsUrl(opus),
-                    reportsUrl  : getReportsUrl(opus),
-                    glossaryUrl : getGlossaryUrl(opus),
-                    aboutPageUrl: getAboutUrl(opus),
-                    currentUser : authService.getDisplayName()
-            ])
+            def model = commonViewModelParams(opus, 'documents')
+            render(view: 'documents', model: model)
         }
     }
 
@@ -155,24 +114,8 @@ class OpusController extends BaseController {
         } else if(!params.isOpusEditor){
             notAuthorised()
         } else {
-            render(view: 'reports', model: [
-                    opus        : opus,
-                    logos       : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                    bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                    footerText  : opus.footerText,
-                    contact     : opus.contact,
-                    pageName    : 'reports',
-                    opusUrl     : getOpusUrl(opus),
-                    searchUrl   : getSearchUrl(opus),
-                    browseUrl   : getBrowseUrl(opus),
-                    identifyUrl : getIdentifyUrl(opus),
-                    documentsUrl: getDocumentsUrl(opus),
-                    reportsUrl  : getReportsUrl(opus),
-                    glossaryUrl : getGlossaryUrl(opus),
-                    aboutPageUrl: getAboutUrl(opus),
-                    currentUser : authService.getDisplayName()
-            ])
+            def model = commonViewModelParams(opus, 'reports')
+            render(view: 'reports', model: model)
         }
     }
 
@@ -193,23 +136,8 @@ class OpusController extends BaseController {
         if (!opus) {
             notFound()
         } else {
-            render(view: 'edit', model: [
-                    opus        : opus,
-                    logos       : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                    bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                    footerText  : opus.footerText,
-                    contact     : opus.contact,
-                    opusUrl     : getOpusUrl(opus),
-                    searchUrl   : getSearchUrl(opus),
-                    browseUrl   : getBrowseUrl(opus),
-                    identifyUrl : getIdentifyUrl(opus),
-                    documentsUrl: getDocumentsUrl(opus),
-                    reportsUrl  : getReportsUrl(opus),
-                    glossaryUrl : getGlossaryUrl(opus),
-                    aboutPageUrl: getAboutUrl(opus),
-                    currentUser : authService.getDisplayName()
-            ])
+            def model = commonViewModelParams(opus)
+            render(view: 'edit', model: model)
         }
     }
 
@@ -256,25 +184,8 @@ class OpusController extends BaseController {
             if (!opus) {
                 notFound()
             } else {
-                render(view: 'about', model: [
-                        opus        : opus,
-                        logos       : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                        bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                        bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                        footerText  : opus.footerText,
-                        contact     : opus.contact,
-                        pageName    : 'about',
-                        opusUrl     : getOpusUrl(opus),
-                        searchUrl   : getSearchUrl(opus),
-                        browseUrl   : getBrowseUrl(opus),
-                        identifyUrl : getIdentifyUrl(opus),
-                        documentsUrl: getDocumentsUrl(opus),
-                        reportsUrl  : getReportsUrl(opus),
-                        glossaryUrl : getGlossaryUrl(opus),
-                        aboutPageUrl: getAboutUrl(opus),
-                        opusTitle   : opus.title,
-                        pageTitle   : "About ${opus.title}" ?: DEFAULT_OPUS_TITLE
-                ])
+                def model = commonViewModelParams(opus, 'about', "About ${opus.title}" ?: DEFAULT_OPUS_TITLE)
+                render(view: 'about', model: model)
             }
         }
     }
@@ -313,23 +224,8 @@ class OpusController extends BaseController {
             if (!opus) {
                 notFound()
             } else {
-                render view: 'shareRequest', model: [
-                        opus        : opus,
-                        logos       : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                        bannerUrl   : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                        bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                        pageTitle   : opus.title ?: DEFAULT_OPUS_TITLE,
-                        footerText  : opus.footerText,
-                        contact     : opus.contact,
-                        opusUrl     : getOpusUrl(opus),
-                        searchUrl   : getSearchUrl(opus),
-                        browseUrl   : getBrowseUrl(opus),
-                        identifyUrl : getIdentifyUrl(opus),
-                        documentsUrl: getDocumentsUrl(opus),
-                        reportsUrl  : getReportsUrl(opus),
-                        glossaryUrl : getGlossaryUrl(opus),
-                        aboutPageUrl: getAboutUrl(opus)
-                ]
+                def model = commonViewModelParams(opus, '', opus.title ?: DEFAULT_OPUS_TITLE,)
+                render view: 'shareRequest', model: model
             }
         }
     }
@@ -363,23 +259,8 @@ class OpusController extends BaseController {
         if (!opus) {
             notFound()
         } else {
-            render view: 'show', model: [
-                    opus                : opus,
-                    logos               : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                    bannerUrl           : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight        : opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                    footerText          : opus.footerText,
-                    contact             : opus.contact,
-                    pageName            : 'opus',
-                    opusUrl             : getOpusUrl(opus),
-                    searchUrl           : getSearchUrl(opus),
-                    browseUrl           : getBrowseUrl(opus),
-                    identifyUrl         : getIdentifyUrl(opus),
-                    documentsUrl        : getDocumentsUrl(opus),
-                    reportsUrl          : getReportsUrl(opus),
-                    glossaryUrl         : getGlossaryUrl(opus),
-                    aboutPageUrl        : getAboutUrl(opus)
-            ]
+            def model = commonViewModelParams(opus, 'opus')
+            render view: 'show', model: model
         }
     }
 
@@ -616,6 +497,33 @@ class OpusController extends BaseController {
         }
     }
 
+    def updateFlorulaList() {
+        def opusId = params.opusId
+        String florulaListId = params.florulaListId
+        if (!opusId) {
+            badRequest "opusId is mandatory"
+        } else {
+            def userId = authService.userId
+            if (userId) {
+                profileService.updateFlorulaList(opusId, florulaListId)
+            } else {
+                Cookie cookie = request.cookies.find { it.name == FLORULA_COOKIE }
+                if (!cookie) {
+                    cookie = new Cookie(FLORULA_COOKIE, florulaListId)
+                }
+                cookie.httpOnly = false
+                cookie.maxAge = -1
+                cookie.secure = false
+                cookie.setPath(request.contextPath)
+                cookie.setDomain(request.serverName)
+                cookie.setValue(florulaListId)
+                response.addCookie(cookie)
+            }
+            flash.message = "Filter ${florulaListId ? 'enabled' : 'removed'}"
+            redirect(uri: "/opus/${opusId}/filter")
+        }
+    }
+
     def getTags() {
         Map response = profileService.getTags()
 
@@ -721,5 +629,35 @@ class OpusController extends BaseController {
 
     def reportPanel = {
         render template: "report"
+    }
+
+    private def commonViewModelParams(def opus, String pageName = '', String pageTitle = '') {
+        def florulaListId = authService.userId ? opus.florulaListId : request.cookies.find { it.name == FLORULA_COOKIE }?.value
+        def model = [
+                opus            : opus,
+                logos           : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
+                bannerUrl       : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
+                bannerHeight    : opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
+                footerText      : opus.footerText,
+                contact         : opus.contact,
+                opusUrl         : getOpusUrl(opus),
+                searchUrl       : getSearchUrl(opus),
+                browseUrl       : getBrowseUrl(opus),
+                filterUrl       : getFilterUrl(opus),
+                identifyUrl     : getIdentifyUrl(opus),
+                documentsUrl    : getDocumentsUrl(opus),
+                reportsUrl      : getReportsUrl(opus),
+                glossaryUrl     : getGlossaryUrl(opus),
+                aboutPageUrl    : getAboutUrl(opus),
+                currentUser     : authService.getDisplayName(),
+                opusTitle       : opus.title,
+                hasFilter       : florulaListId,
+                florulaListId   : florulaListId
+        ]
+
+        if (pageName) model += [pageName: pageName]
+        if (pageTitle) model += [pageTitle: pageTitle]
+
+        return model
     }
 }

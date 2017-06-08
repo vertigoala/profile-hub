@@ -14,6 +14,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.validation.constraints.NotNull
 
+import static au.org.ala.profile.hub.WebServiceWrapperService.getFLORULA_COOKIE
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_AUTHOR
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
 
@@ -43,18 +44,8 @@ class ProfileController extends BaseController {
                 notAuthorised()
             } else {
                 profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
-                profileAndOpus << [edit                : true,
-                          currentUser         : authService.getDisplayName(),
-                          opusUrl             : getOpusUrl(profileAndOpus.opus),
-                          searchUrl           : getSearchUrl(profileAndOpus.opus),
-                          browseUrl           : getBrowseUrl(profileAndOpus.opus),
-                          identifyUrl         : getIdentifyUrl(profileAndOpus.opus),
-                          documentsUrl        : getDocumentsUrl(profileAndOpus.opus),
-                          reportsUrl          : getReportsUrl(profileAndOpus.opus),
-                          glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
-                          aboutPageUrl        : getAboutUrl(profileAndOpus.opus, profileAndOpus.profile),
-                          footerText          : profileAndOpus.opus.footerText,
-                          contact             : profileAndOpus.opus.contact,
+                profileAndOpus << commonModelEntries(profileAndOpus.opus, profileAndOpus.profile, true)
+                profileAndOpus << [
                           usePrivateRecordData: profileAndOpus.opus.usePrivateRecordData,
                           displayMap          : true]
                 render view: "edit", model: profileAndOpus
@@ -75,17 +66,8 @@ class ProfileController extends BaseController {
                 profileAndOpus.profile.mapSnapshot = mapService.getSnapshotImageUrlWithUUIDs(request.contextPath, profileAndOpus.opus.uuid, profileAndOpus.profile.uuid)
                 String profileUrl = getProfileUrl(profileAndOpus.opus, profileAndOpus.profile)
                 Map model = profileAndOpus
-                model << [edit                : false,
-                          opusUrl             : getOpusUrl(profileAndOpus.opus),
-                          searchUrl           : getSearchUrl(profileAndOpus.opus),
-                          browseUrl           : getBrowseUrl(profileAndOpus.opus),
-                          identifyUrl         : getIdentifyUrl(profileAndOpus.opus),
-                          documentsUrl        : getDocumentsUrl(profileAndOpus.opus),
-                          reportsUrl          : getReportsUrl(profileAndOpus.opus),
-                          glossaryUrl         : getGlossaryUrl(profileAndOpus.opus),
-                          aboutPageUrl        : getAboutUrl(profileAndOpus.opus, profileAndOpus.profile),
-                          footerText          : profileAndOpus.opus.footerText,
-                          contact             : profileAndOpus.opus.contact,
+                model << commonModelEntries(profileAndOpus.opus, profileAndOpus.profile, false)
+                model << [
                           usePrivateRecordData: profileAndOpus.opus.usePrivateRecordData,
                           displayMap          : profileService.hasMatchedName(model.profile),
                           citation            : profileService.getCitation(profileAndOpus.opus, profileAndOpus.profile, profileUrl)
@@ -578,18 +560,7 @@ class ProfileController extends BaseController {
                     notFound()
                 } else {
                     Map model = profile
-                    model.edit = false
-                    model.opusUrl = getOpusUrl(profile.opus)
-                    model.currentUser = authService.getDisplayName()
-                    model.searchUrl = getSearchUrl(profile.opus)
-                    model.browseUrl  = getBrowseUrl(profile.opus)
-                    model.identifyUrl = getIdentifyUrl(profile.opus)
-                    model.documentsUrl = getDocumentsUrl(profile.opus)
-                    model.reportsUrl   = getReportsUrl(profile.opus)
-                    model.glossaryUrl = getGlossaryUrl(profile.opus)
-                    model.aboutPageUrl = getAboutUrl(profile.opus, profile)
-                    model.footerText = profile.opus.footerText
-                    model.contact = profile.opus.contact
+                    model << commonModelEntries(profile.opus, profile, false)
                     model.publications = pubJson.publications
 
                     render view: "publication", model: model;
@@ -902,6 +873,26 @@ class ProfileController extends BaseController {
         } else {
             response.sendError(204)
         }
+    }
+
+    def commonModelEntries(opus, profile, boolean edit) {
+        [
+                edit                : edit,
+
+                aboutPageUrl        : getAboutUrl(opus, profile),
+                browseUrl           : getBrowseUrl(opus),
+                contact             : opus.contact,
+                currentUser         : authService.getDisplayName(),
+                documentsUrl        : getDocumentsUrl(opus),
+                filterUrl           : getFilterUrl(opus),
+                footerText          : opus.footerText,
+                glossaryUrl         : getGlossaryUrl(opus),
+                hasFilter           : authService.userId ? opus.florulaListId : request.cookies.find { it.name == FLORULA_COOKIE }?.value,
+                identifyUrl         : getIdentifyUrl(opus),
+                opusUrl             : getOpusUrl(opus),
+                reportsUrl          : getReportsUrl(opus),
+                searchUrl           : getSearchUrl(opus),
+        ]
     }
 }
 

@@ -1237,6 +1237,19 @@ fader, .fader {
     position: relative;
 }
 
+.filter-indicator {
+    font-size: 0.8em;
+    color: red;
+    text-shadow: 0 0 0.25em hsla(0, 100%, 25%, 1);
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    to {
+        text-shadow: 0 0 0.5em hsla(0, 100%, 50%, 1);
+    }
+}
+
 @media (min-width: 426px) {
     .collection-header fader, .collection-header .fader {
         display: block;
