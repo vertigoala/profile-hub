@@ -5,6 +5,7 @@ profileEditor.controller('AboutController', function (profileService, messageSer
     var self = this;
     
     self.opusId = util.getEntityId("opus");
+    self.opus = null;
     self.shortName = null;
     self.urlSuffix = null;
     self.aboutHtml = null;
@@ -18,15 +19,16 @@ profileEditor.controller('AboutController', function (profileService, messageSer
 
     var future = profileService.getOpusAbout(self.opusId);
     future.then(function(data) {
+        self.opus = data.opus;
         self.shortName = data.opus.shortName;
-        self.urlSuffix = data.opus.shortName ? data.opus.shortName : data.opus.opusId;
+        self.urlSuffix = data.opus.shortName ? data.opus.shortName : data.opusId;
         self.aboutHtml = data.opus.aboutHtml;
         self.citationHtml = data.opus.citationHtml;
         self.citationYear = data.opus.year;
         self.citationDate = data.opus.date;
         self.citationUrl = data.opus.opusUrl;
-        self.administrators = data.opus.administrators;
-        self.collectionCopyright = data.opus.copyright;
+        self.administrators = data.administrators;
+        self.collectionCopyright = data.opus.copyrightText;
         self.genericCopyrightHtml = data.opus.genericCopyrightHtml;
     });
 

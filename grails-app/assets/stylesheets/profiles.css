@@ -1221,6 +1221,11 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
     flex-basis: 0;
 }
 
+.profile-header {
+    display: flex;
+    align-items: center;
+}
+
 fader > div, .fader > div {
     position: absolute;
     left: 0;
@@ -1235,6 +1240,12 @@ fader > div, .fader > div {
 
 fader, .fader {
     position: relative;
+}
+
+@media (max-width: 425px) {
+    .profile-header > img:nth-child(2) {
+        display: none;
+    }
 }
 
 @media (min-width: 426px) {

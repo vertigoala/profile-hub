@@ -6,6 +6,7 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
 
     self.glossary = {items: []};
     self.opusId = util.getEntityId("opus");
+    self.opus = null;
     self.newItem = null;
     self.newFile = null;
 
@@ -65,6 +66,11 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
         if (!self.opusId) {
             return;
         }
+
+		var opusPromise = profileService.getOpus(self.opusId);
+		opusPromise.then(function (data) {
+			self.opus = data;
+		});
 
         if (prefix) {
             self.prefix = prefix;
