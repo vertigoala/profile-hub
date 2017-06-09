@@ -1,7 +1,8 @@
 <div class="banner" style="max-height: ${bannerItems.bannerHeight}px">
     <g:if test="${bannerItems.opusLogoUrl}">
         <div class="logo">
-            <img class="img-responsive" src="${bannerItems.opusLogoUrl}" alt="Collection logo">
+            <img class="img-responsive" src="${bannerItems.opusLogoUrl}"
+                 style="max-height: ${bannerItems.bannerHeight}px" alt="Collection logo">
         </div>
     </g:if>
     <div class="banner-items">
