@@ -134,7 +134,6 @@
                    imageUpload:'${grailsApplication.config.feature.feature.imageUpload}'},
         map: {mapId: '${grailsApplication.config.map.id}',
               accessKey: '${grailsApplication.config.map.access.key}'},
-        mainCssFile: '${assetPath(src: "profiles.css")}',
         bootstrapCssFile: '${assetPath(src: "/bootstrap/css/bootstrap3.3.4.min.css")}',
         imageLoadErrorUrl: '${assetPath(src: "not-available.png")}',
         defaultOpusLogo: '${assetPath(src: "no-logo.svg")}',
