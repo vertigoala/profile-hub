@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.nio.file.Files
 import java.nio.file.Path
 
+import static au.org.ala.profile.hub.Utils.encPath
 import static java.nio.file.StandardCopyOption.COPY_ATTRIBUTES
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -180,7 +181,7 @@ class BiocacheService {
         String uploadUrl = useSandbox ? grailsApplication.config.sandbox.image.upload.url : grailsApplication.config.image.upload.url
 
 
-        metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${enc(opusId)}/profile/${enc(profileId)}/file/${enc(filename)}".toString()
+        metadata.multimedia[0].identifier = "${grailsApplication.config.grails.serverURL}/opus/${encPath(opusId)}/profile/${encPath(profileId)}/file/${encPath(filename)}".toString()
 
 
         // make sure the spelling of licenSe is US to match the Darwin Core standard

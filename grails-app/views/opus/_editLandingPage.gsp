@@ -119,6 +119,14 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="bannerOverlayText">Banner overlay text</label>
+                    <textarea id="bannerOverlayText" class="form-control" ng-model="opusCtrl.opus.opusLayoutConfig.bannerOverlayText" name="bannerOverlayText"></textarea>
+                    <div class="small">
+                        Enter the html code which will overlay on banner.
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label for="updatesSection">Updates section</label>
                     <textarea id="updatesSection" ng-model="opusCtrl.opus.opusLayoutConfig.updatesSection" name="updatesSection" ckeditor="richTextFullToolbar"></textarea>
                     <div class="small">

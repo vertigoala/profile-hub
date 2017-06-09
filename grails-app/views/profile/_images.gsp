@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
+<div class="panel panel-default ${edit?'':'panel-override'}" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
     <div ng-if="imageCtrl.images.length >= 0 && imageCtrl.readonly" ng-cloak>
         <navigation-anchor anchor-name="view_images" title="Images"
                            condition="imageCtrl.images.length > 0"></navigation-anchor>

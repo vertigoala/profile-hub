@@ -1,6 +1,6 @@
 (function() {
 
-  function CollectionHeaderCtrl(config) {
+  function CollectionHeaderCtrl(config, $sce) {
     var self = this;
 
     self.opusLogoUrl = function() {
@@ -21,7 +21,11 @@
         }
         return logoUrl;
       }
-    }
+    };
+
+    self.trustAsHtml = function (text) {
+       return $sce.trustAsHtml(text);
+    };
   }
 
   profileEditor.directive('collectionHeader', function() {

@@ -1,5 +1,3 @@
 <g:if test="${issn}">
-    <span class="h4">
-        ISSN ${issn[0..3]}-${issn[4..7]}
-    </span>
+    ISSN ${issn[0..3]}-${issn[4..7]}
 </g:if>

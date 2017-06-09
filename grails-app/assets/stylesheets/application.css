@@ -8,9 +8,6 @@
 *= require keybase-override.css
 *= require dualMultiselect/dualmultiselect.css
 *= require nsl.css
-*= require theme.css
-*= require profiles.css
-*= require colour.css
 *= require tree.css
 *= require sidebar.css
 *= require bootstrap-fileupload/bootstrap-fileupload.min.css

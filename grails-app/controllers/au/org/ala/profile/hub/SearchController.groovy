@@ -1,5 +1,8 @@
 package au.org.ala.profile.hub
 
+import static au.org.ala.profile.hub.Utils.enc
+
+
 class SearchController extends BaseController {
 
     private static final List<String> SEARCH_OPTIONS = ["nameOnly", "offset", "pageSize", "includeArchived", "matchAll", "includeNameAttributes", "searchAla", "searchNsl", "hideStubs"]
@@ -7,7 +10,7 @@ class SearchController extends BaseController {
     ProfileService profileService
 
     def search() {
-        List queryParams = params.findResults { key, value -> SEARCH_OPTIONS.contains(key) ? "&${key}=${value}" : null }
+        List queryParams = params.findResults { key, value -> SEARCH_OPTIONS.contains(key) ? "&${enc(key)}=${enc(value)}" : null }
         def response = profileService.search(params.opusId, params.term, queryParams)
 
         handle response

@@ -1,7 +1,7 @@
 <div ng-controller="ListsEditor as listCtrl" ng-init="listCtrl.init('${edit}')">
     <navigation-anchor anchor-name="{{listCtrl.readonly ? 'view_' : 'edit_'}}lists" title="Conservation & Sensitivity Lists" condition="listCtrl.lists.length > 0"></navigation-anchor>
 
-    <div class="panel panel-default" ng-show="listCtrl.lists.length > 0">
+    <div class="panel panel-default ${edit?'':'panel-override'}" ng-show="listCtrl.lists.length > 0">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-12">
@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div class="panel panel-default" ng-show="listCtrl.conservationStatuses.length > 0">
+    <div class="panel panel-default ${edit?'':'panel-override'}" ng-show="listCtrl.conservationStatuses.length > 0">
         <navigation-anchor anchor-name="{{listCtrl.readonly ? 'view_' : 'edit_'}}conservationStatus" title="Conservation Status" condition="listCtrl.conservationStatuses.length > 0"></navigation-anchor>
         <div class="panel-heading">
             <div class="row">
@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <div class="panel panel-default" ng-show="listCtrl.hasFeatures">
+    <div class="panel panel-default ${edit?'':'panel-override'}" ng-show="listCtrl.hasFeatures">
         <navigation-anchor anchor-name="{{listCtrl.readonly ? 'view_' : 'edit_'}}features" title="{{listCtrl.opus.featureListSectionName || 'Feature List'}}" condition="listCtrl.hasFeatures"></navigation-anchor>
         <div class="panel-heading">
             <div class="row">

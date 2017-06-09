@@ -4,69 +4,97 @@
         <div class="main-footer-border"></div>
 
         <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-4 margin-bottom-1 site-logo" id="site-logo">
-                <g:each in="${logos?:[[logoUrl:asset.assetPath(src: "ala-logo-2016-inline.png")]]}" var="logo">
-                    <div class="row margin-bottom-1">
-                        <div class="col-xs-12">
-                            <g:if test="${logo.hyperlink}">
-                                <a href="${logo.hyperlink}" target="_blank">
-                                    <img class="img-responsive customizable-logo-img"
-                                         src="${logo.logoUrl}"
-                                         alt="logo"/>
-                                </a>
-                            </g:if>
-                            <g:else>
-                                <img class="img-responsive customizable-logo-img"
+            <div class="col-xs-12 col-sm-12 col-md-8 margin-bottom-1 site-logo" id="site-logo">
+                <div class="row margin-bottom-1">
+                    <g:each in="${logos?:[[logoUrl:asset.assetPath(src: "ala-logo-2016-inline.png")]]}" var="logo">
+                        <g:if test="${logo.hyperlink}">
+                            <a href="${logo.hyperlink}" target="_blank">
+                                <img class="col-xs-12 col-sm-6 col-md-4 img-responsive customizable-logo-img"
                                      src="${logo.logoUrl}"
                                      alt="logo"/>
-                            </g:else>
+                            </a>
+                        </g:if>
+                        <g:else>
+                            <img class="col-xs-12 col-sm-6 col-md-4 img-responsive customizable-logo-img"
+                                 src="${logo.logoUrl}"
+                                 alt="logo"/>
+                        </g:else>
+                    </g:each>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-4 margin-bottom-1 border-left">
+                <div class="row">
+                    <div class="col-xs-12 col-md-7">
+                        <g:if test="${footerText}">
+                            <div class="row margin-bottom-1">
+                                <div class="col-xs-12">
+                                    <b>${raw(footerText)}</b>
+                                </div>
+                            </div>
+                        </g:if>
+                        <g:if test="${contact.email?.contains('@')}">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <a class="soc-envelope" href="${'mailto:' + contact.email}"
+                                       title="${'Email this collection'}"
+                                       target="_blank"><i class="fa fa-envelope"></i>&nbsp;&nbsp;${contact.email}</a>
+                                </div>
+                            </div>
+                        </g:if>
+                        <g:else>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <a class="soc-envelope" href="${contact.email}"
+                                       title="${'Contact the Atlas'}"
+                                       target="_blank"><i class="fa fa-globe"></i>&nbsp;&nbsp;Contact the Atlas</a>
+                                </div>
+                            </div>
+                        </g:else>
+                        <g:if test="${contact?.facebook || contact?.twitter}">
+                            <div class="row margin-top-1">
+                                <div class="col-xs-12">
+                                    <ul class="social list-inline">
+                                        <g:if test="${contact.facebook}">
+                                            <li><a class="soc-facebook" href="${contact.facebook}"
+                                                   title="${opus ? 'Contact this collection via Facebook' : 'Contact the Atlas via Facebook'}"
+                                                   target="_blank"><i class="fa fa-facebook"></i></a></li>
+                                        </g:if>
+                                        <g:if test="${contact.twitter}">
+                                            <li><a class="soc-twitter" href="${contact.twitter}"
+                                                   title="${opus ? 'Contact this collection via Twitter' : 'Contact the Atlas via Twitter'}"
+                                                   target="_blank"><i class="fa fa-twitter"></i></a></li>
+                                        </g:if>
+                                    </ul>
+                                </div>
+                            </div>
+                        </g:if>
+                    </div>
+                    <div class="col-xs-12 col-md-5">
+                        <g:if test="${opus?.brandingConfig?.issn}">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <g:render template="../opus/issn" model="${[issn: opus.brandingConfig.issn]}"></g:render>
+                                </div>
+                            </div>
+                        </g:if>
+                        <g:if test="${opus?.brandingConfig?.shortLicense}">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    ${raw(opus.brandingConfig.shortLicense)}
+                                </div>
+                            </div>
+                        </g:if>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-5 col-md-offset-7">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a href="${createLink(uri: '')}">Other collections</a>
+                            </div>
                         </div>
                     </div>
-                </g:each>
-            </div>
-
-            <div class="col-xs-12 col-sm-6 col-md-4 margin-bottom-1">
-                <g:if test="${footerText}">
-                    <p class="lead">${raw(footerText)}</p>
-                </g:if>
-
-                <g:if test="${opus?.brandingConfig?.shortLicense}">
-                    ${raw(opus.brandingConfig.shortLicense)}
-                </g:if>
-
-                <g:if test="${opus?.brandingConfig?.issn}">
-                    <g:render template="../opus/issn" model="${[issn: opus.brandingConfig.issn]}"></g:render>
-                </g:if>
-            </div>
-
-            <div class="col-xs-12 col-sm-6 col-md-4">
-                <g:if test="${contact?.facebook || contact?.twitter || contact?.email}">
-                    <ul class="social list-inline margin-bottom-1">
-                        <g:if test="${contact.facebook}">
-                            <li><a class="soc-facebook" href="${contact.facebook}"
-                                   title="${opus ? 'Contact this collection via Facebook' : 'Contact the Atlas via Facebook'}"
-                                   target="_blank"><i class="fa fa-facebook"></i></a></li>
-                        </g:if>
-                        <g:if test="${contact.twitter}">
-                            <li><a class="soc-twitter" href="${contact.twitter}"
-                                   title="${opus ? 'Contact this collection via Twitter' : 'Contact the Atlas via Twitter'}"
-                                   target="_blank"><i class="fa fa-twitter"></i></a></li>
-                        </g:if>
-                        <g:if test="${contact.email}">
-                            <li><a class="soc-envelope" href="${contact.email.contains('@') ? 'mailto:' + contact.email : contact.email}"
-                                   title="${opus ? 'Email this collection' : 'Email the Atlas'}"
-                                   target="_blank"><i class="fa fa-envelope"></i></a></li>
-                        </g:if>
-                    </ul>
-                </g:if>
-
-                <ul class="link-list">
-                    <li class="heading">Site navigation</li>
-                    <li><a href="${request.contextPath}/">Collections</a></li>
-                    <g:if test="${contact?.email}">
-                        <li><a href="${contact.email.contains('@') ? 'mailto:' + contact.email : contact.email}">Contact Us</a></li>
-                    </g:if>
-                </ul>
+                </div>
             </div>
         </div>
     </div>

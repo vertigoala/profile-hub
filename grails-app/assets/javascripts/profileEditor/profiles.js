@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['app.config', 'ngSanitize', 'ui.bootstrap', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate', 'dualmultiselect', 'ui.bootstrap.showErrors', 'ngAnimate']);
+var profileEditor = angular.module('profileEditor', ['app.config', 'ngSanitize', 'ngCookies', 'ui.bootstrap', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate', 'dualmultiselect', 'ui.bootstrap.showErrors', 'ngAnimate']);
 
 profileEditor.config(function ($rootScopeProvider) {
     // The digest ttl has been bumped to 20 because the taxonomy directive in the sidebar renders

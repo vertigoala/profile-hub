@@ -522,7 +522,7 @@ class OpusController extends BaseController {
                 response.addCookie(cookie)
             }
             flash.message = "Filter ${florulaListId ? 'enabled' : 'removed'}"
-            redirect(uri: "/opus/${opusId}/filter")
+            redirect(uri: "/opus/${encPath(opusId)}/filter")
         }
     }
 
@@ -530,6 +530,15 @@ class OpusController extends BaseController {
         Map response = profileService.getTags()
 
         handle response
+    }
+
+    def getStyleSheet() {
+        if(!params.opusId){
+            badRequest("opusId is mandatory")
+        } else {
+            Map map = profileService.getStyleSheet(params.opusId)
+            render text: map.css, contentType: 'text/css';
+        }
     }
 
     private def uploadTransferrable(Transferrable transferrable) {
@@ -580,6 +589,9 @@ class OpusController extends BaseController {
         render template: "editLandingPage"
     }
 
+    def editTheme = {
+        render template: "editTheme"
+    }
 
     def editOpusDetailsPanel = {
         render template: "editOpusDetails"

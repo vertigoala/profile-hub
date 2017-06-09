@@ -2,7 +2,7 @@
 <html lang="en">
 <g:render template="/layouts/custom-top" />
 
-<div class="container" id="main-content">
+<div class="container ${request.forwardURI?.endsWith("update")?'public':''}" id="main-content">
     <g:layoutBody/>
 </div>
 <g:render template="/layouts/custom-bottom" />
