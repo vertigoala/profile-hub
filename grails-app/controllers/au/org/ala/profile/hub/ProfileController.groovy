@@ -880,6 +880,7 @@ class ProfileController extends BaseController {
                 edit                : edit,
 
                 aboutPageUrl        : getAboutUrl(opus, profile),
+                bannerItems         : getBannerItems(opus, false),
                 browseUrl           : getBrowseUrl(opus),
                 contact             : opus.contact,
                 currentUser         : authService.getDisplayName(),

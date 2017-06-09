@@ -11,7 +11,7 @@
      ng-init="profileCtrl.loadProfile()">
 
     <a name="top"></a>
-    <profile-header opus="profileCtrl.opus" is-profile="true"></profile-header>
+    <g:render template="/opus/banner" model="[opus: opus]"/>
 
     <div class="container">
         <div class="row">

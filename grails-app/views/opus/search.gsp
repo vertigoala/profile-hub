@@ -8,7 +8,7 @@
 
 <body>
 <div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
-    <profile-header opus="opusCtrl.opus" is-profile="false"></profile-header>
+    <g:render template="banner" model="[opus: opus]"/>
 
     <div class="container">
         <h1 class="hidden">Welcome to the eFlora website</h1><!-- Show the H1 on each page -->

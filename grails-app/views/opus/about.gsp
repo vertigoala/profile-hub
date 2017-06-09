@@ -8,7 +8,7 @@
 <body>
 
 <div ng-controller="AboutController as aboutCtrl" ng-cloak>
-    <profile-header opus="aboutCtrl.opus" is-profile="false"></profile-header>
+    <g:render template="banner" model="[opus: opus]"/>
 
     <div class="container">
         <div class="row">

@@ -4,6 +4,7 @@ import au.org.ala.ws.controller.BasicWSController
 import static au.org.ala.profile.hub.Utils.enc
 import static au.org.ala.profile.hub.Utils.encFragment
 import static au.org.ala.profile.hub.Utils.encPath
+import static au.org.ala.profile.hub.util.HubConstants.*
 
 class BaseController extends BasicWSController {
 
@@ -13,6 +14,33 @@ class BaseController extends BasicWSController {
 
     def enabled(feature) {
         return !grailsApplication.config.feature[feature] || grailsApplication.config.feature[feature].toBoolean()
+    }
+
+    protected getBannerItems(opus, doMainBanner = false) {
+        def model = [
+                opusLogoUrl   : opus.opusLayoutConfig?.opusLogoUrl ?: null,
+                doMainBanner  : doMainBanner,
+                overlayText   : opus.opusLayoutConfig?.bannerOverlayText,
+                gradient      : opus.opusLayoutConfig?.gradient,
+                gradientWidth : opus.opusLayoutConfig?.gradientWidth,
+                duration      : opus.opusLayoutConfig?.duration
+        ]
+
+        if (doMainBanner && opus.opusLayoutConfig?.images) {
+            model << [ banners: opus.opusLayoutConfig.images,
+                       bannerHeight: '500' ]
+        } else {
+            model << [
+                    banners: [
+                            imageUrl : opus.brandingConfig?.opusBannerUrl ?:
+                                    opus?.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL
+                    ],
+                    bannerHeight: opus.brandingConfig?.opusBannerHeight ?:
+                            opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX
+            ]
+        }
+
+        return model
     }
 
     protected getSearchUrl(opus) {
@@ -60,7 +88,6 @@ class BaseController extends BasicWSController {
             createLink(uri: "/opus/${encPath(opus.shortName ?: opus.uuid)}", absolute: true)
         }
     }
-
 
     protected getProfileUrl(opus, profile) {
         if(opus && profile){

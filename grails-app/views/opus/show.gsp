@@ -8,7 +8,7 @@
 <body>
 
 <div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
-    <collection-header opus="opusCtrl.opus"></collection-header>
+    <g:render template="banner" model="[opus: opus]"/>
     <div class="container">
         <div class="row">
             <div class="col-sm-4 col-xs-12">

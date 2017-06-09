@@ -226,7 +226,7 @@ class OpusController extends BaseController {
             if (!opus) {
                 notFound()
             } else {
-                def model = commonViewModelParams(opus, '', opus.title ?: DEFAULT_OPUS_TITLE,)
+                def model = commonViewModelParams(opus, '', opus.title ?: DEFAULT_OPUS_TITLE)
                 render view: 'shareRequest', model: model
             }
         }
@@ -645,7 +645,8 @@ class OpusController extends BaseController {
         render template: "report"
     }
 
-    private def commonViewModelParams(def opus, String pageName = '', String pageTitle = '') {
+    private def commonViewModelParams(def opus, String pageName = '', String pageTitle = '',
+                                      def doMainBanner = false) {
         def florulaListId = authService.userId ? opus.florulaListId : request.cookies.find { it.name == FLORULA_COOKIE }?.value
         def model = [
                 opus            : opus,
@@ -654,6 +655,7 @@ class OpusController extends BaseController {
                 bannerHeight    : opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                 footerText      : opus.footerText,
                 contact         : opus.contact,
+                bannerItems     : getBannerItems(opus, doMainBanner),
                 opusUrl         : getOpusUrl(opus),
                 searchUrl       : getSearchUrl(opus),
                 browseUrl       : getBrowseUrl(opus),
