@@ -2461,7 +2461,6 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
   display: flex;
   align-items: stretch;
   margin-bottom: 1em;
-  height: 275px;
   position: relative;
 }
 
@@ -2469,11 +2468,6 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
   flex-basis: 100%;
   flex-grow: 1;
   flex-shrink: 1;
-}
-
-.collection-header .logo img.img-responsive,
-.banner .logo img.img-responsive {
-  max-height: 275px;
 }
 
 .collection-header fader, .collection-header .fader,
