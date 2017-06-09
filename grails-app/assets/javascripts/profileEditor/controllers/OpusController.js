@@ -169,7 +169,7 @@ profileEditor.controller('OpusController', function ($log, $scope, profileServic
         toggleMapPointerColourHash(false);
 
         if (self.opus.shortName !== self.initialShortName && self.opus.shortName) {
-            var f = profileService.getOpus(self.opus.shortName);
+            var f = profileService.getOpus(self.opus.shortName, true);
             f.then(function () {
                 messageService.alert("The specified short name is already in use. Short Names must be unique across all collections.");
             }, function () {

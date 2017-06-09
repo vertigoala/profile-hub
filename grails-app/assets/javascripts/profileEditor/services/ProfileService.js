@@ -256,10 +256,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        getOpus: function (opusId) {
+        getOpus: function (opusId, disableAlertOnFailure) {
             $log.debug("Fetching opus " + opusId);
 
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/json", {cache: true});
+            if (!angular.isDefined(disableAlertOnFailure)) {
+                disableAlertOnFailure = false;
+            }
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/json", {cache: true, disableAlertOnFailure: disableAlertOnFailure});
             future.then(function (response) {
                 $log.debug("Opus fetched with response code " + response.status);
             });
