@@ -261,7 +261,7 @@ class OpusController extends BaseController {
         if (!opus) {
             notFound()
         } else {
-            def model = commonViewModelParams(opus, 'opus')
+            def model = commonViewModelParams(opus, 'opus', null, true)
             render view: 'show', model: model
         }
     }
