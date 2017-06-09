@@ -2,6 +2,8 @@ package au.org.ala.profile.hub
 
 import au.org.ala.ws.controller.BasicWSController
 import static au.org.ala.profile.hub.Utils.enc
+import static au.org.ala.profile.hub.Utils.encFragment
+import static au.org.ala.profile.hub.Utils.encPath
 
 class BaseController extends BasicWSController {
 
@@ -13,52 +15,56 @@ class BaseController extends BasicWSController {
         return !grailsApplication.config.feature[feature] || grailsApplication.config.feature[feature].toBoolean()
     }
 
-    private getSearchUrl(opus) {
-        "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/search"
+    protected getSearchUrl(opus) {
+        "${request.contextPath}/opus/${encPath(opus.shortName ? opus.shortName : opus.uuid)}/search"
     }
 
-    private getBrowseUrl(opus) {
-        "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/browse"
+    protected getBrowseUrl(opus) {
+        "${request.contextPath}/opus/${encPath(opus.shortName ? opus.shortName : opus.uuid)}/browse"
     }
 
-    private getIdentifyUrl(opus) {
+    protected getFilterUrl(opus) {
+        "${request.contextPath}/opus/${encPath(opus.shortName ? opus.shortName : opus.uuid)}/filter"
+    }
+
+    protected getIdentifyUrl(opus) {
         if(opus.keybaseProjectId != null && opus.keybaseProjectId != ""){
-            "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/identify"
+            "${request.contextPath}/opus/${encPath(opus.shortName ? opus.shortName : opus.uuid)}/identify"
         }
     }
 
-    private getDocumentsUrl(opus) {
-        "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/documents"
+    protected getDocumentsUrl(opus) {
+        "${request.contextPath}/opus/${encPath(opus.shortName ? opus.shortName : opus.uuid)}/documents"
     }
 
-    private getReportsUrl(opus) {
+    protected getReportsUrl(opus) {
         if(params.isOpusAdmin || params.isAlaAdmin){
-            "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/reports"
+            "${request.contextPath}/opus/${encPath(opus.shortName ? opus.shortName : opus.uuid)}/reports"
         }
     }
 
-    private getGlossaryUrl(opus) {
-        opus.glossaryUuid ? "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/glossary" : ""
+    protected getGlossaryUrl(opus) {
+        opus.glossaryUuid ? "${request.contextPath}/opus/${encPath(opus.shortName ? opus.shortName : opus.uuid)}/glossary" : ""
     }
 
-    private getAboutUrl(opus) {
-        "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/about"
+    protected getAboutUrl(opus) {
+        "${request.contextPath}/opus/${encPath(opus.shortName ? opus.shortName : opus.uuid)}/about"
     }
 
-    private getAboutUrl(opus, profile) {
-        "${request.contextPath}/opus/${opus.shortName ? opus.shortName : opus.uuid}/about#?profile=${profile.scientificName}"
+    protected getAboutUrl(opus, profile) {
+        "${request.contextPath}/opus/${encPath(opus.shortName ? opus.shortName : opus.uuid)}/about#?profile=${encFragment(profile.scientificName)}"
     }
 
-    private getOpusUrl(opus) {
+    protected getOpusUrl(opus) {
         if(opus){
-            createLink(uri: "/opus/${opus.shortName ?: opus.uuid}", absolute: true)
+            createLink(uri: "/opus/${encPath(opus.shortName ?: opus.uuid)}", absolute: true)
         }
     }
 
 
-    private getProfileUrl(opus, profile) {
+    protected getProfileUrl(opus, profile) {
         if(opus && profile){
-            "${createLink(uri: "/opus/${opus.shortName ?: opus.uuid}/profile/${enc(profile.scientificName)}", absolute: true)}"
+            createLink(uri: "/opus/${encPath(opus.shortName ?: opus.uuid)}/profile/${encPath(profile.scientificName)}", absolute: true)
         }
     }
 }
