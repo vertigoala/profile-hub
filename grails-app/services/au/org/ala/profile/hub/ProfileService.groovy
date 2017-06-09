@@ -638,7 +638,7 @@ class ProfileService {
         SCSSErrorHandler errorHandler = new SCSSErrorHandler()
         errorHandler.setWarningsAreErrors(true);
         Resource input = assetResourceLocator.findAssetForURI("${scssFilename}")
-        String filename = "${scssFilename}.${opusId}.scss"
+        String filename = "${grailsApplication.config.temp.file.location}/${scssFilename}.${opusId}.scss"
         File writer = new File(filename)
 
         if(opusId){
