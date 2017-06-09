@@ -11,6 +11,8 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.servlet.http.Cookie
 
+import static au.org.ala.profile.hub.Utils.enc
+import static au.org.ala.profile.hub.Utils.encPath
 import static au.org.ala.profile.hub.WebServiceWrapperService.FLORULA_COOKIE
 import static au.org.ala.profile.hub.util.HubConstants.*
 import static au.org.ala.profile.security.Role.ROLE_ADMIN
@@ -514,7 +516,7 @@ class OpusController extends BaseController {
                 cookie.httpOnly = false
                 cookie.maxAge = -1
                 cookie.secure = false
-                cookie.setPath(request.contextPath)
+                cookie.setPath(createLink( uri: "/opus/${encPath(opusId)}" ).toString())
                 cookie.setDomain(request.serverName)
                 cookie.setValue(florulaListId)
                 response.addCookie(cookie)

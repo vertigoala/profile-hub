@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import com.google.common.net.UrlEscapers
 import org.apache.http.HttpStatus
 import org.apache.tika.config.TikaConfig
 import org.apache.tika.mime.MimeTypeException
@@ -9,6 +10,9 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+
+import static com.google.common.net.UrlEscapers.urlFragmentEscaper
+import static com.google.common.net.UrlEscapers.urlPathSegmentEscaper
 
 class Utils {
     static final String UUID_REGEX_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
@@ -56,6 +60,14 @@ class Utils {
         } catch (MimeTypeException e) {
             ''
         }
+    }
+
+    static String encPath(value) {
+        value ? urlPathSegmentEscaper().escape(value.toString()) : ''
+    }
+
+    static String encFragment(value) {
+        value ? urlFragmentEscaper().escape(value.toString()) : ''
     }
 
     static String enc(String value) {
