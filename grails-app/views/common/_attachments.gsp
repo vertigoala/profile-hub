@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-controller="AttachmentController as attachmentCtrl" ng-cloak>
+<div class="panel panel-default ${edit?'':'panel-override'}" ng-controller="AttachmentController as attachmentCtrl" ng-cloak>
     <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}Documents" title="Documents" condition="!attachmentCtrl.readonly || attachmentCtrl.attachments.length > 0"></navigation-anchor>
     <div class="panel-heading" ng-show="${!hideHeading}">
         <div class="row">

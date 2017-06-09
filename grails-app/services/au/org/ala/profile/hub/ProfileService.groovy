@@ -3,8 +3,13 @@ package au.org.ala.profile.hub
 import au.org.ala.profile.hub.util.ReportType
 import au.org.ala.web.AuthService
 import au.org.ala.ws.service.WebService
+import com.vaadin.sass.internal.ScssContext
+import com.vaadin.sass.internal.ScssStylesheet
+import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl
+import com.vaadin.sass.internal.handler.SCSSErrorHandler
 import org.apache.commons.lang.BooleanUtils
 import org.apache.http.entity.ContentType
+import org.springframework.core.io.Resource
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
 import javax.servlet.http.HttpServletResponse
@@ -23,6 +28,7 @@ class ProfileService {
     WebServiceWrapperService webServiceWrapperService
     AuthService authService
     UtilService utilService
+    def assetResourceLocator
 
     def getOpus(String opusId = "") {
         webServiceWrapperService.get("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}")?.resp
@@ -625,5 +631,84 @@ class ProfileService {
     def updateFlorulaList(String opusId, String florulaListId) {
         def url = "${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/florulaList"
         return webService.post(url, [florulaListId: florulaListId])
+    }
+
+    Map getStyleSheet(String opusId){
+        String scssFilename = 'mergedProfilesThemeColour.scss'
+        SCSSErrorHandler errorHandler = new SCSSErrorHandler()
+        errorHandler.setWarningsAreErrors(true);
+        Resource input = assetResourceLocator.findAssetForURI("${scssFilename}")
+        String filename = "${scssFilename}.${opusId}.scss"
+        File writer = new File(filename)
+
+        if(opusId){
+            Map opus = getOpus(opusId);
+            if(opus?.theme){
+                Map theme = opus.theme
+                String config = "";
+
+                if(theme.mainBackgroundColour){
+                    config += "\$main-background-colour: ${theme.mainBackgroundColour};"
+                }
+
+                if(theme.mainTextColour){
+                    config += "\$main-text-colour: ${theme.mainTextColour};"
+                }
+
+                if(theme.callToActionHoverColour){
+                    config += "\$call-to-action-hover-colour: ${theme.callToActionHoverColour};"
+                }
+
+                if(theme.callToActionColour){
+                    config += "\$call-to-action-colour: ${theme.callToActionColour};"
+                }
+
+                if(theme.callToActionTextColour){
+                    config += "\$call-to-action-text-colour: ${theme.callToActionTextColour};"
+                }
+
+                if(theme.footerBackgroundColour){
+                    config += "\$footer-background-colour: ${theme.footerBackgroundColour};"
+                }
+
+                if(theme.footerTextColour){
+                    config += "\$footer-text-colour: ${theme.footerTextColour};"
+                }
+
+                if(theme.footerBorderColour){
+                    config += "\$footer-border-colour: ${theme.footerBorderColour};"
+                }
+
+                if(theme.headerTextColour){
+                    config += "\$header-text-colour: ${theme.headerTextColour};"
+                }
+
+                if(theme.headerBorderColour){
+                    config += "\$header-border-colour: ${theme.headerBorderColour};"
+                }
+
+                writer.write(config)
+            }
+        }
+
+        writer.append(input.inputStream.text)
+
+        try {
+            // Parse stylesheet
+            ScssStylesheet scss = ScssStylesheet.get(filename, null,
+                    new SCSSDocumentHandlerImpl(), errorHandler);
+            if (scss == null) {
+                System.err.println("The scss file " + input
+                        + " could not be found.");
+                System.exit(2);
+            }
+
+            // Compile scss -> css
+            scss.compile(ScssContext.UrlMode.MIXED);
+
+            return  [css: scss.printState(), status: 'success'];
+        } catch (Exception e) {
+            return  [css: "An error occurred during compilation of SCSS file", status: 'failed'];
+        }
     }
 }

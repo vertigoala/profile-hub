@@ -532,6 +532,15 @@ class OpusController extends BaseController {
         handle response
     }
 
+    def getStyleSheet() {
+        if(!params.opusId){
+            badRequest("opusId is mandatory")
+        } else {
+            Map map = profileService.getStyleSheet(params.opusId)
+            render text: map.css, contentType: 'text/css';
+        }
+    }
+
     private def uploadTransferrable(Transferrable transferrable) {
 
         Map opus = profileService.getOpus(params.opusId)
@@ -580,6 +589,9 @@ class OpusController extends BaseController {
         render template: "editLandingPage"
     }
 
+    def editTheme = {
+        render template: "editTheme"
+    }
 
     def editOpusDetailsPanel = {
         render template: "editOpusDetails"

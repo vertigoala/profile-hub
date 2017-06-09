@@ -125,6 +125,7 @@ class UrlMappings {
         "/opus/$opusId/filter" controller: "opus", action: [GET: "filter"]
         "/opus/$opusId/documents" controller: "opus", action: [GET: "documents"]
         "/opus/$opusId/reports" controller: "opus", action: [GET: "reports"]
+        "/opus/$opusId/stylesheet" controller: "opus", action: [GET: "getStyleSheet"]
         "/opus" controller: "opus", action: [GET: "index"]
 
         "/dataResource/$dataResourceUid" controller: "collectory", action: [GET: "getResource"]

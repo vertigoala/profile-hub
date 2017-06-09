@@ -71,6 +71,7 @@
                     <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
                     <li><a href="#supportingCollections" du-smooth-scroll
                            class="font-xxsmall">Supporting collections</a></li>
+                    <li><a href="#theming" du-smooth-scroll class="font-xxsmall">Theming</a></li>
                 </g:else>
             </ul>
         </div>
@@ -87,6 +88,8 @@
                 <g:include controller="opus" action="editStylingPanel" params="[opusId: params.opusId]"/>
 
                 <g:include controller="opus" action="editLandingPagePanel" params="[opusId: params.opusId]"/>
+
+                <g:include controller="opus" action="editTheme" params="[opusId: params.opusId]"/>
 
                 <g:render template="editProfileEditingOptions" model="[opusId: params.opusId]"/>
 

@@ -17,6 +17,7 @@
     </script>
     <g:layoutHead/>
     <asset:stylesheet href="application.css" />
+    <link href="${createLink(uri: "/opus/${opus?.uuid?:'none'}/stylesheet")}" rel="stylesheet"/>
     <asset:javascript src="head.js" />
     <style type="text/css">
     #banner-image {
@@ -40,7 +41,7 @@
     %{--End Google Analytics--}%
 </head>
 
-<body id="${pageProperty(name: 'body.id')}" onload="${pageProperty(name: 'body.onload')}" ng-app="profileEditor">
+<body id="${pageProperty(name: 'body.id')}" class="${request.forwardURI?.endsWith("update")?'':'public'}" onload="${pageProperty(name: 'body.onload')}" ng-app="profileEditor">
 
 <ala:systemMessage/>
 
@@ -68,23 +69,23 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav bold">
+            <g:if test="${opusUrl}">
+                <li class="${pageName=='opus'?'active':''}"><a href="${opusUrl}">Home</a></li>
+            </g:if>
+            <g:if test="${browseUrl}">
+                <li class="${pageName=='browse'?'active':''}"><a href="${browseUrl}">Browse</a></li>
+            </g:if>
+            <g:if test="${glossaryUrl}">
+                <li class="${pageName=='glossary'?'active':''}"><a href="${glossaryUrl}">Glossary</a></li>
+            </g:if>
+            <g:if test="${glossaryUrl}">
+                <li class="${pageName=='about'?'active':''}"><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
+            </g:if>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
                 <li><delegated-search></delegated-search></li>
-                <g:if test="${opusUrl}">
-                    <li class="${pageName=='opus'?'active':''}"><a href="${opusUrl}">Home</a></li>
-                </g:if>
-                <g:if test="${browseUrl}">
-                    <li class="${pageName=='browse'?'active':''}"><a href="${browseUrl}">Browse</a></li>
-                </g:if>
-                <g:if test="${filterUrl}">
-                    <li class="${pageName=='filter'?'active':''}"><a href="${filterUrl}">Filter<g:if test="${hasFilter}"> <span class="filter-indicator" title="You currently have a filter applied to ${opus.shortName ?: opus.uuid}">◉</span></g:if></a></li>
-                </g:if>
-                <g:if test="${glossaryUrl}">
-                    <li class="${pageName=='glossary'?'active':''}"><a href="${glossaryUrl}">Glossary</a></li>
-                </g:if>
-                <g:if test="${glossaryUrl}">
-                    <li class="${pageName=='about'?'active':''}"><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
-                </g:if>
                 <g:render template="/layouts/login"/>
                 <li><p:help help-id="main"/></li>
             </ul>

@@ -66,7 +66,7 @@ grails.project.dependency.resolution = {
         compile 'com.google.guava:guava:19.0'
         compile 'com.google.code.findbugs:jsr305:3.0.1'
         compile 'com.squareup.retrofit2:retrofit:2.2.0'
-
+        compile "com.vaadin:vaadin-sass-compiler:0.9.13"
     }
 
     plugins {

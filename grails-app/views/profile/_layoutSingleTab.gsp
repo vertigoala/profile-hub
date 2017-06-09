@@ -107,38 +107,7 @@
     </div>
 </g:if>
 
-<div class="row margin-top-1">
-    <div class="col-md-12 col-xs-12 col-lg-12 small text-center" ng-cloak>
-        <p><span ng-show="profileCtrl.opus.copyrightText">&copy; {{ profileCtrl.opus.copyrightText }}.</span> <a
-                href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/about##copyright"
-                target="_blank">Copyright Notice</a>.</p>
-    </div>
-</div>
-
-<div class="row margin-top-1" ng-cloak ng-show="profileCtrl.profile.authorship.length > 0">
-    <navigation-anchor anchor-name="view_authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="profileCtrl.profile.authorship.length > 0"></navigation-anchor>
-
-    <div class="col-sm-12 col-md-8 profile-contributor-text">
-        <span ng-repeat="contrib in profileCtrl.profile.authorship"
-                                    ng-show="contrib.text">{{contrib.category | capitalize}}(s) - {{contrib.text}}<span
-                ng-show="!$last"><br/></span>
-        </span>
-        <g:if test="citation">
-            <g:if test="${profile?.authorship}">
-                <span>
-                    <br/><br/>
-                </span>
-            </g:if>
-            <span>
-                ${citation}
-            </span>
-        </g:if>
-    </div>
-    <div class="col-sm-12 col-md-4 last-updated-text">
-        Last updated: <span class="last-updated">{{profileCtrl.profile.lastUpdatedBy?profileCtrl.profile.lastUpdatedBy + ';':''}} {{ profileCtrl.profile.lastPublished | date : 'MMM d, y h:mm' }}</span><br>
-        Status: <span ng-bind="profileCtrl.profile.profileStatus"></span>
-    </div>
-</div>
+<g:render template="footer"></g:render>
 
 <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span
         class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
