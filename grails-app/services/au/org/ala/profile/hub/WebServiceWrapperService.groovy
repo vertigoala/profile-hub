@@ -28,6 +28,11 @@ class WebServiceWrapperService {
 
     String extractFlorulaId() {
         def wr = WebUtils.retrieveGrailsWebRequest()
-        wr.request.cookies.find { it.name == FLORULA_COOKIE }?.value
+        def request = wr.request
+        def value = wr.request.cookies.find { it.name == FLORULA_COOKIE }?.value
+        if (value) return value
+
+        def params = request.parameterMap[FLORULA_OVERRIDE_PARAM]
+        return params ? params.first() : ''
     }
 }

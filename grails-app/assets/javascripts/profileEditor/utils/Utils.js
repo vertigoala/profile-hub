@@ -75,7 +75,7 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
                 }
         }
 
-        return item;
+        return decodeURIComponent(item);
     }
 
     function stripQueryString(item) {
@@ -166,7 +166,7 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
         if (KEYWORDS.indexOf(entityId) > -1 || typeof entityId === 'undefined') {
             entityId = ""; // using empty string instead of null so the value does not convert to the string "null" if put into a url query string
         }
-        return entityId;
+        return decodeURIComponent(entityId);
     }
 
     /**

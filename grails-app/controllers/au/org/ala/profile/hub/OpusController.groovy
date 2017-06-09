@@ -522,7 +522,7 @@ class OpusController extends BaseController {
                 response.addCookie(cookie)
             }
             flash.message = "Filter ${florulaListId ? 'enabled' : 'removed'}"
-            redirect(uri: "/opus/${opusId}/filter")
+            redirect(uri: "/opus/${encPath(opusId)}/filter")
         }
     }
 

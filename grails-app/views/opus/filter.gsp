@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="au.org.ala.profile.hub.Utils" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +18,7 @@
         Any filter set will not persist beyond this browser session.
     </div>
 </auth:ifNotLoggedIn>
-<g:form uri="/opus/${params.opusId}/florulaList" method="POST">
+<g:form uri="/opus/${Utils.encPath(params.opusId)}/florulaList" method="POST">
     <div class="form-group">
         <label for="florulaListId">Filter</label>
         <g:select class="form-control" name="florulaListId" from="${lists}" value="${florulaListId}" optionKey="dataResourceUid" optionValue="listName" noSelection="[(null): '-- No filter --']" aria-describedby="helpBlock" />

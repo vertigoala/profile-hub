@@ -14,7 +14,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.validation.constraints.NotNull
 
-import static au.org.ala.profile.hub.WebServiceWrapperService.getFLORULA_COOKIE
+import static au.org.ala.profile.hub.WebServiceWrapperService.FLORULA_COOKIE
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_AUTHOR
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
 

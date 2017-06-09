@@ -10,6 +10,8 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.apache.http.entity.ContentType
+
+import static au.org.ala.profile.hub.Utils.encPath
 import static groovy.json.JsonOutput.*
 import javax.imageio.ImageIO
 import java.awt.*
@@ -641,7 +643,7 @@ class ImageService {
     }
 
     def updateLocalImageMetadata(String imageId, Map metadata) {
-        webService.post("${grailsApplication.config.profile.service.url}/image/${enc(imageId)}/metadata", metadata)
+        webService.post("${grailsApplication.config.profile.service.url}/image/${encPath(imageId)}/metadata", metadata)
     }
 
     def publishPrivateImage(String opusId, String profileId, String imageId) {

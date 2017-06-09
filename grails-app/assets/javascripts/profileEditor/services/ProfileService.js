@@ -1,7 +1,7 @@
 /**
  * Angular service for interacting with the profile service application
  */
-profileEditor.service('profileService', function ($http, util, $cacheFactory, config, $log) {
+profileEditor.service('profileService', function ($http, util, $cacheFactory, config, $log, $cookies) {
 
     function clearCache() {
         $log.debug("Clearing $http cache");
@@ -66,6 +66,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         }
 
         return currentPromise;
+    }
+
+    function addFlorulaOverrideIdToParams(params) {
+        var filterId = $cookies.phf;
+        if (filterId) {
+            params['florulaOverrideId'] = filterId;
+        }
     }
 
     return {
@@ -716,16 +723,25 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         search: function (opusId, term, options) {
-            var queryParams = "";
-            if (options) {
-                for (var key in options) {
-                    if (options.hasOwnProperty(key)) {
-                        queryParams += "&" + key + "=" + options[key]
-                    }
-                }
+            // var queryParams = "";
+            // if (options) {
+            //     for (var key in options) {
+            //         if (options.hasOwnProperty(key)) {
+            //             queryParams += "&" + key + "=" + options[key]
+            //         }
+            //     }
+            // }
+            var params;
+            if (angular.isDefined(options)) {
+                params = angular.copy(options);
+            } else {
+                params = {};
             }
 
-            var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&term=" + term + queryParams);
+            addFlorulaOverrideIdToParams(params);
+            options['opusId'] = opusId;
+            options['term'] = term;
+            var future = $http.get(util.contextRoot() + "/profile/search", {params: params});
             future.then(function (response) {
                 $log.debug("Profile search returned with response code " + response.status);
             });
@@ -747,7 +763,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             if (typeof opusId == 'undefined') {
                 opusId = "";
             }
-            var future = $http.get(util.contextRoot() + "/profile/search/scientificName?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard + "&sortBy=" + sortBy + "&autoCompleteScientificName=" + autoCompleteScientificName);
+
+            var params = {
+                opusId: opusId,
+                scientificName: scientificName,
+                sortBy: sortBy,
+                useWildcard: useWildcard,
+                autoCompleteScientificName: autoCompleteScientificName
+            };
+            addFlorulaOverrideIdToParams(params);
+            var future = $http.get(util.contextRoot() + "/profile/search/scientificName", { params: params });
             future.then(function (response) {
                 $log.debug("Profile search returned with response code " + response.status);
             });
@@ -755,13 +780,18 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         profileSearchByTaxonLevel: function (opusId, taxon, filter, max, offset) {
-            if (!_.isUndefined(filter)) {
-                filter = "&filter=" + filter
-            } else {
-                filter = "";
-            }
 
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/level?opusId=" + opusId + "&taxon=" + taxon + "&max=" + max + "&offset=" + offset + filter);
+            var params = {
+                opusId: opusId,
+                taxon: taxon,
+                max: max,
+                offset: offset,
+            };
+            if (angular.isDefined(filter)) {
+                params['filter'] = filter;
+            }
+            addFlorulaOverrideIdToParams(params);
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/level", { params: params });
             future.then(function (response) {
                 $log.debug("Facet search returned with response code " + response.status);
             });
@@ -774,7 +804,18 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 sortBy: 'name',
                 immediateChildrenOnly: false
             }, optionalParams);
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset + "&sortBy=" + options.sortBy + "&countChildren=" + options.countChildren + "&immediateChildrenOnly=" + options.immediateChildrenOnly);
+            var params = {
+                opusId: opusId,
+                taxon: taxon,
+                scientificName: scientificName,
+                max: max,
+                offset: offset
+            };
+            params['countChildren'] = options.countChildren;
+            params['sortBy'] = options.sortBy;
+            params['immediateChildrenOnly'] = options.immediateChildrenOnly;
+            addFlorulaOverrideIdToParams(params);
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name", { params: params });
             future.then(function (response) {
                 $log.debug("Facet search returned with response code " + response.status);
             });
@@ -785,7 +826,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             var options = angular.extend({
                 immediateChildrenOnly: false
             }, optionalParams);
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name/count?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&immediateChildrenOnly=" + options.immediateChildrenOnly);
+            var params = {
+                opusId: opusId,
+                taxon: taxon,
+                scientificName: scientificName
+            };
+            params['immediateChildrenOnly'] = options.immediateChildrenOnly;
+            addFlorulaOverrideIdToParams(params);
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name/count", { params: params });
             future.then(function (response) {
                 $log.debug("Profile count  by taxon level and name returned with response code " + response.status);
             });
@@ -793,13 +841,18 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         profileSearchGetImmediateChildren: function (opusId, rank, name, max, offset, filter) {
-            if (_.isUndefined(filter) || !filter || filter.trim().length == 0) {
-                filter = "";
-            } else {
-                filter = "&filter=" + filter;
+            var params = {
+                opusId: opusId,
+                rank: rank,
+                name: name,
+                max: max,
+                offset: offset
+            };
+            if (!(angular.isUndefined(filter) || !filter || filter.trim().length == 0)) {
+                params['filter'] = filter;
             }
-
-            var future = $http.get(util.contextRoot() + "/profile/search/children?opusId=" + opusId + "&rank=" + rank + "&name=" + name + "&max=" + max + "&offset=" + offset + filter);
+            addFlorulaOverrideIdToParams(params);
+            var future = $http.get(util.contextRoot() + "/profile/search/children", { params: params });
             future.then(function (response) {
                 $log.debug("Child search returned with response code " + response.status);
             });
@@ -807,7 +860,11 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         getTaxonLevels: function (opusId) {
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/levels?opusId=" + opusId);
+            var params = {
+                opusId: opusId
+            };
+            addFlorulaOverrideIdToParams(params);
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/levels", { params: params });
             future.then(function (response) {
                 $log.debug("Get taxon levels returned with response code " + response.status);
             });
