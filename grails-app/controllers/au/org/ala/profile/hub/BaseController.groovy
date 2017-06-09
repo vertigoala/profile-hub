@@ -32,8 +32,9 @@ class BaseController extends BasicWSController {
         } else {
             model << [
                     banners: [
-                            imageUrl : opus.brandingConfig?.opusBannerUrl ?:
+                            [ imageUrl : opus.brandingConfig?.opusBannerUrl ?:
                                     opus?.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL
+                            ]
                     ],
                     bannerHeight: opus.brandingConfig?.opusBannerHeight ?:
                             opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX
