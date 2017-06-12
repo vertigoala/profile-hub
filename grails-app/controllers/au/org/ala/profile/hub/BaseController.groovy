@@ -16,7 +16,7 @@ class BaseController extends BasicWSController {
         return !grailsApplication.config.feature[feature] || grailsApplication.config.feature[feature].toBoolean()
     }
 
-    protected getBannerItems(opus, doMainBanner = false) {
+    protected getBannerItems(opus, doMainBanner = false, isProfile = false) {
         def model = [
                 opusLogoUrl   : opus.opusLayoutConfig?.opusLogoUrl ?: null,
                 doMainBanner  : doMainBanner,
@@ -26,18 +26,32 @@ class BaseController extends BasicWSController {
                 duration      : opus.opusLayoutConfig?.duration
         ]
 
-        if (doMainBanner && opus.opusLayoutConfig?.images) {
+        if (doMainBanner && opus?.opusLayoutConfig?.images) {
             model << [ banners: opus.opusLayoutConfig.images,
                        bannerHeight: '500' ]
+        } else if (isProfile) {
+            model << [
+                    banners: [
+                            [ imageUrl : opus?.brandingConfig?.profileBannerUrl ?:
+                                    opus?.brandingConfig?.opusBannerUrl ?:
+                                            DEFAULT_OPUS_BANNER_URL
+                            ]
+                    ],
+                    bannerHeight: opus?.brandingConfig?.profileBannerHeight ?:
+                            opus?.brandingConfig?.opusBannerHeight ?:
+                                    DEFAULT_OPUS_BANNER_HEIGHT_PX
+            ]
         } else {
             model << [
                     banners: [
-                            [ imageUrl : opus.brandingConfig?.opusBannerUrl ?:
-                                    opus?.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL
+                            [ imageUrl: opus?.brandingConfig?.opusBannerUrl ?:
+                                    opus?.brandingConfig?.profileBannerUrl ?:
+                                            DEFAULT_OPUS_BANNER_URL
                             ]
                     ],
-                    bannerHeight: opus.brandingConfig?.opusBannerHeight ?:
-                            opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX
+                    bannerHeight: opus?.brandingConfig?.opusBannerHeight ?:
+                            opus?.brandingConfig?.profileBannerHeight ?:
+                                    DEFAULT_OPUS_BANNER_HEIGHT_PX
             ]
         }
 

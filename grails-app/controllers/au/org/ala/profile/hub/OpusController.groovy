@@ -655,7 +655,7 @@ class OpusController extends BaseController {
                 bannerHeight    : opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                 footerText      : opus.footerText,
                 contact         : opus.contact,
-                bannerItems     : getBannerItems(opus, doMainBanner),
+                bannerItems     : getBannerItems(opus, doMainBanner, false),
                 opusUrl         : getOpusUrl(opus),
                 searchUrl       : getSearchUrl(opus),
                 browseUrl       : getBrowseUrl(opus),
