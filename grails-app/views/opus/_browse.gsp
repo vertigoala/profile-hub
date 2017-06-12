@@ -80,13 +80,15 @@
     <div class="col-lg-9 col-md-8 col-xs-12" ng-cloak>
         <div ng-show="!browseCtrl.selectedTaxon.name && !browseCtrl.searchTerm">
             <p>
-                Browse using the navigation pane to the left. You can jump to a particular taxon by typing the start of the Taxon name into the quick browse option at the bottom of the pane.
+                Browse the taxonomic hierarchy using the navigation pane <span class="hidden-xs hidden-sm">to the left</span><span class="hidden-md hidden-lg">above</span>. You can also jump to a particular taxon in the hierarchy by typing the beginning of the name into the ‘Quick browse’ option at the bottom of the pane.
+            </p>
+            <p>
+                Alternatively, you can select the ‘Search’ navigator at the top of this page and perform a text or name-based search.
             </p>
             <p ng-if="opusCtrl.opus.keybaseKeyId">
-                Alternatively, you can select the Search navigation item and perform a text or name-based search, or select the Identify navigation item and find the profile using the dichotomous key player.
+                The ‘Identify’ button on the homepage will help you select the appropriate profile using dichotomous keys.
             </p>
         </div>
-
 
         <div class="row bottom-border" ng-show="browseCtrl.selectedTaxon.name || browseCtrl.searchTerm">
             <div class="col-md-6">
