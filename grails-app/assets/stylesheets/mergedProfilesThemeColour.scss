@@ -1467,10 +1467,8 @@ hr.comment-divider {
   border-top: 1px solid #fa6158;
 }
 
-.float-bottom-left {
-  bottom: 10px;
-  left: 10px;
-  position: fixed;
+.scroll-to-top {
+  position: relative;
 }
 
 .system-message {

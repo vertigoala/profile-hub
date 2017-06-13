@@ -130,8 +130,8 @@
         </div>
     </div>
 
-    <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span
-            class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
+    <a href="#top" du-smooth-scroll target="_self" class="btn btn-link scroll-to-top" title="Scroll to top">
+        <span class="fa fa-arrow-up"></span><br>Top</a>
 </div>
 
 </body>
