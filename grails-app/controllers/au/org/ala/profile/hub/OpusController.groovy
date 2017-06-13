@@ -1,5 +1,6 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.security.PrivateCollectionSecurityExempt
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import au.org.ala.ws.service.WebService
@@ -11,7 +12,6 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.servlet.http.Cookie
 
-import static au.org.ala.profile.hub.Utils.enc
 import static au.org.ala.profile.hub.Utils.encPath
 import static au.org.ala.profile.hub.WebServiceWrapperService.FLORULA_COOKIE
 import static au.org.ala.profile.hub.util.HubConstants.*
@@ -532,6 +532,7 @@ class OpusController extends BaseController {
         handle response
     }
 
+    @PrivateCollectionSecurityExempt
     def getStyleSheet() {
         if(!params.opusId){
             badRequest("opusId is mandatory")
