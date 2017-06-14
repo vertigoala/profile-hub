@@ -1,4 +1,4 @@
-<%@ page contentType="text/css;charset=UTF-8" %>
+<%@ page contentType="text/css;charset=UTF-8" defaultCodec="none" %>
 body
 , .backgroundcolor--pale-sky
 , .navbar-default .navbar-nav a
