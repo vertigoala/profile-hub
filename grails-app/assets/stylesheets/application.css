@@ -8,6 +8,8 @@
 *= require keybase-override.css
 *= require dualMultiselect/dualmultiselect.css
 *= require nsl.css
+* TODO Remove colours from mergedProfilesThemeColour after merging branch issue486
+*= require mergedProfilesThemeColour
 *= require tree.css
 *= require sidebar.css
 *= require bootstrap-fileupload/bootstrap-fileupload.min.css

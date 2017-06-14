@@ -17,7 +17,7 @@
     </script>
     <g:layoutHead/>
     <asset:stylesheet href="application.css" />
-    <link href="${createLink(uri: "/opus/${opus?.uuid?:'none'}/stylesheet")}" rel="stylesheet"/>
+    <link rel="stylesheet" href="${createLink(controller: "stylesheet", action:"opus", id: "${opus?.uuid ?: ''}", params:[ver: opus?.lastUpdated ?: g.meta(name: 'app.version') + '.' + g.meta(name: 'app.build')] )}" />
     <asset:javascript src="head.js" />
     <style type="text/css">
     #banner-image {
