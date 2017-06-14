@@ -66,10 +66,6 @@ grails.project.dependency.resolution = {
         compile 'com.google.guava:guava:19.0'
         compile 'com.google.code.findbugs:jsr305:3.0.1'
         compile 'com.squareup.retrofit2:retrofit:2.2.0'
-        compile 'org.mozilla:rhino:1.7R4'
-        compile ("com.vaadin:vaadin-sass-compiler:0.9.13"){
-            exclude: "rhino:js:1.7R2"
-        }
 
     }
 
@@ -109,6 +105,7 @@ grails.project.dependency.resolution = {
         //compile ":twitter-bootstrap:3.3.6"
         runtime ":jquery:1.11.1"
         compile ":asset-pipeline:2.14.1"
+        compile ':sass-asset-pipeline:2.7.2' // 2.9+ requires Java 8, TODO upgrade to Java 8
         runtime ":angular-annotate-asset-pipeline:2.4.1"
         runtime ":angular-template-asset-pipeline:2.3.0"
 

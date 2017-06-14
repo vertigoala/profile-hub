@@ -532,16 +532,6 @@ class OpusController extends BaseController {
         handle response
     }
 
-    @PrivateCollectionSecurityExempt
-    def getStyleSheet() {
-        if(!params.opusId){
-            badRequest("opusId is mandatory")
-        } else {
-            Map map = profileService.getStyleSheet(params.opusId)
-            render text: map.css, contentType: 'text/css';
-        }
-    }
-
     private def uploadTransferrable(Transferrable transferrable) {
 
         Map opus = profileService.getOpus(params.opusId)
