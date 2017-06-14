@@ -27,8 +27,7 @@
                 <div ng-bind-html="opusCtrl.opus.opusLayoutConfig.updatesSection">
                 </div>
             </div>
-            </div>  <!-- /col-sm-4 -->
-        </div>
+        </div>  <!-- /col-sm-4 -->
     </div>
 </div>
 

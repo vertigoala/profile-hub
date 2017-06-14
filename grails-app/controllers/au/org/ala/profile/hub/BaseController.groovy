@@ -23,12 +23,27 @@ class BaseController extends BasicWSController {
                 overlayText   : opus.opusLayoutConfig?.bannerOverlayText,
                 gradient      : opus.opusLayoutConfig?.gradient,
                 gradientWidth : opus.opusLayoutConfig?.gradientWidth,
-                duration      : opus.opusLayoutConfig?.duration
+                duration      : opus.opusLayoutConfig?.duration,
+                uuid          : UUID.randomUUID().toString()
         ]
 
         if (doMainBanner && opus?.opusLayoutConfig?.images) {
+            def displayDuration = opus.opusLayoutConfig?.duration ?: 5000
+            def fadeDuration = 1000
+            def numberOfImages = opus.opusLayoutConfig.images.size()
+            def totalDuration = (displayDuration + fadeDuration) * numberOfImages
             model << [ banners: opus.opusLayoutConfig.images,
-                       bannerHeight: '500' ]
+                       bannerHeight: '500',
+                       displayDuration: displayDuration,
+                       fadeDuration: fadeDuration,
+                       totalDuration: totalDuration,
+                       keyframes: [
+                               [opacity: 1.0d, offset: 0.0d, easing: 'linear'],
+                               [opacity: 1.0d, offset: displayDuration / totalDuration, easing: 'linear'],
+                               [opacity: 0.0d, offset: 1.0d / numberOfImages, easing: 'ease-in-out'],
+                               [opacity: 0.0d, offset: 1.0d - fadeDuration / totalDuration, easing: 'linear'],
+                               [opacity: 1.0d, offset: 1.0d, easing: 'ease-in-out']
+                       ]]
         } else if (isProfile) {
             model << [
                     banners: [
