@@ -32,7 +32,7 @@
                                 </div>
                             </div>
                         </g:if>
-                        <g:if test="${contact.email?.contains('@')}">
+                        <g:if test="${contact?.email?.contains('@')}">
                             <div class="row">
                                 <div class="col-xs-12">
                                     <a class="soc-envelope" href="${'mailto:' + contact.email}"
@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                         </g:if>
-                        <g:else>
+                        <g:elseif test="${contact?.email}">
                             <div class="row">
                                 <div class="col-xs-12">
                                     <a class="soc-envelope" href="${contact.email}"
@@ -49,7 +49,7 @@
                                        target="_blank"><i class="fa fa-globe"></i>&nbsp;&nbsp;Contact the Atlas</a>
                                 </div>
                             </div>
-                        </g:else>
+                        </g:elseif>
                         <g:if test="${contact?.facebook || contact?.twitter}">
                             <div class="row margin-top-1">
                                 <div class="col-xs-12">
