@@ -45,8 +45,7 @@ class AccessControlFilters {
                                 // used to determine what controls need to be displayed to the user (e.g. edit buttons) when
                                 // rendering the (unsecured) views.
                                 def opus = null
-                                if (params.opusId && !params.opusId.contains(",")) {
-                                    opus = profileService.getOpus(params.opusId)
+                                if (params.opusId && !params.opusId.contains(",") && (opus = profileService.getOpus(params.opusId))) {
 
                                     params.isOpusAdmin = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_ADMIN.toString()
