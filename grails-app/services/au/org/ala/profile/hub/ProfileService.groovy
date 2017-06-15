@@ -379,6 +379,12 @@ class ProfileService {
         webServiceWrapperService.get("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/glossary/${encPath(opusId)}")
     }
 
+    def getGlossary(String opusId, String prefix) {
+        log.debug("Fetching glossary items in ${prefix} for opus ${opusId}")
+
+        webServiceWrapperService.get("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/glossary/${encPath(prefix)}")
+    }
+
     def uploadGlossary(String opusId, String glossaryId, List items) {
         log.debug("Uploading glossary items for opus ${opusId}")
 

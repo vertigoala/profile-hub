@@ -961,7 +961,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         getGlossary: function (opusId, prefix) {
             $log.debug("Fetching glossary for opus " + opusId);
 
-            var future = $http.get(config.profileServiceUrl + "/opus/" + opusId + "/glossary/" + prefix);
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/glossary/" + prefix);
             future.then(function (response) {
                 $log.debug("Glossary fetched with response code " + response.status);
             });

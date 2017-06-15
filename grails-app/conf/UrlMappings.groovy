@@ -95,6 +95,7 @@ class UrlMappings {
         "/opus/$opusId/supportingCollections/update" controller: "opus", action: [POST: "updateSupportingCollections"]
 
         "/opus/$opusId/glossary/json" controller: "glossary", action: [GET: "getGlossary"]
+        "/opus/$opusId/glossary/$prefix" controller: "glossary", action: [GET: "getGlossary"]
         "/opus/$opusId/glossary/upload" controller: "glossary", action: [POST: "upload"]
         "/opus/$opusId/glossary/item/create" controller: "glossary", action: [PUT: "saveItem"]
         "/opus/$opusId/glossary/item/$glossaryItemId/update" controller: "glossary", action: [POST: "updateItem"]

@@ -69,13 +69,16 @@ class GlossaryController extends BaseController {
     }
 
     def getGlossary() {
+        def response = null;
         if (!params.opusId) {
             badRequest()
+        } else if (params.prefix) {
+            response = profileService.getGlossary(params.opusId as String, params.prefix as String)
         } else {
-            def response = profileService.getGlossary(params.opusId as String)
-
-            handle response
+            response = profileService.getGlossary(params.opusId as String)
         }
+
+        handle response
     }
 
     @Secured(role = Role.ROLE_PROFILE_ADMIN)
