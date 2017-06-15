@@ -150,10 +150,10 @@
                     <label for="helpTextIdentify">Identify</label>
                     <input type="text" class="form-control" id="helpTextIdentify" name="helpTextIdentify" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextIdentify"/>
                 </div>
-                %{--<div class="form-group">--}%
-                    %{--<label for="helpTextFilter">Filter</label>--}%
-                    %{--<input type="text" class="form-control" id="helpTextFilter" name="helpTextFilter" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextFilter"/>--}%
-                %{--</div>--}%
+                <div class="form-group">
+                    <label for="helpTextFilter">Filter</label>
+                    <input type="text" class="form-control" id="helpTextFilter" name="helpTextFilter" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextFilter"/>
+                </div>
                 <div class="form-group">
                     <label for="helpTextDocuments">Context</label>
                     <input type="text" class="form-control" id="helpTextDocuments" name="helpTextDocuments" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextDocuments"/>

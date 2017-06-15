@@ -23,7 +23,6 @@ class ProfileService {
     WebServiceWrapperService webServiceWrapperService
     AuthService authService
     UtilService utilService
-    def assetResourceLocator
 
     def getOpus(String opusId = "") {
         webServiceWrapperService.get("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}")?.resp
