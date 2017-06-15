@@ -17,7 +17,7 @@
                 <g:if test="${opus.keybaseProjectId != null}">
                     <g:link uri="/opus/${opus.shortName ?: opus.uuid}/identify" class="btn btn-default btn-lg btn-block " tooltip="${opus.opusLayoutConfig.helpTextIdentify}" tooltip-placement="right" tooltip-append-to-body="true">Identify</g:link>
                 </g:if>
-                %{--<g:link uri="/opus/${opus.shortName ?: opus.uuid}/filter" class="btn btn-default btn-lg btn-block" tooltip="${opus.opusLayoutConfig.helpTextFilter}" tooltip-placement="right" tooltip-append-to-body="true">Filter</g:link>--}%
+                <g:link uri="/opus/${opus.shortName ?: opus.uuid}/filter" class="btn btn-default btn-lg btn-block" tooltip="${opus.opusLayoutConfig.helpTextFilter}" tooltip-placement="right" tooltip-append-to-body="true">Filter</g:link>
                 <g:link uri="/opus/${opus.shortName ?: opus.uuid}/documents" class="btn btn-default btn-lg btn-block" tooltip="${opus.opusLayoutConfig.helpTextDocuments}" tooltip-placement="right" tooltip-append-to-body="true">Context</g:link>
             </div>  <!-- /col-sm-4 -->
             <div class="col-sm-4 col-xs-12" ng-bind-html="opusCtrl.opus.opusLayoutConfig.explanatoryText">
