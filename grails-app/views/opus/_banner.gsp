@@ -12,7 +12,7 @@
 </g:if>
 <div class="banner-wrapper">
     <div class="banner">
-        <div class="banner-container" style="max-height: ${bannerItems.bannerHeight}px">
+        <div class="banner-container">
             <g:if test="${bannerItems.doMainBanner}"> %{-- && it.type == 'css' --}%
                 <g:each status="index" in="${bannerItems?.banners}" var="it">
                     <div class="bg-item" style="

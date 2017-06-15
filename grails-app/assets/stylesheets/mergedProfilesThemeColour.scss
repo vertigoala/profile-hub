@@ -2518,7 +2518,7 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
           flex-direction: row;
 
           .banner-logo-title {
-            font-size: 3em;
+            font-size: 1.5em;
             font-weight: bold;
             align-self: center;
             text-transform: uppercase;
@@ -2553,6 +2553,9 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
 
           .banner-logo-container {
             width: 750px;
+            .banner-logo-title {
+              font-size: 2em;
+            }
           }
         }
       }
