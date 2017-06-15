@@ -10,7 +10,7 @@
 /* Global
 ================================= */
 body {
-  font-family: 'Arial', "Helvetica Neue", Helvetica, sans-serif;
+  font-family: 'Roboto', 'Arial', "Helvetica Neue", Helvetica, sans-serif;
   font-size: 14px;
   height: 100%;
   margin: 0;
@@ -2399,8 +2399,8 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
           flex-direction: row;
 
           .banner-logo-title {
+            font-family: 'Raleway', sans-serif;
             font-size: 1.5em;
-            font-weight: bold;
             align-self: center;
             text-transform: uppercase;
           }
