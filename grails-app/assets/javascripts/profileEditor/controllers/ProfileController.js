@@ -560,17 +560,18 @@ profileEditor.controller('ProfileController',
     // Support for lazy loading the keyplayer.
     self.keybaseTemplateUrl = undefined;
     self.masterListKeybaseItemsLoading = false;
+    self.masterListKeybaseItemsLoaded = false;
     self.masterListKeybaseItems = null;
 
     self.canInitialiseKeyplayer = function() {
-        if (self.masterListKeybaseItems !== null) return true;
+        if (self.masterListKeybaseItems !== null || self.masterListKeybaseItemsLoaded) return true;
         if (!self.opus) return false;
-        if (!self.opus.masterListUid) return true;
+        // if (!self.opus.masterListUid) return true;
         if (!self.masterListKeybaseItemsLoading) {
-            // well hacked son
             self.masterListKeybaseItemsLoading = true;
             profileService.loadMasterListItems(self.opus).then(function(results) {
                 self.masterListKeybaseItems = results;
+                self.masterListKeybaseItemsLoaded = true;
             }, function(error) {
                 $log.error("Failed to load master list items", error);
                 var msg;

@@ -18,6 +18,7 @@ import static au.org.ala.profile.hub.util.HubConstants.*
 import static au.org.ala.profile.security.Role.ROLE_ADMIN
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
 import static javax.servlet.http.HttpServletResponse.SC_BAD_GATEWAY
+import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT
 
 class OpusController extends BaseController {
 
@@ -490,11 +491,16 @@ class OpusController extends BaseController {
         if (!params.opusId) {
             badRequest "opusId is mandatory"
         } else {
-            def list = profileService.getMasterListKeybaseItems(params.opusId)?.resp
-            if (list == null) {
-                notFound "Ain't no master list"
+            def resp = profileService.getMasterListKeybaseItems(params.opusId)
+            if (resp.status == SC_NO_CONTENT) {
+                response.sendError(SC_NO_CONTENT)
             } else {
-                respond list
+                def list = response?.resp
+                if (list == null) {
+                    notFound "Ain't no master list"
+                } else {
+                    respond list
+                }
             }
         }
     }
