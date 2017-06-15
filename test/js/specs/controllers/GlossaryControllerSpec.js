@@ -4,6 +4,7 @@ describe("GlossaryController tests", function () {
     var form;
     var messageService;
     var profileService;
+    var http;
     var util = {
         getQueryParameter: function(param) {},
         confirm: function(msg) {},
@@ -76,6 +77,12 @@ describe("GlossaryController tests", function () {
         spyOn(form, "$setDirty");
     }));
 
+    beforeEach(inject(function (_$httpBackend_) {
+        http = _$httpBackend_;
+        http.whenGET(/\/path\/opus\/(.+)\/json/)
+            .respond([200, {uuid: 'opus', title: 'opus'}]);
+    }));
+
     it("should initialise the prefix and page to 'a' when there is no page query parameter when the controller loads", function() {
         spyOn(util, "getQueryParameter").and.returnValue(null);
 
@@ -128,6 +135,7 @@ describe("GlossaryController tests", function () {
         scope.glossaryCtrl.loadGlossary();
         scope.$apply();
 
+        http.expectGET('/path/opus/opusId/json');
         expect(messageService.alert).toHaveBeenCalled();
     });
 
@@ -139,6 +147,7 @@ describe("GlossaryController tests", function () {
         scope.glossaryCtrl.loadGlossary();
         scope.$apply();
 
+        http.expectGET('/path/opus/opusId/json');
         expect(scope.glossaryCtrl.glossary).toBeDefined();
         // the order of the response is a, c, b
         expect(scope.glossaryCtrl.glossary.items[0].term).toBe("a");
@@ -154,6 +163,7 @@ describe("GlossaryController tests", function () {
         scope.glossaryCtrl.loadGlossary();
         scope.$apply();
 
+        http.expectGET('/path/opus/opusId/json');
         expect(location.search).toHaveBeenCalledWith("page", "pre");
     });
 
@@ -284,6 +294,7 @@ describe("GlossaryController tests", function () {
         scope.glossaryCtrl.editGlossaryItem(1);
         scope.$apply();
 
+        http.expectGET('/path/opus/opusId/json');
         expect(scope.glossaryCtrl.glossary.items[1].uuid).toBe("newId");
     });
 
