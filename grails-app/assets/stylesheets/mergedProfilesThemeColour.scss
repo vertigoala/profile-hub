@@ -1,13 +1,3 @@
-$main-background-colour: #F8F8F8 !default;
-$main-text-colour: #2E4453 !default;
-$call-to-action-hover-colour: #005082 !default;
-$call-to-action-colour: #0087BE !default;
-$call-to-action-text-colour: #0087BE !default;
-$footer-background-colour: #F8F8F8 !default;
-$footer-text-colour: #2E4453 !default;
-$footer-border-colour: #0087BE !default;
-$header-text-colour: #2E4453 !default;
-$header-border-colour: #0087BE !default;
 /**
  * theme.css
  **/
@@ -20,8 +10,6 @@ $header-border-colour: #0087BE !default;
 /* Global
 ================================= */
 body {
-  background-color: $main-background-colour;
-  color: $main-text-colour;
   font-family: 'Arial', "Helvetica Neue", Helvetica, sans-serif;
   font-size: 14px;
   height: 100%;
@@ -72,7 +60,6 @@ body {
 ================================= */
 
 p, li, ul {
-  color: $main-text-colour;
   font-size: 14px;
   font-weight: 200;
   line-height: 1.5em;
@@ -89,10 +76,6 @@ ul.pull-right {
 
 li.divider {
   margin-top: 20px;
-}
-
-h4 {
-  color: $call-to-action-colour;
 }
 
 .font-xsmall {
@@ -119,7 +102,6 @@ h4 {
   margin-bottom: .3em;
   margin-top: 1em;
   text-transform: none;
-  color: $call-to-action-colour;
 }
 
 .heading-medium {
@@ -159,7 +141,7 @@ h4 {
 }
 
 .heading-underlined {
-  border: 0 solid $call-to-action-colour;
+  border: 0 solid;
   border-bottom-width: 1px;
   padding-bottom: 10px;
 }
@@ -404,14 +386,6 @@ h4 {
   background-color: #637073;
 }
 
-.color--pale-sky {
-  color: $main-background-colour;
-}
-
-.backgroundcolor--pale-sky {
-  background-color: $main-background-colour;
-}
-
 /* -- The Next Web theme -- */
 .background-pomegranate {
   background-color: #ff3c1f;
@@ -470,29 +444,6 @@ h4 {
 }
 
 /* -- The Word Press -- */
-.background-lochmara {
-  background-color: $call-to-action-colour;
-}
-
-.color-lochmara {
-  color: $call-to-action-colour;
-}
-
-.background-venice-blue {
-  background-color: $call-to-action-hover-colour;
-}
-
-.color-venice-blue {
-  color: $call-to-action-hover-colour;
-}
-
-.background-madison {
-  background-color: $main-text-colour;
-}
-
-.color-madison {
-  color: $main-text-colour;
-}
 
 .background-catskill-white {
   background-color: #F3F6F8;
@@ -510,26 +461,19 @@ h4 {
   margin-bottom: 0;
   min-height: 70px;
   padding-top: 10px;
-  border-bottom: 2px solid $call-to-action-colour;
-  border-radius: 0px;
+  border-bottom: 2px solid;
+  border-radius: 0;
 }
 
 .navbar li, .navbar p {
   font-size: 14px;
 }
 
-.navbar-default .navbar-nav a{
-  color: $header-text-colour;
-  background-color: $main-background-colour;
-}
-
-
 .navbar-default .navbar-nav.bold a{
   font-weight: bold;
 }
 
-.navbar-default .navbar-nav>.active>a{
-  color: $call-to-action-hover-colour;
+.navbar-default .navbar-nav > .active > a{
   background-color: #fff;
 }
 
@@ -571,10 +515,6 @@ h4 {
   background-color: #000;
 }
 
-.jumbotron {
-  background-color: $call-to-action-colour;
-}
-
 #banner-image > div > div > h2 {
   color: white;
 }
@@ -584,12 +524,6 @@ h4 {
   min-height: 100px;
   background-position: center center;
 }
-/* Breadcrumb
-================================= */
-.breadcrumb > .active {
-  color: $call-to-action-colour;
-}
-
 /* Btn (Button)
 ================================= */
 
@@ -599,24 +533,10 @@ h4 {
 
 .btn-default {
   background-color: #fff;
-  border-color: $call-to-action-colour;
-  color: $call-to-action-colour;
 }
 
 .btn-primary {
-  background-color: $call-to-action-colour;
-  border-color: $call-to-action-colour;
   color: #FFFFFF;
-}
-
-.btn-default:hover {
-  border-color: $call-to-action-hover-colour;
-  color: $call-to-action-hover-colour;
-}
-
-.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-  background-color: $call-to-action-hover-colour;
-  border-color: $call-to-action-hover-colour;
 }
 
 .button-toolbar {
@@ -651,12 +571,12 @@ h4 {
 }
 
 .panel-override.panel, .panel-override.panel .panel-heading,.panel-override.panel .panel-footer, .panel-override.panel .panel-body{
-  border: 0px;
+  border: 0;
   background-color: inherit;
 }
 
 .panel-override.panel [class^="col-"]{
-  padding-left: 0px;
+  padding-left: 0;
 }
 
 /* Main stats
@@ -750,18 +670,15 @@ h4 {
 /* Tabs
 ================================= */
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-  background-color: $main-background-colour;
-  border: 1px solid $call-to-action-colour;
+  border: 1px solid;
 }
 
 .nav-tabs > li.active > a {
-  color: $call-to-action-hover-colour;
-  border: 1px solid $call-to-action-hover-colour;
   border-bottom-color: transparent;
 }
 
 .nav-tabs {
-  border-bottom: 1px solid $call-to-action-colour;
+  border-bottom: 1px solid;
 }
 
 /* Side menu (with search)
@@ -773,7 +690,6 @@ h4 {
 
 .side-menu {
   position: relative;
-  background-color: $main-background-colour;
   border-right: 1px solid #e7e7e7;
 }
 
@@ -1062,39 +978,28 @@ h4 {
 ================================= */
 
 .pagination > li > a, .pagination > li > span {
-  color: $call-to-action-colour;
   background-color: #fff;
-  border: 1px solid $call-to-action-colour;
+  border: 1px solid;
 }
 
 .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
   color: #fff;
-  background-color: $call-to-action-colour;
-  border-color: $call-to-action-colour;
 }
 
 .pagination > .disabled > span, .pagination > .disabled > span:hover, .pagination > .disabled > span:focus, .pagination > .disabled > a, .pagination > .disabled > a:hover, .pagination > .disabled > a:focus {
   color: #777;
   cursor: not-allowed;
   background-color: #fff;
-  border-color: $call-to-action-colour;
 }
 
 .pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
-  color: $call-to-action-hover-colour;
   background-color: #eee;
-  border-color: $call-to-action-hover-colour;
 }
 
 /* Footer
 ================================= */
-footer {
-  background-color: $footer-background-colour;
-  color: $footer-text-colour;
-}
 
 footer p.lead {
-  color: $call-to-action-colour;
   font-size: 23px;
 }
 
@@ -1123,16 +1028,12 @@ ul.footer-nav.list-inline {
   padding: 0;
 }
 
-.main-footer a, .main-footer a:hover, .main-footer a:focus, .main-footer a > i{
-  color:  $footer-text-colour;
-}
-
 .main-footer li, .main-footer p {
   font-size: 15px;
 }
 
 .main-footer-border {
-  border-top: 1px solid $call-to-action-colour;
+  border-top: 1px solid;
   height: 0;
   margin-bottom: 4em;
   width: 100%;
@@ -1140,7 +1041,7 @@ ul.footer-nav.list-inline {
 }
 
 .main-footer {
-  border-top: 8px solid $call-to-action-colour;
+  border-top: 8px solid;
   margin: 30px 0 0;
   font-size: .95em;
   min-height: 230px;
@@ -1148,7 +1049,7 @@ ul.footer-nav.list-inline {
 /* do not show border on smaller devices*/
 @media only screen and (min-width: 992px){
   .border-left{
-    border-left: 2px solid  $footer-text-colour;
+    border-left: 2px solid;
   }
 }
 
@@ -1172,10 +1073,6 @@ ul.footer-nav.list-inline {
 
 /* Social Icons: Background Colours & Hovers
 ================================= */
-
-.soc-envelope:hover .fa{
-  color: $call-to-action-colour;
-}
 
 li .soc-facebook {
   background-color: #6a6c6f;
@@ -1295,7 +1192,6 @@ accordion > div.panel-group > div.panel > div.panel-heading {
 }
 
 accordion > div.panel-group > div.panel > div.panel-collapse > div.panel-body {
-  background-color: $main-background-colour;
   border: none;
   color: #e9004a;
   padding: 1px;
@@ -1867,7 +1763,6 @@ ul.dropdown-menu[datepicker-popup-wrap] {
 
 input.form-control:focus + ul.dropdown-menu + span.input-group-btn > .btn-default,
 input.form-control:focus + span.input-group-btn > .btn-default {
-  border-color: $header-text-colour;
   outline: 0 none;
 }
 
@@ -2155,14 +2050,12 @@ span.breadcrumb-dropdown {
   border-left: 0px !important;
   border-top: 0px !important;
   border-radius: 0px !important;
-  border-color: $header-text-colour;
   border-right: none;
   padding-top: 6px;
   padding-left: 0px;
 }
 
 .header-control .dropdown-toggle:hover {
-  border-color: $header-text-colour;
   border-right: none;
   background: transparent !important;
   margin-left: -30px !important;
@@ -2179,7 +2072,6 @@ span.breadcrumb-dropdown {
   -moz-transition: width 1s ease-in-out;
   -o-transition: width 1s ease-in-out;
   transition: width 1s ease-in-out;
-  border-color: $header-text-colour;
 }
 
 .header-control input:focus {
@@ -2187,7 +2079,6 @@ span.breadcrumb-dropdown {
   border-top: 0px !important;
   border-radius: 0px !important;
   width: 250px !important;
-  border-color: $header-text-colour;
 }
 
 /*.header-control button:focus, .header-control button:hover {*/
@@ -2312,7 +2203,6 @@ span.breadcrumb-dropdown {
 
 .profile-contributor-text {
   font-weight: 500;
-  color: $call-to-action-colour;
 }
 
 .last-updated-text {
@@ -2395,12 +2285,6 @@ span.breadcrumb-dropdown {
 
 .embedded-sandbox .btn {
   background-color: #fff;
-  border-color: $call-to-action-colour;
-  color: $call-to-action-colour;
-}
-
-.embedded-sandbox h1 {
-  color: $call-to-action-colour;
 }
 
 .embedded-sandbox h2 {
@@ -2474,7 +2358,6 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
       flex: 0 0 0;
       content: "";
       align-self: stretch;
-      background-color: $main-background-colour;
     }
 
     .banner-container {
@@ -2503,8 +2386,6 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
       }
 
       .banner-gradient {
-        background-image: -webkit-linear-gradient(left, $main-background-colour, $main-background-colour 33.333333%, rgba(0,0,0,0) 100%);
-        background-image: linear-gradient(to right, $main-background-colour, $main-background-colour 33.333333%, rgba(0,0,0,0) 100%);
 
         .banner-logo-container {
           width: 100%;
@@ -2548,8 +2429,6 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
       .banner-container {
 
         .banner-gradient {
-          background-image: -webkit-linear-gradient(left, $main-background-colour, $main-background-colour 25%, rgba(0,0,0,0) 100%);
-          background-image: linear-gradient(to right, $main-background-colour, $main-background-colour 25%, rgba(0,0,0,0) 100%);
 
           .banner-logo-container {
             width: 750px;
@@ -2572,8 +2451,6 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
       }
       .banner-container {
         .banner-gradient {
-          background-image: -webkit-linear-gradient(left, $main-background-colour, $main-background-colour 20%, rgba(0,0,0,0) 100%);
-          background-image: linear-gradient(to right, $main-background-colour, $main-background-colour 20%, rgba(0,0,0,0) 100%);
           .banner-logo-container {
             width: 970px;
           }
@@ -2592,8 +2469,6 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
       }
       .banner-container {
         .banner-gradient {
-          background-image: -webkit-linear-gradient(left, $main-background-colour, $main-background-colour 15%, rgba(0,0,0,0) 100%);
-          background-image: linear-gradient(to right, $main-background-colour, $main-background-colour 15%, rgba(0,0,0,0) 100%);
           .banner-logo-container {
             width: 1170px;
           }
@@ -2616,23 +2491,11 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
  * colour.css
  ***/
 
-.blues {
-  light:      $call-to-action-colour;
-  dark:       $call-to-action-hover-colour;
-  very-dark:  #101C62;
-}
-
 .show-grid [class*="col-"] {
   background-color: blue;
 }
 
-a {
-  color: $call-to-action-colour;
-
-}
-
 a:hover, a:focus {
-  color: $call-to-action-hover-colour;
   text-decoration: none;
 }
 
@@ -2640,129 +2503,47 @@ h4, h5, h6 {
   color: black;
 }
 
-.heading-large {
-  color: $main-text-colour;
-}
-
-.heading-underlined {
-  border-color: $call-to-action-colour;
-}
-
-.navbar-default .navbar-nav > li > a {
-  color: $header-text-colour;
-}
-
-.navbar-default .navbar-nav > li > a:hover {
-  color: $call-to-action-hover-colour;
-}
-
-.nav>li>a:focus, .nav>li>a:hover{
-  background-color: $main-background-colour;
-}
-
-.navbar-default .navbar-brand {
-  color: $call-to-action-colour;
-}
-
-.nav-tabs>li>a:hover {
-  border-color: $call-to-action-hover-colour;
-}
-
-.navbar-default .navbar-brand:hover {
-  color: $call-to-action-hover-colour;
-}
-
-.breadcrumb > .active {
-  color: $call-to-action-colour;
-}
-
-#resourceList input[type=text] {
-  border-color: $call-to-action-colour;
-}
-
-.btn-default, .dropdown-toggle {
-  background-color: $main-background-colour;
-  border-color: $call-to-action-colour;
-  color: $header-text-colour;
-}
-
 .btn-mini {
   background-color: #fff;
-  border-color: $call-to-action-colour;
-  color: $call-to-action-colour;
 }
 
 .btn-primary {
-  background-color: $call-to-action-colour;
-  border-color: $call-to-action-colour;
   color: #FFFFFF;
 }
 
 .btn-default:hover {
-  border-color: $call-to-action-hover-colour;
-  color: $call-to-action-hover-colour;
   font-weight: bold;
-  background-color: $main-background-colour;
-}
-
-.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
-  background-color: $call-to-action-hover-colour;
-  border-color: $call-to-action-hover-colour;
-}
-
-.main-stats__stat {
-  border-color: $call-to-action-colour;
-}
-
-.main-stats > div:last-child {
-  border-color: $call-to-action-colour;
-}
-
-.main-stats .main-stats__stat {
-  border-color:  $call-to-action-colour;
 }
 
 .nav-tabs > li.active > a {
-  color: $call-to-action-hover-colour;
-  border: 1px solid $call-to-action-colour;
+  border: 1px solid;
   border-bottom-color: transparent;
 }
 
 .nav-tabs {
-  border-bottom: 1px solid $call-to-action-colour;
+  border-bottom: 1px solid;
 }
 
 .pagination > li > a, .pagination > li > span {
-  color: $call-to-action-colour;
   background-color: #fff;
-  border: 1px solid $call-to-action-colour;
+  border: 1px solid;
 }
 
 .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
   color: #fff;
-  background-color: $call-to-action-colour;
-  border-color: $call-to-action-colour;
 }
 
 .pagination > .disabled > span, .pagination > .disabled > span:hover, .pagination > .disabled > span:focus, .pagination > .disabled > a, .pagination > .disabled > a:hover, .pagination > .disabled > a:focus {
   color: #777;
   background-color: #fff;
-  border-color: $call-to-action-colour;
 }
 
 .pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
-  color: $call-to-action-hover-colour;
   background-color: #eee;
-  border-color: $call-to-action-hover-colour;
 }
 
 footer p.lead {
-  color: $call-to-action-colour;
   font-size: 24px;
-}
-
-.main-footer-border {
-  border-top-color: $call-to-action-colour;
 }
 
 .well, .panel {

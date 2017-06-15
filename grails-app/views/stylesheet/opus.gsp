@@ -12,8 +12,14 @@ body
 , .btn-default
 , .btn-default:hover
 , .dropdown-toggle
+, .banner-wrapper .banner::before
 {
   background-color: ${mainBackgroundColour};
+}
+.banner-wrapper .banner .banner-container .banner-gradient
+{
+  background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, ${mainBackgroundColour} 33.333333%, rgba(0,0,0,0) 100%);
+  background-image: linear-gradient(to right, ${mainBackgroundColour}, ${mainBackgroundColour} 33.333333%, rgba(0,0,0,0) 100%);
 }
 .color--pale-sky
 {
@@ -39,9 +45,9 @@ body
 , .jumbotron
 , .btn-primary
 , .pagination > .active > a
-, .pagination > .active > span
 , .pagination > .active > a:hover
 , .pagination > .active > a:focus
+, .pagination > .active > span
 , .pagination > .active > span:hover
 , .pagination > .active > span:focus
 {
@@ -50,10 +56,8 @@ body
 
 h4
 , a
-, .heading-large
 , .color-lochmara
 , .breadcrumb > .active
-, .btn-default
 , .btn-mini
 , .embedded-sandbox .btn
 , .embedded-sandbox h1
@@ -67,11 +71,8 @@ h4
   color: ${callToActionColour};
 }
 
-.heading-underlined
-, .btn-default
-, .btn-default
+.btn-default
 , .btn-mini
-, .btn-primary
 , .btn-primary
 , .dropdown-toggle
 , .embedded-sandbox .btn
@@ -85,17 +86,17 @@ h4
 , .pagination > li > a
 , .pagination > li > span
 , .pagination > .active > a
-, .pagination > .active > span
 , .pagination > .active > a:hover
-, .pagination > .active > span:hover
 , .pagination > .active > a:focus
+, .pagination > .active > span
+, .pagination > .active > span:hover
 , .pagination > .active > span:focus
-, .pagination > .disabled > span
-, .pagination > .disabled > span:hover
-, .pagination > .disabled > span:focus
 , .pagination > .disabled > a
 , .pagination > .disabled > a:hover
 , .pagination > .disabled > a:focus
+, .pagination > .disabled > span
+, .pagination > .disabled > span:hover
+, .pagination > .disabled > span:focus
 , #resourceList input[type=text]
 {
   border-color: ${callToActionColour};
@@ -125,12 +126,8 @@ h4
 
 .btn-default:hover
 , .btn-primary:hover
-, .btn-primary:focus
 , .btn-primary.focus
-, .btn-primary:active
 , .btn-primary.active
-, .btn-default:hover
-, .nav-tabs > li.active > a
 , .pagination > li > a:focus
 , .pagination > li > a:hover
 , .pagination > li > span:hover
@@ -149,12 +146,10 @@ h4
 , .navbar-default .navbar-nav > li > a:hover
 , .navbar-default .navbar-brand:hover
 , .nav-tabs > li.active > a
-, .btn-default:hover
 , .pagination > li > a:hover
 , .pagination > li > a:focus
 , .pagination > li > span:hover
 , .pagination > li > span:focus
-, .nav-tabs > li.active > a
 {
   color: ${callToActionHoverColour};
 }
@@ -169,10 +164,10 @@ input.form-control:focus + ul.dropdown-menu + span.input-group-btn > .btn-defaul
 {
   border-color: ${headerTextColour};
 }
-.navbar-default .navbar-nav a
-, .navbar-default .navbar-nav > li > a
-, .btn-default
+.btn-default
 , .dropdown-toggle
+, .navbar-default .navbar-nav a
+, .navbar-default .navbar-nav > li > a
 {
   color: ${headerTextColour};
 }
@@ -193,8 +188,30 @@ footer
   color: ${footerTextColour};
 }
 
-@media only screen and (min-width: 992px){
+/* Media queries */
+@media (min-width: 768px) {
+.banner-wrapper .banner .banner-container .banner-gradient
+  {
+    background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, $main-background-colour 25%, rgba(0,0,0,0) 100%);
+    background-image: linear-gradient(to right, ${mainBackgroundColour}, $main-background-colour 25%, rgba(0,0,0,0) 100%);
+  }
+}
+
+@media (min-width: 992px) {
+  .banner-wrapper .banner .banner-container .banner-gradient
+  {
+    background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, $main-background-colour 20%, rgba(0,0,0,0) 100%);
+    background-image: linear-gradient(to right, ${mainBackgroundColour}, $main-background-colour 20%, rgba(0,0,0,0) 100%);
+  }
   .border-left{
     border-left-color: ${footerTextColour};
+  }
+}
+
+@media (min-width: 1200px) {
+  .banner-wrapper .banner .banner-container .banner-gradient
+  {
+    background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, $main-background-colour 15%, rgba(0,0,0,0) 100%);
+    background-image: linear-gradient(to right, ${mainBackgroundColour}, $main-background-colour 15%, rgba(0,0,0,0) 100%);
   }
 }
