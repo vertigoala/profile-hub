@@ -21,8 +21,6 @@ class BaseController extends BasicWSController {
                 opusLogoUrl   : opus.opusLayoutConfig?.opusLogoUrl ?: null,
                 doMainBanner  : doMainBanner,
                 overlayText   : opus.opusLayoutConfig?.bannerOverlayText,
-                gradient      : opus.opusLayoutConfig?.gradient,
-                gradientWidth : opus.opusLayoutConfig?.gradientWidth,
                 duration      : opus.opusLayoutConfig?.duration,
                 uuid          : UUID.randomUUID().toString()
         ]
@@ -33,6 +31,7 @@ class BaseController extends BasicWSController {
             def numberOfImages = opus.opusLayoutConfig.images.size()
             def totalDuration = (displayDuration + fadeDuration) * numberOfImages
             model << [ banners: opus.opusLayoutConfig.images,
+                       minHeight: '275px',
                        displayDuration: displayDuration,
                        fadeDuration: fadeDuration,
                        totalDuration: totalDuration,
@@ -50,7 +49,8 @@ class BaseController extends BasicWSController {
                                     opus?.brandingConfig?.opusBannerUrl ?:
                                             DEFAULT_OPUS_BANNER_URL
                             ]
-                    ]
+                    ],
+                    minHeight: ''
             ]
         } else {
             model << [
@@ -59,7 +59,8 @@ class BaseController extends BasicWSController {
                                     opus?.brandingConfig?.profileBannerUrl ?:
                                             DEFAULT_OPUS_BANNER_URL
                             ]
-                    ]
+                    ],
+                    minHeight: ''
             ]
         }
 

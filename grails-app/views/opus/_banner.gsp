@@ -27,7 +27,7 @@
                 <div class="bg-item" style="background-image: url(${bannerItems?.banners?.first()?.imageUrl});"></div>
             </g:elseif>
             <div class="banner-gradient">
-                <div class="banner-logo-container">
+                <div class="banner-logo-container" style="${bannerItems?.minHeight ? "min-height: ${bannerItems.minHeight};" : ''}">
                     <div class="banner-logo-title">
                         ${ bannerItems.overlayText ? raw(bannerItems.overlayText) : (opus.title ?: opus.uuid) }
                     </div>
