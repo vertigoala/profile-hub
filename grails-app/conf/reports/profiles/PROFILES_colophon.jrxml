@@ -41,15 +41,6 @@
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$F{colophon.pdfLicense}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkType="Reference">
-				<reportElement positionType="Float" x="0" y="398" width="515" height="19" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="5dbe037b-b77a-4387-bbdb-f60f98049fcf">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-				</reportElement>
-				<textElement>
-					<font isUnderline="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Generated on " + DATEFORMAT(TODAY( ),"E MMM d, yyyy")]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="420" width="515" height="17" uuid="66e9b388-5782-4395-a92c-262186e63ecf">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -65,10 +56,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{colophon.profileLink}]]></textFieldExpression>
 			</textField>
-			<image onErrorType="Blank">
-				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="136" y="660" width="249" height="75" backcolor="#DDDDDD" uuid="d5384ce3-f158-4e4d-9d60-8d784b2f6ff8"/>
-				<imageExpression><![CDATA["img/atlas-poweredby_rgb-lightbg.png"]]></imageExpression>
-			</image>
 			<image scaleImage="RealSize" hAlign="Center" vAlign="Middle" isLazy="true" onErrorType="Blank">
 				<reportElement positionType="Float" x="187" y="488" width="150" height="150" uuid="2acfcb11-90d7-4a7b-9299-d5c0d1af7111">
 					<printWhenExpression><![CDATA[$P{QR_CODE} != null]]></printWhenExpression>

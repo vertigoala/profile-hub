@@ -4,7 +4,12 @@
     "title": "NSW flora",
     "subtitle": "Acacia paradoxa DC.",
     "primaryImage": "http://images.ala.org.au/image/proxyImageThumbnailLarge?imageId=dfc0883d-1fab-4689-a922-b6f30ab93236",
-    "banner": "http://images.ala.org.au//store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original"
+    "banner": "http://images.ala.org.au//store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original",
+    "authorship": "P.G. Kodela",
+    "citation": "P.G. Kodela (2015) Acacia paradoxa DC.. In: Kellermann, J. (ed.), <i>Flora of South Australia </i>(ed. 5). 10 pp. (State Herbarium of South Australia: Adelaide). http://localhost:8080/profile-hub/opus/39295895-f9cd-4189-bc19-64bd46cd689b. 27 July 2015 - 02:38",
+    "logoUrl1": "https://profiles-dev.ala.org.au/opus/845def7a-5082-4750-b4fe-c360f73232fc/image/m9buxc1sjor.png",
+    "logoUrl2": "https://profiles-dev.ala.org.au/opus/845def7a-5082-4750-b4fe-c360f73232fc/image/gj82geyu8fr.png",
+    "logoUrl3": "https://www.environment.gov.au/system/files/styles/banner/private/pages/2a4683ff-a751-47aa-b12b-c50e3c1d881b/images/eadig03253.jpg?itok=21B4eLoH"
   },
   "colophon": {
     "citation": "P.G. Kodela (2015) Acacia paradoxa DC.. In: Kellermann, J. (ed.), <i>Flora of South Australia </i>(ed. 5). 10 pp. (State Herbarium of South Australia: Adelaide). http://localhost:8080/profile-hub/opus/39295895-f9cd-4189-bc19-64bd46cd689b. 27 July 2015 - 02:38",
@@ -108,6 +113,30 @@
         "occurrencesUrl": "http://avh.ala.org.au/occurrences/search?q=lsid%3Aurn%3Alsid%3Abiodiversity.org.au%3Aapni.taxon%3A298640+AND+%28data_resource_uid%3A%22dr376%22%29",
         "hasConservationStatus": true,
         "lastAttributeChange": null,
+        "description": "Woody trees or shrubs, rarely (in Australia) lianas; branches rarely (in Australia) with prickles. Leaves bipinnate or modified to polymorphic phyllodes, rarely reduced to scales or absent; foliar glands normally present; stipules normally present (but commonly caducous) and scarious, sometimes spinose. Inflorescences simple or racemose, infrequently paniculate; flowers white to golden (rarely mauve-pink), 2 or more aggregated into globular heads or oblongoid to cylindrical spikes, (3–) 4 or 5 (–6)-merous; sepals free to united, rarely absent; stamens numerous, normally free, rarely united basally into a short tube or irregularly faciculate; ovary single (rarely to 5), sessile or (rarely in Australia) stipitate. Legumes dehiscent or (rarely in Australia) indehiscent. Seeds normally with a pleurogram and without endosperm; funicle arillate or exarillate.",
+        "distribution":  {
+              "creators": "P.G. Kodela",
+              "title": "Occurrence",
+              "text": "widely distributed from the coast west to Moree and Griffith areas.\nGrows in many different communities in various soil types.\nNC CC SC NT CT ST NWS CWS SWS NWP SWP\n\nQld Vic. *Tas. W.A. S.A.",
+              "order": -1,
+              "source": null,
+              "original": null,
+              "uuid": "db7ded4f-ab7c-4b1b-8ccb-465f540786ee",
+              "editors": "",
+              "required": false,
+              "mapImageUrl": "http://biocache.ala.org.au//ws/mapping/wms/image?q=lsid%3Aurn%3Alsid%3Abiodiversity.org.au%3Aapni.taxon%3A298640+AND+%28data_resource_uid%3A%22dr376%22%29&extents=96.173828125,-47.11468820158343,169.826171875,-2.5694811631203973&outlineColour=0&dpi=300&scale=on&baselayer=world&fileName=occurrencemap.jpg&format=jpg&outline=true&popacity=1&pradiuspx=5&pcolour=00ff85",
+              "occurrencesUrl": "http://avh.ala.org.au/occurrences/search?q=lsid%3Aurn%3Alsid%3Abiodiversity.org.au%3Aapni.taxon%3A298640+AND+%28data_resource_uid%3A%22dr376%22%29",
+              "plainText": "widely distributed from the coast west to Moree and Griffith areas.\nGrows in many different communities in various soil types.\nNC CC SC NT CT ST NWS CWS SWS NWP SWP\n\nQld Vic. *Tas. W.A. S.A.",
+              "profile": {
+                "scientificName": "Acacia paradoxa",
+                "uuid": "bee218e6-e0a4-4b99-8c5e-e63a6e1b93aa",
+                "opus": {
+                  "title": "NSW flora",
+                  "uuid": "39295895-f9cd-4189-bc19-64bd46cd689b",
+                  "shortName": null
+                }
+              }
+            },
         "acknowledgements": [
           {
             "category": "Tester",
@@ -435,7 +464,6 @@
         "createdDate": "2015-07-01T07:14:01Z",
         "nslNameIdentifier": "68149",
         "nameAuthor": "DC.",
-        "mapImageUrl": "http://biocache.ala.org.au//ws/mapping/wms/image?q=lsid%3Aurn%3Alsid%3Abiodiversity.org.au%3Aapni.taxon%3A298640+AND+%28data_resource_uid%3A%22dr376%22%29&extents=96.173828125,-47.11468820158343,169.826171875,-2.5694811631203973&outlineColour=0&dpi=300&scale=on&baselayer=world&fileName=occurrencemap.jpg&format=jpg&outline=true&popacity=1&pradiuspx=5&pcolour=00ff85",
         "scientificName": "Acacia paradoxa",
         "speciesProfile": {
           "taxonName": {
@@ -5934,27 +5962,6 @@
             "editors": "",
             "required": false,
             "plainText": "Frequently hybridises with a number of other acacias, particularly those of the Acacia verniciflua group and may be most closely related to this group. The name is from the Greek paradoxos, meaning strange, contrary to expectation, which may refer to this thorny, rather unattractive shrub being a showy plant when in full bloom (N. Hall & L.A.S. Johnson, The Names of Acacias of New South Wales, 1993).",
-            "profile": {
-              "scientificName": "Acacia paradoxa",
-              "uuid": "bee218e6-e0a4-4b99-8c5e-e63a6e1b93aa",
-              "opus": {
-                "title": "NSW flora",
-                "uuid": "39295895-f9cd-4189-bc19-64bd46cd689b",
-                "shortName": null
-              }
-            }
-          },
-          {
-            "creators": "P.G. Kodela",
-            "title": "Occurrence",
-            "text": "widely distributed from the coast west to Moree and Griffith areas.\nGrows in many different communities in various soil types.\nNC CC SC NT CT ST NWS CWS SWS NWP SWP\n\nQld Vic. *Tas. W.A. S.A.",
-            "order": -1,
-            "source": null,
-            "original": null,
-            "uuid": "db7ded4f-ab7c-4b1b-8ccb-465f540786ee",
-            "editors": "",
-            "required": false,
-            "plainText": "widely distributed from the coast west to Moree and Griffith areas.\nGrows in many different communities in various soil types.\nNC CC SC NT CT ST NWS CWS SWS NWP SWP\n\nQld Vic. *Tas. W.A. S.A.",
             "profile": {
               "scientificName": "Acacia paradoxa",
               "uuid": "bee218e6-e0a4-4b99-8c5e-e63a6e1b93aa",

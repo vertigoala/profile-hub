@@ -68,7 +68,9 @@ profileEditor.controller('ExportPDFController', function (opusId, rank, scientif
 
     self.totalChildren = -1;
 
-    var exportableSections = ["attributes", "map", "taxonomy", "taxon", "nomenclature", "links", "bhllinks", "specimens", "bibliography", "images", "conservation", "features", "key"];
+   // var exportableSections = ["attributes", "map", "taxonomy", "taxon", "nomenclature", "links", "bhllinks", "specimens", "bibliography", "images", "conservation", "features", "key"];
+    var exportableSections = ["attributes", "map", "taxonomy", "nomenclature", "links", "specimens", "bibliography", "images", "conservation", "features", "key"];
+
 
     self.options = [];
     var attributeAdded = false;

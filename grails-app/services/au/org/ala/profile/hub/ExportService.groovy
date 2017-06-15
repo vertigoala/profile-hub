@@ -17,6 +17,7 @@ import org.springframework.web.context.request.RequestContextHolder
 
 import java.util.concurrent.ConcurrentLinkedQueue
 
+import static au.org.ala.profile.hub.Utils.enc
 import static groovyx.gpars.GParsPool.withPool
 import static org.owasp.html.Sanitizers.BLOCKS
 import static org.owasp.html.Sanitizers.FORMATTING
@@ -174,27 +175,24 @@ class ExportService {
 
         def firstProfile = curatedModel.profiles[0]?.profile
 
-        // Generate  citation
-        String citation = null
-        if (opus.citationHtml) {
-            Date now = new Date()
-            citation = "${firstProfile?.authorship} (${now[Calendar.YEAR]}) ${firstProfile?.fullName}. In: ${stripTextFromNonFormattingHtmlTags(opus.citationHtml)}. ${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}. ${now.format('dd MMMM yyyy - hh:mm')}"
-        }
-
         curatedModel << [
                 cover   : [
                         title       : opus.title,
                         subtitle    : firstProfile?.fullName ?: firstProfile?.scientificName,
-                        logos        : opus.brandingConfig.logos?:[],
                         banner      : opus.bannerUrl,
-                        primaryImage: firstProfile?.primaryImage ?: (firstProfile?.images?.size() > 0 ? firstProfile?.images[0].leftImage.largeImageUrl : '')
+                        primaryImage: firstProfile?.primaryImage ?: (firstProfile?.images?.size() > 0 ? firstProfile?.images[0].leftImage.largeImageUrl : ''),
+                        logoUrl1: opus.brandingConfig?.logos[0]?.logoUrl?: "",
+                        logoUrl2: opus.brandingConfig?.logos[1]?.logoUrl?:"",
+                        logoUrl3: opus.brandingConfig?.logos[2]?.logoUrl?:"",
+                        authorship: firstProfile.authorship?: null,
+                        citation: firstProfile.citation?:null
                 ],
                 colophon: [
                         collectionCopyright: "&copy; ${opus.copyrightText}",
                         genericCopyright   : HubConstants.PDF_COPYRIGHT_TEXT,
                         pdfLicense         : opus.brandingConfig.pdfLicense,
                         profileLink        : "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${firstProfile?.uuid}",
-                        citation           : citation,
+                        citation           : firstProfile.citation?:null,
                         version            : firstProfile.version ?: null,
                         lastUpdated        : firstProfile.lastPublished ?: firstProfile.lastUpdated ?: null
                 ]
@@ -259,10 +257,18 @@ class ExportService {
             replaceTitleWithOptionalCaption(it)
         }
 
+        String descriptionAttribute = ""
+        def distributionAttribute = [:]
+
         // Format profile attributes text
         if (params.attributes) {
             model.profile.attributes.each { attribute ->
                 attribute.text = convertTagsForJasper(sanitizeHtml(formatAttributeText(attribute.text, attribute.title)))
+
+                (attribute.title == "Description")? descriptionAttribute = attribute.text : ""
+
+                (attribute.title == "Distribution")? distributionAttribute = attribute : null
+
                 List<Map> attributeImages = extractImagesFromAttributeText(attribute.text, images)
 
                 Map pairs = groupImagesIntoPairs(model.profile.scientificName, attributeImages, figureNumber)
@@ -270,6 +276,19 @@ class ExportService {
                 figureNumber = pairs.figureNumber
             }
         }
+
+        if (distributionAttribute) {
+            model.profile.distribution = distributionAttribute
+            model.profile.attributes.removeAll {
+                it.title == 'Distribution'
+            }
+        }
+
+        model.profile.attributes.removeAll {
+            it.title == 'Description'
+        }
+
+        model.profile.description = descriptionAttribute
 
         model.profile.primaryImage = images.find { it.imageId == model.profile.primaryImage }
 
@@ -292,11 +311,12 @@ class ExportService {
         // Retrieve occurrences-map image url
         String occurrenceQuery = model.profile.occurrenceQuery
         if (mapService.snapshotImageExists(opus.uuid, model.profile.uuid) && opus.mapConfig.allowSnapshots) {
-            model.profile.mapImageUrl = "${grailsApplication.config.grails.serverURL}${mapService.getSnapshotImageUrlWithUUIDs("", opus.uuid, model.profile.uuid)}"
+            model.profile.distribution.mapImageUrl = "${grailsApplication.config.grails.serverURL}${mapService.getSnapshotImageUrlWithUUIDs("", opus.uuid, model.profile.uuid)}"
         } else {
-            model.profile.mapImageUrl = mapService.constructMapImageUrl(occurrenceQuery, opus.usePrivateRecordData)
+            model.profile.distribution.mapImageUrl = mapService.constructMapImageUrl(occurrenceQuery, opus.usePrivateRecordData, "808080")
         }
         model.profile.occurrencesUrl = createOccurrencesUrl(opus, occurrenceQuery)
+        model.profile.distribution.occurrencesUrl = model.profile.occurrencesUrl
 
         // Don't make them a String if you want the groovy truth to work (Check Bootstrap.groovy for null values workaround)
         def nslNameIdentifier = model.profile.nslNameIdentifier
@@ -312,11 +332,31 @@ class ExportService {
             }
         }
 
+        def nslNameDetails = nslService.getNameDetails(nslNameIdentifier)?.resp?.name?.primaryInstance[0]?:null
+        String nslProtologue = null
+        if (nslNameDetails) {
+            nslProtologue = nslNameDetails.citationHtml?:null
+            if (nslProtologue && nslNameDetails.page) {
+                nslProtologue += ": " + nslNameDetails.page
+            }
+        }
+
+        model.profile.nslProtologue = nslProtologue
+
         // Filter authors and contributors
         model.profile.acknowledgements = model.profile.authorship?.findAll { it.category != 'Author' }
+
+        String profileUrl = "${grailsApplication.config.grails.serverURL}/opus/${opus.shortName ?: opus.uuid}/profile/${enc(model.profile.scientificName)}"
+        // Generate  citation
+        model.profile.citation = profileService.getCitation(opus, model.profile, profileUrl)
+
         model.profile.authorship = model.profile.authorship?.findAll { it.category == 'Author' }.collect {
             it.text
         }.join(", ")
+
+        // Format scientificName
+        String formattedName = formatScientificName(model.profile.scientificName, model.profile.nameAuthor, model.profile.fullName)
+        model.profile.fullName = formattedName
 
         // Format creators and editors
         model.profile.attributes.each { attribute ->
@@ -344,6 +384,45 @@ class ExportService {
         return model
     }
 
+/**
+ *  Formatting logic mimics Util.js formatScientificName
+ * @param text
+ * @param tiltle
+ * @return
+ */
+    static String formatScientificName(String scientificName, String nameAuthor, String fullName) {
+        if (!scientificName && !nameAuthor && !fullName) {
+            return null;
+        }
+        List<String> connectingTerms = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect."];
+
+        if (nameAuthor) {
+            connectingTerms.push(nameAuthor);
+        }
+
+        String name = null;
+        if (fullName && fullName.trim().size() > 0) {
+            name = fullName;
+        } else if (scientificName && nameAuthor) {
+            name = scientificName + " " + nameAuthor;
+        } else {
+            name = scientificName;
+        }
+
+        connectingTerms.each {connectingTerm ->
+            int index = name.indexOf(connectingTerm);
+            if (index > -1) {
+                String part1 = "<i>${name.substring(0, index)}</i>";
+                String part2 = connectingTerm;
+                String part3 = "<i>${name.substring(index + connectingTerm.size(), name.size())}</i>";
+                name = part1 + part2 + part3;
+            }
+        }
+
+        return name;
+    }
+
+
     /**
      *
      * @param text
@@ -351,13 +430,15 @@ class ExportService {
      * @return
      */
     static String formatAttributeText(String text, String title) {
+        String replacementTitle = (title != 'Description')? "<i>${title}:</i>" : ""
+
         if (text) {
             if (text.startsWith('<p>')) {
-                text = text.replaceFirst('<p>', "<p><b>${title}:</b> ")
+                text = text.replaceFirst('<p>', "<p>${replacementTitle} ")
             } else if (text.startsWith('<')) {
-                text = "<p><b>${title}:</b></p>${text}"
+                text = "<p>${replacementTitle}</p>${text}"
             } else {
-                text = "<b>${title}:</b> ${text}"
+                text = "${replacementTitle} ${text}"
             }
 
             return text

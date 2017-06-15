@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2017-04-13T15:07:54 -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-15T13:04:39 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Wave Cover" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c50b24eb-eb33-413f-8e75-e7e20a5341fd">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -11,7 +11,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JSON report source"/>
 	<subDataset name="logo" uuid="5ecedb89-c1b0-481b-91c2-d21fabd7d568">
 		<field name="logoUrl" class="java.lang.String">
 			<fieldDescription><![CDATA[logoUrl]]></fieldDescription>
@@ -33,64 +33,107 @@
 	<field name="cover.subtitle" class="java.lang.String"/>
 	<field name="cover.banner" class="java.lang.String"/>
 	<field name="cover.primaryImage" class="java.lang.String"/>
+	<field name="cover.authorship" class="java.lang.String"/>
+	<field name="cover.citation" class="java.lang.String"/>
+	<field name="cover.logoUrl1" class="java.lang.String"/>
+	<field name="cover.logoUrl2" class="java.lang.String"/>
+	<field name="cover.logoUrl3" class="java.lang.String"/>
+	<field name="cover.logoUrl4" class="java.lang.String"/>
 	<title>
-		<band height="841" splitType="Stretch">
-			<image scaleImage="FillFrame">
-				<reportElement x="0" y="630" width="595" height="211" uuid="7d5f399a-cbec-48b3-979b-064c0b477ca2">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<imageExpression><![CDATA["img/wave.png"]]></imageExpression>
-			</image>
+		<band height="719" splitType="Stretch">
 			<textField>
-				<reportElement positionType="Float" x="40" y="120" width="510" height="54" forecolor="#8AA158" uuid="5bb49d37-ea51-4ca3-a18a-38cb0e66e0ee"/>
+				<reportElement x="23" y="277" width="537" height="45" forecolor="#D47500" uuid="7f58d454-cae0-4ebb-9ccd-c885124eb525"/>
 				<box leftPadding="20" rightPadding="20"/>
-				<textElement textAlignment="Left">
-					<font size="34"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cover.title}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement positionType="Float" x="40" y="179" width="510" height="30" uuid="7f58d454-cae0-4ebb-9ccd-c885124eb525"/>
-				<box leftPadding="20" rightPadding="20"/>
-				<textElement textAlignment="Left">
-					<font size="20"/>
+				<textElement textAlignment="Left" markup="html">
+					<font fontName="Roboto" size="24" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cover.subtitle}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement key="" x="45" y="403" width="515" height="27" isRemoveLineWhenBlank="true" uuid="c2eaa037-c3a7-45a5-b768-0766e8b077c0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{cover.citation}.asBoolean())]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Roboto" size="10"/>
+				</textElement>
+				<text><![CDATA[Citation:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="45" y="439" width="515" height="160" isRemoveLineWhenBlank="true" uuid="2d9eb2ae-b2db-4524-bb2f-51d75a13e1a1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="html">
+					<font fontName="Roboto" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cover.citation}]]></textFieldExpression>
+			</textField>
 			<textField>
-				<reportElement x="150" y="800" width="420" height="30" uuid="38fc9afd-edcb-42f3-b6bc-cd258f6507b3"/>
-				<textElement textAlignment="Right">
-					<font size="12"/>
+				<reportElement x="45" y="624" width="420" height="30" uuid="38fc9afd-edcb-42f3-b6bc-cd258f6507b3"/>
+				<textElement textAlignment="Left">
+					<font fontName="Roboto" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Generated on " + DATEFORMAT(TODAY( ),"E MMM d, yyyy")]]></textFieldExpression>
 			</textField>
-			<image scaleImage="Clip" hAlign="Center" vAlign="Middle" isLazy="true" onErrorType="Blank">
-				<reportElement x="0" y="0" width="595" height="130" uuid="eaf9ccb6-ecaa-4539-a561-1421b0aa0562"/>
-				<imageExpression><![CDATA[$F{cover.banner}]]></imageExpression>
+			<textField>
+				<reportElement x="45" y="328" width="515" height="62" uuid="acb92de7-c403-438f-8ec7-fda711101499"/>
+				<textElement>
+					<font fontName="Roboto" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Author: " + $F{cover.authorship}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame">
+				<reportElement x="0" y="0" width="595" height="240" uuid="1c0d107b-419b-48e8-b6c7-b5badc10efb6"/>
+				<imageExpression><![CDATA["img/PDF banner.png"]]></imageExpression>
 			</image>
-			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Blank">
-				<reportElement x="120" y="219" width="360" height="221" uuid="c5735229-bddb-4409-8e46-71965d580786">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-				</reportElement>
-				<imageExpression><![CDATA[$F{cover.primaryImage}]]></imageExpression>
-			</image>
-			<componentElement>
-				<reportElement x="120" y="450" width="360" height="150" uuid="8e06231f-d1d1-4233-b20a-599b90544c28"/>
-				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
-					<datasetRun subDataset="logo" uuid="2f5d5583-1161-449c-a1fc-7136583b5d50">
-						<dataSourceExpression><![CDATA[$P{REPORT_DATA_SOURCE}.subDataSource("cover.logos")]]></dataSourceExpression>
-					</datasetRun>
-					<jr:listContents height="30" width="360">
-						<image hAlign="Center" vAlign="Bottom" onErrorType="Blank" hyperlinkType="Reference">
-							<reportElement x="0" y="0" width="360" height="20" uuid="9fe52c08-4160-4bc6-94e3-d2a9b2cfd10d"/>
-							<imageExpression><![CDATA[$F{logoUrl}]]></imageExpression>
-							<hyperlinkReferenceExpression><![CDATA[$F{hyperlink}]]></hyperlinkReferenceExpression>
-						</image>
-					</jr:listContents>
-				</jr:list>
-			</componentElement>
 		</band>
 	</title>
+	<pageFooter>
+		<band height="60" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-1" y="0" width="596" height="5" backcolor="#D47500" uuid="bac4e0b9-bbea-4d83-bba5-b3d58393e9ab"/>
+			</rectangle>
+			<frame>
+				<reportElement mode="Opaque" x="0" y="4" width="595" height="56" backcolor="#343434" uuid="a7da222a-5bb9-4c74-b273-a863c0c8ee77">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<image vAlign="Middle" isLazy="true" hyperlinkType="Reference">
+					<reportElement positionType="Float" x="31" y="7" width="160" height="40" uuid="85192e67-5d29-45ef-912d-ca0bc09bf3c0">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<printWhenExpression><![CDATA[new Boolean($F{cover.logoUrl1}.asBoolean())]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA[$F{cover.logoUrl1}]]></imageExpression>
+				</image>
+				<image vAlign="Middle" isLazy="true">
+					<reportElement positionType="Float" x="228" y="7" width="160" height="40" uuid="3d4f2992-0362-4c7f-beb4-04be781e0943">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<printWhenExpression><![CDATA[new Boolean($F{cover.logoUrl2}.asBoolean())]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA[$F{cover.logoUrl2}]]></imageExpression>
+				</image>
+				<image vAlign="Middle" isLazy="true">
+					<reportElement positionType="Float" x="413" y="7" width="160" height="40" uuid="2fca4e06-793f-43e7-9fea-b5d60326c53b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[new Boolean($F{cover.logoUrl3}.asBoolean())]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA[$F{cover.logoUrl3}]]></imageExpression>
+				</image>
+				<image vAlign="Middle">
+					<reportElement positionType="Float" x="32" y="7" width="188" height="40" uuid="716e8926-6c87-4dc4-947f-a7ab9dae021e">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[!new Boolean($F{cover.logoUrl1}.asBoolean())]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA["img/ALA-logo-inline-reverse.png"]]></imageExpression>
+				</image>
+			</frame>
+		</band>
+	</pageFooter>
 </jasperReport>
