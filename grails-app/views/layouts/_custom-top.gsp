@@ -17,14 +17,8 @@
     </script>
     <g:layoutHead/>
     <asset:stylesheet href="application.css" />
-    <link rel="stylesheet" href="${createLink(controller: "stylesheet", action:"opus", id: "${opus?.uuid ?: ''}", params:[ver: opus?.lastUpdated ?: g.meta(name: 'app.version') + '.' + g.meta(name: 'app.build')] )}" />
+    <link rel="stylesheet" href="${createLink(controller: "stylesheet", action:"opus", id: "${opus?.uuid ?: ''}", params:[ver: o.cacheBuster(opus: opus)] )}" />
     <asset:javascript src="head.js" />
-    <style type="text/css">
-    #banner-image {
-        background-image: url(${bannerUrl ?: grailsApplication.config.images.service.url + '/store/7/4/4/e/a08a52f2-7bbe-40d9-8f1a-fe8acb28e447/original'});
-        min-height: ${bannerHeight ?: 100}px;
-    }
-    </style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
