@@ -192,16 +192,16 @@ footer
 @media (min-width: 768px) {
 .banner-wrapper .banner .banner-container .banner-gradient
   {
-    background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, $main-background-colour 25%, rgba(0,0,0,0) 100%);
-    background-image: linear-gradient(to right, ${mainBackgroundColour}, $main-background-colour 25%, rgba(0,0,0,0) 100%);
+    background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, ${mainBackgroundColour} 25%, rgba(0,0,0,0) 100%);
+    background-image: linear-gradient(to right, ${mainBackgroundColour}, ${mainBackgroundColour} 25%, rgba(0,0,0,0) 100%);
   }
 }
 
 @media (min-width: 992px) {
   .banner-wrapper .banner .banner-container .banner-gradient
   {
-    background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, $main-background-colour 20%, rgba(0,0,0,0) 100%);
-    background-image: linear-gradient(to right, ${mainBackgroundColour}, $main-background-colour 20%, rgba(0,0,0,0) 100%);
+    background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, ${mainBackgroundColour} 20%, rgba(0,0,0,0) 100%);
+    background-image: linear-gradient(to right, ${mainBackgroundColour}, ${mainBackgroundColour} 20%, rgba(0,0,0,0) 100%);
   }
   .border-left{
     border-left-color: ${footerTextColour};
@@ -211,7 +211,7 @@ footer
 @media (min-width: 1200px) {
   .banner-wrapper .banner .banner-container .banner-gradient
   {
-    background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, $main-background-colour 15%, rgba(0,0,0,0) 100%);
-    background-image: linear-gradient(to right, ${mainBackgroundColour}, $main-background-colour 15%, rgba(0,0,0,0) 100%);
+    background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, ${mainBackgroundColour} 15%, rgba(0,0,0,0) 100%);
+    background-image: linear-gradient(to right, ${mainBackgroundColour}, ${mainBackgroundColour} 15%, rgba(0,0,0,0) 100%);
   }
 }
