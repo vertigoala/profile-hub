@@ -20,8 +20,6 @@ before_install:
 - echo "GRAILS_VERSION:$GRAILS_VERSION"
 - sdk install grails $GRAILS_VERSION || true
 before_script:
-- export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
 - npm install karma
 - npm install karma-jquery
 - npm install karma-jasmine
@@ -37,7 +35,15 @@ before_script:
   grep -q "\-SNAPSHOT"; if [ "$?" = "1" ]; then MAVEN_REPO="ala-repo-release"; fi;
 - echo "MAVEN_REPO:$MAVEN_REPO"
 script:
-- node_modules/karma/bin/karma start karma.conf.js --single-run --browsers Firefox,PhantomJS && grails clean && grails refresh-dependencies --non-interactive && grails test-app --non-interactive && grails prod maven-deploy --repository=$MAVEN_REPO --non-interactive --stacktrace --verbose
+ - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers PhantomJS
+ - export DISPLAY=:99.0
+ - sh -e /etc/init.d/xvfb start
+ - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers Firefox --port 9877
+ - grails clean
+ - grails refresh-dependencies --non-interactive
+ - grails test-app --non-interactive
+after_script:
+ - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && travis_retry grails prod maven-deploy --repository=$MAVEN_REPO --non-interactive --stacktrace --verbose'
 env:
   global:
   - secure: HQaT+1B5r/7A15V3QHs5Lw1S8jNWgjgCKa8Fz7aEF4F+FHBiTqqM/fvFWcC+g7KHkLhgTht2efEIp9akBt8sArz1xp/BGhKr4JJRGU2uYJE8NpFb08u1OPAvurWQ72bwihJQBJWI9VXiQGoGQffLQL1yLQmlGMFbU/sOLzUxhGQ=
