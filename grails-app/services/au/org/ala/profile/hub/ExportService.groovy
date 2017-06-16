@@ -194,7 +194,8 @@ class ExportService {
                         profileLink        : "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${firstProfile?.uuid}",
                         citation           : firstProfile.citation?:null,
                         version            : firstProfile.version ?: null,
-                        lastUpdated        : firstProfile.lastPublished ?: firstProfile.lastUpdated ?: null
+                        lastUpdated        : firstProfile.lastPublished ?: firstProfile.lastUpdated ?: null,
+                        issn               : opus.brandingConfig.issn ?: null
                 ]
         ]
 
@@ -282,6 +283,8 @@ class ExportService {
             model.profile.attributes.removeAll {
                 it.title == 'Distribution'
             }
+        } else {
+            model.profile.distribution = [:]
         }
 
         model.profile.attributes.removeAll {
