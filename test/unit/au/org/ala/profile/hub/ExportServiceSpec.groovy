@@ -47,9 +47,9 @@ class ExportServiceSpec extends Specification {
 
         where:
         text | title | formattedText
-        "kangaroo thorn, hedge wattle" | "Common Name" | "<b>Common Name:</b> kangaroo thorn, hedge wattle"
-        "<p>kangaroo thorn, hedge wattle</p>" | "Common Name" | "<p><b>Common Name:</b> kangaroo thorn, hedge wattle</p>"
-        "<ol><li>July–November.</li></ol>" | "Flowering" | "<p><b>Flowering:</b></p><ol><li>July–November.</li></ol>"
+        "kangaroo thorn, hedge wattle" | "Common Name" | "<i>Common Name:</i> kangaroo thorn, hedge wattle"
+        "<p>kangaroo thorn, hedge wattle</p>" | "Common Name" | "<p><i>Common Name:</i> kangaroo thorn, hedge wattle</p>"
+        "<ol><li>July–November.</li></ol>" | "Flowering" | "<p><i>Flowering:</i></p><ol><li>July–November.</li></ol>"
     }
 
     @Unroll
