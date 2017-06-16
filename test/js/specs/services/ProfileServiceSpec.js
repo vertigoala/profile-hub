@@ -288,7 +288,7 @@ describe("ProfileService tests", function () {
     it("should invoke the get glossary operation on the PROFILE SERVICE when getGlossary is called", function() {
         service.getGlossary("opus1", "prefix");
 
-        http.expectGET("http://profileService/opus/opus1/glossary/prefix").respond("bla");
+        http.expectGET("/someContext/opus/opus1/glossary/prefix").respond("bla");
     });
 
     it("should invoke the delete glossary item operation on the context root when deleteGlossaryItem is called", function() {
