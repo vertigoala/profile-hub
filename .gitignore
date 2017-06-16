@@ -40,6 +40,5 @@ out/
 # karma files
 node_modules/*
 coverage/*
-package.json
 
 .sass-cache
