@@ -37,7 +37,7 @@ script:
   - ./grailsw refresh-dependencies --non-interactive
   - ./grailsw test-app --non-interactive
   - ./grailsw prod war --non-interactive
-after_script:
+after_success:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && travis_retry ./grailsw prod maven-deploy --repository=$MAVEN_REPO --non-interactive --stacktrace'
 env:
   global:
