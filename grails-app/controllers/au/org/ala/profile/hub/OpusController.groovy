@@ -1,6 +1,5 @@
 package au.org.ala.profile.hub
 
-import au.org.ala.profile.security.PrivateCollectionSecurityExempt
 import au.org.ala.profile.security.Secured
 import au.org.ala.web.AuthService
 import au.org.ala.ws.service.WebService
@@ -10,10 +9,7 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
-import javax.servlet.http.Cookie
-
 import static au.org.ala.profile.hub.Utils.encPath
-import static au.org.ala.profile.hub.WebServiceWrapperService.FLORULA_COOKIE
 import static au.org.ala.profile.hub.util.HubConstants.*
 import static au.org.ala.profile.security.Role.ROLE_ADMIN
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
@@ -28,6 +24,7 @@ class OpusController extends BaseController {
     ProfileService profileService
     KeybaseService keybaseService
     WebService webService
+    FlorulaCookieService florulaCookieService
 
     def index() {
         render view: 'index', model: [
@@ -515,16 +512,18 @@ class OpusController extends BaseController {
             if (userId) {
                 profileService.updateFlorulaList(opusId, florulaListId)
             } else {
-                Cookie cookie = request.cookies.find { it.name == FLORULA_COOKIE }
-                if (!cookie) {
-                    cookie = new Cookie(FLORULA_COOKIE, florulaListId)
-                }
-                cookie.httpOnly = false
-                cookie.maxAge = -1
-                cookie.secure = false
-                cookie.setPath(createLink( uri: "/opus/${encPath(opusId)}" ).toString())
-                cookie.setDomain(request.serverName)
-                cookie.setValue(florulaListId)
+//                Cookie cookie = request.cookies.find { it.name == FLORULA_COOKIE }
+//                if (!cookie) {
+//                    cookie = new Cookie(FLORULA_COOKIE, florulaListId)
+//                }
+//                cookie.httpOnly = false
+//                cookie.maxAge = -1
+//                cookie.secure = false
+//                cookie.setPath(createLink( uri: "/opus/${encPath(opusId)}" ).toString())
+//                cookie.setDomain(request.serverName)
+//                cookie.setValue(florulaListId)
+                def opus = profileService.getOpus(opusId)
+                def cookie = florulaCookieService.updateCookie(request, opus.uuid, florulaListId)
                 response.addCookie(cookie)
             }
             flash.message = "Filter ${florulaListId ? 'enabled' : 'removed'}"
@@ -644,7 +643,7 @@ class OpusController extends BaseController {
 
     private def commonViewModelParams(def opus, String pageName = '', String pageTitle = '',
                                       def doMainBanner = false) {
-        def florulaListId = authService.userId ? opus.florulaListId : request.cookies.find { it.name == FLORULA_COOKIE }?.value
+        def florulaListId = authService.userId ? opus.florulaListId : florulaCookieService.getFlorulaListIdForOpusId(request, opus.uuid)
         def model = [
                 opus            : opus,
                 logos           : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,

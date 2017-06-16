@@ -14,6 +14,7 @@ class ProfileControllerSpec extends Specification {
     BiocacheService biocacheService
     ImageService imageService
     MapService mapService
+    FlorulaCookieService florulaCookieService
 
     def setup() {
         controller = new ProfileController()
@@ -28,6 +29,9 @@ class ProfileControllerSpec extends Specification {
         controller.biocacheService = biocacheService
         controller.imageService = imageService
         controller.mapService = mapService
+
+        florulaCookieService = Stub(FlorulaCookieService)
+        controller.florulaCookieService = florulaCookieService
 
         authService.getDisplayName() >> "Fred Bloggs"
     }

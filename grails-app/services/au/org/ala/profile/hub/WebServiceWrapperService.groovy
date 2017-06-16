@@ -14,25 +14,24 @@ class WebServiceWrapperService {
 
     def webService
     def authService
+    FlorulaCookieService florulaCookieService
 
     Map get(String url, Map params = [:], ContentType contentType = ContentType.APPLICATION_JSON, boolean includeApiKey = true, boolean includeUser = true, Map customHeaders = [:]) {
         // only add it if there is no current user
         if (!authService.userId) {
-            def florulaId = extractFlorulaId()
-            if (florulaId) {
-                params += [(FLORULA_OVERRIDE_PARAM): florulaId]
+            def florulaIds = extractFlorulaIds()
+            if (florulaIds) {
+                florulaIds.each {
+                    params += [(FLORULA_OVERRIDE_PARAM + '-' + it.key): it.value]
+                }
             }
         }
         return webService.get(url, params, contentType, includeApiKey, includeUser, customHeaders)
     }
 
-    String extractFlorulaId() {
+    Map<String, String> extractFlorulaIds() {
         def wr = WebUtils.retrieveGrailsWebRequest()
         def request = wr.request
-        def value = wr.request.cookies.find { it.name == FLORULA_COOKIE }?.value
-        if (value) return value
-
-        def params = request.parameterMap[FLORULA_OVERRIDE_PARAM]
-        return params ? params.first() : ''
+        return florulaCookieService.getCookieValue(request)
     }
 }

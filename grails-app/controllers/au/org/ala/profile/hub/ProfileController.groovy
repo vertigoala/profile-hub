@@ -26,6 +26,7 @@ class ProfileController extends BaseController {
     ExportService exportService
     ImageService imageService
     MapService mapService
+    FlorulaCookieService florulaCookieService
 
     def index() {}
 
@@ -888,7 +889,7 @@ class ProfileController extends BaseController {
                 filterUrl           : getFilterUrl(opus),
                 footerText          : opus.footerText,
                 glossaryUrl         : getGlossaryUrl(opus),
-                hasFilter           : authService.userId ? opus.florulaListId : request.cookies.find { it.name == FLORULA_COOKIE }?.value,
+                hasFilter           : authService.userId ? opus.florulaListId : florulaCookieService.getFlorulaListIdForOpusId(request, opus.uuid),
                 identifyUrl         : getIdentifyUrl(opus),
                 opusUrl             : getOpusUrl(opus),
                 reportsUrl          : getReportsUrl(opus),

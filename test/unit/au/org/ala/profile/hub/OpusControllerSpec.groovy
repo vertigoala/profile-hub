@@ -14,6 +14,7 @@ class OpusControllerSpec extends Specification {
     AuthService mockAuthService
     UserService mockUserService
     ProfileService mockProfileService
+    FlorulaCookieService stubFlorulaCookieService
 
     def setup() {
         controller = new OpusController()
@@ -26,6 +27,8 @@ class OpusControllerSpec extends Specification {
 
         mockProfileService = Mock(ProfileService)
         controller.profileService = mockProfileService
+        stubFlorulaCookieService = Stub(FlorulaCookieService)
+        controller.florulaCookieService = stubFlorulaCookieService
     }
 
     def "index should render the index view"() {
@@ -68,7 +71,7 @@ class OpusControllerSpec extends Specification {
         controller.edit()
 
         then:
-        assert model.size() == 15
+        assert model.size() == 20
         assert model.containsKey("opus")
         assert model.containsKey("logos")
         assert model.containsKey("opusUrl")
@@ -105,7 +108,7 @@ class OpusControllerSpec extends Specification {
         controller.show()
 
         then:
-        assert model.size() == 15
+        assert model.size() == 21
         assert model.containsKey("opus")
         assert model.containsKey("logos")
         assert model.containsKey("bannerUrl")
