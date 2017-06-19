@@ -501,7 +501,7 @@ class OpusController extends OpusBaseController {
             if (resp.status == SC_NO_CONTENT) {
                 response.sendError(SC_NO_CONTENT)
             } else {
-                def list = response?.resp
+                def list = resp?.resp
                 if (list == null) {
                     notFound "Ain't no master list"
                 } else {
