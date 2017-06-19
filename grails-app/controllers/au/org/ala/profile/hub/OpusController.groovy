@@ -14,6 +14,7 @@ import static au.org.ala.profile.hub.util.HubConstants.*
 import static au.org.ala.profile.security.Role.ROLE_ADMIN
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
 import static javax.servlet.http.HttpServletResponse.SC_BAD_GATEWAY
+import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT
 
 class OpusController extends BaseController {
@@ -397,11 +398,19 @@ class OpusController extends BaseController {
             Map opus = profileService.getOpus(params.opusId)
 
             if (opus) {
-                File file = new File("${grailsApplication.config.image.private.dir}/${opus.uuid}/${params.filename}")
+                def filename = params.filename
+                File file = new File("${grailsApplication.config.image.private.dir}/${opus.uuid}/$filename")
                 if (file.exists()) {
-                    response.setHeader("Content-disposition", "attachment;filename=${params.fileName}")
-                    response.setContentType(Utils.getContentType(file))
-                    file.withInputStream { response.outputStream << it }
+                    response.setHeader('Cache-Control', 'must-revalidate')
+                    response.setHeader('Expires', null)
+                    if (request.getDateHeader('If-Modified-Since') == file.lastModified()) {
+                        response.sendError(SC_NOT_MODIFIED)
+                    } else {
+                        response.setDateHeader('Last-Modified', file.lastModified())
+                        response.setHeader("Content-disposition", "inline;filename=$filename")
+                        response.setContentType(Utils.getContentType(file))
+                        file.withInputStream { response.outputStream << it }
+                    }
                 } else {
                     notFound "No matching file could be found"
                 }
