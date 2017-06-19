@@ -37,6 +37,8 @@ class StylesheetController {
         } else {
             header 'Cache-Control', 'public, max-age=31536000'
             response.setDateHeader('Expires', (new Date() + 365).time)
+            // override grails pragma header
+            header 'Pragma', 'cache'
         }
         render(view: 'opus', contentType: 'text/css', model: model)
     }
