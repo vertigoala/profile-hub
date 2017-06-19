@@ -36,6 +36,7 @@ class StylesheetController {
             header 'Cache-Control', 'no-cache, no-store, must-revalidate'
         } else {
             header 'Cache-Control', 'public, max-age=31536000'
+            response.setDateHeader('Expires', (new Date() + 365).time)
         }
         render(view: 'opus', contentType: 'text/css', model: model)
     }
