@@ -498,7 +498,7 @@ class OpusController extends OpusBaseController {
             badRequest "opusId is mandatory"
         } else {
             def resp = profileService.getMasterListKeybaseItems(params.opusId)
-            if (resp.status == SC_NO_CONTENT) {
+            if (resp.statusCode == SC_NO_CONTENT) {
                 response.sendError(SC_NO_CONTENT)
             } else {
                 def list = resp?.resp
