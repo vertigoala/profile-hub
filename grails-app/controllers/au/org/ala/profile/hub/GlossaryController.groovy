@@ -32,6 +32,7 @@ class GlossaryController extends BaseController {
                         opusUrl     : getOpusUrl(opus),
                         searchUrl   : getSearchUrl(opus),
                         browseUrl   : getBrowseUrl(opus),
+                        filterUrl   : getFilterUrl(opus),
                         identifyUrl : getIdentifyUrl(opus),
                         documentsUrl: getDocumentsUrl(opus),
                         reportsUrl  : getReportsUrl(opus),
