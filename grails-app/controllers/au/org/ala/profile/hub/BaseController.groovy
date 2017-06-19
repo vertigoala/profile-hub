@@ -21,14 +21,14 @@ class BaseController extends BasicWSController {
                 opusLogoUrl   : opus.opusLayoutConfig?.opusLogoUrl ?: null,
                 doMainBanner  : doMainBanner,
                 overlayText   : opus.opusLayoutConfig?.bannerOverlayText,
-                duration      : opus.opusLayoutConfig?.duration,
                 uuid          : UUID.randomUUID().toString()
         ]
 
         if (doMainBanner) {
+            def images = opus?.opusLayoutConfig?.images ?: []
             def displayDuration = opus.opusLayoutConfig?.duration ?: 5000
             def fadeDuration = 1000
-            def numberOfImages = opus?.opusLayoutConfig?.images?.size() ?: 0
+            def numberOfImages = images.size()
             def totalDuration = (displayDuration + fadeDuration) * numberOfImages
             def keyframes
             if (numberOfImages != 0) {
@@ -42,7 +42,7 @@ class BaseController extends BasicWSController {
             } else {
                 keyframes = []
             }
-            model << [ banners: opus.opusLayoutConfig.images,
+            model << [ banners: images,
                        minHeight: '275px',
                        displayDuration: displayDuration,
                        fadeDuration: fadeDuration,
