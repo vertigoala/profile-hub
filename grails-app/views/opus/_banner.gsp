@@ -14,13 +14,13 @@
     <div class="banner">
         <div class="banner-container">
             <g:if test="${bannerItems.doMainBanner}"> %{-- && it.type == 'css' --}%
-                <g:each status="index" in="${bannerItems?.banners}" var="it">
+                <g:each status="index" in="${bannerItems?.banners?.reverse()}" var="it">
                     <div class="bg-item" style="
                     background-image: url(${it.imageUrl});
                     animation-name: fader-${bannerItems.uuid};
                     animation-iteration-count: infinite;
                     animation-duration: ${bannerItems.totalDuration / 1000}s;
-                    animation-delay: ${index * (bannerItems?.fadeDuration + bannerItems?.displayDuration) / 1000}s;"></div>
+                    animation-delay: ${(bannerItems?.banners.size() - index - 1) * (bannerItems?.fadeDuration + bannerItems?.displayDuration) / 1000}s;"></div>
                 </g:each>
             </g:if>
             <g:elseif test="${!bannerItems.doMainBanner}">
