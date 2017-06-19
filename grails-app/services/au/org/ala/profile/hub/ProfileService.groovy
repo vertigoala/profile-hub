@@ -595,9 +595,14 @@ class ProfileService {
                 substitutions[key] = value.join(', ')
             }
 
+            // add special substitutions
+            if(substitutions['\\$Editor']){
+                substitutions['\\$EditorEd'] = substitutions['\\$Editor'] + " (ed.)"
+            }
+
             String result = opus.citationProfile;
             substitutions.each { key, value ->
-                result = result.replaceAll(key, value);
+                result = result.replaceAll(key + "\\b", value);
             }
 
             result = result.replaceAll('\\$[^\\s]*', "")
