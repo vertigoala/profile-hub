@@ -521,16 +521,6 @@ class OpusController extends OpusBaseController {
             if (userId) {
                 profileService.updateFlorulaList(opusId, florulaListId)
             } else {
-//                Cookie cookie = request.cookies.find { it.name == FLORULA_COOKIE }
-//                if (!cookie) {
-//                    cookie = new Cookie(FLORULA_COOKIE, florulaListId)
-//                }
-//                cookie.httpOnly = false
-//                cookie.maxAge = -1
-//                cookie.secure = false
-//                cookie.setPath(createLink( uri: "/opus/${encPath(opusId)}" ).toString())
-//                cookie.setDomain(request.serverName)
-//                cookie.setValue(florulaListId)
                 def opus = profileService.getOpus(opusId)
                 def cookie = florulaCookieService.updateCookie(request, opus.uuid, florulaListId)
                 response.addCookie(cookie)

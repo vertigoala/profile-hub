@@ -12,6 +12,11 @@
 <g:render template="banner" model="[opus: opus]"/>
 <div class="container">
     <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
+    <g:if test="${flash.message}">
+        <div class="alert alert-info">
+            ${flash.message}
+        </div>
+    </g:if>
     <auth:ifNotLoggedIn>
         <div class="alert alert-warning">
             <i class="fa fa-2x fa-exclamation-triangle"></i> You are not logged in.

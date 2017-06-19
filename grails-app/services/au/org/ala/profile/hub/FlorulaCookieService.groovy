@@ -17,7 +17,7 @@ class FlorulaCookieService {
     LinkGenerator grailsLinkGenerator
 
     def findCookie(HttpServletRequest request) {
-        def cookie = request.cookies.findAll { it.name == FLORULA_COOKIE }
+        def cookie = request.cookies.find { it.name == FLORULA_COOKIE }
 
         return cookie
     }
@@ -27,7 +27,7 @@ class FlorulaCookieService {
         if (!cookie) {
             cookie = new Cookie(FLORULA_COOKIE, encodeCookieValue( [ (opusId) : listId ] ))
         } else {
-            cookie = encodeCookieValue(decodeCookieValue(cookie.value) + [ (opusId) : listId ])
+            cookie.setValue(encodeCookieValue(decodeCookieValue(cookie.value) + [ (opusId) : listId ]))
         }
         cookie.httpOnly = false
         cookie.maxAge = -1
