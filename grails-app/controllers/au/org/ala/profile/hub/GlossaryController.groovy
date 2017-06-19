@@ -2,13 +2,16 @@ package au.org.ala.profile.hub
 
 import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
+import au.org.ala.web.AuthService
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 import static au.org.ala.profile.hub.util.HubConstants.*
 
-class GlossaryController extends BaseController {
+class GlossaryController extends OpusBaseController {
 
+    AuthService authService
+    FlorulaCookieService florulaCookieService
     ProfileService profileService
 
     def view() {
@@ -20,25 +23,9 @@ class GlossaryController extends BaseController {
             if (!opus) {
                 notFound()
             } else {
-                render(view: 'glossary', model: [
-                        opus        : opus,
-                        logos  : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                        bannerUrl: opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                        bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                        pageTitle: "${opus.title} Glossary" ?: DEFAULT_OPUS_TITLE,
-                        footerText  : opus.footerText,
-                        contact     : opus.contact,
-                        pageName    : 'glossary',
-                        opusUrl     : getOpusUrl(opus),
-                        searchUrl   : getSearchUrl(opus),
-                        browseUrl   : getBrowseUrl(opus),
-                        filterUrl   : getFilterUrl(opus),
-                        identifyUrl : getIdentifyUrl(opus),
-                        documentsUrl: getDocumentsUrl(opus),
-                        reportsUrl  : getReportsUrl(opus),
-                        glossaryUrl : getGlossaryUrl(opus),
-                        aboutPageUrl: getAboutUrl(opus)
-                ])
+                def title = "${opus.title} Glossary" ?: DEFAULT_OPUS_TITLE
+                def model = commonViewModelParams(opus, 'glossary', title)
+                render(view: 'glossary', model: model)
             }
         }
     }

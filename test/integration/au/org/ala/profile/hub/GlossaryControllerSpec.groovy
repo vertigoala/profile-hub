@@ -46,11 +46,11 @@ class GlossaryControllerSpec extends IntegrationSpec {
         controller.view()
 
         then:
-        assert controller.modelAndView.model.size() == 17
-        assert controller.modelAndView.model.containsKey("logos")
-        assert controller.modelAndView.model.containsKey("bannerUrl")
-        assert controller.modelAndView.model.containsKey("pageTitle")
         assert controller.modelAndView.model.containsKey("bannerHeight")
+        assert controller.modelAndView.model.containsKey("bannerUrl")
+        assert controller.modelAndView.model.containsKey("logos")
+        assert controller.modelAndView.model.containsKey("opus")
+        assert controller.modelAndView.model.containsKey("pageTitle")
     }
 
     def "upload should return a 400 bad request if no opus id is provided"() {
