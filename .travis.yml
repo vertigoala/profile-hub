@@ -33,10 +33,12 @@ before_script:
     grep -q "\-SNAPSHOT"; if [ "$?" = "1" ]; then MAVEN_REPO="ala-repo-release"; fi;
   - echo "MAVEN_REPO:$MAVEN_REPO"
 script:
+  - set -e
   - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers Firefox,PhantomJS --port 9877 --log-level info
   - ./grailsw refresh-dependencies --non-interactive
   - ./grailsw test-app --non-interactive
   - ./grailsw prod war --non-interactive
+  - set +e
 after_success:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && travis_retry ./grailsw prod maven-deploy --repository=$MAVEN_REPO --non-interactive --stacktrace'
 env:
