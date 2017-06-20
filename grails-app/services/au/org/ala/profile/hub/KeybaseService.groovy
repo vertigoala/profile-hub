@@ -4,6 +4,7 @@ import au.org.ala.ws.service.WebService
 
 class KeybaseService {
     static final String CHAR_ENCODING = "utf-8"
+    static final String LINK_THROUGH = "[link through]"
 
     def grailsApplication
     WebService webService
@@ -103,17 +104,34 @@ class KeybaseService {
 
                 List parents = []
                 key.leads.each { lead ->
-                    if (!parents.contains(lead.parent_id)) {
+                    if (!parents.contains(lead.parent_id) && lead.lead_text != LINK_THROUGH) {
                         parents << lead.parent_id
                     }
                 }
 
                 key.leads.each { lead ->
-                    couplets[lead.parent_id] << [id    : (parents.findIndexOf { it == lead.parent_id } + 1),
-                                                 text  : lead.lead_text,
-                                                 target: lead.item ? items[lead.item] : (parents.findIndexOf {
-                                                     it == lead.lead_id
-                                                 } + 1)]
+                    if (lead.lead_text != LINK_THROUGH) {
+                        couplets[lead.parent_id] << [id    : (parents.findIndexOf { it == lead.parent_id } + 1),
+                                                     text  : lead.lead_text,
+                                                     target: lead.item ? items[lead.item] : (parents.findIndexOf {
+                                                         it == lead.lead_id
+                                                     } + 1),
+                                                     lead_id: lead.lead_id]
+                    } else {
+                       Map parentMap = [:]
+                       couplets.each { e ->
+                            if (parentMap.isEmpty()) {
+                                e?.value?.each { m ->
+                                     if (m.lead_id == lead.parent_id) {
+                                         parentMap = m
+                                     }
+                                }
+                            }
+                        }
+                       if (!parentMap?.isEmpty() && parentMap?.target) {
+                            parentMap.target = parentMap.target + ": " + items[lead.item]
+                       }
+                    }
                 }
 
                 result.keyName = key.key_name

@@ -389,9 +389,10 @@ class ExportService {
 
 /**
  *  Formatting logic mimics Util.js formatScientificName
- * @param text
- * @param tiltle
- * @return
+ * @param scientificName
+ * @param nameAuthor
+ * @param fullName
+ * @return the formatted Scientific Name for eg: <i>Acacia</i> Mill.
  */
     static String formatScientificName(String scientificName, String nameAuthor, String fullName) {
         if (!scientificName && !nameAuthor && !fullName) {
