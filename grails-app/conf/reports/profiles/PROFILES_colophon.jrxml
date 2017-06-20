@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-06-16T16:39:31 -->
+<!-- 2017-06-20T10:09:16 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_colophon" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40" uuid="c50b24eb-eb33-413f-8e75-e7e20a5341fd">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -64,16 +64,10 @@
 				</reportElement>
 				<imageExpression><![CDATA[((java.io.InputStream)$P{QR_CODE})]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="0" y="365" width="515" height="17" isRemoveLineWhenBlank="true" uuid="c2eaa037-c3a7-45a5-b768-0766e8b077c0">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($F{colophon.citation}.asBoolean())]]></printWhenExpression>
-				</reportElement>
-				<text><![CDATA[This work should be cited as:]]></text>
-			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="10" y="382" width="505" height="30" isRemoveLineWhenBlank="true" uuid="2d9eb2ae-b2db-4524-bb2f-51d75a13e1a1">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<reportElement x="0" y="382" width="515" height="30" isRemoveLineWhenBlank="true" uuid="2d9eb2ae-b2db-4524-bb2f-51d75a13e1a1">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{colophon.citation}.asBoolean())]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$F{colophon.citation}]]></textFieldExpression>
