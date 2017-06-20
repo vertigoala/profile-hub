@@ -739,8 +739,8 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             }
 
             // addFlorulaOverrideIdToParams(params);
-            options['opusId'] = opusId;
-            options['term'] = term;
+            params['opusId'] = opusId;
+            params['term'] = term;
             var future = $http.get(util.contextRoot() + "/profile/search", {params: params});
             future.then(function (response) {
                 $log.debug("Profile search returned with response code " + response.status);
