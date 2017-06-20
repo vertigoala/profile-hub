@@ -13,6 +13,7 @@ body
 , .btn-default:hover
 , .dropdown-toggle
 , .banner-wrapper .banner::before
+, .banner-wrapper .banner .banner-container .bg-item
 {
   background-color: ${mainBackgroundColour};
 }
