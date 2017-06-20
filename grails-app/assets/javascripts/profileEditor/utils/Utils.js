@@ -163,7 +163,7 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
             entityId = entityId.substring(0, entityId.indexOf(";"))
         }
 
-        if (KEYWORDS.indexOf(entityId) > -1 || typeof entityId === 'undefined') {
+        if (KEYWORDS.indexOf(entityId) > -1 || typeof entityId === 'undefined' || entityId === null) {
             entityId = ""; // using empty string instead of null so the value does not convert to the string "null" if put into a url query string
         }
         return decodeURIComponent(entityId);

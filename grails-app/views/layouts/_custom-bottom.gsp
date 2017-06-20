@@ -90,7 +90,7 @@
                     <div class="col-xs-12 col-md-5 col-md-offset-7">
                         <div class="row">
                             <div class="col-xs-12">
-                                <a href="${createLink(uri: '')}">Other collections</a>
+                                <a href="${createLink(uri: '/')}">Other collections</a>
                             </div>
                         </div>
                     </div>
