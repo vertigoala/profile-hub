@@ -2275,69 +2275,65 @@ textarea[ckeditor='richTextSingleLine'] + .cke .cke_wysiwyg_div {
   display: none;
 }
 
-.banner-wrapper {
+.banner {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   margin-bottom: 1em;
 
+  &::before {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 0;
+    flex: 0 0 0;
+    content: "";
+    //-ms-flex-item-align: stretch;
+    //-ms-grid-row-align: stretch;
+    //align-self: stretch;
+  }
 
-  .banner {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
+  .banner-container {
+    position: relative;
 
-    &::before {
-      -webkit-box-flex: 0;
-      -ms-flex: 0 0 0;
-      flex: 0 0 0;
-      content: "";
-      //-ms-flex-item-align: stretch;
-      //-ms-grid-row-align: stretch;
-      //align-self: stretch;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 0 auto;
+    flex: 1 0 auto;
+    //-ms-flex-item-align: stretch;
+    //-ms-grid-row-align: stretch;
+    //align-self: stretch;
+
+
+    .bg-item {
+      position: absolute;
+
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: -1;
     }
 
-    .banner-container {
-      position: relative;
+    .banner-gradient {
 
-      -webkit-box-flex: 1;
-      -ms-flex: 1 0 auto;
-      flex: 1 0 auto;
-      //-ms-flex-item-align: stretch;
-      //-ms-grid-row-align: stretch;
-      //align-self: stretch;
+      .banner-logo-container {
+        width: 100%;
+        padding: 3em 15px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
 
-
-      .bg-item {
-        position: absolute;
-
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        z-index: -1;
-      }
-
-      .banner-gradient {
-
-        .banner-logo-container {
-          width: 100%;
-          padding: 3em 15px;
-          display: -webkit-box;
-          display: -ms-flexbox;
-          display: flex;
-          -webkit-box-orient: horizontal;
-          -webkit-box-direction: normal;
-          -ms-flex-direction: row;
-          flex-direction: row;
-
-          .banner-logo-title {
-            font-family: 'Raleway', sans-serif;
-            font-size: 2em;
-            align-self: center;
-            text-transform: uppercase;
-          }
+        .banner-logo-title {
+          font-family: 'Raleway', sans-serif;
+          font-size: 2em;
+          align-self: center;
+          text-transform: uppercase;
         }
       }
     }
@@ -2441,23 +2437,22 @@ footer p.lead {
     max-width: 275px;
     margin: 0;
   }
-  .banner-wrapper {
+
+  .banner {
     margin-bottom: 2em;
 
-    .banner {
-      &::before {
-        -ms-flex-preferred-size: calc(50% - 375px);
-        flex-basis: calc(50% - 375px);
-      }
-      .banner-container {
+    &::before {
+      -ms-flex-preferred-size: calc(50% - 375px);
+      flex-basis: calc(50% - 375px);
+    }
+    .banner-container {
 
-        .banner-gradient {
+      .banner-gradient {
 
-          .banner-logo-container {
-            width: 750px;
-            .banner-logo-title {
-              font-size: 2.5em;
-            }
+        .banner-logo-container {
+          width: 750px;
+          .banner-logo-title {
+            font-size: 2.5em;
           }
         }
       }
@@ -2465,18 +2460,16 @@ footer p.lead {
   }
 }
 @media (min-width: 992px) {
-  .banner-wrapper {
+  .banner {
     margin-bottom: 3em;
-    .banner {
-      &::before {
-        -ms-flex-preferred-size: calc(50% - 485px);
-        flex-basis: calc(50% - 485px);
-      }
-      .banner-container {
-        .banner-gradient {
-          .banner-logo-container {
-            width: 970px;
-          }
+    &::before {
+      -ms-flex-preferred-size: calc(50% - 485px);
+      flex-basis: calc(50% - 485px);
+    }
+    .banner-container {
+      .banner-gradient {
+        .banner-logo-container {
+          width: 970px;
         }
       }
     }
@@ -2484,17 +2477,15 @@ footer p.lead {
 }
 
 @media (min-width: 1200px) {
-  .banner-wrapper {
-    .banner {
-      &::before {
-        -ms-flex-preferred-size: calc(50% - 585px);
-        flex-basis: calc(50% - 585px);
-      }
-      .banner-container {
-        .banner-gradient {
-          .banner-logo-container {
-            width: 1170px;
-          }
+  .banner {
+    &::before {
+      -ms-flex-preferred-size: calc(50% - 585px);
+      flex-basis: calc(50% - 585px);
+    }
+    .banner-container {
+      .banner-gradient {
+        .banner-logo-container {
+          width: 1170px;
         }
       }
     }

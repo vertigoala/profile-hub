@@ -12,12 +12,12 @@ body
 , .btn-default
 , .btn-default:hover
 , .dropdown-toggle
-, .banner-wrapper .banner::before
-, .banner-wrapper .banner .banner-container .bg-item
+, .banner::before
+, .banner .banner-container .bg-item
 {
   background-color: ${mainBackgroundColour};
 }
-.banner-wrapper .banner .banner-container .banner-gradient
+.banner .banner-container .banner-gradient
 {
   background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, ${mainBackgroundColour} 33.333333%, rgba(0,0,0,0) 100%);
   background-image: linear-gradient(to right, ${mainBackgroundColour}, ${mainBackgroundColour} 33.333333%, rgba(0,0,0,0) 100%);
@@ -191,7 +191,7 @@ footer
 
 /* Media queries */
 @media (min-width: 768px) {
-.banner-wrapper .banner .banner-container .banner-gradient
+.banner .banner-container .banner-gradient
   {
     background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, ${mainBackgroundColour} 25%, rgba(0,0,0,0) 100%);
     background-image: linear-gradient(to right, ${mainBackgroundColour}, ${mainBackgroundColour} 25%, rgba(0,0,0,0) 100%);
@@ -199,7 +199,7 @@ footer
 }
 
 @media (min-width: 992px) {
-  .banner-wrapper .banner .banner-container .banner-gradient
+  .banner .banner-container .banner-gradient
   {
     background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, ${mainBackgroundColour} 20%, rgba(0,0,0,0) 100%);
     background-image: linear-gradient(to right, ${mainBackgroundColour}, ${mainBackgroundColour} 20%, rgba(0,0,0,0) 100%);
@@ -210,7 +210,7 @@ footer
 }
 
 @media (min-width: 1200px) {
-  .banner-wrapper .banner .banner-container .banner-gradient
+  .banner .banner-container .banner-gradient
   {
     background-image: -webkit-linear-gradient(left, ${mainBackgroundColour}, ${mainBackgroundColour} 15%, rgba(0,0,0,0) 100%);
     background-image: linear-gradient(to right, ${mainBackgroundColour}, ${mainBackgroundColour} 15%, rgba(0,0,0,0) 100%);
