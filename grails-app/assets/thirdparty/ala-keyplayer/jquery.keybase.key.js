@@ -523,11 +523,9 @@
         $('<span>', {class: 'keybase-player-filter'}).appendTo('.' + settings.cssClass.remainingItems + ' .keybase-player-menu');
         $('<a>', {href: '#', title: 'Filter'}).appendTo('.' + settings.cssClass.remainingItems + ' .keybase-player-filter');
 
-        if ($('link[rel=stylesheet][href*=font-awesome]').length > 0) {
-            $('.keybase-player-filter a').html('<i class="fa fa-filter fa-lg fa-lg"></i>');
-            $('.' + settings.cssClass.stepBack + ' a').html('<i class="fa fa-undo fa-lg fa-lg"></i>');
-            $('.' + settings.cssClass.startOver + ' a').html('<i class="fa fa-refresh fa-lg fa-lg"></i>');
-        }
+        $('.keybase-player-filter a').html('<i class="fa fa-filter fa-lg fa-lg"></i>');
+        $('.' + settings.cssClass.stepBack + ' a').html('<i class="fa fa-undo fa-lg fa-lg"></i>');
+        $('.' + settings.cssClass.startOver + ' a').html('<i class="fa fa-refresh fa-lg fa-lg"></i>');
 
         // Resize Player panes
         var position;
@@ -1710,10 +1708,7 @@
 
         if ($('.keybase-player-filter-remove').length === 0) {
             $('.keybase-player-filter').after('<span class="keybase-player-filter-remove"><a href="#"></a></span>');
-            if ($('link[rel=stylesheet][href*=font-awesome]').length > 0) {
-                $('.keybase-player-filter-remove a').html('<i class="fa fa-trash fa-lg fa-lg"></i>');
-            }
-
+            $('.keybase-player-filter-remove a').html('<i class="fa fa-trash fa-lg fa-lg"></i>');
             $('.keybase-player-filter-remove').click(function(e) {
                 e.preventDefault();
                 removeFilter();
