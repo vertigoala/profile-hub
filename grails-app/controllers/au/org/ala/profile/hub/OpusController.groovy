@@ -13,9 +13,7 @@ import static au.org.ala.profile.hub.Utils.encPath
 import static au.org.ala.profile.hub.util.HubConstants.*
 import static au.org.ala.profile.security.Role.ROLE_ADMIN
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
-import static javax.servlet.http.HttpServletResponse.SC_BAD_GATEWAY
-import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED
-import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT
+import static javax.servlet.http.HttpServletResponse.*
 
 class OpusController extends OpusBaseController {
 
@@ -488,8 +486,12 @@ class OpusController extends OpusBaseController {
             badRequest("opusId is mandatory")
         } else {
             def regen = params.boolean('regenerateStubs', false)
-            profileService.syncOpusMasterList(params.opusId, regen)
-            response.sendError(204)
+            def syncResponse = profileService.syncOpusMasterList(params.opusId, regen)
+            if (syncResponse.statusCode != SC_OK) {
+                response.sendError(syncResponse.statusCode, "an error occured")
+            } else {
+                response.sendError(SC_NO_CONTENT)
+            }
         }
     }
 
