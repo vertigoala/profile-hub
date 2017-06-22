@@ -156,9 +156,11 @@ class ExportService {
             withPool(THREAD_COUNT) {
                 children.eachParallel {
                     if (it.profileId != params.profileId && it.scientificName != params.profileId) {
-                        Map profile = loadProfileData(it.profileId, opus, params)
-                        profile.taxonomicOrder = it.taxonomicOrder
-                        curatedModel.profiles << profile
+                        Map model = loadProfileData(it.profileId, opus, params)
+                        if (model?.profile) {
+                            model.profile.taxonomicOrder = it.taxonomicOrder
+                            curatedModel.profiles << model
+                        }
                     }
                 }
             }
@@ -335,16 +337,17 @@ class ExportService {
             }
         }
 
-        def nslNameDetails = nslService.getNameDetails(nslNameIdentifier)?.resp?.name?.primaryInstance[0]?:null
-        String nslProtologue = null
-        if (nslNameDetails) {
-            nslProtologue = nslNameDetails.citationHtml?:null
-            if (nslProtologue && nslNameDetails.page) {
+        if (nslNameIdentifier) {
+            def nslNameDetails = nslService.getNameDetails(nslNameIdentifier)?.resp?.name?.primaryInstance[0] ?: null
+            String nslProtologue = nslNameDetails?.citationHtml?: null
+            if (nslProtologue && nslNameDetails?.page) {
                 nslProtologue += ": " + nslNameDetails.page
             }
-        }
 
-        model.profile.nslProtologue = nslProtologue
+            if (nslProtologue) {
+                model.profile.nslProtologue = nslProtologue
+            }
+        }
 
         // Filter authors and contributors
         model.profile.acknowledgements = model.profile.authorship?.findAll { it.category != 'Author' }
