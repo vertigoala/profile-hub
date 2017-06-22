@@ -46,7 +46,6 @@ class GlossaryControllerSpec extends IntegrationSpec {
         controller.view()
 
         then:
-        assert controller.modelAndView.model.containsKey("bannerHeight")
         assert controller.modelAndView.model.containsKey("bannerUrl")
         assert controller.modelAndView.model.containsKey("logos")
         assert controller.modelAndView.model.containsKey("opus")

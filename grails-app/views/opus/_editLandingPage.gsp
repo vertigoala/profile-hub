@@ -11,28 +11,6 @@
             <div class="col-sm-12">
 
                 <div class="form-group">
-                    <label>Logo for hero banner</label>
-                    <input type="text" class="form-control" name="heroUrl" ng-model="opusCtrl.opus.opusLayoutConfig.opusLogoUrl"/>
-                    <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.opusLogo" btn-checkbox >Upload a file</button>
-                    <div ng-if="opusCtrl.showUpload.opusLogo" class="clearfix">
-                        <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.opusLogoUploaded"
-                                      url="{{opusCtrl.imageUploadUrl + 'opusLogo'}}" show-metadata="false" disable-source="true"></image-upload>
-                    </div>
-
-                    <span class="help-block">
-                        This image will be displayed on on the collection home page.  If left blank, a placeholder logo will be used.
-                    </span>
-                    <div class="alert alert-info">
-                        <p>
-                            <strong><i class="fa fa-exclamation-circle"><span class="sr-only">Note:</span></i></strong>
-                            Recommended size is 200-300 px height by 425px wide.  If the image exceeds 500px in height, it
-                            will be scaled (preserving aspect ratio) to 500px high.  The images below will be scaled
-                            and cropped to match this images height and the remaining window width.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label for="explanatoryText">Explanatory text</label>
                     <textarea id="explanatoryText" ng-model="opusCtrl.opus.opusLayoutConfig.explanatoryText" name="explanatoryText" ckeditor="richTextFullToolbar"></textarea>
                     <div class="small">
@@ -98,26 +76,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Gradient</label>
-                    <input class="form-control" name="gradient" colorpicker="rgba" number-to-rgba type="text" ng-model="opusCtrl.opus.opusLayoutConfig.gradient" />
-                    <span class="help-block">
-                        This is the starting colour for the gradient that begins after the logo and fades to rgba(0,0,0,0).  Set to rgba(0,0,0,0) to disable.  Use rgba(248,248,248,1) if the logo has a transparent background.
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label>Gradient width</label>
-                    <div class="input-group">
-                        <input class="form-control" name="gradient-width" type="number" placeholder="49.0" step="0.1" min="0" max="100" ng-model="opusCtrl.opus.opusLayoutConfig.gradientWidth" />
-                        <span class="input-group-addon">%</span>
-                    </div>
-                    <span class="help-block">
-                        The width of the gradient, set to 0.0 to disable.  The gradient will start from the left and
-                        degrade to the right, starting from the gradient colour and fading to transparent at this
-                        percentage of the width of the image carousel.
-                    </span>
-                </div>
-
                 <div class="form-group">
                     <label for="bannerOverlayText">Banner overlay text</label>
                     <textarea id="bannerOverlayText" class="form-control" ng-model="opusCtrl.opus.opusLayoutConfig.bannerOverlayText" name="bannerOverlayText"></textarea>

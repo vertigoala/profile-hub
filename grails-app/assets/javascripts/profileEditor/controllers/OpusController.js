@@ -565,13 +565,6 @@ profileEditor.controller('OpusController', function ($log, $scope, profileServic
         self.LandingPage.$setDirty();
     };
 
-    self.opusLogoUploaded = function (result) {
-        var imageUrl = util.getBaseHref() + result.imageUrl;
-        self.opus.opusLayoutConfig.opusLogoUrl = imageUrl;
-        self.toggleUploadPanel('opusLogo');
-        self.LandingPage.$setDirty();
-    };
-
     self.removeItem = function ($index, list, form) {
         if (list.length) {
             list.splice($index,1);

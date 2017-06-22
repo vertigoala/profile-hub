@@ -29,7 +29,6 @@ class OpusController extends OpusBaseController {
         render view: 'index', model: [
                 logos     : DEFAULT_OPUS_LOGOS,
                 bannerUrl   : DEFAULT_OPUS_BANNER_URL,
-                bannerHeight: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                 footerText  : ALA_FOOTER_TEXT,
                 contact     : [email   : ALA_CONTACT_EMAIL,
                                facebook: ALA_CONTACT_FACEBOOK,
@@ -42,7 +41,6 @@ class OpusController extends OpusBaseController {
             render view: 'search', model: [
                     logos     : DEFAULT_OPUS_LOGOS,
                     bannerUrl   : DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                     footerText  : ALA_FOOTER_TEXT,
                     contact     : [email   : ALA_CONTACT_EMAIL,
                                    facebook: ALA_CONTACT_FACEBOOK,
@@ -123,7 +121,6 @@ class OpusController extends OpusBaseController {
         render view: "edit", model: [
                 logos     : DEFAULT_OPUS_LOGOS,
                 bannerUrl   : DEFAULT_OPUS_BANNER_URL,
-                bannerHeight: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                 currentUser : authService.getDisplayName()
         ]
     }

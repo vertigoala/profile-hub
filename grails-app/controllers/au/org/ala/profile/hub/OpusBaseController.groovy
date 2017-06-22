@@ -1,6 +1,5 @@
 package au.org.ala.profile.hub
 
-import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_BANNER_HEIGHT_PX
 import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_BANNER_URL
 import static au.org.ala.profile.hub.util.HubConstants.DEFAULT_OPUS_LOGOS
 
@@ -13,7 +12,6 @@ class OpusBaseController extends BaseController {
                 opus            : opus,
                 logos           : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
                 bannerUrl       : opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                bannerHeight    : opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
                 footerText      : opus.footerText,
                 contact         : opus.contact,
                 bannerItems     : getBannerItems(opus, doMainBanner, false),

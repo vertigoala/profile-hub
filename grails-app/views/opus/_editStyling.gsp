@@ -17,24 +17,10 @@
                         <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.opusBannerUploaded"
                                 url="{{opusCtrl.imageUploadUrl + 'opusBanner'}}" show-metadata="false" disable-source="true"></image-upload>
                     </div>
-                    <div class="radio">
-                        <label for="opusBannerHeightTall" class="inline-label padding-right-1">Banner height</label>
-                        <label for="opusBannerHeightTall" class="inline-label padding-right-1">
-                            <input id="opusBannerHeightTall" type="radio" name="opusBannerHeight" ng-value="300"
-                                   ng-model="opusCtrl.opus.brandingConfig.opusBannerHeight">
-                            Tall
-                        </label>
-                        <label for="opusBannerHeightShort" class="inline-label">
-                            <input id="opusBannerHeightShort" type="radio" name="opusBannerHeight" ng-value="100" class="padding-left-1"
-                                   ng-model="opusCtrl.opus.brandingConfig.opusBannerHeight">
-                            Short
-                        </label>
-                    </div>
-
                     <div class="small">This image will be displayed on all pages <em>except</em> the collection homepage and the profile view and edit pages.
                     If left blank, the banner image for profile pages will be used.
                     If both fields are left blank then a system default image will be used.</div>
-                    <div class="small">Recommended size is at least 1000px wide by {{ opusCtrl.opus.brandingConfig.opusBannerHeight }}px high.</div>
+                    <div class="small">Recommended size is at least 1000px wide by 300px high.</div>
                 </div>
 
                 <div class="form-group">
@@ -45,23 +31,10 @@
                         <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.profileBannerUploaded"
                                       url="{{opusCtrl.imageUploadUrl + 'profileBanner'}}" show-metadata="false" disable-source="true"></image-upload>
                     </div>
-                    <div class="radio">
-                        <label for="profileBannerHeightTall" class="inline-label padding-right-1">Banner height</label>
-                        <label for="profileBannerHeightTall" class="inline-label padding-right-1">
-                            <input id="profileBannerHeightTall" type="radio" name="profileBannerHeight" ng-value="300"
-                                   ng-model="opusCtrl.opus.brandingConfig.profileBannerHeight">
-                            Tall
-                        </label>
-                        <label for="profileBannerHeightShort" class="inline-label">
-                            <input id="profileBannerHeightShort" type="radio" name="profileBannerHeight" ng-value="100"
-                                   ng-model="opusCtrl.opus.brandingConfig.profileBannerHeight">
-                            Short
-                        </label>
-                    </div>
                     <div class="small">This image will be displayed on the profile view and edit pages.
                     If left blank, the banner image for collection pages will be used.
                     If both fields are left blank then a system default image will be used.</div>
-                    <div class="small">Recommended size is at least 1000px wide by {{ opusCtrl.opus.brandingConfig.profileBannerHeight }}px high.</div>
+                    <div class="small">Recommended size is at least 1000px wide by 300px high.</div>
                 </div>
 
                 <div class="form-group">

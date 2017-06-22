@@ -142,8 +142,7 @@ class ProfileService {
                     opus         : opus,
                     profile      : profile,
                     logos      : opus.brandingConfig?.logos ?: DEFAULT_OPUS_LOGOS,
-                    bannerUrl    : opus.brandingConfig?.profileBannerUrl ?: opus.brandingConfig?.opusBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                    bannerHeight: opus.brandingConfig?.profileBannerHeight ?: opus.brandingConfig?.opusBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
+                    bannerUrl    : opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
                     pageTitle    : opus.title ?: DEFAULT_OPUS_TITLE
             ]
 

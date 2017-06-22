@@ -1,7 +1,7 @@
 /**
  * Angular service for interacting with the profile service application
  */
-profileEditor.service('profileService', function ($http, util, $cacheFactory, config, $log, $cookies) {
+profileEditor.service('profileService', function ($http, util, $cacheFactory, config, $log) {
 
     function clearCache() {
         $log.debug("Clearing $http cache");
@@ -66,13 +66,6 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         }
 
         return currentPromise;
-    }
-
-    function addFlorulaOverrideIdToParams(params) {
-        var filterId = $cookies.phf;
-        if (filterId) {
-            params['florulaOverrideId'] = filterId;
-        }
     }
 
     return {

@@ -136,7 +136,6 @@
               accessKey: '${grailsApplication.config.map.access.key}'},
         bootstrapCssFile: '${assetPath(src: "/bootstrap/css/bootstrap3.3.4.min.css")}',
         imageLoadErrorUrl: '${assetPath(src: "not-available.png")}',
-        defaultOpusLogo: '${assetPath(src: "no-logo.svg")}',
         development: ${Environment.current == Environment.DEVELOPMENT}
     });
 </asset:script>

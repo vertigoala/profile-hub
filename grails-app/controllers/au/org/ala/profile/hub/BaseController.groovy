@@ -18,7 +18,6 @@ class BaseController extends BasicWSController {
 
     protected getBannerItems(opus, doMainBanner = false, isProfile = false) {
         def model = [
-                opusLogoUrl   : opus.opusLayoutConfig?.opusLogoUrl ?: null,
                 doMainBanner  : doMainBanner,
                 overlayText   : opus.opusLayoutConfig?.bannerOverlayText,
                 uuid          : UUID.randomUUID().toString()

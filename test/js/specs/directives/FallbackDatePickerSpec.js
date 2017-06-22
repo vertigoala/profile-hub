@@ -18,8 +18,9 @@ describe('Directive: FallbackDatePicker', function () {
     // wrap our directive inside a form to be able to test
     // that our form integration works well (via ngModelController)
     // our directive instance is then put in the global 'elm' variable for further tests
-    if (!tpl) tpl = '<fallback-date-picker ng-model="testModel.someDate"></fallback-date-picker>';
-    tpl = '<form name="form">' + tpl + '</form>';
+    // note: use format="yyyy-MM-dd" so that we can set the <input> value using the same format for both html5 and uib-datepicker
+    if (!tpl) tpl = '<fallback-date-picker ng-model="testModel.someDate" format="yyyy-MM-dd"></fallback-date-picker>';
+    tpl = '<div><form name="form">' + tpl + '</form></div>';
     // inject allows you to use AngularJS dependency injection
     // to retrieve and use other services
     inject(function($compile) {
@@ -58,7 +59,8 @@ describe('Directive: FallbackDatePicker', function () {
       var date = new Date('2015-01-31T00:00:00Z');
       scope.testModel.someDate = date;
       scope.$digest();
-      expect(new Date(elm.find('input')[0].value)).toEqual(date);
+      var value = elm.find('input')[0].value;
+      expect(value).toEqual('2015-01-31');
     });
 
     it('should update the model', function() {
