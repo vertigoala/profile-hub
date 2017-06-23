@@ -58,7 +58,7 @@ module.exports = function (config) {
             'grails-app/assets/thirdparty/angular/angular-1.3.20.js',
             'grails-app/assets/thirdparty/angular/angular-sanitize-1.3.20.js',
             'grails-app/assets/thirdparty/angular/angular-animate-1.3.20.js',
-            'test/js/thirdparty/angular-mocks-1.3.13.js',
+            'test/js/thirdparty/angular-mocks-1.3.20.js',
             'grails-app/assets/thirdparty/angular/ui-bootstrap-tpls-0.14.3.js',
             'grails-app/assets/thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js',
             'grails-app/assets/thirdparty/angular-bootstrap-show-errors/showErrors.js',
