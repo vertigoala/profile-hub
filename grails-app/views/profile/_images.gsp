@@ -70,7 +70,7 @@
                 <div class="col-sm-12">
                     <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.availableImagesCount}})</span>
                     </h4>
-                    <p:help help-id="profile.edit.images" show="${edit}"/>
+                    <p:help help-id="profile.edit.images" show="${edit}" collection-override="${opus?.help?.imagesLink}"/>
                 </div>
             </div>
         </div>

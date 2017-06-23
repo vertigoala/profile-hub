@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h4 class="section-panel-heading">Biodiversity Heritage Library references</h4>
-                <p:help help-id="profile.edit.bhlLinks" show="${edit}"/>
+                <p:help help-id="profile.edit.bhlLinks" show="${edit}"  collection-override="${opus?.help?.bHLReferenceLink}"/>
             </div>
         </div>
     </div>

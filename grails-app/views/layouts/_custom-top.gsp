@@ -84,7 +84,7 @@
         <ul class="nav navbar-nav navbar-right">
                 <li><delegated-search></delegated-search></li>
                 <g:render template="/layouts/login"/>
-                <li><p:help help-id="main"/></li>
+                <li><p:help help-id="main" collection-override="${helpLink}"/></li>
             </ul>
         </div>
     </div>

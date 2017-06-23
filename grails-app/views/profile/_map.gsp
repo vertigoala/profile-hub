@@ -21,7 +21,7 @@
                     </div>
 
                     <div ng-show="mapCtrl.editingMap">
-                        <p:help help-id="profile.edit.map" float="false"/>
+                        <p:help help-id="profile.edit.map" float="false" collection-override="${opus?.help?.mapsLink}"/>
                         <m:occurrenceMap id="editOccurrenceMap"/>
 
                         <div class="row">

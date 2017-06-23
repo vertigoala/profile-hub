@@ -30,10 +30,33 @@ class OpusBaseController extends BaseController {
                 florulaListId   : florulaListId
         ]
 
-        if (pageName) model += [pageName: pageName]
+        if (pageName) model += [pageName: pageName, helpLink: getHelpLink(pageName, opus)]
         if (pageTitle) model += [pageTitle: pageTitle]
 
         return model
+    }
+
+    private String getHelpLink(String pageName, Map opus){
+        switch (pageName){
+            case 'about':
+                return opus?.help?.aboutLink
+            case 'glossary':
+                return opus?.help?.glossaryLink
+            case 'search':
+                return opus?.help?.searchLink
+            case 'browse':
+                return opus?.help?.browseLink
+            case 'identify':
+                return opus?.help?.identifyLink
+            case 'filter':
+                return opus?.help?.filterLink
+            case 'documents':
+                return opus?.help?.documentsLink
+            case 'reports':
+                return opus?.help?.reportsLink
+            case 'opus':
+                return opus?.help?.opusLink
+        }
     }
 
 }

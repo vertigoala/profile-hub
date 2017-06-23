@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h4 class="section-panel-heading">Conservation & sensitivity lists</h4>
-                    <p:help help-id="profile.edit.conservationLists" show="${edit}"/>
+                    <p:help help-id="profile.edit.conservationLists" show="${edit}"  collection-override="${opus?.help?.conservationSensitivityListsLink}"/>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <h4 class="section-panel-heading">{{ listCtrl.opus.featureListSectionName | default:'Feature List' }}</h4>
-                    <p:help help-id="profile.edit.featureLists" show="${edit}"/>
+                    <p:help help-id="profile.edit.featureLists" show="${edit}" collection-override="${opus?.help?.featureListsLink}"/>
                 </div>
             </div>
         </div>

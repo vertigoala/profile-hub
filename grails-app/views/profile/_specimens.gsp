@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Specimens</h4>
-                <p:help help-id="profile.edit.specimens" show="${edit}"/>
+                <p:help help-id="profile.edit.specimens" show="${edit}" collection-override="${opus?.help?.specimensLink}"/>
             </div>
         </div>
     </div>

@@ -587,6 +587,11 @@ class OpusController extends OpusBaseController {
         render template: "editTheme"
     }
 
+    def editHelpLinks = {
+        render template: "editHelpLinks"
+    }
+
+
     def editOpusDetailsPanel = {
         render template: "editOpusDetails"
     }

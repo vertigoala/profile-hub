@@ -48,7 +48,8 @@ class ProfileController extends BaseController {
                 profileAndOpus << commonModelEntries(profileAndOpus.opus, profileAndOpus.profile, true)
                 profileAndOpus << [
                           usePrivateRecordData: profileAndOpus.opus.usePrivateRecordData,
-                          displayMap          : true]
+                          displayMap          : true,
+                          helpLink            : profileAndOpus.opus?.help?.profileEditLink]
                 render view: "edit", model: profileAndOpus
             }
         }
@@ -71,7 +72,8 @@ class ProfileController extends BaseController {
                 model << [
                           usePrivateRecordData: profileAndOpus.opus.usePrivateRecordData,
                           displayMap          : profileService.hasMatchedName(model.profile),
-                          citation            : profileService.getCitation(profileAndOpus.opus, profileAndOpus.profile, profileUrl)
+                          citation            : profileService.getCitation(profileAndOpus.opus, profileAndOpus.profile, profileUrl),
+                          helpLink            : profileAndOpus.opus?.help?.profileViewLink
                 ]
                 render view: "show", model: model
             }
