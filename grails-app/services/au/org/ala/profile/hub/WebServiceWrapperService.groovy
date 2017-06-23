@@ -18,13 +18,20 @@ class WebServiceWrapperService {
 
     Map get(String url, Map params = [:], ContentType contentType = ContentType.APPLICATION_JSON, boolean includeApiKey = true, boolean includeUser = true, Map customHeaders = [:]) {
         // only add it if there is no current user
-        if (!authService.userId) {
-            def florulaIds = extractFlorulaIds()
-            if (florulaIds) {
-                florulaIds.each {
-                    params += [(FLORULA_OVERRIDE_PARAM + '-' + it.key): it.value]
+        try {
+            if (!authService.userId) {
+                def florulaIds = extractFlorulaIds()
+                if (florulaIds) {
+                    florulaIds.each {
+                        params += [(FLORULA_OVERRIDE_PARAM + '-' + it.key): it.value]
+                    }
                 }
             }
+        } catch (IllegalStateException e) {
+            // not in a request context, so authService.userId will fail
+            // continue and move on, note that florula won't work for anonymous user for
+            // these methods
+            log.trace("Couldn't get florula ids from request", e)
         }
         return webService.get(url, params, contentType, includeApiKey, includeUser, customHeaders)
     }
