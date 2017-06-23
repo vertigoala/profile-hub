@@ -127,8 +127,8 @@ class KeybaseService {
                                      }
                                 }
                             }
-                        }
-                       if (!parentMap?.isEmpty() && parentMap?.target) {
+                       }
+                       if (!parentMap.isEmpty() && parentMap.target) {
                             parentMap.target = parentMap.target + ": " + items[lead.item]
                        }
                     }
