@@ -67,7 +67,7 @@
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="382" width="515" height="30" isRemoveLineWhenBlank="true" uuid="2d9eb2ae-b2db-4524-bb2f-51d75a13e1a1">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($F{colophon.citation}.asBoolean())]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{colophon.citation}.asBoolean())]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$F{colophon.citation}]]></textFieldExpression>
@@ -76,7 +76,7 @@
 				<reportElement x="0" y="332" width="505" height="17" isRemoveLineWhenBlank="true" uuid="a9b50e6e-b078-4235-9f2f-ff062ef4a118">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($F{colophon.lastUpdated}.asBoolean())]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{colophon.lastUpdated}.asBoolean())]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA["<b>Profile Updated: " + DATEFORMAT($F{colophon.lastUpdated}, "E MMM d, yyyy h:mm a z") + "</b>"]]></textFieldExpression>
@@ -85,7 +85,7 @@
 				<reportElement x="0" y="349" width="505" height="17" isRemoveLineWhenBlank="true" uuid="dd4a853d-73ed-47fb-a9f6-0d6c9ed92a88">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($F{colophon.version}.asBoolean())]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{colophon.version}.asBoolean())]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA["<b>Version: " + $F{colophon.version} + "</b>"]]></textFieldExpression>

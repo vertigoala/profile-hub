@@ -52,7 +52,7 @@
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="45" y="439" width="515" height="160" isRemoveLineWhenBlank="true" uuid="2d9eb2ae-b2db-4524-bb2f-51d75a13e1a1">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($F{cover.citation}.asBoolean())]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{cover.citation}.asBoolean())]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="html">
 					<font fontName="Roboto" size="10"/>
@@ -93,7 +93,7 @@
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-						<printWhenExpression><![CDATA[new Boolean($F{cover.logoUrl1}.asBoolean())]]></printWhenExpression>
+						<printWhenExpression><![CDATA[Boolean.valueOf($F{cover.logoUrl1}.asBoolean())]]></printWhenExpression>
 					</reportElement>
 					<imageExpression><![CDATA[$F{cover.logoUrl1}]]></imageExpression>
 				</image>
@@ -102,7 +102,7 @@
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-						<printWhenExpression><![CDATA[new Boolean($F{cover.logoUrl2}.asBoolean())]]></printWhenExpression>
+						<printWhenExpression><![CDATA[Boolean.valueOf($F{cover.logoUrl2}.asBoolean())]]></printWhenExpression>
 					</reportElement>
 					<imageExpression><![CDATA[$F{cover.logoUrl2}]]></imageExpression>
 				</image>
@@ -110,7 +110,7 @@
 					<reportElement positionType="Float" x="413" y="7" width="160" height="40" uuid="2fca4e06-793f-43e7-9fea-b5d60326c53b">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-						<printWhenExpression><![CDATA[new Boolean($F{cover.logoUrl3}.asBoolean())]]></printWhenExpression>
+						<printWhenExpression><![CDATA[Boolean.valueOf($F{cover.logoUrl3}.asBoolean())]]></printWhenExpression>
 					</reportElement>
 					<imageExpression><![CDATA[$F{cover.logoUrl3}]]></imageExpression>
 				</image>
@@ -120,7 +120,7 @@
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
-						<printWhenExpression><![CDATA[!new Boolean($F{cover.logoUrl1}.asBoolean())]]></printWhenExpression>
+						<printWhenExpression><![CDATA[!Boolean.valueOf($F{cover.logoUrl1}.asBoolean())]]></printWhenExpression>
 					</reportElement>
 					<imageExpression><![CDATA["img/ALA-logo-inline-reverse.png"]]></imageExpression>
 				</image>

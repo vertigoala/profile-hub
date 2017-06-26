@@ -63,7 +63,7 @@
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="6" y="31" width="509" height="15" isRemoveLineWhenBlank="true" forecolor="#A1A1A1" uuid="75798aac-6d9d-428a-90ea-29ca178ee117">
-					<printWhenExpression><![CDATA[new Boolean($F{profile.nslProtologue}.asBoolean())]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{profile.nslProtologue}.asBoolean())]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="html">
 					<font size="10"/>
@@ -81,7 +81,7 @@
 				<reportElement positionType="Float" x="0" y="102" width="515" height="15" isRemoveLineWhenBlank="true" uuid="be9f099c-949c-422e-9ce1-5976670c7b1b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.attributes)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.attributes)]]></printWhenExpression>
 				</reportElement>
 				<parametersMapExpression><![CDATA[["allowFineGrainedAttribution" : new Boolean($P{PROFILES_REPORT_OPTIONS}.allowFineGrainedAttribution)]]]></parametersMapExpression>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.attributes")]]></dataSourceExpression>
@@ -91,7 +91,7 @@
 				<reportElement positionType="Float" x="0" y="119" width="515" height="15" isRemoveLineWhenBlank="true" uuid="c4406011-49d1-4670-88cc-61c56e034718">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.conservation)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.conservation)]]></printWhenExpression>
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.speciesProfile.conservationStatuses")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_conservation.jasper"]]></subreportExpression>
@@ -100,7 +100,7 @@
 				<reportElement positionType="Float" x="0" y="136" width="515" height="15" isRemoveLineWhenBlank="true" uuid="b4919f7c-674a-4180-9d3f-1e7830e644cb">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.status)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.status)]]></printWhenExpression>
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.status")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_status.jasper"]]></subreportExpression>
@@ -109,7 +109,7 @@
 				<reportElement positionType="Float" x="0" y="152" width="515" height="15" isRemoveLineWhenBlank="true" uuid="552404e2-ac45-41a2-9591-e9b3d8496227">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.nomenclature) && $F{profile.nomenclature.formattedName}]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.nomenclature) && $F{profile.nomenclature.formattedName}]]></printWhenExpression>
 				</reportElement>
 				<parametersMapExpression><![CDATA[["formattedName": $F{profile.nomenclature.formattedName}]]]></parametersMapExpression>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.nomenclature.details")]]></dataSourceExpression>
@@ -119,7 +119,7 @@
 				<reportElement positionType="Float" x="0" y="165" width="515" height="15" isRemoveLineWhenBlank="true" uuid="4335a7a3-5814-41bd-8b3c-5df2664bd10e">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.links)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.links)]]></printWhenExpression>
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.links")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_links.jasper"]]></subreportExpression>
@@ -128,7 +128,7 @@
 				<reportElement positionType="Float" x="0" y="180" width="515" height="15" isRemoveLineWhenBlank="true" uuid="c675d85b-9e2b-476e-abd8-fb07375bff13">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.bhllinks)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.bhllinks)]]></printWhenExpression>
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.bhl")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_bhl.jasper"]]></subreportExpression>
@@ -137,7 +137,7 @@
 				<reportElement positionType="Float" x="0" y="195" width="515" height="15" isRemoveLineWhenBlank="true" uuid="4fc93526-8bdf-4fb2-8457-072c20648f24">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.specimens)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.specimens)]]></printWhenExpression>
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.specimens")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_specimens.jasper"]]></subreportExpression>
@@ -146,7 +146,7 @@
 				<reportElement positionType="Float" x="0" y="210" width="515" height="15" isRemoveLineWhenBlank="true" uuid="03b5da42-55f1-4da6-992b-5cacbdbbf258">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.images)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.images)]]></printWhenExpression>
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.images")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_images.jasper"]]></subreportExpression>
@@ -155,7 +155,7 @@
 				<reportElement key="" positionType="Float" x="0" y="225" width="515" height="15" isRemoveLineWhenBlank="true" uuid="539bd95e-2d2b-4a17-930d-8bf868ee50fd">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.key) && new Boolean($F{profile.bracketedKey.keyName} != null)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.key) && Boolean.valueOf($F{profile.bracketedKey.keyName} != null)]]></printWhenExpression>
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.bracketedKey")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_key.jasper"]]></subreportExpression>
@@ -165,7 +165,7 @@
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($P{PROFILES_REPORT_OPTIONS}.bibliography)]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.bibliography)]]></printWhenExpression>
 				</reportElement>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("profile.bibliography")]]></dataSourceExpression>
 				<subreportExpression><![CDATA["PROFILES_detail_bibliography.jasper"]]></subreportExpression>

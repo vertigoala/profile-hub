@@ -14,10 +14,12 @@ import net.sf.jasperreports.engine.fill.JRFileVirtualizer
 import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
 import org.springframework.web.context.request.RequestContextHolder
+import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 import java.util.concurrent.ConcurrentLinkedQueue
 
 import static au.org.ala.profile.hub.Utils.enc
+import static au.org.ala.profile.hub.Utils.encPath
 import static groovyx.gpars.GParsPool.withPool
 import static org.owasp.html.Sanitizers.BLOCKS
 import static org.owasp.html.Sanitizers.FORMATTING
@@ -43,6 +45,7 @@ class ExportService {
     JasperService jasperService
     MapService mapService
     def grailsApplication
+    LinkGenerator grailsLinkGenerator
 
     Map statusRegions = [
             ""                            : "IUCN",
@@ -352,7 +355,7 @@ class ExportService {
         // Filter authors and contributors
         model.profile.acknowledgements = model.profile.authorship?.findAll { it.category != 'Author' }
 
-        String profileUrl = "${grailsApplication.config.grails.serverURL}/opus/${opus.shortName ?: opus.uuid}/profile/${enc(model.profile.scientificName)}"
+       String profileUrl = grailsLinkGenerator.link(uri: "/opus/${Utils.encPath(opus.shortName ?: opus.uuid)}/profile/${Utils.encPath(model.profile.scientificName)}", absolute: true)
         // Generate  citation
         model.profile.citation = profileService.getCitation(opus, model.profile, profileUrl)
 
@@ -399,34 +402,34 @@ class ExportService {
  */
     static String formatScientificName(String scientificName, String nameAuthor, String fullName) {
         if (!scientificName && !nameAuthor && !fullName) {
-            return null;
+            return null
         }
-        List<String> connectingTerms = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect."];
+        List<String> connectingTerms = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect."]
 
         if (nameAuthor) {
-            connectingTerms.push(nameAuthor);
+            connectingTerms.push(nameAuthor)
         }
 
-        String name = null;
+        String name = null
         if (fullName && fullName.trim().size() > 0) {
-            name = fullName;
+            name = fullName
         } else if (scientificName && nameAuthor) {
-            name = scientificName + " " + nameAuthor;
+            name = scientificName + " " + nameAuthor
         } else {
-            name = scientificName;
+            name = scientificName
         }
 
         connectingTerms.each {connectingTerm ->
-            int index = name.indexOf(connectingTerm);
+            int index = name.indexOf(connectingTerm)
             if (index > -1) {
-                String part1 = "<i>${name.substring(0, index)}</i>";
-                String part2 = connectingTerm;
-                String part3 = "<i>${name.substring(index + connectingTerm.size(), name.size())}</i>";
-                name = part1 + part2 + part3;
+                String part1 = "<i>${name.substring(0, index)}</i>"
+                String part2 = connectingTerm
+                String part3 = "<i>${name.substring(index + connectingTerm.size(), name.size())}</i>"
+                name = part1 + part2 + part3
             }
         }
 
-        return name;
+        return name
     }
 
 
