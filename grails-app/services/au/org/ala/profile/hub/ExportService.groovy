@@ -173,12 +173,16 @@ class ExportService {
             curatedModel.profiles = curatedModel.profiles.sort { it.taxonomicOrder }
         }
 
+        def firstProfile = curatedModel.profiles[0]?.profile
+
+        String opusUrl = grailsLinkGenerator.link(uri: "/opus/${Utils.encPath(opus.shortName?: opus.uuid)}", absolute: true)
+
         curatedModel.options << [
                 allowFineGrainedAttribution: opus.allowFineGrainedAttribution,
-                displayToc                 : curatedModel.profiles?.size() > 1
+                displayToc                 : curatedModel.profiles?.size() > 1,
+                headerTitle                : "${opus.title}: ${firstProfile?.fullName ?: firstProfile?.scientificName}",
+                footerText                 : "${opusUrl}"
         ]
-
-        def firstProfile = curatedModel.profiles[0]?.profile
 
         curatedModel << [
                 cover   : [
@@ -196,7 +200,7 @@ class ExportService {
                         collectionCopyright: "&copy; ${opus.copyrightText}",
                         genericCopyright   : HubConstants.PDF_COPYRIGHT_TEXT,
                         pdfLicense         : opus.brandingConfig.pdfLicense,
-                        profileLink        : "${grailsApplication.config.grails.serverURL}/opus/${opus.uuid}/profile/${firstProfile?.uuid}",
+                        profileLink        : grailsLinkGenerator.link(uri: "/opus/${Utils.encPath(opus.shortName?: opus.uuid)}/profile/${Utils.encPath(firstProfile?.uuid)}", absolute: true),
                         citation           : firstProfile.citation?:null,
                         version            : firstProfile.version ?: null,
                         lastUpdated        : firstProfile.lastPublished ?: firstProfile.lastUpdated ?: null,
