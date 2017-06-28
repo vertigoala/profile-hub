@@ -31,7 +31,7 @@ class AsynchPDFJob {
                     updateJob(pdf.jobType.name, pdf.jobId, pdf)
                     exportService.createAndEmailPDF(pdf.params, pdf.params.latest)
                     log.debug("PDF job ${pdf.jobId} succeeded. Deleting the job now.")
-                    deleteJob(pdf.jobType, pdf.jobId)
+                    deleteJob(pdf.jobType.name, pdf.jobId)
                 } catch (Throwable e) {
                     log.error("Exception occurred during attempt ${pdf.attempt} of PDF Job ${pdf.jobId}", e)
                     pdf.attempt = pdf.attempt + 1
