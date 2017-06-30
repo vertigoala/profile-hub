@@ -152,8 +152,7 @@
                 <div class="form-group">
                     <label for="licenseShort">License - short description</label>
 
-                    <textarea id="licenseShort" ng-model="opusCtrl.opus.brandingConfig.shortLicense" rows="4"
-                              class="form-control" ng-maxlength="100" maxlength="100" ckeditor="richTextFullToolbar"></textarea>
+                    <textarea id="licenseShort" ng-model="opusCtrl.opus.brandingConfig.shortLicense" ckeditor="richTextFullToolbar"></textarea>
                     <div class="small">The text described here will appear on the footer. The maximum characters permitted is 100.</div>
                     <div class="small italics">Characters remaining: {{100 - (opusCtrl.opus.brandingConfig.shortLicense | plainText | replaceUnicodeWithSpace).length}}</div>
                 </div>

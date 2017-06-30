@@ -71,14 +71,14 @@
                     </div>
                     <div class="col-xs-12 col-md-5">
                         <g:if test="${opus?.brandingConfig?.issn}">
-                            <div class="row">
+                            <div class="row margin-bottom-1">
                                 <div class="col-xs-12">
                                     <g:render template="../opus/issn" model="${[issn: opus.brandingConfig.issn]}"></g:render>
                                 </div>
                             </div>
                         </g:if>
                         <g:if test="${opus?.brandingConfig?.shortLicense}">
-                            <div class="row">
+                            <div class="row margin-bottom-1">
                                 <div class="col-xs-12">
                                     ${raw(opus.brandingConfig.shortLicense)}
                                 </div>
