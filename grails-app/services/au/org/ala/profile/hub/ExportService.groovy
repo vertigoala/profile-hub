@@ -170,7 +170,7 @@ class ExportService {
 
             // the findByNameAndTaxonLevel operation returns the profiles in the correct taxonomic order (genera inside
             // families, species inside genera, etc), so ensure that the order is correct after the multithreaded processing
-            curatedModel.profiles = curatedModel.profiles.sort { it.taxonomicOrder }
+            curatedModel.profiles = curatedModel.profiles.sort { it.profile.taxonomicOrder }
         }
 
         def firstProfile = curatedModel.profiles[0]?.profile
