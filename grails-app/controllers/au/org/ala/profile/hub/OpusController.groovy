@@ -512,7 +512,8 @@ class OpusController extends OpusBaseController {
 
     def updateFlorulaList() {
         def opusId = params.opusId
-        String florulaListId = params.florulaListId
+        def json = request.JSON
+        String florulaListId = json.florulaListId
         if (!opusId) {
             badRequest "opusId is mandatory"
         } else {
@@ -524,8 +525,7 @@ class OpusController extends OpusBaseController {
                 def cookie = florulaCookieService.updateCookie(request, opus.uuid, florulaListId)
                 response.addCookie(cookie)
             }
-            flash.message = "Filter ${florulaListId ? 'enabled' : 'removed'}"
-            redirect(uri: "/opus/${encPath(opusId)}/filter")
+            response.sendError(204)
         }
     }
 

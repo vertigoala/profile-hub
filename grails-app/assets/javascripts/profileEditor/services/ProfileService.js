@@ -469,6 +469,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        updateFlorulaList: function(opusId, listId) {
+            $log.debug("Updating florula list for " + opusId + " to " + listId);
+            var future = enqueue(function() {
+                return $http.post(util.contextRoot() + '/opus/' + opusId + '/florulaList', { florulaListId: listId })
+            });
+            return util.toStandardPromise(future);
+        },
+
         getAuditHistory: function (objectId, offset, max) {
             $log.debug("Fetching audit for object " + objectId);
             var future = $http.get(util.contextRoot() + "/audit/object/" + objectId, {

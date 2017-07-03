@@ -1,9 +1,11 @@
 package au.org.ala.profile.hub
 
+import grails.converters.JSON
+
 class OpusTagLib {
     static namespace = 'o'
     static defaultEncodeAs = [taglib:'html']
-    //static encodeAsForTags = [tagName: [taglib:'html'], otherTagName: [taglib:'none']]
+    static encodeAsForTags = [json: 'raw']
 
     static returnObjectForTags = ['cacheBuster']
     /**
@@ -30,6 +32,13 @@ class OpusTagLib {
             return cb + '.' + opus.lastUpdated
         } else {
             return cb
+        }
+    }
+
+    def json = { attrs, body ->
+        def obj = attrs.remove('value')
+        if (obj != null) {
+            (obj as JSON).render(out)
         }
     }
 }

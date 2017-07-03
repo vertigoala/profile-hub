@@ -12,26 +12,24 @@
 <g:render template="banner" model="[opus: opus]"/>
 <div class="container">
     <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
-    <g:if test="${flash.message}">
-        <div class="alert alert-info">
-            ${flash.message}
-        </div>
-    </g:if>
+    <h3>Filter</h3>
     <auth:ifNotLoggedIn>
         <div class="alert alert-warning">
             <i class="fa fa-2x fa-exclamation-triangle"></i> You are not logged in.
             Any filter set will not persist beyond this browser session.
         </div>
     </auth:ifNotLoggedIn>
-    <g:form uri="/opus/${Utils.encPath(params.opusId)}/florulaList" method="POST">
-        <div class="form-group">
-            <label for="florulaListId">Filter</label>
-            <g:select class="form-control" name="florulaListId" from="${lists}" value="${florulaListId}" optionKey="dataResourceUid" optionValue="listName" noSelection="[(null): '-- No filter --']" aria-describedby="helpBlock" />
-            <span id="helpBlock" class="help-block">This collection will be filtered by the current list (for you only).  Filtering <strong>only</strong> allows profiles within the collection that have an a matched name in the list to be returned in search, browse results, and as keys; and shown as a profile page.  If a filter is currently active on the current collection an indicator will be present near the filter item in the nav bar.</span>
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-    </g:form>
+    <filter-select></filter-select>
+
 </div>
+<asset:script type="text/javascript">
+    angular.module("profileEditor").constant("filterConfig", {
+        opusId: "${params.opusId}",
+        lists: ${o.json(value: lists)},
+        value: "${florulaListId}"
+    });
+
+</asset:script>
 </body>
 
 </html>
