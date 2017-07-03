@@ -602,7 +602,6 @@ profileEditor.controller('OpusController', function ($log, $scope, profileServic
     self.canInitialiseKeyplayer = function() {
         if (self.masterListKeybaseItems !== null || self.masterListKeybaseItemsLoaded) return true;
         if (!self.opus) return false;
-        // if (!self.opus.masterListUid) return true;
         if (!self.masterListKeybaseItemsLoading) {
             self.masterListKeybaseItemsLoading = true;
             profileService.loadMasterListItems(self.opus).then(function(results) {
