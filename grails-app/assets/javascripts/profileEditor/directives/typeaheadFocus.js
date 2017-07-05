@@ -8,7 +8,7 @@ profileEditor.directive('typeaheadFocus', function () {
         link: function (scope, element, attr, ngModel) {
 
             // Array of keyCode values for arrow keys
-            const ARROW_KEYS = [37,38,39,40];
+            var ARROW_KEYS = [37,38,39,40];
 
             function manipulateViewValue(e) {
                 /* we have to check to see if the arrow keys were in the input because if they were trying to select
