@@ -94,7 +94,7 @@
 
                 <h5>Help text for sections in home page</h5>
                 <p>
-                    Enter the formatted content that you wish to appear on hover on search, browse, identify and context buttons on collection home page.
+                    Enter the formatted content that you wish to appear on hover on search, browse, identify and library buttons on collection home page.
                 </p>
                 <div class="form-group">
                     <label for="helpTextSearch">Search</label>
@@ -113,7 +113,7 @@
                     <input type="text" class="form-control" id="helpTextFilter" name="helpTextFilter" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextFilter"/>
                 </div>
                 <div class="form-group">
-                    <label for="helpTextDocuments">Context</label>
+                    <label for="helpTextDocuments">Library</label>
                     <input type="text" class="form-control" id="helpTextDocuments" name="helpTextDocuments" ng-model="opusCtrl.opus.opusLayoutConfig.helpTextDocuments"/>
                 </div>
             </div>

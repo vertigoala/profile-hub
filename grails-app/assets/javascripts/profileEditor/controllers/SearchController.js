@@ -10,8 +10,8 @@ profileEditor.controller('SearchController', function (profileService, util, mes
         nameOnly: false,
         includeNameAttributes: false,
         hideStubs: true,
-        searchAla: false,
-        searchNsl: false
+        searchAla: true,
+        searchNsl: true
     };
 
     self.searchOptions = _.clone(self.defaultSearchOptions);

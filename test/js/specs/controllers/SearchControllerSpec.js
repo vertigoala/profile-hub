@@ -54,14 +54,14 @@ describe("SearchController tests", function () {
         scope.searchCtrl.searchTerm = "test";
         scope.searchCtrl.search();
 
-        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", { matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: false, searchNsl: false, hideStubs:true, offset: 0, pageSize: 25});
+        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", { matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: true, searchNsl: true, hideStubs:true, offset: 0, pageSize: 25});
     });
 
     it("should use the provided offset and page size when search is invoked with values", function () {
         scope.searchCtrl.searchTerm = "test";
         scope.searchCtrl.search(6, 66);
 
-        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", { matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: false, searchNsl: false, hideStubs:true, offset: 66, pageSize: 6});
+        expect(profileService.search).toHaveBeenCalledWith("opus1", "test", { matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: true, searchNsl: true, hideStubs:true, offset: 66, pageSize: 6});
     });
 
     it("should do invoke the search service with an empty search time if self.searchTerm is null", function() {
@@ -71,7 +71,7 @@ describe("SearchController tests", function () {
         scope.searchCtrl.search();
         scope.$apply();
 
-        expect(profileService.search).toHaveBeenCalledWith("opus1", "", { matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: false, searchNsl: false, hideStubs:true, offset: 0, pageSize: 25});
+        expect(profileService.search).toHaveBeenCalledWith("opus1", "", { matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: true, searchNsl: true, hideStubs:true, offset: 0, pageSize: 25});
     });
 
     it("should raise an alert message if the call to search fails", function () {
@@ -225,7 +225,7 @@ describe("SearchController tests", function () {
             }, {name: "item2", image: {status: "not-checked", type: {}}}]
         });
         expect(sessionStorage.searches.all.term).toEqual("test");
-        expect(sessionStorage.searches.all.options).toEqual({ matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: false, searchNsl: false, hideStubs: true, offset: 0, pageSize: 25});
+        expect(sessionStorage.searches.all.options).toEqual({ matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: true, searchNsl: true, hideStubs: true, offset: 0, pageSize: 25});
     });
 
     it("it should cache results against the opusId when there is an opus", function () {
@@ -245,7 +245,7 @@ describe("SearchController tests", function () {
             }, {name: "item2", image: {status: "not-checked", type: {}}}]
         });
         expect(sessionStorage.searches.opus1.term).toEqual("test");
-        expect(sessionStorage.searches.opus1.options).toEqual({ matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: false, searchNsl: false, hideStubs: true, offset: 0, pageSize: 25});
+        expect(sessionStorage.searches.opus1.options).toEqual({ matchAll: true, nameOnly: false, includeNameAttributes: false, searchAla: true, searchNsl: true, hideStubs: true, offset: 0, pageSize: 25});
     });
 
     it("should populate the search results from the cache when retrieveCachedOrDelegatedSearch is invoked (no opus)", function () {
@@ -342,8 +342,8 @@ describe("SearchController tests", function () {
             matchAll: true,
             nameOnly: false,
             includeNameAttributes: false,
-            searchAla: false,
-            searchNsl: false,
+            searchAla: true,
+            searchNsl: true,
             hideStubs: true,
             offset: 0,
             pageSize: 25
@@ -365,8 +365,8 @@ describe("SearchController tests", function () {
             matchAll: true,
             nameOnly: false,
             includeNameAttributes: false,
-            searchAla: false,
-            searchNsl: false,
+            searchAla: true,
+            searchNsl: true,
             hideStubs: true,
             offset: 0,
             pageSize: 25
