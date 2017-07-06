@@ -49,6 +49,10 @@ grails.project.dependency.resolution = {
         dependency "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
         dependency "org.apache.httpcomponents:httpclient:${httpmimeVersion}"
         dependency "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
+        // manage the ecj version for Java 8 compat, this should match the version provided by Jasper
+        // TODO remove after Grails 3 upgrade?
+        // TODO Maybe a more recent version would be better?
+        dependency "org.eclipse.jdt.core.compiler:ecj:4.3.1"
     }
 
     dependencies {
@@ -58,8 +62,8 @@ grails.project.dependency.resolution = {
         runtime 'au.org.ala:image-utils:1.8.2'
         runtime 'org.jsoup:jsoup:1.7.2'
 
-        compile 'net.sf.jasperreports:jasperreports:6.2.0'
-        compile 'net.sf.jasperreports:jasperreports-functions:6.2.0'
+        compile 'net.sf.jasperreports:jasperreports:6.4.1'
+        compile 'net.sf.jasperreports:jasperreports-functions:6.4.1'
         compile 'au.org.ala:jasper-liberation-fonts-2.00.1:1.2'
         compile 'net.glxn:qrgen:1.4'
         compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160827.1'
@@ -73,7 +77,7 @@ grails.project.dependency.resolution = {
         build(":release:3.1.2") {
             excludes "httpclient"
         }
-        build ":tomcat:7.0.55"
+        build ":tomcat:7.0.70"
 
         compile ":mail:1.0.7"
         compile ":cache:1.1.8"
