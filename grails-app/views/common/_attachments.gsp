@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-controller="AttachmentController as attachmentCtrl" ng-cloak>
+<div class="panel panel-default ${edit?'':'panel-override'}" ng-controller="AttachmentController as attachmentCtrl" ng-cloak>
     <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}Documents" title="Documents" condition="!attachmentCtrl.readonly || attachmentCtrl.attachments.length > 0"></navigation-anchor>
     <div class="panel-heading" ng-show="${!hideHeading}">
         <div class="row">
@@ -38,7 +38,7 @@
                                                           alt="{{attachment.licence}}" title="{{attachment.licence}}">
                         </span>
                     </div>
-                    <g:if test="${profile ? (edit ? params.isOpusEditor : false) : params.isOpusAdmin}">
+                    <g:if test="${profile ? (edit ? params.isOpusAuthor : false) : params.isOpusAdmin}">
                         <div class="pull-right padding-top-1">
                             <a href="" ng-click="attachmentCtrl.editAttachment(attachment)" class="padding-left-1"><span
                                     class="fa fa-edit">&nbsp;Edit</span></a>
@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <g:if test="${profile ? (edit ? params.isOpusEditor : false) : params.isOpusAdmin}">
+    <g:if test="${profile ? (edit ? params.isOpusAuthor : false) : params.isOpusAdmin}">
         <div class="panel-footer">
             <div class="row">
                 <div class="col-md-12">

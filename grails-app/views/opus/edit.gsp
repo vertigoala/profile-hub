@@ -18,13 +18,6 @@
 <div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
     <a name="top"></a>
 
-    <ol class="breadcrumb" ng-cloak>
-        <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-        <li><a class="font-xxsmall"
-               href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}">{{opusCtrl.opus.title}}</a>
-        </li>
-    </ol>
-
     <div class="row" ng-cloak>
         <div class="col-md-6">
             <p class="lead">
@@ -68,14 +61,18 @@
                     <li><a href="#branding" du-smooth-scroll class="font-xxsmall">Branding</a></li>
                     <li><a href="#featureLists" du-smooth-scroll class="font-xxsmall">Feature Lists</a></li>
                     <li><a href="#glossary" du-smooth-scroll class="font-xxsmall">Glossary</a></li>
+                    <li><a href="#helplinks" du-smooth-scroll class="font-xxsmall">Help links</a></li>
+                    <li><a href="#landingpage" du-smooth-scroll class="font-xxsmall">Home page</a></li>
                     <li><a href="#imageSources" du-smooth-scroll class="font-xxsmall">Image options</a></li>
                     <li><a href="#key" du-smooth-scroll class="font-xxsmall">Key configuration</a></li>
                     <li><a href="#map" du-smooth-scroll class="font-xxsmall">Map configuration</a></li>
+                    <li><a href="#edit_master_list" du-smooth-scroll class="font-xxsmall">Master List</a></li>
                     <li><a href="#profileEditing" du-smooth-scroll target="_self" class="font-xxsmall">Profile Editing Options</a></li>
                     <li><a href="#profileLayout" du-smooth-scroll target="_self" class="font-xxsmall">Profile Page Layout</a></li>
                     <li><a href="#overview" du-smooth-scroll target="_self" class="font-xxsmall">Site overview</a></li>
                     <li><a href="#supportingCollections" du-smooth-scroll
                            class="font-xxsmall">Supporting collections</a></li>
+                    <li><a href="#theming" du-smooth-scroll class="font-xxsmall">Theming</a></li>
                 </g:else>
             </ul>
         </div>
@@ -84,9 +81,18 @@
             <g:include controller="opus" action="editOpusDetailsPanel" params="[opusId: params.opusId]"/>
 
             <g:if test="${params.opusId}">
+
+                <master-list opus="opusCtrl.opus"></master-list>
+
                 <g:include controller="opus" action="editAccessControlPanel" params="[opusId: params.opusId]"/>
 
                 <g:include controller="opus" action="editStylingPanel" params="[opusId: params.opusId]"/>
+
+                <g:include controller="opus" action="editLandingPagePanel" params="[opusId: params.opusId]"/>
+
+                <g:include controller="opus" action="editTheme" params="[opusId: params.opusId]"/>
+
+                <g:include controller="opus" action="editHelpLinks" params="[opusId: params.opusId]"/>
 
                 <g:render template="editProfileEditingOptions" model="[opusId: params.opusId]"/>
 
@@ -121,12 +127,14 @@
                 <g:include controller="opus" action="editGlossaryPanel" params="[opusId: params.opusId]"/>
 
                 <g:include controller="opus" action="editAboutPanel" params="[opusId: params.opusId]"/>
+
+                <additional-statuses opus="opusCtrl.opus"></additional-statuses>
             </g:if>
         </div>
     </div>
 
-    <a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span
-            class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
+    <a href="#top" du-smooth-scroll target="_self" class="btn btn-link scroll-to-top" title="Scroll to top">
+        <span class="fa fa-arrow-up"></span><br>Top</a>
 </div>
 
 </body>

@@ -29,9 +29,9 @@ class CommentControllerSpec extends Specification {
         controller.checkCommentPermissions("", "")
     }
 
-    def "checkCommentPermissions should return true if the user is an editor"() {
+    def "checkCommentPermissions should return true if the user is an author"() {
         when:
-        params.isOpusEditor = true
+        params.isOpusAuthor = true
 
         then:
         controller.checkCommentPermissions("", "")

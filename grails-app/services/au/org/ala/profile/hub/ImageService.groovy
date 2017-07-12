@@ -10,6 +10,8 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import org.apache.http.entity.ContentType
+
+import static au.org.ala.profile.hub.Utils.encPath
 import static groovy.json.JsonOutput.*
 import javax.imageio.ImageIO
 import java.awt.*
@@ -268,6 +270,12 @@ class ImageService {
         }
 
         deleted
+    }
+
+    def deleteSnapshotImage(String directory, String opusId, String profileId, String imageId) {
+        def dirPath = buildFilePath(directory, opusId, profileId, imageId);
+        File dir = new File(dirPath)
+        deleteDirectoryAndContents(dir)
     }
 
     def retrieveImagesPaged(String opusId, String profileId, boolean latest, String searchIdentifier, boolean useInternalPaths = false, boolean readonlyView = true, int pageSize, int startIndex) {
@@ -635,7 +643,7 @@ class ImageService {
     }
 
     def updateLocalImageMetadata(String imageId, Map metadata) {
-        webService.post("${grailsApplication.config.profile.service.url}/image/${enc(imageId)}/metadata", metadata)
+        webService.post("${grailsApplication.config.profile.service.url}/image/${encPath(imageId)}/metadata", metadata)
     }
 
     def publishPrivateImage(String opusId, String profileId, String imageId) {

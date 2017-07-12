@@ -6,6 +6,7 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
 
     self.glossary = {items: []};
     self.opusId = util.getEntityId("opus");
+    self.opus = null;
     self.newItem = null;
     self.newFile = null;
 
@@ -66,6 +67,11 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
             return;
         }
 
+		var opusPromise = profileService.getOpus(self.opusId);
+		opusPromise.then(function (data) {
+			self.opus = data;
+		});
+
         if (prefix) {
             self.prefix = prefix;
             self.page = self.prefix.charAt(0);
@@ -74,7 +80,7 @@ profileEditor.controller('GlossaryController', function (profileService, util, c
         var promise = profileService.getGlossary(self.opusId, self.prefix);
         messageService.info("Loading glossary...");
         promise.then(function (data) {
-                console.log(data.items.length + " glossary items retreived");
+                console.log(data.items.length + " glossary items retrieved");
 
                 self.glossary = data;
 

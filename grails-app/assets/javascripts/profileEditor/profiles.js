@@ -1,4 +1,4 @@
-var profileEditor = angular.module('profileEditor', ['app.config', 'ngSanitize', 'ui.bootstrap', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate', 'dualmultiselect', 'ui.bootstrap.showErrors']);
+var profileEditor = angular.module('profileEditor', ['app.config', 'ngSanitize', 'ui.bootstrap', 'colorpicker.module', 'angular-loading-bar', 'duScroll', 'ngFileUpload', 'checklist-model', 'ngCkeditor', 'angular-inview', 'ngStorage', 'truncate', 'dualmultiselect', 'ui.bootstrap.showErrors', 'ngAnimate']);
 
 profileEditor.config(function ($rootScopeProvider) {
     // The digest ttl has been bumped to 20 because the taxonomy directive in the sidebar renders
@@ -95,6 +95,7 @@ profileEditor.run(function ($rootScope, config) {
         removePlugins: '',
         extraPlugins: 'symbol,alaToolbar,ngImage,autogrow',
         autoGrow_minHeight: 130, // font-size 15px * 1.5em line height + 10px margin bottom per <p> for 4 lines
+        autoGrow_maxHeight: 400,
         toolbar: [
             { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript' ] },
             { name: 'clipboard', items: ['PasteText', '-', 'Undo', 'Redo' ] },

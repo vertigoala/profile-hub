@@ -14,17 +14,17 @@
  *
  */
 
- package au.org.ala.profile.hub
+package au.org.ala.profile.hub
 
 import au.org.ala.profile.hub.reports.JasperExportFormat
 import au.org.ala.profile.hub.reports.JasperReportDef
 import groovy.sql.Sql
 import net.sf.jasperreports.engine.*
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource
+import net.sf.jasperreports.engine.design.JRCompiler
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter
 import net.sf.jasperreports.engine.export.JRTextExporterParameter
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter
-import net.sf.jasperreports.engine.util.JRProperties
 import org.springframework.core.io.Resource
 
 import java.lang.reflect.Field
@@ -166,7 +166,8 @@ class JasperService {
 
             // This is the current official means for setting the temp folder for jasper reports to use when compiling
             // reports on the fly, but it doesn't work
-            JRProperties.setProperty(JRProperties.COMPILER_TEMP_DIR, tempFolder.getAbsolutePath())
+            def propsUtil = JRPropertiesUtil.getInstance(DefaultJasperReportsContext.instance)
+            propsUtil.setProperty(JRCompiler.COMPILER_TEMP_DIR, tempFolder.getAbsolutePath())
 
             // This is a deprecated means for setting the temp folder that supposedly still works (still in the Jasper
             // Reports source code trunk as of 14-Aug-2008, and, in fact, takes precedence over the official method);
@@ -298,7 +299,7 @@ class JasperService {
             break
             case JasperExportFormat.XLS_FORMAT:
             exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, true)
-            exporter.setParameter(JRXlsExporterParameter.IS_AUTO_DETECT_CELL_TYPE, true)
+            exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, true)
             exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, false)
             exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, true)
             break

@@ -8,7 +8,7 @@ import grails.util.Environment
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 
 import javax.validation.constraints.NotNull
-
+import static groovy.io.FileType.DIRECTORIES
 class AdminController extends BaseController {
 
     WebService webService
@@ -34,6 +34,32 @@ class AdminController extends BaseController {
     @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
     def rematchNames() {
         def response = webService.post("${grailsApplication.config.profile.service.url}/admin/rematchNames", [opusIds: request.getJSON()?.opusIds?.split(",")])
+
+        handle response
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def listBackupFiles() {
+        def dir = new File(getBackupRestoreDir());
+        def files = [];
+        if (dir.exists()) {
+            dir.traverse(type: DIRECTORIES, maxDepth: 0) {
+                files.add(it.name)
+            }
+        }
+        success files
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def backupCollections() {
+        def response = webService.post("${grailsApplication.config.profile.service.url}/admin/backupCollections", [opusUuids: request.getJSON()?.opusUuids?.split(","), backupFolder: getBackupRestoreDir(), backupName: request.getJSON()?.backupName])
+
+        handle response
+    }
+
+    @Secured(role = Role.ROLE_ADMIN, opusSpecific = false)
+    def restoreCollections() {
+        def response = webService.post("${grailsApplication.config.profile.service.url}/admin/restoreCollections", [backupFolder: getBackupRestoreDir(), backupNames: request.getJSON()?.backupNames?.split(","), restoreDB: request.getJSON()?.restoreDB])
 
         handle response
     }
@@ -88,4 +114,9 @@ class AdminController extends BaseController {
 
         success [:]
     }
+
+    private String getBackupRestoreDir() {
+        return grailsApplication.config.backupRestoreDir?: '/data/profile-service/backup/db'
+    }
+
 }

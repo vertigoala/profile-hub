@@ -1,4 +1,4 @@
-profileEditor.directive('fallbackDatePicker', function ($browser) {
+profileEditor.directive('fallbackDatePicker', function () {
   return {
     restrict: 'E',
     require: 'ngModel',

@@ -7,11 +7,12 @@
             <div class="input-group-btn">
                 <button type="button" class="btn btn-default dropdown-toggle btn-lg search-type-control" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                    {{ searchCtrl.searchOptions.nameOnly ? 'with name' : 'with text' }} <span class="caret"></span>
+                    {{ searchCtrl.isScientificName() ? 'by scientific name' : searchCtrl.isCommonName() ? 'by common name' : 'containing text' }} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a ng-click="searchCtrl.setSearchOption('name')">with name</a></li>
-                    <li><a ng-click="searchCtrl.setSearchOption('text')">with text</a></li>
+                    <li><a ng-click="searchCtrl.setSearchOption('scientificname')">by scientific name</a></li>
+                    <li><a ng-click="searchCtrl.setSearchOption('commonname')">by common name</a></li>
+                    <li><a ng-click="searchCtrl.setSearchOption('text')">containing text</a></li>
                 </ul>
             </div>
             <input id="searchTerm"
@@ -19,36 +20,17 @@
                    ng-enter="searchCtrl.search()"
                    name="searchTerm"
                    class="input-lg form-control ignore-save-warning"
-                   autocomplete="on"
-                   type="text">
+                   autocomplete="off"
+                   type="text"
+                   typeahead-editable="true"
+                   typeahead="profile.scientificName as profile.scientificName for profile in searchCtrl.autoCompleteSearchByScientificName($viewValue) | filter:$viewValue | limitTo:10" />
             <span class="input-group-btn">
-                <button class="btn btn-primary btn-lg" type="button" ng-click="searchCtrl.search()">Search</button>
-                <button class="btn btn-default btn-lg" type="button" ng-click="searchCtrl.clearSearch()" title="Clear search"><span class="fa fa-trash"></span></button>
+                <button class="btn btn-primary btn-lg search-buttons-responsive-large-screen" type="button" ng-click="searchCtrl.search()">Search</button>
+                <button class="btn btn-default btn-lg search-buttons-responsive-large-screen" type="button" ng-click="searchCtrl.clearSearch()" title="Clear search"><span class="fa fa-trash"></span></button>
+                <button class="btn btn-default btn-lg search-buttons-responsive-small-screen" type="button" ng-click="searchCtrl.search()" title="Clear search"><span class="fa fa-search"></span></button>
             </span>
         </div>
-        <button class="btn btn-link toggle-link ignore-save-warning" ng-model="searchCtrl.showOptions" btn-checkbox>Options</button>
-        <div ng-show="searchCtrl.showOptions" class="well">
-            <div class="checkbox inline-block padding-right-1" ng-show="searchCtrl.searchOptions.nameOnly">
-                <label for="includeNameAttributes" class="inline-label">
-                    <input id="includeNameAttributes" type="checkbox" name="includeNameAttributes" class="ignore-save-warning"
-                           ng-model="searchCtrl.searchOptions.includeNameAttributes" ng-false-value="false">
-                    Include alternate names
-                </label>
-            </div>
-            <div class="checkbox inline-block padding-right-1" ng-show="searchCtrl.searchOptions.nameOnly">
-                <label for="searchAla" class="inline-label">
-                    <input id="searchAla" type="checkbox" name="searchAla" class="ignore-save-warning"
-                           ng-model="searchCtrl.searchOptions.searchAla" ng-false-value="false">
-                    Look for matching names in the ALA
-                </label>
-            </div>
-            <div class="checkbox inline-block padding-right-1" ng-show="searchCtrl.searchOptions.nameOnly">
-                <label for="searchNsl" class="inline-label">
-                    <input id="searchNsl" type="checkbox" name="searchNsl" class="ignore-save-warning"
-                           ng-model="searchCtrl.searchOptions.searchNsl" ng-false-value="false">
-                    Look for matching names in the NSL
-                </label>
-            </div>
+        <div class="well margin-top-1">
             <div class="checkbox inline-block padding-right-1" ng-hide="searchCtrl.searchOptions.nameOnly">
                 <label for="matchAll" class="inline-label">
                     <input id="matchAll" type="checkbox" name="matchAll" class="ignore-save-warning"
@@ -56,11 +38,11 @@
                     Must contain all terms
                 </label>
             </div>
-            <div class="checkbox inline-block">
-                <label for="includeArchivedProfiles" class="inline-label">
-                    <input id="includeArchivedProfiles" type="checkbox" name="includeArchivedProfiles" class="ignore-save-warning"
-                           ng-model="searchCtrl.searchOptions.includeArchived" ng-false-value="false">
-                    Include archived profiles
+            <div class="checkbox inline-block padding-right-1">
+                <label for="hideStubs" class="inline-label">
+                    <input id="hideStubs" type="checkbox" name="hideStubs" class="ignore-save-warning"
+                           ng-model="searchCtrl.searchOptions.hideStubs" ng-false-value="false">
+                    Hide empty profile
                 </label>
             </div>
         </div>
@@ -100,12 +82,15 @@
 
             <div ng-class="searchCtrl.opusId ? 'col-md-10 col-sm-12 col-xs-12' : 'col-md-8 col-sm-12 col-xs-12'">
                 <h4 class="inline-block"><a href="${request.contextPath}/opus/{{ profile.opusShortName ? profile.opusShortName : profile.opusId }}/profile/{{ profile.archivedDate ? profile.uuid : profile.scientificName | enc }}"
-                       target="_self">{{ profile.scientificName }}</a></h4>
+                                            target="_self"><span data-ng-bind-html="searchCtrl.formatName(profile) | sanitizeHtml"></span></a></h4>
                 <div class="inline-block padding-left-1" ng-show="profile.rank">({{profile.rank | capitalize}})</div>
+                <div class="inline-block padding-left-1" ng-show="profile.matchInfo.reason">(<span data-ng-bind-html="searchCtrl.formatReason(profile) | sanitizeHtml"></span>)</div>
 
                 <div class="font-xsmall" ng-show="profile.otherNames"><h5><span ng-repeat="name in profile.otherNames">{{ name.text | capitalize }}<span ng-show="!$last">, </span></span></h5></div>
 
                 <div class="font-xsmall" ng-show="profile.description"><span ng-repeat="description in profile.description">{{ description.text | words: 100 }}<span ng-show="!$last">, </span></span></div>
+
+                <div class="font-xsmall" ng-show="profile.profileStatus == 'Empty'"><uib-alert type="info"><i class="fa fa-exclamation"></i> This profile is a stub.</uib-alert></div>
             </div>
 
             <div class="col-md-2 col-sm-12 col-xs-12" ng-show="!searchCtrl.opusId">

@@ -70,6 +70,7 @@ class UrlMappings {
         "/opus/$opusId/profile/$profileId/multimedia/$documentId" controller: "profile", action: [DELETE: "documentDelete", POST: "documentUpdate"]
         "/opus/$opusId/profile/$profileId/multimedia" controller: "profile", action: [POST: "documentUpdate"]
         "/opus/$opusId/profile/$profileId/primaryMultimedia" controller: "profile", action: [POST: "setPrimaryMultimedia"]
+        "/opus/$opusId/profile/$profileId/status" controller: 'profile', action: [POST: 'setStatus']
         "/opus/$opusId/profile/$profileId" controller: "profile", action: [GET: "show"]
         "/opus/$opusId/data/" controller: "data", action: [GET: "getDataSets"]
         "/opus/$opusId/data/upload" controller: "data", action: [GET: "upload"]
@@ -81,15 +82,20 @@ class UrlMappings {
         "/opus/$opusId/vocab/$vocabId/replaceUsages" controller: "vocab", action: [POST: "replaceUsagesOfTerm"]
         "/opus/$opusId/vocab/$vocabId" controller: "vocab", action: [GET: "show"]
 
+        "/opus/$opusId/additionalStatuses" controller: "opus", action: [POST: 'updateAdditionalStatuses']
         "/opus/$opusId/about/json" controller: "opus", action: [GET: "getAboutHtml"]
         "/opus/$opusId/about/update" controller: "opus", action: [PUT: "updateAbout"]
         "/opus/$opusId/about" controller: "opus", action: [GET: "about"]
+        "/opus/$opusId/masterList" controller: "opus", action: [POST: 'updateMasterList']
+        "/opus/$opusId/masterList/keybaseItems" controller: "opus", action: "getMasterListKeybaseItems"
+        "/opus/$opusId/masterList/sync" controller: "opus", action: [POST: 'syncMasterList']
 
         "/opus/$opusId/shareRequest/$requestingOpusId/" controller: "opus", action: [GET: "getSupportingCollectionRequest"]
         "/opus/$opusId/supportingCollections/respond/$requestingOpusId/$requestAction" controller: "opus", action: [POST: "respondToSupportingCollectionRequest"]
         "/opus/$opusId/supportingCollections/update" controller: "opus", action: [POST: "updateSupportingCollections"]
 
         "/opus/$opusId/glossary/json" controller: "glossary", action: [GET: "getGlossary"]
+        "/opus/$opusId/glossary/$prefix" controller: "glossary", action: [GET: "getGlossary"]
         "/opus/$opusId/glossary/upload" controller: "glossary", action: [POST: "upload"]
         "/opus/$opusId/glossary/item/create" controller: "glossary", action: [PUT: "saveItem"]
         "/opus/$opusId/glossary/item/$glossaryItemId/update" controller: "glossary", action: [POST: "updateItem"]
@@ -100,6 +106,7 @@ class UrlMappings {
         "/opus/$opusId/attachment/$attachmentId" controller: "opus", action: [GET: "getAttachmentMetadata", DELETE: "deleteAttachment"]
         "/opus/$opusId/attachment/" controller: "opus", action: [GET: "getAttachmentMetadata", POST: "saveAttachment"]
 
+        "/opus/$opusId/florulaList" controller: "opus", action: [POST: "updateFlorulaList"]
         "/opus/$opusId/users/update" controller: "opus", action: [POST: "updateUsers"]
         "/opus/$opusId/access/token" controller: "opus", action: [POST: "generateAccessToken", PUT: "generateAccessToken", DELETE: "revokeAccessToken"]
 
@@ -113,6 +120,13 @@ class UrlMappings {
         "/opus/$opusId/json" controller: "opus", action: [GET: "getJson"]
         "/opus/$opusId/delete" controller: "opus", action: [DELETE: "deleteOpus"]
         "/opus/$opusId" controller: "opus", action: [GET: "show"]
+        "/opus/$opusId/search" controller: "opus", action: [GET: "search"]
+        "/opus/$opusId/browse" controller: "opus", action: [GET: "browse"]
+        "/opus/$opusId/filter" controller: "opus", action: [GET: "filter"]
+        "/opus/$opusId/identify" controller: "opus", action: [GET: "identify"]
+        "/opus/$opusId/documents" controller: "opus", action: [GET: "documents"]
+        "/opus/$opusId/reports" controller: "opus", action: [GET: "reports"]
+        "/opus/$opusId/stylesheet" controller: "opus", action: [GET: "getStyleSheet"]
         "/opus" controller: "opus", action: [GET: "index"]
 
         "/dataResource/$dataResourceUid" controller: "collectory", action: [GET: "getResource"]
@@ -150,7 +164,10 @@ class UrlMappings {
         "/admin/message" controller: "admin", action: [GET: "getMessage", POST: "postMessage"]
         "/admin/reloadConfig" controller: "admin", action: [POST: "reloadConfig"]
         "/admin/reindex" controller: "admin", action: [POST: "reindex"]
+        "/admin/listBackupFiles" controller: "admin", action: [GET: "listBackupFiles"]
         "/admin/rematchNames" controller: "admin", action: [POST: "rematchNames"]
+        "/admin/backupCollections" controller: "admin", action: [POST: "backupCollections"]
+        "/admin/restoreCollections" controller: "admin", action: [POST: "restoreCollections"]
         "/admin/job/$jobType/$jobId" controller: "admin", action: [DELETE: "deleteJob"]
         "/admin/job/" controller: "admin", action: [GET: "listPendingJobs"]
         "/admin/tag/$tagId?" controller: "admin", action: [GET: "getTag", PUT: "createTag", POST: "updateTag", DELETE: "deleteTag"]
@@ -201,6 +218,7 @@ class UrlMappings {
         "/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
         "/opus/$opusId/profile/$profileId/image/$imageId/tile/$zoom/$x/$y" controller: "image", action: [GET: "getTile"]
 
+        "/stylesheet/$id?" controller: "stylesheet", action: "opus"
         if (Environment.current == Environment.DEVELOPMENT) {
             "/console/$action?/$id?(.$format)?" controller: 'console'
         }

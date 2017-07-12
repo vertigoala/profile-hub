@@ -16,6 +16,20 @@
                         Show contributors and editors for attributes.
                     </label>
                 </div>
+
+                <div class="form-group">
+                    <label for="citation">Citation template</label>
+
+                    <textarea id="citation" ng-model="opusCtrl.opus.citationProfile" rows="4"
+                              class="form-control" ng-maxlength="500" maxlength="500"></textarea>
+                    <div class="small">
+                        Create a citation template using the given keywords - $Profile(Profile name),
+                    $Year(Profile publication year), $Url(Profile url), $Today(Today's date), $Author(Profile author),
+                    $Editor(Profile editor) and other vocabulary terms
+                    </div>
+                    <div class="small italics">Characters remaining: {{500 - (opusCtrl.opus.citationProfile || '').length}}</div>
+                </div>
+
             </div>
         </div>
     </div>

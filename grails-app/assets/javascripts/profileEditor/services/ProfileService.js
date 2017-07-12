@@ -79,10 +79,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
          * @param profileId The id of the profile to load.
          * @returns {promise.promise|*|jQuery.promise|d.promise|promise}
          */
-        getProfile : function(opusId, profileId) {
+        getProfile : function(opusId, profileId, disableAlertOnFailure) {
             $log.debug("Fetching profile " + profileId);
 
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {params: {fullClassification: true}, cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/json", {params: {fullClassification: true}, cache: true, disableAlertOnFailure: disableAlertOnFailure});
             future = util.toStandardPromise(future);
             future.then(function(data) {
                 // Only cache the profile data from the profie being viewed.  Profiles from supporting collections
@@ -256,10 +256,14 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
-        getOpus: function (opusId) {
+        getOpus: function (opusId, disableAlertOnFailure) {
             $log.debug("Fetching opus " + opusId);
 
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/json", {cache: true});
+            if (!angular.isDefined(disableAlertOnFailure)) {
+                disableAlertOnFailure = false;
+            }
+
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/json", {cache: true, disableAlertOnFailure: disableAlertOnFailure});
             future.then(function (response) {
                 $log.debug("Opus fetched with response code " + response.status);
             });
@@ -293,6 +297,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
 
             return util.toStandardPromise(future);
+        },
+
+        listBackupFiles: function() {
+            $log.debug("Fetching backup files");
+            var future = $http.get(util.contextRoot() + "/admin/listBackupFiles", {cache: true});
+            future.then(function (response) {
+                $log.debug("Backup file list fetched with response code " + response.status);
+            });
+
+            return util.toStandardPromise(future);
+
         },
 
         listOpus: function () {
@@ -425,6 +440,39 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             });
             future.then(function (response) {
                 $log.debug("Terms replaced with response code " + response.status)
+            });
+            return util.toStandardPromise(future);
+        },
+
+        updateAdditionalStatuses: function (opusId, additionalStatuses) {
+            $log.debug("Updating additional statuses for " + opusId + " with " + additionalStatuses);
+            var future = enqueue(function() {
+                return $http.post(util.contextRoot() + '/opus/' + opusId + '/additionalStatuses', additionalStatuses, {disableAlertOnFailure: true});
+            });
+            return util.toStandardPromise(future);
+        },
+
+        updateMasterList: function (opusId, masterListUid) {
+            $log.debug("Updating master list for " + opusId + " with " + masterListUid);
+            var future = enqueue(function() {
+                return $http.post(util.contextRoot() + '/opus/' + opusId + '/masterList', { masterListUid: masterListUid }, {disableAlertOnFailure: true});
+            });
+            return util.toStandardPromise(future);
+        },
+
+        syncMasterList: function(opusId, regen) {
+            $log.debug("Syncing master list for " + opusId);
+            var regenParam = regen ? 'true' : 'false';
+            var future = enqueue(function() {
+                return $http.post(util.contextRoot() + '/opus/' + opusId + '/masterList/sync?regenerateStubs=' + regenParam, {}, {disableAlertOnFailure: true});
+            });
+            return util.toStandardPromise(future);
+        },
+
+        updateFlorulaList: function(opusId, listId) {
+            $log.debug("Updating florula list for " + opusId + " to " + listId);
+            var future = enqueue(function() {
+                return $http.post(util.contextRoot() + '/opus/' + opusId + '/florulaList', { florulaListId: listId })
             });
             return util.toStandardPromise(future);
         },
@@ -612,7 +660,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
         getSpeciesProfile: function (opusId, profileId, guid) {
             $log.debug("Retrieving species profile for " + guid);
-            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/speciesProfile?guid=" + guid, {cache: true});
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/profile/" + profileId + "/speciesProfile?guid=" + guid, {cache: true, disableAlertOnFailure: true});
             future.then(function (response) {
                 $log.debug("Species Profile retrieved with response code " + response.status)
             });
@@ -676,23 +724,23 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         search: function (opusId, term, options) {
-            var queryParams = "";
-            if (options) {
-                for (var key in options) {
-                    if (options.hasOwnProperty(key)) {
-                        queryParams += "&" + key + "=" + options[key]
-                    }
-                }
+            var params;
+            if (angular.isDefined(options)) {
+                params = angular.copy(options);
+            } else {
+                params = {};
             }
 
-            var future = $http.get(util.contextRoot() + "/profile/search?opusId=" + opusId + "&term=" + term + queryParams);
+            params['opusId'] = opusId;
+            params['term'] = term;
+            var future = $http.get(util.contextRoot() + "/profile/search", {params: params});
             future.then(function (response) {
                 $log.debug("Profile search returned with response code " + response.status);
             });
             return util.toStandardPromise(future);
         },
 
-        profileSearch: function (opusId, scientificName, useWildcard, sortBy) {
+        profileSearch: function (opusId, scientificName, useWildcard, sortBy, autoCompleteScientificName) {
             $log.debug("Searching for " + scientificName + (useWildcard ? " with wildcard" : ""));
 
             if (typeof sortBy == 'undefined') {
@@ -701,10 +749,21 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             if (typeof useWildcard == 'undefined') {
                 useWildcard = true;
             }
+            if (typeof autoCompleteScientificName == 'undefined') {
+                autoCompleteScientificName = false;
+            }
             if (typeof opusId == 'undefined') {
                 opusId = "";
             }
-            var future = $http.get(util.contextRoot() + "/profile/search/scientificName?opusId=" + opusId + "&scientificName=" + scientificName + "&useWildcard=" + useWildcard + "&sortBy=" + sortBy);
+
+            var params = {
+                opusId: opusId,
+                scientificName: scientificName,
+                sortBy: sortBy,
+                useWildcard: useWildcard,
+                autoCompleteScientificName: autoCompleteScientificName
+            };
+            var future = $http.get(util.contextRoot() + "/profile/search/scientificName", { params: params });
             future.then(function (response) {
                 $log.debug("Profile search returned with response code " + response.status);
             });
@@ -712,13 +771,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         profileSearchByTaxonLevel: function (opusId, taxon, filter, max, offset) {
-            if (!_.isUndefined(filter)) {
-                filter = "&filter=" + filter
-            } else {
-                filter = "";
-            }
 
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/level?opusId=" + opusId + "&taxon=" + taxon + "&max=" + max + "&offset=" + offset + filter);
+            var params = {
+                opusId: opusId,
+                taxon: taxon,
+                max: max,
+                offset: offset,
+            };
+            if (angular.isDefined(filter)) {
+                params['filter'] = filter;
+            }
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/level", { params: params });
             future.then(function (response) {
                 $log.debug("Facet search returned with response code " + response.status);
             });
@@ -731,7 +794,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
                 sortBy: 'name',
                 immediateChildrenOnly: false
             }, optionalParams);
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&max=" + max + "&offset=" + offset + "&sortBy=" + options.sortBy + "&countChildren=" + options.countChildren + "&immediateChildrenOnly=" + options.immediateChildrenOnly);
+            var params = {
+                opusId: opusId,
+                taxon: taxon,
+                scientificName: scientificName,
+                max: max,
+                offset: offset,
+                countChildren: options.countChildren,
+                sortBy: options.sortBy,
+                immediateChildrenOnly: options.immediateChildrenOnly
+            };
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name", { params: params });
             future.then(function (response) {
                 $log.debug("Facet search returned with response code " + response.status);
             });
@@ -742,7 +815,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             var options = angular.extend({
                 immediateChildrenOnly: false
             }, optionalParams);
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name/count?opusId=" + opusId + "&taxon=" + taxon + "&scientificName=" + scientificName + "&immediateChildrenOnly=" + options.immediateChildrenOnly);
+            var params = {
+                opusId: opusId,
+                taxon: taxon,
+                scientificName: scientificName,
+                immediateChildrenOnly: options.immediateChildrenOnly
+            };
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/name/count", { params: params });
             future.then(function (response) {
                 $log.debug("Profile count  by taxon level and name returned with response code " + response.status);
             });
@@ -750,13 +829,17 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         profileSearchGetImmediateChildren: function (opusId, rank, name, max, offset, filter) {
-            if (_.isUndefined(filter) || !filter || filter.trim().length == 0) {
-                filter = "";
-            } else {
-                filter = "&filter=" + filter;
+            var params = {
+                opusId: opusId,
+                rank: rank,
+                name: name,
+                max: max,
+                offset: offset
+            };
+            if (!(angular.isUndefined(filter) || !filter || filter.trim().length == 0)) {
+                params['filter'] = filter;
             }
-
-            var future = $http.get(util.contextRoot() + "/profile/search/children?opusId=" + opusId + "&rank=" + rank + "&name=" + name + "&max=" + max + "&offset=" + offset + filter);
+            var future = $http.get(util.contextRoot() + "/profile/search/children", { params: params });
             future.then(function (response) {
                 $log.debug("Child search returned with response code " + response.status);
             });
@@ -764,7 +847,10 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         getTaxonLevels: function (opusId) {
-            var future = $http.get(util.contextRoot() + "/profile/search/taxon/levels?opusId=" + opusId);
+            var params = {
+                opusId: opusId
+            };
+            var future = $http.get(util.contextRoot() + "/profile/search/taxon/levels", { params: params });
             future.then(function (response) {
                 $log.debug("Get taxon levels returned with response code " + response.status);
             });
@@ -861,7 +947,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         getGlossary: function (opusId, prefix) {
             $log.debug("Fetching glossary for opus " + opusId);
 
-            var future = $http.get(config.profileServiceUrl + "/opus/" + opusId + "/glossary/" + prefix);
+            var future = $http.get(util.contextRoot() + "/opus/" + opusId + "/glossary/" + prefix);
             future.then(function (response) {
                 $log.debug("Glossary fetched with response code " + response.status);
             });
@@ -1162,6 +1248,16 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
 
         setPrimaryMultimedia: function(profile, primaryAudio, primaryVideo) {
             var future = $http.post(util.contextRoot() + "/opus/" + profile.opusId + "/profile/" + profile.uuid + "/primaryMultimedia", {primaryAudio: primaryAudio, primaryVideo: primaryVideo});
+            return util.toStandardPromise(future);
+        },
+
+        setStatus: function(profile, status) {
+            var future = $http.post(util.contextRoot() + '/opus/' + profile.opusId + '/profile/' + profile.uuid + '/status', { status: status }, {disableAlertOnFailure: true });
+            return util.toStandardPromise(future);
+        },
+
+        loadMasterListItems: function(opus) {
+            var future = $http.get(util.contextRoot() + '/opus/' + opus.uuid + '/masterList/keybaseItems', {disableAlertOnFailure: true });
             return util.toStandardPromise(future);
         }
     }

@@ -19,7 +19,7 @@ describe("BrowseController tests", function () {
     };
     var messageService;
     var profileService;
-    var searchDefer, levelsDefer, byNameDefer, byLevelAndNameDefer;
+    var searchDefer, levelsDefer, byNameDefer, byLevelAndNameDefer, getProfileDefer;
 
     var searchResponse = '[{"guid":"null","scientificName":"Acacia excelsa subsp. angusta","profileId":"e077b602-2a53-44f2-988d-6b54a35f323c"},{"guid":"null","scientificName":"Acacia excelsa subsp. excelsa","profileId":"63155a38-ba7e-4d33-8432-3a9a3556f588"}]';
 
@@ -40,11 +40,13 @@ describe("BrowseController tests", function () {
         levelsDefer = $q.defer();
         byNameDefer = $q.defer();
         byLevelAndNameDefer = $q.defer();
+        getProfileDefer = $q.defer();
 
         spyOn(profileService, "profileSearch").and.returnValue(searchDefer.promise);
         spyOn(profileService, "getTaxonLevels").and.returnValue(levelsDefer.promise);
         spyOn(profileService, "profileSearchByTaxonLevel").and.returnValue(byNameDefer.promise);
         spyOn(profileService, "profileSearchByTaxonLevelAndName").and.returnValue(byLevelAndNameDefer.promise);
+        spyOn(profileService, "getProfile").and.returnValue(getProfileDefer.promise);
 
         messageService = jasmine.createSpyObj(_messageService_, ["success", "info", "alert", "pop"]);
 
@@ -164,6 +166,7 @@ describe("BrowseController tests", function () {
 
     it("should raise an alert message if the call to searchByTaxonLevel fails", function() {
         byLevelAndNameDefer.reject();
+        getProfileDefer.resolve({});
         scope.browseCtrl.searchByTaxon("taxonName", "sciName", 10, 666);
         scope.$apply();
 
@@ -175,9 +178,20 @@ describe("BrowseController tests", function () {
         var results = {species1: 10, species2: 20};
 
         byLevelAndNameDefer.resolve(results);
+        getProfileDefer.resolve({});
         scope.browseCtrl.searchByTaxon("taxonName", "sciName", 10, 666);
         scope.$apply();
 
         expect(scope.browseCtrl.profiles).toEqual(results);
+    });
+
+    it("should set profile exists for a selected taxon searchByTaxon", function() {
+        var results = {something: 10, species2: 20};
+        byLevelAndNameDefer.resolve(results);
+        getProfileDefer.resolve({profile: {scientificName: 'something'}});
+        scope.browseCtrl.searchByTaxon("taxonName", "something", 10, 555);
+        scope.$apply();
+
+        expect(scope.browseCtrl.selectedTaxon.profileExist).toEqual(true);
     });
 });

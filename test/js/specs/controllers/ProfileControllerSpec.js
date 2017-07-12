@@ -491,7 +491,7 @@ describe("ProfileController tests", function () {
 
         scope.profileCtrl.constructManualHierarchyForNameDirective();
 
-        expect(scope.profileCtrl.manualHierarchy).toBeUndefined();
+        expect(scope.profileCtrl.manualHierarchy.length).toBe(0);
     });
 
     it("should leave manualHierarchy undefined when constructManualHierarchyForNameDirective is invoked when profile.manualClassification = false", function() {
@@ -504,7 +504,7 @@ describe("ProfileController tests", function () {
 
         scope.profileCtrl.constructManualHierarchyForNameDirective();
 
-        expect(scope.profileCtrl.manualHierarchy).toBeUndefined();
+        expect(scope.profileCtrl.manualHierarchy.length).toBe(0);
     });
 
     it("should set the manualHierarchy when constructManualHierarchyForNameDirective is invoked when readonly = false and profile.manualClassification = true", function() {
@@ -516,7 +516,7 @@ describe("ProfileController tests", function () {
 
         scope.profileCtrl.constructManualHierarchyForNameDirective();
 
-        expect(scope.profileCtrl.manualHierarchy).toBeDefined();
+        expect(scope.profileCtrl.manualHierarchy.length).toBe(1);
     });
 
     it("should always include the profile as the first item in the manualHierarchy, with guid = null", function() {
@@ -535,7 +535,7 @@ describe("ProfileController tests", function () {
         scope.profileCtrl.constructManualHierarchyForNameDirective();
 
         // manual hierarchy is always constructed bottom-up
-        expect(scope.profileCtrl.manualHierarchy).toBeDefined();
+        expect(scope.profileCtrl.manualHierarchy.length).toBe(2);
         expect(scope.profileCtrl.manualHierarchy[0].name).toBe("profileName");
         expect(scope.profileCtrl.manualHierarchy[0].guid).toBeNull(); // the guid for the first item must be null
         expect(scope.profileCtrl.manualHierarchy[0].rank).toBe("r1");

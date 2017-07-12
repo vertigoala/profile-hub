@@ -1,5 +1,24 @@
+
 /**
- * Created by NKlaze on 10/04/2015.
+ * Copyright 2016, Atlas of Living Australia (ALA)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Version 1.0.0
+ *
+ * Created by Niels Klazenga on 10/04/2015.
  *
  * $.fn.keybase([action], options);
  *
@@ -26,7 +45,12 @@
  *   playerEvents: function(),
  *   playerWindow: function(),
  *   remainingItemsDisplay: function(items, itemsDiv),
- *   resultDisplay: function(result, resultDiv)
+ *   resultDisplay: function(result, resultDiv),
+ *   renderItemLink: function(item),
+ *   filterItems: []|undefined,     // array of item IDs
+ *   filterItemNames: []|undefined  // whitelist of names
+ *   filterItemGuids: []|undefined  // whitelist of guids (inclusive of names)
+ *
  * };
  *
  * Possible actions are 'player', 'indentedKey' and 'bracketedKey'. Action is optional: if no action is given, 'player'
@@ -45,7 +69,6 @@
 
     var rootNodeID;
     var next_id;
-    //var nested_sets;
     var keyNodes;
     var current_node;
 
@@ -54,7 +77,7 @@
     var remainingItemsElem;
     var discardedItemsElem;
 
-    var filter_items = [];
+    var filter_items;
     var filter_leads = [];
     var filter_parents = [];
     var filter_nodes = [];
@@ -63,9 +86,11 @@
     var bracketed_key;
     var indented_key;
     var indentedKeyHtml;
-    
+
+    var i;
+
     $.fn.keybase = function() {
-        
+
         $.fn.keybase.getters = {
             jsonKey: function() { return json; },
             settings: function() { return settings; },
@@ -79,20 +104,26 @@
             filterNodes: function() { return filter_nodes; },
             keyNodes: function() { return keyNodes; }
         };
-        
+
 
         var options;
         if (arguments.length === 1) {
             options = arguments[0];
         }
 
+        var action;
         if (arguments.length === 2) {
-            var action = arguments[0];
+            action = arguments[0];
             options = arguments[1];
         }
 
         settings = $.extend(true, {}, $.fn.keybase.defaults, settings, options);
-        filter_items = settings.filter_items;
+
+        if (settings.filterItems.length > 0) {
+            filter_items = settings.filterItems;
+        } else if (!(filter_items !== undefined && filter_items.length > 0 && settings.reset !== true)) {
+            filter_items = [];
+        }
         $.fn.keybase.setActiveFilter = function(filter) {
             activeFilter = filter;
         }
@@ -116,6 +147,68 @@
             }
         }
 
+        function extractFilterIds(json, filterItemNames, filterItemGuids, caseInsensitive) {
+
+            var nameTransform, filterGuidSet, filterNameSet, itemIds;
+            if (caseInsensitive) {
+                nameTransform = function (filterItem) { return filterItem.toLowerCase() };
+            } else {
+                nameTransform = function (filterItem) { return filterItem };
+            }
+            function nameFilter(item) { return filterNameSet.hasOwnProperty(nameTransform(item.item_name)) }
+
+            function extractGuid(url) {
+                var u = url.trim();
+                var idx = u.lastIndexOf('urn:');
+                if (idx !== -1) {
+                    return u.substring(idx);
+                }
+                idx = u.lastIndexOf('http://');
+                if (idx > 0) {
+                    return u.substring(idx);
+                }
+                if (console) console.debug("Could not extract guid from " + url);
+                return null;
+            }
+
+            function guidFilter(filterItem) {
+                if (filterItem.url) {
+                    var guid = extractGuid(filterItem.url);
+                    return filterGuidSet.hasOwnProperty(guid);
+                }
+                return false;
+            }
+
+            function toStringSet(strings, transform) {
+                if (!transform) transform = function(x) { return x; };
+                var safeStrings = strings !== null ? strings : [];
+                var obj = {};
+                for (var i = 0; i < safeStrings.length; ++i) {
+                    obj[transform(safeStrings[i])] = true;
+                }
+                return obj;
+            }
+
+            filterGuidSet = toStringSet(filterItemGuids);
+            filterNameSet = toStringSet(filterItemNames, nameTransform);
+
+            itemIds = [];
+            for (var i = 0; i < json.items.length; ++i) {
+                var item = json.items[i];
+                if (nameFilter(item) || guidFilter(item)) {
+                    itemIds.push(item.item_id);
+                }
+            }
+
+            if (itemIds.length === 0 && filterItemNames.length > 0) {
+                // XXX None of the filter items matched any of the candidates and an empty filter is
+                // the same as no filter, so add a bogus filter item
+                return ['🥀+💩+💧+☀️=🌹'];
+            } else {
+                return itemIds;
+            }
+        }
+
         if (!json || settings.reset === true) {
             var contentType ="application/x-www-form-urlencoded; charset=utf-8";
 
@@ -127,8 +220,17 @@
                 data: {key_id: settings.key},
                 dataType: settings.ajaxDataType,
                 contentType: contentType,
-                success:function(data){
+                beforeSend: function() {
+                    settings.beforeSend();
+                },
+                success: function(data){
                     json = data;
+
+                    if ((!filter_items || !filter_items.length) && (settings.filterItemNames !== null || settings.filterItemGuids !== null)) {
+                        filter_items = extractFilterIds($.fn.keybase.getters.jsonKey(), settings.filterItemNames, settings.filterItemGuids, true);
+                    }
+
+                    settings.onJson();
 
                     if (settings.title) {
                         settings.keyTitle(json);
@@ -137,7 +239,7 @@
                     if (settings.source) {
                         settings.keySource(json.source);
                     }
-                    
+
                     if ((!action || action === 'player') && !$('.keybase-player-window').length) {
                         settings.playerWindow();
                     }
@@ -145,6 +247,9 @@
                     // root node
                     rootNodeID = json.first_step.root_node_id;
                     next_id = rootNodeID;
+
+                    linkItems();
+                    sortItems();
 
                     nestedSets();
                     getNodes();
@@ -155,7 +260,7 @@
                         nextCouplet();
                     }
                     settings.playerEvents();
-                    
+
                     if (action === "indentedKey") {
                         indentedKey();
                         settings.indentedKeyDisplay(json);
@@ -168,6 +273,9 @@
 
                     settings.onLoad(json);
                 },
+                complete: function() {
+                    settings.onComplete();
+                },
                 error:function(jqXHR,textStatus,errorThrown) {
                     alert("You can not send Cross Domain AJAX requests: " + errorThrown);
                 }
@@ -175,6 +283,10 @@
 
         }
         else {
+            if ((!filter_items || !filter_items.length) && (settings.filterItemNames !== null || settings.filterItemGuids !== null)) {
+                filter_items = extractFilterIds($.fn.keybase.getters.jsonKey(), settings.filterItemNames, settings.filterItemGuids, true);
+            }
+
             if (settings.title) {
                 settings.keyTitle(json);
             }
@@ -189,6 +301,8 @@
 
             // root node
             rootNodeID = json.first_step.root_node_id;
+            console.log(typeof next_id);
+            console.log(next_id);
             next_id = rootNodeID;
 
             nestedSets();
@@ -200,7 +314,6 @@
                 nextCouplet();
             }
             settings.playerEvents();
-
 
             if (action === "indentedKey") {
                 indentedKey();
@@ -221,6 +334,9 @@
         titleDiv: '.keybase-key-title',
         source: true,
         sourceDiv: '.keybase-key-source',
+        playerDiv: '#keybase-player',
+        bracketedKeyDiv: '#keybase-bracketed',
+        indentedKeyDiv: '#keybase-indented',
         cssClass: {
             currentNode: 'keybase-player-currentnode',
             path: 'keybase-player-path',
@@ -230,28 +346,33 @@
             startOver: 'keybase-player-startover'
         },
         reset: false,
+        beforeSend: function() {},
+        onJson: function() {},
         onLoad: function() {},
+        onComplete: function() {},
         onFilterWindowOpen: function() {},
-        filter_items: [],
+        filterItems: [],
+        filterItemNames: null,
+        filterItemGuids: null,
         onBracketedKeyComplete: function() {},
         onIndentedKeyComplete: function() {}
     };
 
 
-    /*
-     * KeyBase Player display functions
-     * Can be overridden by user.
-     */
+  /*
+   * KeyBase Player display functions
+   * Can be overridden by user.
+   */
 
     /**
      * playerEvents function
      *
-     * Sets up the events that make the KeyBase Player work. Note: events need to be removed first, 
+     * Sets up the events that make the KeyBase Player work. Note: events need to be removed first,
      * so you can run consecutive keys in the same page.
      */
     $.fn.keybase.defaults.playerEvents = function() {
-        $('.' + settings.cssClass.currentNode).off('click', 'a', currentNodeHandler);
-        $('.' + settings.cssClass.currentNode).on('click', 'a', currentNodeHandler);
+        $('.' + settings.cssClass.currentNode).off('click', 'a.keybase-lead', currentNodeHandler);
+        $('.' + settings.cssClass.currentNode).on('click', 'a.keybase-lead', currentNodeHandler);
 
         $('.' + settings.cssClass.path).off('click', 'a', stepBackHandler);
         $('.' + settings.cssClass.path).on('click', 'a', stepBackHandler);
@@ -259,18 +380,24 @@
         $('.' + settings.cssClass.stepBack).off('click', 'a', stepBackHandler);
         $('.' + settings.cssClass.stepBack).on('click', 'a', stepBackHandler);
 
-        $('.' + settings.cssClass.startOver).off('click', 'a.first-node', startOverHandler);
-        $('.' + settings.cssClass.startOver).on('click', 'a.first-node', startOverHandler);
+        $('.' + settings.cssClass.startOver).off('click', 'a', startOverHandler);
+        $('.' + settings.cssClass.startOver).on('click', 'a', startOverHandler);
+
+        $('body').off('click', '.keybase-player-filter a', filterHandler);
+        $('body').on('click', '.keybase-player-filter a', filterHandler);
+
+
+
     };
-    
-    /*
-     * currentNodeHandler
-     * 
-     * Finds the next couplet when a lead of the current node is clicked.
-     * 
-     * @param {type} event
-     * @returns {undefined}
-     */
+
+  /*
+   * currentNodeHandler
+   *
+   * Finds the next couplet when a lead of the current node is clicked.
+   *
+   * @param {type} event
+   * @returns {undefined}
+   */
     var currentNodeHandler = function( event ) {
         event.preventDefault();
         if ($(event.target).attr('href')) {
@@ -281,40 +408,51 @@
         }
         nextCouplet();
     };
-    
+
     /**
      * stepBackHandler
-     * 
+     *
      * Finds the previous couplet when the 'step back' button is clicked, or, when a
      * lead in the path is clicked, finds the couplet the lead is in.
-     * 
+     *
      * @param {type} event
      * @returns {undefined}
      */
     var stepBackHandler = function( event ) {
-            event.preventDefault();
-            if ($(event.target).attr('href')) {
-                var lead_id = $(event.target).attr('href').replace("#l_", "");
-            }
-            else {
-                var lead_id = $(event.target).parents('[href]').eq(0).attr('href').replace("#l_", "");
-            }
-            next_id = getParent(lead_id);
-            nextCouplet();
+        event.preventDefault();
+        if ($(event.target).attr('href')) {
+            var lead_id = $(event.target).attr('href').replace("#l_", "");
+        }
+        else {
+            var lead_id = $(event.target).parents('[href]').eq(0).attr('href').replace("#l_", "");
+        }
+        next_id = getParent(lead_id);
+        nextCouplet();
     };
-    
+
     /**
      * startOverHandler
-     * 
+     *
      * Restarts the key player at the first couplet.
-     * 
+     *
      * @param {type} event
      * @returns {undefined}
      */
     var startOverHandler = function( event ) {
         event.preventDefault();
-        next_id = $(event.target).attr('href').replace("#l_", "");
+        next_id = $(event.target).parents('a').eq(0).attr('href').replace("#l_", "");
         nextCouplet();
+    };
+
+    /**
+     * filterHandler
+     *
+     * @description Runs the localFilter function when the local filter button is clicked
+     * @param {type} event
+     */
+    var filterHandler = function(event) {
+        event.preventDefault();
+        localFilter();
     };
 
     /**
@@ -348,7 +486,59 @@
         $('<div>', {class: 'keybase-player-drag-updown'}).appendTo('.keybase-player-rightpane');
         discardedItemsElem = $('<div>', {class: settings.cssClass.discardedItems}).css(css).appendTo('.keybase-player-rightpane');
 
+        settings.resizePlayerWindow();
 
+        $('<h3>', {html: 'Current node'}).appendTo(currentNodeElem);
+        $('<h3>', {html: 'Path'}).appendTo(pathElem);
+        $('<h3>', {html: 'Remaining items (<span class="keybase-num-remaining"></span>)'}).appendTo(remainingItemsElem);
+        $('<h3>', {html: 'Discarded items (<span class="keybase-num-discarded"></span>)'}).appendTo(discardedItemsElem);
+
+        $('<div>').appendTo(currentNodeElem);
+        $('<div>').appendTo(pathElem);
+        $('<div>').appendTo(remainingItemsElem);
+        $('<div>').appendTo(discardedItemsElem);
+
+        currentNodeElem.children('div').css('height', (currentNodeElem.height() -
+            currentNodeElem.children('h3').height() -
+            (parseInt(currentNodeElem.children('h3').css('padding-top'))*2)) + 'px');
+        pathElem.children('div').css('height', (pathElem.height() -
+            pathElem.children('h3').height() -
+            (parseInt(pathElem.children('h3').css('padding-top'))*2)) + 'px');
+        remainingItemsElem.children('div').css('height', (remainingItemsElem.height() -
+            remainingItemsElem.children('h3').height() -
+            (parseInt(remainingItemsElem.children('h3').css('padding-top'))*2)) + 'px');
+        discardedItemsElem.children('div').css('height', (discardedItemsElem.height() -
+            discardedItemsElem.children('h3').height() -
+            (parseInt(discardedItemsElem.children('h3').css('padding-top'))*2)) + 'px');
+
+        // KeyBase Player menu
+        $('<span>', {class: 'keybase-player-menu'}).appendTo('.' + settings.cssClass.currentNode + ' h3');
+        $('<span>', {class: settings.cssClass.stepBack}).appendTo('.keybase-player-menu');
+        $('<a>', {href: '#', title: 'Step back'}).appendTo('.' + settings.cssClass.stepBack);
+        $('<span>', {class: settings.cssClass.startOver}).appendTo('.keybase-player-menu');
+        $('<a>', {href: '#', title: 'Start over'}).appendTo('.' + settings.cssClass.startOver);
+
+        // Local filter button
+        $('<span>', {class: 'keybase-player-menu'}).appendTo('.' + settings.cssClass.remainingItems + ' h3');
+        $('<span>', {class: 'keybase-player-filter'}).appendTo('.' + settings.cssClass.remainingItems + ' .keybase-player-menu');
+        $('<a>', {href: '#', title: 'Filter'}).appendTo('.' + settings.cssClass.remainingItems + ' .keybase-player-filter');
+
+        $('.keybase-player-filter a').html('<i class="fa fa-filter fa-lg fa-lg"></i>');
+        $('.' + settings.cssClass.stepBack + ' a').html('<i class="fa fa-undo fa-lg fa-lg"></i>');
+        $('.' + settings.cssClass.startOver + ' a').html('<i class="fa fa-refresh fa-lg fa-lg"></i>');
+
+        // Resize Player panes
+        var position;
+        $('.keybase-player-window').on('mousedown', '.keybase-player-drag-leftright', $.fn.keybase.dragLeftRight);
+        $('.keybase-player-leftpane').on('mousedown', '.keybase-player-drag-updown', $.fn.keybase.dragUpDownLeftPane);
+        $('.keybase-player-rightpane').on('mousedown', '.keybase-player-drag-updown', $.fn.keybase.dragUpDownRightPane);
+
+        $(document).mouseup(function(e){
+            $(document).unbind('mousemove');
+        });
+    };
+
+    $.fn.keybase.defaults.resizePlayerWindow = function() {
         $('.keybase-player-window').css({
             'position': 'relative'
         });
@@ -387,130 +577,74 @@
         $('.' + settings.cssClass.path + ', .' + settings.cssClass.discardedItems).css({
             'top': (($('.keybase-player-window').height() * 0.5) + 3) + 'px'
         });
-
-        $('<h3>', {html: 'Current node'}).appendTo(currentNodeElem);
-        $('<h3>', {html: 'Path'}).appendTo(pathElem);
-        $('<h3>', {html: 'Remaining items (<span class="keybase-num-remaining"></span>)'}).appendTo(remainingItemsElem);
-        $('<h3>', {html: 'Discarded items (<span class="keybase-num-discarded"></span>)'}).appendTo(discardedItemsElem);
-
-        $('<div>').appendTo(currentNodeElem);
-        $('<div>').appendTo(pathElem);
-        $('<div>').appendTo(remainingItemsElem);
-        $('<div>').appendTo(discardedItemsElem);
-
-        currentNodeElem.children('div').css('height', (currentNodeElem.height() -
-            currentNodeElem.children('h3').height() -
-            (parseInt(currentNodeElem.children('h3').css('padding-top'))*2)) + 'px');
-        pathElem.children('div').css('height', (pathElem.height() -
-            pathElem.children('h3').height() -
-            (parseInt(pathElem.children('h3').css('padding-top'))*2)) + 'px');
-        remainingItemsElem.children('div').css('height', (remainingItemsElem.height() -
-            remainingItemsElem.children('h3').height() -
-            (parseInt(remainingItemsElem.children('h3').css('padding-top'))*2)) + 'px');
-        discardedItemsElem.children('div').css('height', (discardedItemsElem.height() -
-            discardedItemsElem.children('h3').height() -
-            (parseInt(discardedItemsElem.children('h3').css('padding-top'))*2)) + 'px');
-
-
-        // KeyBase Player menu
-        $('<span>', {class: 'keybase-player-menu'}).appendTo('.' + settings.cssClass.currentNode + ' h3');
-        $('<span>', {class: settings.cssClass.stepBack}).appendTo('.keybase-player-menu');
-        $('<a>', {href: '#'}).appendTo('.' + settings.cssClass.stepBack);
-        $('<span>', {class: settings.cssClass.startOver}).appendTo('.keybase-player-menu');
-        $('<a>', {href: '#'}).appendTo('.' + settings.cssClass.startOver);
-
-        $('body').on('click', '.keybase-player-filter a', function(e) {
-            e.preventDefault();
-            localFilter();
-        });
-
-        // Local filter button
-        $('<span>', {class: 'keybase-player-menu'}).appendTo('.' + settings.cssClass.remainingItems + ' h3');
-        $('<span>', {class: 'keybase-player-filter'}).appendTo('.' + settings.cssClass.remainingItems + ' .keybase-player-menu');
-        $('<a>', {href: '#'}).appendTo('.keybase-player-filter');
-        
-        if ($('link[rel=stylesheet][href*=font-awesome]').length > 0) {
-            $('.keybase-player-filter a').html('<i class="fa fa-filter fa-lg fa-lg"></i>');
-            $('.' + settings.cssClass.stepBack + ' a').html('<i class="fa fa-undo fa-lg fa-lg"></i>');
-            $('.' + settings.cssClass.startOver + ' a').html('<i class="fa fa-refresh fa-lg fa-lg"></i>');
-        }
-
-
-
-        // Resize Player panes
-        var position;
-        $('.keybase-player-window .keybase-player-drag-leftright').mousedown(function(e){
-            e.preventDefault();
-            position = $('.keybase-player-window').offset();
-            $(document).mousemove(function(e){
-                if (e.pageX > position.left+190 &&
-                    e.pageX < position.left+$('.keybase-player-window').width()-190) {
-                    $('.keybase-player-leftpane').css("width",e.pageX-position.left);
-                    $('.keybase-player-drag-leftright').css('left', e.pageX-position.left);
-                    $('.keybase-player-rightpane').css({"left": e.pageX-position.left+6,
-                        "width": ($('.keybase-player-window').width()-$('.keybase-player-leftpane').width()-6) + 'px'});
-                    //$('.keybase-player-leftpane>div').css('width', $('.keybase-player-leftpane').width()-2);
-                }
-            })
-        });
-
-        $('.keybase-player-leftpane .keybase-player-drag-updown').mousedown(function(e) {
-            e.preventDefault();
-            position = $('.keybase-player-leftpane').offset();
-            $(document).mousemove(function(e) {
-                if (e.pageY > position.top+29
-                    && e.pageY < position.top+$('.keybase-player-window').height()-32) {
-                    $('.keybase-player-leftpane .keybase-player-drag-updown').css('top', e.pageY-position.top+2);
-                    currentNodeElem.css("height", e.pageY-position.top);
-                    pathElem.css({'top': e.pageY-position.top+5,
-                        'height': ($('.keybase-player-window').height()-currentNodeElem.height()-6) + 'px'});
-                    currentNodeElem.children('div').css('height', (currentNodeElem.height() -
-                        currentNodeElem.children('h3').height() -
-                        (parseInt(currentNodeElem.children('h3').css('padding-top'))*2)) + 'px');
-                    pathElem.children('div').css('height', (pathElem.height() -
-                        pathElem.children('h3').height() -
-                        (parseInt(pathElem.children('h3').css('padding-top'))*2)) + 'px');
-                    if (pathElem.children('div').height() < 5) {
-                        pathElem.children('div').css('overflow', 'hidden').children().hide();
-                    }
-                    else {
-                        pathElem.children('div').css('overflow', 'auto').children().show();
-                    }
-                }
-            })
-        });
-
-        $('.keybase-player-rightpane .keybase-player-drag-updown').mousedown(function(e) {
-            e.preventDefault();
-            position = $('.keybase-player-rightpane').offset();
-            $(document).mousemove(function(e) {
-                if (e.pageY > position.top+29
-                    && e.pageY < position.top+$('.keybase-player-window').height()-32) {
-                    $('.keybase-player-rightpane .keybase-player-drag-updown').css('top', e.pageY-position.top+2);
-                    remainingItemsElem.css("height", e.pageY-position.top);
-                    discardedItemsElem.css({'top': e.pageY-position.top+5,
-                        'height': ($('.keybase-player-window').height() -
-                            remainingItemsElem.height()-6) + 'px'});
-                    remainingItemsElem.children('div').css('height', (remainingItemsElem.height() -
-                        remainingItemsElem.children('h3').height() -
-                        (parseInt(remainingItemsElem.children('h3').css('padding-top'))*2)) + 'px');
-                    discardedItemsElem.children('div').css('height', (discardedItemsElem.height() -
-                        discardedItemsElem.children('h3').height() -
-                        (parseInt(discardedItemsElem.children('h3').css('padding-top'))*2)) + 'px');
-                    if (discardedItemsElem.children('div').height() < 5) {
-                        discardedItemsElem.children('div').css('overflow', 'hidden').children().hide();
-                    }
-                    else {
-                        discardedItemsElem.children('div').css('overflow', 'auto').children().show();
-                    }
-                }
-            })
-        });
-
-        $(document).mouseup(function(e){
-            $(document).unbind('mousemove');
-        })
     };
+
+    $.fn.keybase.dragLeftRight = function(event) {
+        event.preventDefault();
+        position = $('.keybase-player-window').offset();
+        $(document).mousemove(function(e){
+            if (e.pageX > position.left+190 &&
+                e.pageX < position.left+$('.keybase-player-window').width()-190) {
+                $('.keybase-player-leftpane').css("width",e.pageX-position.left);
+                $('.keybase-player-drag-leftright').css('left', e.pageX-position.left);
+                $('.keybase-player-rightpane').css({"left": e.pageX-position.left+6,
+                    "width": ($('.keybase-player-window').width()-$('.keybase-player-leftpane').width()-6) + 'px'});
+            }
+        });
+    };
+
+    $.fn.keybase.dragUpDownLeftPane = function(event) {
+        event.preventDefault();
+        position = $('.keybase-player-leftpane').offset();
+        $(document).mousemove(function(e) {
+            if (e.pageY > position.top+29
+                && e.pageY < position.top+$('.keybase-player-window').height()-32) {
+                $('.keybase-player-leftpane .keybase-player-drag-updown').css('top', e.pageY-position.top+2);
+                currentNodeElem.css("height", e.pageY-position.top);
+                pathElem.css({'top': e.pageY-position.top+5,
+                    'height': ($('.keybase-player-window').height()-currentNodeElem.height()-6) + 'px'});
+                currentNodeElem.children('div').css('height', (currentNodeElem.height() -
+                    currentNodeElem.children('h3').height() -
+                    (parseInt(currentNodeElem.children('h3').css('padding-top'))*2)) + 'px');
+                pathElem.children('div').css('height', (pathElem.height() -
+                    pathElem.children('h3').height() -
+                    (parseInt(pathElem.children('h3').css('padding-top'))*2)) + 'px');
+                if (pathElem.children('div').height() < 5) {
+                    pathElem.children('div').css('overflow', 'hidden').children().hide();
+                }
+                else {
+                    pathElem.children('div').css('overflow', 'auto').children().show();
+                }
+            }
+        });
+    }
+
+    $.fn.keybase.dragUpDownRightPane = function(event) {
+        event.preventDefault();
+        position = $('.keybase-player-rightpane').offset();
+        $(document).mousemove(function(e) {
+            if (e.pageY > position.top+29
+                && e.pageY < position.top+$('.keybase-player-window').height()-32) {
+                $('.keybase-player-rightpane .keybase-player-drag-updown').css('top', e.pageY-position.top+2);
+                remainingItemsElem.css("height", e.pageY-position.top);
+                discardedItemsElem.css({'top': e.pageY-position.top+5,
+                    'height': ($('.keybase-player-window').height() -
+                    remainingItemsElem.height()-6) + 'px'});
+                remainingItemsElem.children('div').css('height', (remainingItemsElem.height() -
+                    remainingItemsElem.children('h3').height() -
+                    (parseInt(remainingItemsElem.children('h3').css('padding-top'))*2)) + 'px');
+                discardedItemsElem.children('div').css('height', (discardedItemsElem.height() -
+                    discardedItemsElem.children('h3').height() -
+                    (parseInt(discardedItemsElem.children('h3').css('padding-top'))*2)) + 'px');
+                if (discardedItemsElem.children('div').height() < 5) {
+                    discardedItemsElem.children('div').css('overflow', 'hidden').children().hide();
+                }
+                else {
+                    discardedItemsElem.children('div').css('overflow', 'auto').children().show();
+                }
+            }
+        });
+    }
 
     /**
      * currentNodeDisplay function
@@ -523,7 +657,7 @@
     $.fn.keybase.defaults.currentNodeDisplay = function(node, currentNodeDiv) {
         var leads = [];
         $.each(node, function(index, item) {
-            var lead = '<li><a href="#l_' + item.lead_id + '">' + item.lead_text + '</li>';
+            var lead = '<li><a class="keybase-lead" href="#l_' + item.lead_id + '">' + item.lead_text + '</li>';
             leads.push(lead);
         });
         $(currentNodeDiv).eq(0).children('div').eq(0).html('<ul>' + leads.join('') + '</ul>');
@@ -563,9 +697,39 @@
                 lead = '<li><a href="#l_' + item.lead_id + '">' + item.lead_text + '</a></li>';
             }
             leads.push(lead);
-         });
+        });
         $(pathDiv).eq(0).children('div').eq(0).html('<ol>' + leads.join('') + '</ol>');
     };
+
+    /**
+     *
+     */
+    $.fn.keybase.defaults.renderItemLink = function(item) {
+        var link = '';
+        if (item.url) {
+            link += '<a href="' + item.url + '">' + item.item_name + '</a>';
+        }
+        else {
+            link += item.item_name;
+        }
+        if (item.to_key) {
+            link += '<a href="' + item.to_key + '"><span class="keybase-player-tokey"></span></a>';
+        }
+
+        if (item.link_to_item_id) {
+            link += ': ';
+            if (item.link_to_url) {
+                link += '<a href="' + item.link_to_url + '">' + item.link_to_item_name + '</a>';
+            }
+            else {
+                link += item.link_to_item_name;
+            }
+            if (item.link_to_key) {
+                link += '<a href="' + item.link_to_key + '"><span class="keybase-player-tokey"></span></a>';
+            }
+        }
+        return link;
+    }
 
 
     /**
@@ -578,10 +742,10 @@
      */
     $.fn.keybase.defaults.remainingItemsDisplay = function(items, itemsDiv) {
         var list = itemsDisplay(items);
-        $(itemsDiv).eq(0).children('h3').eq(0).html('Remaining items (' + items.length + ')');
+        $(itemsDiv).eq(0).children('h3').eq(0).children('.keybase-num-remaining').eq(0).html(items.length);
         $(itemsDiv).eq(0).children('div').eq(0).html('<ul>' + list.join('') + '</ul>');
     };
-    
+
     /**
      * discardedItemsDisplay function
      *
@@ -596,38 +760,18 @@
         $(itemsDiv).eq(0).children('div').eq(0).html('<ul>' + list.join('') + '</ul>');
     };
 
-    /*
-     * itemsDisplay function
-     * 
-     * @param {type} items
-     * @returns {undefined}
-     */
+  /*
+   * itemsDisplay function
+   *
+   * @param {type} items
+   * @returns {undefined}
+   */
     var itemsDisplay = function(items) {
         var list = [];
         $.each(items, function(index, item) {
             var entity;
             entity = '<li>';
-            if (item.url) {
-                entity += '<a href="' + item.url + '">' + item.item_name + '</a>';
-            }
-            else {
-                entity += item.item_name;
-            }
-            if (item.to_key) {
-                entity += '<a href="/keybase/key/show/' + item.to_key + '"><span class="keybase-player-tokey"></span></a>';
-            }
-            if (item.link_to_item_name) {
-                entity += ': ';
-                if (item.link_to_url) {
-                    entity += '<a href="' + item.link_to_url + '">' + item.link_to_item_name + '</a>';
-                }
-                else {
-                    entity += item.link_to_item_name;
-                }
-                if (item.link_to_key) {
-                    entity += '<a href="/keybase/key/show/' + item.link_to_key + '"><span class="keybase-player-tokey"></span></a>';
-                }
-            }
+            entity += settings.renderItemLink(item);
             entity += '</li>';
             list.push(entity);
         });
@@ -656,7 +800,7 @@
 
         $('<h1>', {
             style: "float:left;",
-            html: '<a href="/keybase/project/show/' + json.project.project_id + '"<span class="keybase-project-name">' + json.project.project_name + '</span></a>: <span class="keybase-key-name">' + json.key_name + '</span>'
+            html: '<a href="/keybase/project/show/' + json.project.project_id + '"<span class="keybase-project-name">' + json.project.project_name + '</span></a>: <span class="keybase-key-name">' + json.key_title + '</span>'
         }).appendTo(settings.titleDiv);
 
     };
@@ -731,9 +875,9 @@
         $(settings.sourceDiv).html(str);
     };
 
-    /*
-     * KeyBase processing functions
-     */
+  /*
+   * KeyBase processing functions
+   */
 
     /**
      * function nestedSets
@@ -836,7 +980,7 @@
         var items = remainingItems(remaining_items);
         settings.remainingItemsDisplay(items.remaining, '.' + settings.cssClass.remainingItems);
         settings.discardedItemsDisplay(items.discarded, '.' + settings.cssClass.discardedItems);
-        
+
         $.fn.keybase.getters.remainingItems = function() { return items.remaining; };
         $.fn.keybase.getters.discardedItems = function() { return items.discarded; };
     };
@@ -961,7 +1105,7 @@
     var indentedKey = function() {
         indented_key = [];
         var root = {};
-        root.title = json.key_name;
+        root.title = json.key_title;
         root.isFolder = true;
         root.expand = true;
         root.children = [];
@@ -1009,7 +1153,7 @@
                 //parent.children = children;
                 $.each(children, function(index, lead) {
                     var child = $.extend({}, lead);
-                    
+
                     if (filter_leads.length === 0) {
                         child.fromNode = JSPath.apply('.{.parent_id=="' +  child.parent_id+ '"}', keyNodes)[0].node_number;
                     }
@@ -1030,7 +1174,7 @@
                     if (child.item == null) {
                         delete child.item;
                     }
-                    
+
                     if (filter_leads.length === 0) {
                         var toNode = JSPath.apply('.{.parent_id=="' +  child.lead_id+ '"}', keyNodes);
                         if (toNode.length > 0) {
@@ -1043,20 +1187,20 @@
                         }
                     }
                     //if (children.length > 1) {
-                        couplet.children[index] = child;
+                    couplet.children[index] = child;
                     //}
                     indentedKeyNode(lead.lead_id, child);
                 });
             }
             else {
                 lead = children[0];
-                /*var furtherNodes = JSPath.apply('.{.left>' + lead.left + ' && .right<=' + lead.right + ' && .parent_id==$nodes}', nested_sets, {nodes: filter_nodes});
-                if (furtherNodes.length === 0) {
-                    var path = '.{.item && .left>' + lead.left + ' && .right<=' + lead.right + ' && .lead_id==$leads}';
-                    console.log(path);
-                    var item = JSPath.apply(path, nested_sets, {leads: filter_leads})[0];
-                    parent.item = item.item;
-                }*/
+              /*var furtherNodes = JSPath.apply('.{.left>' + lead.left + ' && .right<=' + lead.right + ' && .parent_id==$nodes}', nested_sets, {nodes: filter_nodes});
+               if (furtherNodes.length === 0) {
+               var path = '.{.item && .left>' + lead.left + ' && .right<=' + lead.right + ' && .lead_id==$leads}';
+               console.log(path);
+               var item = JSPath.apply(path, nested_sets, {leads: filter_leads})[0];
+               parent.item = item.item;
+               }*/
                 if (lead.item !== null) {
                     parent.item = lead.item;
                 }
@@ -1068,26 +1212,26 @@
             delete parent.item;
         }
     };
-    
-    var indentedKeyItem = function(item) {
-            var taxa = {};
-            taxa.title = "Item";
-            taxa.isFolder = true;
-            taxa.children = [];
 
-            var taxon = {};
-            taxon.item_id = item;
-            taxon.title = JSPath.apply('.items{.item_id==' + item + '}.item_name', json)[0];
-            taxa.children[0] = taxon;
-            //alert (taxon.title);
-            taxa.expand = true;
-            return taxa;
+    var indentedKeyItem = function(item) {
+        var taxa = {};
+        taxa.title = "Item";
+        taxa.isFolder = true;
+        taxa.children = [];
+
+        var taxon = {};
+        taxon.item_id = item;
+        taxon.title = JSPath.apply('.items{.item_id==="' + item + '"}.item_name', json)[0];
+        taxa.children[0] = taxon;
+        //alert (taxon.title);
+        taxa.expand = true;
+        return taxa;
     };
 
     /**
      * function indentedKeyDisplay
-     * 
-     * Displays the indented key. The function is accessible from outside the plugin, so 
+     *
+     * Displays the indented key. The function is accessible from outside the plugin, so
      * users can overwrite it with their own function.
      */
     $.fn.keybase.defaults.indentedKeyDisplay = function(json) {
@@ -1097,7 +1241,7 @@
         indentedKeyHtml += '</div> <!-- /.keybase-indented-key -->';
 
         $(settings.indentedKeyDiv).html(indentedKeyHtml);
-        $(settings.indentedKeyDiv).prepend('<div class="keybase-indented-key-filter"><span class="keybase-player-filter"><a href="#"><i class="fa fa-filter fa-lg"></i></a></span></div>')
+        $(settings.indentedKeyDiv).prepend('<div class="keybase-indented-key-filter"><span class="keybase-player-filter"><a href="#" title="Filter"><i class="fa fa-filter fa-lg"></i></a></span></div>')
 
         settings.onIndentedKeyComplete();
     };
@@ -1120,32 +1264,9 @@
                 displayIndentedKeyCouplet(child);
             }
             else {
-                var item = JSPath.apply('.items{.item_id==' + child.children[0].item_id + '}', json)[0];
+                var item = JSPath.apply('.items{.item_id==="' + child.children[0].item_id + '"}', json)[0];
                 indentedKeyHtml += '<span class="keybase-to-item">';
-                if (item.url) {
-                    indentedKeyHtml += '<a href="' + item.url + '">' + item.item_name + '</a>';
-                }
-                else {
-                    indentedKeyHtml += item.item_name;
-                }
-                if (item.to_key) {
-                    indentedKeyHtml += '<a href="' + item.to_key + '"><span class="keybase-player-tokey"></span></a>';
-                }
-
-                if (item.link_to_id) {
-                    indentedKeyHtml += ': ';
-                    if (item.link_to_url) {
-                        indentedKeyHtml += '<a href="' + item.link_to_url + '">' + item.link_to_item_name + '</a>';
-                    }
-                    else {
-                        indentedKeyHtml += item.link_to_item_name;
-                    }
-                    if (item.link_to_key) {
-                        indentedKeyHtml += '<a href="' + item.link_to_key + '"><span class="keybase-player-tokey"></span></a>';
-                    }
-
-                }
-
+                indentedKeyHtml += settings.renderItemLink(item);
                 indentedKeyHtml += '</span> <!-- /.keybase-to-item -->';
                 indentedKeyHtml += '</div> <!-- /.keybase-lead -->';
             }
@@ -1167,11 +1288,11 @@
         var nodes = [];
 
         var root = {};
-        root.title = json.key_name;
+        root.title = json.key_title;
         root.isFolder = true;
         root.expand = true;
         root.children = [];
-        
+
         if (filter_leads.length > 0) {
             var filterNodes = function() {
                 var nodes = [];
@@ -1206,7 +1327,7 @@
                         else {
                             l.fromNode = filter_nodes.indexOf(lead.parent_id)+1;
                         }
-                        
+
                         l.parent_id = lead.parent_id;
                         l.lead_id = lead.lead_id;
 
@@ -1222,7 +1343,7 @@
                             items.children = [];
                             var item = {};
                             item.item_id = lead.item;
-                            item.title = JSPath.apply('.items{.item_id==' + lead.item + '}.item_name', json)[0];
+                            item.title = JSPath.apply('.items{.item_id==="' + lead.item + '"}.item_name', json)[0];
                             item.expand = true;
                             items.children.push(item);
                             l.children.push(items);
@@ -1256,10 +1377,10 @@
         });
         bracketed_key.push(root);
     };
-    
-    /*
-     * function filteredBracketedKeyToNode
-     */
+
+  /*
+   * function filteredBracketedKeyToNode
+   */
     var filteredBracketedKeyToNode = function(lead) {
         var toNode = JSPath.apply('.{.parent_id=="' + lead.lead_id + '" && .lead_id===$filterLeads}', nested_sets, {filterLeads: filter_leads});
         if (toNode.length > 0) {
@@ -1277,7 +1398,7 @@
                     items.children = [];
                     var item = {};
                     item.item_id = toNode[0].item;
-                    item.title = JSPath.apply('.items{.item_id==' + toNode[0].item + '}.item_name', json)[0];
+                    item.title = JSPath.apply('.items{.item_id==="' + toNode[0].item + '"}.item_name', json)[0];
                     item.expand = true;
                     items.children.push(item);
                     return {items: items};
@@ -1288,10 +1409,10 @@
             }
         }
     };
-        
+
     /**
      * function bracketedKeyDisplay
-     * 
+     *
      * Displays the bracketed key. This function is accessible from outside the plugin, so
      * users can use their own function to display the bracketed keys. If the KeyBase plugin
      * is used to manage keys in a project, you might not want to directly link to the next
@@ -1316,32 +1437,9 @@
                 }
                 else {
                     var toItem = items[0].children[0];
-                    var item = JSPath.apply('.items{.item_id==' + toItem.item_id + '}', json)[0];
+                    var item = JSPath.apply('.items{.item_id=="' + toItem.item_id + '"}', json)[0];
                     html += '<span class="keybase-to-item">';
-                    if (item.url) {
-                        html += '<a href="' + item.url + '">' + item.item_name + '</a>';
-                    }
-                    else {
-                        html += item.item_name;
-                    }
-                    if (item.to_key) {
-                        html += '<a href="' + item.to_key + '"><span class="keybase-player-tokey"></span></a>';
-                    }
-
-                    if (item.link_to_id) {
-                        html += ': ';
-                        if (item.link_to_url) {
-                            html += '<a href="' + item.link_to_url + '">' + item.link_to_item_name + '</a>';
-                        }
-                        else {
-                            html += item.link_to_item_name;
-                        }
-                        if (item.link_to_key) {
-                            html += '<a href="' + item.link_to_key + '"><span class="keybase-player-tokey"></span></a>';
-                        }
-
-                    }
-
+                    html += settings.renderItemLink(item);
                     html += '</span> <!-- /.to-item -->';
                 }
                 html += '</span> <!-- /.keybase-lead-text -->';
@@ -1352,15 +1450,15 @@
         }
         html += '</div> <!-- /.keybase-bracketed_key -->';
         $(settings.bracketedKeyDiv).html(html);
-        $(settings.bracketedKeyDiv).prepend('<div class="keybase-bracketed-key-filter"><span class="keybase-player-filter"><a href="#"><i class="fa fa-filter fa-lg"></i></a></span></div>')
+        $(settings.bracketedKeyDiv).prepend('<div class="keybase-bracketed-key-filter"><span class="keybase-player-filter"><a href="#" title="Filter"><i class="fa fa-filter fa-lg"></i></a></span></div>')
 
         settings.onBracketedKeyComplete();
     };
 
 
-    /*
-     * Filter functions
-     */
+  /*
+   * Filter functions
+   */
 
     /**
      * function localFilter
@@ -1400,13 +1498,13 @@
 
         var buttonDiv = $('<div>', {class: 'keybase-filter-buttons'});
         buttonDiv.append('<span><button class="keybase-filter-button-excl"></button></span>').
-            append('<span><button class="keybase-filter-button-excl-all"></button></span>').
-            append('<span><button class="keybase-filter-button-incl"></button></span>').
-            append('<span><button class="keybase-filter-button-incl-all"></button></span>');
+        append('<span><butjmton class="keybase-filter-button-excl-all"></butjmton></span>').
+        append('<span><button class="keybase-filter-button-incl"></button></span>').
+        append('<span><button class="keybase-filter-button-incl-all"></button></span>');
 
         var footerDiv = $('<div>', {class: 'keybase-local-filter-footer'});
         footerDiv.append('<button class="keybase-local-filter-cancel">Cancel</button>').
-            append('<button class="keybase-local-filter-ok">OK</button>');
+        append('<button class="keybase-local-filter-ok">OK</button>');
 
         divIncluded.append(labelIncluded).append(selectIncluded);
         divExcluded.append(labelExcluded).append(selectExcluded);
@@ -1467,7 +1565,7 @@
 
         $('.keybase-local-filter-ok').click(function() {
             closeKeybaseLightbox();
-            
+
             if (filter_items.length) {
                 setFilter();
                 bracketedKey();
@@ -1483,7 +1581,7 @@
                 settings.indentedKeyDisplay();
             }
         });
-        
+
         settings.onFilterWindowOpen();
     };
 
@@ -1500,10 +1598,10 @@
             var theLightbox = $('<div id="keybase-lightbox"/>');
             theLightbox.append(
                 '<div class="keybase-lightbox-header">' +
-                    '<i class="keybase-lightbox-close fa fa-close pull-right fa-border"></i>' +
-                    '</div>').
-                append('<div class="keybase-lightbox-content"></div>').
-                append('<div class="keybase-lightbox-footer"></div>');
+                '<i class="keybase-lightbox-close fa fa-close pull-right fa-border"></i>' +
+                '</div>').
+            append('<div class="keybase-lightbox-content"></div>').
+            append('<div class="keybase-lightbox-footer"></div>');
 
             var theShadow = $('<div id="keybase-lightbox-shadow"/>');
             theShadow.css('height', $(document).height() + 'px');
@@ -1602,15 +1700,15 @@
     var setFilter = function() {
         filterLeads();
         next_id = rootNodeID;
+        if ($('.keybase-player-window').length === 0) {
+            settings.playerWindow();
+            settings.playerEvents();
+        }
         nextCouplet();
-        
-        //settings.bracketedKeyDisplay(json);
+
         if ($('.keybase-player-filter-remove').length === 0) {
-            remainingItemsElem.children('h3').children('.keybase-player-menu').append('<span class="keybase-player-filter-remove"><a href="#"></a></span>');
-            if ($('link[rel=stylesheet][href*=font-awesome]').length > 0) {
-                $('.keybase-player-filter-remove a').html('<i class="fa fa-trash fa-lg fa-lg"></i>');
-            }
-            
+            $('.keybase-player-filter').after('<span class="keybase-player-filter-remove"><a href="#"></a></span>');
+            $('.keybase-player-filter-remove a').html('<i class="fa fa-trash fa-lg fa-lg"></i>');
             $('.keybase-player-filter-remove').click(function(e) {
                 e.preventDefault();
                 removeFilter();
@@ -1648,9 +1746,9 @@
             }
             return acc;
         }, {});
-        
+
     };
-    
+
     /**
      * function removeFilter
      *
@@ -1665,5 +1763,90 @@
         $('.keybase-player-filter').css('background-color', '#ddd');
         $('.keybase-player-filter-remove').remove();
     };
+
+
+    /**
+     *
+     */
+    var linkItems = function() {
+        var link_through_leads = JSPath.apply('.leads{.lead_text==="[link through]"}.parent_id', json);
+        if (link_through_leads.length > 0) {
+            var link_item_ids = [];
+            var link_items = [];
+            var removeLeads = [];
+            $.each(json.leads, function(index, lead) {
+                if (lead.lead_text === "[link through]") {
+                    console.log(lead);
+                    var parent_lead = JSPath.apply('.leads{.lead_id=="' + lead.parent_id + '"}', json)[0];
+                    if (link_item_ids.indexOf(lead.item) === -1) {
+                        link_item_ids.push(lead.item);
+                        var link_item = {
+                            item_id: lead.item,
+                            parent_id: parent_lead.item
+                        };
+                        link_items.push(link_item);
+                    }
+                    parent_lead.item += '_' + lead.item;
+                    removeLeads.push(index);
+                }
+            });
+
+            json.leads = $.grep(json.leads, function(n, i) {
+                return $.inArray(i, removeLeads) ==-1;
+            });
+
+            $.each(json.items, function(index, item) {
+                var i = link_item_ids.indexOf(item.item_id);
+                if (i > -1) {
+                    var parent_item = JSPath.apply('.items{.item_id==="' + link_items[i].parent_id + '"}', json)[0];
+                    item.link_to_item_id = item.item_id;
+                    item.item_id = parent_item.item_id + '_' + item.item_id;
+                    item.link_to_item_name = item.item_name;
+                    item.link_to_url = item.url;
+                    item.link_to_key = item.to_key;
+                    item.item_name = parent_item.item_name;
+                    item.url = parent_item.url;
+                    item.to_key = parent_item.to_key;
+                }
+            });
+
+            var keyed_out_items = JSPath.apply('.leads{.item}.item', json);
+            var removeItems = [];
+            $.each(json.items, function(index, item) {
+                if (keyed_out_items.indexOf(item.item_id) === -1) {
+                    removeItems.push(index);
+                }
+            })
+
+            json.items = $.grep(json.items, function(n, i) {
+                return $.inArray(i, removeItems) ==-1;
+            });
+
+            //console.log(JSON.stringify(json, null, 4));
+        }
+    }
+
+    var sortItems = function() {
+        json.items.sort(function(a, b) {
+            var sort_a = a.item_name + (a.link_to_item_name ? a.link_to_item_name : '');
+            var sort_b = b.item_name + (b.link_to_item_name ? b.link_to_item_name : '');
+            if (sort_a > sort_b) {
+                return 1;
+            }
+            if (sort_a < sort_b) {
+                return -1;
+            }
+            return 0;
+        });
+    };
+
+    var unique = function(list) {
+        var result = [];
+        $.each(list, function(i, e) {
+            if ($.inArray(e, result) == -1) result.push(e);
+        });
+        return result;
+    }
+
 
 }( jQuery ));

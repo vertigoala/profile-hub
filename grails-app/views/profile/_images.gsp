@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
+<div class="panel panel-default ${edit?'':'panel-override'}" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
     <div ng-if="imageCtrl.images.length >= 0 && imageCtrl.readonly" ng-cloak>
         <navigation-anchor anchor-name="view_images" title="Images"
                            condition="imageCtrl.images.length > 0"></navigation-anchor>
@@ -70,7 +70,7 @@
                 <div class="col-sm-12">
                     <h4 class="section-panel-heading">Images <span class="caption">({{imageCtrl.availableImagesCount}})</span>
                     </h4>
-                    <p:help help-id="profile.edit.images" show="${edit}"/>
+                    <p:help help-id="profile.edit.images" show="${edit}" collection-override="${opus?.help?.imagesLink}"/>
                 </div>
             </div>
         </div>

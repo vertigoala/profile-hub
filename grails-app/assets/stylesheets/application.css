@@ -1,4 +1,5 @@
 /*
+*= require fonts.css
 *= require bootstrap/css/bootstrap3.3.4.min.css
 *= require angular-bootstrap-colorpicker-3.0.11/css/colorpicker.min.css
 *= require font-awesome-4.3.0/css/font-awesome.min.css
@@ -8,12 +9,11 @@
 *= require keybase-override.css
 *= require dualMultiselect/dualmultiselect.css
 *= require nsl.css
-*= require theme.css
-*= require profiles.css
-*= require colour.css
+*= require mergedProfilesThemeColour
 *= require tree.css
 *= require sidebar.css
 *= require bootstrap-fileupload/bootstrap-fileupload.min.css
 *= require ala-admin.css
+*= require animation.css
 *= require mapAndImages
 */

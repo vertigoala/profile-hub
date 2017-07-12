@@ -54,7 +54,7 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                 var colourBy = URI.parseQuery(self.profile.occurrenceQuery).colourBy;
 
                 if (!_.isUndefined(colourBy) && !_.isEmpty(colourBy)) {
-                    var label = colourBy.toLowerCase().split(/\s+/).map(function(s) { return s.length > 0 ? s[0].toUpperCase() + s.substring(1) : '' }).join(' ');
+                    var label = util.getFacetLabel(colourBy);
                     self.legend = new L.Control.Legend({
                         id: "legend",
                         position: "bottomright",
@@ -173,6 +173,13 @@ profileEditor.controller('MapController', function ($scope, profileService, util
 
     self.saveMapConfiguration = function () {
         self.profile.occurrenceQuery = self.editableMap.getQueryString();
+        // set a flag if user has made custom map configuration. This flag will determine whether to return user configured
+        // occurrenceQuery or default occurrenceQuery for the profile.
+        if(self.profile.occurrenceQuery == extractBaseQuery(self.profile.occurrenceQuery)){
+            self.profile.isCustomMapConfig = false;
+        } else {
+            self.profile.isCustomMapConfig = true;
+        }
 
         var promise = profileService.updateProfile(self.opusId, self.profileId, self.profile);
         promise.then(function () {

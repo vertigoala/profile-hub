@@ -1,7 +1,7 @@
 /**
  * Opus controller
  */
-profileEditor.controller('OpusController', function ($scope, profileService, util, messageService, $window, $filter) {
+profileEditor.controller('OpusController', function ($log, $scope, profileService, util, messageService, $window, $filter) {
     var self = this;
 
     var SUPPORTING_COLLECTION_REQUESTED = "REQUESTED";
@@ -37,6 +37,7 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
     self.valid = false;
     self.editors = [];
     self.initialShortName = null;
+    self.urlSuffix = null;
 
     self.keybaseTemplateUrl = undefined;
     self.keybaseProjects = [];
@@ -47,7 +48,8 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         opusBanner: false,
         profileBanner: false,
         thumbnail: false,
-        logo: false
+        logo: false,
+        imageSlider: false
     };
 
     self.collectoryResourceOptions = {
@@ -129,6 +131,7 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
                 });
 
                 self.initialShortName = data.shortName;
+                self.urlSuffix = self.opus.shortName ? self.opus.shortName : self.opus.uuid;
 
                 self.supportingOpuses = [].concat(self.opus.supportingOpuses);
                 self.supportingOpuses = self.supportingOpuses.concat(self.opus.requestedSupportingOpuses);
@@ -166,7 +169,7 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         toggleMapPointerColourHash(false);
 
         if (self.opus.shortName !== self.initialShortName && self.opus.shortName) {
-            var f = profileService.getOpus(self.opus.shortName);
+            var f = profileService.getOpus(self.opus.shortName, true);
             f.then(function () {
                 messageService.alert("The specified short name is already in use. Short Names must be unique across all collections.");
             }, function () {
@@ -516,10 +519,70 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         self.StyleForm.$setDirty();
     };
 
+    self.addAnEmptyLogo = function () {
+        var logo = {
+                logoUrl: undefined,
+                hyperlink: undefined
+            };
+
+        self.opus.brandingConfig.logos.push(logo);
+    };
+
     self.logoUploaded = function (result) {
-        self.opus.brandingConfig.logoUrl = util.getBaseHref() + result.imageUrl;
+        var logoUrl = util.getBaseHref() + result.imageUrl,
+            logo = {
+                logoUrl: logoUrl,
+                hyperlink: undefined
+            };
+
+        self.opus.brandingConfig.logos.push(logo);
         self.toggleUploadPanel('logo');
         self.StyleForm.$setDirty();
+    };
+
+    self.generateFileUploadUrl = function () {
+        return self.imageUploadUrl + util.getRandomString();
+    };
+
+    self.addAnEmptyImage = function () {
+        var image = {
+            imageUrl: undefined,
+            credit: undefined
+        };
+
+        self.opus.opusLayoutConfig.images.push(image);
+    };
+
+    self.imageUploaded = function (result) {
+        var imageUrl = util.getBaseHref() + result.imageUrl,
+            image = {
+                imageUrl: imageUrl,
+                credit: undefined
+            };
+
+        self.opus.opusLayoutConfig.images.push(image);
+        self.toggleUploadPanel('imageSlider');
+        self.LandingPage.$setDirty();
+    };
+
+    self.removeItem = function ($index, list, form) {
+        if (list.length) {
+            list.splice($index,1);
+            form.$setDirty();
+        }
+    };
+
+    self.move = function(index, list, form, dir) {
+        var newIndex = index + dir;
+        if (!self.rangeCheck(list, index) || !self.rangeCheck(list, newIndex) || !list) return;
+        var original = list[index];
+        list[index] = list[newIndex];
+        list[newIndex] = original;
+        form.$setDirty();
+    };
+
+    self.rangeCheck = function (list, index) {
+        return (index < list.length)  && (index >= 0);
     };
 
     self.thumbnailUploaded = function (result) {
@@ -532,9 +595,37 @@ profileEditor.controller('OpusController', function ($scope, profileService, uti
         self.showUpload[section] = !self.showUpload[section];
     };
 
+    self.masterListKeybaseItemsLoading = false;
+    self.masterListKeybaseItemsLoaded = false;
+    self.masterListKeybaseItems = null;
+
+    self.canInitialiseKeyplayer = function() {
+        if (self.masterListKeybaseItems !== null || self.masterListKeybaseItemsLoaded) return true;
+        if (!self.opus) return false;
+        if (!self.masterListKeybaseItemsLoading) {
+            self.masterListKeybaseItemsLoading = true;
+            profileService.loadMasterListItems(self.opus).then(function(results) {
+                self.masterListKeybaseItems = results;
+                self.masterListKeybaseItemsLoaded = true;
+            }, function(error) {
+                $log.error("Failed to load master list items", error);
+                var msg;
+                if (self.opus.title.toLowerCase().indexOf('australia') !== -1 && Math.random() >= 0.9) {
+                    msg = "Strewth mate, the master list is deadset cactus";
+                } else {
+                    msg = "Could not load master list."
+                }
+                messageService.alertStayOn(msg);
+            });
+        }
+        return false;
+    };
+
     // Support for lazy loading the keyplayer.
     self.initialiseKeyplayer = function () {
-        self.keybaseTemplateUrl = 'keyplayer.html';
+        if (self.keybaseTemplateUrl != 'keyplayer.html') {
+            self.keybaseTemplateUrl = 'keyplayer.html';
+        }
     };
 
     self.isRecordSourceSelectionValid = function () {

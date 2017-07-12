@@ -5,7 +5,7 @@
                 <button ng-show="!attrCtrl.readonly" ng-click="attrCtrl.addAttribute()" class="btn btn-default"><i
                         class="fa fa-plus"></i>&nbsp;Add attribute
                 </button>
-                <p:help help-id="profile.edit.attribute" show="${edit}"/>
+                <p:help help-id="profile.edit.attribute" show="${edit}" collection-override="${opus?.help?.attributeLink}"/>
 
                 <div class="small pull-right"
                      ng-form="ShowSupportingAttributesForm" ng-show="(!attrCtrl.readonly && (attrCtrl.opus.showLinkedOpusAttributes || attrCtrl.opus.allowCopyFromLinkedOpus))">

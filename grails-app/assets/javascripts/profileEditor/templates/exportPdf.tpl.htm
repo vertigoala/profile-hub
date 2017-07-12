@@ -20,6 +20,11 @@
                 </div>
             </div>
 
+            <div class="col-md-12" ng-show="pdfCtrl.totalChildren > config.pdfHighThresholdLimit ">
+                <p>Lower level taxa cannot be exported as it exceeds the threshold limit of {{config.pdfHighThresholdLimit}}</p>
+            </div>
+
+
             <div class="col-md-12"
                  ng-show="(pdfCtrl.options | filter:{id: 'children'})[0].selected && pdfCtrl.totalChildren > pdfCtrl.ASYNC_THRESHOLD">
                 <hr class="col-md-11"/>

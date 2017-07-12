@@ -12,7 +12,7 @@
 //= require angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js
 //= require angular-loading-bar/loading-bar-0.7.1.min.js
 //= require angular-bootstrap-show-errors/showErrors.js
-//= require angular/ui-bootstrap-tpls-0.12.0.js
+//= require angular/ui-bootstrap-tpls-0.14.3.js
 //= require ckeditor/ckeditor.js
 //= require ckeditor/ng-ckeditor-0.2.1.js
 //= require google-diff-match-patch/diff_match_patch_uncompressed.js
@@ -29,6 +29,7 @@
 //= require dualMultiselect/dualmultiselect.min.js
 //= require colorjs/color.min.js
 //= require urijs-1.18.0/URI.js
+//= require web-animations-polyfill/web-animations-2.2.5.min.js
 //= require webcomponentsjs/webcomponents-0.7.22.min.js
 //= require mapAndImages
 //= require profileEditor/profiles.js

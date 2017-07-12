@@ -10,7 +10,8 @@ profileEditor.directive('imageUpload', function ($browser, $http, config) {
             updateOnEvent: '@?', // name of the event to be $broadcast by the parent scope to trigger saving metadata
             showMetadata: '@', // true to ask for metadata fields, false to just ask for the file
             disableSource: '=?', // true to disable source selection and only offer the default (file upload)
-            uploadUrl: '@url' // the url to post the file to
+            uploadUrl: '@url', // the url to post the file to
+            uploadUrlFn: '&?urlGenerator' // the function will return upload url
         },
         templateUrl: '/profileEditor/imageUpload.htm',
         controllerAs: 'imageUpload',
@@ -31,6 +32,7 @@ profileEditor.directive('imageUpload', function ($browser, $http, config) {
             $scope.showMetadata = true;
 
             $scope.callbackHandler = $scope.callbackFn();
+            $scope.uploadUrlGenerator = $scope.uploadUrlFn();
 
             $scope.licences = null;
 
@@ -57,8 +59,14 @@ profileEditor.directive('imageUpload', function ($browser, $http, config) {
                 $scope.metadata.dataResourceId = $scope.opus.dataResourceUid;
                 $scope.metadata.created = util.formatLocalDate($scope.metadata.created);
                 if (self.files.length > 0) {
+                    var uploadUrl = $scope.uploadUrl;
+                    // if upload url is not given and then check if function is provided, then evaluate it.
+                    if(!uploadUrl && typeof $scope.uploadUrlGenerator == 'function'){
+                        uploadUrl = $scope.uploadUrlGenerator()
+                    }
+
                     Upload.upload({
-                        url: $scope.uploadUrl,
+                        url: uploadUrl,
                         fields: $scope.metadata,
                         file: self.files[0]
                     }).success(handleUploadSuccess).error(function () {
@@ -73,7 +81,7 @@ profileEditor.directive('imageUpload', function ($browser, $http, config) {
                         url: $scope.uploadUrl,
                         data: $.param(data)  // TODO replace this with $httpParamSerializer in angular 1.4+
                     }).then(function(result) { return result.data; }).then(handleUploadSuccess, function() {
-                        $scope.error = "An error occured while uploading your image.";
+                        $scope.error = "An error occurred while uploading your image.";
                     });
                 } else {
                     console.error("'performUpload' event broadcast when there are 0 files to be uploaded");

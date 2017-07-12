@@ -8,17 +8,22 @@ class HelpTagLib {
     static final String HELP_URLS = "help_urls"
 
     def help = { attrs ->
-        Map helpUrls = servletContext.getAttribute(HELP_URLS)
-        if (!helpUrls) {
-            helpUrls = loadHelpUrls()
+        String url
+        if(attrs["collection-override"]){
+            url = attrs["collection-override"]
+        } else {
+            Map helpUrls = servletContext.getAttribute(HELP_URLS)
+            if (!helpUrls) {
+                helpUrls = loadHelpUrls()
+            }
+
+            String urlSuffix = helpUrls?.urls?.get(attrs["help-id"])
+            url = "${helpUrls?.baseUrl}${urlSuffix}"
         }
 
-        String urlSuffix = helpUrls?.urls?.get(attrs["help-id"])
-        if (urlSuffix) {
-            boolean floatRight = attrs.containsKey("float") ? attrs.float.toBoolean() : true
-            boolean show = attrs.containsKey("show") ? attrs.show.toBoolean() : true
-            out << render(template:"/common/helpIcon", model: [baseUrl: helpUrls?.baseUrl, suffix: urlSuffix, floatRight: floatRight, show: show])
-        }
+        boolean floatRight = attrs.containsKey("float") ? attrs.float.toBoolean() : true
+        boolean show = attrs.containsKey("show") ? attrs.show.toBoolean() : true
+        out << render(template:"/common/helpIcon", model: [url: url, floatRight: floatRight, show: show])
     }
 
     def helpUrl = { attrs ->

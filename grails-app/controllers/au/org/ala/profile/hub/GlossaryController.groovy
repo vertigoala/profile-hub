@@ -2,13 +2,16 @@ package au.org.ala.profile.hub
 
 import au.org.ala.profile.security.Role
 import au.org.ala.profile.security.Secured
+import au.org.ala.web.AuthService
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 import static au.org.ala.profile.hub.util.HubConstants.*
 
-class GlossaryController extends BaseController {
+class GlossaryController extends OpusBaseController {
 
+    AuthService authService
+    FlorulaCookieService florulaCookieService
     ProfileService profileService
 
     def view() {
@@ -20,12 +23,9 @@ class GlossaryController extends BaseController {
             if (!opus) {
                 notFound()
             } else {
-                render(view: 'glossary', model: [
-                        logoUrl  : opus.brandingConfig?.logoUrl ?: DEFAULT_OPUS_LOGO_URL,
-                        bannerUrl: opus.brandingConfig?.opusBannerUrl ?: opus.brandingConfig?.profileBannerUrl ?: DEFAULT_OPUS_BANNER_URL,
-                        bannerHeight: opus.brandingConfig?.opusBannerHeight ?: opus.brandingConfig?.profileBannerHeight ?: DEFAULT_OPUS_BANNER_HEIGHT_PX,
-                        pageTitle: "${opus.title} Glossary" ?: DEFAULT_OPUS_TITLE
-                ])
+                def title = "${opus.title} Glossary" ?: DEFAULT_OPUS_TITLE
+                def model = commonViewModelParams(opus, 'glossary', title)
+                render(view: 'glossary', model: model)
             }
         }
     }
@@ -57,13 +57,16 @@ class GlossaryController extends BaseController {
     }
 
     def getGlossary() {
+        def response = null;
         if (!params.opusId) {
             badRequest()
+        } else if (params.prefix) {
+            response = profileService.getGlossary(params.opusId as String, params.prefix as String)
         } else {
-            def response = profileService.getGlossary(params.opusId as String)
-
-            handle response
+            response = profileService.getGlossary(params.opusId as String)
         }
+
+        handle response
     }
 
     @Secured(role = Role.ROLE_PROFILE_ADMIN)

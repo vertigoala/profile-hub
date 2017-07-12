@@ -141,6 +141,30 @@
 
         </div>
         <hr/>
+
+        <div class="panel-default">
+        <div class="panel-heading">
+            <h3>Backup/Restore collection</h3>
+        </div>
+
+        <div class="panel panel-body">
+            <h4>Backup collection</h4>
+            <label>Backup Name: <input ng-model="adminCtrl.backupName"></label> (Backup Name must not contain spaces)<br><br>
+            You may select one or more collections to backup
+            <dualmultiselect options="adminCtrl.backupCollectionMultiSelectOptions"></dualmultiselect>
+            <br>
+            <button class="btn btn-primary" ng-click="adminCtrl.backupCollections()">Backup collection</button><br><br>
+        </div>
+
+        <div class="panel panel-body">
+            <h4>Restore collection</h4>
+            <label>Database Name: <input ng-model="adminCtrl.restoreDBName"></label> (Database name must not contain spaces)<br><br>
+            You may select one or more backup name to restore
+            <dualmultiselect options="adminCtrl.restoreCollectionMultiSelectOptions"></dualmultiselect>
+            <br>
+            <button class="btn btn-primary" ng-click="adminCtrl.restoreCollections()">Restore collection</button><br><br>
+        </div>
+
     </div>
 </div>
 </body>

@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">{{profileCtrl.acknowledgementsSectionTitle}}</h4>
-                <p:help help-id="profile.edit.authors" show="${edit}"/>
+                <p:help help-id="profile.edit.authors" show="${edit}" collection-override="${opus?.help?.authorsAndAcknowledgementsLink}"/>
             </div>
         </div>
     </div>

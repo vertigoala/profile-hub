@@ -6,6 +6,7 @@ profileEditor.directive('keyPlayer', function ($browser) {
             keyId: '=',
             taxonName: '=',
             opusId: '=',
+            onlyIncludeItems: '=?',
             profileUrl: '@',
             keybaseUrl: '@',
             keyLookupUrl: '@'
@@ -25,6 +26,8 @@ profileEditor.directive('keyPlayer', function ($browser) {
             self.bracketedInitialised = false;
             self.indentedInitialised = false;
 
+            self.onlyIncludeItems = null;
+
             self.loadKey = function (keyId) {
                 self.error = null;
                 self.hasKey = keyId != null;
@@ -40,6 +43,11 @@ profileEditor.directive('keyPlayer', function ($browser) {
                         onLoad: keybaseOnLoad,
                         resultDisplay: resultDisplay
                     };
+
+                    if (self.onlyIncludeItems) {
+                        settings.filterItemNames = self.onlyIncludeItems.names;
+                        settings.filterItemGuids = self.onlyIncludeItems.guids;
+                    }
 
                     var action;
                     var initialised = false;
@@ -259,6 +267,14 @@ profileEditor.directive('keyPlayer', function ($browser) {
                 return indentedKeyHtml;
             }
 
+            self.reload = function() {
+                if (self.keyId) {
+                    self.loadKey(self.keyId);
+                } else if (self.taxonName) {
+                    self.loadKeyFromName(self.taxonName);
+                }
+            }
+
         }],
         link: function (scope, element, attrs, ctrl) {
             scope.$watch("keyId", function (keyId) {
@@ -274,6 +290,14 @@ profileEditor.directive('keyPlayer', function ($browser) {
                     scope.keyplayer.loadKeyFromName(scope.keyplayer.taxonName);
                 }
             });
+
+            if (scope.onlyIncludeItems) scope.keyplayer.onlyIncludeItems = scope.onlyIncludeItems;
+            scope.$watch("onlyIncludeItems", function(onlyIncludeNames, oldOnlyIncludeNames) {
+                if (!_.isEqual(onlyIncludeNames, oldOnlyIncludeNames)) {
+                  scope.keyplayer.onlyIncludeItems = onlyIncludeNames;
+                  //scope.keyplayer.reload();
+                }
+            })
         }
     };
 });

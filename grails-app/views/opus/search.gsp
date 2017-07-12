@@ -1,27 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="${grailsApplication.config.layout}"/>
-    <meta name="logoUrl" content="${logoUrl}"/>
+    <meta name="layout" content="${grailsApplication.config.layout + '-nocontainer'}"/>
     <title>Profile search | Atlas of Living Australia</title>
 
 </head>
 
 <body>
-<div>
-    <ol class="breadcrumb" ng-cloak>
-        <li><a class="font-xxsmall" href="${request.contextPath}/">Profile Collections</a></li>
-        <li class="font-xxsmall active">Profile Search</li>
-    </ol>
-</div>
+<div ng-controller="OpusController as opusCtrl" ng-init="opusCtrl.loadOpus()">
+    <g:render template="banner" model="[opus: opus]"/>
 
-<div class="margin-bottom-3">
-    <div class="row">
-        <div class="col-md-12">
+    <div class="container">
+        <h1 class="hidden">Welcome to the eFlora website</h1><!-- Show the H1 on each page -->
 
-            <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
+        <g:include controller="opus" action="opusSummaryPanel" params="[opusId: params.opusId]"/>
 
-        </div>
+        <g:include controller="opus" action="searchPanel" params="[opusId: params.opusId]"/>
     </div>
 </div>
 </body>

@@ -49,6 +49,10 @@ grails.project.dependency.resolution = {
         dependency "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
         dependency "org.apache.httpcomponents:httpclient:${httpmimeVersion}"
         dependency "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
+        // manage the ecj version for Java 8 compat, this should match the version provided by Jasper
+        // TODO remove after Grails 3 upgrade?
+        // TODO Maybe a more recent version would be better?
+        dependency "org.eclipse.jdt.core.compiler:ecj:4.3.1"
     }
 
     dependencies {
@@ -58,14 +62,14 @@ grails.project.dependency.resolution = {
         runtime 'au.org.ala:image-utils:1.8.2'
         runtime 'org.jsoup:jsoup:1.7.2'
 
-        compile 'net.sf.jasperreports:jasperreports:6.2.0'
-        compile 'net.sf.jasperreports:jasperreports-functions:6.2.0'
-        compile 'au.org.ala:jasper-liberation-fonts-2.00.1:1.1'
+        compile 'net.sf.jasperreports:jasperreports:6.4.1'
+        compile 'net.sf.jasperreports:jasperreports-functions:6.4.1'
+        compile 'au.org.ala:jasper-liberation-fonts-2.00.1:1.2'
         compile 'net.glxn:qrgen:1.4'
         compile 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160827.1'
         compile 'com.google.guava:guava:19.0'
         compile 'com.google.code.findbugs:jsr305:3.0.1'
-        compile 'com.squareup.retrofit2:retrofit:2.1.0'
+        compile 'com.squareup.retrofit2:retrofit:2.2.0'
 
     }
 
@@ -73,7 +77,7 @@ grails.project.dependency.resolution = {
         build(":release:3.1.2") {
             excludes "httpclient"
         }
-        build ":tomcat:7.0.55"
+        build ":tomcat:7.0.70"
 
         compile ":mail:1.0.7"
         compile ":cache:1.1.8"
@@ -82,7 +86,7 @@ grails.project.dependency.resolution = {
         compile(":ala-map:2.0.4") {
             excludes "resources"
         }
-        compile(":ala-ws-plugin:1.5") {
+        compile(":ala-ws-plugin:1.6.1") {
             excludes "resources"
         }
         compile(":ala-admin-plugin:1.2") {
@@ -97,14 +101,15 @@ grails.project.dependency.resolution = {
         runtime(":ala-bootstrap3:1.1") {
             excludes "ala-cas-client", "resources"
         }
-        runtime(":ala-auth:1.3.1") {
+        runtime(":ala-auth:2.1.3") {
             excludes "commons-httpclient", "resources"
         }
         runtime ":tika-parser:1.3.0.1"
 
         //compile ":twitter-bootstrap:3.3.6"
         runtime ":jquery:1.11.1"
-        compile ":asset-pipeline:2.11.2-SNAPSHOT"
+        compile ":asset-pipeline:2.14.1"
+        compile ':sass-asset-pipeline:2.7.2' // 2.9+ requires Java 8, TODO upgrade to Java 8
         runtime ":angular-annotate-asset-pipeline:2.4.1"
         runtime ":angular-template-asset-pipeline:2.3.0"
 

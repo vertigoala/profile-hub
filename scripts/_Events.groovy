@@ -42,9 +42,11 @@ eventConfigureTomcat = { Tomcat tomcat ->
         ajpConnector.protocol = 'AJP/1.3'
         ajpConnector.redirectPort = 8443
         ajpConnector.enableLookups = false
+        ajpConnector.URIEncoding = 'UTF-8'
         ajpConnector.setProperty('redirectPort', '8443')
         ajpConnector.setProperty('protocol', 'AJP/1.3')
         ajpConnector.setProperty('enableLookups', 'false')
+        ajpConnector.setProperty('URIEncoding', 'UTF-8')
         tomcat.service.addConnector ajpConnector
 
         println ajpConnector.toString()

@@ -55,10 +55,11 @@ module.exports = function (config) {
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/Map.js',
             'https://rawgit.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/OccurrenceMap.js',
             'grails-app/assets/thirdparty/modernizr/modernizer.js',
-            'grails-app/assets/thirdparty/angular/angular-1.3.13.min.js',
-            'grails-app/assets/thirdparty/angular/angular-sanitize-1.3.13.min.js',
-            'test/js/thirdparty/angular-mocks-1.3.13.js',
-            'grails-app/assets/thirdparty/angular/ui-bootstrap-tpls-0.12.0.js',
+            'grails-app/assets/thirdparty/angular/angular-1.3.20.js',
+            'grails-app/assets/thirdparty/angular/angular-sanitize-1.3.20.js',
+            'grails-app/assets/thirdparty/angular/angular-animate-1.3.20.js',
+            'test/js/thirdparty/angular-mocks-1.3.20.js',
+            'grails-app/assets/thirdparty/angular/ui-bootstrap-tpls-0.14.3.js',
             'grails-app/assets/thirdparty/angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js',
             'grails-app/assets/thirdparty/angular-bootstrap-show-errors/showErrors.js',
             'grails-app/assets/thirdparty/ng-file-upload/ng-file-upload-shim-5.0.7.min.js',
@@ -124,6 +125,10 @@ module.exports = function (config) {
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: true
+        singleRun: true,
+
+        // Testing whether phantomjs travis tests are more reliable...
+        browserNoActivityTimeout: 30000,
+        browserDisconnectTolerance: 2
     });
 };

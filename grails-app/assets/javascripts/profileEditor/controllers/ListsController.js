@@ -1,7 +1,7 @@
 /**
  * Species Lists controller
  */
-profileEditor.controller('ListsEditor', function (profileService, util, messageService, $filter) {
+profileEditor.controller('ListsEditor', function (profileService, util, messageService, $filter, $log) {
     var self = this;
 
     self.lists = [];
@@ -34,6 +34,9 @@ profileEditor.controller('ListsEditor', function (profileService, util, messageS
         var promise = profileService.getSpeciesProfile(self.opusId, self.profileId, self.profile.guid);
         promise.then(function (data) {
             self.conservationStatuses = orderBy(data.conservationStatuses, "region");
+        }, function (data) {
+            $log.error("Couldn't load speciesProfile for opus: " + self.opusId + ", profile: " + self.profileId + ", guid: " + self.profile.guid, data);
+            messageService.alert("Could not load conservation status", true);
         });
     };
 

@@ -10,6 +10,7 @@ import spock.lang.Specification
 class ProfileServiceSpec extends Specification {
     ProfileService service
     WebService webService
+    WebServiceWrapperService webServiceWrapperService
     AuthService authService
 
     def setup() {
@@ -17,14 +18,16 @@ class ProfileServiceSpec extends Specification {
 
         authService = Mock(AuthService)
         authService.getUserId() >> "user1"
-        authService.userDetails() >> [userDisplayName: "fred smith"]
+        authService.userDetails() >> new au.org.ala.web.UserDetails(firstName: 'fred', lastName: 'smith')
 
         webService = Mock(WebService)
         service = new ProfileService()
+        webServiceWrapperService = Mock(WebServiceWrapperService)
         service.grailsApplication = grailsApplication
 
         service.webService = webService
         service.authService = authService
+        service.webServiceWrapperService = webServiceWrapperService
     }
 
     def "getClassification() should construct the correct Profile Service URL"() {
@@ -35,7 +38,7 @@ class ProfileServiceSpec extends Specification {
         service.getClassification("opusid", "profileid", "guid")
 
         then:
-        1 * webService.get(expectedUrl)
+        1 * webServiceWrapperService.get(expectedUrl)
     }
 
     def "updateLinks() should construct the correct Profile Service URL"() {

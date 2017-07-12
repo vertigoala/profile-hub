@@ -101,6 +101,15 @@ skin.fluidLayout = true
 app.http.header.userId = "X-ALA-userId"
 app.view.nocache = true
 
+security {
+    cas {
+        adminRole='ROLE_ADMIN'
+        uriExclusionFilterPattern='/images.*,/css.*,/js.*,/less.*,/assets/.*'
+        uriFilterPattern='/admin.*,/.*/update.*,/.*/create.*,/.*/delete.*,/user/.*,/audit/.*,/.*/respond.*,/.*/shareRequest.*'
+        authenticateOnlyIfLoggedInPattern='.*'
+    }
+}
+
 environments {
     development {
         grails.logging.jul.usebridge = true
@@ -112,6 +121,10 @@ environments {
                 props = ["mail.debug": "true"]
             }
         }
+        security.cas.appServerName='http://devt.ala.org.au:8080'
+    }
+    test {
+        security.cas.appServerName='http://devt.ala.org.au:8080'
     }
     production {
         grails.logging.jul.usebridge = false
@@ -166,10 +179,7 @@ log4j = {
             'grails.spring.BeanBuilder',
             'grails.plugin.webxml',
             "grails.plugin.mail",
-            'grails.plugin.cache.web.filter',
-            'grails.app.services.org.grails.plugin.resource',
-            'grails.app.taglib.org.grails.plugin.resource',
-            'grails.app.resourceMappers.org.grails.plugin.resource'
+            'grails.plugin.cache.web.filter'
 
     debug "grails.app",
             "grails.plugin.mail",

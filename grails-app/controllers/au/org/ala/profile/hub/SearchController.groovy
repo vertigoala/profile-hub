@@ -1,13 +1,16 @@
 package au.org.ala.profile.hub
 
+import static au.org.ala.profile.hub.Utils.enc
+
+
 class SearchController extends BaseController {
 
-    private static final List<String> SEARCH_OPTIONS = ["nameOnly", "offset", "pageSize", "includeArchived", "matchAll", "includeNameAttributes", "searchAla", "searchNsl"]
+    private static final List<String> SEARCH_OPTIONS = ["nameOnly", "offset", "pageSize", "includeArchived", "matchAll", "includeNameAttributes", "searchAla", "searchNsl", "hideStubs"]
 
     ProfileService profileService
 
     def search() {
-        List queryParams = params.findResults { key, value -> SEARCH_OPTIONS.contains(key) ? "&${key}=${value}" : null }
+        List queryParams = params.findResults { key, value -> SEARCH_OPTIONS.contains(key) ? "&${enc(key)}=${enc(value)}" : null }
         def response = profileService.search(params.opusId, params.term, queryParams)
 
         handle response
@@ -18,7 +21,8 @@ class SearchController extends BaseController {
             badRequest "scientificName is a required parameter. opusId, sortBy and useWildcard are optional."
         } else {
             boolean wildcard = params.useWildcard ? params.useWildcard.toBoolean() : true
-            def response = profileService.findByScientificName(params.opusId, params.scientificName, params.max, params.sortBy, wildcard);
+            boolean autoCompleteScientificName = params.autoCompleteScientificName ? params.autoCompleteScientificName.toBoolean() : false
+            def response = profileService.findByScientificName(params.opusId, params.scientificName, params.max, params.sortBy, wildcard, autoCompleteScientificName);
 
             handle response
         }

@@ -1,11 +1,11 @@
-<div class="panel panel-default" ng-cloak ng-show="profileCtrl.profile.classification.length > 0">
+<div class="panel panel-default ${edit?'':'panel-override'}" ng-cloak ng-show="profileCtrl.profile.classification.length > 0">
     <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}taxon" title="Taxonomy" condition="profileCtrl.profile.classification.length > 0"></navigation-anchor>
 
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
                 <h4 class="section-panel-heading">Taxonomy <span ng-show="profileCtrl.profile.taxonomyTree"> from {{ profileCtrl.profile.taxonomyTree }}</span></h4>
-                <p:help help-id="profile.edit.taxonomy" show="${edit}"/>
+                <p:help help-id="profile.edit.taxonomy" show="${edit}" collection-override="${opus?.help?.taxonomyLink}"/>
             </div>
         </div>
     </div>

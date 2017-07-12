@@ -1,48 +1,14 @@
-<div class="padding-top-1" ng-controller="BrowseController as browseCtrl" ng-init="browseCtrl.getTaxonLevels()" ng-cloak>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <h3 class="heading-medium">Browse by category</h3>
+    </div>
+</div>
+<div class="padding-top-1 row" ng-controller="BrowseController as browseCtrl" ng-init="browseCtrl.getTaxonLevels()" ng-cloak>
     <a name="browseTop"></a>
     <div class="col-lg-3 col-md-4 col-xs-12">
         <!-- Side menu -->
         <div class="side-menu">
             <nav class="navbar navbar-default" role="navigation">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <div class="brand-wrapper">
-
-                        <!-- Brand -->
-                        <div class="brand-name-wrapper">
-                            <span class="navbar-brand">Quick search</span>
-                        </div>
-
-                        <!-- Search body -->
-                        <div id="search" class="panel">
-                            <div class="panel-body">
-                                <form class="navbar-form" role="search">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control ignore-save-warning" placeholder="e.g. Acacia binervata"
-                                               ng-change="browseCtrl.searchByScientificName()"
-                                               name="searchTerm"
-                                               autocomplete="off"
-                                               ng-enter="browseCtrl.selectSingleResult()"
-                                               ng-model="browseCtrl.searchTerm"></div>
-                                    <button type="submit" class="btn btn-default ">
-                                        <span class="fa fa-search"></span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <nav class="navbar navbar-default" role="navigation">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <div class="brand-wrapper">
-                        <div class="brand-name-wrapper">
-                            <span class="navbar-brand">Browse by category</span>
-                        </div>
-                    </div>
-                </div>
-
                 <accordion close-others="true">
                     <accordion-group ng-repeat="taxon in browseCtrl.orderedTaxonLevels | orderBy:order" ng-if="browseCtrl.taxonLevels[taxon.key] > 0">
                         <accordion-heading>
@@ -76,6 +42,37 @@
                     </accordion-group>
                 </accordion>
             </nav>
+
+            <nav class="navbar navbar-default" role="navigation">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <div class="brand-wrapper">
+
+                        <!-- Brand -->
+                        <div class="brand-name-wrapper">
+                            <span class="navbar-brand">Quick browse</span>
+                        </div>
+
+                        <!-- Search body -->
+                        <div id="search" class="panel">
+                            <div class="panel-body">
+                                <form class="navbar-form" role="search">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control ignore-save-warning" placeholder="e.g. Acacia binervata"
+                                               ng-change="browseCtrl.searchByScientificName()"
+                                               name="searchTerm"
+                                               autocomplete="off"
+                                               ng-enter="browseCtrl.selectSingleResult()"
+                                               ng-model="browseCtrl.searchTerm"></div>
+                                    <button type="submit" class="btn btn-default ">
+                                        <span class="fa fa-search"></span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
         </div>
     </div>
 
@@ -83,13 +80,15 @@
     <div class="col-lg-9 col-md-8 col-xs-12" ng-cloak>
         <div ng-show="!browseCtrl.selectedTaxon.name && !browseCtrl.searchTerm">
             <p>
-                Search or browse by category using the navigation bar to the left.
+                Browse the taxonomic hierarchy using the navigation pane <span class="hidden-xs hidden-sm">to the left</span><span class="hidden-md hidden-lg">above</span>. You can also jump to a particular taxon in the hierarchy by typing the beginning of the name into the ‘Quick browse’ option at the bottom of the pane.
+            </p>
+            <p>
+                Alternatively, you can select the ‘Search’ navigator at the top of this page and perform a text or name-based search.
             </p>
             <p ng-if="opusCtrl.opus.keybaseKeyId">
-                Alternatively, you can select the Search tab and perform a text or name-based search, or select the Identify tab and find the profile using the dichotomous key player.
+                The ‘Identify’ button on the homepage will help you select the appropriate profile using dichotomous keys.
             </p>
         </div>
-
 
         <div class="row bottom-border" ng-show="browseCtrl.selectedTaxon.name || browseCtrl.searchTerm">
             <div class="col-md-6">
@@ -97,7 +96,18 @@
                     Results for "{{browseCtrl.searchTerm}}*"
                 </h4>
                 <h4 ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level != browseCtrl.selectedTaxon.name">
-                    {{browseCtrl.selectedTaxon.level | capitalize}}: {{browseCtrl.selectedTaxon.name | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
+                    {{browseCtrl.selectedTaxon.level | capitalize}}:
+                    <span ng-show="browseCtrl.selectedTaxon.profileExist">
+                        <a href="${request.contextPath}/opus/{{ browseCtrl.opusId }}/profile/{{ browseCtrl.selectedTaxon.name | enc }}"
+                           target="_self" class="scientific-name">
+                            {{browseCtrl.selectedTaxon.name | capitalize}}
+                        </a>
+                    </span>
+                    <span ng-show="!browseCtrl.selectedTaxon.profileExist">
+                        {{browseCtrl.selectedTaxon.name | capitalize}}
+                    </span>
+
+                    <small>({{browseCtrl.selectedTaxon.count}} entries)</small>
                 </h4>
                 <h4 ng-show="browseCtrl.selectedTaxon.name && browseCtrl.selectedTaxon.level == browseCtrl.selectedTaxon.name">
                     {{browseCtrl.selectedTaxon.level | capitalize}} <small>({{browseCtrl.selectedTaxon.count}} entries)</small>

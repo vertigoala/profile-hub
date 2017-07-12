@@ -195,43 +195,49 @@ describe("ProfileService tests", function () {
     it("should invoke the profile search operation on the context root when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName");
 
-        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=true&sortBy=name").respond("bla");
+        http.expectGET('/someContext/profile/search/scientificName?autoCompleteScientificName=false&opusId=opusId&scientificName=scientificName&sortBy=name&useWildcard=true').respond("bla");
     });
 
     it("should invoke the profile search operation on the context root with wildcard=false if false is passed in when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName", false);
 
-        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false&sortBy=name").respond("bla");
+        http.expectGET("/someContext/profile/search/scientificName?autoCompleteScientificName=false&opusId=opusId&scientificName=scientificName&sortBy=name&useWildcard=false").respond("bla");
     });
 
     it("should invoke the profile search operation on the context root with the sort by value provided when profileSearch is called ", function() {
         service.profileSearch("opusId", "scientificName", false, "sortme");
 
-        http.expectGET("/someContext/profile/search/scientificName?opusId=opusId&scientificName=scientificName&useWildcard=false&sortBy=sortme").respond("bla");
+        http.expectGET("/someContext/profile/search/scientificName?autoCompleteScientificName=false&opusId=opusId&scientificName=scientificName&sortBy=sortme&useWildcard=false").respond("bla");
+    });
+
+    it("should invoke the profile search operation on the context root when wildcardsearch profileSearch on autoCompleteScientificName is called ", function() {
+        service.profileSearch("opusId", "scientificName", true, "sortme", true);
+
+        http.expectGET("/someContext/profile/search/scientificName?autoCompleteScientificName=true&opusId=opusId&scientificName=scientificName&sortBy=sortme&useWildcard=true").respond("bla");
     });
 
     it("should invoke the taxon level search service on the context root when profileSearchByTaxonLevel is invoked", function() {
         service.profileSearchByTaxonLevel("opusId", "taxonName", undefined, 10, 5);
 
-        http.expectGET("/someContext/profile/search/taxon/level?opusId=opusId&taxon=taxonName&max=10&offset=5").respond("bla");
+        http.expectGET("/someContext/profile/search/taxon/level?max=10&offset=5&opusId=opusId&taxon=taxonName").respond("bla");
     });
 
     it("should invoke the taxon level search service on the context root with the provided filter term when profileSearchByTaxonLevel is invoked", function() {
         service.profileSearchByTaxonLevel("opusId", "taxonName", "something", 10, 5);
 
-        http.expectGET("/someContext/profile/search/taxon/level?opusId=opusId&taxon=taxonName&max=10&offset=5&filter=something").respond("bla");
+        http.expectGET("/someContext/profile/search/taxon/level?filter=something&max=10&offset=5&opusId=opusId&taxon=taxonName").respond("bla");
     });
 
     it("should invoke the taxon level and name search service on the context root when profileSearchByTaxonLevelAndName is invoked", function() {
         service.profileSearchByTaxonLevelAndName("opusId", "taxonName", "sciName", 10, 5);
 
-        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&sortBy=name&countChildren=false&immediateChildrenOnly=false").respond("bla");
+        http.expectGET("/someContext/profile/search/taxon/name?countChildren=false&immediateChildrenOnly=false&max=10&offset=5&opusId=opusId&scientificName=sciName&sortBy=name&taxon=taxonName").respond("bla");
     });
 
     it("should invoke the taxon level and name search service on the context root with a sort param if provided when profileSearchByTaxonLevelAndName is invoked", function() {
         service.profileSearchByTaxonLevelAndName("opusId", "taxonName", "sciName", 10, 5, {sortBy: "sortme"});
 
-        http.expectGET("/someContext/profile/search/taxon/name?opusId=opusId&taxon=taxonName&scientificName=sciName&max=10&offset=5&sortBy=sortme&countChildren=false&immediateChildrenOnly=false").respond("bla");
+        http.expectGET("/someContext/profile/search/taxon/name?countChildren=false&immediateChildrenOnly=false&max=10&offset=5&opusId=opusId&scientificName=sciName&sortBy=sortme&taxon=taxonName").respond("bla");
     });
 
     it("should invoke the taxon levels search service on the context root when getTaxonLevels is invoked", function() {
@@ -243,21 +249,21 @@ describe("ProfileService tests", function () {
     it("shold invoke the getImmediateChildren service on the context root with all provided parameters when getImmediateChildren is invoked", function() {
         service.profileSearchGetImmediateChildren("opus1", "rank", "name", 10, 20, "filter");
 
-        http.expectGET("/someContext/profile/search/children?opusId=opus1&rank=rank&name=name&max=10&offset=20&filter=filter").respond("bla");
+        http.expectGET("/someContext/profile/search/children?filter=filter&max=10&name=name&offset=20&opusId=opus1&rank=rank").respond("bla");
     });
 
     it("shold not include the filter param when getImmediateChildren is invoked with a null, empty or undefined filter term", function() {
         service.profileSearchGetImmediateChildren("opus1", "rank", "name", 10, 20, " ");
 
-        http.expectGET("/someContext/profile/search/children?opusId=opus1&rank=rank&name=name&max=10&offset=20").respond("bla");
+        http.expectGET("/someContext/profile/search/children?max=10&name=name&offset=20&opusId=opus1&rank=rank").respond("bla");
 
         service.profileSearchGetImmediateChildren("opus1", "rank", "name", 10, 20, null);
 
-        http.expectGET("/someContext/profile/search/children?opusId=opus1&rank=rank&name=name&max=10&offset=20").respond("bla");
+        http.expectGET("/someContext/profile/search/children?max=10&name=name&offset=20&opusId=opus1&rank=rank").respond("bla");
 
         service.profileSearchGetImmediateChildren("opus1", "rank", "name", 10, 20, undefined);
 
-        http.expectGET("/someContext/profile/search/children?opusId=opus1&rank=rank&name=name&max=10&offset=20").respond("bla");
+        http.expectGET("/someContext/profile/search/children?max=10&name=name&offset=20&opusId=opus1&rank=rank").respond("bla");
     });
 
     it("should invoke the user search operation on the context root when userSearch is called ", function() {
@@ -282,7 +288,7 @@ describe("ProfileService tests", function () {
     it("should invoke the get glossary operation on the PROFILE SERVICE when getGlossary is called", function() {
         service.getGlossary("opus1", "prefix");
 
-        http.expectGET("http://profileService/opus/opus1/glossary/prefix").respond("bla");
+        http.expectGET("/someContext/opus/opus1/glossary/prefix").respond("bla");
     });
 
     it("should invoke the delete glossary item operation on the context root when deleteGlossaryItem is called", function() {

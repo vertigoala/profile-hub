@@ -14,6 +14,7 @@ class OpusControllerSpec extends Specification {
     AuthService mockAuthService
     UserService mockUserService
     ProfileService mockProfileService
+    FlorulaCookieService stubFlorulaCookieService
 
     def setup() {
         controller = new OpusController()
@@ -26,6 +27,8 @@ class OpusControllerSpec extends Specification {
 
         mockProfileService = Mock(ProfileService)
         controller.profileService = mockProfileService
+        stubFlorulaCookieService = Stub(FlorulaCookieService)
+        controller.florulaCookieService = stubFlorulaCookieService
     }
 
     def "index should render the index view"() {
@@ -41,11 +44,9 @@ class OpusControllerSpec extends Specification {
         controller.index()
 
         then:
-        assert model.size() == 6
-        assert model.containsKey("logoUrl")
+        assert model.size() == 4
+        assert model.containsKey("logos")
         assert model.containsKey("bannerUrl")
-        assert model.containsKey("bannerHeight")
-        assert model.containsKey("pageTitle")
         assert model.containsKey("footerText")
         assert model.containsKey("contact")
     }
@@ -69,12 +70,17 @@ class OpusControllerSpec extends Specification {
         controller.edit()
 
         then:
-        assert model.size() == 9
-        assert model.containsKey("logoUrl")
+        assert model.size() == 19
+        assert model.containsKey("opus")
+        assert model.containsKey("logos")
+        assert model.containsKey("opusUrl")
         assert model.containsKey("bannerUrl")
-        assert model.containsKey("bannerHeight")
-        assert model.containsKey("pageTitle")
         assert model.containsKey("currentUser")
+        assert model.containsKey("searchUrl")
+        assert model.containsKey("browseUrl")
+        assert model.containsKey("identifyUrl")
+        assert model.containsKey("documentsUrl")
+        assert model.containsKey("reportsUrl")
         assert model.containsKey("glossaryUrl")
         assert model.containsKey("aboutPageUrl")
         assert model.containsKey("footerText")
@@ -100,12 +106,16 @@ class OpusControllerSpec extends Specification {
         controller.show()
 
         then:
-        assert model.size() == 9
+        assert model.size() == 21
         assert model.containsKey("opus")
-        assert model.containsKey("logoUrl")
+        assert model.containsKey("logos")
         assert model.containsKey("bannerUrl")
-        assert model.containsKey("bannerHeight")
-        assert model.containsKey("pageTitle")
+        assert model.containsKey("opusUrl")
+        assert model.containsKey("searchUrl")
+        assert model.containsKey("browseUrl")
+        assert model.containsKey("identifyUrl")
+        assert model.containsKey("documentsUrl")
+        assert model.containsKey("reportsUrl")
         assert model.containsKey("glossaryUrl")
         assert model.containsKey("aboutPageUrl")
         assert model.containsKey("footerText")

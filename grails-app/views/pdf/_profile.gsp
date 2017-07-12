@@ -20,11 +20,26 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="customizable-logo pull-left">
-                    <img class="customizable-logo-img"
-                         src="${opus.logoUrl ?: grailsApplication.config.ala.base.url + '/wp-content/themes/ala2011/images/logo.png'}"/>
+                    <g:each in="${logos?:[[logoUrl:grailsApplication.config.ala.base.url + '/wp-content/themes/ala2011/images/logo.png']]}" var="logo">
+                        <div class="row margin-bottom-1">
+                            <div class="col-xs-12 col-sm-12 col-lg-12">
+                                <g:if test="${logo.hyperlink}">
+                                    <a href="${logo.hyperlink}" target="_blank">
+                                        <img class="img-responsive customizable-logo-img"
+                                             src="${logo.logoUrl}"
+                                             alt="logo"/>
+                                    </a>
+                                </g:if>
+                                <g:else>
+                                    <img class="img-responsive customizable-logo-img"
+                                         src="${logo.logoUrl}"
+                                         alt="logo"/>
+                                </g:else>
+                            </div>
+                        </div>
+                    </g:each>
                 </div>
             </div>
-
         </div>
     </div>
 

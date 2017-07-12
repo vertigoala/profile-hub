@@ -89,9 +89,10 @@
                 </tab>
                 <tab managed-tab heading="Key" class="font-xxsmall" select-to-initialise="true"
                      ng-show="profileCtrl.opus.keybaseProjectId && profileCtrl.hasKeybaseKey">
-                    <div class="row">
+                    <div class="row" ng-if="profileCtrl.canInitialiseKeyplayer()">
                         <key-player taxon-name="profileCtrl.profile.scientificName" style="display: block"
                                     opus-id="profileCtrl.opus.uuid"
+                                    only-include-items="profileCtrl.masterListKeybaseItems"
                                     keybase-url="${g.createLink(controller:'keybase', action:'keyLookup', absolute: true)}"
                                     key-lookup-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/keybase/findKey"
                                     profile-url="${request.scheme}://${request.serverName}${request.serverPort ? ":" + request.serverPort : ""}${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/profile"></key-player>
@@ -106,27 +107,4 @@
     </div>
 </g:if>
 
-<div class="row margin-top-1">
-    <div class="col-md-12 col-xs-12 col-lg-12 small text-center" ng-cloak>
-        <p><span ng-show="profileCtrl.opus.copyrightText">&copy; {{ profileCtrl.opus.copyrightText }}.</span> <a
-                href="${request.contextPath}/opus/{{profileCtrl.opus.shortName ? profileCtrl.opus.shortName : profileCtrl.opus.uuid}}/about##copyright"
-                target="_blank">Copyright Notice</a>.</p>
-    </div>
-</div>
-
-<div class="row margin-top-1" ng-cloak ng-show="profileCtrl.profile.authorship.length > 0">
-    <navigation-anchor anchor-name="view_authorship" title="{{profileCtrl.acknowledgementsSectionTitle}}" condition="profileCtrl.profile.authorship.length > 0"></navigation-anchor>
-
-    <div class="col-sm-12 col-md-8 profile-contributor-text">
-        Profile contributors: <span ng-repeat="contrib in profileCtrl.profile.authorship"
-                                    ng-show="contrib.text">{{contrib.category | capitalize}}<span
-                ng-show="contrib.category == 'Author'">(s)</span> - {{contrib.text}}<span
-                ng-show="!$last">;&nbsp;</span></span>
-    </div>
-    <div class="col-sm-12 col-md-4 last-updated-text">
-        Last updated: <span class="last-updated">{{ profileCtrl.profile.lastPublished | date : 'MMM d, y h:mm' }}</span>
-    </div>
-</div>
-
-<a href="#top" du-smooth-scroll target="_self" class="font-xxsmall float-bottom-left"><span
-        class="fa fa-arrow-up">&nbsp;Scroll to top</span></a>
+<g:render template="footer"></g:render>

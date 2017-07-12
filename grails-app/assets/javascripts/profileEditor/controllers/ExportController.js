@@ -1,7 +1,7 @@
 /**
  *  Export controller
  */
-profileEditor.controller('ExportController', function (util, $window, $modal, $http) {
+profileEditor.controller('ExportController', function (util, $window, $modal, $http, config) {
     var self = this;
 
     self.profileId = util.getEntityId("profile");
@@ -58,30 +58,30 @@ profileEditor.controller('ExportController', function (util, $window, $modal, $h
 /**
  * Export pdf modal dialog controller
  */
-profileEditor.controller('ExportPDFController', function (opusId, rank, scientificName, $modalInstance, $scope, profileService, $rootScope) {
+profileEditor.controller('ExportPDFController', function (opusId, rank, scientificName, $modalInstance, $scope, profileService, $rootScope, config) {
     var self = this;
 
     self.ASYNC_THRESHOLD = 11;
 
     self.loading = false;
-    self.children = {id: "children", name: "Lower level taxa", selected: true};
 
     self.totalChildren = -1;
 
-    var exportableSections = ["attributes", "map", "taxonomy", "taxon", "nomenclature", "links", "bhllinks", "specimens", "bibliography", "images", "conservation", "features", "key"];
+   // var exportableSections = ["attributes", "map", "taxonomy", "taxon", "nomenclature", "links", "bhllinks", "specimens", "bibliography", "images", "conservation", "features", "key"];
+    var exportableSections = ["attributes", "map", "taxonomy", "nomenclature", "links", "specimens", "bibliography", "images", "conservation", "features", "key"];
+
 
     self.options = [];
     var attributeAdded = false;
     angular.forEach($rootScope.nav, function (navItem) {
-        if ((_.isUndefined(navItem.category) || !navItem.category || navItem.category == 'pdf') && exportableSections.indexOf(navItem.key) > -1) {
+        if ((navItem.category != 'attribute') && exportableSections.indexOf(navItem.key) > -1) {
             self.options.push({id: navItem.key, name: navItem.label, selected: true});
         } else if (navItem.category == "attribute" && !attributeAdded) {
             self.options.push({id: "attributes", name: "Attributes", selected: true});
             attributeAdded = true;
         }
     });
-    self.options.push(self.children);
-
+ 
     self.email = null;
 
     self.ok = function() {
@@ -92,14 +92,15 @@ profileEditor.controller('ExportPDFController', function (opusId, rank, scientif
         $modalInstance.dismiss("cancel");
     };
 
-    $scope.$watch(function() {return self.children.selected}, function() {
-        if (self.totalChildren == -1 && self.children.selected) {
-            self.loading = true;
-            profileService.profileCountByTaxonLevelAndName(opusId, rank, scientificName).then(function(data) {
-                self.totalChildren = data.total;
-                self.loading = false;
-            });
-        }
-    })
+    if (self.totalChildren == -1) {
+        self.loading = true;
+        profileService.profileCountByTaxonLevelAndName(opusId, rank, scientificName).then(function(data) {
+            if (data.total < config.pdfHighThresholdLimit) {
+                self.options.push({id: "children", name: "Lower level taxa", selected: true});
+            }
+            self.totalChildren = data.total;
+            self.loading = false;
+        });
+    }
 
 });

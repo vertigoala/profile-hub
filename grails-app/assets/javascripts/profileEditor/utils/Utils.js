@@ -1,7 +1,7 @@
 /**
  * Utility functions
  */
-profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window', 'messageService', function ($location, $q, config, $modal, $window, messageService) {
+profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$window', 'messageService', function ($location, $log, $q, config, $modal, $window, messageService) {
 
     var KEYWORDS = ["create", "update", "delete", "search"];
     var UUID_REGEX_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
@@ -17,7 +17,9 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
         FAMILY: "family",
         GENUS: "genus",
         SPECIES: "species",
-        SUBSPECIES: "subspecies"
+        SUBSPECIES: "subspecies",
+        VARIETY: "variety",
+        FORMA: "forma"
     };
 
     /**
@@ -73,7 +75,7 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
                 }
         }
 
-        return item;
+        return decodeURIComponent(item);
     }
 
     function stripQueryString(item) {
@@ -161,10 +163,10 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
             entityId = entityId.substring(0, entityId.indexOf(";"))
         }
 
-        if (KEYWORDS.indexOf(entityId) > -1 || typeof entityId === 'undefined') {
+        if (KEYWORDS.indexOf(entityId) > -1 || typeof entityId === 'undefined' || entityId === null) {
             entityId = ""; // using empty string instead of null so the value does not convert to the string "null" if put into a url query string
         }
-        return entityId;
+        return decodeURIComponent(entityId);
     }
 
     /**
@@ -238,13 +240,13 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
             });
             httpPromise.error(function (data, status, context, request) {
                 var msg = "Failed to invoke URL " + request.url + ": Response code " + status;
-                console.log(msg);
+                $log.error(msg);
                 defer.reject(msg);
                 if (status == 403 || status == 401) {
                     console.log("not authorised");
                     redirect(contextRoot() + "/notAuthorised");
                 } else if (status >= 400 && (_.isUndefined(request.disableAlertOnFailure) || !request.disableAlertOnFailure)) {
-                    messageService.alertStayOn("Error calling " + request.url + ", response: " + status + ".  Please refresh the page.");
+                    messageService.alertStayOn("An error occurred.");
                 }
 
             });
@@ -391,6 +393,164 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
         return _.isBoolean(attribute.containsName) && attribute.containsName;
     }
 
+
+    /**
+     * Generate random sequence of characters
+     */
+    function getRandomString () {
+        return Math.random().toString(36).substring(7);
+    };
+
+    /**
+     * Translate facets to user readable text
+     */
+     function getFacetLabel(fieldName) {
+        var lookup = {
+            "state":"State or Territory",
+            "synonym.decade":"occurrence_year",
+            "location_id":"Location ID",
+            "event_id":"Event ID",
+            "elevation_d_rng":"Elevation (in metres)",
+            "min_elevation_d_rng":"Minimum elevation (in metres)",
+            "cl1048":"IBRA 7 Regions",
+            "cl21":"IMCRA Regions",
+            "raw_identification_qualifier":"Raw identification qualifier",
+            "original_name_usage":"Original name usage",
+            "cl2079":"capad 2014 terrestrial",
+            "cl2078":"capad 2014 marine",
+            "cl925":"Estuary habitat mapping",
+            "cl901":"Directory of Important Wetlands",
+            "cl958":"Commonwealth Electoral Boundaries",
+            "cl1049":"IBRA 7 Subregions",
+            "cl1085":"Koppen Climate Classification (All Classes)",
+            "cl678":"Land use",
+            "cl991":"Geomorphology of the Australian Margin and adjacent seafloor",
+            "cl916":"NRM Regions",
+            "cl935":"RAMSAR wetland regions",
+            "cl1057":"River Regions",
+            "cl2013":"ASGS Australian States and Territories",
+            "cl927":"States including coastal waters",
+            "cl923":"Surface Geology of Australia",
+            "cl619":"Vegetation - condition",
+            "cl1076":"IGBP Land Cover vegetation classification scheme (2011)",
+            "cl918":"National Dynamic Land Cover",
+            "occurrence_decade_i":"Year (by decade)",
+            "data_resource_uid":"Data resource",
+            "data_resource":"Data resource",
+            "dataset_name":"Dataset name",
+            "species_list_uid":"Species lists",
+            "institution_uid":"Institution"
+        };
+
+        return  (ALA.OccurrenceMapUtils && ALA.OccurrenceMapUtils.formatFacetName && ALA.OccurrenceMapUtils.formatFacetName( fieldName, lookup)) || "Unknown";
+     }
+
+    var lut = []; for (var i=0; i<256; i++) { lut[i] = (i<16?'0':'')+(i).toString(16); }
+    function generateUuid()  {
+        var d0 = Math.random()*0xffffffff|0;
+        var d1 = Math.random()*0xffffffff|0;
+        var d2 = Math.random()*0xffffffff|0;
+        var d3 = Math.random()*0xffffffff|0;
+        return lut[d0&0xff]+lut[d0>>8&0xff]+lut[d0>>16&0xff]+lut[d0>>24&0xff]+'-'+
+          lut[d1&0xff]+lut[d1>>8&0xff]+'-'+lut[d1>>16&0x0f|0x40]+lut[d1>>24&0xff]+'-'+
+          lut[d2&0x3f|0x80]+lut[d2>>8&0xff]+'-'+lut[d2>>16&0xff]+lut[d2>>24&0xff]+
+          lut[d3&0xff]+lut[d3>>8&0xff]+lut[d3>>16&0xff]+lut[d3>>24&0xff];
+    }
+
+    function rgbaFromNumber(number) {
+        var retVal;
+        if (isFinite(number)) {
+            var red = number >> 24 & 0xFF;
+            var green = number >> 16 & 0xFF;
+            var blue = number >> 8 & 0xFF;
+            var alpha = (number >> 0 & 0xFF) / 255;
+            retVal = 'rgba(' + red + ',' + green + ',' + blue + ',' + alpha + ')';
+        } else {
+            $log.warn("Can't convert " + number + " to RGBA");
+            retVal = 'rgba(0,0,0,0)';
+        }
+        return retVal;
+    }
+
+    function numberFromRgba(rgba) {
+        if (!rgba) return null;
+        var value = rgba.split('(');
+        if (value.length !== 2) {
+            $log.debug(rgba + " is not an rgba");
+            return 0;
+        }
+        value = value[1].split(')');
+        if (value.length !== 2) {
+          $log.debug(rgba + " is not an rgba");
+          return 0;
+        }
+        value = value[0].split(',');
+        if (value.length < 3 || value.length > 4) {
+          $log.debug(rgba + " is not an rgba");
+          return 0;
+        }
+        var red = parseInt(value[0]);
+        var green = parseInt(value[1]);
+        var blue = parseInt(value[2]);
+        var alpha;
+        if (value.length === 4) {
+            alpha = parseFloat(value[3]);
+        } else {
+            alpha = 1.0;
+        }
+        alpha = Math.round(alpha * 255);
+
+        return ((red & 0xFF) << 24) + ((green & 0xFF) << 16) + ((blue & 0xFF) << 8) + (alpha & 0xFF);
+    }
+
+    function isSearchSettingFor(category, searchOptions){
+        if(searchOptions){
+            switch (category){
+                case 'scientificname':
+                    return searchOptions.nameOnly && !searchOptions.includeNameAttributes;
+                    break;
+                case 'commonname':
+                    return searchOptions.nameOnly && searchOptions.includeNameAttributes;
+                    break;
+                case 'text':
+                    return !searchOptions.nameOnly;
+                    break;
+            }
+        }
+    }
+
+    function setSearchOptions(option, searchOptions) {
+        if(searchOptions){
+            switch(option){
+                case 'scientificname':
+                    searchOptions.nameOnly = true;
+                    searchOptions.includeNameAttributes = false;
+                    break;
+                case 'commonname':
+                    searchOptions.nameOnly = true;
+                    searchOptions.includeNameAttributes = true;
+                    break;
+                case 'text':
+                    searchOptions.nameOnly = false;
+                    break;
+            }
+        }
+    }
+
+    function getSearchTypeFromOptions(searchOptions) {
+        if(isSearchSettingFor('scientificname', searchOptions)){
+            return 'scientificname'
+        }
+
+        if(isSearchSettingFor('commonname', searchOptions)){
+            return 'commonname'
+        }
+
+        if(isSearchSettingFor('text', searchOptions)){
+            return 'text'
+        }
+    }
+
     /**
      * Public API
      */
@@ -411,7 +571,14 @@ profileEditor.factory('util', ['$location', '$q', 'config', '$modal', '$window',
         formatScientificName: formatScientificName,
         isNameAttribute: isNameAttribute,
         formatLocalDate: formatLocalDate,
-
+        getRandomString: getRandomString,
+        getFacetLabel: getFacetLabel,
+        generateUuid: generateUuid,
+        rgbaFromNumber: rgbaFromNumber,
+        numberFromRgba: numberFromRgba,
+        isSearchSettingFor: isSearchSettingFor,
+        setSearchOptions: setSearchOptions,
+        getSearchTypeFromOptions: getSearchTypeFromOptions,
         LAST: LAST,
         FIRST: FIRST,
         RANK: RANK,

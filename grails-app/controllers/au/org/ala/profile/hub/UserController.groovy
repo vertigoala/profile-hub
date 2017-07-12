@@ -16,7 +16,11 @@ class UserController extends BaseController {
 
             def response = userService.findUser(params.userName)
 
-            handle response
+            if (!response) {
+                notFound()
+            } else {
+                render response as JSON
+            }
         }
     }
 

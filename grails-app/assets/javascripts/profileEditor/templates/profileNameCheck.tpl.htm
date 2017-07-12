@@ -71,7 +71,7 @@
         name'}}
     </a>
 
-    <a ng-click="toggleManualHierarchy()" ng-if="(nameCheck && nameCheck.noMatch && !nameCheck.providedNameDuplicate) || (editMode && manualHierarchy.length > 0)">
+    <a ng-click="toggleManualHierarchy()" ng-if="(nameCheck && nameCheck.noMatch && !nameCheck.providedNameDuplicate) || (showManualHierarchy && editMode && manualHierarchy.length > 0)">
         <i class="fa fa-sitemap">&nbsp;</i>{{ showManualHierarchy ? 'Clear the hierarchy for ' : 'Specify the hierarchy
         for ' }}{{name}}
     </a>

@@ -445,7 +445,7 @@ describe("OpusController tests", function () {
 
         scope.opusCtrl.saveOpus(form);
 
-        expect(profileService.getOpus).toHaveBeenCalledWith("newShortName");
+        expect(profileService.getOpus).toHaveBeenCalledWith("newShortName", true);
     });
 
     it("should only check for duplicate short names when saving the opus if the short name has changed", function () {

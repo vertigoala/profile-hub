@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.2.0.final using JasperReports Library version 6.2.0  -->
-<!-- 2016-05-10T17:25:16 -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-06-20T10:09:16 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES_colophon" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40" uuid="c50b24eb-eb33-413f-8e75-e7e20a5341fd">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -19,12 +19,13 @@
 	<field name="colophon.collectionCopyright" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="colophon.logo" class="java.lang.String"/>
+	<field name="colophon.pdfLicense" class="java.lang.String"/>
 	<field name="colophon.profileLink" class="java.lang.String"/>
 	<field name="colophon.citation" class="java.lang.String"/>
 	<field name="colophon.version" class="java.lang.String"/>
 	<field name="colophon.lastUpdated" class="java.util.Date"/>
 	<field name="colophon.genericCopyright" class="java.lang.String"/>
+	<field name="colophon.issn" class="java.lang.String"/>
 	<title>
 		<band height="750" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -34,23 +35,21 @@
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$F{colophon.genericCopyright}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkType="Reference">
-				<reportElement positionType="Float" x="0" y="280" width="515" height="19" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="5dbe037b-b77a-4387-bbdb-f60f98049fcf">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="" mode="Opaque" x="0" y="211" width="515" height="93" uuid="f4cfa347-d77c-4dcd-94c8-66b74ac4d3a1">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
-				<textElement>
-					<font isUnderline="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Generated on " + DATEFORMAT(TODAY( ),"E MMM d, yyyy")]]></textFieldExpression>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA[$F{colophon.pdfLicense}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="302" width="515" height="17" uuid="66e9b388-5782-4395-a92c-262186e63ecf">
+				<reportElement positionType="Float" x="0" y="429" width="515" height="17" uuid="66e9b388-5782-4395-a92c-262186e63ecf">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<text><![CDATA[Profile permalink:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true" hyperlinkType="Reference">
-				<reportElement positionType="Float" x="10" y="319" width="505" height="21" isRemoveLineWhenBlank="true" forecolor="#267ED1" uuid="93e4cfc8-24bb-4237-9cc9-ddb50de5f3bc">
+				<reportElement positionType="Float" x="10" y="450" width="505" height="21" isRemoveLineWhenBlank="true" forecolor="#267ED1" uuid="93e4cfc8-24bb-4237-9cc9-ddb50de5f3bc">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -58,48 +57,35 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{colophon.profileLink}]]></textFieldExpression>
 			</textField>
-			<image hAlign="Center" vAlign="Bottom" onErrorType="Blank">
-				<reportElement positionType="FixRelativeToBottom" x="160" y="540" width="200" height="103" uuid="61b61662-d6fb-463c-8964-e9467aab4703"/>
-				<imageExpression><![CDATA[$F{colophon.logo}]]></imageExpression>
-			</image>
-			<image onErrorType="Blank">
-				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="136" y="660" width="249" height="75" backcolor="#DDDDDD" uuid="d5384ce3-f158-4e4d-9d60-8d784b2f6ff8"/>
-				<imageExpression><![CDATA["img/atlas-poweredby_rgb-lightbg.png"]]></imageExpression>
-			</image>
 			<image scaleImage="RealSize" hAlign="Center" vAlign="Middle" isLazy="true" onErrorType="Blank">
-				<reportElement positionType="Float" x="187" y="370" width="150" height="150" uuid="2acfcb11-90d7-4a7b-9299-d5c0d1af7111">
+				<reportElement positionType="Float" x="190" y="520" width="150" height="150" uuid="2acfcb11-90d7-4a7b-9299-d5c0d1af7111">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<printWhenExpression><![CDATA[$P{QR_CODE} != null]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA[((java.io.InputStream)$P{QR_CODE})]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="0" y="223" width="515" height="17" isRemoveLineWhenBlank="true" uuid="c2eaa037-c3a7-45a5-b768-0766e8b077c0">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($F{colophon.citation}.asBoolean())]]></printWhenExpression>
-				</reportElement>
-				<text><![CDATA[This work should be cited as:]]></text>
-			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="10" y="240" width="505" height="30" isRemoveLineWhenBlank="true" uuid="2d9eb2ae-b2db-4524-bb2f-51d75a13e1a1">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				<reportElement x="0" y="382" width="515" height="30" isRemoveLineWhenBlank="true" uuid="2d9eb2ae-b2db-4524-bb2f-51d75a13e1a1">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{colophon.citation}.asBoolean())]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$F{colophon.citation}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="190" width="505" height="17" isRemoveLineWhenBlank="true" uuid="a9b50e6e-b078-4235-9f2f-ff062ef4a118">
+				<reportElement x="0" y="332" width="505" height="17" isRemoveLineWhenBlank="true" uuid="a9b50e6e-b078-4235-9f2f-ff062ef4a118">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($F{colophon.lastUpdated}.asBoolean())]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{colophon.lastUpdated}.asBoolean())]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA["<b>Profile Updated: " + DATEFORMAT($F{colophon.lastUpdated}, "E MMM d, yyyy h:mm a z") + "</b>"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="207" width="505" height="17" isRemoveLineWhenBlank="true" uuid="dd4a853d-73ed-47fb-a9f6-0d6c9ed92a88">
+				<reportElement x="0" y="349" width="505" height="17" isRemoveLineWhenBlank="true" uuid="dd4a853d-73ed-47fb-a9f6-0d6c9ed92a88">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-					<printWhenExpression><![CDATA[new Boolean($F{colophon.version}.asBoolean())]]></printWhenExpression>
+					<printWhenExpression><![CDATA[Boolean.valueOf($F{colophon.version}.asBoolean())]]></printWhenExpression>
 				</reportElement>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA["<b>Version: " + $F{colophon.version} + "</b>"]]></textFieldExpression>
@@ -120,6 +106,26 @@
 				</reportElement>
 				<textElement markup="html"/>
 				<textFieldExpression><![CDATA[$F{colophon.collectionCopyright}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="190" width="515" height="17" isRemoveLineWhenBlank="true" uuid="93aa7cba-a1a3-4fb8-a3de-3582f9a87469">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{colophon.pdfLicense}.asBoolean())]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[License]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="308" width="517" height="18" uuid="cdc80800-0511-458e-8dd9-37affb5a760a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{colophon.issn}.asBoolean())]]></printWhenExpression>
+				</reportElement>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA["<b>ISSN:</b> " + $F{colophon.issn}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
