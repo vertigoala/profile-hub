@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-06-20T10:11:00 -->
+<!-- 2017-07-21T11:45:44 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Wave Cover" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c50b24eb-eb33-413f-8e75-e7e20a5341fd">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -95,7 +95,7 @@
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 						<printWhenExpression><![CDATA[Boolean.valueOf($F{cover.logoUrl1}.asBoolean())]]></printWhenExpression>
 					</reportElement>
-					<imageExpression><![CDATA[$F{cover.logoUrl1}]]></imageExpression>
+					<imageExpression><![CDATA[new File ($F{cover.logoUrl1})]]></imageExpression>
 				</image>
 				<image vAlign="Middle" isLazy="true">
 					<reportElement positionType="Float" x="228" y="7" width="160" height="40" uuid="3d4f2992-0362-4c7f-beb4-04be781e0943">
@@ -104,7 +104,7 @@
 						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 						<printWhenExpression><![CDATA[Boolean.valueOf($F{cover.logoUrl2}.asBoolean())]]></printWhenExpression>
 					</reportElement>
-					<imageExpression><![CDATA[$F{cover.logoUrl2}]]></imageExpression>
+					<imageExpression><![CDATA[new File ($F{cover.logoUrl2})]]></imageExpression>
 				</image>
 				<image vAlign="Middle" isLazy="true">
 					<reportElement positionType="Float" x="413" y="7" width="160" height="40" uuid="2fca4e06-793f-43e7-9fea-b5d60326c53b">
@@ -112,7 +112,7 @@
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<printWhenExpression><![CDATA[Boolean.valueOf($F{cover.logoUrl3}.asBoolean())]]></printWhenExpression>
 					</reportElement>
-					<imageExpression><![CDATA[$F{cover.logoUrl3}]]></imageExpression>
+					<imageExpression><![CDATA[new File ($F{cover.logoUrl3})]]></imageExpression>
 				</image>
 				<image vAlign="Middle">
 					<reportElement positionType="Float" x="32" y="7" width="188" height="40" uuid="716e8926-6c87-4dc4-947f-a7ab9dae021e">
