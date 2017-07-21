@@ -212,7 +212,7 @@ class ExportService {
     }
 
     private String getFilePath (def opus, String logoUrl) {
-        if (opus) {
+        if (opus && logoUrl) {
             String text = "/image/"
             int i = logoUrl.indexOf(text)
             if (i > 0) {
