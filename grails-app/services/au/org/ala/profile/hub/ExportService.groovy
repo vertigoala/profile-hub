@@ -190,11 +190,11 @@ class ExportService {
                         subtitle    : firstProfile?.fullName ?: firstProfile?.scientificName,
                         banner      : opus.bannerUrl,
                         primaryImage: firstProfile?.primaryImage ?: (firstProfile?.images?.size() > 0 ? firstProfile?.images[0].leftImage.largeImageUrl : ''),
-                        logoUrl1: opus.brandingConfig?.logos[0]?.logoUrl?: "",
-                        logoUrl2: opus.brandingConfig?.logos[1]?.logoUrl?:"",
-                        logoUrl3: opus.brandingConfig?.logos[2]?.logoUrl?:"",
-                        authorship: firstProfile.authorship?: null,
-                        citation: firstProfile.citation?:null
+                        logoUrl1    : getFilePath (opus, opus.brandingConfig?.logos[0]?.logoUrl),
+                        logoUrl2    : getFilePath (opus, opus.brandingConfig?.logos[1]?.logoUrl),
+                        logoUrl3    : getFilePath (opus, opus.brandingConfig?.logos[2]?.logoUrl),
+                        authorship  : firstProfile.authorship?: null,
+                        citation    : firstProfile.citation?:null
                 ],
                 colophon: [
                         collectionCopyright: "&copy; ${opus.copyrightText}",
@@ -209,6 +209,21 @@ class ExportService {
         ]
 
         return curatedModel
+    }
+
+    private String getFilePath (def opus, String logoUrl) {
+        if (opus) {
+            String text = "/image/"
+            int i = logoUrl.indexOf(text)
+            if (i > 0) {
+                def filename = logoUrl.substring(i + text.length())
+                File file = new File("${grailsApplication.config.image.private.dir}/${opus.uuid}/$filename")
+                if (file.exists()) {
+                    return "${grailsApplication.config.image.private.dir}/${opus.uuid}/$filename";
+                }
+            }
+        }
+        return "";
     }
 
     /**
