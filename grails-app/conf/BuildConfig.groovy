@@ -89,7 +89,7 @@ grails.project.dependency.resolution = {
         compile(":ala-ws-plugin:1.6.1") {
             excludes "resources"
         }
-        compile(":ala-admin-plugin:1.2") {
+        compile(":ala-admin-plugin:1.3") {
             excludes "resources"
         }
         compile ":quartz:1.0.2"
@@ -97,12 +97,8 @@ grails.project.dependency.resolution = {
         runtime(":images-client-plugin:0.6.1") {
             excludes "ala-bootstrap3", "resources"
         }
-//        runtime ":resources:1.2.14"
-        runtime(":ala-bootstrap3:1.1") {
-            excludes "ala-cas-client", "resources"
-        }
         runtime(":ala-auth:2.1.3") {
-            excludes "commons-httpclient", "resources"
+            excludes "resources"
         }
         runtime ":tika-parser:1.3.0.1"
 

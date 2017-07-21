@@ -19,13 +19,13 @@ class BaseController extends BasicWSController {
     protected getBannerItems(opus, doMainBanner = false, isProfile = false) {
         def model = [
                 doMainBanner  : doMainBanner,
-                overlayText   : opus.opusLayoutConfig?.bannerOverlayText,
+                overlayText   : opus?.opusLayoutConfig?.bannerOverlayText,
                 uuid          : UUID.randomUUID().toString()
         ]
 
         if (doMainBanner) {
             def images = opus?.opusLayoutConfig?.images ?: []
-            def displayDuration = opus.opusLayoutConfig?.duration ?: 5000
+            def displayDuration = opus?.opusLayoutConfig?.duration ?: 5000
             def fadeDuration = 1000
             def numberOfImages = images.size()
             def totalDuration = (displayDuration + fadeDuration) * numberOfImages
