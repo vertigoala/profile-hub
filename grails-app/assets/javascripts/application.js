@@ -7,7 +7,7 @@
 //
 //= require jquery
 // TODO Refactor dropdowns (and others?) to angular-ui-bootstrap to remove dependency on bootstrap JS (will require changes to map plugin?)
-//= require bootstrap
+//= require bootstrap/js/bootstrap.min.js
 //= require angular
 //= require angular-bootstrap-colorpicker-3.0.11/js/bootstrap-colorpicker-module.min.js
 //= require angular-loading-bar/loading-bar-0.7.1.min.js
