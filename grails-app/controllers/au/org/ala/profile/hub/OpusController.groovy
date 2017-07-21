@@ -40,6 +40,7 @@ class OpusController extends OpusBaseController {
         if (params.opusId == null) {
             render view: 'search', model: [
                     logos     : DEFAULT_OPUS_LOGOS,
+                    bannerItems : getBannerItems(null, false, false),
                     bannerUrl   : DEFAULT_OPUS_BANNER_URL,
                     footerText  : ALA_FOOTER_TEXT,
                     contact     : [email   : ALA_CONTACT_EMAIL,

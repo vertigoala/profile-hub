@@ -134,7 +134,7 @@
                    imageUpload:'${grailsApplication.config.feature.feature.imageUpload}'},
         map: {mapId: '${grailsApplication.config.map.id}',
               accessKey: '${grailsApplication.config.map.access.key}'},
-        bootstrapCssFile: '${assetPath(src: "/bootstrap/css/bootstrap3.3.4.min.css")}',
+        bootstrapCssFile: '${assetPath(src: "/thirdparty/bootstrap/css/bootstrap3.3.4.min.css")}',
         imageLoadErrorUrl: '${assetPath(src: "not-available.png")}',
         development: ${Environment.current == Environment.DEVELOPMENT},
         pdfHighThresholdLimit :  '${grailsApplication.config.pdf.highThresholdLimit?:50}'
