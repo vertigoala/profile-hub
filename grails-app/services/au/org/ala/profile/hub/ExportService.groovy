@@ -190,9 +190,9 @@ class ExportService {
                         subtitle    : firstProfile?.fullName ?: firstProfile?.scientificName,
                         banner      : opus.bannerUrl,
                         primaryImage: firstProfile?.primaryImage ?: (firstProfile?.images?.size() > 0 ? firstProfile?.images[0].leftImage.largeImageUrl : ''),
-                        logoUrl1    : getFilePath (opus, opus.brandingConfig?.logos[0]?.logoUrl),
-                        logoUrl2    : getFilePath (opus, opus.brandingConfig?.logos[1]?.logoUrl),
-                        logoUrl3    : getFilePath (opus, opus.brandingConfig?.logos[2]?.logoUrl),
+                        logoUrl1    : getFilePath (opus, opus.brandingConfig?.logos?.getAt(0)?.logoUrl), //Use getAt instead of index syntax [] to avoid NPE
+                        logoUrl2    : getFilePath (opus, opus.brandingConfig?.logos?.getAt(1)?.logoUrl),
+                        logoUrl3    : getFilePath (opus, opus.brandingConfig?.logos?.getAt(2)?.logoUrl),
                         authorship  : firstProfile.authorship?: null,
                         citation    : firstProfile.citation?:null
                 ],
