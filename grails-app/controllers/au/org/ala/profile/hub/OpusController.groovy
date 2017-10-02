@@ -387,6 +387,17 @@ class OpusController extends OpusBaseController {
         }
     }
 
+    def proxyAttachmentDownload() {
+        final attachmentId = params.attachmentId as String
+        if (!attachmentId) {
+            badRequest "Attachment Id must be provided"
+        } else {
+            final opusId = params.opusId as String
+            log.info("Proxying attachment download opus: $opusId, attachment: $attachmentId")
+            profileService.proxyAttachmentDownload(response, opusId, null, attachmentId)
+        }
+    }
+
     def downloadImage() {
         if (!params.opusId || !params.filename) {
             badRequest "opusId and filename are required parameters"

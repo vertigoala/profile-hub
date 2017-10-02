@@ -206,6 +206,16 @@ class ProfileService {
         }
     }
 
+    def proxyAttachmentDownload(HttpServletResponse response, String opusId, String profileId, String attachmendId) {
+        log.debug("Proxying attachment download $attachmendId")
+
+        if (profileId) {
+            webService.proxyGetRequest(response, "${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/profile/${encPath(profileId)}/attachment/${encPath(attachmentId)}/download?latest=true")
+        } else {
+            webService.proxyGetRequest(response, "${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/attachment/${encPath(attachmendId)}/download")
+        }
+    }
+
     def getImageMetadata(String imageId) {
         webServiceWrapperService.get("${grailsApplication.config.profile.service.url}/image/${imageId}")
     }

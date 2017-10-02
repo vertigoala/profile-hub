@@ -694,6 +694,19 @@ class ProfileController extends BaseController {
         }
     }
 
+    def proxyAttachmentDownload() {
+        final attachmentId = params.attachmentId as String
+        if (!attachmentId) {
+            badRequest "Attachment Id must be provided"
+        } else {
+            final opusId = params.opusId as String
+            final profileId = params.profileId as String
+            log.info("Proxying attachment download opus: $opusId, profile: $profileId, attachment: $attachmentId")
+            profileService.proxyAttachmentDownload(response, opusId, profileId, attachmentId)
+        }
+    }
+
+
     @Secured(role = ROLE_PROFILE_AUTHOR)
     def createMapSnapshot(@NotNull String opusId, @NotNull String profileId) {
         Map json = request.getJSON()
