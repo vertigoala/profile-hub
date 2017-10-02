@@ -23,8 +23,10 @@
             <div class="col-sm-4 col-xs-12" ng-bind-html="opusCtrl.opus.opusLayoutConfig.explanatoryText">
             </div>  <!-- /col-sm-4 -->
             <div class="col-sm-4 col-xs-12">
-                <h4>Updates</h4>
-                <div ng-bind-html="opusCtrl.opus.opusLayoutConfig.updatesSection">
+                <div ng-show="opusCtrl.opus.opusLayoutConfig.updatesSection" ng-cloak>
+                    <h4>Updates</h4>
+                    <div ng-bind-html="opusCtrl.opus.opusLayoutConfig.updatesSection">
+                    </div>
                 </div>
             </div>
         </div>  <!-- /col-sm-4 -->
