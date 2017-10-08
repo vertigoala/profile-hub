@@ -376,10 +376,12 @@ class ProfileService {
         webServiceWrapperService.get("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/vocab/usages/find?vocabId=${enc(vocabId)}&term=${URLEncoder.encode(termName, "UTF-8")}")
     }
 
-    def replaceUsagesOfVocabTerm(String opusId, Map json) {
+    def replaceUsagesOfVocabTerm(String opusId, json) {
         log.debug("Replacing usages of vocab term(s): ${json}")
 
-        webService.post("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/vocab/usages/replace", json)
+        Map replacementList = [list: json]
+
+        webService.post("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/vocab/usages/replace", replacementList)
     }
 
     def getGlossary(String opusId) {
