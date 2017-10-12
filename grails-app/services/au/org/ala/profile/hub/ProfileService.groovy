@@ -89,6 +89,11 @@ class ProfileService {
         webService.post("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/masterList/sync?regenerateStubs=${regen}", [:])
     }
 
+    def isMasterListSyncing(String opusId) {
+        webService.get("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/masterList/isSyncing")
+    }
+
+
     def createProfile(String opusId, json) {
         webService.put("${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/profile/", json)
     }

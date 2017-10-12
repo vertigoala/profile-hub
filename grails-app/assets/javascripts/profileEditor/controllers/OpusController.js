@@ -678,6 +678,8 @@ profileEditor.controller('OpusController', function ($log, $scope, profileServic
         form.$setDirty();
     };
 
+
+
     function loadKeybaseProjects() {
         profileService.retrieveKeybaseProjects().then(function (data) {
             self.keybaseProjects = data;

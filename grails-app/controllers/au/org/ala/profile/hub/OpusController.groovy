@@ -504,6 +504,20 @@ class OpusController extends OpusBaseController {
         }
     }
 
+    @Secured(role = ROLE_PROFILE_ADMIN)
+    def isMasterListSyncing() {
+        if (!params.opusId) {
+            badRequest("opusId is mandatory")
+        } else {
+            def response = profileService.isMasterListSyncing(params.opusId)
+            if (response.statusCode != SC_OK) {
+                sendError(response.statusCode, "an error occured")
+            } else {
+                handle response
+            }
+        }
+    }
+
     def getMasterListKeybaseItems() {
         if (!params.opusId) {
             badRequest "opusId is mandatory"

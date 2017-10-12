@@ -469,6 +469,13 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
             return util.toStandardPromise(future);
         },
 
+        isMasterListSyncing: function(opusId) {
+            $log.debug("Checking master list sync status for " + opusId);
+
+            var future = $http.get(util.contextRoot() + '/opus/' + opusId + '/masterList/isSyncing');
+            return util.toStandardPromise(future);
+        },
+
         updateFlorulaList: function(opusId, listId) {
             $log.debug("Updating florula list for " + opusId + " to " + listId);
             var future = enqueue(function() {

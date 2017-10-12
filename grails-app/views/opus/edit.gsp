@@ -82,7 +82,10 @@
 
             <g:if test="${params.opusId}">
 
-                <master-list opus="opusCtrl.opus"></master-list>
+                <master-list
+                        opus="opusCtrl.opus"
+                        help-url="<p:helpUrl help-id="opus.edit.masterList"/>">
+                </master-list>
 
                 <g:include controller="opus" action="editAccessControlPanel" params="[opusId: params.opusId]"/>
 
