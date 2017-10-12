@@ -43,7 +43,7 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             };
 
             $scope.removeVocabTerm = function (index, form) {
-                var promise = profileService.findUsagesOfVocabTerm($scope.opusId, $scope.vocabId, $scope.vocabulary.terms[index].name);
+                var promise = profileService.findUsagesOfVocabTerm($scope.opusId, $scope.vocabId, $scope.vocabulary.terms[index].termId);
                 promise.then(function (data) {
                         if (data.usageCount == 0) {
                             var deletedItemOrder = $scope.vocabulary.terms[index].order;
@@ -104,7 +104,7 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
                 });
 
                 popup.result.then(function(data) {
-                    $scope.replacements.push({vocabId: $scope.vocabId, existingTermName: data.existing.name, newTermName: data.new.name});
+                    $scope.replacements.push({vocabId: $scope.vocabId, existingTermId: data.existing.termId, newTermName: data.new.name});
 
                     form.$setDirty();
                 });
@@ -113,7 +113,7 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             $scope.termIsInReplacementList = function(term) {
                 var match = false;
                 angular.forEach($scope.replacements, function(item) {
-                    if (item.existingTermName == term.name) {
+                    if (item.existingTermId == term.termId) {
                         match = true;
                     }
                 });

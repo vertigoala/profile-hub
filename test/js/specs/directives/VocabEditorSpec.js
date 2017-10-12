@@ -145,7 +145,7 @@ describe('Directive: VocabularyEditor', function () {
     });
 
     it("should return false if the provided term is not in the list of terms to be replaced when termisInReplacementList is invoked", function() {
-        scope.replacements = [{vocabId: "vocab1", existingTermName: "old term", newTermName: "new term"}];
+        scope.replacements = [{vocabId: "vocab1", existingTermId: "1", newTermName: "new term"}];
         var match = scope.termIsInReplacementList({vocabId: "vocab1", name: "something else"});
 
         expect(match).toBe(false);
