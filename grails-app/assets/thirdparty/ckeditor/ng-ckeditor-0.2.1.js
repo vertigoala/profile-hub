@@ -97,8 +97,9 @@
             configLoaderDef = $q.defer();
 
           element.bind('$destroy', function() {
-            if (instance && CKEDITOR.instances[instance.name]) {
-              CKEDITOR.instances[instance.name].destroy();
+            // instance is the reference to the CHKEditor instance that is to be deleted.
+            if (instance) {
+              instance.destroy();
             }
           });
           var setModelData = function(setPristine) {
