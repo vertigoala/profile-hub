@@ -1,5 +1,9 @@
 package au.org.ala.profile.hub
 
+import au.org.ala.profile.hub.reports.BackCoverImageRenderer
+import au.org.ala.profile.hub.reports.ColourParser
+import au.org.ala.profile.hub.reports.ColourUtils
+import au.org.ala.profile.hub.reports.GradientRenderer
 import au.org.ala.profile.hub.reports.JasperExportFormat
 import au.org.ala.profile.hub.reports.JasperReportDef
 import au.org.ala.profile.hub.util.HubConstants
@@ -9,17 +13,24 @@ import grails.transaction.NotTransactional
 import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
 import net.sf.jasperreports.engine.JRParameter
+import net.sf.jasperreports.engine.JRSimpleTemplate
+import net.sf.jasperreports.engine.JRTemplate
 import net.sf.jasperreports.engine.data.JsonDataSource
+import net.sf.jasperreports.engine.design.JRDesignStyle
 import net.sf.jasperreports.engine.fill.JRFileVirtualizer
+import net.sf.jasperreports.engine.type.ModeEnum
 import net.sf.jasperreports.engine.util.SimpleFileResolver
 import org.apache.commons.io.IOUtils
 import org.springframework.web.context.request.RequestContextHolder
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
+import java.awt.Color
 import java.util.concurrent.ConcurrentLinkedQueue
 
-import static au.org.ala.profile.hub.Utils.enc
-import static au.org.ala.profile.hub.Utils.encPath
+import static au.org.ala.profile.hub.reports.ColourUtils.contrastRatio
+import static au.org.ala.profile.hub.reports.ColourUtils.darken
+import static au.org.ala.profile.hub.reports.ColourUtils.lighten
+import static au.org.ala.profile.hub.reports.ColourUtils.relativeLuminance
 import static groovyx.gpars.GParsPool.withPool
 import static org.owasp.html.Sanitizers.BLOCKS
 import static org.owasp.html.Sanitizers.FORMATTING
@@ -34,6 +45,8 @@ class ExportService {
     static transactional = false
     static final String LOCAL_IMAGE_THUMBNAIL_REGEX = "http.*?/image/thumbnail/(${Utils.UUID_REGEX_PATTERN}).*"
     public static final String ISO_8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX"
+    public static final double AUTHOR_ADJUSTMENT = 0.135
+    public static final double PROTOLOGUE_ADJUSTMENT = 0.63
 
     ProfileService profileService
     BiocacheService biocacheService
@@ -97,7 +110,8 @@ class ExportService {
     @NotTransactional
     void createPdf(Map params, Closure<OutputStream> outputStreamSupplier, boolean latest = false) {
         // Create curated report model
-        Map curatedModel = getCurateReportModel(params)
+        Map opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
+        Map curatedModel = getCurateReportModel(opus, params)
 
         // Transform curated model to JSON format input stream
         InputStream inputStream = IOUtils.toInputStream((curatedModel as JSON).toString(), "UTF-8")
@@ -120,11 +134,17 @@ class ExportService {
                 parameters: [
                         'PROFILES_REPORT_OPTIONS': curatedModel.options,
                         'REPORT_FILE_RESOLVER'   : new SimpleFileResolver(reportsDir),
-                        'QR_CODE'                : qrCodeInputStream
+                        'QR_CODE'                : qrCodeInputStream,
+                        'GRADIENT'               : generateGradientRenderer(opus),
+                        'COVER_IMAGE'            : getImageURL(opus, opus.brandingConfig?.pdfBannerUrl),
+                        'BACK_COVER_IMAGE'       : generateBackCoverImageRenderer(opus)
                 ]
         )
         JRFileVirtualizer virtualizer = new JRFileVirtualizer(20, System.getProperty("java.io.tmpdir"))
         reportDef.addParameter(JRParameter.REPORT_VIRTUALIZER, virtualizer)
+        JRTemplate styleTemplate = generateStyleTemplate(opus)
+        reportDef.addParameter(JRParameter.REPORT_TEMPLATES, [styleTemplate])
+
         try {
             jasperService.generateReport(reportDef, outputStreamSupplier)
         } finally {
@@ -132,19 +152,162 @@ class ExportService {
         }
     }
 
+    BackCoverImageRenderer generateBackCoverImageRenderer(opus) {
+        if (opus.brandingConfig?.pdfBackBannerUrl) {
+            ColourParser cp = new ColourParser()
+            def callToActionColour = cp.decodeColorWithDefault(opus.theme.callToActionColour, DEFAULT_CALL_TO_ACTION)
+            def backCoverUrl = opus.brandingConfig?.pdfBackBannerUrl
+            log.info("Back cover URL: $backCoverUrl")
+            def url = getImageURL(opus, backCoverUrl)
+
+            return new BackCoverImageRenderer(url, ColourUtils.withAlpha(callToActionColour, 0.7))
+        } else {
+            return null
+        }
+    }
+    private final static Color DEFAULT_CALL_TO_ACTION = Color.decode('#D47500')
+    private final static Color DEFAULT_CALL_TO_ACTION_TEXT = Color.decode('#343434')
+    private final static Color DEFAULT_MAIN_BACKGROUND = Color.WHITE
+    private final static Color DEFAULT_MAIN_TEXT = Color.BLACK
+    private final static Color DEFAULT_HEADER_BORDER = Color.decode('#d45500')
+    private final static Color DEFAULT_HEADER_TEXT = Color.decode('#343434')
+    private final static Color DEFAULT_FOOTER_BORDER = Color.decode('#d45500')
+    private final static Color DEFAULT_FOOTER_TEXT = Color.WHITE
+    private final static Color DEFAULT_FOOTER_BACKGROUND = Color.decode('#343434')
+
+    GradientRenderer generateGradientRenderer(opus) {
+        ColourParser cp = new ColourParser()
+        def mainBackgroundColour = cp.decodeColorWithDefault(opus.theme.mainBackgroundColour, DEFAULT_MAIN_BACKGROUND)
+        return new GradientRenderer(mainBackgroundColour)
+    }
+
+    JRTemplate generateStyleTemplate(Map opus) {
+        ColourParser cp = new ColourParser()
+
+        def theme = opus.theme
+        def mainBackgroundColour = cp.decodeColorWithDefault(theme.mainBackgroundColour, DEFAULT_MAIN_BACKGROUND)
+        def mainTextColour = cp.decodeColorWithDefault(theme.mainTextColour, DEFAULT_MAIN_TEXT)
+        def callToActionColour = cp.decodeColorWithDefault(theme.callToActionColour, DEFAULT_CALL_TO_ACTION)
+        def callToActionTextColour = cp.decodeColorWithDefault(theme.callToActionTextColour, DEFAULT_CALL_TO_ACTION_TEXT)
+        def footerBackgroundColour = cp.decodeColorWithDefault(theme.footerBackgroundColour, DEFAULT_FOOTER_BACKGROUND)
+        def footerTextColour = cp.decodeColorWithDefault(theme.footerTextColour, DEFAULT_FOOTER_TEXT)
+        def footerBorderColour = cp.decodeColorWithDefault(theme.footerBorderColour, DEFAULT_FOOTER_BORDER)
+        def headerTextColour = cp.decodeColorWithDefault(theme.headerTextColour, DEFAULT_HEADER_TEXT)
+        def headerBorderColour = cp.decodeColorWithDefault(theme.headerBorderColour, DEFAULT_HEADER_BORDER)
+
+        JRSimpleTemplate template = new JRSimpleTemplate()
+
+        def defaultStyle = new JRDesignStyle()
+        defaultStyle.default = true
+        defaultStyle.name = "Base"
+        defaultStyle.forecolor = mainTextColour
+        // TODO alpha
+        if (mainBackgroundColour == Color.WHITE) {
+            defaultStyle.mode = ModeEnum.TRANSPARENT
+        } else {
+            defaultStyle.mode = ModeEnum.OPAQUE
+            defaultStyle.backcolor = mainBackgroundColour
+        }
+        template.addStyle(defaultStyle)
+
+        // TODO alpha
+        def textLuminance = relativeLuminance(mainTextColour.red, mainTextColour.green, mainTextColour.blue)
+        def backLuminance = relativeLuminance(mainBackgroundColour.red, mainBackgroundColour.green, mainBackgroundColour.blue)
+        boolean backLight = textLuminance < backLuminance
+        double contrast
+        Color authorColor, protologueColor
+        if (backLight) {
+            contrast = contrastRatio(backLuminance, textLuminance)
+            authorColor = lighten(mainTextColour, AUTHOR_ADJUSTMENT)
+            protologueColor = lighten(mainTextColour, PROTOLOGUE_ADJUSTMENT)
+        } else {
+            contrast = contrastRatio(textLuminance, backLuminance)
+            authorColor = darken(mainTextColour, AUTHOR_ADJUSTMENT)
+            protologueColor = darken(mainTextColour, PROTOLOGUE_ADJUSTMENT)
+        }
+        if (contrast < 4.5) {
+            log.warn("contrast of $mainBackgroundColour and $mainTextColour is only $contrast")
+        }
+
+        def authorStyle = new JRDesignStyle()
+        authorStyle.name = "Author"
+        authorStyle.parentStyle = defaultStyle
+        authorStyle.forecolor = authorColor
+        template.addStyle(authorStyle)
+
+        def protologueStyle = new JRDesignStyle()
+        protologueStyle.name = "Protologue"
+        protologueStyle.parentStyle = defaultStyle
+        protologueStyle.forecolor = protologueColor
+        template.addStyle(protologueStyle)
+
+        def backCover = new JRDesignStyle()
+        backCover.name = "BackCover"
+        backCover.mode = ModeEnum.OPAQUE
+        backCover.backcolor = callToActionColour
+        backCover.linePen.lineColor = callToActionColour
+        backCover.lineBox.pen.lineColor = callToActionColour
+        template.addStyle(backCover)
+
+        def backCoverLogo = new JRDesignStyle()
+        backCoverLogo.name = "BackCoverLogo"
+        backCoverLogo.mode = ModeEnum.OPAQUE
+        backCoverLogo.backcolor = footerBackgroundColour
+        backCoverLogo.linePen.lineColor = footerBorderColour
+        backCoverLogo.lineBox.pen.lineColor = footerBorderColour
+        template.addStyle(backCoverLogo)
+
+        def header = new JRDesignStyle()
+        header.name = "Header"
+        header.parentStyle = defaultStyle
+        header.forecolor = headerTextColour
+        header.linePen.lineColor = headerBorderColour
+        header.lineBox.pen.lineColor = headerBorderColour
+        template.addStyle(header)
+
+        def footer = new JRDesignStyle()
+        footer.name = "Footer"
+        footer.forecolor = footerTextColour
+        footer.mode = ModeEnum.OPAQUE
+        footer.backcolor = footerBackgroundColour
+        footer.linePen.lineColor = footerBorderColour
+        footer.lineBox.pen.lineColor = footerBorderColour
+        template.addStyle(footer)
+
+        def callToAction = new JRDesignStyle()
+        callToAction.name = "CallToAction"
+        callToAction.mode = ModeEnum.OPAQUE
+        callToAction.forecolor = callToActionTextColour
+        callToAction.backcolor = callToActionColour
+        template.addStyle(callToAction)
+
+        def detail = new JRDesignStyle()
+        detail.name = "Detail"
+        detail.forecolor = callToActionColour
+        template.addStyle(detail)
+
+        def detailBox = new JRDesignStyle()
+        detailBox.name = "DetailBox"
+        detailBox.linePen.lineColor = headerBorderColour
+        detailBox.lineBox.pen.lineColor = headerBorderColour
+        template.addStyle(detailBox)
+
+        return template
+    }
+
     /**
      * Retrieve profile/s data in multiple threads and other required info. Put them all together in a the required data structure for the report template ingestion
-     * @param params
+     * @param opus The opus for the profiles as a map because why would you want to know what the properties were at compile time?
+     * @param params Just some params, who knows what, keys could be anything, no clues as to what we're expecting.  Brilliant.
      * @param latest (optional) = defaults to false
      * @return
      */
-    private Map getCurateReportModel(Map params) {
+    private Map getCurateReportModel(Map opus, Map params) {
         def curatedModel = [
                 options : params,
                 profiles: [] as ConcurrentLinkedQueue
         ]
 
-        Map opus = webService.get("${grailsApplication.config.profile.service.url}/opus/${URLEncoder.encode(params.opusId, "UTF-8")}")?.resp
         curatedModel.profiles << loadProfileData(params.profileId as String, opus, params)
 
         if (params.children && curatedModel.profiles[0].profile.rank) {
@@ -189,6 +352,7 @@ class ExportService {
                         title       : opus.title,
                         subtitle    : firstProfile?.fullName ?: firstProfile?.scientificName,
                         banner      : opus.bannerUrl,
+                        headerTitleHtml: convertTagsForJasper(sanitizeHtml(opus.opusLayoutConfig.bannerOverlayText)) ?: stripTextFromNonFormattingHtmlTags(opus.title) ?: opus.uuid,
                         primaryImage: firstProfile?.primaryImage ?: (firstProfile?.images?.size() > 0 ? firstProfile?.images[0].leftImage.largeImageUrl : ''),
                         logoUrl1    : getFilePath (opus, opus.brandingConfig?.logos?.getAt(0)?.logoUrl), //Use getAt instead of index syntax [] to avoid NPE
                         logoUrl2    : getFilePath (opus, opus.brandingConfig?.logos?.getAt(1)?.logoUrl),
@@ -209,6 +373,11 @@ class ExportService {
         ]
 
         return curatedModel
+    }
+
+    private URL getImageURL(def opus, String logoUrl) {
+        def filePath = getFilePath(opus, logoUrl)
+        return filePath ? new File(filePath).toURI().toURL() : logoUrl?.toURL()
     }
 
     private String getFilePath (def opus, String logoUrl) {

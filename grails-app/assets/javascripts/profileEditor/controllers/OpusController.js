@@ -519,6 +519,18 @@ profileEditor.controller('OpusController', function ($log, $scope, profileServic
         self.StyleForm.$setDirty();
     };
 
+    self.pdfBannerUploaded = function(result) {
+        self.opus.brandingConfig.pdfBannerUrl = util.getBaseHref() + result.imageUrl;
+        self.toggleUploadPanel('pdfBanner');
+        self.StyleForm.$setDirty();
+    };
+
+    self.pdfBackBannerUploaded = function(result) {
+        self.opus.brandingConfig.pdfBackBannerUrl = util.getBaseHref() + result.imageUrl;
+        self.toggleUploadPanel('pdfBackBanner');
+        self.StyleForm.$setDirty();
+    };
+
     self.addAnEmptyLogo = function () {
         var logo = {
                 logoUrl: undefined,

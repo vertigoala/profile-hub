@@ -38,6 +38,32 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Banner image for export cover</label>
+                    <input type="text" class="form-control" name="pdfBannerUrl" ng-model="opusCtrl.opus.brandingConfig.pdfBannerUrl"/>
+                    <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.pdfBanner" btn-checkbox >Upload a file</button>
+                    <div ng-if="opusCtrl.showUpload.pdfBanner" class="clearfix">
+                        <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.pdfBannerUploaded"
+                                      url="{{opusCtrl.imageUploadUrl + 'pdfBanner'}}" show-metadata="false" disable-source="true"></image-upload>
+                    </div>
+                    <div class="small">This image will be displayed on the cover of all profiles exported as a PDF.
+                    If left blank, a default cover image will be used.</div>
+                    <div class="small">Recommended size is <strong>exactly</strong> 595px wide by 240px high.</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Banner image for export back cover</label>
+                    <input type="text" class="form-control" name="pdfBackBannerUrl" ng-model="opusCtrl.opus.brandingConfig.pdfBackBannerUrl"/>
+                    <button class="btn btn-sm btn-default margin-top-1 ignore-save-warning" ng-model="opusCtrl.showUpload.pdfBackBanner" btn-checkbox >Upload a file</button>
+                    <div ng-if="opusCtrl.showUpload.pdfBackBanner" class="clearfix">
+                        <image-upload opus="opusCtrl.opus" on-upload-complete="opusCtrl.pdfBackBannerUploaded"
+                                      url="{{opusCtrl.imageUploadUrl + 'pdfBackBanner'}}" show-metadata="false" disable-source="true"></image-upload>
+                    </div>
+                    <div class="small">This image will be displayed on the back cover of all profiles exported as a PDF.
+                    If left blank, a default cover image will be used.</div>
+                    <div class="small">Recommended size is <strong>exactly</strong> 595px wide by 230px high.</div>
+                </div>
+
+                <div class="form-group">
                     <label>Logo</label>
                     <table class="table">
                         <thead>

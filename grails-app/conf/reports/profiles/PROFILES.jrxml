@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-06-26T16:51:41 -->
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PROFILES" language="groovy" pageWidth="595" pageHeight="842" sectionType="Part" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="d2716064-8ae4-40cf-a575-33afba400e3a">
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<property name="com.jaspersoft.studio.book.group.cover.header" value="Cover and Table of Contents"/>
 	<property name="com.jaspersoft.studio.book.group.cover.footer" value="Backcover"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JSON Sample Data Source"/>
+	<template><![CDATA["PROFILES_styles.jrtx"]]></template>
 	<parameter name="PROFILES_REPORT_OPTIONS" class="java.util.Map">
 		<defaultValueExpression><![CDATA[[
 	      "nomenclature": "true",
@@ -30,6 +30,9 @@
       "footerText": ""
 ]]]></defaultValueExpression>
 	</parameter>
+	<parameter name="GRADIENT" class="au.org.ala.profile.hub.reports.GradientRenderer" isForPrompting="false"/>
+	<parameter name="BACK_COVER_IMAGE" class="au.org.ala.profile.hub.reports.BackCoverImageRenderer" isForPrompting="false"/>
+	<parameter name="COVER_IMAGE" class="java.net.URL" isForPrompting="false"/>
 	<parameter name="QR_CODE" class="java.io.InputStream" isForPrompting="false"/>
 	<queryString language="JSON">
 		<![CDATA[]]>
@@ -40,6 +43,15 @@
 				<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
 					<subreportParameter name="REPORT_DATA_SOURCE">
 						<subreportParameterExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource()]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="COVER_IMAGE">
+						<subreportParameterExpression><![CDATA[(java.net.URL)$P{COVER_IMAGE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="GRADIENT">
+						<subreportParameterExpression><![CDATA[(au.org.ala.profile.hub.reports.GradientRenderer)$P{GRADIENT}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="REPORT_TEMPLATES">
+						<subreportParameterExpression><![CDATA[(java.util.Collection<net.sf.jasperreports.engine.JRTemplate>)$P{REPORT_TEMPLATES}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportExpression><![CDATA["PROFILES_cover.jasper"]]></subreportExpression>
 				</p:subreportPart>
@@ -52,6 +64,9 @@
 					<subreportParameter name="REPORT_DATA_SOURCE">
 						<subreportParameterExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource()]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter name="REPORT_TEMPLATES">
+						<subreportParameterExpression><![CDATA[(java.util.Collection<net.sf.jasperreports.engine.JRTemplate>)$P{REPORT_TEMPLATES}]]></subreportParameterExpression>
+					</subreportParameter>
 					<subreportExpression><![CDATA["PROFILES_colophon.jasper"]]></subreportExpression>
 				</p:subreportPart>
 			</part>
@@ -59,6 +74,9 @@
 				<property name="net.sf.jasperreports.bookmarks.data.source.parameter" value="REPORT_DATA_SOURCE"/>
 				<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.displayToc)]]></printWhenExpression>
 				<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
+					<subreportParameter name="REPORT_TEMPLATES">
+						<subreportParameterExpression><![CDATA[(java.util.Collection<net.sf.jasperreports.engine.JRTemplate>)$P{REPORT_TEMPLATES}]]></subreportParameterExpression>
+					</subreportParameter>
 					<subreportExpression><![CDATA["PROFILES_toc.jasper"]]></subreportExpression>
 				</p:subreportPart>
 			</part>
@@ -66,6 +84,15 @@
 		<groupFooter>
 			<part uuid="88decbbe-63ad-45cc-9e03-5dadc50004d5">
 				<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
+					<subreportParameter name="BACK_COVER_IMAGE">
+						<subreportParameterExpression><![CDATA[(au.org.ala.profile.hub.reports.BackCoverImageRenderer)$P{BACK_COVER_IMAGE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="REPORT_TEMPLATES">
+						<subreportParameterExpression><![CDATA[(java.util.Collection<net.sf.jasperreports.engine.JRTemplate>)$P{REPORT_TEMPLATES}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="REPORT_DATA_SOURCE">
+						<subreportParameterExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource()]]></subreportParameterExpression>
+					</subreportParameter>
 					<subreportExpression><![CDATA["PROFILES_backcover.jasper"]]></subreportExpression>
 				</p:subreportPart>
 			</part>
@@ -79,6 +106,9 @@
 				</subreportParameter>
 				<subreportParameter name="PROFILES_REPORT_OPTIONS">
 					<subreportParameterExpression><![CDATA[$P{PROFILES_REPORT_OPTIONS}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TEMPLATES">
+					<subreportParameterExpression><![CDATA[(java.util.Collection<net.sf.jasperreports.engine.JRTemplate>)$P{REPORT_TEMPLATES}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportExpression><![CDATA["PROFILES_detail.jasper"]]></subreportExpression>
 			</p:subreportPart>

@@ -23,6 +23,7 @@ eventCompileEnd = {
     // compile the reports
     ant.reportCompile(srcdir:'grails-app/conf/reports', destdir:'grails-app/conf/reports', tempdir:'target/jasper', keepJava:true, xmlvalidation:true){
         include(name:'**/*.jrxml')
+//        include(name:'**/*.jrtx')
     }
     println "-------\n- JasperReports compilation process finished"
 }

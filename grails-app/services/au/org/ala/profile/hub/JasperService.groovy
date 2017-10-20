@@ -25,6 +25,7 @@ import net.sf.jasperreports.engine.design.JRCompiler
 import net.sf.jasperreports.engine.export.JRHtmlExporterParameter
 import net.sf.jasperreports.engine.export.JRTextExporterParameter
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter
+import net.sf.jasperreports.engine.util.JRLoader
 import org.springframework.core.io.Resource
 
 import java.lang.reflect.Field
@@ -238,13 +239,15 @@ class JasperService {
         }
 
         if (jrDataSource != null) {
+            JasperReport jasperReport
             if (resource.getFilename().endsWith('.jasper')) {
-                jasperPrint = JasperFillManager.fillReport(resource.inputStream, reportDef.parameters, jrDataSource)
+                jasperReport = (JasperReport)JRLoader.loadObject(resource.inputStream)
             }
             else {
                 forceTempFolder()
-                jasperPrint = JasperFillManager.fillReport(JasperCompileManager.compileReport(resource.inputStream), reportDef.parameters, jrDataSource)
+                jasperReport = JasperCompileManager.compileReport(resource.inputStream)
             }
+            jasperPrint = JasperFillManager.fillReport(jasperReport, reportDef.parameters, jrDataSource)
         }
         else {
 

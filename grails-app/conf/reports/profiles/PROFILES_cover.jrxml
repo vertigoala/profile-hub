@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-07-21T11:45:44 -->
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Wave Cover" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c50b24eb-eb33-413f-8e75-e7e20a5341fd">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -11,7 +10,8 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JSON report source"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JSON Sample Data Source"/>
+	<template><![CDATA["PROFILES_styles.jrtx"]]></template>
 	<subDataset name="logo" uuid="5ecedb89-c1b0-481b-91c2-d21fabd7d568">
 		<field name="logoUrl" class="java.lang.String">
 			<fieldDescription><![CDATA[logoUrl]]></fieldDescription>
@@ -20,11 +20,13 @@
 			<fieldDescription><![CDATA[hyperlink]]></fieldDescription>
 		</field>
 	</subDataset>
-	<parameter name="BookTitle" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Report Book Template"]]></defaultValueExpression>
+	<parameter name="COVER_IMAGE" class="java.net.URL" isForPrompting="false">
+		<parameterDescription><![CDATA[Cover image URL]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
 	</parameter>
-	<parameter name="BookSubTitle" class="java.lang.String">
-		<defaultValueExpression><![CDATA["A sample template of a ReportBook"]]></defaultValueExpression>
+	<parameter name="GRADIENT" class="au.org.ala.profile.hub.reports.GradientRenderer" isForPrompting="false">
+		<parameterDescription><![CDATA[Cover image gradient]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
 	</parameter>
 	<queryString language="json">
 		<![CDATA[model]]>
@@ -39,10 +41,12 @@
 	<field name="cover.logoUrl2" class="java.lang.String"/>
 	<field name="cover.logoUrl3" class="java.lang.String"/>
 	<field name="cover.logoUrl4" class="java.lang.String"/>
+	<field name="cover.headerImageUrl" class="java.lang.String"/>
+	<field name="cover.headerTitleHtml" class="java.lang.String"/>
 	<title>
 		<band height="719" splitType="Stretch">
 			<textField>
-				<reportElement x="23" y="277" width="537" height="45" forecolor="#D47500" uuid="7f58d454-cae0-4ebb-9ccd-c885124eb525"/>
+				<reportElement style="Detail" x="23" y="277" width="537" height="45" uuid="7f58d454-cae0-4ebb-9ccd-c885124eb525"/>
 				<box leftPadding="20" rightPadding="20"/>
 				<textElement textAlignment="Left" markup="html">
 					<font fontName="Roboto" size="24" isBold="true"/>
@@ -75,17 +79,37 @@
 			</textField>
 			<image scaleImage="FillFrame">
 				<reportElement x="0" y="0" width="595" height="240" uuid="1c0d107b-419b-48e8-b6c7-b5badc10efb6"/>
-				<imageExpression><![CDATA["img/PDF banner.png"]]></imageExpression>
+				<graphicElement fill="Solid"/>
+				<imageExpression><![CDATA[$P{COVER_IMAGE} ?: "img/gahnia2.png"]]></imageExpression>
 			</image>
+			<image scaleImage="FillFrame">
+				<reportElement key="" style="DetailBox" x="0" y="55" width="595" height="185" uuid="081626e1-4b11-4060-bd86-786399ebeae2"/>
+				<box>
+					<topPen lineWidth="5.0"/>
+				</box>
+				<imageExpression><![CDATA[$P{GRADIENT} ?: "img/gradient.svg"]]></imageExpression>
+			</image>
+			<textField pattern="">
+				<reportElement mode="Transparent" x="54" y="113" width="487" height="82" uuid="0d3a8d10-05d2-4ec4-a48a-8104d58bda12">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="html">
+					<font fontName="Raleway" size="31"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cover.headerTitleHtml}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageFooter>
 		<band height="60" splitType="Stretch">
 			<rectangle>
-				<reportElement x="-1" y="0" width="596" height="5" backcolor="#D47500" uuid="bac4e0b9-bbea-4d83-bba5-b3d58393e9ab"/>
+				<reportElement style="CallToAction" x="-1" y="0" width="596" height="5" uuid="bac4e0b9-bbea-4d83-bba5-b3d58393e9ab"/>
 			</rectangle>
 			<frame>
-				<reportElement mode="Opaque" x="0" y="4" width="595" height="56" backcolor="#343434" uuid="a7da222a-5bb9-4c74-b273-a863c0c8ee77">
+				<reportElement style="Footer" mode="Opaque" x="0" y="4" width="595" height="56" uuid="a7da222a-5bb9-4c74-b273-a863c0c8ee77">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<image vAlign="Middle" isLazy="true" hyperlinkType="Reference">
