@@ -157,7 +157,7 @@ class ExportService {
             ColourParser cp = new ColourParser()
             def callToActionColour = cp.decodeColorWithDefault(opus.theme.callToActionColour, DEFAULT_CALL_TO_ACTION)
             def backCoverUrl = opus.brandingConfig?.pdfBackBannerUrl
-            log.info("Back cover URL: $backCoverUrl")
+            log.debug("Back cover URL: $backCoverUrl")
             def url = getImageURL(opus, backCoverUrl)
 
             return new BackCoverImageRenderer(url, ColourUtils.withAlpha(callToActionColour, 0.7))

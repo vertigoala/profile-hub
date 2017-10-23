@@ -63,7 +63,7 @@ class BackCoverImageRenderer extends AbstractRenderToImageDataRenderer {
      */
     @Override
     void render(JasperReportsContext jasperReportsContext, Graphics2D grx, Rectangle2D rectangle) throws JRException {
-        log.info("BackCoverImageRenderer.render()")
+        log.debug("BackCoverImageRenderer.render()")
         def gradThresh = round(bufferedImage.height.toDouble() * gradientThreshold).toInteger()
         def gradThreshD = gradThresh.toDouble()
         def gradientHeight = (bufferedImage.height - gradThresh).toDouble()
@@ -83,9 +83,8 @@ class BackCoverImageRenderer extends AbstractRenderToImageDataRenderer {
                 } else {
                     fgd = washColor
                 }
-                def c2 = ColourUtils.blend(fgd, ColourUtils.desaturate(c))
+                def c2 = ColourUtils.blend(fgd, ColourUtils.asLuminosity(c))
                 bufferedImage.setRGB(i,j, c2.getRGB())
-//                image2.setRGB(i, j, c.toLuminosity().rgb)
             }
         }
 
@@ -160,8 +159,6 @@ class BackCoverImageRenderer extends AbstractRenderToImageDataRenderer {
 //            heightFuture.complete(initHeight)
             df.height = initHeight
         }
-
-        image
 
 //        def imageWidth = widthFuture.join()
 //        def imageHeight = heightFuture.join()

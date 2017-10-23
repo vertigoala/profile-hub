@@ -48,10 +48,10 @@ class GradientRenderer extends AbstractRenderToImageDataRenderer {
 
     @Override
     void render(JasperReportsContext jasperReportsContext, Graphics2D g2d, Rectangle2D rect) throws JRException {
-        log.info("GradientRenderer.render() from $startColor")
+        log.debug("GradientRenderer.render() from $startColor")
         g2d.background = TRANSPARENT
         def transparentStartColor = new Color(startColor.red, startColor.green, startColor.blue, 0)
-        log.info("GradientRenderer.render() to $transparentStartColor")
+        log.debug("GradientRenderer.render() to $transparentStartColor")
         final float[] fractions = [ 0f, 0.33f, 1.0f ]
         final Color[] colors = [ startColor, startColor, transparentStartColor]
         g2d.paint = new LinearGradientPaint(0f, 0f, rect.width.toFloat(), 0f, fractions, colors, NO_CYCLE)
