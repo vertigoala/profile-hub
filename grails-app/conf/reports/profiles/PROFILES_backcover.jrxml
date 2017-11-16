@@ -26,7 +26,7 @@
 				<reportElement style="BackCover" x="0" y="230" width="595" height="611" uuid="a0eeb945-c461-469c-9539-05d63cee5db1"/>
 			</rectangle>
 			<image vAlign="Middle" onErrorType="Blank">
-				<reportElement style="BackCoverLogo" x="170" y="710" width="249" height="75" uuid="ef222e70-2523-4f64-a03c-3f5b6102585f"/>
+				<reportElement mode="Opaque" x="170" y="710" width="249" height="75" backcolor="#C9C8C5" uuid="ef222e70-2523-4f64-a03c-3f5b6102585f"/>
 				<graphicElement fill="Solid"/>
 				<imageExpression><![CDATA["img/ALA-logo-inline.png"]]></imageExpression>
 			</image>

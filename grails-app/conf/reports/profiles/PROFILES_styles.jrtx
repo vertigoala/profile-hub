@@ -10,12 +10,6 @@
 	</style>
 	<style name="Author" style="Base" forecolor="#222222"/>
 	<style name="Protologue" style="Base" forecolor="#A1A1A1"/>
-	<style name="BackCoverLogo" mode="Opaque" backcolor="#343434">
-		<pen lineColor="#D45500"/>
-		<box>
-			<pen lineColor="#D45500"/>
-		</box>
-	</style>
 	<style name="Header" style="Base" forecolor="#343434">
 		<pen lineColor="#D45500"/>
 		<box>

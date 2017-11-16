@@ -249,14 +249,6 @@ class ExportService {
         backCover.lineBox.pen.lineColor = callToActionColour
         template.addStyle(backCover)
 
-        def backCoverLogo = new JRDesignStyle()
-        backCoverLogo.name = "BackCoverLogo"
-        backCoverLogo.mode = ModeEnum.OPAQUE
-        backCoverLogo.backcolor = footerBackgroundColour
-        backCoverLogo.linePen.lineColor = footerBorderColour
-        backCoverLogo.lineBox.pen.lineColor = footerBorderColour
-        template.addStyle(backCoverLogo)
-
         def header = new JRDesignStyle()
         header.name = "Header"
         header.parentStyle = defaultStyle
