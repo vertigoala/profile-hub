@@ -30,7 +30,7 @@
 //= require colorjs/color.min.js
 //= require urijs-1.18.0/URI.js
 //= require web-animations-polyfill/web-animations-2.2.5.min.js
-//= require webcomponentsjs/webcomponents-0.7.22.min.js
+//= require webcomponentsjs/webcomponents-0.7.24.js
 //= require mapAndImages
 //= require profileEditor/profiles.js
 //= require_tree profileEditor/controllers
