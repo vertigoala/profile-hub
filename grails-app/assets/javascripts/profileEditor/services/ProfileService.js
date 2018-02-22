@@ -1215,7 +1215,7 @@ profileEditor.service('profileService', function ($http, util, $cacheFactory, co
         },
 
         autocompleteName: function(prefix) {
-            return $http.jsonp(config.bieServiceUrl + "/ws/search/auto.json?idxType=TAXON&callback=JSON_CALLBACK&q=" + prefix);
+            return $http.get(config.bieServiceUrl + "ws/search/auto.json?idxType=TAXON&q=" + prefix);
         },
 
         getTags: function() {
