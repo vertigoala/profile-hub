@@ -37,55 +37,52 @@
                        target="_blank"><span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;Export as PDF
                     </a>
                 </li>
-                <g:if test="${params.isOpusEditor}">
-                    <li class="divider" ng-hide="profileCtrl.isArchived()"></li>
+                <g:if test="${params.isOpusAdmin || params.isOpusEditor || params.isOpusAuthor}">
+                    <li class="divider" ng-hide="profileCtrl.isArchived() || !profileCtrl.readonly()"></li>
                     <li role="presentation" ng-hide="!profileCtrl.readonly() || profileCtrl.isArchived()">
                         <a href="${request.contextPath}/opus/{{profileCtrl.opusId}}/profile/{{profileCtrl.profile.scientificName}}/update"
                            target="_self"><span
                                 class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
                     </li>
-                    <li role="presentation"
-                        ng-if="!profileCtrl.readonly()">
-                        <a href="" ng-click="profileCtrl.toggleAudit()"><span
-                                class="fa fa-history"></span>&nbsp;&nbsp;{{profileCtrl.showProfileAudit ? 'Hide ' : 'Show '}} revision history
-                        </a>
-                    </li>
-                    <li role="presentation"
-                        ng-if="!profileCtrl.readonly() && !profileCtrl.profile.privateMode">
-                        <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
-                                class="fa fa-lock"></span>&nbsp;&nbsp;Lock for major revision</a>
-                    </li>
-                    <g:if test="${params.isOpusEditor}">
+                    <g:if test="${!params.isOpusAuthor}">
+                        <li role="presentation"
+                            ng-if="!profileCtrl.readonly()">
+                            <a href="" ng-click="profileCtrl.toggleAudit()"><span
+                                    class="fa fa-history"></span>&nbsp;&nbsp;{{profileCtrl.showProfileAudit ? 'Hide ' : 'Show '}} revision history
+                            </a>
+                        </li>
+                        <li role="presentation"
+                            ng-if="!profileCtrl.readonly() && !profileCtrl.profile.privateMode">
+                            <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
+                                    class="fa fa-lock"></span>&nbsp;&nbsp;Lock for major revision</a>
+                        </li>
                         <li role="presentation"
                             ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
                             <a href="" ng-click="profileCtrl.toggleDraftMode()"><span
                                     class="fa fa-unlock"></span>&nbsp;&nbsp;Publish draft changes</a>
                         </li>
-                    </g:if>
-                    <li role="presentation"
-                        ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
-                        <a href="" ng-click="profileCtrl.discardDraftChanges()"><span
-                                class="fa fa-times-circle"></span>&nbsp;&nbsp;Discard draft changes</a>
-                    </li>
-                    <li class="divider" ng-hide="profileCtrl.readonly()"></li>
-
-                    <g:if test="${params.isOpusEditor}">
+                        <li role="presentation"
+                            ng-if="!profileCtrl.readonly() && profileCtrl.profile.privateMode">
+                            <a href="" ng-click="profileCtrl.discardDraftChanges()"><span
+                                    class="fa fa-times-circle"></span>&nbsp;&nbsp;Discard draft changes</a>
+                        </li>
+                        <li class="divider" ng-hide="profileCtrl.readonly()"></li>
                         <li role="presentation">
                             <a href="" ng-click="profileCtrl.deleteProfile()" target="_self"
                                ng-hide="profileCtrl.readonly() || !profileCtrl.profileId || profileCtrl.profile.publications.length > 0"><span
                                     class="fa fa-trash-o"></span>&nbsp;&nbsp;Delete this profile</a>
                         </li>
-                    </g:if>
 
-                    <li role="presentation">
-                        <a href="" ng-click="profileCtrl.archiveProfile()" target="_self"
-                           ng-hide="profileCtrl.readonly() || profileCtrl.isArchived()"><span
-                                class="fa fa-archive"></span>&nbsp;&nbsp;Archive this profile</a>
-                    </li>
-                    <li role="presentation" ng-hide="!profileCtrl.isArchived()">
-                        <a href="" ng-click="profileCtrl.restoreProfile()" target="_self"><span
-                                class="fa fa-recycle"></span>&nbsp;&nbsp;Restore this profile</a>
-                    </li>
+                        <li role="presentation">
+                            <a href="" ng-click="profileCtrl.archiveProfile()" target="_self"
+                               ng-hide="profileCtrl.readonly() || profileCtrl.isArchived()"><span
+                                    class="fa fa-archive"></span>&nbsp;&nbsp;Archive this profile</a>
+                        </li>
+                        <li role="presentation" ng-hide="!profileCtrl.isArchived()">
+                            <a href="" ng-click="profileCtrl.restoreProfile()" target="_self"><span
+                                    class="fa fa-recycle"></span>&nbsp;&nbsp;Restore this profile</a>
+                        </li>
+                    </g:if>
                 </g:if>
             </ul>
         </div>

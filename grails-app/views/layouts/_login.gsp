@@ -8,21 +8,25 @@
         <li role="separator" class="padding-bottom-1">
             <span role="menuitem" class="no-icon-menu-item">Role: {{ userCtrl.user.role.name }}</span>
         </li>
-        <g:if test="${params.isOpusAdmin && opus}">
-            <g:if test="${reportsUrl}">
+        <g:if test="${opus}">
+            <g:if test="${params.isOpusAdmin && reportsUrl}">
                 <li class="${pageName=='reports'?'active':''}" role="presentation"><a href="${reportsUrl}"><span class="fa fa-pie-chart">&nbsp;&nbsp;</span>Reports</a></li>
             </g:if>
-            <li role="presentation" ng-show="!profileCtrl.opus.masterListUid">
-                <a target="_self" ng-click="profileCtrl.createProfile(profileCtrl.opusId, false)">
-                    <span class="fa fa-plus">&nbsp;&nbsp;</span>Add a new profile
-                </a>
-            </li>
-            <li role="presentation" ng-show="!profileCtrl.opus.masterListUid">
-                <a target="_self" ng-click="profileCtrl.createProfile(profileCtrl.opusId, true)"><span class="fa fa-copy">&nbsp;&nbsp;</span>Copy an existing profile</a>
-            </li>
-            <li role="presentation" class="padding-bottom-1">
-                <a href="${request.contextPath}/opus/${opus.uuid}/update"><span class="fa fa-edit">&nbsp;&nbsp;</span>Edit configuration</a>
-            </li>
+            <g:if test="${params.isOpusAdmin || params.isOpusEditor || params.isOpusAuthor}">
+                <li role="presentation" ng-show="!profileCtrl.opus.masterListUid">
+                    <a target="_self" ng-click="profileCtrl.createProfile(profileCtrl.opusId, false)">
+                        <span class="fa fa-plus">&nbsp;&nbsp;</span>Add a new profile
+                    </a>
+                </li>
+                <li role="presentation" ng-show="!profileCtrl.opus.masterListUid">
+                    <a target="_self" ng-click="profileCtrl.createProfile(profileCtrl.opusId, true)"><span class="fa fa-copy">&nbsp;&nbsp;</span>Copy an existing profile</a>
+                </li>
+            </g:if>
+            <g:if test="${params.isOpusAdmin}">
+                <li role="presentation" class="padding-bottom-1">
+                    <a href="${request.contextPath}/opus/${opus.uuid}/update"><span class="fa fa-edit">&nbsp;&nbsp;</span>Edit configuration</a>
+                </li>
+            </g:if>
         </g:if>
         <li role="presentation">
             <a role="menuitem"
