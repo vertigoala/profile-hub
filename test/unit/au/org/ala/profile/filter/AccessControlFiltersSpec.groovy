@@ -133,9 +133,9 @@ class AccessControlFiltersSpec extends Specification {
         response.status == responseCode
         params.isALAAdmin == false
         params.isOpusAdmin == true
-        params.isOpusEditor == true
-        params.isOpusAuthor == true
-        params.isOpusReviewer == true
+        params.isOpusEditor == false
+        params.isOpusAuthor == false
+        params.isOpusReviewer == false
 
         where:
         action                  | responseCode
@@ -173,8 +173,8 @@ class AccessControlFiltersSpec extends Specification {
         params.isALAAdmin == false
         params.isOpusAdmin == false
         params.isOpusEditor == true
-        params.isOpusAuthor == true
-        params.isOpusReviewer == true
+        params.isOpusAuthor == false
+        params.isOpusReviewer == false
 
         where:
         action                  | responseCode
@@ -212,7 +212,7 @@ class AccessControlFiltersSpec extends Specification {
         params.isOpusAdmin == false
         params.isOpusEditor == false
         params.isOpusAuthor == true
-        params.isOpusReviewer == true
+        params.isOpusReviewer == false
 
         where:
         action                  | responseCode
