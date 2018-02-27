@@ -74,7 +74,7 @@
                 <li class="${pageName=='filter'?'active':''}"><a href="${filterUrl}">Filter<g:if test="${hasFilter}"> <span class="filter-indicator" title="You currently have a filter applied to ${opus.shortName ?: opus.uuid}">◉</span></g:if></a></li>
             </g:if>
             <g:if test="${glossaryUrl}">
-                <li class="${pageName=='glossary'?'active':''}"><a href="${glossaryUrl}">Glossary</a></li>
+                <li class="${pageName=='glossary'?'active':''}"><a href="${glossaryUrl}" target="glossary">Glossary</a></li>
             </g:if>
             <g:if test="${glossaryUrl}">
                 <li class="${pageName=='about'?'active':''}"><a href="${aboutPageUrl}">About&nbsp;&nbsp;</a></li>
