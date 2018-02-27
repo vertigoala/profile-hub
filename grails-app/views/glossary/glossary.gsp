@@ -15,10 +15,12 @@
                 <h2 class="heading-large inline">Glossary</h2>
             </div>
 
-            <div class="col-md-2">
-                <button class="btn btn-default pull-right margin-top-1" ng-click="glossaryCtrl.addGlossaryItem($index)"><i
-                        class="fa fa-plus"></i> Add item</button>
-            </div>
+            <g:if test="${params.isOpusAdmin}">
+                <div class="col-md-2">
+                    <button class="btn btn-default pull-right margin-top-1" ng-click="glossaryCtrl.addGlossaryItem($index)"><i
+                            class="fa fa-plus"></i> Add item</button>
+                </div>
+            </g:if>
         </div>
 
         <div class="row" ng-cloak>
@@ -49,12 +51,14 @@
                         <tr ng-repeat="item in glossaryCtrl.glossary.items">
                             <td>{{item.term}}</td>
                             <td><span ng-bind-html="item.description | sanitizeHtml"></span></td>
-                            <td class="edits">
-                                <button class="btn-link fa fa-edit" ng-click="glossaryCtrl.editGlossaryItem($index)"
-                                        title="Edit glossary item"></button>
-                                <button class="btn-link fa fa-trash-o color--red" ng-click="glossaryCtrl.deleteGlossaryItem($index)"
-                                        title="Delete glossary item"></button>
-                            </td>
+                            <g:if test="${params.isOpusAdmin}">
+                                <td class="edits">
+                                    <button class="btn-link fa fa-edit" ng-click="glossaryCtrl.editGlossaryItem($index)"
+                                            title="Edit glossary item"></button>
+                                    <button class="btn-link fa fa-trash-o color--red" ng-click="glossaryCtrl.deleteGlossaryItem($index)"
+                                            title="Delete glossary item"></button>
+                                </td>
+                            </g:if>
                         </tr>
                         </tbody>
                     </table>
