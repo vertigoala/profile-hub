@@ -28,17 +28,30 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             var orderBy = $filter("orderBy");
 
             $scope.addVocabTerm = function (form) {
+                var canAdd = true;
+
                 if ($scope.newVocabTerm) {
-                    $scope.vocabulary.terms.push({termId: "",
-                        name: capitalize($scope.newVocabTerm),
-                        order: $scope.vocabulary.terms.length,
-                        required: $scope.allMandatory ? true : false,
-                        containsName: false,
-                        summary: false
-                    });
-                    $scope.newVocabTerm = "";
-                    sortVocabTerms();
-                    form.$setDirty();
+                    for (var i = $scope.vocabulary.terms.length - 1; i >= 0; i--) {
+                        console.debug("counting: " + i);
+                        if ($scope.vocabulary.terms[i].name === capitalize($scope.newVocabTerm)) {
+                            canAdd = false;
+                            messageService.alert("The specified term already exists. Terms must be unique across the attribute vocabulary.");
+                            break;
+                        }
+                    }
+
+                    if (canAdd) {
+                        $scope.vocabulary.terms.push({termId: "",
+                            name: capitalize($scope.newVocabTerm),
+                            order: $scope.vocabulary.terms.length,
+                            required: $scope.allMandatory ? true : false,
+                            containsName: false,
+                            summary: false
+                        });
+                        $scope.newVocabTerm = "";
+                        sortVocabTerms();
+                        form.$setDirty();
+                    }
                 }
             };
 
