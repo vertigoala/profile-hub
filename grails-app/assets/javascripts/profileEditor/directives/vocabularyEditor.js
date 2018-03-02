@@ -32,7 +32,6 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
 
                 if ($scope.newVocabTerm) {
                     for (var i = $scope.vocabulary.terms.length - 1; i >= 0; i--) {
-                        console.debug("counting: " + i);
                         if ($scope.vocabulary.terms[i].name === capitalize($scope.newVocabTerm)) {
                             canAdd = false;
                             messageService.alert("The specified term already exists. Terms must be unique across the attribute vocabulary.");
