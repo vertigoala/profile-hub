@@ -28,18 +28,10 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             var orderBy = $filter("orderBy");
 
             $scope.addVocabTerm = function (form) {
-                var canAdd = true;
-
                 if ($scope.newVocabTerm) {
-                    for (var i = $scope.vocabulary.terms.length - 1; i >= 0; i--) {
-                        if ($scope.vocabulary.terms[i].name === capitalize($scope.newVocabTerm)) {
-                            canAdd = false;
-                            messageService.alert("The specified term already exists. Terms must be unique across the attribute vocabulary.");
-                            break;
-                        }
-                    }
-
-                    if (canAdd) {
+                    if (termExists($scope.newVocabTerm)) {
+                        messageService.alert("The specified term already exists. Terms must be unique across the attribute vocabulary.");
+                    } else {
                         $scope.vocabulary.terms.push({termId: "",
                             name: capitalize($scope.newVocabTerm),
                             order: $scope.vocabulary.terms.length,
@@ -146,10 +138,25 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
                 });
 
                 popup.result.then(function(updatedTerm) {
-                    $scope.vocabulary.terms[index] = updatedTerm;
-                    form.$setDirty();
+                    if (termExists(updatedTerm.name)) {
+                        messageService.alert("The specified term already exists. Terms must be unique across the attribute vocabulary.");
+                    } else {
+                        $scope.vocabulary.terms[index] = updatedTerm;
+                        form.$setDirty();
+                    }
                 });
             };
+
+            function termExists(termToCheck) {
+                var result = false;
+                for (var i = $scope.vocabulary.terms.length - 1; i >= 0; i--) {
+                    if ($scope.vocabulary.terms[i].name === capitalize(termToCheck)) {
+                        result = true;
+                        break;
+                    }
+                }
+                return result;
+            }
 
             $scope.saveVocabulary = function (form) {
                 var promise = profileService.updateVocabulary($scope.opusId, $scope.vocabId, $scope.vocabulary);
@@ -276,7 +283,9 @@ profileEditor.controller('VocabModalController', function ($modalInstance, term)
     self.term = term;
 
     self.ok = function() {
-        $modalInstance.close(self.term);
+        if (term.name.length > 0) {
+            $modalInstance.close(self.term);
+        }
     };
 
     self.cancel = function() {
