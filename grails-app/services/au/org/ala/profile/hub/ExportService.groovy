@@ -478,7 +478,8 @@ class ExportService {
 
         model.profile.description = descriptionAttribute
 
-        model.profile.primaryImage = images.find { it.imageId == model.profile.primaryImage }
+      //  model.profile.primaryImage = images.find { it.imageId == model.profile.primaryImage }
+        model.profile.primaryImage = images.find { it.primary == true }
 
         model.profile.images = groupImagesIntoPairs(model.profile.scientificName, images, figureNumber).imagePairs
 

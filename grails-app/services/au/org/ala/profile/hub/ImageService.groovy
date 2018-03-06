@@ -597,9 +597,9 @@ class ImageService {
                         primary         : it.imageId == profile.primaryImage,
                         type            : type
                 ]
+                convertedImages.add(image)
             }
 
-            convertedImages.add(image)
         }
         convertedImages
     }
