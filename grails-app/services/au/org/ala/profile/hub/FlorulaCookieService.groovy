@@ -33,6 +33,7 @@ class FlorulaCookieService {
         cookie.maxAge = -1
         cookie.secure = false
         def path = grailsLinkGenerator.contextPath
+        path = path.isEmpty() ? "/" : path
         cookie.setPath(path)
         cookie.setDomain(request.serverName)
         return cookie
