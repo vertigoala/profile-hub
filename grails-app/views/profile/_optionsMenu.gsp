@@ -44,7 +44,7 @@
                            target="_self"><span
                                 class="fa fa-edit"></span>&nbsp;&nbsp;Edit</a>
                     </li>
-                    <g:if test="${!params.isOpusAuthor}">
+                    <g:if test="${params.isOpusAdmin || params.isOpusEditor}">
                         <li role="presentation"
                             ng-if="!profileCtrl.readonly()">
                             <a href="" ng-click="profileCtrl.toggleAudit()"><span
