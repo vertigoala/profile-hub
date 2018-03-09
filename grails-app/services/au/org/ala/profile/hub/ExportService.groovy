@@ -588,7 +588,7 @@ class ExportService {
         List<String> connectingTerms = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect."]
 
         if (nameAuthor) {
-            connectingTerms.push(nameAuthor)
+            connectingTerms.add(0, nameAuthor)
         }
 
         String name = null

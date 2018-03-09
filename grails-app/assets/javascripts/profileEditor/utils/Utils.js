@@ -359,7 +359,7 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
         var connectingTerms = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect."];
 
         if (nameAuthor) {
-            connectingTerms.push(nameAuthor);
+            connectingTerms.unshift(nameAuthor);
         }
 
         var name = null;
