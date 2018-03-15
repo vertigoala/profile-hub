@@ -53,15 +53,15 @@ class AccessControlFilters {
 
                                     params.isOpusEditor = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_EDITOR.toString()
-                                    } != null //|| params.isOpusAdmin
+                                    } != null || params.isOpusAdmin
 
                                     params.isOpusAuthor = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_AUTHOR.toString()
-                                    } != null //|| params.isOpusAdmin || params.isOpusEditor
+                                    } != null || params.isOpusAdmin //|| params.isOpusEditor
 
                                     params.isOpusReviewer = opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_PROFILE_REVIEWER.toString()
-                                    } != null //|| params.isOpusAdmin || params.isOpusAuthor || params.isOpusEditor
+                                    } != null || params.isOpusAdmin || params.isOpusAuthor || params.isOpusEditor
 
                                     params.isOpusUser = !opus.privateCollection || opus.authorities?.find {
                                         it.userId == request.userPrincipal?.attributes?.userid && it.role == Role.ROLE_USER.toString()
