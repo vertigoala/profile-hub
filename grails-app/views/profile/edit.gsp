@@ -92,6 +92,7 @@
 
                         <a href="" ng-click="profileCtrl.editName()" class="padding-left-1 small"
                            ng-show="!profileCtrl.readonly() && profileCtrl.opus"><span class="fa fa-edit">&nbsp;</span>Edit name</a>
+
                     </div>
 
                     <div class="col-md-3 text-right" ng-cloak>
@@ -114,6 +115,21 @@
 
                 <g:if test="${!profile.archivedDate}">
                     <g:include controller="profile" action="editNamePanel" params="[opusId: params.opusId]"/>
+
+                    <div class="row">
+                        <div class="col-md-12" ng-cloak>
+                            <label class="padding-left-1 small" for="nameFormatting">Profile Name Format:</label>
+                            <div id="nameFormatting" class="btn-group">
+                                <label class="btn btn-xs" ng-class="profileCtrl.autoFormatProfileName ? 'btn-success' : 'btn-default'"
+                                       ng-model="profileCtrl.autoFormatProfileName" ng-change="profileCtrl.toggleFormatName(true, FormatNameForm)" ng-value="true"
+                                       btn-radio="true">Auto</label>
+                                <label class="btn btn-xs" ng-class="profileCtrl.autoFormatProfileName ? 'btn-default' : 'btn-danger'"
+                                       ng-model="profileCtrl.autoFormatProfileName" ng-change="profileCtrl.toggleFormatName(false, FormatNameForm)" ng-value="false" ng-click="profileCtrl.formatNameEdit()"
+                                       btn-radio="false">Manual</label>
+                            </div>
+                        </div>
+                    </div>
+                    <g:include controller="profile" action="formatNamePanel" params="[opusId: params.opusId]"/>
 
                     <g:include controller="profile" action="auditHistoryPanel" params="[opusId: params.opusId]"/>
 

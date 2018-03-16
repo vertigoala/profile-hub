@@ -786,6 +786,10 @@ class ProfileController extends BaseController {
         render template: "editNamePanel"
     }
 
+    def formatNamePanel = {
+        render template: "formatNamePanel"
+    }
+
     def auditHistoryPanel = {
         render template: "profileAuditHistory"
     }

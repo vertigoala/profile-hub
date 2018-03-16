@@ -17,6 +17,9 @@ profileEditor.controller('ProfileController',
     self.opusId = util.getEntityId("opus");
 
     self.showNameEditControls = false;
+    self.showFormatNameControls = false;
+    self.autoFormatProfileName = true;
+    self.formattedNameText = '';
     self.manuallyMatchedGuid = "";
 
     self.audit = {
@@ -49,6 +52,7 @@ profileEditor.controller('ProfileController',
                     self.profile = data.profile;
                     self.profileId = data.profile.uuid;
                     self.opus = data.opus;
+                   // self.autoFormatName = data.profile.
 
                     self.nslUrl = $sce.trustAsResourceUrl(config.nslNameUrl + self.profile.nslNameIdentifier + ".html");
 
@@ -79,8 +83,12 @@ profileEditor.controller('ProfileController',
                     loadVocabulary();
                     loadNslNameDetails();
 
+                    self.autoFormatProfileName = self.profile.profileSettings ? self.profile.profileSettings['autoFormatProfileName']  : true;
+
+                    self.formattedNameText = util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName, self.profile.profileSettings);
+
                     if (self.profile.matchedName) {
-                        self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.matchedName.nameAuthor, self.profile.matchedName.fullName);
+                          self.profile.matchedName.formattedName = util.formatScientificName(self.profile.matchedName.scientificName, self.profile.matchedName.nameAuthor, self.profile.matchedName.fullName);
                     }
 
                     self.constructManualHierarchyForNameDirective();
@@ -372,9 +380,9 @@ profileEditor.controller('ProfileController',
         }
 
         if (self.profile.matchedName && self.profile.scientificName == self.profile.matchedName.scientificName) {
-            return util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName);
+            return util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName, self.profile.profileSettings);
         } else {
-            return util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, null);
+            return util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, null, self.profile.profileSettings);
         }
     };
 
@@ -383,7 +391,77 @@ profileEditor.controller('ProfileController',
         self.newName = self.profile.scientificName;
     };
 
-    self.saveNameChange = function () {
+    self.formatNameEdit = function (form) {
+
+        if (form && form.$dirty) {
+            var confirm = util.confirm("Do you wish to save and apply changes to Manual Formatting?");
+            confirm.then(function () {
+                self.saveProfileSettings (form);
+                self.showFormatNameControls = !self.showFormatNameControls;
+                /*  self.profileSettings = {};
+                  self.profileSettings['autoFormatProfileName'] = self.autoFormatProfileName;
+                  self.profileSettings['formattedNameText'] = '';
+                  self.formattedNameText = util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName, self.profileSettings);*/
+            });
+
+        } else {
+            self.showFormatNameControls = !self.showFormatNameControls;
+            //self.autoFormatProfileName = true;
+        }
+     //   self.newName = self.profile.scientificName;
+    };
+
+
+   self.toggleFormatName = function (changeToAuto, form) {
+
+       // Need this in case the function is triggered from the Cancel Manual Formatting button
+       if (changeToAuto) {
+           self.autoFormatProfileName = true;
+       } else {
+           self.showFormatNameControls = true;
+       }
+
+       if (changeToAuto && self.formattedNameText) {
+           var confirm = util.confirm("Do you wish switch to Auto Name Format? You will lose the changes any changes that you made for Manual Name Formatting.");
+           confirm.then(function () {
+               self.formattedNameText = '';
+               self.saveProfileSettings (form);
+               self.showFormatNameControls = false;
+             /*  self.profileSettings = {};
+               self.profileSettings['autoFormatProfileName'] = self.autoFormatProfileName;
+               self.profileSettings['formattedNameText'] = '';
+               self.formattedNameText = util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName, self.profileSettings);*/
+           }, function() {
+               self.autoFormatProfileName = !self.autoFormatProfileName;
+           });
+
+       }
+     //   self.showManualFormatNameControls = mode;
+       // self.formattedName = self.profile.formattedName
+    };
+
+
+    //TODO: if user does a Name Change, the Format should switch to Auto
+   //TODO: check that Original name has not changed prior to saving
+   self.saveProfileSettings = function (form) {
+
+        self.profileSettings = {};
+        self.profileSettings['autoFormatProfileName'] = self.autoFormatProfileName;
+        self.profileSettings['formattedNameText'] = self.formattedNameText;
+
+        profileService.updateProfile(self.opusId, self.profileId, {profileSettings:self.profileSettings}).then(
+            function() {
+                form.$setPristine();
+                self.formattedNameText = util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName, self.profileSettings);
+               // self.formatName();
+            },
+            function() {
+                messageService.alert("An error has occurred while updating the Profile setting.");
+            }
+        );
+    };
+
+   self.saveNameChange = function () {
         var confirm = util.confirm("Are you sure you wish to rename this profile?");
 
         confirm.then(function () {
