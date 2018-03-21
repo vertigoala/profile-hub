@@ -16,4 +16,12 @@
 *= require ala-admin.css
 *= require animation.css
 *= require mapAndImages
+*= require self
 */
+
+a.disabled {
+    color: #AAAAAA;
+    cursor: default;
+    pointer-events: none;
+    text-decoration: none;
+}

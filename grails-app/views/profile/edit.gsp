@@ -91,7 +91,7 @@
                         </div>
 
                         <a href="" ng-click="profileCtrl.editName()" class="padding-left-1 small"
-                           ng-show="!profileCtrl.readonly() && profileCtrl.opus"><span class="fa fa-edit">&nbsp;</span>Edit name</a>
+                           ng-show="!profileCtrl.readonly() && profileCtrl.opus" ng-class="{disabled: profileCtrl.showFormatNameControls}"><span class="fa fa-edit">&nbsp;</span>Edit name</a>
 
                     </div>
 
@@ -122,10 +122,10 @@
                             <div id="nameFormatting" class="btn-group">
                                 <label class="btn btn-xs" ng-class="profileCtrl.autoFormatProfileName ? 'btn-success' : 'btn-default'"
                                        ng-model="profileCtrl.autoFormatProfileName" ng-change="profileCtrl.toggleFormatName(true, FormatNameForm)" ng-value="true"
-                                       btn-radio="true">Auto</label>
+                                       btn-radio="true" ng-disabled="profileCtrl.showNameEditControls">Auto</label>
                                 <label class="btn btn-xs" ng-class="profileCtrl.autoFormatProfileName ? 'btn-default' : 'btn-danger'"
                                        ng-model="profileCtrl.autoFormatProfileName" ng-change="profileCtrl.toggleFormatName(false, FormatNameForm)" ng-value="false" ng-click="profileCtrl.formatNameEdit()"
-                                       btn-radio="false">Manual</label>
+                                       btn-radio="false" ng-disabled="profileCtrl.showNameEditControls">Manual</label>
                             </div>
                         </div>
                     </div>
