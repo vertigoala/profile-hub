@@ -545,7 +545,7 @@ class ExportService {
         }.join(", ")
 
         // Format scientificName
-        String formattedName = formatScientificName(model.profile.scientificName, model.profile.nameAuthor, model.profile.fullName)
+        String formattedName = formatScientificName(model.profile.scientificName, model.profile.nameAuthor, model.profile.fullName, model.profile.profileSettings)
         model.profile.fullName = formattedName
 
         // Format creators and editors
@@ -581,36 +581,41 @@ class ExportService {
  * @param fullName
  * @return the formatted Scientific Name for eg: <i>Acacia</i> Mill.
  */
-    static String formatScientificName(String scientificName, String nameAuthor, String fullName) {
-        if (!scientificName && !nameAuthor && !fullName) {
-            return null
-        }
-        List<String> connectingTerms = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect."]
+    static String formatScientificName(String scientificName, String nameAuthor, String fullName, def profileSettings = null) {
+        if (!profileSettings || profileSettings?.autoFormatName || !profileSettings?.formattedNameText) {
 
-        if (nameAuthor) {
-            connectingTerms.add(0, nameAuthor)
-        }
-
-        String name = null
-        if (fullName && fullName.trim().size() > 0) {
-            name = fullName
-        } else if (scientificName && nameAuthor) {
-            name = scientificName + " " + nameAuthor
-        } else {
-            name = scientificName
-        }
-
-        connectingTerms.each {connectingTerm ->
-            int index = name.indexOf(connectingTerm)
-            if (index > -1) {
-                String part1 = "<i>${name.substring(0, index)}</i>"
-                String part2 = connectingTerm
-                String part3 = "<i>${name.substring(index + connectingTerm.size(), name.size())}</i>"
-                name = part1 + part2 + part3
+            if (!scientificName && !nameAuthor && !fullName) {
+                return null
             }
-        }
+            List<String> connectingTerms = ["subsp.", "var.", "f.", "ser.", "subg.", "sect.", "subsect."]
 
-        return name
+            if (nameAuthor) {
+                connectingTerms.add(0, nameAuthor)
+            }
+
+            String name = null
+            if (fullName && fullName.trim().size() > 0) {
+                name = fullName
+            } else if (scientificName && nameAuthor) {
+                name = scientificName + " " + nameAuthor
+            } else {
+                name = scientificName
+            }
+
+            connectingTerms.each { connectingTerm ->
+                int index = name.indexOf(connectingTerm)
+                if (index > -1) {
+                    String part1 = "<i>${name.substring(0, index)}</i>"
+                    String part2 = connectingTerm
+                    String part3 = "<i>${name.substring(index + connectingTerm.size(), name.size())}</i>"
+                    name = part1 + part2 + part3
+                }
+            }
+
+            return name
+        } else {
+            return profileSettings.formattedNameText
+        }
     }
 
 

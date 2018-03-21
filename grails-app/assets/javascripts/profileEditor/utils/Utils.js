@@ -353,7 +353,7 @@ profileEditor.factory('util', ['$location', '$log', '$q', 'config', '$modal', '$
      * @returns {*} The formatted name
      */
     function formatScientificName(scientificName, nameAuthor, fullName, profileSettings) {
-        if (!profileSettings || profileSettings.autoFormatProfileName) {
+        if (!profileSettings || profileSettings.autoFormatProfileName || !profileSettings.formattedNameText) {
             if (!scientificName && !nameAuthor && !fullName) {
                 return null;
             }
