@@ -398,17 +398,11 @@ profileEditor.controller('ProfileController',
             confirm.then(function () {
                 self.saveProfileSettings (form);
                 self.showFormatNameControls = !self.showFormatNameControls;
-                /*  self.profileSettings = {};
-                  self.profileSettings['autoFormatProfileName'] = self.autoFormatProfileName;
-                  self.profileSettings['formattedNameText'] = '';
-                  self.formattedNameText = util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName, self.profileSettings);*/
-            });
+             });
 
         } else {
             self.showFormatNameControls = !self.showFormatNameControls;
-            //self.autoFormatProfileName = true;
         }
-     //   self.newName = self.profile.scientificName;
     };
 
 
@@ -427,23 +421,18 @@ profileEditor.controller('ProfileController',
                self.formattedNameText = '';
                self.saveProfileSettings (form);
                self.showFormatNameControls = false;
-             /*  self.profileSettings = {};
-               self.profileSettings['autoFormatProfileName'] = self.autoFormatProfileName;
-               self.profileSettings['formattedNameText'] = '';
-               self.formattedNameText = util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName, self.profileSettings);*/
            }, function() {
                self.autoFormatProfileName = !self.autoFormatProfileName;
            });
 
        }
-     //   self.showManualFormatNameControls = mode;
-       // self.formattedName = self.profile.formattedName
     };
 
-
-    //TODO: if user does a Name Change, the Format should switch to Auto
-   //TODO: check that Original name has not changed prior to saving
    self.saveProfileSettings = function (form) {
+
+       var profileName = self.profile.fullName? self.profile.fullName: self.profile.scientificName + " " + self.profile.nameAuthor;
+
+       if (self.autoFormatProfileName || (self.formattedNameText && self.formattedNameText.replace(/(<([^>]+)>)/ig,"") == profileName)) {
 
         self.profileSettings = {};
         self.profileSettings['autoFormatProfileName'] = self.autoFormatProfileName;
@@ -453,12 +442,16 @@ profileEditor.controller('ProfileController',
             function() {
                 form.$setPristine();
                 self.formattedNameText = util.formatScientificName(self.profile.scientificName, self.profile.nameAuthor, self.profile.fullName, self.profileSettings);
-               // self.formatName();
             },
             function() {
                 messageService.alert("An error has occurred while updating the Profile setting.");
             }
         );
+       } else if (!self.formattedNameText) {
+           messageService.alert("Please make sure that formatted text is not empty for Manual Format mode.");
+       } else {
+           messageService.alert("You cannot change the profile name using this function. Please use Edit Name functionality for that.");
+       }
     };
 
    self.saveNameChange = function () {
@@ -476,6 +469,10 @@ profileEditor.controller('ProfileController',
                 self.profile = profile;
 
                 messageService.success("The profile name has been successfully updated.");
+
+                self.autoFormatProfileName = true;
+                self.formattedNameText = '';
+                self.saveProfileSettings();
 
                 util.redirect(util.contextRoot() + "/opus/" + self.opusId + "/profile/" + profile.scientificName + "/update");
             }, function () {
