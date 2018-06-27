@@ -638,8 +638,10 @@ profileEditor.controller('ProfileController',
     self.masterListKeybaseItemsLoaded = false;
     self.masterListKeybaseItems = null;
 
+    // Disable this feature to remove filter for keys https://github.com/AtlasOfLivingAustralia/profile-hub/issues/514
     self.canInitialiseKeyplayer = function() {
-        if (self.masterListKeybaseItems !== null || self.masterListKeybaseItemsLoaded) return true;
+        return true;
+/*        if (self.masterListKeybaseItems !== null || self.masterListKeybaseItemsLoaded) return true;
         if (!self.opus) return false;
         // if (!self.opus.masterListUid) return true;
         if (!self.masterListKeybaseItemsLoading) {
@@ -658,7 +660,7 @@ profileEditor.controller('ProfileController',
                 messageService.alertStayOn(msg);
             });
         }
-        return false;
+        return false; */
     };
     self.initialiseKeyplayer = function() {
         self.keybaseTemplateUrl = 'keyplayer.html';

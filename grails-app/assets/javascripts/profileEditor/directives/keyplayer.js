@@ -44,11 +44,12 @@ profileEditor.directive('keyPlayer', function ($browser) {
                         resultDisplay: resultDisplay
                     };
 
-                    if (self.onlyIncludeItems) {
+                    // Disable this feature to remove filter for keys https://github.com/AtlasOfLivingAustralia/profile-hub/issues/514
+                 /*   if (self.onlyIncludeItems) {
                         settings.filterItemNames = self.onlyIncludeItems.names;
                         settings.filterItemGuids = self.onlyIncludeItems.guids;
                     }
-
+                */
                     var action;
                     var initialised = false;
                     if (self.format == 'bracketed') {

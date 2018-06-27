@@ -611,8 +611,10 @@ profileEditor.controller('OpusController', function ($log, $scope, profileServic
     self.masterListKeybaseItemsLoaded = false;
     self.masterListKeybaseItems = null;
 
+    // Disable this feature to remove filter for keys https://github.com/AtlasOfLivingAustralia/profile-hub/issues/514
     self.canInitialiseKeyplayer = function() {
-        if (self.masterListKeybaseItems !== null || self.masterListKeybaseItemsLoaded) return true;
+        return true;
+    /*        if (self.masterListKeybaseItems !== null || self.masterListKeybaseItemsLoaded) return true;
         if (!self.opus) return false;
         if (!self.masterListKeybaseItemsLoading) {
             self.masterListKeybaseItemsLoading = true;
@@ -630,7 +632,7 @@ profileEditor.controller('OpusController', function ($log, $scope, profileServic
                 messageService.alertStayOn(msg);
             });
         }
-        return false;
+        return false; */
     };
 
     // Support for lazy loading the keyplayer.
