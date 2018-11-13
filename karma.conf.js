@@ -54,7 +54,6 @@ module.exports = function (config) {
             'https://raw.githubusercontent.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/layers/SmartWmsLayer.js',
             'https://raw.githubusercontent.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/Map.js',
             'https://raw.githubusercontent.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/OccurrenceMap.js',
-            'https://raw.githubusercontent.com/AtlasOfLivingAustralia/ala-map-plugin/master/web-app/js/OccurrenceMap.js',
             'grails-app/assets/thirdparty/modernizr/modernizer.js',
             'grails-app/assets/thirdparty/angular/angular-1.3.20.js',
             'grails-app/assets/thirdparty/angular/angular-sanitize-1.3.20.js',
