@@ -33,10 +33,6 @@
     </div>
 </div>
 
-<g:if test="${!profile.archivedDate}">
-    <g:include controller="profile" action="nomenclaturePanel" params="[opusId: params.opusId]"/>
-</g:if>
-
 <g:if test="${!profile.privateMode || (params.currentUser && params.isOpusReviewer)}">
     <div class="row">
         <div class="col-md-12" ng-cloak>
@@ -44,11 +40,15 @@
                 <tab heading="Profile" class="font-xxsmall" ng-show="managedTabCtrl.hasContent()" managed-tab>
                     <div class="row" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
                         <div ng-class="(profileCtrl.profile.mapSnapshot || imageCtrl.primaryImage || profileCtrl.primaryAudio || profileCtrl.primaryVideo) ? 'col-md-9' : 'col-md-12'">
-                            <g:render template="attributes"/>
+                            <g:if test="${!profile.archivedDate}">
+                                <g:render template="nomenclaturePanel"/>
+                            </g:if>
                             <g:render template="specimens"/>
+                            <g:render template="attributes"/>
                             <g:if test="${!profile.archivedDate}">
                                 <g:render template="taxon"/>
                             </g:if>
+
                         </div>
                         <div class="side col-md-3" ng-if="profileCtrl.profile.mapSnapshot || imageCtrl.primaryImage || profileCtrl.primaryVideo || profileCtrl.primaryAudio">
                             <g:render template="mapSnapshot" model="[size: 'small']"/>

@@ -1,5 +1,6 @@
-<div class="panel panel-default" ng-cloak ng-form="NomenclatureForm" ng-show="!profileCtrl.readonly()">
-    <navigation-anchor anchor-name="edit_nomenclature" title="Nomenclature" condition="!profileCtrl.readonly()"></navigation-anchor>
+<div class="panel panel-default  ${edit?'':'panel-override'}" ng-cloak ng-form="NomenclatureForm"
+     ng-show="profileCtrl.profile.nslNameIdentifier || !profileCtrl.readonly()">
+    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}nomenclature" title="Nomenclature"></navigation-anchor>
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
@@ -20,7 +21,7 @@
         </div>
     </div>
 
-    <div class="panel-footer">
+    <div class="panel-footer" ng-if="!profileCtrl.readonly()">
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-right">
