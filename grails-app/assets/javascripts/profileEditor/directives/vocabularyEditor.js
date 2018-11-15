@@ -86,7 +86,7 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
                             return $scope.vocabulary.terms[existingTermIndex];
                         },
                         terms: function() {
-                            var terms = [];//angular.copy($scope.vocabulary.terms);
+                            var terms = [];
                             var itemToDel = $scope.vocabulary.terms[existingTermIndex];
                             var deletedItemOrder = $scope.vocabulary.terms[existingTermIndex].order;
                             angular.forEach($scope.vocabulary.terms, function(term) {
