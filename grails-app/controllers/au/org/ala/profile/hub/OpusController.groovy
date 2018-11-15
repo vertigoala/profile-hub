@@ -326,7 +326,7 @@ class OpusController extends OpusBaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_ADMIN, opusSpecific = false)
+    @Secured(role = ROLE_PROFILE_ADMIN, opusSpecific = true)
     def deleteOpus() {
         if (!params.opusId) {
             badRequest "opusId is a required parameter"
