@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest
 
-import static au.org.ala.profile.hub.Utils.encPath
 import static au.org.ala.profile.hub.util.HubConstants.*
 import static au.org.ala.profile.security.Role.ROLE_ADMIN
 import static au.org.ala.profile.security.Role.ROLE_PROFILE_ADMIN
@@ -104,6 +103,7 @@ class OpusController extends OpusBaseController {
         }
     }
 
+    @Secured(role = ROLE_PROFILE_ADMIN)
     def reports() {
         def opus = profileService.getOpus(params.opusId as String)
 
@@ -326,7 +326,7 @@ class OpusController extends OpusBaseController {
         }
     }
 
-    @Secured(role = ROLE_ADMIN, opusSpecific = false)
+    @Secured(role = ROLE_PROFILE_ADMIN, opusSpecific = false)
     def deleteOpus() {
         if (!params.opusId) {
             badRequest "opusId is a required parameter"

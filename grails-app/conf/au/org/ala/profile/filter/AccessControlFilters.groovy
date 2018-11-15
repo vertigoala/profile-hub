@@ -81,10 +81,10 @@ class AccessControlFilters {
                                                     authorised = params.isOpusAdmin
                                                     log.debug "Action ${actionFullName} requires ROLE_PROFILE_ADMIN. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_EDITOR.toString()) {
-                                                    authorised = params.isOpusAdmin || params.isOpusEditor
+                                                    authorised = params.isOpusAdmin || params.isOpusAuthor || params.isOpusEditor
                                                     log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_AUTHOR.toString()) {
-                                                    authorised = params.isOpusAdmin || params.isOpusAuthor || params.isOpusEditor
+                                                    authorised = params.isOpusAdmin || params.isOpusAuthor
                                                     log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_REVIEWER.toString()) {
                                                     authorised = params.isOpusAdmin || params.isOpusAuthor || params.isOpusReviewer || params.isOpusEditor

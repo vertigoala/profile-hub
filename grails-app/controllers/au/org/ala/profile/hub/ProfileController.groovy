@@ -14,9 +14,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.validation.constraints.NotNull
 
-import static au.org.ala.profile.hub.WebServiceWrapperService.FLORULA_COOKIE
-import static au.org.ala.profile.security.Role.ROLE_PROFILE_AUTHOR
-import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
+import static au.org.ala.profile.security.Role.*
 
 class ProfileController extends BaseController {
 
@@ -30,7 +28,7 @@ class ProfileController extends BaseController {
 
     def index() {}
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def edit() {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
@@ -133,7 +131,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def createDraftMode() {
         if (!params.profileId) {
             badRequest()
@@ -149,7 +147,7 @@ class ProfileController extends BaseController {
     }
 
     @PrivateCollectionSecurityExempt
-    @Secured(role = ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_ADMIN)
     def publishDraft() {
         if (!params.profileId) {
             badRequest()
@@ -220,7 +218,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_ADMIN)
     def deleteProfile() {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
@@ -573,7 +571,7 @@ class ProfileController extends BaseController {
     }
 
     @PrivateCollectionSecurityExempt
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_ADMIN)
     def savePublication() {
         if (!enabled("publications")) {
             badRequest "The publications feature has been disabled"
