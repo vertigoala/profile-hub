@@ -4,11 +4,15 @@
 </div>
 
 <div class="modal-body">
-    <p>
+    <p ng-hide="removeTermCtrl.usageCount == '0'" >
         The vocabulary term {{removeTermCtrl.existingTerm.name}} is being used in {{removeTermCtrl.usageCount}}
         profile(s).
         You must either select a replacement term or manually find and remove all usages before you can delete
         the term.
+    </p>
+    <p ng-show="removeTermCtrl.usageCount == '0'" >
+        The vocabulary term {{removeTermCtrl.existingTerm.name}} is being selected as a replacement term.
+        You must either select another replacement term or remove all usages before you can delete the term.
     </p>
 
     <div class="form-horizontal">
