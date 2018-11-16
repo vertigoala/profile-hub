@@ -9,11 +9,12 @@
         </div>
 
         <!-- config is on root scope -->
-        <div ng-if="config.isOpusReviewer && (config.isOpusAuthor || comment.author.userId == config.currentUserId)"
-             class="col-md-4">
-            <button class="btn btn-link fa fa-trash-o color--red" ng-click="commentCtrl.deleteComment(path)"
+        <div class="col-md-4">
+            <button ng-if="config.isALAAdmin || config.isOpusAdmin"
+                    class="btn btn-link fa fa-trash-o color--red" ng-click="commentCtrl.deleteComment(path)"
                     title="Delete comment"></button>
-            <button class="btn btn-link fa fa-edit" ng-click="commentCtrl.editComment(path)"
+            <button ng-if="config.isOpusAdmin || config.isOpusEditor || config.isOpusAuthor || (config.isOpusReviewer && comment.author.userId == config.currentUserId)"
+                    class="btn btn-link fa fa-edit" ng-click="commentCtrl.editComment(path)"
                     title="Edit comment"></button>
         </div>
     </div>

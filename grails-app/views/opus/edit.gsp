@@ -30,7 +30,7 @@
                     <a href="${request.contextPath}/opus/{{opusCtrl.opus.shortName ? opusCtrl.opus.shortName : opusCtrl.opus.uuid}}"
                        class="btn btn-default" target="_self" ng-show="opusCtrl.opus.uuid"><i
                             class="fa fa-eye"></i> Public View</a>
-                    <g:if test="${params.isOpusAdmin}">
+                    <g:if test="${params.isALAAdmin}">
                         <button ng-click="opusCtrl.deleteOpus()" class="btn btn-danger" target="_self"
                                 ng-show="opusCtrl.opus.uuid"><i
                                 class="fa fa-trash-o"></i> Delete this collection

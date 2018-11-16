@@ -125,6 +125,8 @@
         isOpusReviewer: ${!!params.isOpusReviewer},
         isOpusAuthor: ${!!params.isOpusAuthor},
         isOpusEditor: ${!!params.isOpusEditor},
+        isOpusAdmin: ${!!params.isOpusAdmin},
+        isALAAdmin: ${!!params.isALAAdmin},
         listServiceUrl: '${grailsApplication.config.lists.base.url}',
         masterListType: '${grailsApplication.config.lists.masterlist.type ?: 'PROFILE' }',
         nslServiceUrlPrefix: '${grailsApplication.config.nsl.service.url.prefix}',

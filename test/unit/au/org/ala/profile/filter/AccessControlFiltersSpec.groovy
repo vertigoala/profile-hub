@@ -398,13 +398,26 @@ class AccessControlFiltersSpec extends Specification {
         def testData = getTestCollectionAndProfile()
         def opus = testData.opus
         def profile = testData.profile
-        pService.getOpus(_) >> opus
-        pService.getProfile(_, _, _) >> profile
-        pService.getCitation(_, _, _) >> ""
-        pService.hasMatchedName(_) >> true
-        pService.createProfile(_, _) >> [statusCode: 200, resp: [:]]
-        pService.archiveProfile(*_) >> [statusCode: 200, resp: [:]]
-        pService.toggleDraftMode(*_) >> [statusCode: 200, resp: [:]]
+        def wsResponse = [statusCode: 200, resp: [:]]
+        Map methodReturnValues = [
+                "getProfile" : profile,
+                "createProfile": wsResponse,
+                "deleteProfile": wsResponse,
+                "toggleDraftMode": wsResponse,
+                "archiveProfile": wsResponse,
+                "savePublication": wsResponse
+        ]
+
+        // Adding this interaction to make sure controller action is not called when authorization fails.
+        numberOfCallsToFunction * pService."${functionCalled}"(*_) >> methodReturnValues[functionCalled]
+        pService.getOpus(*_) >> opus
+        pService.getProfile(*_) >> profile
+        pService.getCitation(*_) >> ""
+        pService.hasMatchedName(*_) >> true
+        pService.createProfile(*_) >> wsResponse
+        pService.archiveProfile(*_) >> wsResponse
+        pService.toggleDraftMode(*_) >> wsResponse
+        pService.savePublication(*_) >> wsResponse
         eService.createPdf(*_) >> null
 
         controller = new ProfileController()
@@ -425,71 +438,71 @@ class AccessControlFiltersSpec extends Specification {
         response.status == responseCode
 
         where:
-        action                  | type                        | responseCode
+        action                  | type                        | responseCode | functionCalled  | numberOfCallsToFunction
         // view profile
-        "show"                  | "NOT_LOGGED_IN_USER"        | 200
-        "show"                  | "LOGGED_IN_USER"            | 200
-        "show"                  | "REVIEWER"                  | 200
-        "show"                  | "EDITOR"                    | 200
-        "show"                  | "AUTHOR"                    | 200
-        "show"                  | "ADMIN"                     | 200
-        "show"                  | "ALA_ADMIN"                 | 200
+        "show"                  | "NOT_LOGGED_IN_USER"        | 200          | "getProfile"    | 1
+        "show"                  | "LOGGED_IN_USER"            | 200          | "getProfile"    | 1
+        "show"                  | "REVIEWER"                  | 200          | "getProfile"    | 1
+        "show"                  | "EDITOR"                    | 200          | "getProfile"    | 1
+        "show"                  | "AUTHOR"                    | 200          | "getProfile"    | 1
+        "show"                  | "ADMIN"                     | 200          | "getProfile"    | 1
+        "show"                  | "ALA_ADMIN"                 | 200          | "getProfile"    | 1
         // edit profile
-        "edit"                  | "NOT_LOGGED_IN_USER"        | 403
-        "edit"                  | "LOGGED_IN_USER"            | 403
-        "edit"                  | "REVIEWER"                  | 403
-        "edit"                  | "EDITOR"                    | 200
-        "edit"                  | "AUTHOR"                    | 200
-        "edit"                  | "ADMIN"                     | 200
-        "edit"                  | "ALA_ADMIN"                 | 200
+        "edit"                  | "NOT_LOGGED_IN_USER"        | 403          | "getProfile"    | 0
+        "edit"                  | "LOGGED_IN_USER"            | 403          | "getProfile"    | 0
+        "edit"                  | "REVIEWER"                  | 403          | "getProfile"    | 0
+        "edit"                  | "EDITOR"                    | 200          | "getProfile"    | 1
+        "edit"                  | "AUTHOR"                    | 200          | "getProfile"    | 1
+        "edit"                  | "ADMIN"                     | 200          | "getProfile"    | 1
+        "edit"                  | "ALA_ADMIN"                 | 200          | "getProfile"    | 1
         // create profile
-        "createProfile"         | "NOT_LOGGED_IN_USER"        | 403
-        "createProfile"         | "LOGGED_IN_USER"            | 403
-        "createProfile"         | "REVIEWER"                  | 403
-        "createProfile"         | "EDITOR"                    | 403
-        "createProfile"         | "AUTHOR"                    | 200
-        "createProfile"         | "ADMIN"                     | 200
-        "createProfile"         | "ALA_ADMIN"                 | 200
+        "createProfile"         | "NOT_LOGGED_IN_USER"        | 403          | "createProfile" | 0
+        "createProfile"         | "LOGGED_IN_USER"            | 403          | "createProfile" | 0
+        "createProfile"         | "REVIEWER"                  | 403          | "createProfile" | 0
+        "createProfile"         | "EDITOR"                    | 403          | "createProfile" | 0
+        "createProfile"         | "AUTHOR"                    | 200          | "createProfile" | 1
+        "createProfile"         | "ADMIN"                     | 200          | "createProfile" | 1
+        "createProfile"         | "ALA_ADMIN"                 | 200          | "createProfile" | 1
         // delete profile
-        "deleteProfile"         | "NOT_LOGGED_IN_USER"        | 403
-        "deleteProfile"         | "LOGGED_IN_USER"            | 403
-        "deleteProfile"         | "REVIEWER"                  | 403
-        "deleteProfile"         | "EDITOR"                    | 403
-        "deleteProfile"         | "AUTHOR"                    | 403
-        "deleteProfile"         | "ADMIN"                     | 200
-        "deleteProfile"         | "ALA_ADMIN"                 | 200
+        "deleteProfile"         | "NOT_LOGGED_IN_USER"        | 403          | "deleteProfile" | 0
+        "deleteProfile"         | "LOGGED_IN_USER"            | 403          | "deleteProfile" | 0
+        "deleteProfile"         | "REVIEWER"                  | 403          | "deleteProfile" | 0
+        "deleteProfile"         | "EDITOR"                    | 403          | "deleteProfile" | 0
+        "deleteProfile"         | "AUTHOR"                    | 403          | "deleteProfile" | 0
+        "deleteProfile"         | "ADMIN"                     | 200          | "deleteProfile" | 1
+        "deleteProfile"         | "ALA_ADMIN"                 | 200          | "deleteProfile" | 1
         // lock for major revision
-        "createDraftMode"       | "NOT_LOGGED_IN_USER"        | 403
-        "createDraftMode"       | "LOGGED_IN_USER"            | 403
-        "createDraftMode"       | "REVIEWER"                  | 403
-        "createDraftMode"       | "EDITOR"                    | 200
-        "createDraftMode"       | "AUTHOR"                    | 200
-        "createDraftMode"       | "ADMIN"                     | 200
-        "createDraftMode"       | "ALA_ADMIN"                 | 200
-        // lock for major revision
-        "archiveProfile"        | "NOT_LOGGED_IN_USER"        | 403
-        "archiveProfile"        | "LOGGED_IN_USER"            | 403
-        "archiveProfile"        | "REVIEWER"                  | 403
-        "archiveProfile"        | "EDITOR"                    | 403
-        "archiveProfile"        | "AUTHOR"                    | 200
-        "archiveProfile"        | "ADMIN"                     | 200
-        "archiveProfile"        | "ALA_ADMIN"                 | 200
+        "createDraftMode"       | "NOT_LOGGED_IN_USER"        | 403          | "toggleDraftMode" | 0
+        "createDraftMode"       | "LOGGED_IN_USER"            | 403          | "toggleDraftMode" | 0
+        "createDraftMode"       | "REVIEWER"                  | 403          | "toggleDraftMode" | 0
+        "createDraftMode"       | "EDITOR"                    | 200          | "toggleDraftMode" | 1
+        "createDraftMode"       | "AUTHOR"                    | 200          | "toggleDraftMode" | 1
+        "createDraftMode"       | "ADMIN"                     | 200          | "toggleDraftMode" | 1
+        "createDraftMode"       | "ALA_ADMIN"                 | 200          | "toggleDraftMode" | 1
+        // Archive profiles
+        "archiveProfile"        | "NOT_LOGGED_IN_USER"        | 403          | "archiveProfile"  | 0
+        "archiveProfile"        | "LOGGED_IN_USER"            | 403          | "archiveProfile"  | 0
+        "archiveProfile"        | "REVIEWER"                  | 403          | "archiveProfile"  | 0
+        "archiveProfile"        | "EDITOR"                    | 403          | "archiveProfile"  | 0
+        "archiveProfile"        | "AUTHOR"                    | 200          | "archiveProfile"  | 1
+        "archiveProfile"        | "ADMIN"                     | 200          | "archiveProfile"  | 1
+        "archiveProfile"        | "ALA_ADMIN"                 | 200          | "archiveProfile"  | 1
         // publish draft profiles
-        "publishDraft"          | "NOT_LOGGED_IN_USER"        | 403
-        "publishDraft"          | "LOGGED_IN_USER"            | 403
-        "publishDraft"          | "REVIEWER"                  | 403
-        "publishDraft"          | "EDITOR"                    | 403
-        "publishDraft"          | "AUTHOR"                    | 403
-        "publishDraft"          | "ADMIN"                     | 200
-        "publishDraft"          | "ALA_ADMIN"                 | 200
+        "publishDraft"          | "NOT_LOGGED_IN_USER"        | 403          | "getProfile"      | 0
+        "publishDraft"          | "LOGGED_IN_USER"            | 403          | "getProfile"      | 0
+        "publishDraft"          | "REVIEWER"                  | 403          | "getProfile"      | 0
+        "publishDraft"          | "EDITOR"                    | 403          | "getProfile"      | 0
+        "publishDraft"          | "AUTHOR"                    | 403          | "getProfile"      | 0
+        "publishDraft"          | "ADMIN"                     | 200          | "getProfile"      | 1
+        "publishDraft"          | "ALA_ADMIN"                 | 200          | "getProfile"      | 1
         // create profile snapshot
-        "savePublication"       | "NOT_LOGGED_IN_USER"        | 403
-        "savePublication"       | "LOGGED_IN_USER"            | 403
-        "savePublication"       | "REVIEWER"                  | 403
-        "savePublication"       | "EDITOR"                    | 403
-        "savePublication"       | "AUTHOR"                    | 403
-        "savePublication"       | "ADMIN"                     | 200
-        "savePublication"       | "ALA_ADMIN"                 | 200
+        "savePublication"       | "NOT_LOGGED_IN_USER"        | 403          | "savePublication" | 0
+        "savePublication"       | "LOGGED_IN_USER"            | 403          | "savePublication" | 0
+        "savePublication"       | "REVIEWER"                  | 403          | "savePublication" | 0
+        "savePublication"       | "EDITOR"                    | 403          | "savePublication" | 0
+        "savePublication"       | "AUTHOR"                    | 403          | "savePublication" | 0
+        "savePublication"       | "ADMIN"                     | 200          | "savePublication" | 1
+        "savePublication"       | "ALA_ADMIN"                 | 200          | "savePublication" | 1
     }
 
     void "check to ensure users with correct privilege can comment on a profile"() {
@@ -506,11 +519,20 @@ class AccessControlFiltersSpec extends Specification {
         def testData = getTestCollectionAndProfile()
         def opus = testData.opus
         def profile = testData.profile
+        def wsResponse = [statusCode: 200, resp: [ author: [userId: "PROFILE_REVIEWER_USER"]]]
+        Map methodReturnValues = [
+                "getComments": wsResponse,
+                "addComment": wsResponse,
+                "deleteComment": wsResponse,
+                "updateComment": wsResponse
+        ]
+
+        // Adding this interaction to make sure controller action is not called when authorization fails.
+        numberOfCallsToFunction * pService."${functionCalled}"(*_) >> methodReturnValues[functionCalled]
         pService.getOpus(_) >> opus
-        pService.getProfile(_, _, _) >> profile
-        pService.addComment(*_) >> [statusCode: 200, resp: []]
-        pService.getComments(_) >> [statusCode: 200, resp: []]
-        pService.getComment(*_) >> [statusCode: 200, resp: [author: [userId: 'abc']]]
+        pService.addComment(*_) >> wsResponse
+        pService.getComments(*_) >> wsResponse
+        pService.getComment(*_) >> wsResponse
 
         controller = new CommentController()
         controller.profileService = pService
@@ -519,6 +541,7 @@ class AccessControlFiltersSpec extends Specification {
         log.info("Controller - profile; Action - ${action}; User - ${type};")
         params.opusId = "allusers"
         params.profileId = "test"
+        params.commentId = "commentId"
         request.userPrincipal = users[type]
         request.json = profile as JSON
 
@@ -530,23 +553,39 @@ class AccessControlFiltersSpec extends Specification {
         response.status == responseCode
 
         where:
-        action                  | type                        | responseCode
-        // create comments
-        "addComment"            | "NOT_LOGGED_IN_USER"        | 403
-        "addComment"            | "LOGGED_IN_USER"            | 403
-        "addComment"            | "REVIEWER"                  | 200
-        "addComment"            | "EDITOR"                    | 200
-        "addComment"            | "AUTHOR"                    | 200
-        "addComment"            | "ADMIN"                     | 200
-        "addComment"            | "ALA_ADMIN"                 | 200
+        action                  | type                        | responseCode | functionCalled  | numberOfCallsToFunction
+        // create comment
+        "addComment"            | "NOT_LOGGED_IN_USER"        | 403          | "addComment"    | 0
+        "addComment"            | "LOGGED_IN_USER"            | 403          | "addComment"    | 0
+        "addComment"            | "REVIEWER"                  | 200          | "addComment"    | 1
+        "addComment"            | "EDITOR"                    | 200          | "addComment"    | 1
+        "addComment"            | "AUTHOR"                    | 200          | "addComment"    | 1
+        "addComment"            | "ADMIN"                     | 200          | "addComment"    | 1
+        "addComment"            | "ALA_ADMIN"                 | 200          | "addComment"    | 1
         // view comments
-        "getComments"           | "NOT_LOGGED_IN_USER"        | 403
-        "getComments"           | "LOGGED_IN_USER"            | 403
-        "getComments"           | "REVIEWER"                  | 200
-        "getComments"           | "EDITOR"                    | 200
-        "getComments"           | "AUTHOR"                    | 200
-        "getComments"           | "ADMIN"                     | 200
-        "getComments"           | "ALA_ADMIN"                 | 200
+        "getComments"           | "NOT_LOGGED_IN_USER"        | 403          | "getComments"   | 0
+        "getComments"           | "LOGGED_IN_USER"            | 403          | "getComments"   | 0
+        "getComments"           | "REVIEWER"                  | 200          | "getComments"   | 1
+        "getComments"           | "EDITOR"                    | 200          | "getComments"   | 1
+        "getComments"           | "AUTHOR"                    | 200          | "getComments"   | 1
+        "getComments"           | "ADMIN"                     | 200          | "getComments"   | 1
+        "getComments"           | "ALA_ADMIN"                 | 200          | "getComments"   | 1
+        // update comment
+        "updateComment"         | "NOT_LOGGED_IN_USER"        | 403          | "updateComment"    | 0
+        "updateComment"         | "LOGGED_IN_USER"            | 403          | "updateComment"    | 0
+        "updateComment"         | "REVIEWER"                  | 200          | "updateComment"    | 1
+        "updateComment"         | "EDITOR"                    | 200          | "updateComment"    | 1
+        "updateComment"         | "AUTHOR"                    | 200          | "updateComment"    | 1
+        "updateComment"         | "ADMIN"                     | 200          | "updateComment"    | 1
+        "updateComment"         | "ALA_ADMIN"                 | 200          | "updateComment"    | 1
+        // delete comment
+        "deleteComment"         | "NOT_LOGGED_IN_USER"        | 403          | "deleteComment" | 0
+        "deleteComment"         | "LOGGED_IN_USER"            | 403          | "deleteComment" | 0
+        "deleteComment"         | "REVIEWER"                  | 403          | "deleteComment" | 0
+        "deleteComment"         | "EDITOR"                    | 403          | "deleteComment" | 0
+        "deleteComment"         | "AUTHOR"                    | 403          | "deleteComment" | 0
+        "deleteComment"         | "ADMIN"                     | 200          | "deleteComment" | 1
+        "deleteComment"         | "ALA_ADMIN"                 | 200          | "deleteComment" | 1
 
     }
 
@@ -568,11 +607,21 @@ class AccessControlFiltersSpec extends Specification {
         def testData = getTestCollectionAndProfile()
         def opus = testData.opus
         def profile = testData.profile
-        pService.getOpus(_) >> opus
-        pService.getProfile(_, _, _) >> profile
-        pService.deleteOpus(*_) >> [statusCode: 200, resp: []]
+        def wsResponse = [statusCode: 200, resp: [:]]
+        Map methodReturnValues = [
+                "getOpus" : opus,
+                "updateFlorulaList": null,
+                "createOpus": wsResponse,
+                "deleteOpus": wsResponse
+        ]
+
+        // Adding this interaction to make sure controller action is not called when authorization fails.
+        numberOfCallsToFunction * pService."${functionCalled}"(*_) >> methodReturnValues[functionCalled]
+        pService.getOpus(*_) >> opus
+        pService.getProfile(*_) >> profile
+        pService.deleteOpus(*_) >> wsResponse
         fCookieService.getFlorulaListIdForOpusId(*_) >> null
-        wService.get(*_) >> [statusCode: 200, resp: []]
+        wService.get(*_) >> wsResponse
 
         controller = new OpusController()
         controller.profileService = pService
@@ -592,71 +641,79 @@ class AccessControlFiltersSpec extends Specification {
         response.status == responseCode
 
         where:
-        action                    | type                        | responseCode
+        action                    | type                        | responseCode | functionCalled | numberOfCallsToFunction
         // view opus home page
-        "show"                    | "NOT_LOGGED_IN_USER"        | 200
-        "show"                    | "LOGGED_IN_USER"            | 200
-        "show"                    | "REVIEWER"                  | 200
-        "show"                    | "EDITOR"                    | 200
-        "show"                    | "AUTHOR"                    | 200
-        "show"                    | "ADMIN"                     | 200
-        "show"                    | "ALA_ADMIN"                 | 200
+        "show"                    | "NOT_LOGGED_IN_USER"        | 200          | "getOpus"      | 2
+        "show"                    | "LOGGED_IN_USER"            | 200          | "getOpus"      | 2
+        "show"                    | "REVIEWER"                  | 200          | "getOpus"      | 2
+        "show"                    | "EDITOR"                    | 200          | "getOpus"      | 2
+        "show"                    | "AUTHOR"                    | 200          | "getOpus"      | 2
+        "show"                    | "ADMIN"                     | 200          | "getOpus"      | 2
+        "show"                    | "ALA_ADMIN"                 | 200          | "getOpus"      | 1
         // view search page
-        "search"                  | "NOT_LOGGED_IN_USER"        | 200
-        "search"                  | "LOGGED_IN_USER"            | 200
-        "search"                  | "REVIEWER"                  | 200
-        "search"                  | "EDITOR"                    | 200
-        "search"                  | "AUTHOR"                    | 200
-        "search"                  | "ADMIN"                     | 200
-        "search"                  | "ALA_ADMIN"                 | 200
+        "search"                  | "NOT_LOGGED_IN_USER"        | 200          | "getOpus"      | 2
+        "search"                  | "LOGGED_IN_USER"            | 200          | "getOpus"      | 2
+        "search"                  | "REVIEWER"                  | 200          | "getOpus"      | 2
+        "search"                  | "EDITOR"                    | 200          | "getOpus"      | 2
+        "search"                  | "AUTHOR"                    | 200          | "getOpus"      | 2
+        "search"                  | "ADMIN"                     | 200          | "getOpus"      | 2
+        "search"                  | "ALA_ADMIN"                 | 200          | "getOpus"      | 1
         // view browse page
-        "browse"                  | "NOT_LOGGED_IN_USER"        | 200
-        "browse"                  | "LOGGED_IN_USER"            | 200
-        "browse"                  | "REVIEWER"                  | 200
-        "browse"                  | "EDITOR"                    | 200
-        "browse"                  | "AUTHOR"                    | 200
-        "browse"                  | "ADMIN"                     | 200
-        "browse"                  | "ALA_ADMIN"                 | 200
+        "browse"                  | "NOT_LOGGED_IN_USER"        | 200          | "getOpus"      | 2
+        "browse"                  | "LOGGED_IN_USER"            | 200          | "getOpus"      | 2
+        "browse"                  | "REVIEWER"                  | 200          | "getOpus"      | 2
+        "browse"                  | "EDITOR"                    | 200          | "getOpus"      | 2
+        "browse"                  | "AUTHOR"                    | 200          | "getOpus"      | 2
+        "browse"                  | "ADMIN"                     | 200          | "getOpus"      | 2
+        "browse"                  | "ALA_ADMIN"                 | 200          | "getOpus"      | 1
         // view filter page
-        "filter"                  | "NOT_LOGGED_IN_USER"        | 200
-        "filter"                  | "LOGGED_IN_USER"            | 200
-        "filter"                  | "REVIEWER"                  | 200
-        "filter"                  | "EDITOR"                    | 200
-        "filter"                  | "AUTHOR"                    | 200
-        "filter"                  | "ADMIN"                     | 200
-        "filter"                  | "ALA_ADMIN"                 | 200
-        // view opus home page
-        "edit"                    | "NOT_LOGGED_IN_USER"        | 403
-        "edit"                    | "LOGGED_IN_USER"            | 403
-        "edit"                    | "REVIEWER"                  | 403
-        "edit"                    | "EDITOR"                    | 403
-        "edit"                    | "AUTHOR"                    | 403
-        "edit"                    | "ADMIN"                     | 200
-        "edit"                    | "ALA_ADMIN"                 | 200
+        "filter"                  | "NOT_LOGGED_IN_USER"        | 200          | "getOpus"      | 2
+        "filter"                  | "LOGGED_IN_USER"            | 200          | "getOpus"      | 2
+        "filter"                  | "REVIEWER"                  | 200          | "getOpus"      | 2
+        "filter"                  | "EDITOR"                    | 200          | "getOpus"      | 2
+        "filter"                  | "AUTHOR"                    | 200          | "getOpus"      | 2
+        "filter"                  | "ADMIN"                     | 200          | "getOpus"      | 2
+        "filter"                  | "ALA_ADMIN"                 | 200          | "getOpus"      | 1
+        // edit opus configuration
+        "edit"                    | "NOT_LOGGED_IN_USER"        | 403          | "getOpus"      | 1
+        "edit"                    | "LOGGED_IN_USER"            | 403          | "getOpus"      | 1
+        "edit"                    | "REVIEWER"                  | 403          | "getOpus"      | 1
+        "edit"                    | "EDITOR"                    | 403          | "getOpus"      | 1
+        "edit"                    | "AUTHOR"                    | 403          | "getOpus"      | 1
+        "edit"                    | "ADMIN"                     | 200          | "getOpus"      | 2
+        "edit"                    | "ALA_ADMIN"                 | 200          | "getOpus"      | 1
         // view opus reports
-        "edit"                    | "NOT_LOGGED_IN_USER"        | 403
-        "edit"                    | "LOGGED_IN_USER"            | 403
-        "edit"                    | "REVIEWER"                  | 403
-        "edit"                    | "EDITOR"                    | 403
-        "edit"                    | "AUTHOR"                    | 403
-        "edit"                    | "ADMIN"                     | 200
-        "edit"                    | "ALA_ADMIN"                 | 200
+        "reports"                 | "NOT_LOGGED_IN_USER"        | 403          | "getOpus"      | 1
+        "reports"                 | "LOGGED_IN_USER"            | 403          | "getOpus"      | 1
+        "reports"                 | "REVIEWER"                  | 403          | "getOpus"      | 1
+        "reports"                 | "EDITOR"                    | 403          | "getOpus"      | 1
+        "reports"                 | "AUTHOR"                    | 403          | "getOpus"      | 1
+        "reports"                 | "ADMIN"                     | 200          | "getOpus"      | 2
+        "reports"                 | "ALA_ADMIN"                 | 200          | "getOpus"      | 1
         // set filter on a page
-        "updateFlorulaList"       | "NOT_LOGGED_IN_USER"        | 204
-        "updateFlorulaList"       | "LOGGED_IN_USER"            | 204
-        "updateFlorulaList"       | "REVIEWER"                  | 204
-        "updateFlorulaList"       | "EDITOR"                    | 204
-        "updateFlorulaList"       | "AUTHOR"                    | 204
-        "updateFlorulaList"       | "ADMIN"                     | 204
-        "updateFlorulaList"       | "ALA_ADMIN"                 | 204
+        "updateFlorulaList"       | "NOT_LOGGED_IN_USER"        | 204          | "updateFlorulaList" | 1
+        "updateFlorulaList"       | "LOGGED_IN_USER"            | 204          | "updateFlorulaList" | 1
+        "updateFlorulaList"       | "REVIEWER"                  | 204          | "updateFlorulaList" | 1
+        "updateFlorulaList"       | "EDITOR"                    | 204          | "updateFlorulaList" | 1
+        "updateFlorulaList"       | "AUTHOR"                    | 204          | "updateFlorulaList" | 1
+        "updateFlorulaList"       | "ADMIN"                     | 204          | "updateFlorulaList" | 1
+        "updateFlorulaList"       | "ALA_ADMIN"                 | 204          | "updateFlorulaList" | 1
+        // create opus
+        "createOpus"              | "NOT_LOGGED_IN_USER"        | 403          | "createOpus"        | 0
+        "createOpus"              | "LOGGED_IN_USER"            | 403          | "createOpus"        | 0
+        "createOpus"              | "REVIEWER"                  | 403          | "createOpus"        | 0
+        "createOpus"              | "EDITOR"                    | 403          | "createOpus"        | 0
+        "createOpus"              | "AUTHOR"                    | 403          | "createOpus"        | 0
+        "createOpus"              | "ADMIN"                     | 403          | "createOpus"        | 0
+        "createOpus"              | "ALA_ADMIN"                 | 200          | "createOpus"        | 1
         // delete opus
-        "deleteOpus"              | "NOT_LOGGED_IN_USER"        | 403
-        "deleteOpus"              | "LOGGED_IN_USER"            | 403
-        "deleteOpus"              | "REVIEWER"                  | 403
-        "deleteOpus"              | "EDITOR"                    | 403
-        "deleteOpus"              | "AUTHOR"                    | 403
-        "deleteOpus"              | "ADMIN"                     | 200
-        "deleteOpus"              | "ALA_ADMIN"                 | 200
+        "deleteOpus"              | "NOT_LOGGED_IN_USER"        | 403          | "deleteOpus"        | 0
+        "deleteOpus"              | "LOGGED_IN_USER"            | 403          | "deleteOpus"        | 0
+        "deleteOpus"              | "REVIEWER"                  | 403          | "deleteOpus"        | 0
+        "deleteOpus"              | "EDITOR"                    | 403          | "deleteOpus"        | 0
+        "deleteOpus"              | "AUTHOR"                    | 403          | "deleteOpus"        | 0
+        "deleteOpus"              | "ADMIN"                     | 403          | "deleteOpus"        | 0
+        "deleteOpus"              | "ALA_ADMIN"                 | 200          | "deleteOpus"        | 1
 
     }
 
@@ -743,7 +800,7 @@ class SecuredController {
 class MockAuthService extends AuthService {
     @Override
     def getUserId() {
-        666
+        "PROFILE_REVIEWER_USER"
     }
 
     @Override
