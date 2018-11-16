@@ -49,6 +49,8 @@ class AccessControlFiltersSpec extends Specification {
 
     def setup() {
         grailsApplication.config.security.authorisation.disable = false
+        grailsApplication.config.lists.base.url = "http://lists.ala.org.au"
+        grailsApplication.config.image.staging.dir = "/data/profile-hub/"
         users = [
                 'NOT_LOGGED_IN_USER' : null,
                 'LOGGED_IN_USER': new User([authority: "", userid: "9876"]),
