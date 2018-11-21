@@ -139,7 +139,8 @@
         bootstrapCssFile: '${assetPath(src: "/bootstrap/css/bootstrap3.3.4.min.css")}',
         imageLoadErrorUrl: '${assetPath(src: "not-available.png")}',
         development: ${Environment.current == Environment.DEVELOPMENT},
-        pdfHighThresholdLimit :  '${grailsApplication.config.pdf.highThresholdLimit?:50}'
+        pdfHighThresholdLimit :  '${grailsApplication.config.pdf.highThresholdLimit?:50}',
+        facetGroupUrl: '${g.createLink(controller: 'resource', action: 'facets')}'
     });
 </asset:script>
 
