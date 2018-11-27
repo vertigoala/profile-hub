@@ -1,6 +1,6 @@
 <div class="panel panel-default  ${edit?'':'panel-override'}" ng-cloak ng-form="NomenclatureForm"
-     ng-show="profileCtrl.profile.nslNameIdentifier || !profileCtrl.readonly()">
-    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}nomenclature" title="Nomenclature"></navigation-anchor>
+     ng-show="profileCtrl.profile.nslNomenclatureIdentifier || !profileCtrl.readonly()">
+    <navigation-anchor anchor-name="{{profileCtrl.readonly() ? 'view_' : 'edit_'}}nomenclature" condition="profileCtrl.profile.nslNomenclatureIdentifier || !profileCtrl.readonly()" title="Nomenclature"></navigation-anchor>
     <div class="panel-heading">
         <div class="row">
             <div class="col-sm-12">
