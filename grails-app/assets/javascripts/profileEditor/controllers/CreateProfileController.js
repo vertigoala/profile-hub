@@ -1,7 +1,7 @@
 /**
  * Controller for handling creating a new profile (via a modal popup)
  */
-profileEditor.controller('CreateProfileController', function (profileService, $modalInstance, opusId, duplicateExisting) {
+profileEditor.controller('CreateProfileController', function (profileService, messageService, $modalInstance, opusId, duplicateExisting) {
     var self = this;
 
     self.opusId = opusId;
@@ -44,14 +44,18 @@ profileEditor.controller('CreateProfileController', function (profileService, $m
     };
 
     self.searchByScientificName = function () {
-        var searchResult = profileService.profileSearch(self.opusId, self.profileToCopy, true);
-        searchResult.then(function (data) {
-                self.profiles = data;
-            },
-            function () {
-                messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
-            }
-        );
+        if (!self.profileToCopy || self.profileToCopy === undefined || self.profileToCopy.length <= 0) {
+            self.profiles = [];
+        } else {
+            var searchResult = profileService.profileSearch(self.opusId, self.profileToCopy, true);
+            searchResult.then(function (data) {
+                    self.profiles = data;
+                },
+                function () {
+                    messageService.alert("Failed to perform search for '" + self.searchTerm + "'.");
+                }
+            );
+        }
     };
 
     self.valid = function() {
