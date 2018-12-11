@@ -211,13 +211,13 @@ class ProfileService {
         }
     }
 
-    def proxyAttachmentDownload(HttpServletResponse response, String opusId, String profileId, String attachmendId) {
-        log.debug("Proxying attachment download $attachmendId")
+    def proxyAttachmentDownload(HttpServletResponse response, String opusId, String profileId, String attachmentId) {
+        log.debug("Proxying attachment download $attachmentId")
 
         if (profileId) {
             webService.proxyGetRequest(response, "${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/profile/${encPath(profileId)}/attachment/${encPath(attachmentId)}/download?latest=true")
         } else {
-            webService.proxyGetRequest(response, "${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/attachment/${encPath(attachmendId)}/download")
+            webService.proxyGetRequest(response, "${grailsApplication.config.profile.service.url}/opus/${encPath(opusId)}/attachment/${encPath(attachmentId)}/download")
         }
     }
 
