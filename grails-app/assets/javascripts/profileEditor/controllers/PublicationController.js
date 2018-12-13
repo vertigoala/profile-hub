@@ -25,7 +25,7 @@ profileEditor.controller('PublicationController', function (profileService, util
             promise.then(function () {
                 loadPublications();
             }, function () {
-                messageService.alert("An error occurred while creating the snapshot.");
+                messageService.alertStayOn("An error occurred while creating the snapshot. The error might be due to profile not having an author.");
             });
         });
     };
