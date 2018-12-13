@@ -71,6 +71,14 @@
       {
         "sort":"count",
         "field":"state"
+      },
+      {
+        "sort":"count",
+        "field": "cl1048"
+      },
+      {
+        "sort":"count",
+        "field": "cl1049"
       }
     ]
   },
