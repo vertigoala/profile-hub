@@ -75,6 +75,7 @@
 
         function checkMasterlistSyncStatus() {
             $log.debug("Chceking masterlist sync status");
+            if (!self.opus.uuid) return;
             profileService.isMasterListSyncing(self.opus.uuid)
                 .then(function(res) {
                     self.isMasterListSyncing = res.response;
