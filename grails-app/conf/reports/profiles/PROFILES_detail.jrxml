@@ -238,6 +238,7 @@
 				<reportElement positionType="Float" x="0" y="86" width="515" height="15" uuid="6c27bf88-e8a0-4428-b155-5ec3610add41">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[Boolean.valueOf($P{PROFILES_REPORT_OPTIONS}.map)]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="REPORT_TEMPLATES">
 					<subreportParameterExpression><![CDATA[(java.util.Collection<net.sf.jasperreports.engine.JRTemplate>)$P{REPORT_TEMPLATES}]]></subreportParameterExpression>
