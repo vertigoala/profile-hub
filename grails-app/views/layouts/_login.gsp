@@ -12,7 +12,7 @@
             <g:if test="${params.isOpusAdmin && reportsUrl}">
                 <li class="${pageName=='reports'?'active':''}" role="presentation"><a href="${reportsUrl}"><span class="fa fa-pie-chart">&nbsp;&nbsp;</span>Reports</a></li>
             </g:if>
-            <g:if test="${params.isOpusAdmin || params.isOpusEditor || params.isOpusAuthor}">
+            <g:if test="${params.isOpusAdmin || params.isOpusAuthor}">
                 <li role="presentation" ng-show="!profileCtrl.opus.masterListUid">
                     <a target="_self" ng-click="profileCtrl.createProfile(profileCtrl.opusId, false)">
                         <span class="fa fa-plus">&nbsp;&nbsp;</span>Add a new profile

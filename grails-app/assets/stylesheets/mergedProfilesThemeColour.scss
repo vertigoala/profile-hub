@@ -1349,7 +1349,11 @@ hr.comment-divider {
 
 .nomenclature .concept {
   font-weight: bold;
-  display: inline-block;
+}
+
+.nomenclature .btn {
+  white-space: normal;
+  text-align: start;
 }
 
 .nomenclature a, .nomenclature a:focus, .nomenclature a:hover {

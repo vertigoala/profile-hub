@@ -14,9 +14,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.validation.constraints.NotNull
 
-import static au.org.ala.profile.hub.WebServiceWrapperService.FLORULA_COOKIE
-import static au.org.ala.profile.security.Role.ROLE_PROFILE_AUTHOR
-import static au.org.ala.profile.security.Role.ROLE_PROFILE_EDITOR
+import static au.org.ala.profile.security.Role.*
 
 class ProfileController extends BaseController {
 
@@ -30,7 +28,7 @@ class ProfileController extends BaseController {
 
     def index() {}
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def edit() {
         if (!params.opusId || !params.profileId) {
             badRequest "opusId and profileId are required parameters"
@@ -106,7 +104,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateProfile() {
         def json = request.getJSON()
         log.debug("updateProfile with json " + json + " for profile " + params.profileId)
@@ -121,7 +119,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def renameProfile() {
         def json = request.getJSON()
         if (!params.opusId || !params.profileId || !json) {
@@ -133,7 +131,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def createDraftMode() {
         if (!params.profileId) {
             badRequest()
@@ -149,7 +147,7 @@ class ProfileController extends BaseController {
     }
 
     @PrivateCollectionSecurityExempt
-    @Secured(role = ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_ADMIN)
     def publishDraft() {
         if (!params.profileId) {
             badRequest()
@@ -170,7 +168,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def publishPrivateImage() {
         if (!params.opusId || !params.profileId || !params.imageId) {
             badRequest()
@@ -181,7 +179,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateLocalImageMetadata() {
         def metadata = request.getJSON()
         if (!params.imageId || !metadata) {
@@ -220,7 +218,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_EDITOR)
+    @Secured(role = ROLE_PROFILE_ADMIN)
     def deleteProfile() {
         if (!params.profileId || !params.opusId) {
             badRequest "profileId and opusId are required parameters"
@@ -262,7 +260,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateBHLLinks() {
         def jsonRequest = request.getJSON()
 
@@ -276,7 +274,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateLinks() {
         def jsonRequest = request.getJSON()
 
@@ -291,7 +289,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateAttribute() {
         log.debug "Updating attribute....."
         def jsonRequest = request.getJSON()
@@ -306,7 +304,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def deleteAttribute() {
         if (!params.attributeId || !params.profileId) {
             badRequest "attributeId and profileId are required parameters"
@@ -358,7 +356,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def uploadImage() {
         if (!params.opusId || !params.profileId || !params.dataResourceId || !params.title) {
             badRequest "opusId, dataResourceId, title and profileId are mandatory fields"
@@ -393,7 +391,7 @@ class ProfileController extends BaseController {
         handle response
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def deleteLocalImage() {
         if (!params.opusId || !params.profileId || !params.imageId || !params.type) {
             badRequest "opusId, profileId, imageId and type are required parameters"
@@ -573,7 +571,7 @@ class ProfileController extends BaseController {
     }
 
     @PrivateCollectionSecurityExempt
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_ADMIN)
     def savePublication() {
         if (!enabled("publications")) {
             badRequest "The publications feature has been disabled"
@@ -607,7 +605,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def updateAuthorship() {
         def json = request.getJSON()
 
@@ -660,7 +658,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def saveAttachment() {
         if (!params.opusId || !params.profileId || !(request instanceof MultipartHttpServletRequest) || !request.getParameter("data")) {
             badRequest "opusId and profile are required parameters, a JSON data paramaeter must be provided, and the request must be a multipart request"
@@ -683,7 +681,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def deleteAttachment() {
         if (!params.opusId || !params.profileId || !params.attachmentId) {
             badRequest "opusId, profileId and attachmentId are required parameters"
@@ -707,7 +705,7 @@ class ProfileController extends BaseController {
     }
 
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def createMapSnapshot(@NotNull String opusId, @NotNull String profileId) {
         Map json = request.getJSON()
         String occurrenceQuery = json?.occurrenceQuery
@@ -723,7 +721,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def deleteMapSnapshot(@NotNull String opusId, @NotNull String profileId) {
         def opusAndProfile = profileService.getProfile(opusId, profileId)
         if (!opusAndProfile || !opusAndProfile.profile) {
@@ -814,7 +812,7 @@ class ProfileController extends BaseController {
      * @param documentId the documentId of the document to update (if not supplied, a create operation will be assumed).
      * @return the result of the update.
      */
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def documentUpdate(String documentId) {
 
         log.debug("In documentUpdate for ID: ${documentId}")
@@ -843,7 +841,7 @@ class ProfileController extends BaseController {
      * @param documentId the documentId of the document to delete.
      * @return the result of the deletion.
      */
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def documentDelete(String documentId) {
         log.debug("In documentDelete for ID: ${documentId}")
 
@@ -857,7 +855,7 @@ class ProfileController extends BaseController {
         render status: result.statusCode
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def setPrimaryMultimedia() {
         log.debug("setPrimaryMultimedia()")
 
@@ -878,7 +876,7 @@ class ProfileController extends BaseController {
         }
     }
 
-    @Secured(role = ROLE_PROFILE_AUTHOR)
+    @Secured(role = ROLE_PROFILE_EDITOR)
     def setStatus() {
         log.debug('setStatus()')
 

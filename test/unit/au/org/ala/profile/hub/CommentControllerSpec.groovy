@@ -63,19 +63,6 @@ class CommentControllerSpec extends Specification {
         !allowed
     }
 
-    def "deleteComment should return a 401 NOT AUTHORISED if the user is not allowed to delete the comment"() {
-        given:
-        profileService.getComment(_, _, _) >> [resp: [author: [userId: "9876"]]]
-
-        when:
-        params.profileId = "profileId"
-        params.commentId = "commentId"
-        controller.deleteComment()
-
-        then:
-        response.status == HttpStatus.SC_UNAUTHORIZED
-    }
-
     def "updateComment should return a 401 NOT AUTHORISED if the user is not allowed to delete the comment"() {
         given:
         profileService.getComment(_, _, _) >> [resp: [author: [userId: "9876"]]]

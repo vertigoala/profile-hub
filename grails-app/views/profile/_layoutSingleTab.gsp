@@ -34,8 +34,6 @@
 </div>
 
 <g:if test="${!profile.archivedDate}">
-    <g:include controller="profile" action="nomenclaturePanel" params="[opusId: params.opusId]"/>
-
     <div class="top row margin-bottom-1">
         <g:render template="map" model="[allowStaticImage: true]"/>
         <div class="col-md-6 col-sm-12" ng-controller="ImagesController as imageCtrl" ng-init="imageCtrl.init('${edit}')">
@@ -57,6 +55,10 @@
                 <tab heading="Details" class="font-xxsmall" managed-tab>
                     <div class="row">
                         <div class="col-md-12">
+                            <g:if test="${!profile.archivedDate}">
+                                <g:include controller="profile" action="nomenclaturePanel"
+                                           params="[opusId: params.opusId]"/>
+                            </g:if>
                             <g:include controller="profile" action="attributesPanel"
                                        params="[opusId: params.opusId]"/>
                             <g:include controller="profile" action="linksPanel"

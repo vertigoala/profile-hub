@@ -140,7 +140,10 @@
               onUpdateModelData(true);
             });
 
-            instance.document.on('keyup', setModelData);
+            // This fixes a bug in ng-ckeditor that caused #627.
+            // Previously listener was incorrectly configured. Function setModelData was called on a keystroke
+            // anywhere on the page.
+            instance.on('key', setModelData);
           });
           instance.on('customConfigLoaded', function() {
             configLoaderDef.resolve();

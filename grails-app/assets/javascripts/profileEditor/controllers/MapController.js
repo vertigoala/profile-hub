@@ -303,7 +303,8 @@ profileEditor.controller('MapController', function ($scope, profileService, util
                     point: {
                         colour: self.opus.mapConfig.mapPointColour,
                         mapAttribution: self.opus.mapConfig.mapAttribution
-                    }
+                    },
+                    facetGroupUrl: config.facetGroupUrl
                 }
             );
 

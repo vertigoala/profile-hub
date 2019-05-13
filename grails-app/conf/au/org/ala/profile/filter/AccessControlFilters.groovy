@@ -81,10 +81,10 @@ class AccessControlFilters {
                                                     authorised = params.isOpusAdmin
                                                     log.debug "Action ${actionFullName} requires ROLE_PROFILE_ADMIN. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_EDITOR.toString()) {
-                                                    authorised = params.isOpusAdmin || params.isOpusEditor
+                                                    authorised = params.isOpusAdmin || params.isOpusAuthor || params.isOpusEditor
                                                     log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_AUTHOR.toString()) {
-                                                    authorised = params.isOpusAdmin || params.isOpusAuthor || params.isOpusEditor
+                                                    authorised = params.isOpusAdmin || params.isOpusAuthor
                                                     log.debug "Action ${actionFullName} requires ${requiredRole}. User ${request.userPrincipal?.name} has it? ${authorised}"
                                                 } else if (requiredRole == Role.ROLE_PROFILE_REVIEWER.toString()) {
                                                     authorised = params.isOpusAdmin || params.isOpusAuthor || params.isOpusReviewer || params.isOpusEditor
@@ -122,6 +122,8 @@ class AccessControlFilters {
                         response.status = HttpStatus.SC_FORBIDDEN
                         response.sendError(HttpStatus.SC_FORBIDDEN)
                     }
+
+                    return authorised
                 } else {
                     boolean authenticated = authService.getDisplayName() != null
                     params.isOpusAdmin = authenticated
@@ -130,6 +132,7 @@ class AccessControlFilters {
                     params.isOpusReviewer = authenticated
                     params.isOpusUser = authenticated
                     log.warn "**** Authorisation has been disabled! ****"
+                    return true
                 }
             }
             after = { Map model ->

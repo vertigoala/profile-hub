@@ -48,16 +48,14 @@ class CommentController extends BaseController {
         }
     }
 
-    @Secured(role = Role.ROLE_PROFILE_REVIEWER)
+    @Secured(role = Role.ROLE_PROFILE_ADMIN)
     def deleteComment() {
         if (!params.commentId) {
             badRequest()
-        } else if (checkCommentPermissions(params.profileId, params.commentId)) {
+        } else {
             def response = profileService.deleteComment(params.opusId, params.profileId, params.commentId)
 
             handle response
-        } else {
-            notAuthorised()
         }
     }
 

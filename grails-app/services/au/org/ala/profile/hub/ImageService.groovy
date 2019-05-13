@@ -387,12 +387,6 @@ class ImageService {
         Map response = [:]
         List allImages = []
 
-        def publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus)
-        if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
-            List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
-            allImages.addAll(publishedImageList)
-        }
-
         //we want to display the images in a specific order - staged, private, published
         if (profile.privateMode && profile.stagedImages) {
             allImages.addAll(convertLocalImages(profile.stagedImages, opus, profile, ImageType.STAGED, useInternalPaths, readonlyView))
@@ -402,6 +396,12 @@ class ImageService {
         // When a collection is changed from private to public, existing private images are NOT published automatically.
         if (profile.privateImages) {
             allImages.addAll(convertLocalImages(profile.privateImages ?: [], opus, profile, ImageType.PRIVATE, useInternalPaths, readonlyView))
+        }
+
+        def publishedImagesMap = biocacheService.retrieveImages(searchIdentifier, opus)
+        if (publishedImagesMap?.resp?.occurrences?.size() > 0) {
+            List publishedImageList = prepareImagesForDisplay(publishedImagesMap, opus, profile, readonlyView)
+            allImages.addAll(publishedImageList)
         }
 
         response.statusCode = SC_OK

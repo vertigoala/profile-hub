@@ -178,33 +178,35 @@ class ImageServiceSpec extends Specification {
 
         then:
         result.resp.size() == 4
-        result.resp[0].imageId == "image1"
-        result.resp[0].occurrenceId == "occurrenceId1"
-        result.resp[0].dataResourceName == "resource1"
-        result.resp[0].largeImageUrl == "largeUrl1"
-        result.resp[0].thumbnailUrl == "thumbnailUrl1"
-        result.resp[0].metadata == image1Metadata[0]
-        result.resp[0].type == ImageType.OPEN
-        result.resp[1].imageId == "image2"
-        result.resp[1].occurrenceId == "occurrenceId2"
-        result.resp[1].dataResourceName == "resource2"
-        result.resp[1].largeImageUrl == "largeUrl2"
-        result.resp[1].thumbnailUrl == "thumbnailUrl2"
-        result.resp[1].metadata == image2Metadata[0]
-        result.resp[1].type == ImageType.OPEN
+        result.resp[0].imageId == "staged1"
+        result.resp[0].dataResourceName == "opus title"
+        result.resp[0].largeImageUrl == "/opus/opusId/profile/profileId/image/staged1.jpg?type=STAGED"
+        result.resp[0].thumbnailUrl == "/opus/opusId/profile/profileId/image/thumbnail/staged1.jpg?type=STAGED"
+        result.resp[0].metadata == stagedImage1
+        result.resp[0].type == ImageType.STAGED
+        result.resp[1].imageId == "staged2"
+        result.resp[1].dataResourceName == "opus title"
+        result.resp[1].largeImageUrl == "/opus/opusId/profile/profileId/image/staged2.jpg?type=STAGED"
+        result.resp[1].thumbnailUrl == "/opus/opusId/profile/profileId/image/thumbnail/staged2.jpg?type=STAGED"
+        result.resp[1].metadata == stagedImage2
+        result.resp[1].type == ImageType.STAGED
 
-        result.resp[2].imageId == "staged1"
-        result.resp[2].dataResourceName == "opus title"
-        result.resp[2].largeImageUrl == "/opus/opusId/profile/profileId/image/staged1.jpg?type=STAGED"
-        result.resp[2].thumbnailUrl == "/opus/opusId/profile/profileId/image/thumbnail/staged1.jpg?type=STAGED"
-        result.resp[2].metadata == stagedImage1
-        result.resp[2].type == ImageType.STAGED
-        result.resp[3].imageId == "staged2"
-        result.resp[3].dataResourceName == "opus title"
-        result.resp[3].largeImageUrl == "/opus/opusId/profile/profileId/image/staged2.jpg?type=STAGED"
-        result.resp[3].thumbnailUrl == "/opus/opusId/profile/profileId/image/thumbnail/staged2.jpg?type=STAGED"
-        result.resp[3].metadata == stagedImage2
-        result.resp[3].type == ImageType.STAGED
+        result.resp[2].imageId == "image1"
+        result.resp[2].occurrenceId == "occurrenceId1"
+        result.resp[2].dataResourceName == "resource1"
+        result.resp[2].largeImageUrl == "largeUrl1"
+        result.resp[2].thumbnailUrl == "thumbnailUrl1"
+        result.resp[2].metadata == image1Metadata[0]
+        result.resp[2].type == ImageType.OPEN
+        result.resp[3].imageId == "image2"
+        result.resp[3].occurrenceId == "occurrenceId2"
+        result.resp[3].dataResourceName == "resource2"
+        result.resp[3].largeImageUrl == "largeUrl2"
+        result.resp[3].thumbnailUrl == "thumbnailUrl2"
+        result.resp[3].metadata == image2Metadata[0]
+        result.resp[3].type == ImageType.OPEN
+
+
     }
 
     def "retrieveImages should not fetch staged images if the profile is not in draft mode"() {

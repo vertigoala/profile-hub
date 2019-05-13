@@ -49,7 +49,8 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
             $scope.removeVocabTerm = function (index, form) {
                 var promise = profileService.findUsagesOfVocabTerm($scope.opusId, $scope.vocabId, $scope.vocabulary.terms[index].termId);
                 promise.then(function (data) {
-                        if (data.usageCount == 0) {
+                        if (data.usageCount == 0 &&
+                                $filter('filter')($scope.replacements, {'newTermName':$scope.vocabulary.terms[index].name}).length == 0) {
                             var deletedItemOrder = $scope.vocabulary.terms[index].order;
                             $scope.vocabulary.terms.splice(index, 1);
 
@@ -85,9 +86,15 @@ profileEditor.directive('vocabularyEditor', function ($browser) {
                             return $scope.vocabulary.terms[existingTermIndex];
                         },
                         terms: function() {
-                            var terms = angular.copy($scope.vocabulary.terms);
-                            var deletedItemOrder = terms[existingTermIndex].order;
-                            terms.splice(existingTermIndex, 1);
+                            var terms = [];
+                            var itemToDel = $scope.vocabulary.terms[existingTermIndex];
+                            var deletedItemOrder = $scope.vocabulary.terms[existingTermIndex].order;
+                            angular.forEach($scope.vocabulary.terms, function(term) {
+                                if ($filter('filter')($scope.replacements, {'existingTermId':term.termId}).length == 0 &&
+                                    term.termId != itemToDel.termId) {
+                                    terms.push(term);
+                                }
+                            });
 
                             angular.forEach(terms, function(term) {
                                 if (term.order > deletedItemOrder) {

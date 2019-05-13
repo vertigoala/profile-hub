@@ -16,7 +16,7 @@
 
     <div class="col-xs-12 profile-contributor-text">
         <p ng-repeat="contrib in profileCtrl.profile.authorship"
-              ng-show="contrib.text">{{contrib.category | capitalize}}(s) - {{contrib.text}}
+              ng-show="contrib.text">{{contrib.category | capitalize}} - {{contrib.text}}
         </p>
         <g:if test="${citation}">
             <p>
