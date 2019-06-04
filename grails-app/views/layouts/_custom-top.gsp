@@ -25,20 +25,18 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WWVM6BD');</script>
-    <!-- End Google Tag Manager -->
+    %{-- Google Analytics --}%
+    <script>
+        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+        ga('create', '${grailsApplication.config.googleAnalyticsId}', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <script async src='//www.google-analytics.com/analytics.js'></script>
+    %{--End Google Analytics--}%
 </head>
 
 <body id="${pageProperty(name: 'body.id')}" class="${request.forwardURI?.endsWith("update")?'':'public'}" onload="${pageProperty(name: 'body.onload')}" ng-app="profileEditor">
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WWVM6BD"
-                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+
 <ala:systemMessage/>
 
 <div ng-controller="CustomAlertController" id="timeoutAlert" class="genericAlert">
