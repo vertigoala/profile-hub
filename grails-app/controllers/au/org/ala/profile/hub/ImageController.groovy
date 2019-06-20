@@ -22,6 +22,8 @@ class ImageController extends BaseController {
             if (imageDetails) {
                 if (params.callback) {
                     // the image client plugin uses jsonp, so it assumes the response will be a json string wrapped in the provided callback function
+                    // add MIME type in header for rendering
+                    response.addHeader("Content-Type", "application/javascript")
                     render """${params.callback}(${imageDetails as JSON})"""
                 } else {
                     render imageDetails as JSON
