@@ -46,8 +46,6 @@ grails.project.dependency.resolution = {
     }
 
     management {
-        dependency "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
-        dependency "org.apache.httpcomponents:httpclient:${httpmimeVersion}"
         dependency "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
         // manage the ecj version for Java 8 compat, this should match the version provided by Jasper
         // TODO remove after Grails 3 upgrade?
@@ -76,9 +74,7 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        build(":release:3.1.2") {
-            excludes "httpclient"
-        }
+        build(":release:3.1.2")
         build ":tomcat:7.0.70"
 
         compile ":mail:1.0.7"
