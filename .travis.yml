@@ -1,7 +1,7 @@
 language: groovy
 sudo: false
 jdk:
-  - openjdk8
+  - openjdk7
 node_js:
   - "6"
 env:
@@ -35,7 +35,6 @@ before_script:
   - export GRAILS_OPTS="-Xmx1536m -Xms1536m -server -Dfile.encoding=UTF-8 -XX:PermSize=32m -XX:MaxPermSize=256m"
 script:
   - node_modules/karma/bin/karma start karma.conf.js --single-run --browsers Firefox,PhantomJS --port 9877 --log-level info && ./grailsw refresh-dependencies --non-interactive && ./grailsw test-app --non-interactive && ./grailsw prod war --non-interactive
-after_success:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && travis_retry ./grailsw prod maven-deploy --repository=$MAVEN_REPO --non-interactive --stacktrace'
 env:
   global:
