@@ -82,7 +82,7 @@ grails.project.dependency.resolution = {
         compile ":cors:1.1.6"
         compile ":csv:0.3.1"
         compile(":ala-map:2.1.8-SNAPSHOT") {
-            excludes "resources"
+            excludes "resources", "httpclient"
         }
         compile(":ala-ws-plugin:1.6.1") {
             excludes "resources"
