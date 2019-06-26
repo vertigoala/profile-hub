@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # stolen from travis as recommended by them:
 # https://twitter.com/plexus/status/499194992632811520
 source /etc/profile
