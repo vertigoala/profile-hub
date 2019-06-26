@@ -74,7 +74,10 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        build(":release:3.1.2")
+//        build(":release:3.1.2")
+        build(":release:3.1.2") {
+            excludes "httpclient"
+        }
         build ":tomcat:7.0.70"
 
         compile ":mail:1.0.7"
