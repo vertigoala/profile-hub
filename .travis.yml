@@ -2,7 +2,7 @@ language: groovy
 dist: xenial
 sudo: false
 jdk:
-  - openjdk7
+  - openjdk8
 node_js:
   - "6"
 env:
