@@ -16,11 +16,11 @@ branches:
   only:
     - master
     - dev
-cache:
-  directories:
-    - node_modules
-    - ~/.m2/repository
-    - ~/.grails/wrapper
+#cache:
+#  directories:
+#    - node_modules
+#    - ~/.m2/repository
+#    - ~/.grails/wrapper
 before_install:
   - export TZ=Australia/Canberra
   - date
