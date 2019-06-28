@@ -1,4 +1,5 @@
 language: groovy
+dist: xenial
 sudo: false
 jdk:
   - openjdk7
