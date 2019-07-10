@@ -37,7 +37,7 @@ grails.project.dependency.resolution = {
     // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
 
     def httpmimeVersion = "4.3.3"
-
+//    def httpmimeVersion = "4.2.1"
     repositories {
         mavenLocal()
         mavenRepo("http://nexus.ala.org.au/content/groups/public/") {
@@ -46,9 +46,9 @@ grails.project.dependency.resolution = {
     }
 
     management {
-        compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
-        compile "org.apache.httpcomponents:httpcore:${httpmimeVersion}"
-        compile "org.apache.httpcomponents:httpclient:${httpmimeVersion}"
+//        compile "org.apache.httpcomponents:httpmime:${httpmimeVersion}"
+//        compile "org.apache.httpcomponents:httpcore:${httpmimeVersion}"
+//        compile "org.apache.httpcomponents:httpclient:${httpmimeVersion}"
         dependency "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
         // manage the ecj version for Java 8 compat, this should match the version provided by Jasper
         // TODO remove after Grails 3 upgrade?
@@ -73,8 +73,10 @@ grails.project.dependency.resolution = {
         compile 'com.google.guava:guava:19.0'
         compile 'com.google.code.findbugs:jsr305:3.0.1'
         compile 'com.squareup.retrofit2:retrofit:2.2.0'
-        compile "org.apache.httpcomponents:httpcore:${httpmimeVersion}"
-        compile "org.apache.httpcomponents:httpclient:${httpmimeVersion}"
+//        compile "org.apache.httpcomponents:httpcore:${httpmimeVersion}"
+//        compile "org.apache.httpcomponents:httpclient:${httpmimeVersion}"
+        compile "org.apache.httpcomponents:httpcore:4.4.1"
+        compile "org.apache.httpcomponents:httpclient:4.4.1"
     }
 
     plugins {
