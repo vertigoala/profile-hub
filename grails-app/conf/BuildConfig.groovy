@@ -36,8 +36,8 @@ grails.project.dependency.resolution = {
     legacyResolve false
     // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
 
-    def httpmimeVersion = "4.3.3"
-//    def httpmimeVersion = "4.2.1"
+//    def httpmimeVersion = "4.3.3"
+    def httpmimeVersion = "4.4.1"
     repositories {
         mavenLocal()
         mavenRepo("http://nexus.ala.org.au/content/groups/public/") {
