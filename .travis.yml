@@ -19,7 +19,7 @@ script:
 - grails clean
 - grails refresh-dependencies --non-interactive
 - grails dependency-report
-- grails test-app -clover.on :unit --non-interactive --stacktrace && ala_travis_grails_build --stacktrace
+- ala_travis_grails_build --stacktrace
 
 env:
   global:
