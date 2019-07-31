@@ -1,5 +1,5 @@
 language: groovy
-dist: bionic
+dist: xenial
 services:
 - xvfb
 sudo: false
