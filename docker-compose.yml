@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+  profile-hub:
+    build:
+      context: .
+    image: vertigoala/profile-hub
+    container_name: profile-hub
+    environment:
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Dport.shutdown=8015 -Dport.http=8000
+    network_mode: "service:profile-service"
+    volumes:
+      - ./config/profile-hub-config.properties:/data/profile-hub/config/profile-hub-config.properties
+
+  profile-service:
+    image: vertigoala/profile-service
+    container_name: profile-service
+    depends_on:
+      - mongoprofiles
+      - esprofiles  
+    ports:
+      - 8000:8000
+      - 8080:8080
+      - 5005:5005
+    volumes:
+      - ./config/profile-service-config.properties:/data/profile-service/config/profile-service-config.properties
+
+  mongoprofiles:
+    image: mongo:3.4.6
+    container_name: mongoprofiles
+    ports:
+      - 27017:27017
+    command: --smallfiles
+  
+  esprofiles:
+    image: elasticsearch:1.7.4
+    container_name: esprofiles
+    environment:
+      - cluster.name=esprofiles
+    volumes:
+      - "./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+      - esprofiles:/usr/share/elasticsearch/data
+  #     - "./elastic-config/elasticsearch:/etc/default/elasticsearch"
+  #     - "./es_index:/usr/share/elasticsearch/data"
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+volumes:
+  esprofiles:
