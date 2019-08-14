@@ -4,7 +4,7 @@
 #
 while true
 do 
-  rsync -rlptzv --progress --delete --exclude=.git "ala-helper:/root/projetos/profile-hub" .
+  rsync -rlptzv --progress --delete --exclude=.git "ala-helper:/root/projetos/profile-hub/*" .
   sleep 2
 done
 
