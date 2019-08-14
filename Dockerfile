@@ -3,7 +3,8 @@
 #
 FROM tomcat:8.5-jre8-alpine
 
-ARG ARTIFACT_URL=https://nexus.ala.org.au/service/local/repositories/releases/content/au/org/ala/profile-hub/2.4/profile-hub-2.4.war
+#ARG ARTIFACT_URL=https://nexus.ala.org.au/service/local/repositories/releases/content/au/org/ala/profile-hub/2.4/profile-hub-2.4.war
+ARG ARTIFACT_URL=https://ala-rnp.s3.amazonaws.com/ala-assets/brasil/profile-hub-2.5-SNAPSHOT.war
 ARG WAR_NAME=profile-hub
 
 RUN mkdir -p /data/profile-hub/config \
@@ -20,7 +21,7 @@ RUN wget $ARTIFACT_URL -q -O /tmp/$WAR_NAME && \
 
 # Tomcat configs
 COPY ./tomcat-conf/* /usr/local/tomcat/conf/
-
+COPY ./config/help-mappings.json /data/profile-hub/config/help-mappings.json
 EXPOSE 8080
 
 # NON-ROOT
