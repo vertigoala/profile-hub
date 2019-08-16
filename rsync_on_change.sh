@@ -5,5 +5,5 @@
 while true
 do 
   rsync -rlptzv --progress --delete --exclude=.git --exclude node_modules --exclude target "ala-builder:/home/ubuntu/projetos/profile-hub/*" .
-  sleep 5
+  sleep 10
 done
